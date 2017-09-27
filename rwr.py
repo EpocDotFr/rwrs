@@ -1,7 +1,10 @@
 from geolite2 import geolite2
+from io import BytesIO
+from PIL import Image
 from lxml import html
 import requests
 import re
+import os
 
 _players_count_regex = re.compile(r'(?P<current_players>\d+)/(?P<max_players>\d+)')
 _time_regex = re.compile(r'(?:(?P<h>\d+)h(?:\s+)?)?(?:(?P<m>\d+)m(?:in)?(?:\s+)?)(?:(?P<s>\d+)s)?')
@@ -91,7 +94,29 @@ def _parse_time(string):
     return None
 
 
-class Scraper:
+class RanksImageScraper:
+    rank_images_template_url = 'http://rwr.runningwithrifles.com/rwr_stats/textures/hud_rank{rank_id}.png'
+
+    def __init__(self, output_dir):
+        self.output_dir = output_dir
+
+        if not os.path.isdir(self.output_dir):
+            raise FileNotFoundError(self.output_dir + ' does not exists')
+
+    def run(self):
+        for rank_id in RANKS.keys():
+            response = requests.get(self.rank_images_template_url.format(rank_id=rank_id))
+
+            response.raise_for_status()
+
+            rank_image = Image.open(BytesIO(response.content))
+
+            rank_image.save(os.path.join(self.output_dir, str(rank_id) + '.png'))
+
+            # TODO Save the image by centering the content
+
+
+class DataScraper:
     servers_url = 'http://rwr.runningwithrifles.com/rwr_server_list/view_servers.php'
     players_url = 'http://rwr.runningwithrifles.com/rwr_stats/view_players.php'
 
@@ -327,9 +352,12 @@ class PlayerRank:
         return str(self.__dict__)
 
 
-s = Scraper()
-print(s.get_servers())
-me = s.search_player('EpocDotFr')
-print(me)
-print(me.xp_to_next_rank)
-print(me.xp_percent_completion_to_next_rank)
+# s = DataScraper()
+# print(s.get_servers())
+# me = s.search_player('EpocDotFr')
+# print(me)
+# print(me.xp_to_next_rank)
+# print(me.xp_percent_completion_to_next_rank)
+
+# d = RanksImageScraper('./')
+# d.run()
