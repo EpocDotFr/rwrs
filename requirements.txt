@@ -1,0 +1,3 @@
+requests
+maxminddb-geolite2
+lxml
