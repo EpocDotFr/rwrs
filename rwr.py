@@ -78,7 +78,7 @@ class PlayersSort:
     XP = 'rank_progression'
 
 
-def _parse_time(string):
+def parse_time(string):
     """Parse a humanly-formatted time string."""
     time = _time_regex.match(string)
 
@@ -96,6 +96,7 @@ def _parse_time(string):
 
 class RanksImageScraper:
     rank_images_template_url = 'http://rwr.runningwithrifles.com/rwr_stats/textures/hud_rank{rank_id}.png'
+    rank_image_size = (64, 64)
 
     def __init__(self, output_dir):
         self.output_dir = output_dir
@@ -103,17 +104,31 @@ class RanksImageScraper:
         if not os.path.isdir(self.output_dir):
             raise FileNotFoundError(self.output_dir + ' does not exists')
 
+    def _download_rank_image(self, rank_id):
+        """Download a RWR rank image and load it using Pillow."""
+        response = requests.get(self.rank_images_template_url.format(rank_id=rank_id))
+
+        response.raise_for_status()
+
+        return Image.open(BytesIO(response.content))
+
     def run(self):
+        """Actually download all the RWR ranks image."""
         for rank_id in RANKS.keys():
-            response = requests.get(self.rank_images_template_url.format(rank_id=rank_id))
+            # Download the image
+            rank_image = self._download_rank_image(rank_id)
 
-            response.raise_for_status()
+            # Only get the actual content of the image
+            rank_image = rank_image.crop(rank_image.convert('RGBa').getbbox())
 
-            rank_image = Image.open(BytesIO(response.content))
+            # Resize it to fit in the self.rank_image_size dimension
+            rank_image.thumbnail(self.rank_image_size, Image.ANTIALIAS)
 
-            rank_image.save(os.path.join(self.output_dir, str(rank_id) + '.png'))
-
-            # TODO Save the image by centering the content
+            # Paste it in a new image, centered
+            new_rank_image = Image.new('RGBA', self.rank_image_size)
+            new_rank_image.paste(rank_image)
+            new_rank_image.save(os.path.join(self.output_dir, str(rank_id) + '.png'))
+            # TODO Center the pasted image
 
 
 class DataScraper:
@@ -187,7 +202,6 @@ class Server:
         name_cell = node[1]
         ip_cell = node[2]
         post_cell = node[3]
-        location_cell = node[4]
         map_cell = node[5]
         players_count_cell = node[6]
         bots_count_cell = node[7]
@@ -207,14 +221,13 @@ class Server:
 
         ret.ip = ip_cell.text
         ret.port = int(post_cell.text)
-        ret.given_location = location_cell.text
 
         with geolite2 as gl2:
             location = gl2.reader().get(ret.ip)
 
             if location:
-                ret.computed_location = location['city']['names']['en'] + ', ' if 'city' in location else ''
-                ret.computed_location += location['country']['names']['en']
+                ret.location = location['city']['names']['en'] + ', ' if 'city' in location else ''
+                ret.location += location['country']['names']['en']
 
         ret.map = ServerMap()
 
@@ -232,7 +245,7 @@ class Server:
 
         ret.bots = int(bots_count_cell.text)
         ret.version = version_cell.text
-        ret.last_updated = _parse_time(last_updated_cell.text)
+        ret.last_updated = parse_time(last_updated_cell.text)
 
         ret.steam_join_link = steam_join_link_cell[0].get('href')
 
@@ -277,7 +290,7 @@ class Player:
         ret.deaths = int(deaths_cell.text)
         ret.score = int(score_cell.text)
         ret.kd_ratio = float(kd_ratio_cell.text)
-        ret.time_played = _parse_time(time_played_cell.text)
+        ret.time_played = parse_time(time_played_cell.text)
         ret.longest_kill_streak = int(longest_kill_streak_cell.text)
         ret.targets_destroyed = int(targets_destroyed_cell.text)
         ret.vehicles_destroyed = int(vehicles_destroyed_cell.text)
@@ -297,6 +310,17 @@ class Player:
             ret.rank.name = RANKS[ret.rank.id]['name'] if ret.rank.id in RANKS else None
 
         return ret
+
+    def playing_on_server(self, servers):
+        """Determine if this user is playing on one of the given servers."""
+        for server in servers:
+            if not hasattr(server, 'players') or not hasattr(server.players, 'list'):
+                continue
+
+            if self.username in server.players.list:
+                return server
+
+        return False
 
     def get_next_rank(self):
         """Get the next rank of the player (if applicable)."""
@@ -359,5 +383,5 @@ class PlayerRank:
 # print(me.xp_to_next_rank)
 # print(me.xp_percent_completion_to_next_rank)
 
-# d = RanksImageScraper('./')
-# d.run()
+d = RanksImageScraper('./')
+d.run()
