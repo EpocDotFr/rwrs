@@ -1,9 +1,9 @@
 {% extends 'layout.html' %}
 
-{% block meta_title %}Players › {{ player.username }} stats{% endblock %}
+{% block meta_title %}Players › {{ player.username }}{% endblock %}
 
 {% block content %}
-    <h2>{{ player.username }} stats</h2>
+    <h2>{{ player.username }}</h2>
 
     <img src="{{ url_for('static', filename='images/ranks/{rank_id}.png'.format(rank_id=player.rank.id)) }}"> {{ player.rank.name }}
 {% endblock %}

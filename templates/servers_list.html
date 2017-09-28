@@ -22,7 +22,7 @@
                         <td>
                             {% if server.players and server.players.list %}
                                 {% for player in server.players.list %}
-                                    <a href="{{ url_for('player_stats', username=player) }}">{{ player }}</a>{{ "," if not loop.last }}
+                                    <a href="{{ url_for('player_stats', username=player) }}">{{ player }}</a>{{ ',' if not loop.last }}
                                 {% endfor %}
                             {% endif %}
                         </td>
