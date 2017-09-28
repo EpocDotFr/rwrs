@@ -1,0 +1,68 @@
+/************************************************************************
+ * Global styles */
+
+body {
+    color: #FFF;
+    background-color: #270100;
+}
+
+h2 {
+    margin-top: 0;
+    border-bottom: 0.1rem solid #5C0000;
+}
+
+/************************************************************************
+ * Links */
+
+a,
+a:visited {
+    text-decoration: underline;
+    color: #FEA760;
+}
+
+a:hover,
+a:focus {
+    color: #FEA760;
+    text-decoration: none;
+    outline: none;
+}
+
+/************************************************************************
+ * Alerts */
+
+.alert {
+    border-radius: 0.5rem;
+    border: 0.1rem solid;
+}
+
+.alert a,
+.alert a:visited,
+.alert a:hover,
+.alert a:focus {
+    color: inherit;
+}
+
+.alert.success {
+    background-color: #266806;
+    color: #FFF;
+    border-color: #31871d;
+}
+
+.alert.error {
+    background-color: #770909;
+    color: #FFF;
+    border-color: #ab1c1c;
+}
+
+.alert.info {
+    background-color: #064b99;
+    color: #FFF;
+    border-color: #0075bf;
+}
+
+/************************************************************************
+ * Links */
+
+footer {
+    border-top: 0.1rem solid #5C0000;
+}

@@ -1,0 +1,12 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    <div class="grid">
+        <div>
+            <i class="fa fa-user fa-4x"></i> <input type="text" placeholder="Type a player name"> <button>Get stats</button>
+        </div>
+        <div>
+            <i class="fa fa-server fa-4x"></i> <a href="{{ url_for('servers_list') }}" class="btn">Servers list</a>
+        </div>
+    </div>
+{% endblock %}

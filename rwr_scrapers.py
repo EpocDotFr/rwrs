@@ -374,14 +374,3 @@ class ServerPlayers:
 class PlayerRank:
     def __repr__(self):
         return str(self.__dict__)
-
-
-# s = DataScraper()
-# print(s.get_servers())
-# me = s.search_player('EpocDotFr')
-# print(me)
-# print(me.xp_to_next_rank)
-# print(me.xp_percent_completion_to_next_rank)
-
-d = RanksImageScraper('./')
-d.run()

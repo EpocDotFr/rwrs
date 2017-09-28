@@ -1,0 +1,40 @@
+{% extends 'layout.html' %}
+
+{% block meta_title %}Servers list{% endblock %}
+
+{% block content %}
+    <h2>Servers list</h2>
+
+    {% if servers %}
+        <table class="mbn">
+            <thead>
+                <tr>
+                    <th>Players</th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for server in servers %}
+                    <tr>
+                        <td>
+                            {% if server.players and server.players.list %}
+                                {% for player in server.players.list %}
+                                    <a href="{{ url_for('player_stats', username=player) }}">{{ player }}</a>{{ "," if not loop.last }}
+                                {% endfor %}
+                            {% endif %}
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p class="alert error pas">Whoops, there isn't any server to display. That's not normal.</p>
+    {% endif %}
+{% endblock %}
