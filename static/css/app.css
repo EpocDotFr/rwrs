@@ -6,9 +6,24 @@ body {
     background-color: #292929;
 }
 
+.page {
+    background-color: #3f3f3f;
+    border-top: 0.1rem solid #514f4f;
+    border-bottom: 0.1rem solid #514f4f;
+}
+
+.home > div:first-child {
+    border-right: 0.1rem solid #514f4f;
+}
+
 h2 {
-    margin-top: 0;
-    border-bottom: 0.1rem solid #5C0000;
+    background-color: #8EB314;
+    border: 0.1rem solid #A1C331;
+    font-size: 2.1rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
 }
 
 /************************************************************************
@@ -17,12 +32,12 @@ h2 {
 a,
 a:visited {
     text-decoration: underline;
-    color: #FEA760;
+    color: #A4CF17;
 }
 
 a:hover,
 a:focus {
-    color: #FEA760;
+    color: #A4CF17;
     text-decoration: none;
     outline: none;
 }
@@ -30,33 +45,49 @@ a:focus {
 /************************************************************************
  * Buttons */
 
-button, input, optgroup, select, textarea {
-    line-height: 1.5;
-}
-
 button,
-input[type="button"],
+input[type="button"][type="submit"],
 .btn,
 .btn:visited {
     background-color: #606060;
-    border: 0.1rem solid #7a7a7a;
+    border: 0.1rem solid #333;
     color: #FFF;
     text-decoration: none;
     cursor: pointer;
-    padding-left: 0.8rem;
-    padding-right: 0.8rem;
-    padding-top: 0.2rem;
-    padding-bottom: 0.2rem;
+    font-weight: bold;
+    padding-left: 1.1rem;
+    padding-right: 1.1rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
 }
 
-button:hover,.btn:hover,
-input[type="button"]:hover,
-input[type="button"]:focus,
-button:focus,
-.btn:focus {
-    background-color: #8EB314;
+button:hover, button:focus,
+.btn:hover, .btn:focus,
+input[type="button"][type="submit"]:hover, input[type="button"][type="submit"]:focus {
     color: #FFF;
-    outline: none;
+    background-color: #8EB314;
+    border-color: #A1C331;
+}
+
+/************************************************************************
+ * Inputs */
+
+button,
+input,
+optgroup,
+select,
+textarea {
+    line-height: 1.5;
+    padding-left: 1.1rem;
+    padding-right: 1.1rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+}
+
+input,
+select,
+textarea {
+    border: 0.1rem solid #333;
 }
 
 /************************************************************************
@@ -92,8 +123,8 @@ button:focus,
 }
 
 /************************************************************************
- * Links */
+ * Footer */
 
 footer {
-    border-top: 0.1rem solid #5C0000;
+    color: #a2a2a2;
 }

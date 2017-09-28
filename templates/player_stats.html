@@ -3,7 +3,7 @@
 {% block meta_title %}Players › {{ player.username }}{% endblock %}
 
 {% block content %}
-    <h2>{{ player.username }}</h2>
+    <h2><i class="fa fa-user"></i> {{ player.username }}</h2>
 
     <img src="{{ url_for('static', filename='images/ranks/{rank_id}.png'.format(rank_id=player.rank.id)) }}"> {{ player.rank.name }}
 {% endblock %}

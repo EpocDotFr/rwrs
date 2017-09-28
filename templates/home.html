@@ -1,12 +1,14 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-    <div class="grid">
-        <div>
-            <i class="fa fa-user fa-4x"></i> <input type="text" placeholder="Type a player name"> <button>Get stats</button>
+    <div class="home grid mtm mbm txtcenter">
+        <div class="prl">
+            <h2><i class="fa fa-user"></i> Searching for a player?</h2>
+            <div><input type="text" placeholder="Type a player name"> <button>Find</button></div>
         </div>
-        <div>
-            <i class="fa fa-server fa-4x"></i> <a href="{{ url_for('servers_list') }}" class="btn">Servers list</a>
+        <div class="pll">
+            <h2><i class="fa fa-server"></i> Searching for a server?</h2>
+            <div><a href="{{ url_for('servers_list') }}" class="btn">Go to the servers list</a></div>
         </div>
     </div>
 {% endblock %}
