@@ -1,8 +1,26 @@
-from flask import Flask, render_template, make_response, abort
+from flask import Flask, render_template, make_response, abort, request
 from werkzeug.exceptions import HTTPException
 import rwr_scrapers
 import logging
 import sys
+
+
+# -----------------------------------------------------------
+# Helpers
+
+
+def humanize_seconds(seconds):
+    """Return a human-readable representation of the given number of seconds."""
+    h = int(seconds / (60 * 60))
+    m = int((seconds % (60 * 60)) / 60)
+    s = int(seconds % 60)
+
+    return '{}h {:>02}m {:>02}s'.format(h, m, s)
+
+
+def humanize_integer(integer):
+    """Return a slightly more human-readable representation of the given integer."""
+    return format(integer, ',d').replace(',', ' ')
 
 
 # -----------------------------------------------------------
@@ -13,6 +31,8 @@ app = Flask(__name__, static_url_path='')
 app.config.from_pyfile('config.py')
 
 app.config['RANKS_IMAGES_DIR'] = 'static/images/ranks'
+
+app.jinja_env.filters.update(humanize_seconds=humanize_seconds, humanize_integer=humanize_integer)
 
 # Default Python logger
 logging.basicConfig(
@@ -37,14 +57,25 @@ def home():
     return render_template('home.html')
 
 
+@app.route('/player')
 @app.route('/player/<username>')
-def player_stats(username):
+def player_stats(username=None):
+    if not username:
+        username = request.args.get('username')
+
+    if not username:
+        abort(404)
+
     scraper = rwr_scrapers.DataScraper()
 
     player = scraper.search_player(username)
 
     if not player:
         abort(404)
+
+    servers = scraper.get_servers()
+
+    player.set_playing_on_server(servers)
 
     return render_template('player_stats.html', player=player)
 

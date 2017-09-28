@@ -88,6 +88,30 @@ textarea {
 }
 
 /************************************************************************
+ * Tables */
+
+.table-responsive {
+    overflow-x: auto;
+}
+
+table,
+table td,
+table th {
+    border: 0.2rem solid #333;
+    table-layout: auto;
+    vertical-align: middle;
+}
+
+table td,
+table th {
+    padding: .4em;
+}
+
+table th {
+    font-weight: bold;
+}
+
+/************************************************************************
  * Alerts */
 
 .alert {

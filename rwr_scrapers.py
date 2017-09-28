@@ -311,16 +311,18 @@ class Player:
 
         return ret
 
-    def playing_on_server(self, servers):
+    def set_playing_on_server(self, servers):
         """Determine if this user is playing on one of the given servers."""
         for server in servers:
             if not hasattr(server, 'players') or not hasattr(server.players, 'list'):
                 continue
 
             if self.username in server.players.list:
-                return server
+                self.playing_on_server = server
 
-        return False
+                return
+
+        self.playing_on_server = False
 
     def get_next_rank(self):
         """Get the next rank of the player (if applicable)."""
