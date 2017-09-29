@@ -17,7 +17,7 @@ _one_hour = _one_minute * 60
 MAPS = {
     # Official maps
     'map1': 'Moorland Trenches',
-    'map1_2': 'Moorland Trenches 2',
+    'map1_2': 'Moorland Trenches (DOM)',
     'map2': 'Keepsake Bay',
     'map3': 'Old Fort Creek',
     'map4': 'Fridge Valley',
@@ -34,10 +34,10 @@ MAPS = {
     'pvp1': 'Islet of Eflen',
 
     # Running with the Dead mod maps
-    'rwd_map1': 'Running with the Dead',
+    'rwd_map1': 'Running with the Dead mod',
 
     # Overlord Defense mod maps
-    'def_dday': 'Overlord Defense'
+    'def_dday': 'Overlord Defense mod'
 }
 
 RANKS = {

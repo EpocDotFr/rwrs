@@ -9,10 +9,11 @@
         <table class="mbn">
             <thead>
                 <tr>
-                    <th>Players</th>
-                    <th>Location</th>
-                    <th></th>
-                    <th></th>
+                    <th>Name</th>
+                    <th>Currents players</th>
+                    <th>Max players</th>
+                    <th>Map</th>
+                    <!--<th>Players</th>-->
                     <th></th>
                 </tr>
             </thead>
@@ -20,21 +21,31 @@
                 {% for server in servers %}
                     <tr>
                         <td>
-                            {% if server.players and server.players.list %}
-                                {% for player in server.players.list %}
-                                    <a href="{{ url_for('player_stats', username=player) }}">{{ player }}</a>{{ ',' if not loop.last }}
-                                {% endfor %}
+                            {% if server.location.country_code %}
+                                <i class="flag flag-{{ server.location.country_code }}" title="{{ server.location.country_name }}"></i>
+                            {% endif %}
+                            {% if server.website %}
+                                <a href="{{ server.website }}">
+                            {% endif %}
+                                {{ server.name }}
+                            {% if server.website %}
+                                </a>
                             {% endif %}
                         </td>
-                        <td><i class="flag flag-{{ server.location.country_code }}" title="{{ server.location.country_name }}"></i></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
+                        <td>{{ server.players.current }}</td>
+                        <td>{{ server.players.max }}</td>
+                        <td>{{ server.map.name }}</td>
+                        <!--<td>
+                            {% for player in server.players.list %}
+                                <a href="{{ url_for('player_stats', username=player) }}">{{ player }}</a>{{ ',' if not loop.last }}
+                            {% endfor %}
+                        </td>-->
+                        <td><a href="{{ server.steam_join_link }}" class="btn"><i class="fa fa-steam"></i> Join</a></td>
                     </tr>
                 {% endfor %}
             </tbody>
         </table>
     {% else %}
-        <p class="alert error pas">Whoops, there isn't any server to display. That's not normal.</p>
+        <p class="alert info pas">Whoops, there isn't any server to display. That's not normal.</p>
     {% endif %}
 {% endblock %}

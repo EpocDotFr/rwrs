@@ -16,7 +16,9 @@
             <td class="txtcenter">
                 {% if player.playing_on_server %}
                     <div>
-                        <i class="flag flag-{{ player.playing_on_server.location.country_code }}" title="{{ player.playing_on_server.location.country_name }}"></i>
+                        {% if player.playing_on_server.location.country_code %}
+                            <i class="flag flag-{{ player.playing_on_server.location.country_code }}" title="{{ player.playing_on_server.location.country_name }}"></i>
+                        {% endif %}
                         {% if player.playing_on_server.website %}
                             <a href="{{ player.playing_on_server.website }}">
                         {% endif %}
@@ -29,7 +31,7 @@
                         <strong>{{ player.playing_on_server.players.current }}/{{ player.playing_on_server.players.max }}</strong> players on <strong>{{ player.playing_on_server.map.name }}</strong> with <strong>{{ player.playing_on_server.bots }}</strong> bots
                     </div>
                     <div class="mts">
-                        <a href="{{ player.playing_on_server.steam_join_link }}" class="btn"><i class="fa fa-steam"></i> Join now</a>
+                        <a href="{{ player.playing_on_server.steam_join_link }}" class="btn"><i class="fa fa-steam"></i> Join</a>
                     </div>
                 {% else %}
                     Nope.
@@ -39,7 +41,7 @@
                 {% if player.next_rank %}
                     <img src="{{ url_for('static', filename='images/ranks/{rank_id}.png'.format(rank_id=player.next_rank.id)) }}"> {{ player.next_rank.name }}
                 {% else %}
-                    {{ player.username }} reached the highest available rank.
+                    {{ player.username }} reached the highest possible rank.
                 {% endif %}
             </td>
         </tr>
