@@ -4,6 +4,7 @@ from io import BytesIO
 from PIL import Image
 from lxml import html
 import requests
+import math
 import re
 import os
 
@@ -125,9 +126,14 @@ class RanksImageScraper:
             # Resize it to fit in the self.rank_image_size dimension
             rank_image.thumbnail(self.rank_image_size, Image.ANTIALIAS)
 
+            paste_pos = (
+                math.floor(self.rank_image_size[0] / 2) - math.floor(rank_image.width / 2),
+                math.floor(self.rank_image_size[1] / 2) - math.floor(rank_image.height / 2)
+            )
+
             # Paste it in a new image, centered
             new_rank_image = Image.new('RGBA', self.rank_image_size)
-            new_rank_image.paste(rank_image)
+            new_rank_image.paste(rank_image, paste_pos)
             new_rank_image.save(os.path.join(self.output_dir, str(rank_id) + '.png'))
             # TODO Center the pasted image
 
