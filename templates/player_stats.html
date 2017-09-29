@@ -7,15 +7,30 @@
 
     <table>
         <tr>
-            <th class="txtcenter w33">Current rank</th>
-            <th class="txtcenter w33">Playing right now?</th>
-            <th class="txtcenter w33">Next rank</th>
+            <th class="txtcenter w30">Current rank</th>
+            <th class="txtcenter w40">Playing right now?</th>
+            <th class="txtcenter w30">Next rank</th>
         </tr>
         <tr>
             <td class="big txtcenter"><img src="{{ url_for('static', filename='images/ranks/{rank_id}.png'.format(rank_id=player.rank.id)) }}"> {{ player.rank.name }}</td>
             <td class="txtcenter">
                 {% if player.playing_on_server %}
-                    {{ player.playing_on_server }}
+                    <div>
+                        <i class="flag flag-{{ player.playing_on_server.location.country_code }}" title="{{ player.playing_on_server.location.country_name }}"></i>
+                        {% if player.playing_on_server.website %}
+                            <a href="{{ player.playing_on_server.website }}">
+                        {% endif %}
+                            {{ player.playing_on_server.name }}
+                        {% if player.playing_on_server.website %}
+                            </a>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <strong>{{ player.playing_on_server.players.current }}/{{ player.playing_on_server.players.max }}</strong> players on <strong>{{ player.playing_on_server.map.name }}</strong> with <strong>{{ player.playing_on_server.bots }}</strong> bots
+                    </div>
+                    <div class="mts">
+                        <a href="{{ player.playing_on_server.steam_join_link }}" class="btn"><i class="fa fa-steam"></i> Join now</a>
+                    </div>
                 {% else %}
                     Nope.
                 {% endif %}
@@ -89,4 +104,9 @@
             <td colspan="6"></td>
         </tr>
     </table>
+
+    <p class="txtcenter">
+        <a href="{{ url_for('home') }}" class="btn"><i class="fa fa-user"></i> Search another player</a>
+        <a href="{{ url_for('servers_list') }}" class="btn"><i class="fa fa-server"></i> Public servers list</a>
+    </p>
 {% endblock %}

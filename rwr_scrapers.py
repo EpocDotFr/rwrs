@@ -231,7 +231,7 @@ class Server:
             location = gl2.reader().get(ret.ip)
 
             if location:
-                ret.location.country_code = location['country']['iso_code']
+                ret.location.country_code = location['country']['iso_code'].lower()
                 ret.location.country_name = location['country']['names']['en']
 
         ret.map = ServerMap()

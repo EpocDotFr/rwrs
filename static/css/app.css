@@ -26,6 +26,10 @@ h2 {
     padding-bottom: 0.5rem;
 }
 
+.flag {
+    vertical-align: middle;
+}
+
 /************************************************************************
  * Progress bar on the player stats page */
 

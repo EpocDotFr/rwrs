@@ -10,7 +10,7 @@
             <thead>
                 <tr>
                     <th>Players</th>
-                    <th></th>
+                    <th>Location</th>
                     <th></th>
                     <th></th>
                     <th></th>
@@ -26,7 +26,7 @@
                                 {% endfor %}
                             {% endif %}
                         </td>
-                        <td></td>
+                        <td><i class="flag flag-{{ server.location.country_code }}" title="{{ server.location.country_name }}"></i></td>
                         <td></td>
                         <td></td>
                         <td></td>
