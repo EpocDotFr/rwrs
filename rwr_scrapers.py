@@ -335,7 +335,7 @@ class Player:
     @memoized_property
     def next_rank(self):
         """Get the next rank of the player (if applicable)."""
-        if not self.rank.id:
+        if self.rank.id is None:
             return None
 
         if self.rank.id == 16: # Highest rank already reached

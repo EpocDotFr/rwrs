@@ -38,7 +38,7 @@ def humanize_seconds(seconds):
 def humanize_integer(integer):
     """Return a slightly more human-readable representation of the given integer."""
     if not integer:
-        return None
+        return 0
 
     return format(integer, ',d').replace(',', ' ')
 

@@ -40,7 +40,7 @@
                                 <a href="{{ url_for('player_stats', username=player) }}">{{ player }}</a>{{ ',' if not loop.last }}
                             {% endfor %}
                         </td>-->
-                        <td><a href="{{ server.steam_join_link }}" class="btn"><i class="fa fa-steam"></i> Join</a></td>
+                        <td class="txtcenter"><a href="{{ server.steam_join_link }}" class="btn"><i class="fa fa-steam"></i> Join</a></td>
                     </tr>
                 {% endfor %}
             </tbody>
