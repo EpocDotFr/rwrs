@@ -125,12 +125,20 @@ table th {
 
 table td,
 table th {
-    padding: .4em;
+    padding: 0.4em;
 }
 
 table th {
     font-weight: bold;
-    background-color: #4a4a4a;
+    background-color: #4d4d4d;
+}
+
+table.striped tr:nth-child(even) td {
+    background-color: #444;
+}
+
+table.striped tbody > tr:hover td {
+    background-color: #4b4b4b;
 }
 
 /************************************************************************
