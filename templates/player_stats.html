@@ -9,8 +9,15 @@
 
     <table class="mbn">
         <tr>
-            <td class="big"><img src="{{ url_for('static', filename='images/ranks/{rank_id}.png'.format(rank_id=player.rank.id)) }}"> {{ player.rank.name }}</td>
-            <td colspan="7">{{ player.xp|humanize_integer }} / {{ player.xp_to_next_rank }} / {{ player.xp_percent_completion_to_next_rank }} %</td>
+            <th class="txtcenter">Current rank</th>
+            <th colspan="3" class="txtright">Experience</th>
+            <td colspan="3">{{ player.xp|humanize_integer }}</td>
+            <th class="txtcenter">Next rank</th>
+        </tr>
+        <tr>
+            <td class="big txtcenter"><img src="{{ url_for('static', filename='images/ranks/{rank_id}.png'.format(rank_id=player.rank.id)) }}"> {{ player.rank.name }}</td>
+            <td colspan="6">{{ player.xp_to_next_rank }} / {{ player.xp_percent_completion_to_next_rank }}%</td>
+            <td class="big txtcenter">{% if player.next_rank %}<img src="{{ url_for('static', filename='images/ranks/{rank_id}.png'.format(rank_id=player.next_rank.id)) }}"> {{ player.next_rank.name }}{% endif %}</td>
         </tr>
         <tr>
             <th>Kills</th>
@@ -38,7 +45,7 @@
             <th>Teamkills</th>
             <td>{{ player.teamkills|humanize_integer }}</td>
             <th>Distance moved</th>
-            <td>{{ player.distance_moved }} km</td>
+            <td>{{ player.distance_moved }}km</td>
             <th>Shots fired</th>
             <td>{{ player.shots_fired|humanize_integer }}</td>
         </tr>

@@ -194,6 +194,8 @@ class DataScraper:
 
 
 class Server:
+    website = None
+
     @classmethod
     def load(cls, node):
         """Load a server data from an HTML <tr> node."""
@@ -222,22 +224,25 @@ class Server:
         ret.ip = ip_cell.text
         ret.port = int(post_cell.text)
 
+        ret.location = ServerLocation()
+
         with geolite2 as gl2:
             location = gl2.reader().get(ret.ip)
 
             if location:
-                ret.location = location['city']['names']['en'] + ', ' if 'city' in location else ''
-                ret.location += location['country']['names']['en']
+                ret.location.country_code = location['country']['iso_code']
+                ret.location.country_name = location['country']['names']['en']
 
         ret.map = ServerMap()
 
         ret.map.id = map_cell.text
         ret.map.name = MAPS[ret.map.id] if ret.map.id in MAPS else None
 
+        ret.players = ServerPlayers()
+
         players = _players_count_regex.match(players_count_cell.text)
 
         if players:
-            ret.players = ServerPlayers()
             players = players.groupdict()
 
             ret.players.current = int(players['current_players'])
@@ -261,6 +266,8 @@ class Server:
 
 
 class Player:
+    playing_on_server = None
+
     @classmethod
     def load(cls, node):
         """Load a player data from an HTML <tr> node."""
@@ -301,20 +308,22 @@ class Player:
         ret.throwables_thrown = int(throwables_thrown_cell.text)
         ret.xp = int(xp_cell.text)
 
+        ret.rank = PlayerRank()
+
         rank_id = _rank_image_regex.search(rank_image_cell[0].get('src'))
 
         if rank_id:
-            ret.rank = PlayerRank()
-
             ret.rank.id = int(rank_id.groupdict()['rank_id'])
-            ret.rank.name = RANKS[ret.rank.id]['name'] if ret.rank.id in RANKS else None
+
+            if ret.rank.id in RANKS:
+                ret.rank.name = RANKS[ret.rank.id]['name']
 
         return ret
 
     def set_playing_on_server(self, servers):
         """Determine if this user is playing on one of the given servers."""
         for server in servers:
-            if not hasattr(server, 'players') or not hasattr(server.players, 'list'):
+            if not server.players.list:
                 continue
 
             if self.username in server.players.list:
@@ -322,11 +331,10 @@ class Player:
 
                 return
 
-        self.playing_on_server = False
-
-    def get_next_rank(self):
+    @property
+    def next_rank(self):
         """Get the next rank of the player (if applicable)."""
-        if not hasattr(self, 'rank'):
+        if not self.rank.id:
             return None
 
         if self.rank.id == 16: # Highest rank already reached
@@ -337,12 +345,15 @@ class Player:
         if next_rank_id not in RANKS:
             return None
 
-        return RANKS[next_rank_id]
+        ret = RANKS[next_rank_id]
+        ret.update({'id': next_rank_id})
+
+        return ret
 
     @property
     def xp_to_next_rank(self):
         """Return the amount of XP the player needs to be promoted to the next rank."""
-        next_rank = self.get_next_rank()
+        next_rank = self.next_rank
 
         if not next_rank:
             return None
@@ -352,7 +363,7 @@ class Player:
     @property
     def xp_percent_completion_to_next_rank(self):
         """Return the percentage of XP the player obtained for the next rank."""
-        next_rank = self.get_next_rank()
+        next_rank = self.next_rank
 
         if not next_rank:
             return None
@@ -369,10 +380,25 @@ class ServerMap:
 
 
 class ServerPlayers:
+    current = 0
+    max = 0
+    list = []
+
+    def __repr__(self):
+        return str(self.__dict__)
+
+
+class ServerLocation:
+    country_code = None
+    country_name = None
+
     def __repr__(self):
         return str(self.__dict__)
 
 
 class PlayerRank:
+    id = None
+    name = None
+
     def __repr__(self):
         return str(self.__dict__)
