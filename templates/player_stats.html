@@ -5,20 +5,50 @@
 {% block content %}
     <h2><i class="fa fa-user"></i> Players › {{ player.username }}</h2>
 
-    {{ player.playing_on_server }}
-
-    <table class="mbn">
+    <table>
         <tr>
-            <th class="txtcenter">Current rank</th>
-            <th colspan="3" class="txtright">Experience</th>
-            <td colspan="3">{{ player.xp|humanize_integer }}</td>
-            <th class="txtcenter">Next rank</th>
+            <th class="txtcenter w33">Current rank</th>
+            <th class="txtcenter w33">Playing right now?</th>
+            <th class="txtcenter w33">Next rank</th>
         </tr>
         <tr>
             <td class="big txtcenter"><img src="{{ url_for('static', filename='images/ranks/{rank_id}.png'.format(rank_id=player.rank.id)) }}"> {{ player.rank.name }}</td>
-            <td colspan="6">{{ player.xp_to_next_rank }} / {{ player.xp_percent_completion_to_next_rank }}%</td>
-            <td class="big txtcenter">{% if player.next_rank %}<img src="{{ url_for('static', filename='images/ranks/{rank_id}.png'.format(rank_id=player.next_rank.id)) }}"> {{ player.next_rank.name }}{% endif %}</td>
+            <td class="txtcenter">
+                {% if player.playing_on_server %}
+                    {{ player.playing_on_server }}
+                {% else %}
+                    Nope.
+                {% endif %}
+            </td>
+            <td class="big txtcenter">
+                {% if player.next_rank %}
+                    <img src="{{ url_for('static', filename='images/ranks/{rank_id}.png'.format(rank_id=player.next_rank.id)) }}"> {{ player.next_rank.name }}
+                {% else %}
+                    {{ player.username }} reached the highest available rank.
+                {% endif %}
+            </td>
         </tr>
+        <tr>
+            <th class="txtcenter">Current XP</th>
+            <th class="txtcenter">Next rank progression ({{ player.xp_percent_completion_to_next_rank }}%)</th>
+            <th class="txtcenter">Required XP</th>
+        </tr>
+        <tr>
+            <td class="txtcenter">{{ player.xp|humanize_integer }}</td>
+            <td class="txtcenter pan">
+                {% if player.next_rank %}
+                    <div class="progress-bar">
+                        <div class="pas small" style="width: {{ player.xp_percent_completion_to_next_rank }}%">{{ player.xp_to_next_rank|humanize_integer }} XP remaining</div>
+                    </div>
+                {% else %}
+                    N/A
+                {% endif %}
+            </td>
+            <td class="txtcenter">{{ player.next_rank.xp|humanize_integer if player.next_rank else 'N/A' }}</td>
+        </tr>
+    </table>
+
+    <table class="mbn">
         <tr>
             <th>Kills</th>
             <td>{{ player.kills|humanize_integer }}</td>
