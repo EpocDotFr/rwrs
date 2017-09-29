@@ -21,6 +21,14 @@
     <header class="txtcenter pts pbs">
         <a href="{{ url_for('home') }}"><img src="{{ url_for('static', filename='images/logo.png') }}"></a>
     </header>
+    <!--
+    <nav>
+        <ul class="txtcenter unstyled mbs">
+            <li class="inbl"><a href="{{ url_for('home') }}" class="btn"><i class="fa fa-home"></i> Home</a></li>
+            <li class="inbl"><a href="{{ url_for('servers_list') }}" class="btn"><i class="fa fa-server"></i> Servers list</a></li>
+        </ul>
+    </nav>
+    -->
 
     {% with flash_messages = get_flashed_messages(with_categories=true) %}
       {% if flash_messages %}
