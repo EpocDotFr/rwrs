@@ -26,11 +26,21 @@ h2 {
     padding-bottom: 0.5rem;
 }
 
+/************************************************************************
+ * Progress bar on the player stats page */
+
 .progress-bar {
     background-color: #4A542C;
+    position: relative;
 }
 
-.progress-bar > div {
+.progress-bar > .text {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.progress-bar > .bar {
     background-color: #657B26;
 }
 

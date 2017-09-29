@@ -30,7 +30,7 @@
         </tr>
         <tr>
             <th class="txtcenter">Current XP</th>
-            <th class="txtcenter">Next rank progression ({{ player.xp_percent_completion_to_next_rank }}%)</th>
+            <th class="txtcenter">Next rank progression</th>
             <th class="txtcenter">Required XP</th>
         </tr>
         <tr>
@@ -38,7 +38,11 @@
             <td class="txtcenter pan">
                 {% if player.next_rank %}
                     <div class="progress-bar">
-                        <div class="pas small" style="width: {{ player.xp_percent_completion_to_next_rank }}%">{{ player.xp_to_next_rank|humanize_integer }} XP remaining</div>
+                        <div class="text pas w100">
+                            <span class="fl">{{ player.xp_percent_completion_to_next_rank }}%</span>
+                            <span class="fr">{{ player.xp_to_next_rank|humanize_integer }} XP remaining</span>
+                        </div>
+                        <div class="bar pas" style="width: {{ player.xp_percent_completion_to_next_rank }}%">&nbsp;</div>
                     </div>
                 {% else %}
                     N/A

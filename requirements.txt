@@ -3,3 +3,4 @@ requests
 maxminddb-geolite2
 lxml
 Pillow
+memoized-property

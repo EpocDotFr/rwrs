@@ -1,3 +1,4 @@
+from memoized_property import memoized_property
 from geolite2 import geolite2
 from io import BytesIO
 from PIL import Image
@@ -331,7 +332,7 @@ class Player:
 
                 return
 
-    @property
+    @memoized_property
     def next_rank(self):
         """Get the next rank of the player (if applicable)."""
         if not self.rank.id:
@@ -350,25 +351,21 @@ class Player:
 
         return ret
 
-    @property
+    @memoized_property
     def xp_to_next_rank(self):
         """Return the amount of XP the player needs to be promoted to the next rank."""
-        next_rank = self.next_rank
-
-        if not next_rank:
+        if not self.next_rank:
             return None
 
-        return next_rank['xp'] - self.xp
+        return self.next_rank['xp'] - self.xp
 
-    @property
+    @memoized_property
     def xp_percent_completion_to_next_rank(self):
         """Return the percentage of XP the player obtained for the next rank."""
-        next_rank = self.next_rank
-
-        if not next_rank:
+        if not self.next_rank:
             return None
 
-        return round((self.xp * 100) / next_rank['xp'], 2)
+        return round((self.xp * 100) / self.next_rank['xp'], 2)
 
     def __repr__(self):
         return str(self.__dict__)
