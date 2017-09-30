@@ -80,7 +80,7 @@
                 {% if server.map.is_official %}
                     <tr>
                         <td class="txtcenter">
-                            <img src="http://via.placeholder.com/350x150?text=Map%20screenshot">
+                            <img src="{{ url_for('static', filename='images/maps/{map_id}.jpg'.format(map_id=server.map.id)) }}">
                         </td>
                     </tr>
                 {% endif %}
