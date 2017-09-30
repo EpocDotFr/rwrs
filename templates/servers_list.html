@@ -6,7 +6,7 @@
     <h2><i class="fa fa-server"></i> Servers</h2>
 
     {% if servers %}
-        <table class="striped mbn">
+        <table class="striped clickable mbn">
             <thead>
                 <tr>
                     <th>Name</th>
@@ -18,7 +18,7 @@
             </thead>
             <tbody>
                 {% for server in servers %}
-                    <tr>
+                    <tr onclick="window.location.href = '{{ url_for('server_details', ip_and_port=server.ip_and_port) }}';">
                         <td>
                             {% if server.location.country_code %}
                                 <i class="flag flag-{{ server.location.country_code }}" title="{{ server.location.country_name }}"></i>
@@ -35,8 +35,8 @@
                         <td>{{ server.players.max }}</td>
                         <td>{{ server.map.name }}</td>
                         <td class="txtcenter">
-                            <a href="{{ url_for('server_details', ip=server.ip) }}" class="btn"><i class="fa fa-eye"></i> Details</a>
                             <a href="{{ server.steam_join_link }}" class="btn"><i class="fa fa-steam"></i> Join</a>
+                            <a href="{{ url_for('server_details', ip_and_port=server.ip_and_port) }}" class="btn" title="Details"><i class="fa fa-eye"></i></a>
                         </td>
                     </tr>
                 {% endfor %}
@@ -47,6 +47,6 @@
     {% endif %}
 
     <p class="txtcenter">
-        <a href="{{ url_for('home') }}" class="btn"><i class="fa fa-user"></i> Search a player</a>
+        <a href="{{ url_for('home') }}" class="btn"><i class="fa fa-user"></i> Search for a player</a>
     </p>
 {% endblock %}

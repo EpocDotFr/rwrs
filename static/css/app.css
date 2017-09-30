@@ -141,6 +141,10 @@ table.striped tbody > tr:hover td {
     background-color: #4b4b4b;
 }
 
+table.clickable tbody > tr:hover td {
+    cursor: pointer;
+}
+
 /************************************************************************
  * Alerts */
 

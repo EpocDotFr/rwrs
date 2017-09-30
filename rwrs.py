@@ -107,11 +107,13 @@ def servers_list():
     return render_template('servers_list.html', servers=scraper.get_servers())
 
 
-@app.route('/servers/<ip>')
-def server_details(ip):
+@app.route('/servers/<ip_and_port>')
+def server_details(ip_and_port):
+    ip, port = ip_and_port.split(':', maxsplit=1)
+
     scraper = rwr_scrapers.DataScraper()
 
-    server = scraper.search_server(ip)
+    server = scraper.search_server(ip, port)
 
     if not server:
         abort(404)

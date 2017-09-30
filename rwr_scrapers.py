@@ -135,7 +135,6 @@ class RanksImageScraper:
             new_rank_image = Image.new('RGBA', self.rank_image_size)
             new_rank_image.paste(rank_image, paste_pos)
             new_rank_image.save(os.path.join(self.output_dir, str(rank_id) + '.png'))
-            # TODO Center the pasted image
 
 
 class DataScraper:
@@ -198,11 +197,11 @@ class DataScraper:
 
         return Player.load(node[0])
 
-    def search_server(self, ip):
-        """Search for a RWR player."""
+    def search_server(self, ip, port):
+        """Search for a RWR public server."""
         html_content = self._call(self.servers_url)
 
-        node = html_content.xpath('(//table/tr/td[position() = 3 and text() = \'' + ip + '\']/parent::tr)[1]')
+        node = html_content.xpath('(//table/tr[(td[3] = \'{ip}\') and (td[4] = \'{port}\')])[1]'.format(ip=ip, port=port))
 
         if not node:
             return None
@@ -240,6 +239,8 @@ class Server:
 
         ret.ip = ip_cell.text
         ret.port = int(post_cell.text)
+
+        ret.ip_and_port = '{ip}:{port}'.format(ip=ret.ip, port=ret.port)
 
         ret.location = ServerLocation()
 
