@@ -77,8 +77,8 @@ def home():
     return render_template('home.html')
 
 
-@app.route('/player')
-@app.route('/player/<username>')
+@app.route('/players')
+@app.route('/players/<username>')
 def player_stats(username=None):
     if not username:
         username = request.args.get('username')
@@ -105,6 +105,18 @@ def servers_list():
     scraper = rwr_scrapers.DataScraper()
 
     return render_template('servers_list.html', servers=scraper.get_servers())
+
+
+@app.route('/servers/<ip>')
+def server_details(ip):
+    scraper = rwr_scrapers.DataScraper()
+
+    server = scraper.search_server(ip)
+
+    if not server:
+        abort(404)
+
+    return render_template('server_details.html', server=server)
 
 
 # -----------------------------------------------------------

@@ -13,7 +13,6 @@
                     <th>Currents players</th>
                     <th>Max players</th>
                     <th>Map</th>
-                    <!--<th>Players</th>-->
                     <th></th>
                 </tr>
             </thead>
@@ -35,12 +34,10 @@
                         <td>{{ server.players.current }}</td>
                         <td>{{ server.players.max }}</td>
                         <td>{{ server.map.name }}</td>
-                        <!--<td>
-                            {% for player in server.players.list %}
-                                <a href="{{ url_for('player_stats', username=player) }}">{{ player }}</a>{{ ',' if not loop.last }}
-                            {% endfor %}
-                        </td>-->
-                        <td class="txtcenter"><a href="{{ server.steam_join_link }}" class="btn"><i class="fa fa-steam"></i> Join</a></td>
+                        <td class="txtcenter">
+                            <a href="{{ url_for('server_details', ip=server.ip) }}" class="btn"><i class="fa fa-eye"></i> Details</a>
+                            <a href="{{ server.steam_join_link }}" class="btn"><i class="fa fa-steam"></i> Join</a>
+                        </td>
                     </tr>
                 {% endfor %}
             </tbody>
@@ -50,6 +47,6 @@
     {% endif %}
 
     <p class="txtcenter">
-        <a href="{{ url_for('home') }}" class="btn"><i class="fa fa-user"></i> Find a player</a>
+        <a href="{{ url_for('home') }}" class="btn"><i class="fa fa-user"></i> Search a player</a>
     </p>
 {% endblock %}

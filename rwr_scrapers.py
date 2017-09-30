@@ -176,18 +176,17 @@ class DataScraper:
 
         players = []
 
-        for node in html_content.xpath('//table/tr[position()>1]'):
+        for node in html_content.xpath('//table/tr[position() > 1]'):
             players.append(Player.load(node))
 
         return players
 
-    def search_player(self, username, sort=PlayersSort.SCORE):
+    def search_player(self, username):
         """Search for a RWR player."""
         username = username.upper()
 
         params = {
-            'search': username,
-            'sort': sort
+            'search': username
         }
 
         html_content = self._call(self.players_url, params=params)
@@ -198,6 +197,17 @@ class DataScraper:
             return None
 
         return Player.load(node[0])
+
+    def search_server(self, ip):
+        """Search for a RWR player."""
+        html_content = self._call(self.servers_url)
+
+        node = html_content.xpath('(//table/tr/td[position() = 3 and text() = \'' + ip + '\']/parent::tr)[1]')
+
+        if not node:
+            return None
+
+        return Server.load(node[0])
 
 
 class Server:
@@ -263,6 +273,7 @@ class Server:
 
         if players_cell.text:
             ret.players.list = [player_name for player_name in players_cell.text.split(', ')]
+            ret.players.list.sort()
 
         ret.comment = comment_cell.text
 
