@@ -68,12 +68,16 @@
                 </tr>
                 <tr>
                     <td class="txtcenter">
-                        {% if server.map.is_official %}
-                            <a href="https://runningwithrifles.gamepedia.com/Special:Search/{{ server.map.name }}">
-                        {% endif %}
-                            {{ server.map.name }}
-                        {% if server.map.is_official %}
-                            </a>
+                        {% if server.map.name %}
+                            {% if server.map.is_official %}
+                                <a href="https://runningwithrifles.gamepedia.com/Special:Search/{{ server.map.name }}">
+                            {% endif %}
+                                {{ server.map.name }}
+                            {% if server.map.is_official %}
+                                </a>
+                            {% endif %}
+                        {% else %}
+                            {{ server.map.id }}
                         {% endif %}
                     </td>
                 </tr>

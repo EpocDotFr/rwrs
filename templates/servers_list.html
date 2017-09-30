@@ -37,12 +37,16 @@
                         <td class="{{ 'txtorange' if server.players.free in (1, 2) else 'txtred' if server.players.free == 0 else '' }}">{{ server.players.current }}</td>
                         <td>{{ server.players.max }}</td>
                         <td>
-                            {% if server.map.is_official %}
-                                <a href="https://runningwithrifles.gamepedia.com/Special:Search/{{ server.map.name }}">
-                            {% endif %}
-                                {{ server.map.name }}
-                            {% if server.map.is_official %}
-                                </a>
+                            {% if server.map.name %}
+                                {% if server.map.is_official %}
+                                    <a href="https://runningwithrifles.gamepedia.com/Special:Search/{{ server.map.name }}">
+                                {% endif %}
+                                    {{ server.map.name }}
+                                {% if server.map.is_official %}
+                                    </a>
+                                {% endif %}
+                            {% else %}
+                                {{ server.map.id }}
                             {% endif %}
                         </td>
                         <td class="txtcenter">

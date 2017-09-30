@@ -31,12 +31,16 @@
                         <strong><span class="{{ 'txtorange' if player.playing_on_server.players.free in (1, 2) else 'txtred' if player.playing_on_server.players.free == 0 else '' }}">{{ player.playing_on_server.players.current }}</span>/{{ player.playing_on_server.players.max }}</strong> players on
 
                         <strong>
-                            {% if player.playing_on_server.map.is_official %}
-                                <a href="https://runningwithrifles.gamepedia.com/Special:Search/{{ player.playing_on_server.map.name }}">
-                            {% endif %}
-                                {{ player.playing_on_server.map.name }}
-                            {% if player.playing_on_server.map.is_official %}
-                                </a>
+                            {% if player.playing_on_server.map.name %}
+                                {% if player.playing_on_server.map.is_official %}
+                                    <a href="https://runningwithrifles.gamepedia.com/Special:Search/{{ player.playing_on_server.map.name }}">
+                                {% endif %}
+                                    {{ player.playing_on_server.map.name }}
+                                {% if player.playing_on_server.map.is_official %}
+                                    </a>
+                                {% endif %}
+                            {% else %}
+                                {{ player.playing_on_server.map.id }}
                             {% endif %}
                         </strong>
                     </div>
