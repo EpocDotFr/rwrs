@@ -31,7 +31,7 @@
                                 </a>
                             {% endif %}
                         </td>
-                        <td>{{ server.players.current }}</td>
+                        <td class="{{ 'txtorange' if server.players.free in (2, 3) else 'txtred' if server.players.free <= 1 else '' }}">{{ server.players.current }}</td>
                         <td>{{ server.players.max }}</td>
                         <td>
                             {% if server.map.is_official %}

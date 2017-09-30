@@ -18,7 +18,7 @@
             <table class="mbs">
                 <tr>
                     <th>IP:Port</th>
-                    <td>{{ server.ip_and_port }}</th>
+                    <td>{{ server.ip_and_port }}</td>
                     <th>Location</th>
                     <td>
                         {% if server.location.country_code %}
@@ -26,25 +26,25 @@
                         {% else %}
                             N/A
                         {% endif %}
-                    </th>
+                    </td>
                 </tr>
                 <tr>
                     <th>Current players</th>
-                    <td>{{ server.players.current }}</th>
+                    <td class="{{ 'txtorange' if server.players.free in (2, 3) else 'txtred' if server.players.free <= 1 else '' }}">{{ server.players.current }}</td>
                     <th>Max players</th>
-                    <td>{{ server.players.max }}</th>
+                    <td>{{ server.players.max }}</td>
                 </tr>
                 <tr>
                     <th>Bots</th>
-                    <td>{{ server.bots }}</th>
+                    <td>{{ server.bots }}</td>
                     <th>Version</th>
-                    <td>{{ server.version }}</th>
+                    <td>{{ server.version }}</td>
                 </tr>
                 <tr>
                     <th>Last updated</th>
-                    <td>{{ server.last_updated|humanize_seconds }} ago</th>
+                    <td>{{ server.last_updated|humanize_seconds }} ago</td>
                     <th>Message</th>
-                    <td>{{ server.comment }}</th>
+                    <td>{{ server.comment }}</td>
                 </td>
             </table>
 

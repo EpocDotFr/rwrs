@@ -268,6 +268,7 @@ class Server:
 
             ret.players.current = int(players['current_players'])
             ret.players.max = int(players['max_players'])
+            ret.players.free = ret.players.max - ret.players.current
 
         ret.bots = int(bots_count_cell.text)
         ret.version = version_cell.text
@@ -403,6 +404,7 @@ class ServerMap:
 class ServerPlayers:
     current = 0
     max = 0
+    free = 0
     list = []
 
     def __repr__(self):
