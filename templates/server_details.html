@@ -77,15 +77,13 @@
                         {% endif %}
                     </td>
                 </tr>
-                <tr>
-                    <td class="txtcenter">
-                        {% if server.map.is_official %}
+                {% if server.map.is_official %}
+                    <tr>
+                        <td class="txtcenter">
                             <img src="http://via.placeholder.com/350x150?text=Map%20screenshot">
-                        {% else %}
-                            No preview available.
-                        {% endif %}
-                    </td>
-                </tr>
+                        </td>
+                    </tr>
+                {% endif %}
             </table>
         </div>
     </div>
