@@ -28,11 +28,21 @@
                         {% endif %}
                     </div>
                     <div>
-                        <strong>{{ player.playing_on_server.players.current }}/{{ player.playing_on_server.players.max }}</strong> players on <strong>{{ player.playing_on_server.map.name }}</strong>
+                        <strong>{{ player.playing_on_server.players.current }}/{{ player.playing_on_server.players.max }}</strong> players on
+
+                        <strong>
+                            {% if player.playing_on_server.map.is_official %}
+                                <a href="https://runningwithrifles.gamepedia.com/Special:Search/{{ player.playing_on_server.map.name }}">
+                            {% endif %}
+                                {{ player.playing_on_server.map.name }}
+                            {% if player.playing_on_server.map.is_official %}
+                                </a>
+                            {% endif %}
+                        </strong>
                     </div>
                     <div class="mts">
-                        <a href="{{ player.playing_on_server.steam_join_link }}" class="btn"><i class="fa fa-steam"></i> Join</a>
-                        <a href="{{ url_for('server_details', ip_and_port=player.playing_on_server.ip_and_port) }}" class="btn" title="Details"><i class="fa fa-eye"></i> Details</a>
+                        <a href="{{ player.playing_on_server.steam_join_link }}" class="btn"><i class="fa fa-steam"></i> Join server</a>
+                        <a href="{{ url_for('server_details', ip_and_port=player.playing_on_server.ip_and_port) }}" class="btn" title="Details"><i class="fa fa-eye"></i> Server details</a>
                     </div>
                 {% else %}
                     Nope.

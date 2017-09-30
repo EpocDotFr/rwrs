@@ -5,12 +5,93 @@
 {% block content %}
     <h2><i class="fa fa-server"></i> Servers › {{ server.name }}</h2>
 
-    {% for player in server.players.list %}
-        <a href="{{ url_for('player_stats', username=player) }}">{{ player }}</a>{{ ',' if not loop.last }}
-    {% endfor %}
+    <p class="txtcenter mbs">
+        <a href="{{ server.steam_join_link }}" class="btn"><i class="fa fa-steam"></i> Join</a>
+
+        {% if server.website %}
+            <a href="{{ server.website }}" class="btn"><i class="fa fa-external-link"></i> Server's website</a>
+        {% endif %}
+    </p>
+
+    <div class="grid has-gutter">
+        <div class="two-thirds">
+            <table class="mbs">
+                <tr>
+                    <th>IP:Port</th>
+                    <td>{{ server.ip_and_port }}</th>
+                    <th>Location</th>
+                    <td>
+                        {% if server.location.country_code %}
+                            <i class="flag flag-{{ server.location.country_code }}"></i> {{ server.location.country_name }}
+                        {% else %}
+                            N/A
+                        {% endif %}
+                    </th>
+                </tr>
+                <tr>
+                    <th>Current players</th>
+                    <td>{{ server.players.current }}</th>
+                    <th>Max players</th>
+                    <td>{{ server.players.max }}</th>
+                </tr>
+                <tr>
+                    <th>Bots</th>
+                    <td>{{ server.bots }}</th>
+                    <th>Version</th>
+                    <td>{{ server.version }}</th>
+                </tr>
+                <tr>
+                    <th>Last updated</th>
+                    <td>{{ server.last_updated|humanize_seconds }} ago</th>
+                    <th>Message</th>
+                    <td>{{ server.comment }}</th>
+                </td>
+            </table>
+
+            <table class="mbn">
+                <tr>
+                    <th>Players list</th>
+                </tr>
+                {% for player in server.players.list %}
+                    <tr>
+                        <td>
+                            <a href="{{ url_for('player_stats', username=player) }}">{{ player }}</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+        <div class="one-third">
+            <table>
+                <tr>
+                    <th class="txtcenter">Current map</th>
+                </tr>
+                <tr>
+                    <td class="txtcenter">
+                        {% if server.map.is_official %}
+                            <a href="https://runningwithrifles.gamepedia.com/Special:Search/{{ server.map.name }}">
+                        {% endif %}
+                            {{ server.map.name }}
+                        {% if server.map.is_official %}
+                            </a>
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td class="txtcenter">
+                        {% if server.map.is_official %}
+                            <img src="http://via.placeholder.com/350x150?text=Map%20screenshot">
+                        {% else %}
+                            No preview available.
+                        {% endif %}
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
 
     <p class="txtcenter">
         <a href="{{ url_for('home') }}" class="btn"><i class="fa fa-user"></i> Search for a player</a> or
-        <a href="{{ url_for('servers_list') }}" class="btn"><i class="fa fa-server"></i> Return to the public servers list</a>
+        <a href="{{ url_for('servers_list') }}" class="btn"><i class="fa fa-server"></i> Go back to the public servers list</a>
     </p>
 {% endblock %}

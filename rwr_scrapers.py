@@ -9,7 +9,7 @@ import re
 import os
 
 _players_count_regex = re.compile(r'(?P<current_players>\d+)/(?P<max_players>\d+)')
-_time_regex = re.compile(r'(?:(?P<h>\d+)h(?:\s+)?)?(?:(?P<m>\d+)m(?:in)?(?:\s+)?)(?:(?P<s>\d+)s)?')
+_time_regex = re.compile(r'(?:(?P<h>\d+)h(?:\s+)?)?(?:(?P<m>\d+)m(?:in)?(?:\s+)?)?(?:(?P<s>\d+)s)?')
 _rank_image_regex = re.compile(r'rank(?P<rank_id>\d+)')
 
 _one_minute = 60
@@ -394,7 +394,7 @@ class Player:
 
 class ServerMap:
     name = None
-    is_official = None
+    is_official = False
 
     def __repr__(self):
         return str(self.__dict__)

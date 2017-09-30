@@ -33,7 +33,15 @@
                         </td>
                         <td>{{ server.players.current }}</td>
                         <td>{{ server.players.max }}</td>
-                        <td>{{ server.map.name }}</td>
+                        <td>
+                            {% if server.map.is_official %}
+                                <a href="https://runningwithrifles.gamepedia.com/Special:Search/{{ server.map.name }}">
+                            {% endif %}
+                                {{ server.map.name }}
+                            {% if server.map.is_official %}
+                                </a>
+                            {% endif %}
+                        </td>
                         <td class="txtcenter">
                             <a href="{{ server.steam_join_link }}" class="btn"><i class="fa fa-steam"></i> Join</a>
                             <a href="{{ url_for('server_details', ip_and_port=server.ip_and_port) }}" class="btn" title="Details"><i class="fa fa-eye"></i></a>
