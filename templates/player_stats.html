@@ -28,10 +28,11 @@
                         {% endif %}
                     </div>
                     <div>
-                        <strong>{{ player.playing_on_server.players.current }}/{{ player.playing_on_server.players.max }}</strong> players on <strong>{{ player.playing_on_server.map.name }}</strong> with <strong>{{ player.playing_on_server.bots }}</strong> bots
+                        <strong>{{ player.playing_on_server.players.current }}/{{ player.playing_on_server.players.max }}</strong> players on <strong>{{ player.playing_on_server.map.name }}</strong>
                     </div>
                     <div class="mts">
                         <a href="{{ player.playing_on_server.steam_join_link }}" class="btn"><i class="fa fa-steam"></i> Join</a>
+                        <a href="{{ url_for('server_details', ip_and_port=player.playing_on_server.ip_and_port) }}" class="btn" title="Details"><i class="fa fa-eye"></i> Details</a>
                     </div>
                 {% else %}
                     Nope.

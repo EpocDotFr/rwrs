@@ -3,14 +3,14 @@
 {% block meta_title %}Servers › {{ server.name }}{% endblock %}
 
 {% block content %}
-    <h2><i class="fa fa-user"></i> Servers › {{ server.name }}</h2>
+    <h2><i class="fa fa-server"></i> Servers › {{ server.name }}</h2>
 
     {% for player in server.players.list %}
         <a href="{{ url_for('player_stats', username=player) }}">{{ player }}</a>{{ ',' if not loop.last }}
     {% endfor %}
 
     <p class="txtcenter">
-        <a href="{{ url_for('home') }}" class="btn"><i class="fa fa-user"></i> Search a player</a>
-        <a href="{{ url_for('servers_list') }}" class="btn"><i class="fa fa-server"></i> Public servers list</a>
+        <a href="{{ url_for('home') }}" class="btn"><i class="fa fa-user"></i> Search for a player</a> or
+        <a href="{{ url_for('servers_list') }}" class="btn"><i class="fa fa-server"></i> Return to the public servers list</a>
     </p>
 {% endblock %}

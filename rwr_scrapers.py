@@ -17,28 +17,28 @@ _one_hour = _one_minute * 60
 
 MAPS = {
     # Official maps
-    'map1': 'Moorland Trenches',
-    'map1_2': 'Moorland Trenches (DOM)',
-    'map2': 'Keepsake Bay',
-    'map3': 'Old Fort Creek',
-    'map4': 'Fridge Valley',
-    'map5': 'Bootleg Islands',
-    'map6': 'Rattlesnake Crescent',
-    'map7': 'Power Junction',
-    'map8': 'Vigil Island',
-    'map9': 'Black Gold Estuary',
-    'map10': 'Railroad Gap',
-    'map11': 'Copehill Down',
-    'map12': 'Frozen Canyon',
-    'map13': 'Iron Enclave',
-    'map14': 'Misty Heights',
-    'pvp1': 'Islet of Eflen',
+    'map1': {'name': 'Moorland Trenches', 'is_official': True},
+    'map1_2': {'name': 'Moorland Trenches (DOM)', 'is_official': True},
+    'map2': {'name': 'Keepsake Bay', 'is_official': True},
+    'map3': {'name': 'Old Fort Creek', 'is_official': True},
+    'map4': {'name': 'Fridge Valley', 'is_official': True},
+    'map5': {'name': 'Bootleg Islands', 'is_official': True},
+    'map6': {'name': 'Rattlesnake Crescent', 'is_official': True},
+    'map7': {'name': 'Power Junction', 'is_official': True},
+    'map8': {'name': 'Vigil Island', 'is_official': True},
+    'map9': {'name': 'Black Gold Estuary', 'is_official': True},
+    'map10': {'name': 'Railroad Gap', 'is_official': True},
+    'map11': {'name': 'Copehill Down', 'is_official': True},
+    'map12': {'name': 'Frozen Canyon', 'is_official': True},
+    'map13': {'name': 'Iron Enclave', 'is_official': True},
+    'map14': {'name': 'Misty Heights', 'is_official': True},
+    'pvp1': {'name': 'Islet of Eflen', 'is_official': True},
 
     # Running with the Dead mod maps
-    'rwd_map1': 'Running with the Dead mod',
+    'rwd_map1': {'name': 'Running with the Dead mod', 'is_official': False},
 
     # Overlord Defense mod maps
-    'def_dday': 'Overlord Defense mod'
+    'def_dday': {'name': 'Overlord Defense mod', 'is_official': False}
 }
 
 RANKS = {
@@ -254,7 +254,10 @@ class Server:
         ret.map = ServerMap()
 
         ret.map.id = map_cell.text
-        ret.map.name = MAPS[ret.map.id] if ret.map.id in MAPS else None
+
+        if ret.map.id in MAPS:
+            ret.map.name = MAPS[ret.map.id]['name']
+            ret.map.is_official = MAPS[ret.map.id]['is_official']
 
         ret.players = ServerPlayers()
 
@@ -390,6 +393,9 @@ class Player:
 
 
 class ServerMap:
+    name = None
+    is_official = None
+
     def __repr__(self):
         return str(self.__dict__)
 
