@@ -30,8 +30,11 @@
                             {% if server.website %}
                                 </a>
                             {% endif %}
+                            {% if server.is_official %}
+                                <i class="fa fa-star" title="Official server"></i>
+                            {% endif %}
                         </td>
-                        <td class="{{ 'txtorange' if server.players.free in (2, 3) else 'txtred' if server.players.free <= 1 else '' }}">{{ server.players.current }}</td>
+                        <td class="{{ 'txtorange' if server.players.free in (1, 2) else 'txtred' if server.players.free == 0 else '' }}">{{ server.players.current }}</td>
                         <td>{{ server.players.max }}</td>
                         <td>
                             {% if server.map.is_official %}

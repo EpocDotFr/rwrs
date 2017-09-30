@@ -28,7 +28,7 @@
                         {% endif %}
                     </div>
                     <div>
-                        <strong><span class="{{ 'txtorange' if player.playing_on_server.players.free in (2, 3) else 'txtred' if player.playing_on_server.players.free <= 1 else '' }}">{{ player.playing_on_server.players.current }}</span>/{{ player.playing_on_server.players.max }}</strong> players on
+                        <strong><span class="{{ 'txtorange' if player.playing_on_server.players.free in (1, 2) else 'txtred' if player.playing_on_server.players.free == 0 else '' }}">{{ player.playing_on_server.players.current }}</span>/{{ player.playing_on_server.players.max }}</strong> players on
 
                         <strong>
                             {% if player.playing_on_server.map.is_official %}
