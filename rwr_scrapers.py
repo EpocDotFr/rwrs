@@ -363,6 +363,10 @@ class Player:
 
                 return
 
+    def compare_with(self, player):
+        """Compare this player with another player."""
+        pass
+
     @memoized_property
     def next_rank(self):
         """Get the next rank of the player (if applicable)."""

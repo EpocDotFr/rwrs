@@ -103,6 +103,33 @@ def player_stats(username=None):
     return render_template('player_stats.html', player=player)
 
 
+@app.route('/players/<username_1>/compare')
+@app.route('/players/<username_1>/compare/<username_2>')
+def players_compare(username_1, username_2):
+    if not username_2:
+        username_2 = request.args.get('username_2')
+
+        # Redirect to a SEO-friendly URL if the username_2 query parameter is detected
+        return redirect(url_for('players_compare', username_1=username_1, username_2=username_2))
+
+    if not username_2:
+        abort(404)
+
+    scraper = rwr_scrapers.DataScraper()
+
+    player_1 = scraper.search_player(username_1)
+
+    if not player_1:
+        abort(404)
+
+    player_2 = scraper.search_player(username_2)
+
+    if not player_2:
+        abort(404)
+
+    comparison = player_1.compare_with(player_2)
+
+
 @app.route('/servers')
 def servers_list():
     scraper = rwr_scrapers.DataScraper()
