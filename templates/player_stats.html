@@ -14,7 +14,7 @@
             <th class="txtcenter w30">Next rank</th>
         </tr>
         <tr>
-            <td class="big txtcenter"><img src="{{ url_for('static', filename='images/ranks/{rank_id}.png'.format(rank_id=player.rank.id)) }}"> {{ player.rank.name }}</td>
+            <td class="big txtcenter">{{ macros.compare_ranks(player, player_to_compare_with) }} <img src="{{ url_for('static', filename='images/ranks/{rank_id}.png'.format(rank_id=player.rank.id)) }}"> {{ player.rank.name }}</td>
             <td class="txtcenter">
                 {% if player.playing_on_server %}
                     <div>{{ macros.location(player.playing_on_server.location) }} {{ macros.server_name(player.playing_on_server) }}</div>
@@ -71,7 +71,7 @@
             <th>Kills</th>
             <td>{{ macros.compare_numbers(player, player_to_compare_with, 'kills') }} {{ player.kills|humanize_integer }}</td>
             <th>Deaths</th>
-            <td>{{ macros.compare_numbers(player, player_to_compare_with, 'deaths') }} {{ player.deaths|humanize_integer }}</td>
+            <td>{{ macros.compare_numbers(player, player_to_compare_with, 'deaths', above_zero_is_good=False) }} {{ player.deaths|humanize_integer }}</td>
             <th>K/D ratio</th>
             <td>{{ macros.compare_numbers(player, player_to_compare_with, 'kd_ratio', type=float) }} {{ player.kd_ratio }}</td>
             <th>Score</th>
