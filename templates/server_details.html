@@ -3,7 +3,7 @@
 {% block meta_title %}Servers › {{ server.name }}{% endblock %}
 
 {% block content %}
-    <h2><i class="fa fa-server"></i> Servers › {{ server.name }}</h2>
+    <h2><i class="fa fa-server"></i> Servers › {{ server.name }}{% if server.is_official %} <i class="fa fa-star" title="Official server"></i>{% endif %}</h2>
 
     <p class="txtcenter mbs">
         <a href="{{ server.steam_join_link }}" class="btn"><i class="fa fa-steam"></i> Join</a>
@@ -48,7 +48,7 @@
                 </td>
             </table>
 
-            <table class="mbn">
+            <table class="striped mbn">
                 <tr>
                     <th>Players list</th>
                 </tr>
@@ -56,6 +56,12 @@
                     <tr>
                         <td>
                             <a href="{{ url_for('player_stats', username=player) }}">{{ player }}</a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td>
+                            <div class="alert info pas">Nobody is currently playing.</div>
                         </td>
                     </tr>
                 {% endfor %}
