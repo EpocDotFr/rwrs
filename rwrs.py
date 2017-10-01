@@ -3,6 +3,7 @@ from werkzeug.exceptions import HTTPException
 import rwr_scrapers
 import logging
 import sys
+import math
 
 
 # -----------------------------------------------------------
@@ -52,7 +53,18 @@ app.config.from_pyfile('config.py')
 
 app.config['RANKS_IMAGES_DIR'] = 'static/images/ranks'
 
-app.jinja_env.filters.update(humanize_seconds=humanize_seconds, humanize_integer=humanize_integer)
+app.jinja_env.filters.update(
+    humanize_seconds=humanize_seconds,
+    humanize_integer=humanize_integer
+)
+
+app.jinja_env.globals.update(
+    int=int,
+    float=float,
+    round=round,
+    abs=abs,
+    fabs=math.fabs
+)
 
 # Default Python logger
 logging.basicConfig(
@@ -131,9 +143,7 @@ def players_compare(username, username_to_compare_with=None):
 
     player.set_playing_on_server(servers)
 
-    comparison = player.compare_with(player_to_compare_with)
-
-    return render_template('player_stats.html', player=player, player_to_compare_with=player_to_compare_with, comparison=comparison)
+    return render_template('player_stats.html', player=player, player_to_compare_with=player_to_compare_with)
 
 
 @app.route('/servers')

@@ -8,7 +8,9 @@
     <h2><i class="fa fa-server"></i> Servers › {{ server.name }}{% if server.is_official %} <i class="fa fa-star" title="Official server"></i>{% endif %}</h2>
 
     <p class="txtcenter mbs">
-        <a href="{{ server.steam_join_link }}" class="btn"><i class="fa fa-steam"></i> Join</a>
+        {% if server.players.free > 0 %}
+            <a href="{{ server.steam_join_link }}" class="btn"><i class="fa fa-steam"></i> Join</a>
+        {% endif %}
 
         {% if server.website %}
             <a href="{{ server.website }}" class="btn"><i class="fa fa-external-link"></i> Server's website</a>
@@ -26,7 +28,7 @@
                 </tr>
                 <tr>
                     <th>Current players</th>
-                    <td class="{{ 'txtorange' if server.players.free in (1, 2) else 'txtred' if server.players.free == 0 else '' }}">{{ server.players.current }}</td>
+                    <td class="{{ macros.server_slots_class(server) }}">{{ server.players.current }}</td>
                     <th>Max players</th>
                     <td>{{ server.players.max }}</td>
                 </tr>

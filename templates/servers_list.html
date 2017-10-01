@@ -22,11 +22,14 @@
                 {% for server in servers %}
                     <tr onclick="window.location.href = '{{ url_for('server_details', ip_and_port=server.ip_and_port) }}';">
                         <td>{{ macros.location(server.location) }} {{ macros.server_name(server) }}</td>
-                        <td class="{{ 'txtorange' if server.players.free in (1, 2) else 'txtred' if server.players.free == 0 else '' }}">{{ server.players.current }}</td>
+                        <td class="{{ macros.server_slots_class(server) }}">{{ server.players.current }}</td>
                         <td>{{ server.players.max }}</td>
                         <td>{{ macros.map_name(server.map) }}</td>
                         <td class="txtcenter">
-                            <a href="{{ server.steam_join_link }}" class="btn"><i class="fa fa-steam"></i> Join</a>
+                            {% if server.players.free > 0 %}
+                                <a href="{{ server.steam_join_link }}" class="btn"><i class="fa fa-steam"></i> Join</a>
+                            {% endif %}
+
                             <a href="{{ url_for('server_details', ip_and_port=server.ip_and_port) }}" class="btn" title="Details"><i class="fa fa-eye"></i></a>
                         </td>
                     </tr>
