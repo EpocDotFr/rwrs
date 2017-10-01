@@ -103,31 +103,37 @@ def player_stats(username=None):
     return render_template('player_stats.html', player=player)
 
 
-@app.route('/players/<username_1>/compare')
-@app.route('/players/<username_1>/compare/<username_2>')
-def players_compare(username_1, username_2):
-    if not username_2:
-        username_2 = request.args.get('username_2')
+@app.route('/players/<username>/compare')
+@app.route('/players/<username>/compare/<username_to_compare_with>')
+def players_compare(username, username_to_compare_with=None):
+    if not username_to_compare_with:
+        username_to_compare_with = request.args.get('username_to_compare_with')
 
-        # Redirect to a SEO-friendly URL if the username_2 query parameter is detected
-        return redirect(url_for('players_compare', username_1=username_1, username_2=username_2))
+        # Redirect to a SEO-friendly URL if the username_to_compare_with query parameter is detected
+        return redirect(url_for('players_compare', username=username, username_to_compare_with=username_to_compare_with))
 
-    if not username_2:
+    if not username_to_compare_with:
         abort(404)
 
     scraper = rwr_scrapers.DataScraper()
 
-    player_1 = scraper.search_player(username_1)
+    player = scraper.search_player(username)
 
-    if not player_1:
+    if not player:
         abort(404)
 
-    player_2 = scraper.search_player(username_2)
+    player_to_compare_with = scraper.search_player(username_to_compare_with)
 
-    if not player_2:
+    if not player_to_compare_with:
         abort(404)
 
-    comparison = player_1.compare_with(player_2)
+    servers = scraper.get_servers()
+
+    player.set_playing_on_server(servers)
+
+    comparison = player.compare_with(player_to_compare_with)
+
+    return render_template('player_stats.html', player=player, player_to_compare_with=player_to_compare_with, comparison=comparison)
 
 
 @app.route('/servers')

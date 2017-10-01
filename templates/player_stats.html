@@ -1,9 +1,11 @@
+{% import 'macros.html' as macros %}
+
 {% extends 'layout.html' %}
 
-{% block meta_title %}Players › {{ player.username }}{% endblock %}
+{% block meta_title %}Players › {{ player.username }}{% if player_to_compare_with %} (Comparison with {{ player_to_compare_with.username }}){% endif %}{% endblock %}
 
 {% block content %}
-    <h2><i class="fa fa-user"></i> Players › {{ player.username }}</h2>
+    <h2><i class="fa fa-user"></i> Players › {{ player.username }}{% if player_to_compare_with %} (Comparison with {{ player_to_compare_with.username }}){% endif %}</h2>
 
     <table class="mbs">
         <tr>
@@ -15,34 +17,11 @@
             <td class="big txtcenter"><img src="{{ url_for('static', filename='images/ranks/{rank_id}.png'.format(rank_id=player.rank.id)) }}"> {{ player.rank.name }}</td>
             <td class="txtcenter">
                 {% if player.playing_on_server %}
-                    <div>
-                        {% if player.playing_on_server.location.country_code %}
-                            <i class="flag flag-{{ player.playing_on_server.location.country_code }}" title="{{ player.playing_on_server.location.country_name }}"></i>
-                        {% endif %}
-                        {% if player.playing_on_server.website %}
-                            <a href="{{ player.playing_on_server.website }}">
-                        {% endif %}
-                            {{ player.playing_on_server.name }}
-                        {% if player.playing_on_server.website %}
-                            </a>
-                        {% endif %}
-                    </div>
+                    <div>{{ macros.location(player.playing_on_server.location) }} {{ macros.server_name(player.playing_on_server) }}</div>
                     <div>
                         <strong><span class="{{ 'txtorange' if player.playing_on_server.players.free in (1, 2) else 'txtred' if player.playing_on_server.players.free == 0 else '' }}">{{ player.playing_on_server.players.current }}</span>/{{ player.playing_on_server.players.max }}</strong> players on
 
-                        <strong>
-                            {% if player.playing_on_server.map.name %}
-                                {% if player.playing_on_server.map.is_official %}
-                                    <a href="https://runningwithrifles.gamepedia.com/Special:Search/{{ player.playing_on_server.map.name }}">
-                                {% endif %}
-                                    {{ player.playing_on_server.map.name }}
-                                {% if player.playing_on_server.map.is_official %}
-                                    </a>
-                                {% endif %}
-                            {% else %}
-                                {{ player.playing_on_server.map.id }}
-                            {% endif %}
-                        </strong>
+                        <strong>{{ macros.map_name(player.playing_on_server.map, False) }}</strong>
                     </div>
                     <div class="mts">
                         <a href="{{ player.playing_on_server.steam_join_link }}" class="btn"><i class="fa fa-steam"></i> Join server</a>
@@ -123,7 +102,7 @@
     </table>
 
     <div class="txtcenter mts">
-        <form method="get" action="{{ url_for('players_compare', username_1=player.username) }}" class="inbl">
+        <form method="get" action="{{ url_for('players_compare', username=player.username) }}" class="inbl">
             <input type="text" name="username_2" placeholder="Type a player name" required> <button type="submit">Compare</button>
         </form> or
         <a href="{{ url_for('home') }}" class="btn"><i class="fa fa-user"></i> Search for another player</a> or

@@ -1,3 +1,5 @@
+{% import 'macros.html' as macros %}
+
 {% extends 'layout.html' %}
 
 {% block meta_title %}Servers › {{ server.name }}{% endblock %}
@@ -20,13 +22,7 @@
                     <th>IP:Port</th>
                     <td>{{ server.ip_and_port }}</td>
                     <th>Location</th>
-                    <td>
-                        {% if server.location.country_code %}
-                            <i class="flag flag-{{ server.location.country_code }}"></i> {{ server.location.country_name }}
-                        {% else %}
-                            N/A
-                        {% endif %}
-                    </td>
+                    <td>{{ macros.location(server.location, True, True) }}</td>
                 </tr>
                 <tr>
                     <th>Current players</th>
@@ -61,7 +57,7 @@
                 {% else %}
                     <tr>
                         <td>
-                            <div class="alert info pas">Nobody is currently playing.</div>
+                            <div class="alert info pas">Nobody currently playing.</div>
                         </td>
                     </tr>
                 {% endfor %}
@@ -73,19 +69,7 @@
                     <th class="txtcenter">Current map</th>
                 </tr>
                 <tr>
-                    <td class="txtcenter">
-                        {% if server.map.name %}
-                            {% if server.map.is_official %}
-                                <a href="https://runningwithrifles.gamepedia.com/Special:Search/{{ server.map.name }}">
-                            {% endif %}
-                                {{ server.map.name }}
-                            {% if server.map.is_official %}
-                                </a>
-                            {% endif %}
-                        {% else %}
-                            {{ server.map.id }}
-                        {% endif %}
-                    </td>
+                    <td class="txtcenter">{{ macros.map_name(server.map) }}</td>
                 </tr>
                 {% if server.map.is_official %}
                     <tr>

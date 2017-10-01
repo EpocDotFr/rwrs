@@ -363,7 +363,7 @@ class Player:
 
                 return
 
-    def compare_with(self, player):
+    def compare_with(self, player_to_compare_with):
         """Compare this player with another player."""
         pass
 

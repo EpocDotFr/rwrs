@@ -1,0 +1,34 @@
+{% macro map_name(map, link=True) -%}
+    {% if map.name %}
+        {% if link and map.is_official %}
+            <a href="https://runningwithrifles.gamepedia.com/Special:Search/{{ map.name }}">
+        {% endif %}
+            {{ map.name }}
+        {% if link and map.is_official %}
+            </a>
+        {% endif %}
+    {% else %}
+        {{ map.id }}
+    {% endif %}
+{%- endmacro %}
+
+{% macro server_name(server) -%}
+    {% if server.website %}
+        <a href="{{ server.website }}">
+    {% endif %}
+        {{ server.name }}
+    {% if server.website %}
+        </a>
+    {% endif %}
+    {% if server.is_official %}
+        <i class="fa fa-star" title="Official server"></i>
+    {% endif %}
+{%- endmacro %}
+
+{% macro location(location, text=False, na=False) -%}
+    {% if location.country_code %}
+        <i class="flag flag-{{ location.country_code }}" title="{{ location.country_name }}"></i>{% if text %} {{location.country_name }}{% endif %}
+    {% elif na %}
+        N/A
+    {% endif %}
+{%- endmacro %}
