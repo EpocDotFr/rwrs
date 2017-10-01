@@ -153,7 +153,7 @@ class DataScraper:
     def _call(self, url, params=None):
         """Perform an HTTP GET request to the desired RWR list endpoint."""
         headers = {
-            'User-Agent': 'RWR Client'
+            'User-Agent': 'RWRS'
         }
 
         response = requests.get(url, params=params, headers=headers)

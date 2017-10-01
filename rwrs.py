@@ -1,4 +1,4 @@
-from flask import Flask, render_template, make_response, abort, request
+from flask import Flask, render_template, make_response, abort, request, redirect, url_for
 from werkzeug.exceptions import HTTPException
 import rwr_scrapers
 import logging
@@ -82,6 +82,9 @@ def home():
 def player_stats(username=None):
     if not username:
         username = request.args.get('username')
+
+        # Redirect to a SEO-friendly URL if the username query parameter is detected
+        return redirect(url_for('player_stats', username=username))
 
     if not username:
         abort(404)

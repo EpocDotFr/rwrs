@@ -52,7 +52,7 @@
                     Nope.
                 {% endif %}
             </td>
-            <td class="big txtcenter">
+            <td class="{{ 'big' if player.next_rank else '' }} txtcenter">
                 {% if player.next_rank %}
                     <img src="{{ url_for('static', filename='images/ranks/{rank_id}.png'.format(rank_id=player.next_rank.id)) }}"> {{ player.next_rank.name }}
                 {% else %}
