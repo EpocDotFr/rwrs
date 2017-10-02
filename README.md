@@ -73,6 +73,14 @@ and save all the RWR ranks images. They are saved at `static/images/ranks/{rank 
   1. `set FLASK_APP=rwrs.py`
   2. `flask download_ranks_images`
 
+### Extracting minimaps
+
+The Flask command `flask extract_minimaps` is used to extract minimaps (the ones displayed when pressing on
+<kbd>TAB</kbd>). They are saved at `static/images/maps/minimap/{rank ID}.png` and `static/images/maps/minimap/{rank ID}_preview.png`.
+
+  1. `set FLASK_APP=rwrs.py`
+  2. `flask extract_minimaps --gamedir="{path to the game root directory}"`
+
 ## How it works
 
 This project is powered by [Flask](http://flask.pocoo.org/) (Python) for the backend. The frontend is powered by good ol'
