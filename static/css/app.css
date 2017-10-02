@@ -112,6 +112,7 @@ input[type="button"][type="submit"][disabled]:hover, input[type="button"][type="
     color: #6f6f6f;
     background-color: #545454;
     border-color: #5a5a5a;
+    cursor: default;
 }
 
 /************************************************************************
