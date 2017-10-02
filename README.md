@@ -82,12 +82,16 @@ Data is fetched from the [official servers list](http://rwr.runningwithrifles.co
 (which sucks) as well from the [official players list](http://rwr.runningwithrifles.com/rwr_stats/view_players.php?sort=score)
 page (which sucks, too).
 
+As the provided servers location is most of the time either missing or invalid, RWRS makes its own look up using a
+[GeoLite2](https://dev.maxmind.com/geoip/geoip2/geolite2/) database.
+
 ## Credits
 
   - RWRS icon by [Dot on Paper](https://www.iconfinder.com/icons/753920/gun_military_shield_war_weapon_weapons_icon) (freeware)
   - Font by [Typesgal](https://www.dafont.com/fr/top-secret-kb.font) (freeware)
   - Flag icons by [Flag Sprites](https://www.flag-sprites.com/en/) and [GoSquared](https://www.gosquared.com/resources/flag-icons/) (freeware)
   - Maps previews comes from the [official RWR wiki](https://runningwithrifles.gamepedia.com/Running_with_Rifles_Wiki)
+  - This project uses GeoLite2 data created by MaxMind, available from [www.maxmind.com](https://www.maxmind.com/)
   - RWR logo, ranks images, Running With Rifles © 2015 - 2017 Osumia Games
   - This project isn't supported nor endorsed by Osumia Games
 
