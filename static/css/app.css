@@ -102,6 +102,18 @@ input[type="button"][type="submit"]:hover, input[type="button"][type="submit"]:f
     border-color: #9cc321;
 }
 
+button[disabled],
+input[type="button"][type="submit"][disabled],
+.btn.disabled,
+.btn.disabled:visited,
+button[disabled]:hover, button[disabled]:focus,
+.btn.disabled:hover, .btn.disabled:focus,
+input[type="button"][type="submit"][disabled]:hover, input[type="button"][type="submit"][disabled]:focus {
+    color: #6f6f6f;
+    background-color: #545454;
+    border-color: #5a5a5a;
+}
+
 /************************************************************************
  * Inputs */
 

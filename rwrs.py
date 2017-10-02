@@ -64,6 +64,7 @@ app.jinja_env.filters.update(
 app.jinja_env.globals.update(
     int=int,
     float=float,
+    str=str,
     round=round,
     abs=abs,
     fabs=math.fabs

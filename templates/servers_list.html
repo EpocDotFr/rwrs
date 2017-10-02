@@ -26,9 +26,7 @@
                         <td>{{ server.players.max }}</td>
                         <td>{{ macros.map_name(server.map) }}</td>
                         <td class="txtcenter">
-                            {% if server.players.free > 0 %}
-                                <a href="{{ server.steam_join_link }}" class="btn"><i class="fa fa-steam"></i> Join</a>
-                            {% endif %}
+                            {{ macros.server_join_button(server) }}
 
                             <a href="{{ url_for('server_details', ip_and_port=server.ip_and_port) }}" class="btn" title="Details"><i class="fa fa-eye"></i></a>
                         </td>

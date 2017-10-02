@@ -24,11 +24,9 @@
                         <strong>{{ macros.map_name(player.playing_on_server.map, False) }}</strong>
                     </div>
                     <div class="mts">
-                        {% if player.playing_on_server.players.free > 0 %}
-                            <a href="{{ player.playing_on_server.steam_join_link }}" class="btn"><i class="fa fa-steam"></i> Join server</a>
-                        {% endif %}
+                        {{ macros.server_join_button(player.playing_on_server) }}
 
-                        <a href="{{ url_for('server_details', ip_and_port=player.playing_on_server.ip_and_port) }}" class="btn" title="Details"><i class="fa fa-eye"></i> Server details</a>
+                        <a href="{{ url_for('server_details', ip_and_port=player.playing_on_server.ip_and_port) }}" class="btn" title="Details"><i class="fa fa-eye"></i> Setails</a>
                     </div>
                 {% else %}
                     Nope.

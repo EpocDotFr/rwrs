@@ -8,9 +8,7 @@
     <h2><i class="fa fa-server"></i> Servers › {{ server.name }}{% if server.is_official %} <i class="fa fa-star" title="Official server"></i>{% endif %}</h2>
 
     <p class="txtcenter mbs">
-        {% if server.players.free > 0 %}
-            <a href="{{ server.steam_join_link }}" class="btn"><i class="fa fa-steam"></i> Join</a>
-        {% endif %}
+        {{ macros.server_join_button(server) }}
 
         {% if server.website %}
             <a href="{{ server.website }}" class="btn"><i class="fa fa-external-link"></i> Server's website</a>
