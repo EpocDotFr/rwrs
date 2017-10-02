@@ -13,15 +13,15 @@
 {%- endmacro %}
 
 {% macro server_name(server) -%}
+    {% if server.is_official %}
+        <i class="fa fa-star" title="Official server"></i>
+    {% endif %}
     {% if server.website %}
         <a href="{{ server.website }}">
     {% endif %}
         {{ server.name }}
     {% if server.website %}
         </a>
-    {% endif %}
-    {% if server.is_official %}
-        <i class="fa fa-star" title="Official server"></i>
     {% endif %}
 {%- endmacro %}
 
