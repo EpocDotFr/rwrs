@@ -74,7 +74,12 @@
                 {% if server.map.is_official %}
                     <tr>
                         <td class="txtcenter">
-                            <img src="{{ url_for('static', filename='images/maps/{map_id}.jpg'.format(map_id=server.map.id)) }}">
+                            <img src="{{ url_for('static', filename='images/maps/preview/{map_id}.jpg'.format(map_id=server.map.id)) }}">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="txtcenter">
+                            <a href="{{ url_for('static', filename='images/maps/minimap/{map_id}.png'.format(map_id=server.map.id)) }}"><img src="{{ url_for('static', filename='images/maps/minimap/{map_id}_thumb.png'.format(map_id=server.map.id)) }}"></a>
                         </td>
                     </tr>
                 {% endif %}

@@ -13,10 +13,10 @@ Available at [rwrs.epoc.fr](https://rwrs.epoc.fr/).
   - Public servers
     - Real servers location
     - Real maps name
-    - Maps are linked to their respective [official RWR wiki](https://runningwithrifles.gamepedia.com/Running_with_Rifles_Wiki) page
+    - Maps are linked to their [official RWR wiki](https://runningwithrifles.gamepedia.com/Running_with_Rifles_Wiki) page
     - Official servers are highlighted
     - Public servers list
-    - Public server details (players list with link to their profile, current map preview, etc)
+    - Public server details (players list with link to their profile, current map preview and minimap, etc)
 
 ## Prerequisites
 

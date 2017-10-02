@@ -4,6 +4,7 @@ import rwr_scrapers
 import logging
 import sys
 import math
+import click
 
 
 # -----------------------------------------------------------
@@ -55,6 +56,7 @@ app = Flask(__name__, static_url_path='')
 app.config.from_pyfile('config.py')
 
 app.config['RANKS_IMAGES_DIR'] = 'static/images/ranks'
+app.config['MINIMAPS_IMAGES_DIR'] = 'static/images/maps/minimap'
 
 app.jinja_env.filters.update(
     humanize_seconds=humanize_seconds,
@@ -190,6 +192,24 @@ def download_ranks_images():
 
     scraper = rwr_scrapers.RanksImageScraper(app.config['RANKS_IMAGES_DIR'])
     scraper.run()
+
+    app.logger.info('Done')
+
+
+@app.cli.command()
+@click.option('--gamedir', '-g', help='Game root directory')
+def extract_minimaps(gamedir):
+    """Extract minimaps from RWR."""
+    context = click.get_current_context()
+
+    if not gamedir:
+        click.echo(extract_minimaps.get_help(context))
+        context.exit()
+
+    app.logger.info('Extracting started')
+
+    extractor = rwr_scrapers.MinimapsImageExtractor(gamedir, app.config['MINIMAPS_IMAGES_DIR'])
+    extractor.extract()
 
     app.logger.info('Done')
 

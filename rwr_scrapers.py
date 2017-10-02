@@ -1,8 +1,10 @@
 from memoized_property import memoized_property
 from geolite2 import geolite2
+from shutil import copyfile
 from io import BytesIO
 from PIL import Image
 from lxml import html
+from glob import glob
 import requests
 import math
 import re
@@ -104,6 +106,40 @@ def parse_time(string):
         return seconds + minutes * _one_minute + hours * _one_hour
 
     return None
+
+
+class MinimapsImageExtractor:
+    minimap_image_size = (320, 320)
+
+    def __init__(self, game_dir, output_dir):
+        self.game_dir = game_dir
+        self.output_dir = output_dir
+
+        if not os.path.isdir(self.game_dir):
+            raise FileNotFoundError(self.game_dir + ' does not exists')
+
+        if not os.path.isdir(self.output_dir):
+            raise FileNotFoundError(self.output_dir + ' does not exists')
+
+        self.packages_dir = os.path.join(self.game_dir, 'media/packages')
+
+    def extract(self):
+        """Actually run the extract process."""
+        minimaps = glob(os.path.join(self.packages_dir, '*', 'maps', '*.png'), recursive=True)
+
+        for minimap in minimaps:
+            map_id = os.path.splitext(os.path.basename(minimap))[0]
+
+            if map_id == 'lobby':
+                continue
+
+            # Copy the original minimap first
+            copyfile(minimap, os.path.join(self.output_dir, map_id + '.png'))
+
+            # Create the thumbnail
+            minimap_thumbnail = Image.open(minimap)
+            minimap_thumbnail.thumbnail(self.minimap_image_size, Image.ANTIALIAS)
+            minimap_thumbnail.save(os.path.join(self.output_dir, map_id + '_thumb.png'))
 
 
 class RanksImageScraper:
