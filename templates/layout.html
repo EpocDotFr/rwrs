@@ -30,18 +30,16 @@
     </nav>
     -->
 
-    {% with flash_messages = get_flashed_messages(with_categories=true) %}
-      {% if flash_messages %}
-        <div class="pas center w1140p">
-        {% for category, message in flash_messages %}
-          <p class="alert {{ category }} pas">{{ message }}</p>
-        {% endfor %}
-        </div>
-      {% endif %}
-    {% endwith %}
-
     <div class="page pts pbs">
         <div class="w1140p center">
+            {% with flash_messages = get_flashed_messages(with_categories=true) %}
+              {% if flash_messages %}
+                {% for category, message in flash_messages %}
+                  <p class="alert {{ category }} pas">{{ message }}</p>
+                {% endfor %}
+              {% endif %}
+            {% endwith %}
+
             {% block content %} {% endblock %}
         </div>
     </div>

@@ -1,4 +1,4 @@
-from flask import Flask, render_template, make_response, abort, request, redirect, url_for
+from flask import Flask, render_template, make_response, abort, request, redirect, url_for, flash
 from werkzeug.exceptions import HTTPException
 import rwr_scrapers
 import logging
@@ -109,7 +109,9 @@ def player_stats(username=None):
     player = scraper.search_player(username)
 
     if not player:
-        abort(404)
+        flash('Sorry, the player "{}" wasn\'t found.'.format(username), 'error')
+
+        return redirect(url_for('home'))
 
     servers = scraper.get_servers()
 
@@ -135,12 +137,16 @@ def players_compare(username, username_to_compare_with=None):
     player = scraper.search_player(username)
 
     if not player:
-        abort(404)
+        flash('Sorry, the player "{}" wasn\'t found.'.format(username), 'error')
+
+        return redirect(url_for('home'))
 
     player_to_compare_with = scraper.search_player(username_to_compare_with)
 
     if not player_to_compare_with:
-        abort(404)
+        flash('Sorry, the player "{}" wasn\'t found.'.format(username_to_compare_with), 'error')
+
+        return redirect(url_for('player_stats', username=username))
 
     servers = scraper.get_servers()
 
@@ -165,7 +171,9 @@ def server_details(ip_and_port):
     server = scraper.search_server(ip, port)
 
     if not server:
-        abort(404)
+        flash('Sorry, this server wasn\'t found.', 'error')
+
+        return redirect(url_for('servers_list'))
 
     return render_template('server_details.html', server=server)
 
