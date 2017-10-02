@@ -18,7 +18,7 @@ _one_hour = _one_minute * 60
 MAPS = {
     # Official maps
     'map1': {'name': 'Moorland Trenches', 'is_official': True},
-    'map1_2': {'name': 'Moorland Trenches (DOM)', 'is_official': True},
+    'map1_2': {'name': 'Moorland Trenches (Domination)', 'is_official': True},
     'map2': {'name': 'Keepsake Bay', 'is_official': True},
     'map3': {'name': 'Old Fort Creek', 'is_official': True},
     'map4': {'name': 'Fridge Valley', 'is_official': True},
@@ -32,7 +32,8 @@ MAPS = {
     'map12': {'name': 'Frozen Canyon', 'is_official': True},
     'map13': {'name': 'Iron Enclave', 'is_official': True},
     'map14': {'name': 'Misty Heights', 'is_official': True},
-    'pvp1': {'name': 'Islet of Eflen', 'is_official': True},
+    'map15': {'name': 'Islet of Eflen', 'is_official': True},
+    'pvp1': {'name': 'Islet of Eflen (PVP)', 'is_official': True},
 
     # Running with the Dead mod maps
     'rwd_map1': {'name': 'Running with the Dead mod', 'is_official': False},
