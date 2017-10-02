@@ -62,6 +62,11 @@
                     </tr>
                 {% endfor %}
             </table>
+
+            <p class="txtcenter">
+                <a href="{{ url_for('home') }}" class="btn"><i class="fa fa-user"></i> Search for a player</a> or
+                <a href="{{ url_for('servers_list') }}" class="btn"><i class="fa fa-server"></i> Go back to the public servers list</a>
+            </p>
         </div>
         <div class="one-third">
             <table>
@@ -86,9 +91,4 @@
             </table>
         </div>
     </div>
-
-    <p class="txtcenter">
-        <a href="{{ url_for('home') }}" class="btn"><i class="fa fa-user"></i> Search for a player</a> or
-        <a href="{{ url_for('servers_list') }}" class="btn"><i class="fa fa-server"></i> Go back to the public servers list</a>
-    </p>
 {% endblock %}

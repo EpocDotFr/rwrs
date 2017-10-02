@@ -1,5 +1,6 @@
 from flask import Flask, render_template, make_response, abort, request, redirect, url_for, flash
 from werkzeug.exceptions import HTTPException
+from flask_cache import Cache
 import rwr_scrapers
 import logging
 import sys
@@ -48,6 +49,10 @@ def humanize_integer(integer):
     return format(integer, ',d').replace(',', ' ')
 
 
+def full_path_cache_key():
+    return request.full_path
+
+
 # -----------------------------------------------------------
 # Boot
 
@@ -55,6 +60,8 @@ def humanize_integer(integer):
 app = Flask(__name__, static_url_path='')
 app.config.from_pyfile('config.py')
 
+app.config['CACHE_TYPE'] = 'filesystem'
+app.config['CACHE_DIR'] = 'storage/cache'
 app.config['RANKS_IMAGES_DIR'] = 'static/images/ranks'
 app.config['MINIMAPS_IMAGES_DIR'] = 'static/images/maps/minimap'
 
@@ -71,6 +78,8 @@ app.jinja_env.globals.update(
     abs=abs,
     fabs=math.fabs
 )
+
+cache = Cache(app)
 
 # Default Python logger
 logging.basicConfig(
@@ -97,6 +106,7 @@ def home():
 
 @app.route('/players')
 @app.route('/players/<username>')
+@cache.cached(timeout=60 * 5, key_prefix=full_path_cache_key)
 def player_stats(username=None):
     if not username:
         username = request.args.get('username')
@@ -125,6 +135,7 @@ def player_stats(username=None):
 
 @app.route('/players/<username>/compare')
 @app.route('/players/<username>/compare/<username_to_compare_with>')
+@cache.cached(timeout=60 * 5, key_prefix=full_path_cache_key)
 def players_compare(username, username_to_compare_with=None):
     if not username_to_compare_with:
         username_to_compare_with = request.args.get('username_to_compare_with')
@@ -159,6 +170,7 @@ def players_compare(username, username_to_compare_with=None):
 
 
 @app.route('/servers')
+@cache.cached(timeout=60, key_prefix=full_path_cache_key)
 def servers_list():
     scraper = rwr_scrapers.DataScraper()
 
@@ -166,6 +178,7 @@ def servers_list():
 
 
 @app.route('/servers/<ip_and_port>')
+@cache.cached(timeout=60, key_prefix=full_path_cache_key)
 def server_details(ip_and_port):
     ip, port = ip_and_port.split(':', maxsplit=1)
 
