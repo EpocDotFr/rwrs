@@ -26,7 +26,7 @@
                     <div class="mts">
                         {{ macros.server_join_button(player.playing_on_server) }}
 
-                        <a href="{{ url_for('server_details', ip_and_port=player.playing_on_server.ip_and_port) }}" class="btn" title="Details"><i class="fa fa-eye"></i> Setails</a>
+                        <a href="{{ url_for('server_details', ip_and_port=player.playing_on_server.ip_and_port) }}" class="btn"><i class="fa fa-eye"></i> Details</a>
                     </div>
                 {% else %}
                     Nope.
