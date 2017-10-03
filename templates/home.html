@@ -6,13 +6,14 @@
             <h2><i class="fa fa-user"></i> Searching for a player?</h2>
             <div>
                 <form method="get" action="{{ url_for('player_stats') }}">
-                    <input type="text" name="username" placeholder="Type a player name" required> <button type="submit">Find</button>
+                    <input type="text" name="username" placeholder="Type a player name" required> <button type="submit"><i class="fa fa-search"></i> Find</button>
                 </form>
             </div>
         </div>
         <div class="pll">
             <h2><i class="fa fa-server"></i> Looking for a server?</h2>
-            <div><a href="{{ url_for('servers_list') }}" class="btn">Go to the public servers list</a></div>
+            <div><a href="{{ url_for('servers_list') }}" class="btn"><i class="fa fa-chevron-right"></i> Go to the servers list</a></div>
+            <div class="mts">Currently <strong>{{ playing_players }}</strong> players on <strong>{{ non_empty_servers }}</strong> servers</div>
         </div>
     </div>
 {% endblock %}

@@ -1,7 +1,6 @@
 from flask import Flask, render_template, make_response, abort, request, redirect, url_for, flash
 from werkzeug.exceptions import HTTPException
 from flask_cache import Cache
-import rwr_scrapers
 import logging
 import sys
 import math
@@ -64,6 +63,7 @@ app.config['CACHE_TYPE'] = 'filesystem'
 app.config['CACHE_DIR'] = 'storage/cache'
 app.config['RANKS_IMAGES_DIR'] = 'static/images/ranks'
 app.config['MINIMAPS_IMAGES_DIR'] = 'static/images/maps/minimap'
+app.config['SERVERS_CACHE_TIMEOUT'] = 60
 
 app.jinja_env.filters.update(
     humanize_seconds=humanize_seconds,
@@ -96,12 +96,23 @@ for handler in app.logger.handlers:
 
 
 # -----------------------------------------------------------
+# After-init imports
+
+
+import rwr_scrapers
+
+
+# -----------------------------------------------------------
 # Routes
 
 
 @app.route('/')
 def home():
-    return render_template('home.html')
+    scraper = rwr_scrapers.DataScraper()
+
+    playing_players, non_empty_servers = scraper.get_players_on_servers_counts()
+
+    return render_template('home.html', playing_players=playing_players, non_empty_servers=non_empty_servers)
 
 
 @app.route('/players')
@@ -170,7 +181,6 @@ def players_compare(username, username_to_compare_with=None):
 
 
 @app.route('/servers')
-@cache.cached(timeout=60, key_prefix=full_path_cache_key)
 def servers_list():
     scraper = rwr_scrapers.DataScraper()
 
@@ -178,13 +188,12 @@ def servers_list():
 
 
 @app.route('/servers/<ip_and_port>')
-@cache.cached(timeout=60, key_prefix=full_path_cache_key)
 def server_details(ip_and_port):
     ip, port = ip_and_port.split(':', maxsplit=1)
 
     scraper = rwr_scrapers.DataScraper()
 
-    server = scraper.search_server(ip, port)
+    server = scraper.search_server(ip, int(port))
 
     if not server:
         flash('Sorry, this server wasn\'t found.', 'error')

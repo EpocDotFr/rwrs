@@ -4,6 +4,7 @@ from io import BytesIO
 from PIL import Image
 from lxml import html
 from glob import glob
+import rwrs
 import requests
 import math
 import re
@@ -198,8 +199,9 @@ class DataScraper:
 
         return html.fromstring(response.text)
 
+    @rwrs.cache.cached(timeout=rwrs.app.config['SERVERS_CACHE_TIMEOUT'], key_prefix='all_servers')
     def get_servers(self):
-        """Get and parse the list of all available RWR servers."""
+        """Get and parse the list of all available public RWR servers."""
         html_content = self._call(self.servers_url)
 
         servers = []
@@ -208,6 +210,25 @@ class DataScraper:
             servers.append(Server.load(node))
 
         return servers
+
+    def search_server(self, ip, port):
+        """Search for a RWR public server."""
+        servers = self.get_servers()
+
+        for server in servers:
+            if server.ip == ip and server.port == port:
+                return server
+
+        return None
+
+    def get_players_on_servers_counts(self):
+        """Get the total of players currently playing on the total of non-empty servers."""
+        servers = self.get_servers()
+
+        playing_players = sum([server.players.current for server in servers])
+        non_empty_servers = sum([1 for server in servers if server.players.current > 0])
+
+        return (playing_players, non_empty_servers)
 
     def get_players(self, start=0, sort=PlayersSort.SCORE):
         """Get and parse a list of RWR players."""
@@ -241,17 +262,6 @@ class DataScraper:
             return None
 
         return Player.load(node[0])
-
-    def search_server(self, ip, port):
-        """Search for a RWR public server."""
-        html_content = self._call(self.servers_url)
-
-        node = html_content.xpath('(//table/tr[(td[3] = \'{ip}\') and (td[4] = \'{port}\')])[1]'.format(ip=ip, port=port))
-
-        if not node:
-            return None
-
-        return Server.load(node[0])
 
 
 class Server:
@@ -330,7 +340,7 @@ class Server:
         return ret
 
     def __repr__(self):
-        return str(self.__dict__)
+        return self.ip_and_port
 
 
 class Player:
@@ -435,7 +445,7 @@ class Player:
         return round((self.xp * 100) / self.next_rank['xp'], 2)
 
     def __repr__(self):
-        return str(self.__dict__)
+        return self.username
 
 
 class ServerMap:
@@ -443,7 +453,7 @@ class ServerMap:
     is_official = False
 
     def __repr__(self):
-        return str(self.__dict__)
+        return self.id
 
 
 class ServerPlayers:
@@ -452,21 +462,12 @@ class ServerPlayers:
     free = 0
     list = []
 
-    def __repr__(self):
-        return str(self.__dict__)
-
 
 class ServerLocation:
     country_code = None
     country_name = None
 
-    def __repr__(self):
-        return str(self.__dict__)
-
 
 class PlayerRank:
     id = None
     name = None
-
-    def __repr__(self):
-        return str(self.__dict__)
