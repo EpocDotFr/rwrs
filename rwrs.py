@@ -49,7 +49,7 @@ def humanize_integer(integer):
 
 
 def full_path_cache_key():
-    return request.full_path
+    return request.full_path.lower()
 
 
 # -----------------------------------------------------------
