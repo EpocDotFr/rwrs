@@ -106,4 +106,4 @@ As the provided servers location is most of the time either missing or invalid, 
 ## End words
 
 If you have questions or problems, you can either submit an issue [here on GitHub](https://github.com/EpocDotFr/rwrs/issues)
-or in [this Reddit thread](TODO).
+or in [this Reddit thread](https://www.reddit.com/r/Runningwithrifles/comments/741v7h/introducing_rwrs_running_with_rifles_stats_more/).
