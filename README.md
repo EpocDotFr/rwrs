@@ -84,7 +84,7 @@ The Flask command `flask extract_minimaps` is used to extract minimaps (the ones
 ## How it works
 
 This project is powered by [Flask](http://flask.pocoo.org/) (Python) for the backend. The frontend is powered by good ol'
-HTML and CSS.
+HTML and CSS only.
 
 Data is fetched from the [official servers list](http://rwr.runningwithrifles.com/rwr_server_list/view_servers.php) page
 (which sucks) as well from the [official players list](http://rwr.runningwithrifles.com/rwr_stats/view_players.php?sort=score)

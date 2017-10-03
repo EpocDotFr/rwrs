@@ -109,7 +109,7 @@ def home():
 @cache.cached(timeout=60 * 5, key_prefix=full_path_cache_key)
 def player_stats(username=None):
     if not username:
-        username = request.args.get('username')
+        username = request.args.get('username').strip()
 
         # Redirect to a SEO-friendly URL if the username query parameter is detected
         return redirect(url_for('player_stats', username=username))
@@ -138,7 +138,7 @@ def player_stats(username=None):
 @cache.cached(timeout=60 * 5, key_prefix=full_path_cache_key)
 def players_compare(username, username_to_compare_with=None):
     if not username_to_compare_with:
-        username_to_compare_with = request.args.get('username_to_compare_with')
+        username_to_compare_with = request.args.get('username_to_compare_with').strip()
 
         # Redirect to a SEO-friendly URL if the username_to_compare_with query parameter is detected
         return redirect(url_for('players_compare', username=username, username_to_compare_with=username_to_compare_with))

@@ -1,6 +1,5 @@
 from memoized_property import memoized_property
 from geolite2 import geolite2
-from shutil import copyfile
 from io import BytesIO
 from PIL import Image
 from lxml import html
@@ -125,21 +124,21 @@ class MinimapsImageExtractor:
 
     def extract(self):
         """Actually run the extract process."""
-        minimaps = glob(os.path.join(self.packages_dir, '*', 'maps', '*.png'), recursive=True)
+        minimaps_paths = glob(os.path.join(self.packages_dir, '*', 'maps', '*.png'), recursive=True)
 
-        for minimap in minimaps:
-            map_id = os.path.splitext(os.path.basename(minimap))[0]
+        for minimap_path in minimaps_paths:
+            map_id = os.path.splitext(os.path.basename(minimap_path))[0]
 
             if map_id == 'lobby':
                 continue
 
             # Copy the original minimap first
-            copyfile(minimap, os.path.join(self.output_dir, map_id + '.png'))
+            minimap = Image.open(minimap_path)
+            minimap.save(os.path.join(self.output_dir, map_id + '.png'), optimize=True)
 
             # Create the thumbnail
-            minimap_thumbnail = Image.open(minimap)
-            minimap_thumbnail.thumbnail(self.minimap_image_size, Image.ANTIALIAS)
-            minimap_thumbnail.save(os.path.join(self.output_dir, map_id + '_thumb.png'))
+            minimap.thumbnail(self.minimap_image_size, Image.ANTIALIAS)
+            minimap.save(os.path.join(self.output_dir, map_id + '_thumb.png'), optimize=True)
 
 
 class RanksImageScraper:
@@ -180,7 +179,7 @@ class RanksImageScraper:
             # Paste it in a new image, centered
             new_rank_image = Image.new('RGBA', self.rank_image_size)
             new_rank_image.paste(rank_image, paste_pos)
-            new_rank_image.save(os.path.join(self.output_dir, str(rank_id) + '.png'))
+            new_rank_image.save(os.path.join(self.output_dir, str(rank_id) + '.png'), optimize=True)
 
 
 class DataScraper:
