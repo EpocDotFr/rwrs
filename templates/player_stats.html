@@ -77,7 +77,7 @@
         </tr>
         <tr>
             <th>Score leaderboard position</th>
-            <td>{{ macros.compare_numbers(player, player_to_compare_with, 'position', above_zero_is_good=False) }} # {{ player.position|humanize_integer }}</td>
+            <td>{{ macros.compare_numbers(player, player_to_compare_with, 'position', above_zero_is_good=False, inverse=True) }} # {{ player.position|humanize_integer }}</td>
             <th>Time played</th>
             <td>{{ macros.compare_numbers(player, player_to_compare_with, 'time_played', type='time') }} {{ player.time_played|humanize_seconds }}</td>
             <th>Longest kill streak</th>

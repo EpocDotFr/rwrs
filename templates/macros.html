@@ -45,7 +45,7 @@
     {% endif %}
 {%- endmacro %}
 
-{% macro compare_numbers(first, second, attribute, type=int, above_zero_is_good=True) -%}
+{% macro compare_numbers(first, second, attribute, type=int, above_zero_is_good=True, inverse=False) -%}
     {% if second %}
         {% set value = first[attribute] - second[attribute] %}
 
@@ -60,13 +60,13 @@
         {% endif %}
 
         {% if value > 0 %}
-            {% set icon_class = 'arrow-up' %}
+            {% set icon_class = 'arrow-up' if not inverse else 'arrow-down' %}
             {% set color_class = 'txtgreen' if above_zero_is_good else 'txtred' %}
-            {% set title = first.username + ' is above ' + second.username + ' by ' + value_humanized %}
+            {% set title = first.username + ' is ' + ('above' if not inverse else 'below') + ' ' + second.username + ' by ' + value_humanized %}
         {% elif value < 0 %}
-            {% set icon_class = 'arrow-down' %}
+            {% set icon_class = 'arrow-down' if not inverse else 'arrow-up' %}
             {% set color_class = 'txtred' if above_zero_is_good else 'txtgreen' %}
-            {% set title = first.username + ' is below ' + second.username + ' by ' + value_humanized %}
+            {% set title = first.username + ' is ' + ('below' if not inverse else 'above') + ' ' + second.username + ' by ' + value_humanized %}
         {% else %}
             {% set icon_class = 'balance-scale' %}
             {% set color_class = 'txtgrey' %}
