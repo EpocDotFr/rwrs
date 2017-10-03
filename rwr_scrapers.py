@@ -230,11 +230,11 @@ class DataScraper:
 
         return (playing_players, non_empty_servers)
 
-    def get_players(self, start=0, sort=PlayersSort.SCORE):
+    def get_players(self, start=0):
         """Get and parse a list of RWR players."""
         params = {
             'start': start,
-            'sort': sort
+            'sort': PlayersSort.SCORE
         }
 
         html_content = self._call(self.players_url, params=params)
@@ -251,7 +251,8 @@ class DataScraper:
         username = username.upper()
 
         params = {
-            'search': username
+            'search': username,
+            'sort': PlayersSort.SCORE
         }
 
         html_content = self._call(self.players_url, params=params)
