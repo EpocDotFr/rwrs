@@ -2,7 +2,7 @@
     {% set username = player.lower() if raw else player.username.lower() %}
 
     {% if username == config['MY_USERNAME'] %}
-        <a href="https://epoc.fr/" title="Hey, I'm the creator of this website! Glad seeing you're using it."><img src="{{ url_for('static', filename='images/me.png') }}"></a>
+        <a href="https://epoc.fr/" title="Hey, I'm the creator of this website! Glad to see you're using it."><img src="{{ url_for('static', filename='images/me.png') }}"></a>
     {% endif %}
 {%- endmacro %}
 
