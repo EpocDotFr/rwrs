@@ -71,9 +71,9 @@
             <th>Deaths</th>
             <td>{{ macros.compare_numbers(player, player_to_compare_with, 'deaths', above_zero_is_good=False) }} {{ player.deaths|humanize_integer }}</td>
             <th>K/D ratio</th>
-            <td>{{ macros.compare_numbers(player, player_to_compare_with, 'kd_ratio', type=float) }} {{ player.kd_ratio }}</td>
+            <td>{{ macros.compare_numbers(player, player_to_compare_with, 'kd_ratio', type=float) }} <span class="{{ 'txtred' if player.kd_ratio < 1 else 'txtgreen' }}">{{ player.kd_ratio }}</span></td>
             <th>Score</th>
-            <td>{{ macros.compare_numbers(player, player_to_compare_with, 'score') }} {{ player.score|humanize_integer }}</td>
+            <td>{{ macros.compare_numbers(player, player_to_compare_with, 'score') }} <span class="{{ 'txtred' if player.score < 0 else 'txtgreen' }}">{{ player.score|humanize_integer }}</span></td>
         </tr>
         <tr>
             <th>Score leaderboard position</th>
