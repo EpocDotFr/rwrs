@@ -19,10 +19,16 @@
         <div class="two-thirds">
             <table class="mbs">
                 <tr>
-                    <th>IP:Port</th>
-                    <td>{{ server.ip_and_port }}</td>
+                    <th>IP</th>
+                    <td>{{ server.ip }}</td>
+                    <th>Port</th>
+                    <td>{{ server.port }}</td>
+                </tr>
+                <tr>
                     <th>Location</th>
                     <td>{{ macros.location(server.location, True, True) }}</td>
+                    <th>Version</th>
+                    <td>{{ server.version }}</td>
                 </tr>
                 <tr>
                     <th>Current players</th>
@@ -33,12 +39,6 @@
                 <tr>
                     <th>Bots</th>
                     <td>{{ server.bots }}</td>
-                    <th>Version</th>
-                    <td>{{ server.version }}</td>
-                </tr>
-                <tr>
-                    <th>Last updated</th>
-                    <td>{{ server.last_updated|humanize_seconds }} ago</td>
                     <th>Message</th>
                     <td>{{ server.comment }}</td>
                 </td>
