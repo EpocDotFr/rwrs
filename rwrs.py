@@ -64,6 +64,7 @@ app.config['CACHE_DIR'] = 'storage/cache'
 app.config['RANKS_IMAGES_DIR'] = 'static/images/ranks'
 app.config['MINIMAPS_IMAGES_DIR'] = 'static/images/maps/minimap'
 app.config['SERVERS_CACHE_TIMEOUT'] = 60
+app.config['MY_USERNAME'] = 'epocdotfr'
 
 app.jinja_env.filters.update(
     humanize_seconds=humanize_seconds,

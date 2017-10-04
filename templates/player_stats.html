@@ -5,7 +5,7 @@
 {% block meta_title %}Players › {{ player.username }}{% if player_to_compare_with %} (Comparison with {{ player_to_compare_with.username }}){% endif %}{% endblock %}
 
 {% block content %}
-    <h2><i class="fa fa-user"></i> Players › {{ player.username }}{% if player_to_compare_with %} (Comparison with {{ player_to_compare_with.username }}){% endif %}</h2>
+    <h2><i class="fa fa-user"></i> Players › {{ macros.me_easter_egg(player) }} {{ player.username }}{% if player_to_compare_with %} (Comparison with {{ macros.me_easter_egg(player_to_compare_with) }} {{ player_to_compare_with.username }}){% endif %}</h2>
 
     <table class="mbs">
         <tr>
