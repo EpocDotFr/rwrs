@@ -50,11 +50,11 @@
             <td class="txtcenter pan">
                 {% if player.next_rank %}
                     <div class="progress-bar">
-                        <div class="text pas w100">
+                        <div class="text pls pts prs w100">
                             <span class="fl">{{ player.xp_percent_completion_to_next_rank }}%</span>
                             <span class="fr">{{ player.xp_to_next_rank|humanize_integer }} XP remaining</span>
                         </div>
-                        <div class="bar pas" style="width: {{ player.xp_percent_completion_to_next_rank }}%">&nbsp;</div>
+                        <div class="bar" style="width: {{ player.xp_percent_completion_to_next_rank }}%"></div>
                     </div>
                 {% else %}
                     N/A

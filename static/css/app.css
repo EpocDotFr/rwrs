@@ -52,6 +52,7 @@ h2 {
 .progress-bar {
     background-color: #4A542C;
     position: relative;
+    height: 4.2rem;
 }
 
 .progress-bar > .text {
@@ -62,6 +63,7 @@ h2 {
 
 .progress-bar > .bar {
     background-color: #657B26;
+    height: 4.2rem;
 }
 
 /************************************************************************
