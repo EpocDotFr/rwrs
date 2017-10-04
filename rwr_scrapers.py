@@ -280,7 +280,6 @@ class Server:
         players_count_cell = node[6]
         bots_count_cell = node[7]
         version_cell = node[8]
-        last_updated_cell = node[9]
         steam_join_link_cell = node[10]
         players_cell = node[11]
         comment_cell = node[12]
@@ -328,7 +327,6 @@ class Server:
 
         ret.bots = int(bots_count_cell.text)
         ret.version = version_cell.text
-        ret.last_updated = parse_time(last_updated_cell.text)
 
         ret.steam_join_link = steam_join_link_cell[0].get('href')
 
