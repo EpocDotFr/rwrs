@@ -108,6 +108,14 @@ def parse_time(string):
     return None
 
 
+def _make_players_cache_key():
+    return 'players_' + rwrs.request.view_args.get('start') + '_' + rwrs.request.view_args.get('sort')
+
+
+def _make_player_cache_key():
+    return 'player_' + rwrs.request.view_args.get('username')
+
+
 class MinimapsImageExtractor:
     minimap_image_size = (320, 320)
 
@@ -184,11 +192,13 @@ class RanksImageScraper:
 
 
 class DataScraper:
-    servers_url = 'http://rwr.runningwithrifles.com/rwr_server_list/view_servers.php'
-    players_url = 'http://rwr.runningwithrifles.com/rwr_stats/view_players.php'
+    servers_endpoint = 'http://rwr.runningwithrifles.com/rwr_server_list/'
+    players_endpoint = 'http://rwr.runningwithrifles.com/rwr_stats/'
 
-    def _call(self, url, params=None):
+    def _call(self, endpoint, resource, params=None):
         """Perform an HTTP GET request to the desired RWR list endpoint."""
+        url = endpoint + resource
+
         headers = {
             'User-Agent': 'RWRS'
         }
@@ -202,11 +212,11 @@ class DataScraper:
     @rwrs.cache.cached(timeout=rwrs.app.config['SERVERS_CACHE_TIMEOUT'], key_prefix='all_servers')
     def get_servers(self):
         """Get and parse the list of all available public RWR servers."""
-        html_content = self._call(self.servers_url)
+        html_content = self._call(self.servers_endpoint, 'view_servers.php')
 
         servers = []
 
-        for node in html_content.xpath('//table/tr[position()>1]'):
+        for node in html_content.xpath('//table/tr[position() > 1]'):
             servers.append(Server.load(node))
 
         return servers
@@ -230,14 +240,15 @@ class DataScraper:
 
         return (playing_players, non_empty_servers)
 
-    def get_players(self, start=0):
+    @rwrs.cache.cached(timeout=rwrs.app.config['PLAYERS_CACHE_TIMEOUT'], key_prefix=_make_players_cache_key)
+    def get_players(self, start=0, sort=PlayersSort.SCORE):
         """Get and parse a list of RWR players."""
         params = {
             'start': start,
-            'sort': PlayersSort.SCORE
+            'sort': sort
         }
 
-        html_content = self._call(self.players_url, params=params)
+        html_content = self._call(self.players_endpoint, 'view_players.php', params=params)
 
         players = []
 
@@ -246,23 +257,23 @@ class DataScraper:
 
         return players
 
+    @rwrs.cache.cached(timeout=rwrs.app.config['PLAYERS_CACHE_TIMEOUT'], key_prefix=_make_player_cache_key)
     def search_player(self, username):
         """Search for a RWR player."""
         username = username.upper()
 
         params = {
-            'search': username,
-            'sort': PlayersSort.SCORE
+            'search': username
         }
 
-        html_content = self._call(self.players_url, params=params)
+        html_content = self._call(self.players_endpoint, 'view_player.php', params=params)
 
-        node = html_content.xpath('(//table/tr[contains(@class, "highlight")])[1]')
+        node = html_content.xpath('(//table/tr[position() = 2])[1]')
 
         if not node:
             return None
 
-        return Player.load(node[0])
+        return Player.load(node[0], alternative=True)
 
 
 class Server:
@@ -346,29 +357,27 @@ class Player:
     playing_on_server = None
 
     @classmethod
-    def load(cls, node):
+    def load(cls, node, alternative=False):
         """Load a player data from an HTML <tr> node."""
         ret = cls()
 
-        position_cell = node[0]
         username_cell = node[1]
         kills_cell = node[2]
         deaths_cell = node[3]
         score_cell = node[4]
         kd_ratio_cell = node[5]
         time_played_cell = node[6]
-        longest_kill_streak_cell = node[7]
-        targets_destroyed_cell = node[8]
-        vehicles_destroyed_cell = node[9]
-        soldiers_healed_cell = node[10]
-        teamkills_cell = node[11]
+        longest_kill_streak_cell = node[8 if alternative else 7]
+        targets_destroyed_cell = node[9 if alternative else 8]
+        vehicles_destroyed_cell = node[10 if alternative else 9]
+        soldiers_healed_cell = node[11 if alternative else 10]
+        teamkills_cell = node[7 if alternative else 11]
         distance_moved_cell = node[12]
         shots_fired_cell = node[13]
         throwables_thrown_cell = node[14]
         xp_cell = node[15]
         rank_image_cell = node[17]
 
-        ret.position = int(position_cell.text)
         ret.username = username_cell.text
         ret.kills = int(kills_cell.text)
         ret.deaths = int(deaths_cell.text)

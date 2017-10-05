@@ -48,10 +48,6 @@ def humanize_integer(integer):
     return format(integer, ',d').replace(',', ' ')
 
 
-def full_path_cache_key():
-    return request.full_path.lower()
-
-
 # -----------------------------------------------------------
 # Boot
 
@@ -64,6 +60,7 @@ app.config['CACHE_DIR'] = 'storage/cache'
 app.config['RANKS_IMAGES_DIR'] = 'static/images/ranks'
 app.config['MINIMAPS_IMAGES_DIR'] = 'static/images/maps/minimap'
 app.config['SERVERS_CACHE_TIMEOUT'] = 60
+app.config['PLAYERS_CACHE_TIMEOUT'] = 60 * 5
 app.config['MY_USERNAME'] = 'epocdotfr'
 
 app.jinja_env.filters.update(
@@ -118,7 +115,6 @@ def home():
 
 @app.route('/players')
 @app.route('/players/<username>')
-@cache.cached(timeout=60 * 5, key_prefix=full_path_cache_key)
 def player_stats(username=None):
     if not username:
         username = request.args.get('username').strip()
@@ -147,7 +143,6 @@ def player_stats(username=None):
 
 @app.route('/players/<username>/compare')
 @app.route('/players/<username>/compare/<username_to_compare_with>')
-@cache.cached(timeout=60 * 5, key_prefix=full_path_cache_key)
 def players_compare(username, username_to_compare_with=None):
     if not username_to_compare_with:
         username_to_compare_with = request.args.get('username_to_compare_with').strip()
