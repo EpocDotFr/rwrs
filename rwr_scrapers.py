@@ -108,14 +108,6 @@ def parse_time(string):
     return None
 
 
-def _make_players_cache_key():
-    return 'players_' + rwrs.request.view_args.get('start') + '_' + rwrs.request.view_args.get('sort')
-
-
-def _make_player_cache_key():
-    return 'player_' + rwrs.request.view_args.get('username')
-
-
 class MinimapsImageExtractor:
     minimap_image_size = (320, 320)
 
@@ -209,7 +201,7 @@ class DataScraper:
 
         return html.fromstring(response.text)
 
-    @rwrs.cache.cached(timeout=rwrs.app.config['SERVERS_CACHE_TIMEOUT'], key_prefix='all_servers')
+    @rwrs.cache.memoize(timeout=rwrs.app.config['SERVERS_CACHE_TIMEOUT'])
     def get_servers(self):
         """Get and parse the list of all available public RWR servers."""
         html_content = self._call(self.servers_endpoint, 'view_servers.php')
@@ -240,7 +232,7 @@ class DataScraper:
 
         return (playing_players, non_empty_servers)
 
-    @rwrs.cache.cached(timeout=rwrs.app.config['PLAYERS_CACHE_TIMEOUT'], key_prefix=_make_players_cache_key)
+    @rwrs.cache.memoize(timeout=rwrs.app.config['PLAYERS_CACHE_TIMEOUT'])
     def get_players(self, start=0, sort=PlayersSort.SCORE):
         """Get and parse a list of RWR players."""
         params = {
@@ -257,7 +249,7 @@ class DataScraper:
 
         return players
 
-    @rwrs.cache.cached(timeout=rwrs.app.config['PLAYERS_CACHE_TIMEOUT'], key_prefix=_make_player_cache_key)
+    @rwrs.cache.memoize(timeout=rwrs.app.config['PLAYERS_CACHE_TIMEOUT'])
     def search_player(self, username):
         """Search for a RWR player."""
         username = username.upper()
@@ -274,6 +266,9 @@ class DataScraper:
             return None
 
         return Player.load(node[0], alternative=True)
+
+    def __repr__(self):
+        return 'rwrs_data_scraper'
 
 
 class Server:
@@ -475,7 +470,13 @@ class ServerLocation:
     country_code = None
     country_name = None
 
+    def __repr__(self):
+        return self.country_code
+
 
 class PlayerRank:
     id = None
     name = None
+
+    def __repr__(self):
+        return self.id
