@@ -4,4 +4,4 @@ maxminddb-geolite2
 lxml
 Pillow
 memoized-property
-Flask-Cache
+Flask-Caching

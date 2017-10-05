@@ -1,6 +1,6 @@
 from flask import Flask, render_template, make_response, abort, request, redirect, url_for, flash
 from werkzeug.exceptions import HTTPException
-from flask_cache import Cache
+from flask_caching import Cache
 import logging
 import sys
 import math
