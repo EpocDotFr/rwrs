@@ -2,7 +2,7 @@
     {% set username = player.lower() if raw else player.username.lower() %}
 
     {% if username == config['MY_USERNAME'] %}
-        <a href="https://epoc.fr/" title="Hey, I'm the creator of this website! Glad to see you're using it."><img src="{{ url_for('static', filename='images/me.png') }}"></a>
+        <img src="{{ url_for('static', filename='images/me.png') }}" title="Hey, I'm the creator of this website! Glad to see you're using it." class="help">
     {% endif %}
 {%- endmacro %}
 
@@ -22,7 +22,7 @@
 
 {% macro server_name(server) -%}
     {% if server.is_ranked %}
-        <i class="fa fa-star txtyellow" title="Ranked server"></i>
+        <i class="fa fa-star txtyellow help" title="Ranked server"></i>
     {% endif %}
     {% if server.website %}
         <a href="{{ server.website }}">
@@ -81,7 +81,7 @@
             {% set title = 'No difference between ' + first.username + ' and ' + second.username %}
         {% endif %}
 
-        <i class="fa fa-{{ icon_class }} {{ color_class }}" title="{{ title }}"></i>
+        <i class="fa fa-{{ icon_class }} {{ color_class }} help" title="{{ title }}"></i>
     {% endif %}
 {%- endmacro %}
 
@@ -101,6 +101,6 @@
             {% set title = first.username + ' and ' + second.username + ' have the same rank' %}
         {% endif %}
 
-        <i class="fa fa-{{ icon_class }} {{ color_class }}" title="{{ title }}"></i>
+        <i class="fa fa-{{ icon_class }} {{ color_class }} help" title="{{ title }}"></i>
     {% endif %}
 {%- endmacro %}

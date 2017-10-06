@@ -50,6 +50,10 @@ h2 {
     color: #f5ea22;
 }
 
+.help {
+    cursor: help;
+}
+
 /************************************************************************
  * Progress bar on the player stats page */
 
