@@ -64,7 +64,7 @@
         </tr>
     </table>
 
-    <table class="mbn">
+    <table class="mbs">
         <tr>
             <th>Kills</th>
             <td>{{ macros.compare_numbers(player, player_to_compare_with, 'kills') }} {{ player.kills|humanize_integer }}</td>
@@ -101,6 +101,45 @@
             <td colspan="6"></td>
         </tr>
     </table>
+
+    {% if config['DEBUG'] %}
+    <table class="mbn">
+        <tr>
+            <th class="txtcenter">Radio calls</th>
+            <td>
+                <img src="https://runningwithrifles.gamepedia.com/media/runningwithrifles.gamepedia.com/thumb/8/8e/Hud_mortar1.png/75px-Hud_mortar1.png">
+                <img src="https://runningwithrifles.gamepedia.com/media/runningwithrifles.gamepedia.com/thumb/2/21/Hud_hesco_barrier.png/50px-Hud_hesco_barrier.png">
+                <img src="https://runningwithrifles.gamepedia.com/media/runningwithrifles.gamepedia.com/thumb/9/9a/Hud_mortar2.png/75px-Hud_mortar2.png">
+                <img src="https://runningwithrifles.gamepedia.com/media/runningwithrifles.gamepedia.com/thumb/9/90/Hud_paratroopers1.png/75px-Hud_paratroopers1.png">
+                <img src="https://runningwithrifles.gamepedia.com/media/runningwithrifles.gamepedia.com/thumb/a/ac/Hud_rubber_boat.png/75px-Hud_rubber_boat.png">
+                <img src="https://runningwithrifles.gamepedia.com/media/runningwithrifles.gamepedia.com/thumb/6/6b/Hud_buggydrop.png/75px-Hud_buggydrop.png">
+                <img src="https://runningwithrifles.gamepedia.com/media/runningwithrifles.gamepedia.com/thumb/a/a8/Hud_artillery1.png/75px-Hud_artillery1.png">
+                <img src="https://runningwithrifles.gamepedia.com/media/runningwithrifles.gamepedia.com/thumb/9/9d/Hud_paratroopers2.png/75px-Hud_paratroopers2.png">
+                <img src="https://runningwithrifles.gamepedia.com/media/runningwithrifles.gamepedia.com/thumb/7/70/Hud_humveedrop.png/75px-Hud_humveedrop.png">
+                <img src="https://runningwithrifles.gamepedia.com/media/runningwithrifles.gamepedia.com/thumb/7/7d/Hud_tank.png/75px-Hud_tank.png">
+                <img src="https://runningwithrifles.gamepedia.com/media/runningwithrifles.gamepedia.com/thumb/8/80/Hud_artillery2.png/75px-Hud_artillery2.png">
+            </td>
+        </tr>
+        <tr>
+            <th class="txtcenter">Weapons</th>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <th class="txtcenter">Equipment</th>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <th class="txtcenter">Throwables</th>
+            <td>
+
+            </td>
+        </tr>
+    </table>
+    {% endif %}
 
     <form method="get" action="{{ url_for('players_compare', username=player.username) }}" class="txtcenter mts mbs">
         <input type="text" name="username_to_compare_with" placeholder="Type a player name" required> <button type="submit">Compare</button>

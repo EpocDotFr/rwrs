@@ -18,9 +18,9 @@ _one_minute = 60
 _one_hour = _one_minute * 60
 
 MAPS = {
-    # Official maps
+    # Official RWR maps
     'map1': {'name': 'Moorland Trenches', 'is_official': True},
-    'map1_2': {'name': 'Moorland Trenches (Domination)', 'is_official': True},
+    'map1_2': {'name': 'Moorland Trenches', 'is_official': True},
     'map2': {'name': 'Keepsake Bay', 'is_official': True},
     'map3': {'name': 'Old Fort Creek', 'is_official': True},
     'map4': {'name': 'Fridge Valley', 'is_official': True},
@@ -35,7 +35,7 @@ MAPS = {
     'map13': {'name': 'Iron Enclave', 'is_official': True},
     'map14': {'name': 'Misty Heights', 'is_official': True},
     'map15': {'name': 'Islet of Eflen', 'is_official': True},
-    'pvp1': {'name': 'Islet of Eflen (PVP)', 'is_official': True},
+    'pvp1': {'name': 'Islet of Eflen', 'is_official': True},
 
     # Running with the Dead mod maps
     'rwd_map1': {'name': 'Running with the Dead mod', 'is_official': False},
@@ -62,6 +62,55 @@ RANKS = {
     14: {'name': 'Lieutenant General', 'xp': 200000},
     15: {'name': 'General', 'xp': 500000},
     16: {'name': 'General of the Army', 'xp': 1000000}
+}
+
+UNLOCKABLES = {
+    0: {},
+    500: {},
+    1000: {
+        'radio_calls': [
+            {'id': 'mortar_1', 'name': 'Mortar strike (1x8)'},
+            {'id': 'sandbag', 'name': 'Sandbag drop'}
+        ]
+    },
+    1500: {},
+    2000: {},
+    3000: {
+        'radio_calls': [
+            {'id': 'mortar_2', 'name': 'Mortar strike (3x8)'},
+            {'id': 'para_1', 'name': '4 paratroops'},
+            {'id': 'boat_drop', 'name': 'Boat drop'},
+            {'id': 'buggy_drop', 'name': 'Buggy drop'}
+        ]
+    },
+    4000: {
+        'radio_calls': [
+            {'id': 'artillery_1', 'name': 'Artillery strike (2x16)'},
+            {'id': 'para_2', 'name': '8 Paratroops'},
+            {'id': 'humvee_drop', 'name': 'Humvee airdrop'}
+        ]
+    },
+    5000: {
+        'radio_calls': [
+            {'id': 'tank_drop', 'name': 'Tank drop'}
+        ]
+    },
+    6000: {},
+    7000: {
+        'radio_calls': [
+            {'id': 'artillery_2', 'name': 'Artillery strike (8x16)'}
+        ]
+    },
+    8000: {},
+    10000: {},
+    12000: {},
+    14000: {},
+    20000: {},
+    50000: {},
+    100000: {},
+    200000: {},
+    500000: {},
+    1000000: {}
 }
 
 # Official invasion servers
