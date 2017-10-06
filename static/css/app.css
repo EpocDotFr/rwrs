@@ -104,9 +104,9 @@ input[type="button"][type="submit"],
     font-weight: bold;
 }
 
-button:hover, button:focus,
-.btn:hover, .btn:focus,
-input[type="button"][type="submit"]:hover, input[type="button"][type="submit"]:focus {
+button:hover, button:focus, button.active,
+.btn:hover, .btn:focus, .btn.active,
+input[type="button"][type="submit"]:hover, input[type="button"][type="submit"]:focus, input[type="button"][type="submit"].active {
     color: #FFF;
     background-color: #7da109;
     border-color: #9cc321;
