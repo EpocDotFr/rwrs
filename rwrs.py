@@ -131,7 +131,7 @@ def player_stats(username=None):
     player = scraper.search_player(username)
 
     if not player:
-        flash('Sorry, the player "{}" wasn\'t found.'.format(username), 'error')
+        flash('Sorry, the player "{}" wasn\'t found. Maybe this player hasn\'t already played on a ranked server yet.'.format(username), 'error')
 
         return redirect(url_for('home'))
 
@@ -159,14 +159,14 @@ def players_compare(username, username_to_compare_with=None):
     player = scraper.search_player(username)
 
     if not player:
-        flash('Sorry, the player "{}" wasn\'t found.'.format(username), 'error')
+        flash('Sorry, the player "{}" wasn\'t found. Maybe this player hasn\'t already played on a ranked server yet.'.format(username), 'error')
 
         return redirect(url_for('home'))
 
     player_to_compare_with = scraper.search_player(username_to_compare_with)
 
     if not player_to_compare_with:
-        flash('Sorry, the player "{}" wasn\'t found.'.format(username_to_compare_with), 'error')
+        flash('Sorry, the player "{}" wasn\'t found. Maybe this player hasn\'t already played on a ranked server yet.'.format(username_to_compare_with), 'error')
 
         return redirect(url_for('player_stats', username=username))
 

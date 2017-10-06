@@ -21,8 +21,8 @@
 {%- endmacro %}
 
 {% macro server_name(server) -%}
-    {% if server.is_official %}
-        <i class="fa fa-star" title="Official server"></i>
+    {% if server.is_ranked %}
+        <i class="fa fa-star txtyellow" title="Ranked server"></i>
     {% endif %}
     {% if server.website %}
         <a href="{{ server.website }}">

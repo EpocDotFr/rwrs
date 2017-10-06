@@ -2,10 +2,10 @@
 
 {% extends 'layout.html' %}
 
-{% block meta_title %}Servers › {{ server.name }}{% if server.is_official %} ★{% endif %}{% endblock %}
+{% block meta_title %}Servers › {% if server.is_ranked %}★ {% endif %}{{ server.name }}{% endblock %}
 
 {% block content %}
-    <h2><i class="fa fa-server"></i> Servers › {{ server.name }}{% if server.is_official %} <i class="fa fa-star" title="Official server"></i>{% endif %}</h2>
+    <h2><i class="fa fa-server"></i> Servers › {% if server.is_ranked %}<i class="fa fa-star txtyellow" title="Ranked server"></i> {% endif %}{{ server.name }}</h2>
 
     <p class="txtcenter mbs">
         {{ macros.server_join_button(server) }}

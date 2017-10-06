@@ -102,11 +102,13 @@
         </tr>
     </table>
 
-    <div class="txtcenter mts">
+    <div class="txtcenter mts mbs">
         <form method="get" action="{{ url_for('players_compare', username=player.username) }}" class="inbl">
             <input type="text" name="username_to_compare_with" placeholder="Type a player name" required> <button type="submit">Compare</button>
         </form> or
         <a href="{{ url_for('home') }}" class="btn"><i class="fa fa-user"></i> Search for another player</a> or
         <a href="{{ url_for('servers_list') }}" class="btn"><i class="fa fa-server"></i> Go to the servers list</a>
     </div>
+
+    <div class="small txtcenter">Stats only concerns official invasion (ranked) servers (those tagged with a <i class="fa fa-star txtyellow"></i>).</div>
 {% endblock %}

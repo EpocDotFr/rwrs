@@ -64,13 +64,24 @@ RANKS = {
     16: {'name': 'General of the Army', 'xp': 1000000}
 }
 
-OFFICIAL_SERVERS = (
-    '31.186.250.67',
-    '162.248.88.126',
-    '45.32.63.85',
-    '31.186.250.67',
-    '199.217.117.133',
-    '103.42.224.189'
+# Official invasion servers
+RANKED_SERVERS = (
+    # JP
+    '45.32.63.85:1234',
+    '45.32.63.85:1235',
+
+    # US
+    '162.248.88.126:1236',
+    '162.248.88.126:1234',
+    '199.217.117.133:1234',
+
+    # EU
+    '31.186.250.67:1234',
+    '31.186.250.67:1235',
+    '31.186.250.67:2240',
+
+    # AU
+    '103.42.224.189:1234'
 )
 
 
@@ -302,7 +313,7 @@ class Server:
         ret.port = int(post_cell.text)
         ret.ip_and_port = '{ip}:{port}'.format(ip=ret.ip, port=ret.port)
 
-        ret.is_official = ret.ip in OFFICIAL_SERVERS
+        ret.is_ranked = ret.ip_and_port in RANKED_SERVERS
         ret.location = ServerLocation()
 
         with geolite2 as gl2:

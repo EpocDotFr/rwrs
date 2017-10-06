@@ -1,20 +1,20 @@
 # RWRS (Running With Rifles Stats)
 
-Players statistics for the official [Running With Rifles](http://www.runningwithrifles.com/wp/) (RWR) servers, and more.
-Available at [rwrs.epoc.fr](https://rwrs.epoc.fr/).
+Players statistics for the official [Running With Rifles](http://www.runningwithrifles.com/wp/) (RWR) invasion servers,
+and more. Available at [rwrs.epoc.fr](https://rwrs.epoc.fr/).
 
 ## Features
 
   - Web-based
   - Players
     - Search for a player
-    - View player stats (as well as next rank progression, which server he's playing on, etc)
+    - View player stats (as well as next rank progression, which server he's playing on, etc). Note that stats only concerns official invasion (ranked) servers
     - Compare two players stats
   - Public servers
     - Real servers location
     - Real maps name
     - Maps are linked to their [official RWR wiki](https://runningwithrifles.gamepedia.com/Running_with_Rifles_Wiki) page
-    - Official servers are highlighted
+    - Official invasion (ranked) servers are highlighted
     - Public servers list
     - Public server details (players list with link to their profile, current map preview and minimap, etc)
 
