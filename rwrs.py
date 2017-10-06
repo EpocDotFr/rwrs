@@ -57,6 +57,7 @@ app.config.from_pyfile('config.py')
 
 app.config['CACHE_TYPE'] = 'filesystem'
 app.config['CACHE_DIR'] = 'storage/cache'
+app.config['CACHE_THRESHOLD'] = 100
 app.config['RANKS_IMAGES_DIR'] = 'static/images/ranks'
 app.config['MINIMAPS_IMAGES_DIR'] = 'static/images/maps/minimap'
 app.config['SERVERS_CACHE_TIMEOUT'] = 60
