@@ -5,6 +5,7 @@ import logging
 import sys
 import math
 import click
+import os
 
 
 # -----------------------------------------------------------
@@ -254,3 +255,30 @@ def http_error_handler(error, without_code=False):
         return make_response(body, error)
     else:
         return make_response(body)
+
+
+# -----------------------------------------------------------
+# Hooks
+
+
+@app.url_defaults
+def hashed_static_file(endpoint, values):
+    """Add a cache-buster value in the URL of each static assets."""
+    if endpoint == 'static':
+        filename = values.get('filename')
+
+        if filename:
+            blueprint = request.blueprint
+
+            if '.' in endpoint:
+                blueprint = endpoint.rsplit('.', 1)[0]
+
+            static_folder = app.static_folder
+
+            if blueprint and app.blueprints[blueprint].static_folder:
+                static_folder = app.blueprints[blueprint].static_folder
+
+            fp = os.path.join(static_folder, filename)
+
+            if os.path.exists(fp):
+                values[int(os.stat(fp).st_mtime)] = ''
