@@ -208,7 +208,7 @@ def server_details(ip_and_port):
 @app.cli.command()
 @click.option('--gamedir', '-g', help='Game root directory')
 def extract_ranks_images(gamedir):
-    """Extract all the ranks images."""
+    """Extract ranks images from RWR."""
     context = click.get_current_context()
 
     if not gamedir:
@@ -239,6 +239,13 @@ def extract_minimaps(gamedir):
     extractor.extract()
 
     app.logger.info('Done')
+
+
+@app.cli.command()
+@click.option('--gamedir', '-g', help='Game root directory')
+def extract_unlockables_images(gamedir):
+    """Extract unlockables images from RWR."""
+    pass # TODO
 
 
 # -----------------------------------------------------------

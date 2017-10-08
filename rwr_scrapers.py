@@ -1,6 +1,5 @@
 from memoized_property import memoized_property
 from geolite2 import geolite2
-from io import BytesIO
 from PIL import Image
 from lxml import html
 from glob import glob
@@ -69,36 +68,36 @@ UNLOCKABLES = {
     500: {},
     1000: {
         'radio_calls': [
-            {'id': 'mortar_1', 'name': 'Mortar strike (1x8)'},
-            {'id': 'sandbag', 'name': 'Sandbag drop'}
+            {'image': 'mortar1', 'name': 'Mortar strike (1x8)'},
+            {'image': 'hesco_barrier', 'name': 'Sandbag drop'}
         ]
     },
     1500: {},
     2000: {},
     3000: {
         'radio_calls': [
-            {'id': 'mortar_2', 'name': 'Mortar strike (3x8)'},
-            {'id': 'para_1', 'name': '4 paratroops'},
-            {'id': 'boat_drop', 'name': 'Boat drop'},
-            {'id': 'buggy_drop', 'name': 'Buggy drop'}
+            {'image': 'mortar2', 'name': 'Mortar strike (3x8)'},
+            {'image': 'paratroopers1', 'name': '4 paratroops'},
+            {'image': 'rubber_boat', 'name': 'Boat drop'},
+            {'image': 'buggydrop', 'name': 'Buggy drop'}
         ]
     },
     4000: {
         'radio_calls': [
-            {'id': 'artillery_1', 'name': 'Artillery strike (2x16)'},
-            {'id': 'para_2', 'name': '8 Paratroops'},
-            {'id': 'humvee_drop', 'name': 'Humvee airdrop'}
+            {'image': 'artillery1', 'name': 'Artillery strike (2x16)'},
+            {'image': 'paratroopers2', 'name': '8 Paratroops'},
+            {'image': 'humveedrop', 'name': 'Humvee airdrop'}
         ]
     },
     5000: {
         'radio_calls': [
-            {'id': 'tank_drop', 'name': 'Tank drop'}
+            {'image': 'tank', 'name': 'Tank drop'}
         ]
     },
     6000: {},
     7000: {
         'radio_calls': [
-            {'id': 'artillery_2', 'name': 'Artillery strike (8x16)'}
+            {'image': 'artillery2', 'name': 'Artillery strike (8x16)'}
         ]
     },
     8000: {},
