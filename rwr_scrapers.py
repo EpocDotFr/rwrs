@@ -202,29 +202,30 @@ class MinimapsImageExtractor:
             minimap.save(os.path.join(self.output_dir, map_id + '_thumb.png'), optimize=True)
 
 
-class RanksImageScraper:
-    rank_images_template_url = 'http://rwr.runningwithrifles.com/rwr_stats/textures/hud_rank{rank_id}.png'
+class RanksImageExtractor:
     rank_image_size = (64, 64)
 
-    def __init__(self, output_dir):
+    def __init__(self, game_dir, output_dir):
+        self.game_dir = game_dir
         self.output_dir = output_dir
+
+        if not os.path.isdir(self.game_dir):
+            raise FileNotFoundError(self.game_dir + ' does not exists')
 
         if not os.path.isdir(self.output_dir):
             raise FileNotFoundError(self.output_dir + ' does not exists')
 
-    def _download_rank_image(self, rank_id):
-        """Download a RWR rank image and load it using Pillow."""
-        response = requests.get(self.rank_images_template_url.format(rank_id=rank_id))
+        self.textures_dir = os.path.join(self.game_dir, 'media/packages/vanilla/textures')
 
-        response.raise_for_status()
+    def extract(self):
+        """Actually run the extract process."""
+        ranks_paths = glob(os.path.join(self.textures_dir, 'hud_rank*.png'))
 
-        return Image.open(BytesIO(response.content))
+        for rank_path in ranks_paths:
+            rank_id = os.path.splitext(os.path.basename(rank_path))[0].replace('hud_rank', '')
 
-    def run(self):
-        """Actually download all the RWR ranks image."""
-        for rank_id in RANKS.keys():
             # Download the image
-            rank_image = self._download_rank_image(rank_id)
+            rank_image = Image.open(rank_path)
 
             # Only get the actual content of the image
             rank_image = rank_image.crop(rank_image.convert('RGBa').getbbox())
@@ -240,7 +241,7 @@ class RanksImageScraper:
             # Paste it in a new image, centered
             new_rank_image = Image.new('RGBA', self.rank_image_size)
             new_rank_image.paste(rank_image, paste_pos)
-            new_rank_image.save(os.path.join(self.output_dir, str(rank_id) + '.png'), optimize=True)
+            new_rank_image.save(os.path.join(self.output_dir, rank_id + '.png'), optimize=True)
 
 
 class DataScraper:

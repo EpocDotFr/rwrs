@@ -206,12 +206,19 @@ def server_details(ip_and_port):
 
 
 @app.cli.command()
-def download_ranks_images():
-    """Download and save all the ranks images."""
-    app.logger.info('Starting download')
+@click.option('--gamedir', '-g', help='Game root directory')
+def extract_ranks_images(gamedir):
+    """Extract all the ranks images."""
+    context = click.get_current_context()
 
-    scraper = rwr_scrapers.RanksImageScraper(app.config['RANKS_IMAGES_DIR'])
-    scraper.run()
+    if not gamedir:
+        click.echo(extract_ranks_images.get_help(context))
+        context.exit()
+
+    app.logger.info('Extraction started')
+
+    extractor = rwr_scrapers.RanksImageExtractor(gamedir, app.config['RANKS_IMAGES_DIR'])
+    extractor.extract()
 
     app.logger.info('Done')
 
@@ -226,7 +233,7 @@ def extract_minimaps(gamedir):
         click.echo(extract_minimaps.get_help(context))
         context.exit()
 
-    app.logger.info('Extracting started')
+    app.logger.info('Extraction started')
 
     extractor = rwr_scrapers.MinimapsImageExtractor(gamedir, app.config['MINIMAPS_IMAGES_DIR'])
     extractor.extract()
