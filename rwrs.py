@@ -183,7 +183,9 @@ def players_compare(username, username_to_compare_with=None):
 def servers_list():
     scraper = rwr_scrapers.DataScraper()
 
-    return render_template('servers_list.html', servers=scraper.get_servers())
+    playing_players, non_empty_servers = scraper.get_players_on_servers_counts()
+
+    return render_template('servers_list.html', servers=scraper.get_servers(), playing_players=playing_players, non_empty_servers=non_empty_servers)
 
 
 @app.route('/servers/<ip_and_port>')
