@@ -1,4 +1,5 @@
 from memoized_property import memoized_property
+from collections import OrderedDict
 from geolite2 import geolite2
 from PIL import Image
 from lxml import html
@@ -63,54 +64,136 @@ RANKS = {
     16: {'name': 'General of the Army', 'xp': 1000000}
 }
 
-UNLOCKABLES = {
-    0: {},
-    500: {},
-    1000: {
+SQUADMATES_STEPS_XP = 1000 # One squad mate is gained every 1000 XP
+MAX_SQUADMATES = 10 # Maximum squad mates allowed
+
+UNLOCKABLES = OrderedDict([
+    (0, {
+        'weapons': [
+            {'image': 'm16a4', 'name': 'Assault rifles'},
+            {'image': 'mossberg', 'name': 'Shotguns'}
+        ],
+        'equipment': [
+            {'image': 'riot_shield', 'name': 'Riot shield'}
+        ],
+        'throwables': [
+            {'image': 'grenade', 'name': '2 hand/stun grenades'}
+        ]
+    }),
+    (500, {
+        'weapons': [
+            {'image': 'm72law', 'name': 'Bazooka'},
+            {'image': 'mk23', 'name': 'Silenced pistols'} # TODO Verify
+        ],
+        'equipment': [
+            {'image': 'hesco_barrier', 'name': 'Deployable cover'}
+        ],
+        'throwables': [
+            {'image': 'impact_grenade', 'name': '2 impact grenades'}
+        ]
+    }),
+    (1000, {
         'radio_calls': [
             {'image': 'mortar1', 'name': 'Mortar strike (1x8)'},
             {'image': 'hesco_barrier', 'name': 'Sandbag drop'}
+        ],
+        'weapons': [
+            {'image': 'm60e4', 'name': 'Machineguns'},
+            {'image': 'desert_eagle', 'name': 'Desert Eagle pistol'}
+        ],
+        'throwables': [
+            {'image': 'c4', 'name': '1 C4'}
         ]
-    },
-    1500: {},
-    2000: {},
-    3000: {
+    }),
+    (1500, {
+        'weapons': [
+            {'image': 'm24a2', 'name': 'Sniper rifles'},
+            {'image': 'p90', 'name': 'Advanced assault rifles'}, # TODO Verify
+            {'image': 'mp5sd', 'name': 'Silent SMGs'},
+            {'image': 'l85a2', 'name': 'L85A2'},
+            {'image': 'pepperdust', 'name': 'Pepperdust shotgun'}
+        ],
+        'throwables': [
+            {'image': 'claymore', 'name': '1 Claymore mine'}
+        ]
+    }),
+    (2000, {
+        'weapons': [
+            {'image': 'm72law', 'name': 'Second bazooka'}
+        ],
+        'equipment': [
+            {'image': 'deployable_mg', 'name': 'Deployable machinegun nest'},
+            {'image': 'minigun', 'name': 'Deployable minigun nest'},
+            {'image': 'mortar', 'name': 'Deployable mortar'}
+        ],
+        'throwables': [
+            {'image': 'grenade', 'name': '3 hand/stun/impact grenades'},
+            {'image': 'c4', 'name': '2 C4'}
+        ]
+    }),
+    (3000, {
         'radio_calls': [
             {'image': 'mortar2', 'name': 'Mortar strike (3x8)'},
             {'image': 'paratroopers1', 'name': '4 paratroops'},
             {'image': 'rubber_boat', 'name': 'Boat drop'},
             {'image': 'buggydrop', 'name': 'Buggy drop'}
+        ],
+        'weapons': [
+            {'image': 'aa-12', 'name': 'AA-12 shotgun'},
+            {'image': 'xm8', 'name': 'XM-8 assault rifle'},
+            {'image': 'f2000', 'name': 'F2000 rifle'},
+            {'image': 'p90', 'name': 'P90 submachinegun'}
+        ],
+        'throwables': [
+            {'image': 'claymore', 'name': '2 Claymore mine'},
+            {'image': 'c4', 'name': '3 C4'}
         ]
-    },
-    4000: {
+    }),
+    (4000, {
         'radio_calls': [
             {'image': 'artillery1', 'name': 'Artillery strike (2x16)'},
             {'image': 'paratroopers2', 'name': '8 Paratroops'},
             {'image': 'humveedrop', 'name': 'Humvee airdrop'}
+        ],
+        'weapons': [
+            {'image': 'benelli_m4', 'name': 'Benelli M4 shotgun'},
+            {'image': 'vss_vintorez', 'name': 'VSS Vintorez sniper rifle'},
+            {'image': 'ns2000', 'name': 'Neostead 2000 shotgun'},
+            {'image': 'xm25', 'name': 'XM-25 Launcher'},
+            {'image': 'barrett_m107', 'name': 'Barrett M-107 sniper rifle'}
+        ],
+        'throwables': [
+            {'image': 'grenade', 'name': '4 hand/stun/impact grenades'},
+            {'image': 'flare', 'name': '1 paratroop flare'},
+            {'image': 'flare', 'name': '1 checkpoint flare'} # TODO
         ]
-    },
-    5000: {
+    }),
+    (5000, {
         'radio_calls': [
             {'image': 'tank', 'name': 'Tank drop'}
+        ],
+        'equipment': [
+            {'image': 'tow2', 'name': 'Deployable TOW missile nest'}
         ]
-    },
-    6000: {},
-    7000: {
+    }),
+    (6000, {
+        'throwables': [
+            {'image': 'flare', 'name': '2 paratroop flare'},
+            {'image': 'claymore', 'name': '3 Claymore mine'},
+            {'image': 'flare', 'name': '2 checkpoint flare'} # TODO
+        ]
+    }),
+    (7000, {
         'radio_calls': [
             {'image': 'artillery2', 'name': 'Artillery strike (8x16)'}
         ]
-    },
-    8000: {},
-    10000: {},
-    12000: {},
-    14000: {},
-    20000: {},
-    50000: {},
-    100000: {},
-    200000: {},
-    500000: {},
-    1000000: {}
-}
+    }),
+    (10000, {
+        'equipment': [
+            {'image': 'tow2', 'name': '2nd deployable TOW missile nest'}
+        ]
+    })
+])
 
 # Official invasion servers
 RANKED_SERVERS = (
@@ -201,6 +284,35 @@ class MinimapsImageExtractor:
             minimap.save(os.path.join(self.output_dir, map_id + '_thumb.png'), optimize=True)
 
 
+class UnlockablesImagesExtractor:
+    def __init__(self, game_dir, output_dir):
+        self.game_dir = game_dir
+        self.output_dir = output_dir
+
+        if not os.path.isdir(self.game_dir):
+            raise FileNotFoundError(self.game_dir + ' does not exists')
+
+        if not os.path.isdir(self.output_dir):
+            raise FileNotFoundError(self.output_dir + ' does not exists')
+
+        self.textures_dir = os.path.join(self.game_dir, 'media/packages/vanilla/textures')
+
+    def extract(self):
+        """Actually run the extract process."""
+        unlockables_to_extract = [un['image'] for required_xp, unlocks in UNLOCKABLES.items() for unlock_id, unlock in unlocks.items() for un in unlock]
+
+        paths = glob(os.path.join(self.textures_dir, 'hud_*.png'))
+
+        for path in paths:
+            name = os.path.splitext(os.path.basename(path))[0].replace('hud_', '')
+
+            if name not in unlockables_to_extract:
+                continue
+
+            image = Image.open(path)
+            image.save(os.path.join(self.output_dir, name + '.png'), optimize=True)
+
+
 class RanksImageExtractor:
     rank_image_size = (64, 64)
 
@@ -223,7 +335,6 @@ class RanksImageExtractor:
         for rank_path in ranks_paths:
             rank_id = os.path.splitext(os.path.basename(rank_path))[0].replace('hud_rank', '')
 
-            # Download the image
             rank_image = Image.open(rank_path)
 
             # Only get the actual content of the image
@@ -506,6 +617,26 @@ class Player:
             return None
 
         return round((self.xp * 100) / self.next_rank['xp'], 2)
+
+    @memoized_property
+    def unlocks(self):
+        """Compute what the player unlocked (or not)."""
+        ret = {
+            'radio_calls': [],
+            'weapons': [],
+            'equipment': [],
+            'throwables': [],
+            'squad_mates': 0
+        }
+
+        for required_xp, unlocks in UNLOCKABLES.items():
+            if required_xp > self.xp:
+                break
+
+            if 'radio_calls' in unlocks:
+                ret['radio_calls'].extend(unlocks['radio_calls'])
+
+        return ret
 
     def __repr__(self):
         return self.username

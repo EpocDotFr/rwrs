@@ -61,6 +61,7 @@ app.config['CACHE_DIR'] = 'storage/cache'
 app.config['CACHE_THRESHOLD'] = 100
 app.config['RANKS_IMAGES_DIR'] = 'static/images/ranks'
 app.config['MINIMAPS_IMAGES_DIR'] = 'static/images/maps/minimap'
+app.config['UNLOCKABLES_IMAGES_DIR'] = 'static/images/unlockables'
 app.config['SERVERS_CACHE_TIMEOUT'] = 60
 app.config['PLAYERS_CACHE_TIMEOUT'] = 60 * 5
 app.config['MY_USERNAME'] = 'epocdotfr'
@@ -245,7 +246,18 @@ def extract_minimaps(gamedir):
 @click.option('--gamedir', '-g', help='Game root directory')
 def extract_unlockables_images(gamedir):
     """Extract unlockables images from RWR."""
-    pass # TODO
+    context = click.get_current_context()
+
+    if not gamedir:
+        click.echo(extract_unlockables_images.get_help(context))
+        context.exit()
+
+    app.logger.info('Extraction started')
+
+    extractor = rwr_scrapers.UnlockablesImagesExtractor(gamedir, app.config['UNLOCKABLES_IMAGES_DIR'])
+    extractor.extract()
+
+    app.logger.info('Done')
 
 
 # -----------------------------------------------------------
