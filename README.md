@@ -22,6 +22,7 @@ and more. Available at [rwrs.epoc.fr](https://rwrs.epoc.fr/).
 
   - Should work on any Python 3.x version. Feel free to test with another Python version and give me feedback
   - (Optional, but recommended) A [uWSGI](https://uwsgi-docs.readthedocs.io/en/latest/)-capable web server
+  - (Optional) Running With Rifles, if you need to extract images
 
 ## Installation
 
@@ -65,13 +66,15 @@ The uWSGI file you'll have to set in your uWSGI configuration is `uwsgi.py`. The
 You'll probably have to hack with this application to make it work with one of the solutions described
 [here](http://flask.pocoo.org/docs/0.12/deploying/). Send me a pull request if you make it work.
 
-### Downloading ranks images
+### Extracting ranks images
 
-The Flask command `flask download_ranks_images` is used to download, process (the actual images content isn't centered)
+The Flask command `flask extract_ranks_images` is used to retrieve, process (the actual images content isn't centered)
 and save all the RWR ranks images. They are saved at `static/images/ranks/{rank ID}.png`.
 
   1. `set FLASK_APP=rwrs.py`
-  2. `flask download_ranks_images`
+  2. `flask extract_ranks_images --gamedir="{path to the game root directory}"`
+
+This command requires the game to be installed.
 
 ### Extracting minimaps
 
@@ -80,6 +83,8 @@ The Flask command `flask extract_minimaps` is used to extract minimaps (the ones
 
   1. `set FLASK_APP=rwrs.py`
   2. `flask extract_minimaps --gamedir="{path to the game root directory}"`
+
+This command requires the game to be installed.
 
 ## How it works
 
