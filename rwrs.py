@@ -1,52 +1,12 @@
 from flask import Flask, render_template, make_response, abort, request, redirect, url_for, flash
 from werkzeug.exceptions import HTTPException
 from flask_caching import Cache
+from helpers import *
 import logging
 import sys
 import math
 import click
 import os
-
-
-# -----------------------------------------------------------
-# Helpers
-
-
-def humanize_seconds(seconds):
-    """Return a human-readable representation of the given number of seconds."""
-    if not seconds:
-        return ''
-
-    d = int(seconds / (60 * 60 * 24))
-    h = int((seconds % (60 * 60 * 24)) / (60 * 60))
-    m = int((seconds % (60 * 60)) / 60)
-    s = int(seconds % 60)
-
-    ret = []
-
-    if d:
-        ret.append(('{}d', d))
-
-    if h:
-        ret.append(('{}h', h))
-
-    if m:
-        ret.append(('{:>02}m', m))
-
-    if s:
-        ret.append(('{:>02}s', s))
-
-    f, v = zip(*ret)
-
-    return ' '.join(f).format(*v)
-
-
-def humanize_integer(integer):
-    """Return a slightly more human-readable representation of the given integer."""
-    if not integer:
-        return 0
-
-    return format(integer, ',d').replace(',', ' ')
 
 
 # -----------------------------------------------------------
@@ -100,7 +60,7 @@ for handler in app.logger.handlers:
 # After-init imports
 
 
-import rwr_scrapers
+import rwr
 
 
 # -----------------------------------------------------------
@@ -109,11 +69,13 @@ import rwr_scrapers
 
 @app.route('/')
 def home():
-    scraper = rwr_scrapers.DataScraper()
+    scraper = rwr.DataScraper()
+
+    all_players = scraper.get_all_players()
 
     playing_players, non_empty_servers = scraper.get_players_on_servers_counts()
 
-    return render_template('home.html', playing_players=playing_players, non_empty_servers=non_empty_servers)
+    return render_template('home.html', all_players=all_players, playing_players=playing_players, non_empty_servers=non_empty_servers)
 
 
 @app.route('/players')
@@ -128,7 +90,7 @@ def player_stats(username=None):
     if not username:
         abort(404)
 
-    scraper = rwr_scrapers.DataScraper()
+    scraper = rwr.DataScraper()
 
     player = scraper.search_player(username)
 
@@ -156,7 +118,7 @@ def players_compare(username, username_to_compare_with=None):
     if not username_to_compare_with:
         abort(404)
 
-    scraper = rwr_scrapers.DataScraper()
+    scraper = rwr.DataScraper()
 
     player = scraper.search_player(username)
 
@@ -181,7 +143,7 @@ def players_compare(username, username_to_compare_with=None):
 
 @app.route('/servers')
 def servers_list():
-    scraper = rwr_scrapers.DataScraper()
+    scraper = rwr.DataScraper()
 
     playing_players, non_empty_servers = scraper.get_players_on_servers_counts()
 
@@ -192,7 +154,7 @@ def servers_list():
 def server_details(ip_and_port):
     ip, port = ip_and_port.split(':', maxsplit=1)
 
-    scraper = rwr_scrapers.DataScraper()
+    scraper = rwr.DataScraper()
 
     server = scraper.search_server(ip, int(port))
 
@@ -220,7 +182,7 @@ def extract_ranks_images(gamedir):
 
     app.logger.info('Extraction started')
 
-    extractor = rwr_scrapers.RanksImageExtractor(gamedir, app.config['RANKS_IMAGES_DIR'])
+    extractor = rwr.RanksImageExtractor(gamedir, app.config['RANKS_IMAGES_DIR'])
     extractor.extract()
 
     app.logger.info('Done')
@@ -238,7 +200,7 @@ def extract_minimaps(gamedir):
 
     app.logger.info('Extraction started')
 
-    extractor = rwr_scrapers.MinimapsImageExtractor(gamedir, app.config['MINIMAPS_IMAGES_DIR'])
+    extractor = rwr.MinimapsImageExtractor(gamedir, app.config['MINIMAPS_IMAGES_DIR'])
     extractor.extract()
 
     app.logger.info('Done')
@@ -256,7 +218,7 @@ def extract_unlockables_images(gamedir):
 
     app.logger.info('Extraction started')
 
-    extractor = rwr_scrapers.UnlockablesImagesExtractor(gamedir, app.config['UNLOCKABLES_IMAGES_DIR'])
+    extractor = rwr.UnlockablesImagesExtractor(gamedir, app.config['UNLOCKABLES_IMAGES_DIR'])
     extractor.extract()
 
     app.logger.info('Done')

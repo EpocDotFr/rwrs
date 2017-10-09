@@ -13,7 +13,16 @@
         <div class="pll">
             <h2><i class="fa fa-server"></i> Looking for a server?</h2>
             <div><a href="{{ url_for('servers_list') }}" class="btn"><i class="fa fa-chevron-right"></i> Go to the servers list</a></div>
-            <div class="mts">Currently <strong>{{ playing_players }}</strong> players on <strong>{{ non_empty_servers }}</strong> servers</div>
+            <div class="mts">Currently <strong>{{ playing_players }}</strong> players <span class="total-playing-friends is-hidden">(including <strong class="txtblue">?</strong> friends)</span> on <strong>{{ non_empty_servers }}</strong> servers</div>
         </div>
     </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/zepto/1.2.0/zepto.min.js"></script>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+    <script>
+        $(function() {
+            friendsFeature.all_players = {{ all_players|tojson }};
+            friendsFeature.initOnHome();
+        });
+    </script>
 {% endblock %}

@@ -146,4 +146,12 @@
     {% endif %}
 
     <div class="small txtcenter">Stats only concerns official invasion (ranked) servers which are tagged with a <i class="fa fa-star txtyellow"></i></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/zepto/1.2.0/zepto.min.js"></script>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+    <script>
+        $(function() {
+            // friendsFeature.initOnPlayerStats();
+        });
+    </script>
 {% endblock %}
