@@ -22,7 +22,7 @@ friendsFeature = {
         if (total_playing_players > 0) {
             $total_playing_players = $('.total-playing-friends');
 
-            $total_playing_players.children('strong').text(friendsCount);
+            $total_playing_players.children('strong').text(total_playing_players);
             $total_playing_players.removeClass('is-hidden');
         }
     },
@@ -47,10 +47,23 @@ friendsFeature = {
 
         // TODO
     },
-    totalPlayingFriends: function() {
+    getPlayingFriends: function() {
         var friends = this.getFriends();
+        var self = this;
+        var playing_friends = [];
 
-        return 2; // TODO this.all_players
+        $.each(friends, function(friends_index, friend) {
+            $.each(self.all_players, function(player_index, player) {
+                if (friend == player) {
+                    playing_friends.push(friend);
+                }
+            });
+        });
+
+        return playing_friends;
+    },
+    totalPlayingFriends: function() {
+        return this.getPlayingFriends().length;
     },
     getFriends: function() {
         return JSON.parse(localStorage.getItem('friends')) || [];
