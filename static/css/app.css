@@ -196,6 +196,14 @@ table tr.info:hover td {
     background-color: #3b576c !important;
 }
 
+table tr .actions {
+    display: none;
+}
+
+table tr:hover .actions {
+    display: inline-block;
+}
+
 /************************************************************************
  * Alerts */
 

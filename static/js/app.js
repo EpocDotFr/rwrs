@@ -38,7 +38,7 @@ friendsFeature = {
             return;
         }
 
-        $total_playing_players = $('.total-playing-friends');
+        var $total_playing_players = $('span.total-playing-friends');
 
         $total_playing_players.children('strong').text(playing_friends.length);
         $total_playing_players.removeClass('is-hidden');
@@ -54,7 +54,7 @@ friendsFeature = {
             return;
         }
 
-        $servers_list = $('.servers-list');
+        var $servers_list = $('table.servers-list > tbody > tr');
 
         $.each(this.all_players_with_servers, function(server_ip_and_port, players) {
             var highlight = false;
@@ -74,7 +74,7 @@ friendsFeature = {
             });
 
             if (highlight) {
-                $servers_list.find('tbody > tr[data-server-ip-and-port="' + server_ip_and_port + '"]').addClass('info');
+                $servers_list.filter('[data-server-ip-and-port="' + server_ip_and_port + '"]').addClass('info');
             }
         });
     },
@@ -84,12 +84,41 @@ friendsFeature = {
         }
 
         var friends = this.getFriends();
+        var self = this;
 
-        if (friends.length == 0) {
-            return;
-        }
+        var $players_list = $('table.players-list > tbody > tr');
 
-        $players_list = $('.players-list');
+        $players_list.each(function() {
+            var $tr = $(this);
+            var $add_friend_link = $tr.find('a.add-friend');
+            var $remove_friend_link = $tr.find('a.remove-friend');
+
+            $add_friend_link.on('click', function(e) {
+                e.preventDefault();
+
+                var $a = $(this);
+                var $closest_tr = $a.closest('tr[data-username]');
+
+                self.addFriend($closest_tr.data('username'));
+
+                $a.addClass('is-hidden');
+                $remove_friend_link.removeClass('is-hidden');
+                $closest_tr.addClass('info');
+            });
+
+            $remove_friend_link.on('click', function(e) {
+                e.preventDefault();
+
+                var $a = $(this);
+                var $closest_tr = $a.closest('tr[data-username]');
+
+                self.removeFriend($closest_tr.data('username'));
+
+                $a.addClass('is-hidden');
+                $add_friend_link.removeClass('is-hidden');
+                $closest_tr.removeClass('info');
+            });
+        });
 
         $.each(this.players, function(player_index, player) {
             var highlight = false;
@@ -102,8 +131,13 @@ friendsFeature = {
                 }
             });
 
+            var $player_tr = $players_list.filter('[data-username="' + player + '"]');
+
             if (highlight) {
-                $players_list.find('tbody > tr[data-username="' + player + '"]').addClass('info');
+                $player_tr.addClass('info');
+                $player_tr.find('a.remove-friend').removeClass('is-hidden');
+            } else {
+                $player_tr.find('a.add-friend').removeClass('is-hidden');
             }
         });
     },
@@ -123,11 +157,11 @@ friendsFeature = {
     addFriend: function(username) {
         var friends = this.getFriends();
 
-        if ((username in friends)) {
+        if ($.inArray(username, friends) !== -1) {
             return false;
         }
 
-        friends.append(username);
+        friends.push(username);
 
         this.setFriends(friends);
 
@@ -136,7 +170,7 @@ friendsFeature = {
     removeFriend: function(username) {
         var friends = this.getFriends();
 
-        if (!(username in friends)) {
+        if ($.inArray(username, friends) === -1) {
             return false;
         }
 

@@ -45,27 +45,31 @@
             </table>
 
             <table class="striped mbn players-list">
-                <tr>
-                    <th>Players list</th>
-                </tr>
-                {% for player in server.players.list %}
-                    <tr data-username="{{ player }}">
-                        <td>
-                            <div class="inbl fr">
-                                <a href="#" title="Add as friend"><i class="fa fa-user-plus"></i></a>
-                                <a href="#" title="Remove friend"><i class="fa fa-user-times"></i></a>
-                            </div>
-
-                            {{ macros.me_easter_egg(player, raw=True) }} <a href="{{ url_for('player_stats', username=player) }}">{{ player }}</a>
-                        </td>
-                    </tr>
-                {% else %}
+                <thead>
                     <tr>
-                        <td>
-                            <div class="alert info pas">Nobody currently playing.</div>
-                        </td>
+                        <th>Players list</th>
                     </tr>
-                {% endfor %}
+                </thead>
+                <tbody>
+                    {% for player in server.players.list %}
+                        <tr data-username="{{ player }}">
+                            <td>
+                                <div class="actions fr">
+                                    <a href="#" title="Add to friends list" class="add-friend is-hidden"><i class="fa fa-user-plus"></i></a>
+                                    <a href="#" title="Remove from friends list" class="remove-friend is-hidden"><i class="fa fa-user-times"></i></a>
+                                </div>
+
+                                {{ macros.me_easter_egg(player, raw=True) }} <a href="{{ url_for('player_stats', username=player) }}">{{ player }}</a>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td>
+                                <div class="alert info pas">Nobody currently playing.</div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
             </table>
 
             <p class="txtcenter">

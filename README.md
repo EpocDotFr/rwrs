@@ -10,6 +10,7 @@ and more. Available at [rwrs.epoc.fr](https://rwrs.epoc.fr/).
     - Search for a player
     - View player stats (as well as next rank progression, which server he's playing on, etc). Note that stats only concerns official invasion (ranked) servers
     - Compare two players stats
+    - Friends list (easily know on which servers your friends are playing on. This don't need to create a user account or whatever)
   - Public servers
     - Real servers location
     - Real maps name
@@ -21,6 +22,7 @@ and more. Available at [rwrs.epoc.fr](https://rwrs.epoc.fr/).
 ## Prerequisites
 
   - Should work on any Python 3.x version. Feel free to test with another Python version and give me feedback
+  - A modern web browser (which optionally support localStorage)
   - (Optional, but recommended) A [uWSGI](https://uwsgi-docs.readthedocs.io/en/latest/)-capable web server
   - (Optional) Running With Rifles, if you need to extract images
 
