@@ -189,11 +189,11 @@ table.clickable tr:hover td {
 }
 
 table tr.info td {
-    background-color: #3b5162;
+    background-color: #3b5162 !important;
 }
 
 table tr.info:hover td {
-    background-color: #3b576c;
+    background-color: #3b576c !important;
 }
 
 /************************************************************************

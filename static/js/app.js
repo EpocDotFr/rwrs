@@ -17,30 +17,31 @@ friendsFeature = {
             return;
         }
 
-        var total_playing_players = this.getPlayingFriends().length;
+        var friends = this.getFriends();
 
-        if (total_playing_players == 0) {
+        if (friends.length == 0) {
+            return;
+        }
+
+        var self = this;
+        var playing_friends = [];
+
+        $.each(friends, function(friends_index, friend) {
+            $.each(self.all_players, function(player_index, player) {
+                if (friend == player) {
+                    playing_friends.push(friend);
+                }
+            });
+        });
+
+        if (playing_friends.length == 0) {
             return;
         }
 
         $total_playing_players = $('.total-playing-friends');
 
-        $total_playing_players.children('strong').text(total_playing_players);
+        $total_playing_players.children('strong').text(playing_friends.length);
         $total_playing_players.removeClass('is-hidden');
-    },
-    initOnPlayerStats: function() {
-        if (!isLocalStorageSupported()) {
-            return;
-        }
-
-        // TODO
-    },
-    initOnServerDetails: function() {
-        if (!isLocalStorageSupported()) {
-            return;
-        }
-
-        // TODO
     },
     initOnServersList: function() {
         if (!isLocalStorageSupported()) {
@@ -52,8 +53,6 @@ friendsFeature = {
         if (friends.length == 0) {
             return;
         }
-
-        console.log(friends);
 
         $servers_list = $('.servers-list');
 
@@ -74,27 +73,46 @@ friendsFeature = {
                 }
             });
 
-            console.log(highlight);
-
             if (highlight) {
                 $servers_list.find('tbody > tr[data-server-ip-and-port="' + server_ip_and_port + '"]').addClass('info');
             }
         });
     },
-    getPlayingFriends: function() {
-        var friends = this.getFriends();
-        var self = this;
-        var playing_friends = [];
+    initOnServerDetails: function() {
+        if (!isLocalStorageSupported()) {
+            return;
+        }
 
-        $.each(friends, function(friends_index, friend) {
-            $.each(self.all_players, function(player_index, player) {
-                if (friend == player) {
-                    playing_friends.push(friend);
+        var friends = this.getFriends();
+
+        if (friends.length == 0) {
+            return;
+        }
+
+        $players_list = $('.players-list');
+
+        $.each(this.players, function(player_index, player) {
+            var highlight = false;
+
+            $.each(friends, function(friends_index, friend) {
+                if (player == friend) {
+                    highlight = true;
+
+                    return false;
                 }
             });
-        });
 
-        return playing_friends;
+            if (highlight) {
+                $players_list.find('tbody > tr[data-username="' + player + '"]').addClass('info');
+            }
+        });
+    },
+    initOnPlayerStats: function() {
+        if (!isLocalStorageSupported()) {
+            return;
+        }
+
+        // TODO
     },
     getFriends: function() {
         return JSON.parse(localStorage.getItem('friends')) || [];
