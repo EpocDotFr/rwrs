@@ -147,7 +147,9 @@ def servers_list():
 
     playing_players, non_empty_servers = scraper.get_players_on_servers_counts()
 
-    return render_template('servers_list.html', servers=scraper.get_servers(), playing_players=playing_players, non_empty_servers=non_empty_servers)
+    all_players_with_servers = scraper.get_all_players_with_servers()
+
+    return render_template('servers_list.html', all_players_with_servers=all_players_with_servers, servers=scraper.get_servers(), playing_players=playing_players, non_empty_servers=non_empty_servers)
 
 
 @app.route('/servers/<ip_and_port>')

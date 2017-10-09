@@ -410,9 +410,26 @@ class DataScraper:
         ret = []
 
         for server in servers:
+            if not server.players.list:
+                continue
+
             ret.extend(server.players.list)
 
         return list(set(ret))
+
+    def get_all_players_with_servers(self):
+        """Get all the players usernames along the server their are playing on."""
+        servers = self.get_servers()
+
+        ret = {}
+
+        for server in servers:
+            if not server.players.list:
+                continue
+
+            ret[server.ip_and_port] = server.players.list
+
+        return ret
 
     @rwrs.cache.memoize(timeout=rwrs.app.config['PLAYERS_CACHE_TIMEOUT'])
     def get_players(self, start=0, sort=PlayersSort.SCORE):

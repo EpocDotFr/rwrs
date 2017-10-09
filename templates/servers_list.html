@@ -8,7 +8,7 @@
 
 {% block content %}
     {% if servers %}
-        <table class="striped clickable mbn">
+        <table class="striped clickable mbn servers-list">
             <thead>
                 <tr>
                     <th>Name</th>
@@ -20,7 +20,7 @@
             </thead>
             <tbody>
                 {% for server in servers %}
-                    <tr onclick="window.location.href = '{{ url_for('server_details', ip_and_port=server.ip_and_port) }}';">
+                    <tr onclick="window.location.href = '{{ url_for('server_details', ip_and_port=server.ip_and_port) }}';" data-server-ip-and-port="{{ server.ip_and_port }}">
                         <td>{{ macros.location(server.location) }} {{ macros.server_name(server) }}</td>
                         <td class="{{ macros.server_slots_class(server) }}">{{ server.players.current }}</td>
                         <td>{{ server.players.max }}</td>
@@ -44,7 +44,8 @@
         <script src="{{ url_for('static', filename='js/app.js') }}"></script>
         <script>
             $(function() {
-                // friendsFeature.initOnServersList();
+                friendsFeature.all_players_with_servers = {{ all_players_with_servers|tojson }};
+                friendsFeature.initOnServersList();
             });
         </script>
     {% else %}

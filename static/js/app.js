@@ -17,14 +17,16 @@ friendsFeature = {
             return;
         }
 
-        var total_playing_players = this.totalPlayingFriends();
+        var total_playing_players = this.getPlayingFriends().length;
 
-        if (total_playing_players > 0) {
-            $total_playing_players = $('.total-playing-friends');
-
-            $total_playing_players.children('strong').text(total_playing_players);
-            $total_playing_players.removeClass('is-hidden');
+        if (total_playing_players == 0) {
+            return;
         }
+
+        $total_playing_players = $('.total-playing-friends');
+
+        $total_playing_players.children('strong').text(total_playing_players);
+        $total_playing_players.removeClass('is-hidden');
     },
     initOnPlayerStats: function() {
         if (!isLocalStorageSupported()) {
@@ -45,7 +47,39 @@ friendsFeature = {
             return;
         }
 
-        // TODO
+        var friends = this.getFriends();
+
+        if (friends.length == 0) {
+            return;
+        }
+
+        console.log(friends);
+
+        $servers_list = $('.servers-list');
+
+        $.each(this.all_players_with_servers, function(server_ip_and_port, players) {
+            var highlight = false;
+
+            $.each(players, function(player_index, player) {
+                $.each(friends, function(friends_index, friend) {
+                    if (player == friend) {
+                        highlight = true;
+
+                        return false;
+                    }
+                });
+
+                if (highlight) {
+                    return false;
+                }
+            });
+
+            console.log(highlight);
+
+            if (highlight) {
+                $servers_list.find('tbody > tr[data-server-ip-and-port="' + server_ip_and_port + '"]').addClass('info');
+            }
+        });
     },
     getPlayingFriends: function() {
         var friends = this.getFriends();
@@ -61,9 +95,6 @@ friendsFeature = {
         });
 
         return playing_friends;
-    },
-    totalPlayingFriends: function() {
-        return this.getPlayingFriends().length;
     },
     getFriends: function() {
         return JSON.parse(localStorage.getItem('friends')) || [];
@@ -96,11 +127,5 @@ friendsFeature = {
         this.setFriends(friends);
 
         return true;
-    },
-    totalFriends: function() {
-        return this.getFriends().length;
-    },
-    hasFriends: function() {
-        return this.totalFriends() > 0;
     }
 }

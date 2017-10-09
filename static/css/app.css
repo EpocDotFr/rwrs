@@ -180,12 +180,20 @@ table.striped tr:nth-child(even) td {
     background-color: #444;
 }
 
-table.striped tbody > tr:hover td {
+table.striped tr:hover td {
     background-color: #4b4b4b;
 }
 
-table.clickable tbody > tr:hover td {
+table.clickable tr:hover td {
     cursor: pointer;
+}
+
+table tr.info td {
+    background-color: #3b5162;
+}
+
+table tr.info:hover td {
+    background-color: #3b576c;
 }
 
 /************************************************************************
