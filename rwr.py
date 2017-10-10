@@ -418,7 +418,7 @@ class DataScraper:
         return list(set(ret))
 
     def get_all_players_with_servers(self):
-        """Get all the players usernames along the server their are playing on."""
+        """Get all the players usernames along the server they are playing on."""
         servers = self.get_servers()
 
         ret = {}
@@ -428,6 +428,34 @@ class DataScraper:
                 continue
 
             ret[server.ip_and_port] = server.players.list
+
+        return ret
+
+    def get_all_players_with_servers_details(self):
+        """Get all the players usernames along details about the servers they are playing on."""
+        servers = self.get_servers()
+
+        ret = []
+
+        for server in servers:
+            if not server.players.list:
+                continue
+
+            ret.append({
+                'name': server.name,
+                'website': server.website,
+                'is_ranked': server.is_ranked,
+                'steam_join_link': server.steam_join_link,
+                'location': {
+                    'country_code': server.location.country_code,
+                    'country_name': server.location.country_name
+                },
+                'players': {
+                    'current': server.players.current,
+                    'max': server.players.max,
+                    'list': server.players.list
+                }
+            })
 
         return ret
 

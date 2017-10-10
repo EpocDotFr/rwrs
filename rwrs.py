@@ -80,7 +80,9 @@ def home():
 
 @app.route('/my-friends')
 def my_friends():
-    all_players_with_servers_details = []
+    scraper = rwr.DataScraper()
+
+    all_players_with_servers_details = scraper.get_all_players_with_servers_details()
 
     return render_template('manage_friends.html', all_players_with_servers_details=all_players_with_servers_details)
 
