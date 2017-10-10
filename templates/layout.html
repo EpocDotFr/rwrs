@@ -16,11 +16,14 @@
     <link rel="stylesheet" href="https://cdn.rawgit.com/alsacreations/KNACSS/6.1.2/css/knacss.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/flags.min.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/zepto/1.2.0/zepto.min.js"></script>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
 </head>
 <body>
     <header class="txtcenter pts pbs">
         <div class="w1140p center">
-            <a href="{{ url_for('home') }}" class="manage-friends-link inbl fr"><i class="fa fa-users"></i> My friends</a>
+            <a href="{{ url_for('home') }}" class="manage-friends-link inbl fr is-hidden"><i class="fa fa-users"></i> My friends</a>
             <a href="{{ url_for('home') }}"><img src="{{ url_for('static', filename='images/logo.png') }}"></a>
         </div>
     </header>

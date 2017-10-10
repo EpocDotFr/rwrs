@@ -16,10 +16,22 @@ function isLocalStorageSupported() {
  */
 friendsFeature = {
     /**
+     * Global initialization of the feature (on all pages).
+     */
+    init: function() {
+        if (!isLocalStorageSupported()) {
+            return false;
+        }
+
+        $('.manage-friends-link').removeClass('is-hidden');
+
+        return true;
+    },
+    /**
      * Initialize the Friends feature on the Home page.
      */
     initOnHome: function() {
-        if (!isLocalStorageSupported()) {
+        if (!this.init()) {
             return;
         }
 
@@ -53,7 +65,7 @@ friendsFeature = {
      * Initialize the Friends feature on the Servers list page.
      */
     initOnServersList: function() {
-        if (!isLocalStorageSupported()) {
+        if (!this.init()) {
             return;
         }
 
@@ -91,7 +103,7 @@ friendsFeature = {
      * Initialize the Friends feature on the Server details page.
      */
     initOnServerDetails: function() {
-        if (!isLocalStorageSupported()) {
+        if (!this.init()) {
             return;
         }
 
@@ -160,7 +172,7 @@ friendsFeature = {
      * Initialize the Friends feature on the Player stats page.
      */
     initOnPlayerStats: function() {
-        if (!isLocalStorageSupported()) {
+        if (!this.init()) {
             return;
         }
 
