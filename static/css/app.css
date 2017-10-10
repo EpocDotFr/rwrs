@@ -196,7 +196,8 @@ table tr.info:hover td {
     background-color: #3b576c !important;
 }
 
-table tr .actions {
+table tr .actions,
+table tr .actions-disabled {
     display: none;
 }
 

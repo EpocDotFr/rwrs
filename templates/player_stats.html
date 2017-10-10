@@ -8,7 +8,7 @@
 
 {% block content %}
     <form method="get" action="{{ url_for('players_compare', username=player.username) }}" class="txtcenter mts mbs">
-        <input type="text" name="username_to_compare_with" placeholder="Type a player name" required> <button type="submit">Compare</button>
+        <input type="text" name="username_to_compare_with" placeholder="Type a player name" required> <button type="submit">Compare with this player</button>
     </form>
 
     <table class="mbs">

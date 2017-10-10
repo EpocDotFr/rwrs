@@ -11,7 +11,13 @@ function isLocalStorageSupported() {
     }
 }
 
+/**
+ * The Friends feature logic.
+ */
 friendsFeature = {
+    /**
+     * Initialize the Friends feature on the Home page.
+     */
     initOnHome: function() {
         if (!isLocalStorageSupported()) {
             return;
@@ -43,6 +49,9 @@ friendsFeature = {
         $total_playing_players.children('strong').text(playing_friends.length);
         $total_playing_players.removeClass('is-hidden');
     },
+    /**
+     * Initialize the Friends feature on the Servers list page.
+     */
     initOnServersList: function() {
         if (!isLocalStorageSupported()) {
             return;
@@ -78,10 +87,16 @@ friendsFeature = {
             }
         });
     },
+    /**
+     * Initialize the Friends feature on the Server details page.
+     */
     initOnServerDetails: function() {
         if (!isLocalStorageSupported()) {
             return;
         }
+
+        // Enable the feature on the players list
+        $('.actions-disabled').removeClass('actions-disabled').addClass('actions');
 
         var friends = this.getFriends();
         var self = this;
@@ -141,6 +156,9 @@ friendsFeature = {
             }
         });
     },
+    /**
+     * Initialize the Friends feature on the Player stats page.
+     */
     initOnPlayerStats: function() {
         if (!isLocalStorageSupported()) {
             return;
@@ -148,12 +166,21 @@ friendsFeature = {
 
         // TODO
     },
+    /**
+     * Get all the user's friends.
+     */
     getFriends: function() {
         return JSON.parse(localStorage.getItem('friends')) || [];
     },
+    /**
+     * Set the user's friends.
+     */
     setFriends: function(friends) {
         localStorage.setItem('friends', JSON.stringify(friends));
     },
+    /**
+     * Add a new friend to the user's friends list.
+     */
     addFriend: function(username) {
         var friends = this.getFriends();
 
@@ -167,6 +194,9 @@ friendsFeature = {
 
         return true;
     },
+    /**
+     * Remove a friend from the user's friends list.
+     */
     removeFriend: function(username) {
         var friends = this.getFriends();
 
