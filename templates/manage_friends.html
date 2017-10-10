@@ -5,25 +5,29 @@
 {% block meta_title %}My friends{% endblock %}
 
 {% block content %}
-    <table class="striped mbn">
-        <thead>
-            <tr>
-                <th>Name</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>
-
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <div class="alert info pas">You have no friends at this moment.</div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+    <div id="app" v-cloak>
+        <table class="striped mbn">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th class="w100p"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="friend in enrichedFriends">
+                    <td>${ friend }</td>
+                    <td class="txtcenter">
+                        <a href="#" class="btn" @click.prevent="removeFriend(friend)" title="Remove from friends list"><i class="fa fa-user-times"></i></a>
+                    </td>
+                </tr>
+                <tr v-show="friends.length == 0">
+                    <td class="txtcenter" colspan="2">
+                        <div class="alert info pas txtcenter"><img src="{{ url_for('static', filename='images/forever_alone.png') }}"><br>You don't have friends at this moment.</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.4.4/vue{{ '.min' if not config['DEBUG'] else '' }}.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/zepto/1.2.0/zepto.min.js"></script>
@@ -32,6 +36,7 @@
         Vue.config.silent = {{ 'false' if config['DEBUG'] else 'true' }};
         Vue.config.productionTip = false;
 
+        friendsFeature.all_players_with_servers_details = {{ all_players_with_servers_details|tojson }};
         friendsFeature.initOnMyFriends();
     </script>
 {% endblock %}

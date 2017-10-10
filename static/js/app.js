@@ -35,6 +35,36 @@ friendsFeature = {
             return;
         }
 
+        this.app = new Vue({
+            delimiters: ['${', '}'], // Because Jinja2 already uses double brackets
+            el: '#app',
+            data: {
+                rawPlayersWithServersDetails: friendsFeature.all_players_with_servers_details,
+                friends: []
+            },
+            mounted: function() {
+                this.$nextTick(function() {
+                    friendsFeature.app.friends = friendsFeature.getFriends();
+                });
+            },
+            methods: {
+                removeFriend: function(username) {
+                    if (friendsFeature.removeFriend(username)) {
+                        this.friends.splice(this.friends.indexOf(username), 1);
+                    }
+                },
+                addFriend: function(username) {
+                    if (friendsFeature.addFriend(username)) {
+                        this.friends.push(username);
+                    }
+                }
+            },
+            computed: {
+                enrichedFriends: function() {
+                    return this.friends; // TODO
+                }
+            }
+        });
     },
     /**
      * Initialize the Friends feature on the Home page.
@@ -50,11 +80,10 @@ friendsFeature = {
             return;
         }
 
-        var self = this;
         var playing_friends = [];
 
         $.each(friends, function(friends_index, friend) {
-            $.each(self.all_players, function(player_index, player) {
+            $.each(friendsFeature.all_players, function(player_index, player) {
                 if (friend == player) {
                     playing_friends.push(friend);
                 }
@@ -120,7 +149,6 @@ friendsFeature = {
         $('.actions-disabled').removeClass('actions-disabled').addClass('actions');
 
         var friends = this.getFriends();
-        var self = this;
 
         var $players_list = $('.players-list > tbody > tr');
 
@@ -135,7 +163,7 @@ friendsFeature = {
                 var $a = $(this);
                 var $closest_tr = $a.closest('tr[data-username]');
 
-                self.addFriend($closest_tr.data('username'));
+                friendsFeature.addFriend($closest_tr.data('username'));
 
                 $a.addClass('is-hidden');
                 $remove_friend_link.removeClass('is-hidden');
@@ -148,7 +176,7 @@ friendsFeature = {
                 var $a = $(this);
                 var $closest_tr = $a.closest('tr[data-username]');
 
-                self.removeFriend($closest_tr.data('username'));
+                friendsFeature.removeFriend($closest_tr.data('username'));
 
                 $a.addClass('is-hidden');
                 $add_friend_link.removeClass('is-hidden');
@@ -186,7 +214,6 @@ friendsFeature = {
         }
 
         var friends = this.getFriends();
-        var self = this;
 
         var $add_friend_link = $('.add-friend');
         var $remove_friend_link = $('.remove-friend');
@@ -194,7 +221,7 @@ friendsFeature = {
         $add_friend_link.on('click', function(e) {
             e.preventDefault();
 
-            self.addFriend(self.player);
+            friendsFeature.addFriend(friendsFeature.player);
 
             $(this).addClass('is-hidden');
             $remove_friend_link.removeClass('is-hidden');
@@ -203,7 +230,7 @@ friendsFeature = {
         $remove_friend_link.on('click', function(e) {
             e.preventDefault();
 
-            self.removeFriend(self.player);
+            friendsFeature.removeFriend(friendsFeature.player);
 
             $(this).addClass('is-hidden');
             $add_friend_link.removeClass('is-hidden');
