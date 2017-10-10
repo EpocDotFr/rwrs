@@ -164,7 +164,35 @@ friendsFeature = {
             return;
         }
 
-        // TODO
+        var friends = this.getFriends();
+        var self = this;
+
+        var $add_friend_link = $('a.add-friend');
+        var $remove_friend_link = $('a.remove-friend');
+
+        $add_friend_link.on('click', function(e) {
+            e.preventDefault();
+
+            self.addFriend(self.player);
+
+            $(this).addClass('is-hidden');
+            $remove_friend_link.removeClass('is-hidden');
+        });
+
+        $remove_friend_link.on('click', function(e) {
+            e.preventDefault();
+
+            self.removeFriend(self.player);
+
+            $(this).addClass('is-hidden');
+            $add_friend_link.removeClass('is-hidden');
+        });
+
+        if ($.inArray(this.player, friends) !== -1) {
+            $remove_friend_link.removeClass('is-hidden');
+        } else {
+            $add_friend_link.removeClass('is-hidden');
+        }
     },
     /**
      * Get all the user's friends.
