@@ -19,7 +19,10 @@
 </head>
 <body>
     <header class="txtcenter pts pbs">
-        <a href="{{ url_for('home') }}"><img src="{{ url_for('static', filename='images/logo.png') }}"></a>
+        <div class="w1140p center">
+            <a href="{{ url_for('home') }}" class="manage-friends-link inbl fr"><i class="fa fa-users"></i> My friends</a>
+            <a href="{{ url_for('home') }}"><img src="{{ url_for('static', filename='images/logo.png') }}"></a>
+        </div>
     </header>
 
     <nav>

@@ -30,6 +30,13 @@ h2 {
     vertical-align: middle;
 }
 
+.help {
+    cursor: help;
+}
+
+/************************************************************************
+ * Text colors */
+
 .txtred {
     color: #f64242;
 }
@@ -54,8 +61,26 @@ h2 {
     color: #44b2f8;
 }
 
-.help {
-    cursor: help;
+/************************************************************************
+ * Header */
+
+header > div {
+    position: relative;
+}
+
+header .manage-friends-link,
+header .manage-friends-link:visited {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: auto;
+    bottom: auto;
+    text-decoration: none;
+}
+
+header .manage-friends-link:hover,
+header .manage-friends-link:focus {
+    color: #FFF;
 }
 
 /************************************************************************

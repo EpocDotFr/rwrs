@@ -44,7 +44,7 @@ friendsFeature = {
             return;
         }
 
-        var $total_playing_players = $('span.total-playing-friends');
+        var $total_playing_players = $('.total-playing-friends');
 
         $total_playing_players.children('strong').text(playing_friends.length);
         $total_playing_players.removeClass('is-hidden');
@@ -63,7 +63,7 @@ friendsFeature = {
             return;
         }
 
-        var $servers_list = $('table.servers-list > tbody > tr');
+        var $servers_list = $('.servers-list > tbody > tr');
 
         $.each(this.all_players_with_servers, function(server_ip_and_port, players) {
             var highlight = false;
@@ -101,12 +101,12 @@ friendsFeature = {
         var friends = this.getFriends();
         var self = this;
 
-        var $players_list = $('table.players-list > tbody > tr');
+        var $players_list = $('.players-list > tbody > tr');
 
         $players_list.each(function() {
             var $tr = $(this);
-            var $add_friend_link = $tr.find('a.add-friend');
-            var $remove_friend_link = $tr.find('a.remove-friend');
+            var $add_friend_link = $tr.find('.add-friend');
+            var $remove_friend_link = $tr.find('.remove-friend');
 
             $add_friend_link.on('click', function(e) {
                 e.preventDefault();
@@ -150,9 +150,9 @@ friendsFeature = {
 
             if (highlight) {
                 $player_tr.addClass('info');
-                $player_tr.find('a.remove-friend').removeClass('is-hidden');
+                $player_tr.find('.remove-friend').removeClass('is-hidden');
             } else {
-                $player_tr.find('a.add-friend').removeClass('is-hidden');
+                $player_tr.find('.add-friend').removeClass('is-hidden');
             }
         });
     },
@@ -167,8 +167,8 @@ friendsFeature = {
         var friends = this.getFriends();
         var self = this;
 
-        var $add_friend_link = $('a.add-friend');
-        var $remove_friend_link = $('a.remove-friend');
+        var $add_friend_link = $('.add-friend');
+        var $remove_friend_link = $('.remove-friend');
 
         $add_friend_link.on('click', function(e) {
             e.preventDefault();
