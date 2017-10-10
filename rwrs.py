@@ -78,6 +78,11 @@ def home():
     return render_template('home.html', all_players=all_players, playing_players=playing_players, non_empty_servers=non_empty_servers)
 
 
+@app.route('/my-friends')
+def my_friends():
+    return render_template('manage_friends.html')
+
+
 @app.route('/players')
 @app.route('/players/<username>')
 def player_stats(username=None):

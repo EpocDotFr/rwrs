@@ -28,6 +28,15 @@ friendsFeature = {
         return true;
     },
     /**
+     * Initialize the Friends feature on the My friends page.
+     */
+    initOnMyFriends: function() {
+        if (!this.init()) {
+            return;
+        }
+
+    },
+    /**
      * Initialize the Friends feature on the Home page.
      */
     initOnHome: function() {

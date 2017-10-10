@@ -1,0 +1,37 @@
+{% extends 'layout.html' %}
+
+{% block page_title %}<h2><i class="fa fa-users"></i> My friends</h2>{% endblock %}
+
+{% block meta_title %}My friends{% endblock %}
+
+{% block content %}
+    <table class="striped mbn">
+        <thead>
+            <tr>
+                <th>Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="alert info pas">You have no friends at this moment.</div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.4.4/vue{{ '.min' if not config['DEBUG'] else '' }}.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/zepto/1.2.0/zepto.min.js"></script>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+    <script>
+        Vue.config.silent = {{ 'false' if config['DEBUG'] else 'true' }};
+        Vue.config.productionTip = false;
+
+        friendsFeature.initOnMyFriends();
+    </script>
+{% endblock %}
