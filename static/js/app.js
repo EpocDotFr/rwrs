@@ -44,7 +44,8 @@ friendsFeature = {
             el: '#app',
             data: {
                 friends: [],
-                my_username: friendsFeature.my_username
+                my_username: friendsFeature.my_username,
+                friend_to_add: ''
             },
             mounted: function() {
                 this.$nextTick(function() {
@@ -55,11 +56,26 @@ friendsFeature = {
                 removeFriend: function(username) {
                     if (friendsFeature.removeFriend(username)) {
                         this.friends.splice(this.friends.indexOf(username), 1);
+
+                        return true;
                     }
+
+                    return false;
                 },
                 addFriend: function(username) {
                     if (friendsFeature.addFriend(username)) {
                         this.friends.push(username);
+
+                        return true;
+                    }
+
+                    return false;
+                },
+                submitAddFriendForm: function() {
+                    if (this.addFriend(this.friend_to_add.toUpperCase())) {
+                        this.friend_to_add = '';
+                    } else {
+                        alert('Friend wasn\'t added. Hey may be already in your friends list.');
                     }
                 }
             },
