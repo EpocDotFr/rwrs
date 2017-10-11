@@ -55,8 +55,8 @@
                         <tr data-username="{{ player }}">
                             <td>
                                 <div class="actions-disabled fr">
-                                    <a href="#" title="Add to friends list" class="add-friend is-hidden"><i class="fa fa-user-plus"></i></a>
-                                    <a href="#" title="Remove from friends list" class="remove-friend is-hidden"><i class="fa fa-user-times"></i></a>
+                                    <a href="#" title="Add {{ player }} to friends list" class="add-friend is-hidden"><i class="fa fa-user-plus"></i></a>
+                                    <a href="#" title="Remove {{ player }} from friends list" class="remove-friend is-hidden"><i class="fa fa-user-times"></i></a>
                                 </div>
 
                                 {{ macros.me_easter_egg(player, raw=True) }} <a href="{{ url_for('player_stats', username=player) }}">{{ player }}</a>

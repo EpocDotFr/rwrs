@@ -35,12 +35,16 @@ friendsFeature = {
             return;
         }
 
+        Vue.config.productionTip = false;
+
+        var vue_delimiters = ['${', '}']; // Because Jinja2 already uses double brackets
+
         this.app = new Vue({
-            delimiters: ['${', '}'], // Because Jinja2 already uses double brackets
+            delimiters: vue_delimiters,
             el: '#app',
             data: {
-                rawPlayersWithServersDetails: friendsFeature.all_players_with_servers_details,
-                friends: []
+                friends: [],
+                my_username: friendsFeature.my_username
             },
             mounted: function() {
                 this.$nextTick(function() {
@@ -60,8 +64,24 @@ friendsFeature = {
                 }
             },
             computed: {
-                enrichedFriends: function() {
-                    return this.friends; // TODO
+                friendsEnriched: function() {
+                    var enriched_friends = [];
+
+                    $.each(this.friends, function(friend_index, friend) {
+                        var enriched_friend = {
+                            username: friend
+                        };
+
+                        $.each(friendsFeature.all_players_with_servers_details, function(server_index, server) {
+                            if ($.inArray(friend, server.players.list) !== -1) {
+                                enriched_friend.playing_on_server = server;
+                            }
+                        });
+
+                        enriched_friends.push(enriched_friend)
+                    });
+
+                    return enriched_friends;
                 }
             }
         });
@@ -82,12 +102,10 @@ friendsFeature = {
 
         var playing_friends = [];
 
-        $.each(friends, function(friends_index, friend) {
-            $.each(friendsFeature.all_players, function(player_index, player) {
-                if (friend == player) {
-                    playing_friends.push(friend);
-                }
-            });
+        $.each(friends, function(friend_index, friend) {
+            if ($.inArray(friend, friendsFeature.all_players) !== -1) {
+                playing_friends.push(friend);
+            }
         });
 
         if (playing_friends.length == 0) {
@@ -118,16 +136,10 @@ friendsFeature = {
         $.each(this.all_players_with_servers, function(server_ip_and_port, players) {
             var highlight = false;
 
-            $.each(players, function(player_index, player) {
-                $.each(friends, function(friends_index, friend) {
-                    if (player == friend) {
-                        highlight = true;
+            $.each(friends, function(friends_index, friend) {
+                if ($.inArray(friend, players) !== -1) {
+                    highlight = true;
 
-                        return false;
-                    }
-                });
-
-                if (highlight) {
                     return false;
                 }
             });
@@ -187,13 +199,9 @@ friendsFeature = {
         $.each(this.players, function(player_index, player) {
             var highlight = false;
 
-            $.each(friends, function(friends_index, friend) {
-                if (player == friend) {
-                    highlight = true;
-
-                    return false;
-                }
-            });
+            if ($.inArray(player, friends) !== -1) {
+                highlight = true;
+            }
 
             var $player_tr = $players_list.filter('[data-username="' + player + '"]');
 
@@ -252,7 +260,7 @@ friendsFeature = {
      * Set the user's friends.
      */
     setFriends: function(friends) {
-        localStorage.setItem('friends', JSON.stringify(friends));
+        localStorage.setItem('friends', JSON.stringify(friends.sort()));
     },
     /**
      * Add a new friend to the user's friends list.

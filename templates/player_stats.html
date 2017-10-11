@@ -8,12 +8,16 @@
 
 {% block content %}
     <div class="txtcenter mbs">
-        <form method="get" action="{{ url_for('players_compare', username=player.username) }}" class="inbl">
-            <input type="text" name="username_to_compare_with" placeholder="Type a player name" required> <button type="submit">Compare players</button>
+        <form method="get" action="{{ url_for('players_compare', username=player.username) }}" class="inbl fl">
+            <input type="text" name="username_to_compare_with" placeholder="Type a player name" required> <button type="submit"><i class="fa fa-files-o"></i> Compare players</button>
         </form>
 
-        <a href="#" class="btn add-friend is-hidden"><i class="fa fa-user-plus"></i> Add to friends list</a>
-        <a href="#" class="btn remove-friend is-hidden"><i class="fa fa-user-times"></i> Remove from friends list</a>
+        <div class="fr">
+            <a href="#" class="btn add-friend is-hidden"><i class="fa fa-user-plus"></i> Add {{ player.username }} to friends list</a>
+            <a href="#" class="btn remove-friend is-hidden"><i class="fa fa-user-times"></i> Remove {{ player.username }} from friends list</a>
+        </div>
+
+        <div class="clearfix"></div>
     </div>
 
     <table class="mbs">

@@ -9,19 +9,45 @@
         <table class="striped mbn">
             <thead>
                 <tr>
-                    <th>Name</th>
+                    <th>Friend name</th>
+                    <th>Playing on server</th>
+                    <th>Current players</th>
+                    <th>Max players</th>
                     <th class="w100p"></th>
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="friend in enrichedFriends">
-                    <td>${ friend }</td>
+                <tr v-for="friend in friendsEnriched">
+                    <td>
+                        <img src="/images/me.png" title="Hey, I'm the creator of this website! Glad to see you're using it." class="help" v-if="friend.username.toLowerCase() == my_username">
+                        <a :href="'/players/' + friend.username">${ friend.username }</a>
+                    </td>
+                    <td>
+                        <template v-if="friend.playing_on_server">
+                            <a :href="friend.playing_on_server.players.free > 0 ? friend.playing_on_server.steam_join_link : '#'" :class="['btn', friend.playing_on_server.players.free == 0 ? 'disabled' : '']" onclick="return false;" :title="friend.playing_on_server.players.free == 0 ? 'Server is full' : ''" v-if="friend.playing_on_server"><i class="fa fa-steam"></i> Join</a>
+                            <i :class="['flag', 'flag-' + friend.playing_on_server.location.country_code]" :title="friend.playing_on_server.location.country_name" v-if="friend.playing_on_server.location.country_code"></i>
+                            <i class="fa fa-star txtyellow help" title="Ranked server" v-if="friend.playing_on_server.is_ranked"></i>
+                            <a :href="'/servers/' + friend.playing_on_server.ip_and_port">${ friend.playing_on_server.name }</a>
+                        </template>
+                    </td>
+                    <td>
+                        <template v-if="friend.playing_on_server">
+                            <span :class="[(friend.playing_on_server.players.free == 1 || friend.playing_on_server.players.free == 2) ? 'txtorange' : '', friend.playing_on_server.players.free == 0 ? 'txtred' : '']">
+                                ${ friend.playing_on_server.players.current }
+                            </span>
+                        </template>
+                    </td>
+                    <td>
+                        <template v-if="friend.playing_on_server">
+                            ${ friend.playing_on_server.players.max }
+                        </template>
+                    </td>
                     <td class="txtcenter">
-                        <a href="#" class="btn" @click.prevent="removeFriend(friend)" title="Remove from friends list"><i class="fa fa-user-times"></i></a>
+                        <a href="#" class="btn" @click.prevent="removeFriend(friend.username)" :title="'Remove ' + friend.username + ' from friends list'"><i class="fa fa-user-times"></i></a>
                     </td>
                 </tr>
-                <tr v-show="friends.length == 0">
-                    <td class="txtcenter" colspan="2">
+                <tr v-show="friendsEnriched.length == 0">
+                    <td class="txtcenter" colspan="5">
                         <div class="alert info pas txtcenter"><img src="{{ url_for('static', filename='images/forever_alone.png') }}"><br>You don't have friends at this moment.</div>
                     </td>
                 </tr>
@@ -34,8 +60,8 @@
     <script src="{{ url_for('static', filename='js/app.js') }}"></script>
     <script>
         Vue.config.silent = {{ 'false' if config['DEBUG'] else 'true' }};
-        Vue.config.productionTip = false;
 
+        friendsFeature.my_username = '{{ config['MY_USERNAME'] }}';
         friendsFeature.all_players_with_servers_details = {{ all_players_with_servers_details|tojson }};
         friendsFeature.initOnMyFriends();
     </script>

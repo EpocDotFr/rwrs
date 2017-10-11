@@ -442,6 +442,7 @@ class DataScraper:
                 continue
 
             ret.append({
+                'ip_and_port': server.ip_and_port,
                 'name': server.name,
                 'website': server.website,
                 'is_ranked': server.is_ranked,
@@ -450,9 +451,14 @@ class DataScraper:
                     'country_code': server.location.country_code,
                     'country_name': server.location.country_name
                 },
+                'map': {
+                    'id': server.map.id,
+                    'name': server.map.name
+                },
                 'players': {
                     'current': server.players.current,
                     'max': server.players.max,
+                    'free': server.players.free,
                     'list': server.players.list
                 }
             })

@@ -5,7 +5,6 @@ and more. Available at [rwrs.epoc.fr](https://rwrs.epoc.fr/).
 
 ## Features
 
-  - Web-based
   - Players
     - Search for a player
     - View player stats (as well as next rank progression, which server he's playing on, etc). Note that stats only concerns official invasion (ranked) servers
