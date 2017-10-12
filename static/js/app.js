@@ -74,6 +74,12 @@ friendsFeature = {
                     return false;
                 },
                 submitAddFriendForm: function() {
+                    if (!this.friend_to_add) {
+                        alert('So you have a friend with no name?');
+
+                        return;
+                    }
+
                     if (this.addFriend(this.friend_to_add.toUpperCase())) {
                         this.friend_to_add = '';
                     } else {
