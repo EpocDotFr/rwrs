@@ -65,6 +65,7 @@ friendsFeature = {
                 addFriend: function(username) {
                     if (friendsFeature.addFriend(username)) {
                         this.friends.push(username);
+                        this.friends.sort();
 
                         return true;
                     }

@@ -1,8 +1,16 @@
-{% macro me_easter_egg(player, raw=False) -%}
-    {% set username = player.lower() if raw else player.username.lower() %}
+{% macro player_name(player, raw=False, link=False) -%}
+    {% set username = player if raw else player.username %}
 
-    {% if username == config['MY_USERNAME'] %}
-        <img src="{{ url_for('static', filename='images/me.png') }}" title="Hey, I'm the creator of this website! Glad to see you're using it." class="help">
+    {% if username.lower() == config['MY_USERNAME'] %}
+        <img src="{{ url_for('static', filename='images/me.png') }}" title="Hey, I'm the creator of this website! Glad to see you're using it." class="help me">
+    {% endif %}
+
+    {% if link %}
+        <a href="{{ url_for('player_stats', username=username) }}">
+    {% endif %}
+        {{ username }}
+    {% if link %}
+        </a>
     {% endif %}
 {%- endmacro %}
 

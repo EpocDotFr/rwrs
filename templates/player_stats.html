@@ -2,7 +2,7 @@
 
 {% extends 'layout.html' %}
 
-{% block page_title %}<h2><i class="fa fa-user"></i> Players › {{ macros.me_easter_egg(player) }} {{ player.username }}{% if player_to_compare_with %} (Comparison with {{ macros.me_easter_egg(player_to_compare_with) }} {{ player_to_compare_with.username }}){% endif %}</h2>{% endblock %}
+{% block page_title %}<h2><i class="fa fa-user"></i> Players › {{ macros.player_name(player) }}{% if player_to_compare_with %} (Comparison with {{ macros.player_name(player_to_compare_with) }}){% endif %}</h2>{% endblock %}
 
 {% block meta_title %}Players › {{ player.username }}{% if player_to_compare_with %} (Comparison with {{ player_to_compare_with.username }}){% endif %}{% endblock %}
 

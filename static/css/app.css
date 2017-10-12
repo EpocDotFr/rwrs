@@ -38,6 +38,12 @@ h2 {
   display: none;
 }
 
+.me {
+    background-color: #EEE;
+    border-radius: 0.2em;
+    padding: 0.2rem;
+}
+
 /************************************************************************
  * Text colors */
 

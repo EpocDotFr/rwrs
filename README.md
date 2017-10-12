@@ -9,7 +9,7 @@ and more. Available at [rwrs.epoc.fr](https://rwrs.epoc.fr/).
     - Search for a player
     - View player stats (as well as next rank progression, which server he's playing on, etc). Note that stats only concerns official invasion (ranked) servers
     - Compare two players stats
-    - Friends list (easily know on which servers your friends are playing on. This don't need to create a user account or whatever)
+    - Friends list (easily know on which servers your friends are playing on. There's no need to create a user account or whatever)
   - Public servers
     - Real servers location
     - Real maps name
@@ -80,7 +80,7 @@ This command requires the game to be installed.
 ### Extracting minimaps
 
 The Flask command `flask extract_minimaps` is used to extract minimaps (the ones displayed when pressing on
-<kbd>TAB</kbd>). They are saved at `static/images/maps/minimap/{rank ID}.png` and `static/images/maps/minimap/{rank ID}_preview.png`.
+<kbd>TAB</kbd>). They are saved at `static/images/maps/minimap/{map ID}.png` and `static/images/maps/minimap/{map ID}_thumb.png`.
 
   1. `set FLASK_APP=rwrs.py`
   2. `flask extract_minimaps --gamedir="{path to the game root directory}"`
@@ -89,12 +89,11 @@ This command requires the game to be installed.
 
 ## How it works
 
-This project is powered by [Flask](http://flask.pocoo.org/) (Python) for the backend. The frontend is powered by good ol'
-HTML and CSS only.
+This project is mainly powered by [Flask](http://flask.pocoo.org/) (Python) for the backend.
 
 Data is fetched from the [official servers list](http://rwr.runningwithrifles.com/rwr_server_list/view_servers.php) page
 (which sucks) as well from the [official players list](http://rwr.runningwithrifles.com/rwr_stats/view_players.php?sort=score)
-page (which sucks, too).
+page (which sucks, too). Data is cached so there isn't many requests sent to the server who hosts these lists.
 
 As the provided servers location is most of the time either missing or invalid, RWRS makes its own look up using a
 [GeoLite2](https://dev.maxmind.com/geoip/geoip2/geolite2/) database.
