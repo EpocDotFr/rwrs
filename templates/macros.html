@@ -3,6 +3,8 @@
 
     {% if username.lower() == config['MY_USERNAME'] %}
         <img src="{{ url_for('static', filename='images/me.png') }}" title="Hey, I'm the creator of this website! Glad to see you're using it." class="help me">
+    {% elif username.lower() in config['CONTRIBUTORS'] %}
+        <i class="fa fa-hand-peace-o help" title="This player contributed in a way or another to RWRS. Thanks to her/him!"></i>
     {% endif %}
 
     {% if link %}

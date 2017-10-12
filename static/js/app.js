@@ -45,6 +45,7 @@ friendsFeature = {
             data: {
                 friends: [],
                 my_username: friendsFeature.my_username,
+                contributors: friendsFeature.contributors,
                 friend_to_add: ''
             },
             mounted: function() {
@@ -78,6 +79,9 @@ friendsFeature = {
                     } else {
                         alert('Friend wasn\'t added. Hey may be already in your friends list.');
                     }
+                },
+                inArray: function(value, array) {
+                    return $.inArray(value, array) !== -1;
                 }
             },
             computed: {
