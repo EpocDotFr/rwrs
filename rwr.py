@@ -453,7 +453,8 @@ class DataScraper:
                 },
                 'map': {
                     'id': server.map.id,
-                    'name': server.map.name
+                    'name': server.map.name,
+                    'is_official': server.map.is_official
                 },
                 'players': {
                     'current': server.players.current,
