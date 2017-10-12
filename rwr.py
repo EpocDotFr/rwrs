@@ -693,11 +693,12 @@ class Player:
         }
 
         for required_xp, unlocks in UNLOCKABLES.items():
-            if required_xp > self.xp:
-                break
-
             if 'radio_calls' in unlocks:
-                ret['radio_calls'].extend(unlocks['radio_calls'])
+                for radio_call in unlocks['radio_calls']:
+                    radio_call['required_xp'] = required_xp
+                    radio_call['unlocked'] = self.xp >= required_xp
+
+                    ret['radio_calls'].append(radio_call)
 
         return ret
 

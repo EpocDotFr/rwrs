@@ -27,7 +27,7 @@
             <th class="txtcenter w30">Next rank</th>
         </tr>
         <tr>
-            <td class="big txtcenter">{{ macros.compare_ranks(player, player_to_compare_with) }} <img src="{{ url_for('static', filename='images/ranks/{rank_id}.png'.format(rank_id=player.rank.id)) }}"> {{ player.rank.name }}</td>
+            <td class="big txtcenter">{{ macros.compare_ranks(player, player_to_compare_with) }} <img src="{{ url_for('static', filename='images/ranks/{rank_id}.png'.format(rank_id=player.rank.id)) }}" title="{{ player.rank.name }}"> {{ player.rank.name }}</td>
             <td class="txtcenter">
                 {% if player.playing_on_server %}
                     <div>{{ macros.location(player.playing_on_server.location) }} {{ macros.server_name(player.playing_on_server) }}</div>
@@ -47,7 +47,7 @@
             </td>
             <td class="{{ 'big' if player.next_rank else '' }} txtcenter">
                 {% if player.next_rank %}
-                    <img src="{{ url_for('static', filename='images/ranks/{rank_id}.png'.format(rank_id=player.next_rank.id)) }}"> {{ player.next_rank.name }}
+                    <img src="{{ url_for('static', filename='images/ranks/{rank_id}.png'.format(rank_id=player.next_rank.id)) }}" title="{{ player.next_rank.name }}"> {{ player.next_rank.name }}
                 {% else %}
                     {{ player.username }} reached the highest possible rank.
                 {% endif %}
@@ -120,17 +120,9 @@
         <tr>
             <th>Radio calls</th>
             <td>
-                <img src="https://runningwithrifles.gamepedia.com/media/runningwithrifles.gamepedia.com/thumb/8/8e/Hud_mortar1.png/75px-Hud_mortar1.png">
-                <img src="https://runningwithrifles.gamepedia.com/media/runningwithrifles.gamepedia.com/thumb/2/21/Hud_hesco_barrier.png/50px-Hud_hesco_barrier.png">
-                <img src="https://runningwithrifles.gamepedia.com/media/runningwithrifles.gamepedia.com/thumb/9/9a/Hud_mortar2.png/75px-Hud_mortar2.png">
-                <img src="https://runningwithrifles.gamepedia.com/media/runningwithrifles.gamepedia.com/thumb/9/90/Hud_paratroopers1.png/75px-Hud_paratroopers1.png">
-                <img src="https://runningwithrifles.gamepedia.com/media/runningwithrifles.gamepedia.com/thumb/a/ac/Hud_rubber_boat.png/75px-Hud_rubber_boat.png">
-                <img src="https://runningwithrifles.gamepedia.com/media/runningwithrifles.gamepedia.com/thumb/6/6b/Hud_buggydrop.png/75px-Hud_buggydrop.png">
-                <img src="https://runningwithrifles.gamepedia.com/media/runningwithrifles.gamepedia.com/thumb/a/a8/Hud_artillery1.png/75px-Hud_artillery1.png">
-                <img src="https://runningwithrifles.gamepedia.com/media/runningwithrifles.gamepedia.com/thumb/9/9d/Hud_paratroopers2.png/75px-Hud_paratroopers2.png">
-                <img src="https://runningwithrifles.gamepedia.com/media/runningwithrifles.gamepedia.com/thumb/7/70/Hud_humveedrop.png/75px-Hud_humveedrop.png">
-                <img src="https://runningwithrifles.gamepedia.com/media/runningwithrifles.gamepedia.com/thumb/7/7d/Hud_tank.png/75px-Hud_tank.png">
-                <img src="https://runningwithrifles.gamepedia.com/media/runningwithrifles.gamepedia.com/thumb/8/80/Hud_artillery2.png/75px-Hud_artillery2.png">
+                {% for radio_call in player.unlocks['radio_calls'] %}
+                    <img src="{{ url_for('static', filename='images/unlockables/radio_calls/' + radio_call['image'] + '.png') }}" class="{{ 'locked' if not radio_call['unlocked'] else '' }} help" title="{{ radio_call['name'] }} ({{ radio_call['required_xp'] }} XP)">
+                {% endfor %}
             </td>
         </tr>
         <tr>
