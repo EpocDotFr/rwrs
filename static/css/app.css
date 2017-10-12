@@ -274,3 +274,10 @@ table tr:hover .actions {
 footer {
     color: #a2a2a2;
 }
+
+footer a,
+footer a:visited,
+footer a:hover,
+footer a:focus {
+    color: inherit;
+}
