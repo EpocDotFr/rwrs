@@ -120,27 +120,25 @@
         <tr>
             <th>Radio calls</th>
             <td>
-                {% for radio_call in player.unlocks['radio_calls'] %}
-                    <img src="{{ url_for('static', filename='images/unlockables/radio_calls/' + radio_call['image'] + '.png') }}" class="{{ 'locked' if not radio_call['unlocked'] else '' }} help" title="{{ radio_call['name'] }} ({{ radio_call['required_xp'] }} XP)">
-                {% endfor %}
+                {{ macros.unlockables_list(player.unlocks, 'radio_calls') }}
             </td>
         </tr>
         <tr>
             <th>Weapons</th>
             <td>
-
+                {{ macros.unlockables_list(player.unlocks, 'weapons') }}
             </td>
         </tr>
         <tr>
             <th>Equipment</th>
             <td>
-
+                {{ macros.unlockables_list(player.unlocks, 'equipment') }}
             </td>
         </tr>
         <tr>
             <th>Throwables</th>
             <td>
-
+                {{ macros.unlockables_list(player.unlocks, 'throwables') }}
             </td>
         </tr>
     </table>

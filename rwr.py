@@ -299,7 +299,7 @@ class UnlockablesImagesExtractor:
 
     def extract(self):
         """Actually run the extract process."""
-        unlockables_to_extract = [un['image'] for required_xp, unlocks in UNLOCKABLES.items() for unlock_id, unlock in unlocks.items() for un in unlock]
+        unlockables_to_extract = [un['image'] for required_xp, unlocks in UNLOCKABLES.items() for unlock_id, unlock in unlocks.items() for un in unlock if un['image'] != 'placeholder']
 
         paths = glob(os.path.join(self.textures_dir, 'hud_*.png'))
 
@@ -699,6 +699,27 @@ class Player:
                     radio_call['unlocked'] = self.xp >= required_xp
 
                     ret['radio_calls'].append(radio_call)
+
+            if 'weapons' in unlocks:
+                for weapon in unlocks['weapons']:
+                    weapon['required_xp'] = required_xp
+                    weapon['unlocked'] = self.xp >= required_xp
+
+                    ret['weapons'].append(weapon)
+
+            if 'equipment' in unlocks:
+                for equipment in unlocks['equipment']:
+                    equipment['required_xp'] = required_xp
+                    equipment['unlocked'] = self.xp >= required_xp
+
+                    ret['equipment'].append(equipment)
+
+            if 'throwables' in unlocks:
+                for throwable in unlocks['throwables']:
+                    throwable['required_xp'] = required_xp
+                    throwable['unlocked'] = self.xp >= required_xp
+
+                    ret['throwables'].append(throwable)
 
         return ret
 
