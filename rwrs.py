@@ -26,7 +26,7 @@ app.config['SERVERS_CACHE_TIMEOUT'] = 60
 app.config['PLAYERS_CACHE_TIMEOUT'] = 60 * 5
 app.config['MY_USERNAME'] = 'epocdotfr'
 app.config['CONTRIBUTORS'] = ['street veteran', 'mastock']
-app.config['DEVS'] = ['jackmayol', 'ahnold', 'basto']
+app.config['DEVS'] = ['jackmayol', 'ahnold']
 
 app.jinja_env.filters.update(
     humanize_seconds=humanize_seconds,
