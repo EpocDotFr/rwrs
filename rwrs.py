@@ -217,24 +217,6 @@ def extract_minimaps(gamedir):
     app.logger.info('Done')
 
 
-@app.cli.command()
-@click.option('--gamedir', '-g', help='Game root directory')
-def extract_unlockables_images(gamedir):
-    """Extract unlockables images from RWR."""
-    context = click.get_current_context()
-
-    if not gamedir:
-        click.echo(extract_unlockables_images.get_help(context))
-        context.exit()
-
-    app.logger.info('Extraction started')
-
-    extractor = rwr.UnlockablesImagesExtractor(gamedir, app.config['UNLOCKABLES_IMAGES_DIR'])
-    extractor.extract()
-
-    app.logger.info('Done')
-
-
 # -----------------------------------------------------------
 # HTTP errors handler
 

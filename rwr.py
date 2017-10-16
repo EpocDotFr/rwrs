@@ -94,8 +94,8 @@ UNLOCKABLES = OrderedDict([
     }),
     (1000, {
         'radio_calls': [
-            {'image': 'mortar1', 'name': 'Mortar strike (1x8)'},
-            {'image': 'hesco_barrier', 'name': 'Sandbag drop'}
+            {'image': 'mortar_1', 'name': 'Mortar strike (1x8)'},
+            {'image': 'sandbag_drop', 'name': 'Sandbag drop'}
         ],
         'weapons': [
             {'image': 'placeholder', 'name': 'Machineguns'}, # TODO
@@ -133,10 +133,10 @@ UNLOCKABLES = OrderedDict([
     }),
     (3000, {
         'radio_calls': [
-            {'image': 'mortar2', 'name': 'Mortar strike (3x8)'},
-            {'image': 'paratroopers1', 'name': '4 paratroops'},
-            {'image': 'rubber_boat', 'name': 'Boat drop'},
-            {'image': 'buggydrop', 'name': 'Buggy drop'}
+            {'image': 'mortar_2', 'name': 'Mortar strike (3x8)'},
+            {'image': 'paratroopers_1', 'name': '4 paratroops'},
+            {'image': 'rubber_boat_drop', 'name': 'Boat drop'},
+            {'image': 'buggy_drop', 'name': 'Buggy drop'}
         ],
         'weapons': [
             {'image': 'aa-12', 'name': 'AA-12 shotgun'},
@@ -151,9 +151,9 @@ UNLOCKABLES = OrderedDict([
     }),
     (4000, {
         'radio_calls': [
-            {'image': 'artillery1', 'name': 'Artillery strike (2x16)'},
-            {'image': 'paratroopers2', 'name': '8 Paratroops'},
-            {'image': 'humveedrop', 'name': 'Humvee airdrop'}
+            {'image': 'artillery_1', 'name': 'Artillery strike (2x16)'},
+            {'image': 'paratroopers_2', 'name': '8 Paratroops'},
+            {'image': 'humvee_drop', 'name': 'Humvee drop'}
         ],
         'weapons': [
             {'image': 'benelli_m4', 'name': 'Benelli M4 shotgun'},
@@ -170,7 +170,7 @@ UNLOCKABLES = OrderedDict([
     }),
     (5000, {
         'radio_calls': [
-            {'image': 'tank', 'name': 'Tank drop'}
+            {'image': 'tank_drop', 'name': 'Tank drop'}
         ],
         'equipment': [
             {'image': 'tow2', 'name': 'Deployable TOW missile nest'}
@@ -185,7 +185,7 @@ UNLOCKABLES = OrderedDict([
     }),
     (7000, {
         'radio_calls': [
-            {'image': 'artillery2', 'name': 'Artillery strike (8x16)'}
+            {'image': 'artillery_2', 'name': 'Artillery strike (8x16)'}
         ]
     }),
     (10000, {
@@ -282,35 +282,6 @@ class MinimapsImageExtractor:
             # Create the thumbnail
             minimap.thumbnail(self.minimap_image_size, Image.ANTIALIAS)
             minimap.save(os.path.join(self.output_dir, map_id + '_thumb.png'), optimize=True)
-
-
-class UnlockablesImagesExtractor:
-    def __init__(self, game_dir, output_dir):
-        self.game_dir = game_dir
-        self.output_dir = output_dir
-
-        if not os.path.isdir(self.game_dir):
-            raise FileNotFoundError(self.game_dir + ' does not exists')
-
-        if not os.path.isdir(self.output_dir):
-            raise FileNotFoundError(self.output_dir + ' does not exists')
-
-        self.textures_dir = os.path.join(self.game_dir, 'media/packages/vanilla/textures')
-
-    def extract(self):
-        """Actually run the extract process."""
-        unlockables_to_extract = [un['image'] for required_xp, unlocks in UNLOCKABLES.items() for unlock_id, unlock in unlocks.items() for un in unlock if un['image'] != 'placeholder']
-
-        paths = glob(os.path.join(self.textures_dir, 'hud_*.png'))
-
-        for path in paths:
-            name = os.path.splitext(os.path.basename(path))[0].replace('hud_', '')
-
-            if name not in unlockables_to_extract:
-                continue
-
-            image = Image.open(path)
-            image.save(os.path.join(self.output_dir, name + '.png'), optimize=True)
 
 
 class RanksImageExtractor:
