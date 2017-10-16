@@ -70,8 +70,8 @@ MAX_SQUADMATES = 10 # Maximum squad mates allowed
 UNLOCKABLES = OrderedDict([
     (0, {
         'weapons': [
-            {'image': 'placeholder', 'name': 'Assault rifles'}, # TODO
-            {'image': 'placeholder', 'name': 'Shotguns'} # TODO
+            {'image': 'assault_rifles', 'name': 'Assault rifles'},
+            {'image': 'shotguns', 'name': 'Shotguns'}
         ],
         'equipment': [
             {'image': 'riot_shield', 'name': 'Riot shield'}
@@ -82,8 +82,8 @@ UNLOCKABLES = OrderedDict([
     }),
     (500, {
         'weapons': [
-            {'image': 'placeholder', 'name': 'Bazooka'}, # TODO
-            {'image': 'placeholder', 'name': 'Silenced pistols'} # TODO
+            {'image': 'bazooka', 'name': 'Bazooka'},
+            {'image': 'pistols_sd', 'name': 'Silenced pistols'}
         ],
         'equipment': [
             {'image': 'hesco_barrier', 'name': 'Deployable cover'}
@@ -98,7 +98,7 @@ UNLOCKABLES = OrderedDict([
             {'image': 'sandbag_drop', 'name': 'Sandbag drop'}
         ],
         'weapons': [
-            {'image': 'placeholder', 'name': 'Machineguns'}, # TODO
+            {'image': 'machineguns', 'name': 'Machineguns'},
             {'image': 'desert_eagle', 'name': 'Desert Eagle pistol'}
         ],
         'throwables': [
@@ -107,9 +107,9 @@ UNLOCKABLES = OrderedDict([
     }),
     (1500, {
         'weapons': [
-            {'image': 'placeholder', 'name': 'Sniper rifles'}, # TODO
-            {'image': 'placeholder', 'name': 'Advanced assault rifles'}, # TODO Verify
-            {'image': 'placeholder', 'name': 'Silent SMGs'}, # TODO
+            {'image': 'snipers', 'name': 'Sniper rifles'},
+            {'image': 'adv_assault_rifles', 'name': 'Advanced assault rifles'}, # TODO
+            {'image': 'smgs_sd', 'name': 'Silent SMGs'},
             {'image': 'l85a2', 'name': 'L85A2'},
             {'image': 'pepperdust', 'name': 'Pepperdust shotgun'}
         ],
@@ -119,7 +119,7 @@ UNLOCKABLES = OrderedDict([
     }),
     (2000, {
         'weapons': [
-            {'image': 'placeholder', 'name': 'Second bazooka'} # TODO
+            {'image': 'bazooka', 'name': 'Second bazooka'} # TODO
         ],
         'equipment': [
             {'image': 'deployable_mg', 'name': 'Deployable machinegun nest'},

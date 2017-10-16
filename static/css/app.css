@@ -45,8 +45,12 @@ h2 {
 }
 
 .locked {
-    opacity: 0.3;
+    opacity: 0.2;
     filter: grayscale(100%);
+}
+
+.no-bold {
+    font-weight: normal;
 }
 
 /************************************************************************

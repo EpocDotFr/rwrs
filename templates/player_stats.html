@@ -118,33 +118,33 @@
     {% if config['DEBUG'] %}
     <table class="mtm mbn">
         <tr>
-            <th>Radio calls</th>
+            <th>Radio calls<br><span class="no-bold">{{ player.unlocks.radio_calls.current }}/{{ player.unlocks.radio_calls.max }}</span></th>
             <td>
                 {{ macros.unlockables_list(player.unlocks, 'radio_calls') }}
             </td>
         </tr>
         <tr>
-            <th>Weapons</th>
+            <th>Weapons<br><span class="no-bold">{{ player.unlocks.weapons.current }}/{{ player.unlocks.weapons.max }}</span></th>
             <td>
                 {{ macros.unlockables_list(player.unlocks, 'weapons') }}
             </td>
         </tr>
         <tr>
-            <th>Equipment</th>
+            <th>Equipment<br><span class="no-bold">{{ player.unlocks.equipment.current }}/{{ player.unlocks.equipment.max }}</span></th>
             <td>
                 {{ macros.unlockables_list(player.unlocks, 'equipment') }}
             </td>
         </tr>
         <tr>
-            <th>Throwables</th>
+            <th>Throwables<br><span class="no-bold">{{ player.unlocks.throwables.current }}/{{ player.unlocks.throwables.max }}</span></th>
             <td>
                 {{ macros.unlockables_list(player.unlocks, 'throwables') }}
             </td>
         </tr>
         <tr>
-            <th>Squad mates</th>
+            <th>Squad mates<br><span class="no-bold">{{ player.unlocks.squad_mates.current }}/{{ player.unlocks.squad_mates.max }}</span></th>
             <td>
-                {{ player.unlocks.squad_mates.current }}/{{ player.unlocks.squad_mates.max }} <img src="{{ url_for('static', filename='images/unlockables/squad_mates/{squad_mates}.png'.format(squad_mates=player.unlocks.squad_mates.current)) }}">
+                <img src="{{ url_for('static', filename='images/unlockables/squad_mates/{squad_mates}.png'.format(squad_mates=player.unlocks.squad_mates.current)) }}">
             </td>
         </tr>
     </table>
