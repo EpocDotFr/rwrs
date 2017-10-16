@@ -46,6 +46,7 @@ friendsFeature = {
                 friends: [],
                 my_username: friendsFeature.my_username,
                 contributors: friendsFeature.contributors,
+                devs: friendsFeature.devs,
                 friend_to_add: ''
             },
             mounted: function() {
