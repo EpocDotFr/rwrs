@@ -141,6 +141,12 @@
                 {{ macros.unlockables_list(player.unlocks, 'throwables') }}
             </td>
         </tr>
+        <tr>
+            <th>Squad mates</th>
+            <td>
+                {{ player.unlocks.squad_mates.current }}/{{ player.unlocks.squad_mates.max }} <img src="{{ url_for('static', filename='images/unlockables/squad_mates/{squad_mates}.png'.format(squad_mates=player.unlocks.squad_mates.current)) }}">
+            </td>
+        </tr>
     </table>
     {% endif %}
 

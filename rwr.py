@@ -195,6 +195,12 @@ UNLOCKABLES = OrderedDict([
     })
 ])
 
+
+def count_max_unlockables(type):
+    """Count the total number of unlockables are available in the specified unlockable type."""
+    return len([un for required_xp, unlocks in UNLOCKABLES.items() for unlock_id, unlock in unlocks.items() if unlock_id == type for un in unlock])
+
+
 # Official invasion servers
 RANKED_SERVERS = (
     # JP
@@ -656,41 +662,80 @@ class Player:
     def unlocks(self):
         """Compute what the player unlocked (or not)."""
         ret = {
-            'radio_calls': [],
-            'weapons': [],
-            'equipment': [],
-            'throwables': [],
-            'squad_mates': 0
+            'radio_calls': {
+                'list': [],
+                'current': 0,
+                'max': count_max_unlockables('radio_calls')
+            },
+            'weapons': {
+                'list': [],
+                'current': 0,
+                'max': count_max_unlockables('weapons')
+            },
+            'equipment':  {
+                'list': [],
+                'current': 0,
+                'max': count_max_unlockables('equipment')
+            },
+            'throwables':  {
+                'list': [],
+                'current': 0,
+                'max': count_max_unlockables('throwables')
+            },
+            'squad_mates': {
+                'current': 8, # TODO
+                'max': MAX_SQUADMATES
+            }
         }
 
         for required_xp, unlocks in UNLOCKABLES.items():
             if 'radio_calls' in unlocks:
                 for radio_call in unlocks['radio_calls']:
-                    radio_call['required_xp'] = required_xp
-                    radio_call['unlocked'] = self.xp >= required_xp
+                    unlocked = self.xp >= required_xp
 
-                    ret['radio_calls'].append(radio_call)
+                    radio_call['required_xp'] = required_xp
+                    radio_call['unlocked'] = unlocked
+
+                    if unlocked:
+                        ret['radio_calls']['current'] += 1
+
+                    ret['radio_calls']['list'].append(radio_call)
 
             if 'weapons' in unlocks:
                 for weapon in unlocks['weapons']:
-                    weapon['required_xp'] = required_xp
-                    weapon['unlocked'] = self.xp >= required_xp
+                    unlocked = self.xp >= required_xp
 
-                    ret['weapons'].append(weapon)
+                    weapon['required_xp'] = required_xp
+                    weapon['unlocked'] = unlocked
+
+                    if unlocked:
+                        ret['weapons']['current'] += 1
+
+                    ret['weapons']['list'].append(weapon)
 
             if 'equipment' in unlocks:
                 for equipment in unlocks['equipment']:
-                    equipment['required_xp'] = required_xp
-                    equipment['unlocked'] = self.xp >= required_xp
+                    unlocked = self.xp >= required_xp
 
-                    ret['equipment'].append(equipment)
+                    equipment['required_xp'] = required_xp
+                    equipment['unlocked'] = unlocked
+
+                    if unlocked:
+                        ret['equipment']['current'] += 1
+
+                    ret['equipment']['list'].append(equipment)
 
             if 'throwables' in unlocks:
                 for throwable in unlocks['throwables']:
-                    throwable['required_xp'] = required_xp
-                    throwable['unlocked'] = self.xp >= required_xp
+                    unlocked = self.xp >= required_xp
 
-                    ret['throwables'].append(throwable)
+                    throwable['required_xp'] = required_xp
+                    throwable['unlocked'] = unlocked
+
+                    if unlocked:
+                        ret['throwables']['current'] += 1
+
+                    ret['throwables']['list'].append(throwable)
 
         return ret
 
