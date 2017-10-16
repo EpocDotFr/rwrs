@@ -25,7 +25,7 @@ app.config['UNLOCKABLES_IMAGES_DIR'] = 'static/images/unlockables'
 app.config['SERVERS_CACHE_TIMEOUT'] = 60
 app.config['PLAYERS_CACHE_TIMEOUT'] = 60 * 5
 app.config['MY_USERNAME'] = 'epocdotfr'
-app.config['CONTRIBUTORS'] = ['street veteran']
+app.config['CONTRIBUTORS'] = ['street veteran', 'mastock']
 
 app.jinja_env.filters.update(
     humanize_seconds=humanize_seconds,
