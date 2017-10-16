@@ -196,11 +196,6 @@ UNLOCKABLES = OrderedDict([
 ])
 
 
-def count_max_unlockables(type):
-    """Count the total number of unlockables are available in the specified unlockable type."""
-    return len([un for required_xp, unlocks in UNLOCKABLES.items() for unlock_id, unlock in unlocks.items() if unlock_id == type for un in unlock])
-
-
 # Official invasion servers
 RANKED_SERVERS = (
     # JP
@@ -661,81 +656,43 @@ class Player:
     @memoized_property
     def unlocks(self):
         """Compute what the player unlocked (or not)."""
+        def _init_unlockable(ret, type):
+            ret[type] = {
+                'list': [],
+                'current': 0,
+                'max': len([un for required_xp, unlocks in UNLOCKABLES.items() for unlock_id, unlock in unlocks.items() if unlock_id == type for un in unlock])
+            }
+
+        def _compute_unlockable(unlocks, ret, type):
+            if type in unlocks:
+                for unlockable in unlocks[type]:
+                    unlocked = self.xp >= required_xp
+
+                    unlockable['required_xp'] = required_xp
+                    unlockable['unlocked'] = unlocked
+
+                    if unlocked:
+                        ret[type]['current'] += 1
+
+                    ret[type]['list'].append(unlockable)
+
         ret = {
-            'radio_calls': {
-                'list': [],
-                'current': 0,
-                'max': count_max_unlockables('radio_calls')
-            },
-            'weapons': {
-                'list': [],
-                'current': 0,
-                'max': count_max_unlockables('weapons')
-            },
-            'equipment':  {
-                'list': [],
-                'current': 0,
-                'max': count_max_unlockables('equipment')
-            },
-            'throwables':  {
-                'list': [],
-                'current': 0,
-                'max': count_max_unlockables('throwables')
-            },
             'squad_mates': {
-                'current': 8, # TODO
+                'current': math.floor(self.xp / SQUADMATES_STEPS_XP) if self.xp < MAX_SQUADMATES * SQUADMATES_STEPS_XP else MAX_SQUADMATES,
                 'max': MAX_SQUADMATES
             }
         }
 
+        _init_unlockable(ret, 'radio_calls')
+        _init_unlockable(ret, 'weapons')
+        _init_unlockable(ret, 'equipment')
+        _init_unlockable(ret, 'throwables')
+
         for required_xp, unlocks in UNLOCKABLES.items():
-            if 'radio_calls' in unlocks:
-                for radio_call in unlocks['radio_calls']:
-                    unlocked = self.xp >= required_xp
-
-                    radio_call['required_xp'] = required_xp
-                    radio_call['unlocked'] = unlocked
-
-                    if unlocked:
-                        ret['radio_calls']['current'] += 1
-
-                    ret['radio_calls']['list'].append(radio_call)
-
-            if 'weapons' in unlocks:
-                for weapon in unlocks['weapons']:
-                    unlocked = self.xp >= required_xp
-
-                    weapon['required_xp'] = required_xp
-                    weapon['unlocked'] = unlocked
-
-                    if unlocked:
-                        ret['weapons']['current'] += 1
-
-                    ret['weapons']['list'].append(weapon)
-
-            if 'equipment' in unlocks:
-                for equipment in unlocks['equipment']:
-                    unlocked = self.xp >= required_xp
-
-                    equipment['required_xp'] = required_xp
-                    equipment['unlocked'] = unlocked
-
-                    if unlocked:
-                        ret['equipment']['current'] += 1
-
-                    ret['equipment']['list'].append(equipment)
-
-            if 'throwables' in unlocks:
-                for throwable in unlocks['throwables']:
-                    unlocked = self.xp >= required_xp
-
-                    throwable['required_xp'] = required_xp
-                    throwable['unlocked'] = unlocked
-
-                    if unlocked:
-                        ret['throwables']['current'] += 1
-
-                    ret['throwables']['list'].append(throwable)
+            _compute_unlockable(unlocks, ret, 'radio_calls')
+            _compute_unlockable(unlocks, ret, 'weapons')
+            _compute_unlockable(unlocks, ret, 'equipment')
+            _compute_unlockable(unlocks, ret, 'throwables')
 
         return ret
 
