@@ -145,7 +145,7 @@ UNLOCKABLES = OrderedDict([
             {'image': 'p90', 'name': 'P90 submachinegun'}
         ],
         'throwables': [
-            {'image': 'claymore', 'name': '2 Claymore mine'},
+            {'image': 'claymore', 'name': '2 Claymore mines'},
             {'image': 'c4', 'name': '3 C4'}
         ]
     }),
@@ -164,8 +164,8 @@ UNLOCKABLES = OrderedDict([
         ],
         'throwables': [
             {'image': 'placeholder', 'name': '4 hand/stun/impact grenades'}, # TODO
-            {'image': 'flare', 'name': '1 paratroop flare'},
-            {'image': 'placeholder', 'name': '1 checkpoint flare'} # TODO
+            {'image': 'flare', 'name': '1 paratroop flares'},
+            {'image': 'flare', 'name': '1 checkpoint flares'} # TODO
         ]
     }),
     (5000, {
@@ -178,9 +178,9 @@ UNLOCKABLES = OrderedDict([
     }),
     (6000, {
         'throwables': [
-            {'image': 'flare', 'name': '2 paratroop flare'},
-            {'image': 'claymore', 'name': '3 Claymore mine'},
-            {'image': 'placeholder', 'name': '2 checkpoint flare'} # TODO
+            {'image': 'flare', 'name': '2 paratroop flares'},
+            {'image': 'claymore', 'name': '3 Claymore mines'},
+            {'image': 'flare', 'name': '2 checkpoint flares'} # TODO
         ]
     }),
     (7000, {
