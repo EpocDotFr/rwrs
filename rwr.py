@@ -86,7 +86,7 @@ UNLOCKABLES = OrderedDict([
             {'image': 'pistols_sd', 'name': 'Silenced pistols'}
         ],
         'equipment': [
-            {'image': 'hesco_barrier', 'name': 'Deployable cover'}
+            {'image': 'cover', 'name': 'Deployable cover'}
         ],
         'throwables': [
             {'image': 'impact_grenade', 'name': '2 impact grenades'}
@@ -123,8 +123,8 @@ UNLOCKABLES = OrderedDict([
         ],
         'equipment': [
             {'image': 'deployable_mg', 'name': 'Deployable machinegun nest'},
-            {'image': 'minigun', 'name': 'Deployable minigun nest'},
-            {'image': 'mortar', 'name': 'Deployable mortar'}
+            {'image': 'deployable_minigun', 'name': 'Deployable minigun nest'},
+            {'image': 'deployable_mortar', 'name': 'Deployable mortar'}
         ],
         'throwables': [
             {'image': 'placeholder', 'name': '3 hand/stun/impact grenades'}, # TODO
@@ -173,7 +173,7 @@ UNLOCKABLES = OrderedDict([
             {'image': 'tank_drop', 'name': 'Tank drop'}
         ],
         'equipment': [
-            {'image': 'tow2', 'name': 'Deployable TOW missile nest'}
+            {'image': 'deployable_tow', 'name': 'Deployable TOW missile nest'}
         ]
     }),
     (6000, {
@@ -190,7 +190,7 @@ UNLOCKABLES = OrderedDict([
     }),
     (10000, {
         'equipment': [
-            {'image': 'tow2', 'name': '2nd deployable TOW missile nest'}
+            {'image': 'deployable_tow', 'name': '2nd deployable TOW missile nest'}
         ]
     })
 ])
