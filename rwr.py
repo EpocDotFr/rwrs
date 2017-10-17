@@ -77,7 +77,7 @@ UNLOCKABLES = OrderedDict([
             {'image': 'riot_shield', 'name': 'Riot shield'}
         ],
         'throwables': [
-            {'image': 'placeholder', 'name': '2 hand/stun grenades'} # TODO
+            {'image': 'hand_stun_grenades', 'name': '2 hand/stun grenades'}
         ]
     }),
     (500, {
@@ -108,7 +108,7 @@ UNLOCKABLES = OrderedDict([
     (1500, {
         'weapons': [
             {'image': 'snipers', 'name': 'Sniper rifles'},
-            {'image': 'adv_assault_rifles', 'name': 'Advanced assault rifles'}, # TODO
+            {'image': 'adv_assault_rifles', 'name': 'Advanced assault rifles'},
             {'image': 'smgs_sd', 'name': 'Silent SMGs'},
             {'image': 'l85a2', 'name': 'L85A2'},
             {'image': 'pepperdust', 'name': 'Pepperdust shotgun'}
@@ -119,7 +119,7 @@ UNLOCKABLES = OrderedDict([
     }),
     (2000, {
         'weapons': [
-            {'image': 'bazooka', 'name': 'Second bazooka'} # TODO
+            {'image': 'bazooka', 'name': 'Second bazooka'}
         ],
         'equipment': [
             {'image': 'deployable_mg', 'name': 'Deployable machinegun nest'},
@@ -127,7 +127,7 @@ UNLOCKABLES = OrderedDict([
             {'image': 'deployable_mortar', 'name': 'Deployable mortar'}
         ],
         'throwables': [
-            {'image': 'placeholder', 'name': '3 hand/stun/impact grenades'}, # TODO
+            {'image': 'hand_stun_impact_grenades', 'name': '3 hand/stun/impact grenades'},
             {'image': 'c4', 'name': '2 C4'}
         ]
     }),
@@ -163,7 +163,7 @@ UNLOCKABLES = OrderedDict([
             {'image': 'barrett_m107', 'name': 'Barrett M-107 sniper rifle'}
         ],
         'throwables': [
-            {'image': 'placeholder', 'name': '4 hand/stun/impact grenades'}, # TODO
+            {'image': 'hand_stun_impact_grenades', 'name': '4 hand/stun/impact grenades'},
             {'image': 'flare', 'name': '1 paratroop flares'},
             {'image': 'flare', 'name': '1 checkpoint flares'} # TODO
         ]
