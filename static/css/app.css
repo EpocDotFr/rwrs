@@ -53,6 +53,11 @@ h2 {
     font-weight: normal;
 }
 
+.unlockables-list > div {
+    background-color: #4d4d4d;
+    margin-bottom: 0.4em;
+}
+
 /************************************************************************
  * Text colors */
 
