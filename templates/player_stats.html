@@ -119,34 +119,26 @@
     <table class="mtm mbn">
         <tr>
             <th>Radio calls<br><span class="no-bold">{{ player.unlocks.radio_calls.current }}/{{ player.unlocks.radio_calls.max }}</span></th>
-            <td class="pbn">
-                <div class="flex-container unlockables-list has-gutter">
-                    {{ macros.unlockables_list(player.unlocks, 'radio_calls') }}
-                </div>
+            <td class="unlockables-list radio-calls">
+                {{ macros.unlockables_list(player.unlocks, 'radio_calls') }}
             </td>
         </tr>
         <tr>
             <th>Weapons<br><span class="no-bold">{{ player.unlocks.weapons.current }}/{{ player.unlocks.weapons.max }}</span></th>
-            <td class="pbn">
-                <div class="flex-container unlockables-list has-gutter">
-                    {{ macros.unlockables_list(player.unlocks, 'weapons') }}
-                </div>
+            <td class="unlockables-list weapons">
+                {{ macros.unlockables_list(player.unlocks, 'weapons') }}
             </td>
         </tr>
         <tr>
             <th>Equipment<br><span class="no-bold">{{ player.unlocks.equipment.current }}/{{ player.unlocks.equipment.max }}</span></th>
-            <td class="pbn">
-                <div class="flex-container unlockables-list has-gutter">
-                    {{ macros.unlockables_list(player.unlocks, 'equipment') }}
-                </div>
+            <td class="unlockables-list equipment">
+                {{ macros.unlockables_list(player.unlocks, 'equipment') }}
             </td>
         </tr>
         <tr>
             <th>Throwables<br><span class="no-bold">{{ player.unlocks.throwables.current }}/{{ player.unlocks.throwables.max }}</span></th>
-            <td class="pbn">
-                <div class="flex-container unlockables-list has-gutter">
-                    {{ macros.unlockables_list(player.unlocks, 'throwables') }}
-                </div>
+            <td class="unlockables-list throwables">
+                {{ macros.unlockables_list(player.unlocks, 'throwables') }}
             </td>
         </tr>
         <tr>

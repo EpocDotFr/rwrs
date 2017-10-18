@@ -12,10 +12,6 @@ body {
     border-bottom: 0.1rem solid #514f4f;
 }
 
-.home > div:first-child {
-    border-right: 0.1rem solid #514f4f;
-}
-
 h2 {
     background-color: #7da109;
     border: 0.1rem solid #9cc321;
@@ -44,18 +40,72 @@ h2 {
     padding: 0.1rem;
 }
 
-.locked {
-    opacity: 0.2;
-    filter: grayscale(100%);
-}
-
 .no-bold {
     font-weight: normal;
+}
+
+/************************************************************************
+ * Home page */
+
+.home > div:first-child {
+    border-right: 0.1rem solid #514f4f;
+}
+
+/************************************************************************
+ * Player stats page */
+
+.unlockables-list {
+    padding-bottom: 0;
+}
+
+.unlockables-list .locked {
+    opacity: 0.2;
+    filter: grayscale(100%);
 }
 
 .unlockables-list > div {
     background-color: #4d4d4d;
     margin-bottom: 0.4em;
+    vertical-align: middle;
+    float: left;
+    margin-right: 0.4em;
+}
+
+.unlockables-list > div:last-child {
+    margin-right: 0;
+}
+
+.unlockables-list.radio-calls > div {
+    height: 64px;
+}
+
+.unlockables-list.weapons > div {
+    height: 190px;
+}
+
+.unlockables-list.equipment > div {
+    height: 150px;
+}
+
+.unlockables-list.throwables > div {
+    height: 85px;
+}
+
+.progress-bar {
+    background-color: #4A542C;
+    position: relative;
+    height: 4.2rem;
+}
+
+.progress-bar > .text {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.progress-bar > .bar {
+    background-color: #657B26;
+    height: 4.2rem;
 }
 
 /************************************************************************
@@ -105,26 +155,6 @@ header .manage-friends-link:visited {
 header .manage-friends-link:hover,
 header .manage-friends-link:focus {
     color: #FFF;
-}
-
-/************************************************************************
- * Progress bar on the player stats page */
-
-.progress-bar {
-    background-color: #4A542C;
-    position: relative;
-    height: 4.2rem;
-}
-
-.progress-bar > .text {
-    position: absolute;
-    top: 0;
-    left: 0;
-}
-
-.progress-bar > .bar {
-    background-color: #657B26;
-    height: 4.2rem;
 }
 
 /************************************************************************
