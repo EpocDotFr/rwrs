@@ -94,7 +94,7 @@ UNLOCKABLES = OrderedDict([
     }),
     (1000, {
         'radio_calls': [
-            {'image': 'mortar_1', 'name': 'Mortar strike (1x8)'},
+            {'image': 'mortar_1', 'name': 'Mortar strike 1x8'},
             {'image': 'sandbag_drop', 'name': 'Sandbag drop'}
         ],
         'weapons': [
@@ -122,8 +122,8 @@ UNLOCKABLES = OrderedDict([
             {'image': 'bazooka', 'name': 'Second bazooka'}
         ],
         'equipment': [
-            {'image': 'deployable_mg', 'name': 'Deployable machinegun nest'},
-            {'image': 'deployable_minigun', 'name': 'Deployable minigun nest'},
+            {'image': 'deployable_mg', 'name': 'Deployable machinegun'},
+            {'image': 'deployable_minigun', 'name': 'Deployable minigun'},
             {'image': 'deployable_mortar', 'name': 'Deployable mortar'}
         ],
         'throwables': [
@@ -133,15 +133,15 @@ UNLOCKABLES = OrderedDict([
     }),
     (3000, {
         'radio_calls': [
-            {'image': 'mortar_2', 'name': 'Mortar strike (3x8)'},
-            {'image': 'paratroopers_1', 'name': '4 paratroops'},
+            {'image': 'mortar_2', 'name': 'Mortar strike 3x8'},
+            {'image': 'paratroopers_1', 'name': '4 paratroopers'},
             {'image': 'rubber_boat_drop', 'name': 'Boat drop'},
             {'image': 'buggy_drop', 'name': 'Buggy drop'}
         ],
         'weapons': [
             {'image': 'aa-12', 'name': 'AA-12 shotgun'},
             {'image': 'xm8', 'name': 'XM-8 assault rifle'},
-            {'image': 'f2000', 'name': 'F2000 rifle'},
+            {'image': 'f2000', 'name': 'F2000 assault rifle'},
             {'image': 'p90', 'name': 'P90 submachinegun'}
         ],
         'throwables': [
@@ -151,21 +151,20 @@ UNLOCKABLES = OrderedDict([
     }),
     (4000, {
         'radio_calls': [
-            {'image': 'artillery_1', 'name': 'Artillery strike (2x16)'},
-            {'image': 'paratroopers_2', 'name': '8 Paratroops'},
+            {'image': 'artillery_1', 'name': 'Artillery strike 2x16'},
+            {'image': 'paratroopers_2', 'name': '8 paratroopers'},
             {'image': 'humvee_drop', 'name': 'Humvee drop'}
         ],
         'weapons': [
             {'image': 'benelli_m4', 'name': 'Benelli M4 shotgun'},
             {'image': 'vss_vintorez', 'name': 'VSS Vintorez sniper rifle'},
             {'image': 'ns2000', 'name': 'Neostead 2000 shotgun'},
-            {'image': 'xm25', 'name': 'XM-25 Launcher'},
+            {'image': 'xm25', 'name': 'XM-25 launcher'},
             {'image': 'barrett_m107', 'name': 'Barrett M-107 sniper rifle'}
         ],
         'throwables': [
             {'image': 'hand_stun_impact_grenades', 'name': '4 hand/stun/impact grenades'},
-            {'image': 'flare', 'name': '1 paratroop flares'},
-            {'image': 'flare', 'name': '1 checkpoint flares'} # TODO
+            {'image': 'flare', 'name': '1 paratroopers flare'}
         ]
     }),
     (5000, {
@@ -178,14 +177,13 @@ UNLOCKABLES = OrderedDict([
     }),
     (6000, {
         'throwables': [
-            {'image': 'flare', 'name': '2 paratroop flares'},
-            {'image': 'claymore', 'name': '3 Claymore mines'},
-            {'image': 'flare', 'name': '2 checkpoint flares'} # TODO
+            {'image': 'flare', 'name': '2 paratroopers flares'},
+            {'image': 'claymore', 'name': '3 Claymore mines'}
         ]
     }),
     (7000, {
         'radio_calls': [
-            {'image': 'artillery_2', 'name': 'Artillery strike (8x16)'}
+            {'image': 'artillery_2', 'name': 'Artillery strike 8x16'}
         ]
     }),
     (10000, {
