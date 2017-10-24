@@ -143,7 +143,7 @@
         <tr>
             <th>Squad mates<br><span class="no-bold">{{ player.unlocks.squad_mates.current }}/{{ player.unlocks.squad_mates.max }}</span></th>
             <td>
-                <img src="{{ url_for('static', filename='images/unlockables/squad_mates/{squad_mates}.png'.format(squad_mates=player.unlocks.squad_mates.current)) }}" title="You may have up to {{ player.unlocks.squad_mates.current }} soldiers at your orders.">
+                <img src="{{ url_for('static', filename='images/unlockables/squad_mates/{squad_mates}.png'.format(squad_mates=player.unlocks.squad_mates.current)) }}" title="You may have up to {{ player.unlocks.squad_mates.current }} soldiers at your orders. 1 soldier every {{ player.unlocks.squad_mates.xp_steps }} XP, maximum {{ player.unlocks.squad_mates.max }}." class="help">
             </td>
         </tr>
     </table>

@@ -51,8 +51,8 @@
                     </td>
                     <td>
                         <template v-if="friend.playing_on_server">
-                            <a :href="'https://runningwithrifles.gamepedia.com/Special:Search/' + friend.playing_on_server.map.name" v-if="friend.playing_on_server.map.is_official && friend.playing_on_server.map.name">${ friend.playing_on_server.map.name }</a>
-                            <template v-if="!friend.playing_on_server.map.is_official && friend.playing_on_server.map.name">${ friend.playing_on_server.map.name }</template>
+                            <a :href="friend.playing_on_server.map.url" v-if="friend.playing_on_server.map.url && friend.playing_on_server.map.name">${ friend.playing_on_server.map.name }</a>
+                            <template v-if="!friend.playing_on_server.map.url && friend.playing_on_server.map.name">${ friend.playing_on_server.map.name }</template>
                             <template v-if="!friend.playing_on_server.map.name">${ friend.playing_on_server.map.id }</template>
                         </template>
                     </td>

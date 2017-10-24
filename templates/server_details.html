@@ -84,7 +84,7 @@
                 <tr>
                     <td class="txtcenter">{{ macros.map_name(server.map) }}</td>
                 </tr>
-                {% if server.map.is_official %}
+                {% if server.map.has_images %}
                     <tr>
                         <td class="txtcenter">
                             <img src="{{ url_for('static', filename='images/maps/preview/{map_id}.jpg'.format(map_id=server.map.id)) }}">

@@ -19,32 +19,38 @@ _one_hour = _one_minute * 60
 
 MAPS = {
     # Official vanilla maps
-    'map1': {'name': 'Moorland Trenches', 'is_official': True},
-    'map1_2': {'name': 'Moorland Trenches', 'is_official': True},
-    'map2': {'name': 'Keepsake Bay', 'is_official': True},
-    'map3': {'name': 'Old Fort Creek', 'is_official': True},
-    'map4': {'name': 'Fridge Valley', 'is_official': True},
-    'map5': {'name': 'Bootleg Islands', 'is_official': True},
-    'map6': {'name': 'Rattlesnake Crescent', 'is_official': True},
-    'map7': {'name': 'Power Junction', 'is_official': True},
-    'map8': {'name': 'Vigil Island', 'is_official': True},
-    'map9': {'name': 'Black Gold Estuary', 'is_official': True},
-    'map10': {'name': 'Railroad Gap', 'is_official': True},
-    'map11': {'name': 'Copehill Down', 'is_official': True},
-    'map12': {'name': 'Frozen Canyon', 'is_official': True},
-    'map13': {'name': 'Iron Enclave', 'is_official': True},
-    'map14': {'name': 'Misty Heights', 'is_official': True},
-    'map15': {'name': 'Islet of Eflen', 'is_official': True},
-    'pvp1': {'name': 'Islet of Eflen', 'is_official': True},
+    'map1': {'name': 'Moorland Trenches', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Moorland_Trenches'},
+    'map1_2': {'name': 'Moorland Trenches', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Moorland_Trenches'},
+    'map2': {'name': 'Keepsake Bay', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Keepsake_Bay'},
+    'map3': {'name': 'Old Fort Creek', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Old_Fort_Creek'},
+    'map4': {'name': 'Fridge Valley', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Fridge_Valley'},
+    'map5': {'name': 'Bootleg Islands', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Bootleg_Islands'},
+    'map6': {'name': 'Rattlesnake Crescent', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Rattlesnake_Crescent'},
+    'map7': {'name': 'Power Junction', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Power_Junction'},
+    'map8': {'name': 'Vigil Island', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Vigil_Island'},
+    'map9': {'name': 'Black Gold Estuary', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Black_Gold_Estuary'},
+    'map10': {'name': 'Railroad Gap', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Railroad_Gap'},
+    'map11': {'name': 'Copehill Down', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Copehill_Down'},
+    'map12': {'name': 'Frozen Canyon', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Frozen_Canyon'},
+    'map13': {'name': 'Iron Enclave', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Iron_Enclave'},
+    'map14': {'name': 'Misty Heights', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Misty_Heights'},
+    'map15': {'name': 'Islet of Eflen', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Islet_of_Eflen'},
+    'pvp1': {'name': 'Islet of Eflen', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Islet_of_Eflen'},
 
     # Official Pacific DLC maps
-    'island2': {'name': 'Unknown (Pacific DLC)', 'is_official': False}, # TODO
+    'island1': {'name': 'Unknown (Pacific DLC)', 'has_images': False}, # TODO
+    'island2': {'name': 'Unknown (Pacific DLC)', 'has_images': False}, # TODO
+    'island3': {'name': 'Unknown (Pacific DLC)', 'has_images': False}, # TODO
+    'island4': {'name': 'Unknown (Pacific DLC)', 'has_images': False}, # TODO
+    'island5': {'name': 'Unknown (Pacific DLC)', 'has_images': False}, # TODO
+    'island6': {'name': 'Unknown (Pacific DLC)', 'has_images': False}, # TODO
+    'island7': {'name': 'Unknown (Pacific DLC)', 'has_images': False}, # TODO
 
     # Running with the Dead mod maps
-    'rwd_map1': {'name': 'Running with the Dead mod', 'is_official': False},
+    'rwd_map1': {'name': 'Running with the Dead mod', 'has_images': False, 'url': 'https://steamcommunity.com/sharedfiles/filedetails/?id=677995637'},
 
     # Overlord Defense mod maps
-    'def_dday': {'name': 'Overlord Defense mod', 'is_official': False}
+    'def_dday': {'name': 'Overlord Defense mod', 'has_images': False, 'url': 'https://steamcommunity.com/sharedfiles/filedetails/?id=682078428'}
 }
 
 RANKS = {
@@ -430,7 +436,8 @@ class DataScraper:
                 'map': {
                     'id': server.map.id,
                     'name': server.map.name,
-                    'is_official': server.map.is_official
+                    'has_images': server.map.has_images,
+                    'url': server.map.url,
                 },
                 'players': {
                     'current': server.players.current,
@@ -528,7 +535,10 @@ class Server:
 
         if ret.map.id in MAPS:
             ret.map.name = MAPS[ret.map.id]['name']
-            ret.map.is_official = MAPS[ret.map.id]['is_official']
+            ret.map.has_images = MAPS[ret.map.id]['has_images']
+
+            if 'url' in MAPS[ret.map.id]:
+                ret.map.url = MAPS[ret.map.id]['url']
 
         ret.players = ServerPlayers()
 
@@ -683,6 +693,7 @@ class Player:
         ret = {
             'squad_mates': {
                 'current': math.floor(self.xp / SQUADMATES_STEPS_XP) if self.xp < MAX_SQUADMATES * SQUADMATES_STEPS_XP else MAX_SQUADMATES,
+                'xp_steps': SQUADMATES_STEPS_XP,
                 'max': MAX_SQUADMATES
             }
         }
@@ -706,7 +717,8 @@ class Player:
 
 class ServerMap:
     name = None
-    is_official = False
+    has_images = False
+    url = None
 
     def __repr__(self):
         return self.id

@@ -20,11 +20,11 @@
 
 {% macro map_name(map, link=True) -%}
     {% if map.name %}
-        {% if link and map.is_official %}
-            <a href="https://runningwithrifles.gamepedia.com/Special:Search/{{ map.name }}">
+        {% if link and map.url %}
+            <a href="{{ map.url }}">
         {% endif %}
             {{ map.name }}
-        {% if link and map.is_official %}
+        {% if link and map.url %}
             </a>
         {% endif %}
     {% else %}
