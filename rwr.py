@@ -18,7 +18,7 @@ _one_minute = 60
 _one_hour = _one_minute * 60
 
 MAPS = {
-    # Official RWR maps
+    # Official vanilla maps
     'map1': {'name': 'Moorland Trenches', 'is_official': True},
     'map1_2': {'name': 'Moorland Trenches', 'is_official': True},
     'map2': {'name': 'Keepsake Bay', 'is_official': True},
@@ -36,6 +36,9 @@ MAPS = {
     'map14': {'name': 'Misty Heights', 'is_official': True},
     'map15': {'name': 'Islet of Eflen', 'is_official': True},
     'pvp1': {'name': 'Islet of Eflen', 'is_official': True},
+
+    # Official Pacific DLC maps
+    'island2': {'name': 'Unknown (Pacific DLC)', 'is_official': False}, # TODO
 
     # Running with the Dead mod maps
     'rwd_map1': {'name': 'Running with the Dead mod', 'is_official': False},
@@ -196,21 +199,24 @@ UNLOCKABLES = OrderedDict([
 
 # Official invasion servers
 RANKED_SERVERS = (
-    # JP
+    # Vanilla JP
     '45.32.63.85:1234',
     '45.32.63.85:1235',
 
-    # US
+    # Vanilla US
     '162.248.88.126:1236',
     '162.248.88.126:1234',
     '199.217.117.133:1234',
 
-    # EU
+    # Vanilla EU
     '31.186.250.67:1234',
     '31.186.250.67:1235',
     '31.186.250.67:2240',
 
-    # AU
+    # Pacific DLC EU
+    # '31.186.250.67:1270' TODO
+
+    # Vanilla AU
     '103.42.224.189:1234'
 )
 
