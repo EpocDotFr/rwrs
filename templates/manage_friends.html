@@ -28,7 +28,7 @@
                     <td>
                         <img src="{{ url_for('static', filename='images/me.png') }}" title="Hey, I'm the creator of this website! Glad to see you're using it." class="help me" v-if="friend.username.toLowerCase() == my_username">
                         <i class="fa fa-hand-peace-o help" title="This player contributed in a way or another to RWRS. Thanks to her/him!" v-if="inArray(friend.username.toLowerCase(), contributors)"></i>
-                        <img src="{{ url_for('static', filename='images/dev.png') }}" title="You're in presence of one of the Running With Rifles developers!" class="help" v-if="inArray(friend.username.toLowerCase(), devs)">
+                        <img src="{{ url_for('static', filename='images/dev.png') }}" title="Say hi to one of the Running With Rifles developers!" class="help" v-if="inArray(friend.username.toLowerCase(), devs)">
                         <a :href="'/players/' + friend.username">${ friend.username }</a>
                     </td>
                     <td>

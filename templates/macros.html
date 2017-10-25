@@ -6,7 +6,7 @@
     {% elif username.lower() in config['CONTRIBUTORS'] %}
         <i class="fa fa-hand-peace-o help" title="This player contributed in a way or another to RWRS. Thanks to her/him!"></i>
     {% elif username.lower() in config['DEVS'] %}
-        <img src="{{ url_for('static', filename='images/dev.png') }}" title="You're in presence of one of the Running With Rifles developers!" class="help">
+        <img src="{{ url_for('static', filename='images/dev.png') }}" title="Say hi to one of the Running With Rifles developers!" class="help">
     {% endif %}
 
     {% if link %}
