@@ -494,7 +494,7 @@ class Server:
 
     @classmethod
     def load(cls, xml_node, html_servers):
-        """Load a server data from an XML and list of HTML nodes."""
+        """Load a server data from an XML and the HTML code of the servers list page."""
         ret = cls()
 
         name_node = xml_node.find('name')
@@ -573,17 +573,11 @@ class Server:
 
     @property
     def mode_name(self):
-        if self.mode in SERVER_MODES:
-            return SERVER_MODES[self.mode]
-        else:
-            return 'N/A'
+        return SERVER_MODES[self.mode] if self.mode in SERVER_MODES else 'N/A'
 
     @property
     def type_name(self):
-        if self.type in SERVER_TYPES:
-            return SERVER_TYPES[self.type]
-        else:
-            return 'N/A'
+        return SERVER_TYPES[self.type] if self.type in SERVER_TYPES else 'N/A'
 
     def __repr__(self):
         return self.ip_and_port
