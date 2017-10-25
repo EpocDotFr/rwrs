@@ -2,7 +2,7 @@ from memoized_property import memoized_property
 from collections import OrderedDict
 from geolite2 import geolite2
 from PIL import Image
-from lxml import html
+from lxml import html, etree
 from glob import glob
 import rwrs
 import requests
@@ -10,7 +10,6 @@ import math
 import re
 import os
 
-_players_count_regex = re.compile(r'(?P<current_players>\d+)/(?P<max_players>\d+)')
 _time_regex = re.compile(r'(?:(?P<h>\d+)h(?:\s+)?)?(?:(?P<m>\d+)m(?:in)?(?:\s+)?)?(?:(?P<s>\d+)s)?')
 _rank_image_regex = re.compile(r'rank(?P<rank_id>\d+)')
 
@@ -38,19 +37,20 @@ MAPS = {
     'pvp1': {'name': 'Islet of Eflen', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Islet_of_Eflen'},
 
     # Official Pacific DLC maps
-    'island1': {'name': 'Unknown (Pacific DLC)', 'has_images': False}, # TODO
-    'island2': {'name': 'Unknown (Pacific DLC)', 'has_images': False}, # TODO
-    'island3': {'name': 'Unknown (Pacific DLC)', 'has_images': False}, # TODO
-    'island4': {'name': 'Unknown (Pacific DLC)', 'has_images': False}, # TODO
-    'island5': {'name': 'Unknown (Pacific DLC)', 'has_images': False}, # TODO
-    'island6': {'name': 'Unknown (Pacific DLC)', 'has_images': False}, # TODO
-    'island7': {'name': 'Unknown (Pacific DLC)', 'has_images': False}, # TODO
+    # TODO
+    # 'island1': {'name': 'Unknown', 'has_images': False},
+    # 'island2': {'name': 'Unknown', 'has_images': False},
+    # 'island3': {'name': 'Unknown', 'has_images': False},
+    # 'island4': {'name': 'Unknown', 'has_images': False},
+    # 'island5': {'name': 'Unknown', 'has_images': False},
+    # 'island6': {'name': 'Unknown', 'has_images': False},
+    # 'island7': {'name': 'Unknown', 'has_images': False},
 
     # Running with the Dead mod maps
-    'rwd_map1': {'name': 'Running with the Dead mod', 'has_images': False, 'url': 'https://steamcommunity.com/sharedfiles/filedetails/?id=677995637'},
+    'rwd_map1': {'name': 'Moorland Trenches (RWD)', 'has_images': False, 'url': 'https://steamcommunity.com/sharedfiles/filedetails/?id=677995637'},
 
     # Overlord Defense mod maps
-    'def_dday': {'name': 'Overlord Defense mod', 'has_images': False, 'url': 'https://steamcommunity.com/sharedfiles/filedetails/?id=682078428'}
+    'def_dday': {'name': 'D-Day (defense)', 'has_images': False, 'url': 'https://steamcommunity.com/sharedfiles/filedetails/?id=682078428'}
 }
 
 RANKS = {
@@ -203,30 +203,6 @@ UNLOCKABLES = OrderedDict([
 ])
 
 
-# Official invasion servers
-RANKED_SERVERS = (
-    # Vanilla JP
-    '45.32.63.85:1234',
-    '45.32.63.85:1235',
-
-    # Vanilla US
-    '162.248.88.126:1236',
-    '162.248.88.126:1234',
-    '199.217.117.133:1234',
-
-    # Vanilla EU
-    '31.186.250.67:1234',
-    '31.186.250.67:1235',
-    '31.186.250.67:2240',
-
-    # Pacific DLC EU
-    # '31.186.250.67:1270' TODO
-
-    # Vanilla AU
-    '103.42.224.189:1234'
-)
-
-
 class PlayersSort:
     USERNAME = 'username'
     KILLS = 'kills'
@@ -340,7 +316,7 @@ class DataScraper:
     servers_endpoint = 'http://rwr.runningwithrifles.com/rwr_server_list/'
     players_endpoint = 'http://rwr.runningwithrifles.com/rwr_stats/'
 
-    def _call(self, endpoint, resource, params=None):
+    def _call(self, endpoint, resource, type, params=None):
         """Perform an HTTP GET request to the desired RWR list endpoint."""
         url = endpoint + resource
 
@@ -352,17 +328,23 @@ class DataScraper:
 
         response.raise_for_status()
 
-        return html.fromstring(response.text)
+        if type == 'html':
+            return html.fromstring(response.text)
+        elif type == 'xml':
+            return etree.fromstring(response.text)
+        else:
+            raise ValueError('Invalid type parameter')
 
     @rwrs.cache.memoize(timeout=rwrs.app.config['SERVERS_CACHE_TIMEOUT'])
     def get_servers(self):
         """Get and parse the list of all available public RWR servers."""
-        html_content = self._call(self.servers_endpoint, 'view_servers.php')
+        xml_servers = self._call(self.servers_endpoint, 'get_server_list.php', 'xml', params={'start': 0, 'size': 100})
+        html_servers = self._call(self.servers_endpoint, 'view_servers.php', 'html')
 
         servers = []
 
-        for node in html_content.xpath('//table/tr[position() > 1]'):
-            servers.append(Server.load(node))
+        for xml_node in xml_servers.xpath('/result/server'):
+            servers.append(Server.load(xml_node, html_servers))
 
         return servers
 
@@ -429,6 +411,8 @@ class DataScraper:
                 'website': server.website,
                 'is_ranked': server.is_ranked,
                 'steam_join_link': server.steam_join_link,
+                'type': server.type_name,
+                'mode': server.mode_name,
                 'location': {
                     'country_code': server.location.country_code,
                     'country_name': server.location.country_name
@@ -457,7 +441,7 @@ class DataScraper:
             'sort': sort
         }
 
-        html_content = self._call(self.players_endpoint, 'view_players.php', params=params)
+        html_content = self._call(self.players_endpoint, 'view_players.php', 'html', params=params)
 
         players = []
 
@@ -475,7 +459,7 @@ class DataScraper:
             'search': username
         }
 
-        html_content = self._call(self.players_endpoint, 'view_player.php', params=params)
+        html_content = self._call(self.players_endpoint, 'view_player.php', 'html', params=params)
 
         node = html_content.xpath('(//table/tr[position() = 2])[1]')
 
@@ -492,34 +476,60 @@ class Server:
     website = None
 
     @classmethod
-    def load(cls, node):
-        """Load a server data from an HTML <tr> node."""
+    def load(cls, xml_node, html_servers):
+        """Load a server data from an XML and list of HTML nodes."""
         ret = cls()
 
-        name_cell = node[1]
-        ip_cell = node[2]
-        post_cell = node[3]
-        map_cell = node[5]
-        players_count_cell = node[6]
-        bots_count_cell = node[7]
-        version_cell = node[8]
-        steam_join_link_cell = node[10]
-        players_cell = node[11]
-        comment_cell = node[12]
+        name_node = xml_node.find('name')
+        address_node = xml_node.find('address')
+        port_node = xml_node.find('port')
+        map_id_node = xml_node.find('map_id')
+        bots_node = xml_node.find('bots')
+        current_players_node = xml_node.find('current_players')
+        version_node = xml_node.find('version')
+        dedicated_node = xml_node.find('dedicated')
+        comment_node = xml_node.find('comment')
+        url_node = xml_node.find('url')
+        max_players_node = xml_node.find('max_players')
+        mode_node = xml_node.find('mode')
+        realm_node = xml_node.find('realm')
 
-        if (len(name_cell)): # Server name cell has a link
-            name_hypertext = name_cell[0]
+        ret.name = name_node.text
 
-            ret.website = name_hypertext.get('href')
-            ret.name = name_hypertext.text
-        else:
-            ret.name = name_cell.text
-
-        ret.ip = ip_cell.text
-        ret.port = int(post_cell.text)
+        ret.ip = address_node.text
+        ret.port = int(port_node.text)
         ret.ip_and_port = '{ip}:{port}'.format(ip=ret.ip, port=ret.port)
 
-        ret.is_ranked = ret.ip_and_port in RANKED_SERVERS
+        ret.map = ServerMap()
+        ret.map.id = os.path.basename(map_id_node.text)
+
+        if ret.map.id in MAPS:
+            ret.map.name = MAPS[ret.map.id]['name']
+            ret.map.has_images = MAPS[ret.map.id]['has_images']
+
+            if 'url' in MAPS[ret.map.id]:
+                ret.map.url = MAPS[ret.map.id]['url']
+
+        ret.bots = int(bots_node.text)
+
+        ret.players = ServerPlayers()
+        ret.players.current = int(current_players_node.text)
+        ret.players.max = int(max_players_node.text)
+        ret.players.free = ret.players.max - ret.players.current
+
+        ret.version = version_node.text
+        ret.is_dedicated = True if dedicated_node.text == '1' else False
+        ret.comment = comment_node.text
+
+        if url_node.text:
+            ret.website = url_node.text
+
+        ret.mode = mode_node.text
+
+        ret.is_official = realm_node.text and realm_node.text.startswith('official')
+        ret.is_ranked = realm_node.text == 'official_invasion' # Only official invasion servers stats are shared between servers and are available to be viewed
+        ret.type = map_id_node.text.split('/')[2]
+
         ret.location = ServerLocation()
 
         with geolite2 as gl2:
@@ -529,40 +539,46 @@ class Server:
                 ret.location.country_code = location['country']['iso_code'].lower()
                 ret.location.country_name = location['country']['names']['en']
 
-        ret.map = ServerMap()
+        ret.steam_join_link = 'steam://rungameid/270150//server_address={ip} server_port={port}'.format(ip=ret.ip, port=ret.port)
 
-        ret.map.id = map_cell.text
+        html_server_node = html_servers.xpath('(//table/tr[(td[3] = \'{ip}\') and (td[4] = \'{port}\')])[1]'.format(ip=ret.ip, port=ret.port))
 
-        if ret.map.id in MAPS:
-            ret.map.name = MAPS[ret.map.id]['name']
-            ret.map.has_images = MAPS[ret.map.id]['has_images']
+        if html_server_node:
+            html_server_node = html_server_node[0]
 
-            if 'url' in MAPS[ret.map.id]:
-                ret.map.url = MAPS[ret.map.id]['url']
+            players_node = html_server_node[11]
 
-        ret.players = ServerPlayers()
-
-        players = _players_count_regex.match(players_count_cell.text)
-
-        if players:
-            players = players.groupdict()
-
-            ret.players.current = int(players['current_players'])
-            ret.players.max = int(players['max_players'])
-            ret.players.free = ret.players.max - ret.players.current
-
-        ret.bots = int(bots_count_cell.text)
-        ret.version = version_cell.text
-
-        ret.steam_join_link = steam_join_link_cell[0].get('href')
-
-        if players_cell.text:
-            ret.players.list = [player_name for player_name in players_cell.text.split(', ')]
-            ret.players.list.sort()
-
-        ret.comment = comment_cell.text
+            if players_node.text:
+                ret.players.list = [player_name.strip() for player_name in players_node.text.split(',')]
+                ret.players.list.sort()
 
         return ret
+
+    @property
+    def mode_name(self):
+        if self.mode == 'COOP':
+            return 'Coop.'
+        elif self.mode == 'DOM':
+            return 'Dom.'
+        elif self.mode == 'PvP':
+            return 'PvP'
+        elif self.mode == 'PvPvE':
+            return 'PvPvE'
+        else:
+            return 'N/A'
+
+    @property
+    def type_name(self):
+        if self.type.startswith('vanilla'):
+            return 'Vanilla'
+        elif self.type == 'pacific':
+            return 'Pacific DLC'
+        elif self.type == 'Running_with_the_Dead':
+            return 'Running with the Dead'
+        elif self.type == 'overlord_defense':
+            return 'Overlord Defense'
+        else:
+            return 'N/A'
 
     def __repr__(self):
         return self.ip_and_port

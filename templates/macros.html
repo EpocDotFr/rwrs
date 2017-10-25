@@ -32,15 +32,15 @@
     {% endif %}
 {%- endmacro %}
 
-{% macro server_name(server) -%}
+{% macro server_name(server, link=True) -%}
     {% if server.is_ranked %}
         <i class="fa fa-star txtyellow help" title="Ranked server"></i>
     {% endif %}
-    {% if server.website %}
+    {% if link and server.website %}
         <a href="{{ server.website }}">
     {% endif %}
         {{ server.name }}
-    {% if server.website %}
+    {% if link and server.website %}
         </a>
     {% endif %}
 {%- endmacro %}

@@ -2,7 +2,7 @@
 
 {% extends 'layout.html' %}
 
-{% block page_title %}<h2><i class="fa fa-server"></i> Servers › {% if server.is_ranked %}<i class="fa fa-star txtyellow help" title="Ranked server"></i> {% endif %}{{ server.name }}</h2>{% endblock %}
+{% block page_title %}<h2><i class="fa fa-server"></i> Servers › {{ macros.server_name(server, False) }}</h2>{% endblock %}
 
 {% block meta_title %}Servers › {% if server.is_ranked %}★ {% endif %}{{ server.name }}{% endblock %}
 
@@ -25,10 +25,10 @@
                     <td>{{ server.port }}</td>
                 </tr>
                 <tr>
-                    <th>Location</th>
-                    <td>{{ macros.location(server.location, True, True) }}</td>
-                    <th>Version</th>
-                    <td>{{ server.version }}</td>
+                    <th>Type</th>
+                    <td>{{ server.type_name }}</td>
+                    <th>Mode</th>
+                    <td>{{ server.mode_name }}</td>
                 </tr>
                 <tr>
                     <th>Current players</th>
@@ -37,8 +37,20 @@
                     <td>{{ server.players.max }}</td>
                 </tr>
                 <tr>
+                    <th>Location</th>
+                    <td>{{ macros.location(server.location, True, True) }}</td>
+                    <th>Version</th>
+                    <td>{{ server.version }}</td>
+                </tr>
+                <tr>
                     <th>Bots</th>
                     <td>{{ server.bots }}</td>
+                    <th>Dedicated</th>
+                    <td>{{ 'Yes' if server.is_dedicated else 'No' }}</td>
+                </tr>
+                <tr>
+                    <th>Official</th>
+                    <td>{{ 'Yes' if server.is_official else 'No' }}</td>
                     <th>Message</th>
                     <td>{{ server.comment }}</td>
                 </td>

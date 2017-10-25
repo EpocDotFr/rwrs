@@ -18,6 +18,8 @@
                     <th>Current players</th>
                     <th>Max players</th>
                     <th>Map</th>
+                    <th>Type</th>
+                    <th>Mode</th>
                     <th class="w100p"></th>
                 </tr>
             </thead>
@@ -56,12 +58,22 @@
                             <template v-if="!friend.playing_on_server.map.name">${ friend.playing_on_server.map.id }</template>
                         </template>
                     </td>
+                    <td>
+                        <template v-if="friend.playing_on_server">
+                            ${ friend.playing_on_server.type }
+                        </template>
+                    </td>
+                    <td>
+                        <template v-if="friend.playing_on_server">
+                            ${ friend.playing_on_server.mode }
+                        </template>
+                    </td>
                     <td class="txtcenter">
                         <a href="#" class="btn" @click.prevent="removeFriend(friend.username)" :title="'Remove ' + friend.username + ' from friends list'"><i class="fa fa-user-times"></i></a>
                     </td>
                 </tr>
                 <tr v-show="friendsEnriched.length == 0">
-                    <td class="txtcenter" colspan="6">
+                    <td class="txtcenter" colspan="8">
                         <div class="alert info pas txtcenter"><img src="{{ url_for('static', filename='images/forever_alone.png') }}"><br>You don't have friends at this moment.</div>
                     </td>
                 </tr>
