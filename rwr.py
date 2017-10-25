@@ -47,10 +47,10 @@ MAPS = {
     # 'island7': {'name': 'Unknown', 'has_images': False},
 
     # Running with the Dead mod maps
-    'rwd_map1': {'name': 'Moorland Trenches (RWD)', 'has_images': False, 'url': 'https://steamcommunity.com/sharedfiles/filedetails/?id=677995637'},
+    'rwd_map1': {'name': 'Moorland Trenches (RWD)', 'has_images': False},
 
     # Overlord Defense mod maps
-    'def_dday': {'name': 'D-Day (defense)', 'has_images': False, 'url': 'https://steamcommunity.com/sharedfiles/filedetails/?id=682078428'}
+    'def_dday': {'name': 'D-Day (defense)', 'has_images': False}
 }
 
 RANKS = {
