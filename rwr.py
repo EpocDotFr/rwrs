@@ -203,6 +203,23 @@ UNLOCKABLES = OrderedDict([
 ])
 
 
+SERVER_MODES = {
+    'COOP': 'Coop.',
+    'DOM': 'Dom.',
+    'PvP': 'PvP',
+    'PvPvE': 'PvPvE'
+}
+
+
+SERVER_TYPES = {
+    'vanilla': 'Vanilla',
+    'vanilla.winter': 'Vanilla',
+    'pacific': 'Pacific DLC',
+    'Running_with_the_Dead': 'Running with the Dead',
+    'overlord_defense': 'Overlord Defense',
+}
+
+
 class PlayersSort:
     USERNAME = 'username'
     KILLS = 'kills'
@@ -556,27 +573,15 @@ class Server:
 
     @property
     def mode_name(self):
-        if self.mode == 'COOP':
-            return 'Coop.'
-        elif self.mode == 'DOM':
-            return 'Dom.'
-        elif self.mode == 'PvP':
-            return 'PvP'
-        elif self.mode == 'PvPvE':
-            return 'PvPvE'
+        if self.mode in SERVER_MODES:
+            return SERVER_MODES[self.mode]
         else:
             return 'N/A'
 
     @property
     def type_name(self):
-        if self.type.startswith('vanilla'):
-            return 'Vanilla'
-        elif self.type == 'pacific':
-            return 'Pacific DLC'
-        elif self.type == 'Running_with_the_Dead':
-            return 'Running with the Dead'
-        elif self.type == 'overlord_defense':
-            return 'Overlord Defense'
+        if self.type in SERVER_TYPES:
+            return SERVER_TYPES[self.type]
         else:
             return 'N/A'
 
