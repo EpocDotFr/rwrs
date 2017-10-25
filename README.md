@@ -15,7 +15,7 @@ and more. Available at [rwrs.epoc.fr](https://rwrs.epoc.fr/).
     - Real maps name
     - Maps are linked to their [official RWR wiki](https://runningwithrifles.gamepedia.com/Running_with_Rifles_Wiki) page
     - Official invasion (ranked) servers are highlighted
-    - Public servers list
+    - Game mode (coop, PvPvE, etc) and type (vanilla RWR, Pacific DLC, etc)
     - Public server details (players list with link to their profile, current map preview and minimap, etc)
 
 ## Prerequisites
