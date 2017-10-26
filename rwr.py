@@ -37,14 +37,13 @@ MAPS = {
     'pvp1': {'name': 'Islet of Eflen', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Islet_of_Eflen'},
 
     # Official Pacific DLC maps
-    # TODO
-    # 'island1': {'name': 'Unknown', 'has_images': False},
-    # 'island2': {'name': 'Unknown', 'has_images': False},
-    # 'island3': {'name': 'Unknown', 'has_images': False},
-    # 'island4': {'name': 'Unknown', 'has_images': False},
-    # 'island5': {'name': 'Unknown', 'has_images': False},
-    # 'island6': {'name': 'Unknown', 'has_images': False},
-    # 'island7': {'name': 'Unknown', 'has_images': False},
+    'island1': {'name': 'Guadalcanal', 'has_images': False},
+    'island2': {'name': 'Russell Islands', 'has_images': False},
+    'island3': {'name': 'Bougainville Island', 'has_images': False},
+    'island4': {'name': 'Tarawa', 'has_images': False},
+    'island5': {'name': 'Saipan', 'has_images': False},
+    'island6': {'name': 'Iwo Jima', 'has_images': False},
+    'island7': {'name': 'Downfall', 'has_images': False},
 
     # Running with the Dead mod maps
     'rwd_map1': {'name': 'Moorland Trenches (RWD)', 'has_images': False},
