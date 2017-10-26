@@ -19,7 +19,7 @@ _one_hour = _one_minute * 60
 MAPS = {
     # Official vanilla maps
     'map1': {'name': 'Moorland Trenches', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Moorland_Trenches'},
-    'map1_2': {'name': 'Moorland Trenches', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Moorland_Trenches'},
+    'map1_2': {'name': 'Moorland Trenches (v2)', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Moorland_Trenches'},
     'map2': {'name': 'Keepsake Bay', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Keepsake_Bay'},
     'map3': {'name': 'Old Fort Creek', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Old_Fort_Creek'},
     'map4': {'name': 'Fridge Valley', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Fridge_Valley'},
