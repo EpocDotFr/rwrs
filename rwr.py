@@ -533,8 +533,12 @@ class Server:
         ret.port = int(port_node.text)
         ret.ip_and_port = '{ip}:{port}'.format(ip=ret.ip, port=ret.port)
 
+        game_type, map_id = parse_map_path(map_id_node.text)
+
+        ret.type = game_type
+
         ret.map = ServerMap()
-        ret.map.id = os.path.basename(map_id_node.text)
+        ret.map.id = map_id
 
         if ret.map.id in MAPS:
             ret.map.name = MAPS[ret.map.id]['name']
@@ -561,7 +565,6 @@ class Server:
 
         ret.is_official = realm_node.text and realm_node.text.startswith('official')
         ret.is_ranked = realm_node.text == 'official_invasion' # Only official invasion servers stats are shared between servers and are available to be viewed
-        ret.type = map_id_node.text.split('/')[2]
 
         ret.location = ServerLocation()
 
