@@ -12,6 +12,7 @@ import os
 
 _time_regex = re.compile(r'(?:(?P<h>\d+)h(?:\s+)?)?(?:(?P<m>\d+)m(?:in)?(?:\s+)?)?(?:(?P<s>\d+)s)?')
 _rank_image_regex = re.compile(r'rank(?P<rank_id>\d+)')
+_map_path_regex = re.compile(r'media/packages/(?P<game_type>.+)/maps/(?P<map_id>.+)$')
 
 _one_minute = 60
 _one_hour = _one_minute * 60
@@ -253,6 +254,22 @@ def parse_time(string):
     return None
 
 
+def parse_map_path(map_path):
+    """Parse a map path to extract the game type it belong to as well as the map identifier."""
+    game_type = None
+    map_id = None
+
+    parsed = _map_path_regex.search(map_path)
+
+    if parsed:
+        parsed = parsed.groupdict()
+
+        game_type = parsed['game_type']
+        map_id = parsed['map_id']
+
+    return game_type, map_id
+
+
 class MinimapsImageExtractor:
     minimap_image_size = (320, 320)
 
@@ -270,12 +287,12 @@ class MinimapsImageExtractor:
 
     def extract(self):
         """Actually run the extract process."""
-        minimaps_paths = glob(os.path.join(self.packages_dir, '*', 'maps', '*.png'), recursive=True)
+        minimaps_paths = glob(os.path.join(self.packages_dir, '*', 'maps', '*', 'map.png'))
 
         for minimap_path in minimaps_paths:
-            map_id = os.path.splitext(os.path.basename(minimap_path))[0]
+            game_type, map_id = parse_map_path(minimap_path.replace('\\', '/').replace('/map.png', ''))
 
-            if map_id == 'lobby':
+            if not map_id or map_id == 'lobby' or game_type == 'teddy_hunt':
                 continue
 
             # Copy the original minimap first
