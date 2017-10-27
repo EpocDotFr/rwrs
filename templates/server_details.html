@@ -4,7 +4,7 @@
 
 {% block page_title %}<h2><i class="fa fa-server"></i> Servers › {{ macros.server_name(server, False) }}</h2>{% endblock %}
 
-{% block meta_title %}Servers › {% if server.is_ranked %}★ {% endif %}{{ server.name }}{% endblock %}
+{% block meta_title %}Servers › {% if server.is_ranked or server.is_official %}★ {% endif %}{{ server.name }}{% endblock %}
 
 {% block content %}
     <p class="txtcenter mbs">
@@ -49,10 +49,8 @@
                     <td>{{ 'Yes' if server.is_dedicated else 'No' }}</td>
                 </tr>
                 <tr>
-                    <th>Official</th>
-                    <td>{{ 'Yes' if server.is_official else 'No' }}</td>
                     <th>Message</th>
-                    <td>{{ server.comment }}</td>
+                    <td colspan="4">{{ server.comment }}</td>
                 </td>
             </table>
 
