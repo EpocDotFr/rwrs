@@ -550,8 +550,8 @@ class Server:
         ret.bots = int(bots_node.text)
 
         ret.players = ServerPlayers()
-        ret.players.current = int(current_players_node.text)
-        ret.players.max = 0 if int(max_players_node.text) < 0 else int(max_players_node.text)
+        ret.players.current = 0 if int(current_players_node.text) < 0 else int(current_players_node.text)
+        ret.players.max = int(max_players_node.text)
         ret.players.free = ret.players.max - ret.players.current
 
         ret.version = version_node.text
