@@ -443,6 +443,7 @@ class DataScraper:
                 'name': server.name,
                 'website': server.website,
                 'is_ranked': server.is_ranked,
+                'is_official': server.is_official,
                 'steam_join_link': server.steam_join_link,
                 'type': server.type_name,
                 'mode': server.mode_name,
