@@ -443,7 +443,6 @@ class DataScraper:
                 'name': server.name,
                 'website': server.website,
                 'is_ranked': server.is_ranked,
-                'is_official': server.is_official,
                 'steam_join_link': server.steam_join_link,
                 'type': server.type_name,
                 'mode': server.mode_name,
@@ -564,8 +563,7 @@ class Server:
 
         ret.mode = mode_node.text
 
-        ret.is_official = realm_node.text and realm_node.text.startswith('official')
-        ret.is_ranked = realm_node.text == 'official_invasion' # Only official invasion servers stats are shared between servers and are available to be viewed
+        ret.is_ranked = realm_node.text == 'official_invasion' # Only server stats with this realm are shared between each other and are available to be viewed
 
         ret.location = ServerLocation()
 

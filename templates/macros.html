@@ -34,9 +34,7 @@
 
 {% macro server_name(server, link=True) -%}
     {% if server.is_ranked %}
-        <i class="fa fa-star txtyellow help" title="Official ranked server"></i>
-    {% elif server.is_official %}
-        <i class="fa fa-star help" title="Official server"></i>
+        <i class="fa fa-star txtyellow help" title="Ranked server"></i>
     {% endif %}
     {% if link and server.website %}
         <a href="{{ server.website }}">
