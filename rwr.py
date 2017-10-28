@@ -1,11 +1,11 @@
 from memoized_property import memoized_property
 from collections import OrderedDict
 from geolite2 import geolite2
-from PIL import Image
 from lxml import html, etree
+from PIL import Image
 from glob import glob
-import rwrs
 import requests
+import rwrs
 import math
 import re
 import os
@@ -19,38 +19,50 @@ _one_hour = _one_minute * 60
 
 MAPS = {
     # Official vanilla maps
-    'map1': {'name': 'Moorland Trenches', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Moorland_Trenches'},
-    'map1_2': {'name': 'Moorland Trenches (v2)', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Moorland_Trenches'},
-    'map2': {'name': 'Keepsake Bay', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Keepsake_Bay'},
-    'map3': {'name': 'Old Fort Creek', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Old_Fort_Creek'},
-    'map4': {'name': 'Fridge Valley', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Fridge_Valley'},
-    'map5': {'name': 'Bootleg Islands', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Bootleg_Islands'},
-    'map6': {'name': 'Rattlesnake Crescent', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Rattlesnake_Crescent'},
-    'map7': {'name': 'Power Junction', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Power_Junction'},
-    'map8': {'name': 'Vigil Island', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Vigil_Island'},
-    'map9': {'name': 'Black Gold Estuary', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Black_Gold_Estuary'},
-    'map10': {'name': 'Railroad Gap', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Railroad_Gap'},
-    'map11': {'name': 'Copehill Down', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Copehill_Down'},
-    'map12': {'name': 'Frozen Canyon', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Frozen_Canyon'},
-    'map13': {'name': 'Iron Enclave', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Iron_Enclave'},
-    'map14': {'name': 'Misty Heights', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Misty_Heights'},
-    'map15': {'name': 'Islet of Eflen', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Islet_of_Eflen'},
-    'pvp1': {'name': 'Islet of Eflen', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Islet_of_Eflen'},
+    'vanilla': {
+        'map1': {'name': 'Moorland Trenches', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Moorland_Trenches'},
+        'map1_2': {'name': 'Moorland Trenches (v2)', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Moorland_Trenches'},
+        'map2': {'name': 'Keepsake Bay', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Keepsake_Bay'},
+        'map3': {'name': 'Old Fort Creek', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Old_Fort_Creek'},
+        'map5': {'name': 'Bootleg Islands', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Bootleg_Islands'},
+        'map6': {'name': 'Rattlesnake Crescent', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Rattlesnake_Crescent'},
+        'map7': {'name': 'Power Junction', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Power_Junction'},
+        'map8': {'name': 'Vigil Island', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Vigil_Island'},
+        'map9': {'name': 'Black Gold Estuary', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Black_Gold_Estuary'},
+        'map10': {'name': 'Railroad Gap', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Railroad_Gap'},
+        'map11': {'name': 'Copehill Down', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Copehill_Down'},
+        'map13': {'name': 'Iron Enclave', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Iron_Enclave'},
+        'map14': {'name': 'Misty Heights', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Misty_Heights'},
+        'map15': {'name': 'Islet of Eflen', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Islet_of_Eflen'},
+        'pvp1': {'name': 'Islet of Eflen', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Islet_of_Eflen'}
+    },
+
+    # Official vanilla maps (winter)
+    'vanilla.winter': {
+        'map4': {'name': 'Fridge Valley', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Fridge_Valley'},
+        'map12': {'name': 'Frozen Canyon', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Frozen_Canyon'}
+    },
 
     # Official Pacific DLC maps
-    'island1': {'name': 'Guadalcanal', 'has_images': True},
-    'island2': {'name': 'Russell Islands', 'has_images': True},
-    'island3': {'name': 'Bougainville Island', 'has_images': True},
-    'island4': {'name': 'Tarawa', 'has_images': True},
-    'island5': {'name': 'Saipan', 'has_images': True},
-    'island6': {'name': 'Iwo Jima', 'has_images': True},
-    'island7': {'name': 'Downfall', 'has_images': True},
+    'pacific': {
+        'island1': {'name': 'Guadalcanal', 'has_images': True},
+        'island2': {'name': 'Russell Islands', 'has_images': True},
+        'island3': {'name': 'Bougainville Island', 'has_images': True},
+        'island4': {'name': 'Tarawa', 'has_images': True},
+        'island5': {'name': 'Saipan', 'has_images': True},
+        'island6': {'name': 'Iwo Jima', 'has_images': True},
+        'island7': {'name': 'Downfall', 'has_images': True}
+    },
 
     # Running with the Dead mod maps
-    'rwd_map1': {'name': 'Moorland Trenches (RWD)', 'has_images': False},
+    'Running_with_the_Dead': {
+        'rwd_map1': {'name': 'Moorland Trenches (RWD)', 'has_images': False}
+    },
 
     # Overlord Defense mod maps
-    'def_dday': {'name': 'D-Day (defense)', 'has_images': False}
+    'overlord_defense': {
+        'def_dday': {'name': 'D-Day (defense)', 'has_images': False}
+    }
 }
 
 RANKS = {
@@ -297,11 +309,11 @@ class MinimapsImageExtractor:
 
             # Copy the original minimap first
             minimap = Image.open(minimap_path)
-            minimap.save(os.path.join(self.output_dir, map_id + '.png'), optimize=True)
+            minimap.save(os.path.join(self.output_dir, game_type, map_id + '.png'), optimize=True)
 
             # Create the thumbnail
             minimap.thumbnail(self.minimap_image_size, Image.ANTIALIAS)
-            minimap.save(os.path.join(self.output_dir, map_id + '_thumb.png'), optimize=True)
+            minimap.save(os.path.join(self.output_dir, game_type, map_id + '_thumb.png'), optimize=True)
 
 
 class RanksImageExtractor:
@@ -540,12 +552,12 @@ class Server:
         ret.map = ServerMap()
         ret.map.id = map_id
 
-        if ret.map.id in MAPS:
-            ret.map.name = MAPS[ret.map.id]['name']
-            ret.map.has_images = MAPS[ret.map.id]['has_images']
+        if ret.type in MAPS and ret.map.id in MAPS[ret.type]:
+            ret.map.name = MAPS[ret.type][ret.map.id]['name']
+            ret.map.has_images = MAPS[ret.type][ret.map.id]['has_images']
 
-            if 'url' in MAPS[ret.map.id]:
-                ret.map.url = MAPS[ret.map.id]['url']
+            if 'url' in MAPS[ret.type][ret.map.id]:
+                ret.map.url = MAPS[ret.type][ret.map.id]['url']
 
         ret.bots = int(bots_node.text)
 

@@ -97,12 +97,12 @@
                 {% if server.map.has_images %}
                     <tr>
                         <td class="txtcenter">
-                            <img src="{{ url_for('static', filename='images/maps/preview/{map_id}.png'.format(map_id=server.map.id)) }}">
+                            <img src="{{ url_for('static', filename='images/maps/preview/{game_type}/{map_id}.png'.format(game_type=server.type, map_id=server.map.id)) }}">
                         </td>
                     </tr>
                     <tr>
                         <td class="txtcenter">
-                            <a href="{{ url_for('static', filename='images/maps/minimap/{map_id}.png'.format(map_id=server.map.id)) }}"><img src="{{ url_for('static', filename='images/maps/minimap/{map_id}_thumb.png'.format(map_id=server.map.id)) }}"></a>
+                            <a href="{{ url_for('static', filename='images/maps/minimap/{game_type}/{map_id}.png'.format(game_type=server.type, map_id=server.map.id)) }}"><img src="{{ url_for('static', filename='images/maps/minimap/{game_type}/{map_id}_thumb.png'.format(game_type=server.type, map_id=server.map.id)) }}"></a>
                         </td>
                     </tr>
                 {% endif %}
