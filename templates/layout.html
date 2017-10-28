@@ -35,8 +35,10 @@
     <div class="page pts pbs">
         <div class="w1140p center">
             {% if request.args['from'] %}
-                <div class="alert info pas mbs">
-                    <strong>Heads-up!</strong> You were redirected here automatically from the old RWRS address (rwrs.epoc.fr). Please remember to update your bookmarks - if you use any - to the new address (rwrstats.com) as the old one will no longer work soon.
+                <div class="alert info pas mbs" id="redirect-notice">
+                    <a href="#" class="fr" onclick="document.getElementById('redirect-notice').parentNode.removeChild(document.getElementById('redirect-notice')); return false;"><i class="fa fa-times"></i></a>
+
+                    <strong>Heads-up!</strong> You were redirected here automatically from the old RWRS address (rwrs.epoc.fr). Please remember to update your bookmarks - if you use any - to use the new address (rwrstats.com) as the old one will no longer work soon.
                 </div>
             {% endif %}
 
