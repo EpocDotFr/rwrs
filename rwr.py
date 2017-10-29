@@ -51,7 +51,7 @@ MAPS = {
         'island4': {'name': 'Tarawa', 'has_images': True},
         'island5': {'name': 'Saipan', 'has_images': True},
         'island6': {'name': 'Iwo Jima', 'has_images': True},
-        'island7': {'name': 'Downfall', 'has_images': True}
+        'island7': {'name': 'Operation Downfall', 'has_images': True}
     },
 
     # Running with the Dead mod maps
@@ -545,7 +545,7 @@ class Server:
         ret.port = int(port_node.text)
         ret.ip_and_port = '{ip}:{port}'.format(ip=ret.ip, port=ret.port)
 
-        game_type, map_id = parse_map_path(map_id_node.text)
+        game_type, map_id = parse_map_path(map_id_node.text.replace('//', '/'))
 
         ret.type = game_type
 
