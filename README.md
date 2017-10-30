@@ -72,8 +72,9 @@ You'll probably have to hack with this application to make it work with one of t
 The Flask command `flask extract_ranks_images` is used to retrieve, process (the actual images content isn't centered)
 and save all the RWR ranks images. They are saved at `static/images/ranks/{rank ID}.png`.
 
-  1. `set FLASK_APP=rwrs.py`
-  2. `flask extract_ranks_images --gamedir="{path to the game root directory}"`
+  1. `pip install -r requirements-dev.txt`
+  2. `set FLASK_APP=rwrs.py`
+  3. `flask extract_ranks_images --gamedir="{path to the game root directory}"`
 
 This command requires the game to be installed.
 
@@ -82,8 +83,9 @@ This command requires the game to be installed.
 The Flask command `flask extract_minimaps` is used to extract minimaps (the ones displayed when pressing on
 <kbd>TAB</kbd>). They are saved at `static/images/maps/minimap/{map ID}.png` and `static/images/maps/minimap/{map ID}_thumb.png`.
 
-  1. `set FLASK_APP=rwrs.py`
-  2. `flask extract_minimaps --gamedir="{path to the game root directory}"`
+  1. `pip install -r requirements-dev.txt`
+  2. `set FLASK_APP=rwrs.py`
+  3. `flask extract_minimaps --gamedir="{path to the game root directory}"`
 
 This command requires the game to be installed.
 
