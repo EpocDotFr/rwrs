@@ -45,13 +45,13 @@ MAPS = {
 
     # Official Pacific DLC maps
     'pacific': {
-        'island1': {'name': 'Guadalcanal', 'has_images': True},
-        'island2': {'name': 'Russell Islands', 'has_images': True},
-        'island3': {'name': 'Bougainville Island', 'has_images': True},
-        'island4': {'name': 'Tarawa', 'has_images': True},
-        'island5': {'name': 'Saipan', 'has_images': True},
-        'island6': {'name': 'Iwo Jima', 'has_images': True},
-        'island7': {'name': 'Operation Downfall', 'has_images': True}
+        'island1': {'name': 'Guadalcanal', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Guadalcanal'},
+        'island2': {'name': 'Russell Islands', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Russell_Islands'},
+        'island3': {'name': 'Bougainville Island', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Bougainville_Island'},
+        'island4': {'name': 'Tarawa', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Tarawa'},
+        'island5': {'name': 'Saipan', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Saipan'},
+        'island6': {'name': 'Iwo Jima', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Iwo_Jima'},
+        'island7': {'name': 'Operation Downfall', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Operation_Downfall'}
     },
 
     # Running with the Dead mod maps
