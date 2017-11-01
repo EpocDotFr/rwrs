@@ -3,9 +3,9 @@ from werkzeug.exceptions import HTTPException
 from flask_caching import Cache
 from helpers import *
 import logging
-import sys
-import math
 import click
+import math
+import sys
 import os
 
 
@@ -23,7 +23,7 @@ app.config['RANKS_IMAGES_DIR'] = 'static/images/ranks'
 app.config['MINIMAPS_IMAGES_DIR'] = 'static/images/maps/minimap'
 app.config['UNLOCKABLES_IMAGES_DIR'] = 'static/images/unlockables'
 app.config['SERVERS_CACHE_TIMEOUT'] = 60
-app.config['PLAYERS_CACHE_TIMEOUT'] = 60 * 5
+app.config['PLAYERS_CACHE_TIMEOUT'] = 60 * 15
 app.config['MY_USERNAME'] = 'epocdotfr'
 app.config['CONTRIBUTORS'] = ['street veteran', 'mastock']
 app.config['DEVS'] = ['jackmayol', 'pasik', 'pasik2'] # ahnold tremozl
@@ -158,7 +158,9 @@ def servers_list():
 
     all_players_with_servers = scraper.get_all_players_with_servers()
 
-    return render_template('servers_list.html', all_players_with_servers=all_players_with_servers, servers=scraper.get_servers())
+    servers = scraper.filter_servers(**request.args.to_dict())
+
+    return render_template('servers_list.html', all_players_with_servers=all_players_with_servers, servers=servers)
 
 
 @app.route('/servers/<ip_and_port>')

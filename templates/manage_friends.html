@@ -10,7 +10,7 @@
             <input type="text" v-model.trim="friend_to_add" placeholder="Type a player name" required> <button type="submit">Add new friend</button>
         </form>
 
-        <table class="striped mbn">
+        <table :class="[friendsEnriched.length > 0 ? 'striped' : '', 'mbn']">
             <thead>
                 <tr>
                     <th>Friend name</th>
@@ -73,7 +73,7 @@
                     </td>
                 </tr>
                 <tr v-show="friendsEnriched.length == 0">
-                    <td class="txtcenter" colspan="8">
+                    <td colspan="8">
                         <div class="alert info pas txtcenter"><img src="{{ url_for('static', filename='images/forever_alone.png') }}"><br>You don't have friends at this moment.</div>
                     </td>
                 </tr>

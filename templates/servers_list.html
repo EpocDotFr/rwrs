@@ -7,45 +7,63 @@
 {% block meta_title %}Servers{% endblock %}
 
 {% block content %}
-    {% if servers %}
-        <table class="striped clickable mbn servers-list">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Current players</th>
-                    <th>Max players</th>
-                    <th>Map</th>
-                    <th>Type</th>
-                    <th>Mode</th>
-                    <th class="w150p"></th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for server in servers %}
-                    <tr onclick="window.location.href = '{{ url_for('server_details', ip_and_port=server.ip_and_port) }}';" data-server-ip-and-port="{{ server.ip_and_port }}">
-                        <td>{{ macros.location(server.location) }} {{ macros.server_name(server) }}</td>
-                        <td class="{{ macros.server_slots_class(server) }}">{{ server.players.current }}</td>
-                        <td>{{ server.players.max }}</td>
-                        <td>{{ macros.map_name(server.map) }}</td>
-                        <td>{{ server.type_name }}</td>
-                        <td>{{ server.mode_name }}</td>
-                        <td class="txtcenter">
-                            {{ macros.server_join_button(server) }}
+    {% if config['DEBUG'] %}
+    <form action="{{ url_for('servers_list') }}" method="GET" class="mbs">
+        <fieldset class="man ptn">
+            <legend><i class="fa fa-filter"></i> Filters</legend>
 
-                            <a href="{{ url_for('server_details', ip_and_port=server.ip_and_port) }}" class="btn" title="Details"><i class="fa fa-eye"></i></a>
-                        </td>
-                    </tr>
+            <select name="country">
+                <option value="">Anywhere</option>
+                {% for country in all_countries %}
+                    <option value="{{ country.country_code }}" {% if request.args.country == country.country_code %}selected{% endif %}>{{ country.country_name }}</option>
                 {% endfor %}
-            </tbody>
-        </table>
-
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/zepto/1.2.0/zepto.min.js"></script>
-        <script src="{{ url_for('static', filename='js/app.js') }}"></script>
-        <script>
-            friendsFeature.all_players_with_servers = {{ all_players_with_servers|tojson }};
-            friendsFeature.initOnServersList();
-        </script>
-    {% else %}
-        <p class="alert info pas">Whoops, there isn't any server to display. That's not normal.</p>
+            </select>
+            <button type="submit">Apply</button>
+        </fieldset>
+    </form>
     {% endif %}
+
+    <table class="{{ 'striped clickable' if servers else '' }} mbn servers-list">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Current players</th>
+                <th>Max players</th>
+                <th>Map</th>
+                <th>Type</th>
+                <th>Mode</th>
+                <th class="w150p"></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for server in servers %}
+                <tr onclick="window.location.href = '{{ url_for('server_details', ip_and_port=server.ip_and_port) }}';" data-server-ip-and-port="{{ server.ip_and_port }}">
+                    <td>{{ macros.location(server.location) }} {{ macros.server_name(server) }}</td>
+                    <td class="{{ macros.server_slots_class(server) }}">{{ server.players.current }}</td>
+                    <td>{{ server.players.max }}</td>
+                    <td>{{ macros.map_name(server.map) }}</td>
+                    <td>{{ server.type_name }}</td>
+                    <td>{{ server.mode_name }}</td>
+                    <td class="txtcenter">
+                        {{ macros.server_join_button(server) }}
+
+                        <a href="{{ url_for('server_details', ip_and_port=server.ip_and_port) }}" class="btn" title="Details"><i class="fa fa-eye"></i></a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="7">
+                        <div class="alert info pas txtcenter">There isn't any server to display.</div>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/zepto/1.2.0/zepto.min.js"></script>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+    <script>
+        friendsFeature.all_players_with_servers = {{ all_players_with_servers|tojson }};
+        friendsFeature.initOnServersList();
+    </script>
 {% endblock %}
