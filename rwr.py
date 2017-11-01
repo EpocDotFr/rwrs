@@ -403,6 +403,47 @@ class DataScraper:
 
         return None
 
+    def filter_servers(self, **kwargs):
+        """Filter servers corresponding to criteria."""
+        def _filter_server(server, **kwargs):
+
+            type = kwargs.get('type')
+            mode = kwargs.get('mode')
+            map_id = kwargs.get('map_id')
+            is_dedicated = kwargs.get('is_dedicated')
+            is_ranked = kwargs.get('is_ranked')
+            country_code = kwargs.get('country_code')
+            is_not_empty = kwargs.get('is_not_empty')
+            is_not_full = kwargs.get('is_not_full')
+
+            if type and type != server.type:
+                return False
+
+            if mode and mode != server.mode:
+                return False
+
+            if map_id and map_id != server.map.id:
+                return False
+
+            if is_dedicated is not None and is_dedicated != server.is_dedicated:
+                return False
+
+            if is_ranked is not None and is_ranked != server.is_ranked:
+                return False
+
+            if country_code and country_code != server.location.country_code:
+                return False
+
+            if is_not_empty is True and server.players.current > 0:
+                return False
+
+            if is_not_full is True and server.players.free > 0:
+                return False
+
+            return True
+
+        return filter(_filter_server, self.get_servers())
+
     def get_players_on_servers_counts(self):
         """Get the total of players currently playing on the total of non-empty servers."""
         servers = self.get_servers()
