@@ -216,11 +216,11 @@ UNLOCKABLES = OrderedDict([
 
 
 SERVER_MODES = {
-    'COOP': {'short': 'Coop.', 'full': 'Cooperation'},
-    'DOM': {'short': 'Dom.', 'full': 'Domination'},
-    'PvP': {'short': 'PvP', 'full': 'PvP'},
-    'PvE': {'short': 'PvE', 'full': 'PvE'},
-    'PvPvE': {'short': 'PvPvE', 'full': 'PvPvE'}
+    'COOP': {'short': 'Coop.', 'long': 'Cooperation'},
+    'DOM': {'short': 'Dom.', 'long': 'Domination'},
+    'PvP': {'short': 'PvP', 'long': 'PvP'},
+    'PvE': {'short': 'PvE', 'long': 'PvE'},
+    'PvPvE': {'short': 'PvPvE', 'long': 'PvPvE'}
 }
 
 
@@ -448,7 +448,7 @@ class DataScraper:
             if server.mode and server.mode not in already_handled:
                 ret.append({
                     'value': server.mode,
-                    'label': server.mode_name_full
+                    'label': server.mode_name_long
                 })
 
                 already_handled.append(server.mode)
@@ -717,14 +717,14 @@ class Server:
 
     def get_mode_name(self, short=True):
         """Return the server's game mode name."""
-        return SERVER_MODES[self.mode]['short' if short else 'full'] if self.mode in SERVER_MODES else 'N/A'
+        return SERVER_MODES[self.mode]['short' if short else 'long'] if self.mode in SERVER_MODES else 'N/A'
 
     @property
     def mode_name(self):
         return self.get_mode_name()
 
     @property
-    def mode_name_full(self):
+    def mode_name_long(self):
         return self.get_mode_name(False)
 
     @property
