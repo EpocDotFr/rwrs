@@ -77,7 +77,12 @@ def home():
 
     playing_players, non_empty_servers = scraper.get_players_on_servers_counts()
 
-    return render_template('home.html', all_players=all_players, playing_players=playing_players, non_empty_servers=non_empty_servers)
+    return render_template(
+        'home.html',
+        all_players=all_players,
+        playing_players=playing_players,
+        non_empty_servers=non_empty_servers
+    )
 
 
 @app.route('/my-friends')
@@ -158,9 +163,27 @@ def servers_list():
 
     all_players_with_servers = scraper.get_all_players_with_servers()
 
-    servers = scraper.filter_servers(**request.args.to_dict())
+    filters = request.args.to_dict()
 
-    return render_template('servers_list.html', all_players_with_servers=all_players_with_servers, servers=servers)
+    if filters:
+        servers = scraper.filter_servers(**filters)
+    else:
+        servers = scraper.get_servers()
+
+    locations = scraper.get_all_servers_locations()
+    types = scraper.get_all_servers_types()
+    modes = scraper.get_all_servers_modes()
+    maps = scraper.get_all_servers_maps()
+
+    return render_template(
+        'servers_list.html',
+        all_players_with_servers=all_players_with_servers,
+        servers=servers,
+        locations=locations,
+        types=types,
+        modes=modes,
+        maps=maps
+    )
 
 
 @app.route('/servers/<ip_and_port>')

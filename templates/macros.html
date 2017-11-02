@@ -124,3 +124,16 @@
         <i class="fa fa-{{ icon_class }} {{ color_class }} help" title="{{ title }}"></i>
     {% endif %}
 {%- endmacro %}
+
+{% macro select(name, default_label, options, default_value='any', where=request.args) -%}
+    <select name="{{ name }}">
+        <option value="{{ default_value }}">{{ default_label }}</option>
+        {% for option in options %}
+            <option value="{{ option.value }}" {% if where.get(name) == option.value %}selected{% endif %}>{{ option.label }}</option>
+        {% endfor %}
+    </select>
+{%- endmacro %}
+
+{% macro checkbox(name, label, value='yes', where=request.args) -%}
+    <label><input type="checkbox" name="{{ name }}" value="{{ value }}" {% if where.get(name) == value %}checked{% endif %}> {{ label }}</label>
+{%- endmacro %}

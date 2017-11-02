@@ -9,16 +9,19 @@
 {% block content %}
     {% if config['DEBUG'] %}
     <form action="{{ url_for('servers_list') }}" method="GET" class="mbs">
-        <fieldset class="man ptn">
+        <fieldset class="man">
             <legend><i class="fa fa-filter"></i> Filters</legend>
 
-            <select name="country">
-                <option value="">Anywhere</option>
-                {% for country in all_countries %}
-                    <option value="{{ country.country_code }}" {% if request.args.country == country.country_code %}selected{% endif %}>{{ country.country_name }}</option>
-                {% endfor %}
-            </select>
-            <button type="submit">Apply</button>
+            {{ macros.select('location', '(Any location)', locations) }}
+            {{ macros.select('map', '(Any map)', maps) }}
+            {{ macros.select('type', '(Any type)', types) }}
+            {{ macros.select('mode', '(Any mode)', modes) }}
+            {{ macros.checkbox('dedicated', 'Dedicated') }}
+            {{ macros.checkbox('ranked', 'Ranked') }}
+            {{ macros.checkbox('not_empty', 'Not empty') }}
+            {{ macros.checkbox('not_full', 'Not full') }}
+
+            <button type="submit" class="fr">Apply</button>
         </fieldset>
     </form>
     {% endif %}

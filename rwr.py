@@ -216,10 +216,10 @@ UNLOCKABLES = OrderedDict([
 
 
 SERVER_MODES = {
-    'COOP': 'Coop.',
-    'DOM': 'Dom.',
-    'PvP': 'PvP',
-    'PvPvE': 'PvPvE'
+    'COOP': {'short': 'Coop.', 'full': 'Cooperation'},
+    'DOM': {'short': 'Dom.', 'full': 'Domination'},
+    'PvP': {'short': 'PvP', 'full': 'PvP'},
+    'PvPvE': {'short': 'PvPvE', 'full': 'PvPvE'}
 }
 
 
@@ -403,45 +403,113 @@ class DataScraper:
 
         return None
 
-    def filter_servers(self, **criteria):
+    def get_all_servers_locations(self):
+        """Return the location of all the servers."""
+        servers = self.get_servers()
+        ret = []
+        already_handled = []
+
+        for server in servers:
+            if server.location.country_code and server.location.country_code not in already_handled:
+                ret.append({
+                    'value': server.location.country_code,
+                    'label': server.location.country_name
+                })
+
+                already_handled.append(server.location.country_code)
+
+        return sorted(ret, key=lambda k: k['label'])
+
+    def get_all_servers_types(self):
+        """Return the type of all of the servers."""
+        servers = self.get_servers()
+        ret = []
+        already_handled = []
+
+        for server in servers:
+            if server.type and server.type not in already_handled:
+                ret.append({
+                    'value': server.type,
+                    'label': server.type_name
+                })
+
+                already_handled.append(server.type)
+
+        return sorted(ret, key=lambda k: k['label'])
+
+    def get_all_servers_modes(self):
+        """Return the mode of all of the servers."""
+        servers = self.get_servers()
+        ret = []
+        already_handled = []
+
+        for server in servers:
+            if server.mode and server.mode not in already_handled:
+                ret.append({
+                    'value': server.mode,
+                    'label': server.mode_name_full
+                })
+
+                already_handled.append(server.mode)
+
+        return sorted(ret, key=lambda k: k['label'])
+
+    def get_all_servers_maps(self):
+        """Return the map of all of the servers."""
+        servers = self.get_servers()
+        ret = []
+        already_handled = []
+
+        for server in servers:
+            if server.map.id and server.map.id not in already_handled:
+                ret.append({
+                    'value': server.map.id,
+                    'label': server.map.name
+                })
+
+                already_handled.append(server.map.id)
+
+        return sorted(ret, key=lambda k: k['label'])
+
+    def filter_servers(self, **filters):
         """Filter servers corresponding to the given criteria."""
-        def _filter_server(server, criteria):
-            type = criteria.get('type')
-            mode = criteria.get('mode')
-            map_id = criteria.get('map_id')
-            is_dedicated = criteria.get('is_dedicated')
-            is_ranked = criteria.get('is_ranked')
-            country = criteria.get('country')
-            is_not_empty = criteria.get('is_not_empty')
-            is_not_full = criteria.get('is_not_full')
+        def _filter_server(server, filters):
+            location = filters.get('location', 'any')
+            map = filters.get('map', 'any')
+            type = filters.get('type', 'any')
+            mode = filters.get('mode', 'any')
+            dedicated = filters.get('dedicated')
+            ranked = filters.get('ranked')
+            not_empty = filters.get('not_empty')
+            not_full = filters.get('not_full')
 
-            if type and type != server.type:
+            if location != 'any' and location != server.location.country_code:
                 return False
 
-            if mode and mode != server.mode:
+            if map != 'any' and map != server.map.id:
                 return False
 
-            if map_id and map_id != server.map.id:
+            if type != 'any' and type != server.type:
                 return False
 
-            if is_dedicated is not None and is_dedicated != server.is_dedicated:
+            if mode != 'any' and mode != server.mode:
                 return False
 
-            if is_ranked is not None and is_ranked != server.is_ranked:
+            if dedicated == 'yes' and not server.is_dedicated:
                 return False
 
-            if country and country != server.location.country_code:
+            if ranked == 'yes' and not server.is_ranked:
                 return False
 
-            if is_not_empty is True and server.players.current > 0:
+            if not_empty == 'yes' and server.players.current == 0:
                 return False
 
-            if is_not_full is True and server.players.free > 0:
+            if not_full == 'yes' and server.players.free == 0:
                 return False
 
             return True
 
-        return [server for server in self.get_servers() if _filter_server(server, criteria)]
+        return [server for server in self.get_servers() if _filter_server(server, filters)]
 
     def get_players_on_servers_counts(self):
         """Get the total of players currently playing on the total of non-empty servers."""
@@ -641,9 +709,17 @@ class Server:
 
         return ret
 
+    def get_mode_name(self, short=True):
+        """Return the server's game mode name."""
+        return SERVER_MODES[self.mode]['short' if short else 'full'] if self.mode in SERVER_MODES else 'N/A'
+
     @property
     def mode_name(self):
-        return SERVER_MODES[self.mode] if self.mode in SERVER_MODES else 'N/A'
+        return self.get_mode_name()
+
+    @property
+    def mode_name_full(self):
+        return self.get_mode_name(False)
 
     @property
     def type_name(self):
