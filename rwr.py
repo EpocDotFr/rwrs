@@ -43,7 +43,7 @@ MAPS = {
         'map12': {'name': 'Frozen Canyon', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Frozen_Canyon'}
     },
 
-    # Official Pacific DLC maps
+    # Official RWR: PACIFIC maps
     'pacific': {
         'island1': {'name': 'Guadalcanal', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Guadalcanal'},
         'island2': {'name': 'Russell Islands', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Russell_Islands'},
@@ -227,7 +227,7 @@ SERVER_MODES = {
 SERVER_TYPES = {
     'vanilla': 'Vanilla',
     'vanilla.winter': 'Vanilla',
-    'pacific': 'Pacific DLC',
+    'pacific': 'RWR: PACIFIC',
     'Running_with_the_Dead': 'Running with the Dead',
     'overlord_defense': 'Overlord Defense',
 }
@@ -490,8 +490,13 @@ class DataScraper:
             if map != 'any' and map != server.map.id:
                 return False
 
-            if type != 'any' and type != server.type:
-                return False
+            if type != 'any':
+                if type.startswith('vanilla'):
+                    if not server.type.startswith('vanilla'):
+                        return False
+                else:
+                    if type != server.type:
+                        return False
 
             if mode != 'any' and mode != server.mode:
                 return False

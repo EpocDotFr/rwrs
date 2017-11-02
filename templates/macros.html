@@ -125,8 +125,8 @@
     {% endif %}
 {%- endmacro %}
 
-{% macro select(name, default_label, options, default_value='any', where=request.args) -%}
-    <select name="{{ name }}">
+{% macro select(name, default_label, options, default_value='any', where=request.args, class='') -%}
+    <select name="{{ name }}" class="{{ class }}">
         <option value="{{ default_value }}">{{ default_label }}</option>
         {% for option in options %}
             <option value="{{ option.value }}" {% if where.get(name) == option.value %}selected{% endif %}>{{ option.label }}</option>

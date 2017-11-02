@@ -13,9 +13,9 @@
             <legend><i class="fa fa-filter"></i> Filters</legend>
 
             {{ macros.select('location', '(Any location)', locations) }}
-            {{ macros.select('map', '(Any map)', maps) }}
-            {{ macros.select('type', '(Any type)', types) }}
-            {{ macros.select('mode', '(Any mode)', modes) }}
+            {{ macros.select('map', '(Any map)', maps, class="w150p") }}
+            {{ macros.select('type', '(Any type)', types, class="w150p") }}
+            {{ macros.select('mode', '(Any mode)', modes, class="w150p") }}
             {{ macros.checkbox('dedicated', 'Dedicated') }}
             {{ macros.checkbox('ranked', 'Ranked') }}
             {{ macros.checkbox('not_empty', 'Not empty') }}
