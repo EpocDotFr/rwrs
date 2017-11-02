@@ -17,6 +17,7 @@ and more. Available at [rwrstats.com](https://rwrstats.com/).
     - Official invasion (ranked) servers are highlighted
     - Game mode (coop, PvPvE, etc) and type (vanilla RWR, Pacific DLC, etc)
     - Public server details (players list with link to their profile, current map preview and minimap, etc)
+    - Filtering capabilities
 
 ## Prerequisites
 
