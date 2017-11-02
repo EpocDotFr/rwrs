@@ -219,6 +219,7 @@ SERVER_MODES = {
     'COOP': {'short': 'Coop.', 'full': 'Cooperation'},
     'DOM': {'short': 'Dom.', 'full': 'Domination'},
     'PvP': {'short': 'PvP', 'full': 'PvP'},
+    'PvE': {'short': 'PvE', 'full': 'PvE'},
     'PvPvE': {'short': 'PvPvE', 'full': 'PvPvE'}
 }
 
@@ -427,7 +428,7 @@ class DataScraper:
         already_handled = []
 
         for server in servers:
-            if server.type and server.type not in already_handled:
+            if server.type and server.type != 'vanilla.winter' and server.type not in already_handled:
                 ret.append({
                     'value': server.type,
                     'label': server.type_name
