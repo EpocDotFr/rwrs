@@ -717,7 +717,7 @@ class Server:
 
     def get_mode_name(self, short=True):
         """Return the server's game mode name."""
-        return SERVER_MODES[self.mode]['short' if short else 'long'] if self.mode in SERVER_MODES else self.mode
+        return SERVER_MODES[self.mode]['short' if short else 'long'] if self.mode in SERVER_MODES else self.mode if self.mode is not None else 'N/A'
 
     @property
     def mode_name(self):
@@ -729,7 +729,7 @@ class Server:
 
     @property
     def type_name(self):
-        return SERVER_TYPES[self.type] if self.type in SERVER_TYPES else self.type
+        return SERVER_TYPES[self.type] if self.type in SERVER_TYPES else self.type if self.type is not None else 'N/A'
 
     def __repr__(self):
         return self.ip_and_port
