@@ -465,7 +465,7 @@ class DataScraper:
             if server.map.id and server.map.id not in already_handled:
                 ret.append({
                     'value': server.map.id,
-                    'label': server.map.name
+                    'label': server.map.name if server.map.name else server.map.id
                 })
 
                 already_handled.append(server.map.id)
