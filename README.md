@@ -108,8 +108,8 @@ As the provided servers location is most of the time either missing or invalid, 
   - Flag icons by [Flag Sprites](https://www.flag-sprites.com/en/) and [GoSquared](https://www.gosquared.com/resources/flag-icons/) (freeware)
   - Maps previews comes from the [official RWR wiki](https://runningwithrifles.gamepedia.com/Running_with_Rifles_Wiki)
   - This project uses GeoLite2 data created by MaxMind, available from [www.maxmind.com](https://www.maxmind.com/)
-  - RWR logo, ranks images, items images, Running With Rifles © 2015 - 2017 Osumia Games
-  - This project isn't supported nor endorsed by Osumia Games
+  - All Running With Rifles assets © 2015 - 2017 Osumia Games
+  - This project is not affiliated with Osumia Games
 
 ## End words
 
