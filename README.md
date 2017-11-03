@@ -116,6 +116,5 @@ As the provided servers location is most of the time either missing or invalid, 
 If you have questions or problems, you can either:
 
   - Submit an issue [here on GitHub](https://github.com/EpocDotFr/rwrs/issues)
-  - Post a comment in [this Reddit thread](https://www.reddit.com/r/Runningwithrifles/comments/741v7h/introducing_rwrs_running_with_rifles_stats_more/)
   - Post a message in [this topic](http://www.runningwithrifles.com/phpBB3/viewtopic.php?f=12&t=3376) on the official RWR forums
   - Post a message in [this Steam topic](https://steamcommunity.com/app/270150/discussions/0/1520386297704428050/)
