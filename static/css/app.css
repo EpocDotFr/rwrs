@@ -185,6 +185,7 @@ input[type="button"][type="submit"],
     color: #FFF;
     text-decoration: none;
     font-weight: bold;
+    border-radius: 0;
 }
 
 button:hover, button:focus, button.active,

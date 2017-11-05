@@ -75,13 +75,14 @@ def home():
 
     all_players = scraper.get_all_players()
 
-    playing_players, non_empty_servers = scraper.get_players_on_servers_counts()
+    playing_players, non_empty_servers, total_servers = scraper.get_players_on_servers_counts()
 
     return render_template(
         'home.html',
         all_players=all_players,
         playing_players=playing_players,
-        non_empty_servers=non_empty_servers
+        non_empty_servers=non_empty_servers,
+        total_servers=total_servers
     )
 
 

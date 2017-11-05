@@ -523,8 +523,9 @@ class DataScraper:
 
         playing_players = sum([server.players.current for server in servers])
         non_empty_servers = sum([1 for server in servers if server.players.current > 0])
+        total_servers = len(servers)
 
-        return (playing_players, non_empty_servers)
+        return (playing_players, non_empty_servers, total_servers)
 
     def get_all_players(self):
         """Get all the players usernames."""
