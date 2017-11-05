@@ -87,10 +87,12 @@
     <script>
         Vue.config.silent = {{ 'false' if config['DEBUG'] else 'true' }};
 
+        friendsFeature.all_players = {{ all_players|tojson }};
         friendsFeature.my_username = '{{ config['MY_USERNAME'] }}';
         friendsFeature.contributors = {{ config['CONTRIBUTORS']|tojson }};
         friendsFeature.devs = {{ config['DEVS']|tojson }};
         friendsFeature.all_players_with_servers_details = {{ all_players_with_servers_details|tojson }};
+
         friendsFeature.initOnMyFriends();
     </script>
 {% endblock %}

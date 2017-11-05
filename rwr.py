@@ -517,7 +517,7 @@ class DataScraper:
 
         return [server for server in self.get_servers() if _filter_server(server, filters)]
 
-    def get_players_on_servers_counts(self):
+    def get_counters(self):
         """Get the total of players currently playing on the total of non-empty servers."""
         servers = self.get_servers()
 

@@ -20,7 +20,13 @@
 <body>
     <header class="txtcenter pts pbs">
         <div class="w1140p center">
-            <a href="{{ url_for('my_friends') }}" class="manage-friends-link inbl fr is-hidden"><i class="fa fa-users"></i> My friends</a>
+            <div class="left txtleft small">
+                <strong>{{ g.total_servers }}</strong> servers available (<strong>{{ g.non_empty_servers }}</strong> are active)<br>
+                <strong>{{ g.playing_players }}</strong> players online <span class="total-playing-friends is-hidden">(including <strong class="txtblue">?</strong> friends)</span><br>
+            </div>
+            <div class="right txtright">
+                <a href="{{ url_for('my_friends') }}" class="manage-friends-link is-hidden"><i class="fa fa-users"></i> My friends</a>
+            </div>
             <a href="{{ url_for('home') }}"><img src="{{ url_for('static', filename='images/logo.png') }}"></a>
         </div>
     </header>

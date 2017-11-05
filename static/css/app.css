@@ -142,13 +142,24 @@ header > div {
     position: relative;
 }
 
-header .manage-friends-link,
-header .manage-friends-link:visited {
+header .left {
+    position: absolute;
+    top: 0;
+    right: auto;
+    left: 0;
+    bottom: auto;
+}
+
+header .right {
     position: absolute;
     top: 0;
     right: 0;
     left: auto;
     bottom: auto;
+}
+
+header .manage-friends-link,
+header .manage-friends-link:visited {
     text-decoration: none;
 }
 

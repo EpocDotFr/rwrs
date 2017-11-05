@@ -25,6 +25,8 @@ friendsFeature = {
 
         $('.manage-friends-link').removeClass('is-hidden');
 
+        this.initInHeader();
+
         return true;
     },
     /**
@@ -122,28 +124,7 @@ friendsFeature = {
             return;
         }
 
-        var friends = this.getFriends();
-
-        if (friends.length == 0) {
-            return;
-        }
-
-        var playing_friends = [];
-
-        $.each(friends, function(friend_index, friend) {
-            if ($.inArray(friend, friendsFeature.all_players) !== -1) {
-                playing_friends.push(friend);
-            }
-        });
-
-        if (playing_friends.length == 0) {
-            return;
-        }
-
-        var $total_playing_players = $('.total-playing-friends');
-
-        $total_playing_players.children('strong').text(playing_friends.length);
-        $total_playing_players.removeClass('is-hidden');
+        // Nothing special to do
     },
     /**
      * Initialize the Friends feature on the Servers list page.
@@ -277,6 +258,33 @@ friendsFeature = {
         } else {
             $add_friend_link.removeClass('is-hidden');
         }
+    },
+    /**
+     * Initialize the Friends feature in the header of all pages.
+     */
+    initInHeader: function() {
+        var friends = this.getFriends();
+
+        if (friends.length == 0) {
+            return;
+        }
+
+        var playing_friends = [];
+
+        $.each(friends, function(friend_index, friend) {
+            if ($.inArray(friend, friendsFeature.all_players) !== -1) {
+                playing_friends.push(friend);
+            }
+        });
+
+        if (playing_friends.length == 0) {
+            return;
+        }
+
+        var $total_playing_players = $('.total-playing-friends');
+
+        $total_playing_players.children('strong').text(playing_friends.length);
+        $total_playing_players.removeClass('is-hidden');
     },
     /**
      * Get all the user's friends.
