@@ -518,14 +518,14 @@ class DataScraper:
         return [server for server in self.get_servers() if _filter_server(server, filters)]
 
     def get_counters(self):
-        """Get the total of players currently playing on the total of non-empty servers."""
+        """Get the number of players online, the active servers as well as the total number of available servers."""
         servers = self.get_servers()
 
-        playing_players = sum([server.players.current for server in servers])
-        non_empty_servers = sum([1 for server in servers if server.players.current > 0])
+        online_players = sum([server.players.current for server in servers])
+        active_servers = sum([1 for server in servers if server.players.current > 0])
         total_servers = len(servers)
 
-        return (playing_players, non_empty_servers, total_servers)
+        return (online_players, active_servers, total_servers)
 
     def get_all_players(self):
         """Get all the players usernames."""

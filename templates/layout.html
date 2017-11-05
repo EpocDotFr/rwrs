@@ -21,8 +21,8 @@
     <header class="txtcenter pts pbs">
         <div class="w1140p center">
             <div class="left txtleft small">
-                <strong>{{ g.total_servers }}</strong> servers available (<strong>{{ g.non_empty_servers }}</strong> are active)<br>
-                <strong>{{ g.playing_players }}</strong> players online <span class="total-playing-friends is-hidden">(including <strong class="txtblue">?</strong> friends)</span><br>
+                <strong>{{ g.total_servers }}</strong> servers available (<strong>{{ g.active_servers }}</strong> are active)<br>
+                <strong>{{ g.online_players }}</strong> players online <span class="total-playing-friends is-hidden">(including <strong class="txtblue">?</strong> friends)</span><br>
             </div>
             <div class="right txtright">
                 <a href="{{ url_for('my_friends') }}" class="manage-friends-link is-hidden"><i class="fa fa-users"></i> My friends</a>

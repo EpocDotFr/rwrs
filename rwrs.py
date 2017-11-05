@@ -313,10 +313,11 @@ def hashed_static_file(endpoint, values):
 
 @app.before_request
 def get_counters():
+    """Retrieve (if necessary) and initialize the counters shown in the header of all the pages."""
     scraper = rwr.DataScraper()
 
-    playing_players, non_empty_servers, total_servers = scraper.get_counters()
+    online_players, active_servers, total_servers = scraper.get_counters()
 
-    g.playing_players = playing_players
-    g.non_empty_servers = non_empty_servers
+    g.online_players = online_players
+    g.active_servers = active_servers
     g.total_servers = total_servers
