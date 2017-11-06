@@ -332,3 +332,28 @@ friendsFeature = {
         return true;
     }
 }
+
+/**
+ * The Players charts feature logic.
+ */
+playersChartFeature = {
+    /**
+     * Initialize the Players charts on the Home page.
+     */
+    initOnHome: function() {
+        this.createChart('#online-players-chart', 'Total number of online players');
+    },
+    createChart: function(container_selector, title) {
+        return new Chart({
+            parent: container_selector,
+            title: title,
+            data: this.data,
+            is_series: 1,
+            show_dots: 0,
+            heatline: 1,
+            type: 'line',
+            x_axis_mode: 'tick',
+            y_axis_mode: 'span'
+        });
+    }
+};
