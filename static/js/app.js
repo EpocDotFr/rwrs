@@ -336,17 +336,16 @@ friendsFeature = {
 /**
  * The Players charts feature logic.
  */
-playersChartFeature = {
+playersChartsFeature = {
     /**
-     * Initialize the Players charts on the Home page.
+     * Initialize the Players charts on the Server details page.
      */
-    initOnHome: function() {
-        this.createChart('#online-players-chart', 'Total number of online players');
+    initOnServerDetails: function() {
+        this.createChart('#server-players-chart');
     },
-    createChart: function(container_selector, title) {
+    createChart: function(container_selector) {
         return new Chart({
             parent: container_selector,
-            title: title,
             data: this.data,
             is_series: 1,
             show_dots: 0,
