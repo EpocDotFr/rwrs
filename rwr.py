@@ -224,13 +224,13 @@ SERVER_MODES = {
 }
 
 
-SERVER_TYPES = {
-    'vanilla': 'Vanilla',
-    'vanilla.winter': 'Vanilla',
-    'pacific': 'RWR: PACIFIC',
-    'Running_with_the_Dead': 'Running with the Dead',
-    'overlord_defense': 'Overlord Defense',
-}
+SERVER_TYPES = OrderedDict([
+    ('vanilla', 'Vanilla'),
+    ('vanilla.winter', 'Vanilla'),
+    ('pacific', 'RWR: PACIFIC'),
+    ('Running_with_the_Dead', 'Running with the Dead'),
+    ('overlord_defense', 'Overlord Defense')
+])
 
 
 def get_mode_name(mode, short=True):
@@ -463,20 +463,33 @@ class DataScraper:
         )
 
         ret = []
+        vanilla_group = {
+            'type': 'group',
+            'label': SERVER_TYPES['vanilla'],
+            'entries': []
+        }
 
         for server_type_id, server_type_name in SERVER_TYPES.items():
-            group = {
-                'type': 'group',
-                'label': server_type_name,
-                'entries': []
-            }
+            if server_type_id.startswith('vanilla'):
+                group = vanilla_group
+            else:
+                group = {
+                    'type': 'group',
+                    'label': server_type_name,
+                    'entries': []
+                }
 
             for entry in entries:
                 if entry['value'] in MAPS[server_type_id]:
                     group['entries'].append(entry)
 
-            if group['entries']:
+            if not server_type_id.startswith('vanilla') and group['entries']:
                 ret.append(group)
+
+        if vanilla_group['entries']:
+            vanilla_group['entries'] = sorted(vanilla_group['entries'], key=lambda k: k['label'])
+
+            ret.append(vanilla_group)
 
         return ret
 
