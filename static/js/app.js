@@ -284,6 +284,7 @@ friendsFeature = {
         var $total_playing_players = $('.total-playing-friends');
 
         $total_playing_players.children('strong').text(playing_friends.length);
+        $total_playing_players.children('.friend-label').text(playing_friends.length > 1 ? 'friends' : 'friend');
         $total_playing_players.removeClass('is-hidden');
     },
     /**

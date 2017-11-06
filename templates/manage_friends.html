@@ -7,7 +7,7 @@
 {% block content %}
     <div id="app" v-cloak>
         <form class="mbs txtcenter" v-on:submit.prevent="submitAddFriendForm()">
-            <input type="text" v-model.trim="friend_to_add" placeholder="Type a player name" required> <button type="submit">Add new friend</button>
+            <input type="text" v-model.trim="friend_to_add" placeholder="Type a player name" required> <button type="submit"><i class="fa fa-user-plus"></i> Add new friend</button>
         </form>
 
         <table :class="[friendsEnriched.length > 0 ? 'striped' : '', 'mbn']">
