@@ -404,73 +404,53 @@ class DataScraper:
 
         return None
 
-    def get_all_servers_locations(self):
-        """Return the location of all the servers."""
+    def _get_list(self, value_attribute, label_attribute):
+        """Return a list of value -> label of the specified servers attributes."""
         servers = self.get_servers()
         ret = []
         already_handled = []
 
         for server in servers:
-            if server.location.country_code and server.location.country_code not in already_handled:
+            value = value_attribute(server)
+            label = label_attribute(server)
+
+            if value and value not in already_handled:
                 ret.append({
-                    'value': server.location.country_code,
-                    'label': server.location.country_name
+                    'value': value,
+                    'label': label
                 })
 
-                already_handled.append(server.location.country_code)
+                already_handled.append(value)
 
         return sorted(ret, key=lambda k: k['label'])
+
+    def get_all_servers_locations(self):
+        """Return the location of all the servers."""
+        return self._get_list(
+            lambda server: server.location.country_code,
+            lambda server: server.location.country_name
+        )
 
     def get_all_servers_types(self):
         """Return the type of all of the servers."""
-        servers = self.get_servers()
-        ret = []
-        already_handled = []
-
-        for server in servers:
-            if server.type and server.type != 'vanilla.winter' and server.type not in already_handled:
-                ret.append({
-                    'value': server.type,
-                    'label': server.type_name
-                })
-
-                already_handled.append(server.type)
-
-        return sorted(ret, key=lambda k: k['label'])
+        return self._get_list(
+            lambda server: server.type if server.type != 'vanilla.winter' else False,
+            lambda server: server.type_name
+        )
 
     def get_all_servers_modes(self):
         """Return the mode of all of the servers."""
-        servers = self.get_servers()
-        ret = []
-        already_handled = []
-
-        for server in servers:
-            if server.mode and server.mode not in already_handled:
-                ret.append({
-                    'value': server.mode,
-                    'label': server.mode_name_long
-                })
-
-                already_handled.append(server.mode)
-
-        return sorted(ret, key=lambda k: k['label'])
+        return self._get_list(
+            lambda server: server.mode,
+            lambda server: server.mode_name_long
+        )
 
     def get_all_servers_maps(self):
         """Return the map of all of the servers."""
-        servers = self.get_servers()
-        ret = []
-        already_handled = []
-
-        for server in servers:
-            if server.map.id and server.map.id not in already_handled:
-                ret.append({
-                    'value': server.map.id,
-                    'label': server.map.name if server.map.name else server.map.id
-                })
-
-                already_handled.append(server.map.id)
-
-        return sorted(ret, key=lambda k: k['label'])
+        return self._get_list(
+            lambda server: server.map.id,
+            lambda server: server.map.name if server.map.name else server.map.id
+        )
 
     def filter_servers(self, **filters):
         """Filter servers corresponding to the given criteria."""
