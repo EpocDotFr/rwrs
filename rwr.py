@@ -489,7 +489,7 @@ class DataScraper:
         if vanilla_group['entries']:
             vanilla_group['entries'] = sorted(vanilla_group['entries'], key=lambda k: k['label'])
 
-            ret.append(vanilla_group)
+            ret.insert(0, vanilla_group)
 
         return ret
 
