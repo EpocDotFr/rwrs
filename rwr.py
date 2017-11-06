@@ -233,6 +233,16 @@ SERVER_TYPES = {
 }
 
 
+def get_mode_name(mode, short=True):
+    """Return the server's game mode name."""
+    return SERVER_MODES[mode]['short' if short else 'long'] if mode in SERVER_MODES else mode if mode is not None else 'N/A'
+
+
+def get_type_name(type):
+    """Return the server's game type name."""
+    return SERVER_TYPES[type] if type in SERVER_TYPES else type if type is not None else 'N/A'
+
+
 class PlayersSort:
     USERNAME = 'username'
     KILLS = 'kills'
@@ -696,21 +706,17 @@ class Server:
 
         return ret
 
-    def get_mode_name(self, short=True):
-        """Return the server's game mode name."""
-        return SERVER_MODES[self.mode]['short' if short else 'long'] if self.mode in SERVER_MODES else self.mode if self.mode is not None else 'N/A'
-
     @property
     def mode_name(self):
-        return self.get_mode_name()
+        return get_mode_name(self.mode)
 
     @property
     def mode_name_long(self):
-        return self.get_mode_name(False)
+        return get_mode_name(self.mode, False)
 
     @property
     def type_name(self):
-        return SERVER_TYPES[self.type] if self.type in SERVER_TYPES else self.type if self.type is not None else 'N/A'
+        return get_type_name(self.type)
 
     def __repr__(self):
         return self.ip_and_port

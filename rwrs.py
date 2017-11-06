@@ -39,7 +39,8 @@ app.jinja_env.globals.update(
     str=str,
     round=round,
     abs=abs,
-    fabs=math.fabs
+    fabs=math.fabs,
+    isinstance=isinstance
 )
 
 cache = Cache(app)

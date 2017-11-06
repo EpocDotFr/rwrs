@@ -125,12 +125,22 @@
     {% endif %}
 {%- endmacro %}
 
-{% macro select(name, default_label, options, default_value='any', where=request.args, class='') -%}
+{% macro options(entries, where=request.args) -%}
+    {% for entry in entries %}
+        {% if not entry.type or entry.type == 'option' %}
+            <option value="{{ entry.value }}" {% if where.get(name) == entry.value %}selected{% endif %}>{{ entry.label }}</option>
+        {% elif entry.type == 'group' %}
+            <optgroup label="{{ entry.label }}">
+                {{ options(entries=entry.entries, where=where) }}
+            </optgroup>
+        {% endif %}
+    {% endfor %}
+{%- endmacro %}
+
+{% macro select(name, default_label, entries, default_value='any', where=request.args, class='') -%}
     <select name="{{ name }}" class="{{ class }}">
         <option value="{{ default_value }}">{{ default_label }}</option>
-        {% for option in options %}
-            <option value="{{ option.value }}" {% if where.get(name) == option.value %}selected{% endif %}>{{ option.label }}</option>
-        {% endfor %}
+        {{ options(entries=entries, where=where) }}
     </select>
 {%- endmacro %}
 
