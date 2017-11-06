@@ -12,7 +12,7 @@ import os
 
 _time_regex = re.compile(r'(?:(?P<h>\d+)h(?:\s+)?)?(?:(?P<m>\d+)m(?:in)?(?:\s+)?)?(?:(?P<s>\d+)s)?')
 _rank_image_regex = re.compile(r'rank(?P<rank_id>\d+)')
-_map_path_regex = re.compile(r'media/packages/(?P<game_type>.+)/maps/(?P<map_id>.+)$')
+_map_path_regex = re.compile(r'media/packages/(?P<server_type>.+)/maps/(?P<map_id>.+)$')
 
 _one_minute = 60
 _one_hour = _one_minute * 60
@@ -279,7 +279,7 @@ def parse_time(string):
 
 def parse_map_path(map_path):
     """Parse a map path to extract the game type it belong to as well as the map identifier."""
-    game_type = None
+    server_type = None
     map_id = None
 
     parsed = _map_path_regex.search(map_path)
@@ -287,10 +287,10 @@ def parse_map_path(map_path):
     if parsed:
         parsed = parsed.groupdict()
 
-        game_type = parsed['game_type']
+        server_type = parsed['server_type']
         map_id = parsed['map_id']
 
-    return game_type, map_id
+    return server_type, map_id
 
 
 class MinimapsImageExtractor:
@@ -313,18 +313,18 @@ class MinimapsImageExtractor:
         minimaps_paths = glob(os.path.join(self.packages_dir, '*', 'maps', '*', 'map.png'))
 
         for minimap_path in minimaps_paths:
-            game_type, map_id = parse_map_path(minimap_path.replace('\\', '/').replace('/map.png', ''))
+            server_type, map_id = parse_map_path(minimap_path.replace('\\', '/').replace('/map.png', ''))
 
-            if not map_id or map_id == 'lobby' or game_type == 'teddy_hunt':
+            if not map_id or map_id == 'lobby' or server_type == 'teddy_hunt':
                 continue
 
             # Copy the original minimap first
             minimap = Image.open(minimap_path)
-            minimap.save(os.path.join(self.output_dir, game_type, map_id + '.png'), optimize=True)
+            minimap.save(os.path.join(self.output_dir, server_type, map_id + '.png'), optimize=True)
 
             # Create the thumbnail
             minimap.thumbnail(self.minimap_image_size, Image.ANTIALIAS)
-            minimap.save(os.path.join(self.output_dir, game_type, map_id + '_thumb.png'), optimize=True)
+            minimap.save(os.path.join(self.output_dir, server_type, map_id + '_thumb.png'), optimize=True)
 
 
 class RanksImageExtractor:
@@ -457,10 +457,28 @@ class DataScraper:
 
     def get_all_servers_maps(self):
         """Return the map of all of the servers."""
-        return self._get_list(
+        entries = self._get_list(
             lambda server: server.map.id,
             lambda server: server.map.name if server.map.name else server.map.id
         )
+
+        ret = []
+
+        for server_type_id, server_type_name in SERVER_TYPES.items():
+            group = {
+                'type': 'group',
+                'label': server_type_name,
+                'entries': []
+            }
+
+            for entry in entries:
+                if entry['value'] in MAPS[server_type_id]:
+                    group['entries'].append(entry)
+
+            if group['entries']:
+                ret.append(group)
+
+        return ret
 
     def filter_servers(self, **filters):
         """Filter servers corresponding to the given criteria."""
@@ -650,9 +668,9 @@ class Server:
         ret.port = int(port_node.text)
         ret.ip_and_port = '{ip}:{port}'.format(ip=ret.ip, port=ret.port)
 
-        game_type, map_id = parse_map_path(map_id_node.text.replace('//', '/'))
+        server_type, map_id = parse_map_path(map_id_node.text.replace('//', '/'))
 
-        ret.type = game_type
+        ret.type = server_type
 
         ret.map = ServerMap()
         ret.map.id = map_id
