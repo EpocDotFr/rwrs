@@ -6,6 +6,12 @@
 
 {% block meta_title %}Servers › {% if server.is_ranked %}★ {% endif %}{{ server.name }}{% endblock %}
 
+{% block jsfiles %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/zepto/1.2.0/zepto.min.js"></script>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+    <script src="https://unpkg.com/frappe-charts@0.0.3/dist/frappe-charts.min.iife.js"></script>
+{% endblock %}
+
 {% block content %}
     <p class="txtcenter mbs">
         {{ macros.server_join_button(server) }}
@@ -126,9 +132,6 @@
         </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/zepto/1.2.0/zepto.min.js"></script>
-    <script src="https://unpkg.com/frappe-charts@0.0.3/dist/frappe-charts.min.iife.js"></script>
-    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
     <script>
         friendsFeature.all_players = {{ g.all_players|tojson }};
         friendsFeature.players = {{ server.players.list|tojson }};

@@ -6,6 +6,11 @@
 
 {% block meta_title %}Players › {{ player.username }}{% if player_to_compare_with %} (Comparison with {{ player_to_compare_with.username }}){% endif %}{% endblock %}
 
+{% block jsfiles %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/zepto/1.2.0/zepto.min.js"></script>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+{% endblock %}
+
 {% block content %}
     <div class="txtcenter">
         <form method="get" action="{{ url_for('players_compare', username=player.username) }}" class="inbl fl">
@@ -150,8 +155,6 @@
 
     <div class="small txtcenter mts">Stats only concerns ranked servers which are tagged with a <i class="fa fa-star txtyellow"></i></div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/zepto/1.2.0/zepto.min.js"></script>
-    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
     <script>
         friendsFeature.all_players = {{ g.all_players|tojson }};
         friendsFeature.player = '{{ player.username }}';
