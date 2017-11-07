@@ -130,7 +130,7 @@
     <script src="https://unpkg.com/frappe-charts@0.0.3/dist/frappe-charts.min.iife.js"></script>
     <script src="{{ url_for('static', filename='js/app.js') }}"></script>
     <script>
-        friendsFeature.all_players = {{ all_players|tojson }};
+        friendsFeature.all_players = {{ g.all_players|tojson }};
         friendsFeature.players = {{ server.players.list|tojson }};
         friendsFeature.initOnServerDetails();
 

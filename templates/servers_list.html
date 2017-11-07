@@ -64,9 +64,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/zepto/1.2.0/zepto.min.js"></script>
     <script src="{{ url_for('static', filename='js/app.js') }}"></script>
     <script>
-        friendsFeature.all_players = {{ all_players|tojson }};
+        friendsFeature.all_players = {{ g.all_players|tojson }};
         friendsFeature.all_players_with_servers = {{ all_players_with_servers|tojson }};
-
         friendsFeature.initOnServersList();
     </script>
 {% endblock %}
