@@ -344,15 +344,22 @@ playersChartsFeature = {
         this.createChart('#server-players-chart');
     },
     createChart: function(container_selector) {
-        return new Chart({
-            parent: container_selector,
+        $.each(this.data, function(k, v) {
+            v.x = new Date(v.x);
+        });
+
+        MG.data_graphic({
+            show_tooltips: false,
             data: this.data,
-            is_series: 1,
-            show_dots: 0,
-            heatline: 1,
-            type: 'line',
-            x_axis_mode: 'tick',
-            y_axis_mode: 'span'
+            color: '#A4CF17',
+            target: container_selector,
+            x_accessor: 'x',
+            y_accessor: 'y',
+            top: 0,
+            bottom: 20,
+            left: 20,
+            right: 10,
+            buffer: 5
         });
     }
 };
