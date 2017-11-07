@@ -264,6 +264,9 @@ def http_error_handler(error, without_code=False):
     elif not isinstance(error, int):
         error = 500
 
+    g.INCLUDE_WEB_ANALYTICS = False
+    g.NO_INDEX = True
+
     body = render_template('errors/{}.html'.format(error))
 
     if not without_code:
@@ -274,6 +277,26 @@ def http_error_handler(error, without_code=False):
 
 # -----------------------------------------------------------
 # Hooks
+
+
+@app.before_request
+def define_globals():
+    g.INCLUDE_WEB_ANALYTICS = not app.config['DEBUG']
+    g.NO_INDEX = False
+
+
+@app.before_request
+def set_counters():
+    """Retrieve (if necessary) and initialize the counters shown in the header of all the pages."""
+    scraper = rwr.DataScraper()
+
+    g.all_players = scraper.get_all_players()
+
+    online_players, active_servers, total_servers = scraper.get_counters()
+
+    g.online_players = online_players
+    g.active_servers = active_servers
+    g.total_servers = total_servers
 
 
 @app.url_defaults
@@ -297,17 +320,3 @@ def hashed_static_file(endpoint, values):
 
             if os.path.exists(fp):
                 values[int(os.stat(fp).st_mtime)] = ''
-
-
-@app.before_request
-def get_counters():
-    """Retrieve (if necessary) and initialize the counters shown in the header of all the pages."""
-    scraper = rwr.DataScraper()
-
-    g.all_players = scraper.get_all_players()
-
-    online_players, active_servers, total_servers = scraper.get_counters()
-
-    g.online_players = online_players
-    g.active_servers = active_servers
-    g.total_servers = total_servers
