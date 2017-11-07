@@ -281,13 +281,6 @@ def http_error_handler(error, without_code=False):
 
 @app.before_request
 def define_globals():
-    g.INCLUDE_WEB_ANALYTICS = not app.config['DEBUG']
-    g.NO_INDEX = False
-
-
-@app.before_request
-def set_counters():
-    """Retrieve (if necessary) and initialize the counters shown in the header of all the pages."""
     scraper = rwr.DataScraper()
 
     g.all_players = scraper.get_all_players()
@@ -297,6 +290,9 @@ def set_counters():
     g.online_players = online_players
     g.active_servers = active_servers
     g.total_servers = total_servers
+
+    g.INCLUDE_WEB_ANALYTICS = not app.config['DEBUG']
+    g.NO_INDEX = False
 
 
 @app.url_defaults
