@@ -4,6 +4,12 @@
 
 {% block meta_title %}My friends{% endblock %}
 
+{% block jsfiles %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.4.4/vue{{ '.min' if not config['DEBUG'] else '' }}.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/zepto/1.2.0/zepto.min.js"></script>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+{% endblock %}
+
 {% block content %}
     <div id="app" v-cloak>
         <form class="mbs txtcenter" v-on:submit.prevent="submitAddFriendForm()">
@@ -81,9 +87,6 @@
         </table>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.4.4/vue{{ '.min' if not config['DEBUG'] else '' }}.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/zepto/1.2.0/zepto.min.js"></script>
-    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
     <script>
         Vue.config.silent = {{ 'false' if config['DEBUG'] else 'true' }};
 
