@@ -74,11 +74,8 @@ import rwr
 def home():
     scraper = rwr.DataScraper()
 
-    all_players = scraper.get_all_players()
-
     return render_template(
-        'home.html',
-        all_players=all_players
+        'home.html'
     )
 
 
@@ -86,12 +83,10 @@ def home():
 def my_friends():
     scraper = rwr.DataScraper()
 
-    all_players = scraper.get_all_players()
     all_players_with_servers_details = scraper.get_all_players_with_servers_details()
 
     return render_template(
         'manage_friends.html',
-        all_players=all_players,
         all_players_with_servers_details=all_players_with_servers_details
     )
 
@@ -118,13 +113,11 @@ def player_stats(username=None):
         return redirect(url_for('home'))
 
     servers = scraper.get_servers()
-    all_players = scraper.get_all_players()
 
     player.set_playing_on_server(servers)
 
     return render_template(
         'player_stats.html',
-        all_players=all_players,
         player=player
     )
 
@@ -158,13 +151,11 @@ def players_compare(username, username_to_compare_with=None):
         return redirect(url_for('player_stats', username=username))
 
     servers = scraper.get_servers()
-    all_players = scraper.get_all_players()
 
     player.set_playing_on_server(servers)
 
     return render_template(
         'player_stats.html',
-        all_players=all_players,
         player=player,
         player_to_compare_with=player_to_compare_with
     )
@@ -174,7 +165,6 @@ def players_compare(username, username_to_compare_with=None):
 def servers_list():
     scraper = rwr.DataScraper()
 
-    all_players = scraper.get_all_players()
     all_players_with_servers = scraper.get_all_players_with_servers()
 
     filters = request.args.to_dict()
@@ -191,7 +181,6 @@ def servers_list():
 
     return render_template(
         'servers_list.html',
-        all_players=all_players,
         all_players_with_servers=all_players_with_servers,
         servers=servers,
         locations=locations,
@@ -208,7 +197,6 @@ def server_details(ip_and_port):
     scraper = rwr.DataScraper()
 
     server = scraper.search_server(ip, int(port))
-    all_players = scraper.get_all_players()
 
     if not server:
         flash('Sorry, this server wasn\'t found.', 'error')
@@ -217,7 +205,6 @@ def server_details(ip_and_port):
 
     return render_template(
         'server_details.html',
-        all_players=all_players,
         server=server
     )
 
@@ -316,6 +303,8 @@ def hashed_static_file(endpoint, values):
 def get_counters():
     """Retrieve (if necessary) and initialize the counters shown in the header of all the pages."""
     scraper = rwr.DataScraper()
+
+    g.all_players = scraper.get_all_players()
 
     online_players, active_servers, total_servers = scraper.get_counters()
 
