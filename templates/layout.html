@@ -19,6 +19,8 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
 
     {% block jsfiles %} {% endblock %}
+
+    {% if g.NO_INDEX %}<meta name="robots" content="noindex,nofollow,noarchive" />{% endif %}
 </head>
 <body>
     <header class="txtcenter pts pbs">
@@ -77,7 +79,7 @@
         </div>
     </footer>
 
-    {% if config['GAUGES_SITE_ID'] %}
+    {% if config['GAUGES_SITE_ID'] and g.INCLUDE_WEB_ANALYTICS %}
         <script type="text/javascript">
           var _gauges = _gauges || [];
           (function() {
