@@ -13,11 +13,6 @@
     <script src="{{ url_for('static', filename='js/app.js') }}"></script>
 {% endblock %}
 
-{% block cssfiles %}
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/metrics-graphics/2.11.0/metricsgraphics.min.css">
-{% endblock %}
-
-
 {% block content %}
     <p class="txtcenter mbs">
         {{ macros.server_join_button(server) }}
@@ -122,7 +117,7 @@
 
             <table class="mbn">
                 <tr>
-                    <th class="txtcenter">Players</th>
+                    <th class="txtcenter">Players count</th>
                 </tr>
                 <tr>
                     <td class="pan">
@@ -158,6 +153,26 @@
             {
                 "x": "2017-11-07T11:00:00Z",
                 "y": 2
+            },
+            {
+                "x": "2017-11-07T11:15:00Z",
+                "y": 0
+            },
+            {
+                "x": "2017-11-07T11:30:00Z",
+                "y": 1
+            },
+            {
+                "x": "2017-11-07T11:45:00Z",
+                "y": 8
+            },
+            {
+                "x": "2017-11-07T12:00:00Z",
+                "y": 15
+            },
+            {
+                "x": "2017-11-07T12:15:00Z",
+                "y": 24
             }
         ];
         playersChartsFeature.initOnServerDetails();
