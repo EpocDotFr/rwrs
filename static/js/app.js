@@ -355,11 +355,15 @@ playersChartsFeature = {
             target: container_selector,
             x_accessor: 'x',
             y_accessor: 'y',
-            top: 0,
-            bottom: 20,
-            left: 20,
-            right: 10,
-            buffer: 5
+            area: false,
+            y_extended_ticks: true,
+            x_extended_ticks: true,
+            top: 10,
+            bottom: 35,
+            left: 30,
+            right: 15,
+            buffer: 0,
+            width: 365
         });
     }
 };

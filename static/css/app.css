@@ -184,6 +184,12 @@ a:focus {
     outline: none;
 }
 
+a.disabled {
+    cursor: default;
+    color: #fff;
+    text-decoration: none;
+}
+
 /************************************************************************
  * Buttons */
 
@@ -330,6 +336,28 @@ fieldset {
     background-color: #30537b;
     color: #FFF;
     border-color: #296b95;
+}
+
+/************************************************************************
+ * Charts */
+
+.mg-x-axis line, .mg-y-axis line {
+    stroke: #fff;
+}
+
+.mg-histogram .axis text, .mg-x-axis text, .mg-y-axis text {
+    fill: #fff;
+    opacity: 1;
+    font-size: 1.2rem;
+}
+
+.mg-x-axis line.mg-extended-xax-ticks, .mg-y-axis line.mg-extended-yax-ticks {
+    opacity: 1;
+    stroke: #333;
+}
+
+path.mg-main-line {
+    opacity: 1;
 }
 
 /************************************************************************
