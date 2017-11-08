@@ -236,22 +236,26 @@ friendsFeature = {
         });
 
         $.each(this.all_players_with_servers_details, function(server_index, server) {
-            $.each(server.players.list, function(player_index, player) {
-                var highlight = false;
+            if (server.ip_and_port == friendsFeature.server_ip_and_port) {
+                $.each(server.players.list, function(player_index, player) {
+                    var highlight = false;
 
-                if ($.inArray(player, friends) !== -1) {
-                    highlight = true;
-                }
+                    if ($.inArray(player, friends) !== -1) {
+                        highlight = true;
+                    }
 
-                var $player_tr = $players_list.filter('[data-username="' + player + '"]');
+                    var $player_tr = $players_list.filter('[data-username="' + player + '"]');
 
-                if (highlight) {
-                    $player_tr.addClass('info');
-                    $player_tr.find('.remove-friend').removeClass('is-hidden');
-                } else {
-                    $player_tr.find('.add-friend').removeClass('is-hidden');
-                }
-            });
+                    if (highlight) {
+                        $player_tr.addClass('info');
+                        $player_tr.find('.remove-friend').removeClass('is-hidden');
+                    } else {
+                        $player_tr.find('.add-friend').removeClass('is-hidden');
+                    }
+                });
+
+                return false;
+            }
         });
     },
     /**
