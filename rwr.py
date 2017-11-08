@@ -548,34 +548,6 @@ class DataScraper:
 
         return (online_players, active_servers, total_servers)
 
-    def get_all_players(self):
-        """Get all the players usernames."""
-        servers = self.get_servers()
-
-        ret = []
-
-        for server in servers:
-            if not server.players.list:
-                continue
-
-            ret.extend(server.players.list)
-
-        return list(set(ret))
-
-    def get_all_players_with_servers(self):
-        """Get all the players usernames along the server they are playing on."""
-        servers = self.get_servers()
-
-        ret = {}
-
-        for server in servers:
-            if not server.players.list:
-                continue
-
-            ret[server.ip_and_port] = server.players.list
-
-        return ret
-
     def get_all_players_with_servers_details(self):
         """Get all the players usernames along details about the servers they are playing on."""
         servers = self.get_servers()

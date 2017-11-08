@@ -67,8 +67,7 @@
     </table>
 
     <script>
-        friendsFeature.all_players = {{ g.all_players|tojson }};
-        friendsFeature.all_players_with_servers = {{ all_players_with_servers|tojson }};
+        friendsFeature.all_players_with_servers_details = {{ g.all_players_with_servers_details|tojson }};
         friendsFeature.initOnServersList();
     </script>
 {% endblock %}
