@@ -72,8 +72,6 @@ import rwr
 
 @app.route('/')
 def home():
-    scraper = rwr.DataScraper()
-
     return render_template(
         'home.html'
     )
@@ -81,13 +79,8 @@ def home():
 
 @app.route('/my-friends')
 def my_friends():
-    scraper = rwr.DataScraper()
-
-    all_players_with_servers_details = scraper.get_all_players_with_servers_details()
-
     return render_template(
-        'manage_friends.html',
-        all_players_with_servers_details=all_players_with_servers_details
+        'manage_friends.html'
     )
 
 
@@ -165,8 +158,6 @@ def players_compare(username, username_to_compare_with=None):
 def servers_list():
     scraper = rwr.DataScraper()
 
-    all_players_with_servers = scraper.get_all_players_with_servers()
-
     filters = request.args.to_dict()
 
     if filters:
@@ -181,7 +172,6 @@ def servers_list():
 
     return render_template(
         'servers_list.html',
-        all_players_with_servers=all_players_with_servers,
         servers=servers,
         locations=locations,
         types=types,
@@ -283,7 +273,7 @@ def http_error_handler(error, without_code=False):
 def define_globals():
     scraper = rwr.DataScraper()
 
-    g.all_players = scraper.get_all_players()
+    g.all_players_with_servers_details = scraper.get_all_players_with_servers_details()
 
     online_players, active_servers, total_servers = scraper.get_counters()
 

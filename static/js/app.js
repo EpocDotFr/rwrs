@@ -30,6 +30,36 @@ friendsFeature = {
         return true;
     },
     /**
+     * Initialize the Friends feature in the header of all pages.
+     */
+    initInHeader: function() {
+        var friends = this.getFriends();
+
+        if (friends.length == 0) {
+            return;
+        }
+
+        var playing_friends = 0;
+
+        $.each(friends, function(friend_index, friend) {
+            $.each(friendsFeature.all_players_with_servers_details, function(server_index, server) {
+                if ($.inArray(friend, server.players.list) !== -1) {
+                    playing_friends += 1;
+                }
+            });
+        });
+
+        if (playing_friends == 0) {
+            return;
+        }
+
+        var $total_playing_players = $('.total-playing-friends');
+
+        $total_playing_players.children('strong').text(playing_friends);
+        $total_playing_players.children('.friend-label').text(playing_friends > 1 ? 'friends' : 'friend');
+        $total_playing_players.removeClass('is-hidden');
+    },
+    /**
      * Initialize the Friends feature on the My friends page.
      */
     initOnMyFriends: function() {
@@ -142,11 +172,11 @@ friendsFeature = {
 
         var $servers_list = $('.servers-list > tbody > tr');
 
-        $.each(this.all_players_with_servers, function(server_ip_and_port, players) {
+        $.each(this.all_players_with_servers_details, function(server_index, server) {
             var highlight = false;
 
             $.each(friends, function(friends_index, friend) {
-                if ($.inArray(friend, players) !== -1) {
+                if ($.inArray(friend, server.players.list) !== -1) {
                     highlight = true;
 
                     return false;
@@ -154,7 +184,7 @@ friendsFeature = {
             });
 
             if (highlight) {
-                $servers_list.filter('[data-server-ip-and-port="' + server_ip_and_port + '"]').addClass('info');
+                $servers_list.filter('[data-server-ip-and-port="' + server.ip_and_port + '"]').addClass('info');
             }
         });
     },
@@ -205,21 +235,23 @@ friendsFeature = {
             });
         });
 
-        $.each(this.players, function(player_index, player) {
-            var highlight = false;
+        $.each(this.all_players_with_servers_details, function(server_index, server) {
+            $.each(server.players.list, function(player_index, player) {
+                var highlight = false;
 
-            if ($.inArray(player, friends) !== -1) {
-                highlight = true;
-            }
+                if ($.inArray(player, friends) !== -1) {
+                    highlight = true;
+                }
 
-            var $player_tr = $players_list.filter('[data-username="' + player + '"]');
+                var $player_tr = $players_list.filter('[data-username="' + player + '"]');
 
-            if (highlight) {
-                $player_tr.addClass('info');
-                $player_tr.find('.remove-friend').removeClass('is-hidden');
-            } else {
-                $player_tr.find('.add-friend').removeClass('is-hidden');
-            }
+                if (highlight) {
+                    $player_tr.addClass('info');
+                    $player_tr.find('.remove-friend').removeClass('is-hidden');
+                } else {
+                    $player_tr.find('.add-friend').removeClass('is-hidden');
+                }
+            });
         });
     },
     /**
@@ -258,34 +290,6 @@ friendsFeature = {
         } else {
             $add_friend_link.removeClass('is-hidden');
         }
-    },
-    /**
-     * Initialize the Friends feature in the header of all pages.
-     */
-    initInHeader: function() {
-        var friends = this.getFriends();
-
-        if (friends.length == 0) {
-            return;
-        }
-
-        var playing_friends = [];
-
-        $.each(friends, function(friend_index, friend) {
-            if ($.inArray(friend, friendsFeature.all_players) !== -1) {
-                playing_friends.push(friend);
-            }
-        });
-
-        if (playing_friends.length == 0) {
-            return;
-        }
-
-        var $total_playing_players = $('.total-playing-friends');
-
-        $total_playing_players.children('strong').text(playing_friends.length);
-        $total_playing_players.children('.friend-label').text(playing_friends.length > 1 ? 'friends' : 'friend');
-        $total_playing_players.removeClass('is-hidden');
     },
     /**
      * Get all the user's friends.
