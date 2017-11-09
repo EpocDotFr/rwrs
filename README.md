@@ -21,9 +21,9 @@ and more. Available at [rwrstats.com](https://rwrstats.com/).
   - Online servers count (+ the active ones)
   - Online players count (+ number of playing friends)
   - Charts (for the past day, week and month)
-    - Online players
-    - Available servers (+ the active ones)
-    - Server players count
+    - Number of online players
+    - Number of available servers (+ the active ones)
+    - Number of players on a server
 
 ## Prerequisites
 
