@@ -18,12 +18,9 @@ app.config.from_pyfile('config.py')
 
 app.config['CACHE_TYPE'] = 'filesystem'
 app.config['CACHE_DIR'] = 'storage/cache'
-app.config['CACHE_THRESHOLD'] = 100
 app.config['RANKS_IMAGES_DIR'] = 'static/images/ranks'
 app.config['MINIMAPS_IMAGES_DIR'] = 'static/images/maps/minimap'
 app.config['UNLOCKABLES_IMAGES_DIR'] = 'static/images/unlockables'
-app.config['SERVERS_CACHE_TIMEOUT'] = 60
-app.config['PLAYERS_CACHE_TIMEOUT'] = 60 * 15
 app.config['MY_USERNAME'] = 'epocdotfr'
 app.config['CONTRIBUTORS'] = ['street veteran', 'mastock']
 app.config['DEVS'] = ['jackmayol', 'pasik', 'pasik2', 'tremozl', 'the soldier'] # ahnold
