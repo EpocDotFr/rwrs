@@ -20,6 +20,10 @@ and more. Available at [rwrstats.com](https://rwrstats.com/).
     - Filtering capabilities
   - Online servers count (+ the active ones)
   - Online players count (+ number of playing friends)
+  - Charts (for the past day, week and month)
+    - Online players
+    - Available servers (+ the active ones)
+    - Server players count
 
 ## Prerequisites
 
