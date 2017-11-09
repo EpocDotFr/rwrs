@@ -18,6 +18,8 @@ and more. Available at [rwrstats.com](https://rwrstats.com/).
     - Game mode (coop, PvPvE, etc) and type (vanilla RWR, Pacific DLC, etc)
     - Public server details (players list with link to their profile, current map preview and minimap, etc)
     - Filtering capabilities
+  - Online servers count (+ the active ones)
+  - Online players count (+ number of playing friends)
 
 ## Prerequisites
 
