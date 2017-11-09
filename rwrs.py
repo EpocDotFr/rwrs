@@ -1,8 +1,11 @@
 from flask import Flask, render_template, make_response, abort, request, redirect, url_for, flash, g
 from werkzeug.exceptions import HTTPException
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy_utils import ArrowType, IPAddressType
 from flask_caching import Cache
 from helpers import *
 import logging
+import arrow
 import click
 import math
 import sys
@@ -16,6 +19,8 @@ import os
 app = Flask(__name__, static_url_path='')
 app.config.from_pyfile('config.py')
 
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///storage/data/db.sqlite'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['CACHE_TYPE'] = 'filesystem'
 app.config['CACHE_DIR'] = 'storage/cache'
 app.config['RANKS_IMAGES_DIR'] = 'static/images/ranks'
@@ -40,6 +45,7 @@ app.jinja_env.globals.update(
     isinstance=isinstance
 )
 
+db = SQLAlchemy(app)
 cache = Cache(app)
 
 # Default Python logger
@@ -197,8 +203,66 @@ def server_details(ip_and_port):
 
 
 # -----------------------------------------------------------
+# Models
+
+
+class ServerPlayersCount(db.Model):
+    __tablename__ = 'server_players_counts'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+
+    ip = db.Column(IPAddressType, nullable=False)
+    port = db.Column(db.Integer, nullable=False)
+    datetime = db.Column(ArrowType, default=arrow.utcnow())
+    count = db.Column(db.Integer, nullable=False)
+
+    def __init__(self, ip=None, port=None, datetime=arrow.utcnow(), count=None):
+        self.ip = ip
+        self.port = port
+        self.datetime = datetime
+        self.count = count
+
+    def __repr__(self):
+        return '<ServerPlayersCount> #{}'.format(self.id)
+
+
+# -----------------------------------------------------------
 # CLI commands
 
+
+@app.cli.command()
+def create_database():
+    """Delete then create all the database tables."""
+    db.drop_all()
+    db.create_all()
+
+
+@app.cli.command()
+def seed_database():
+    """Seed the DB with fake data."""
+    import random
+
+    try:
+        from faker import Faker
+    except ImportError:
+        logging.error('Faker is required for this action.')
+
+        return
+
+    fake = Faker()
+
+    server_ips = [fake.ipv4() for i in range(0, 30)]
+    server_ports = [random.randint(1234, 5678) for i in range(0, 6)]
+
+    for server_ip in server_ips:
+        spc = ServerPlayersCount()
+        spc.ip = server_ip
+        spc.port = random.choice(server_ports)
+        spc.count = random.randint(0, 24)
+
+        db.session.add(spc)
+
+    db.session.commit()
 
 @app.cli.command()
 @click.option('--gamedir', '-g', help='Game root directory')

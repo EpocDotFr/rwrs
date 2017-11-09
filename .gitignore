@@ -1,5 +1,6 @@
 config.py
 storage/logs/*.log
+storage/data/db.sqlite
 storage/cache
 
 ### JetBrains template

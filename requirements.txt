@@ -1,6 +1,10 @@
 flask
+Flask-Caching
+Flask-SQLAlchemy
 requests
 maxminddb-geolite2
 lxml
 memoized-property
-Flask-Caching
+arrow
+SQLAlchemy
+sqlalchemy-utils
