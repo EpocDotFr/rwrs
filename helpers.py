@@ -48,8 +48,10 @@ def humanize_integer(integer):
 
 
 def ip2long(ip):
+    """Convert an IP to its integer representation."""
     return struct.unpack('!L', socket.inet_aton(ip))[0]
 
 
 def long2ip(long):
+    """Convert an integer IP to its string representation."""
     return socket.inet_ntoa(struct.pack('!L', long))
