@@ -21,7 +21,7 @@ app.config.from_pyfile('config.py')
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///storage/data/db.sqlite'
 app.config['SQLALCHEMY_BINDS'] = {
-    'server_players_counts': 'sqlite:///storage/data/server_players_counts.sqlite'
+    'servers_player_count': 'sqlite:///storage/data/servers_player_count.sqlite'
 }
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['CACHE_TYPE'] = 'filesystem'
@@ -209,10 +209,25 @@ def server_details(ip_and_port):
 # Models
 
 
-class ServerPlayersCount(db.Model):
-    __tablename__ = 'server_players_counts'
-    __bind_key__ = 'server_players_counts'
+class ServerPlayerCount(db.Model):
+    TIMESPAN_LAST_DAY = 1
+    TIMESPAN_LAST_WEEK = 2
+    TIMESPAN_LAST_MONTH = 3
+
+    class ServerPlayerCountQuery(db.Query):
+        def _get_base_count_query(self, timespan):
+            pass # TODO
+
+        def get_player_count(self, timespan, ip=None, port=None):
+            pass # TODO
+
+        def get_server_count(self, timespan, online_only=False):
+            pass # TODO
+
+    __tablename__ = 'servers_player_count'
+    __bind_key__ = 'servers_player_count'
     __table_args__ = (db.Index('ip_port_idx', 'ip', 'port'), )
+    query_class = ServerPlayerCountQuery
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True) # TODO To remove because useless
 
@@ -238,7 +253,7 @@ class ServerPlayersCount(db.Model):
             self._ip = ip2long(value)
 
     def __repr__(self):
-        return '<ServerPlayersCount> {}:{}'.format(self.ip, self.port)
+        return '<ServerPlayerCount> {}:{}'.format(self.ip, self.port)
 
 
 # -----------------------------------------------------------
@@ -253,7 +268,7 @@ def create_database():
 
 
 @app.cli.command()
-def store_servers_players_counts():
+def get_servers_player_count():
     """Store the number of players on each servers."""
     app.logger.info('Getting servers list')
 
@@ -264,12 +279,12 @@ def store_servers_players_counts():
     for server in servers:
         app.logger.info('  {} ({}, {})'.format(server.name, server.players.current, server.ip_and_port))
 
-        spc = ServerPlayersCount()
-        spc.ip = server.ip
-        spc.port = server.port
-        spc.count = server.players.current
+        server_player_count = ServerPlayerCount()
+        server_player_count.ip = server.ip
+        server_player_count.port = server.port
+        server_player_count.count = server.players.current
 
-        db.session.add(spc)
+        db.session.add(server_player_count)
 
     app.logger.info('Persisting data')
 
@@ -279,8 +294,8 @@ def store_servers_players_counts():
 
 
 @app.cli.command()
-def delete_old_counts():
-    """Delete old counts."""
+def delete_old_servers_player_count():
+    """Delete old servers player count."""
     app.logger.info('Deleting old data')
 
     # TODO Delete all data older than one month (exclusive)
@@ -368,6 +383,15 @@ def define_globals():
 
     g.INCLUDE_WEB_ANALYTICS = not app.config['DEBUG']
     g.NO_INDEX = False
+    g.UNDER_MAINTENANCE = False
+
+
+@app.before_request
+def check_under_maintenance():
+    if request.endpoint != 'static' and os.path.exists('maintenance'):
+        g.UNDER_MAINTENANCE = True
+
+        abort(503)
 
 
 @app.url_defaults
