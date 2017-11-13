@@ -1,7 +1,7 @@
 from flask import Flask, render_template, make_response, abort, request, redirect, url_for, flash, g
 from werkzeug.exceptions import HTTPException
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy_utils import ArrowType, IPAddressType
+from sqlalchemy_utils import ArrowType
 from flask_caching import Cache
 from helpers import *
 import logging
@@ -20,6 +20,9 @@ app = Flask(__name__, static_url_path='')
 app.config.from_pyfile('config.py')
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///storage/data/db.sqlite'
+app.config['SQLALCHEMY_BINDS'] = {
+    'server_players_counts': 'sqlite:///storage/data/server_players_counts.sqlite'
+}
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['CACHE_TYPE'] = 'filesystem'
 app.config['CACHE_DIR'] = 'storage/cache'
@@ -208,22 +211,34 @@ def server_details(ip_and_port):
 
 class ServerPlayersCount(db.Model):
     __tablename__ = 'server_players_counts'
+    __bind_key__ = 'server_players_counts'
+    __table_args__ = (db.Index('ip_port_idx', 'ip', 'port'), )
 
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True) # TODO To remove
 
-    ip = db.Column(IPAddressType, nullable=False)
+    _ip = db.Column('ip', db.Integer, nullable=False)
     port = db.Column(db.Integer, nullable=False)
-    datetime = db.Column(ArrowType, default=arrow.utcnow())
+    measured_at = db.Column(ArrowType, default=arrow.utcnow(), nullable=False)
     count = db.Column(db.Integer, nullable=False)
 
-    def __init__(self, ip=None, port=None, datetime=arrow.utcnow(), count=None):
+    def __init__(self, ip=None, port=None, measured_at=arrow.utcnow(), count=None):
         self.ip = ip
         self.port = port
-        self.datetime = datetime
+        self.measured_at = measured_at
         self.count = count
 
+    @property
+    def ip(self):
+        if self._ip:
+            return long2ip(self._ip)
+
+    @ip.setter
+    def ip(self, value):
+        if value:
+            self._ip = ip2long(value)
+
     def __repr__(self):
-        return '<ServerPlayersCount> #{}'.format(self.id)
+        return '<ServerPlayersCount> {}:{}'.format(self.ip, self.port)
 
 
 # -----------------------------------------------------------
@@ -240,7 +255,10 @@ def create_database():
 @app.cli.command()
 def seed_database():
     """Seed the DB with fake data."""
-    import random
+    if not app.config['DEBUG']:
+        logging.error('No.')
+
+        return
 
     try:
         from faker import Faker
@@ -248,6 +266,8 @@ def seed_database():
         logging.error('Faker is required for this action.')
 
         return
+
+    import random
 
     fake = Faker()
 
@@ -263,6 +283,7 @@ def seed_database():
         db.session.add(spc)
 
     db.session.commit()
+
 
 @app.cli.command()
 @click.option('--gamedir', '-g', help='Game root directory')

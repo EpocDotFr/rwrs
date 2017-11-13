@@ -1,6 +1,12 @@
+import socket
+import struct
+
+
 __all__ = [
     'humanize_seconds',
-    'humanize_integer'
+    'humanize_integer',
+    'ip2long',
+    'long2ip'
 ]
 
 
@@ -39,3 +45,11 @@ def humanize_integer(integer):
         return '0'
 
     return format(integer, ',d').replace(',', ' ')
+
+
+def ip2long(ip):
+    return struct.unpack('!L', socket.inet_aton(ip))[0]
+
+
+def long2ip(long):
+    return socket.inet_ntoa(struct.pack('!L', long))
