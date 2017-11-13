@@ -214,7 +214,7 @@ class ServerPlayersCount(db.Model):
     __bind_key__ = 'server_players_counts'
     __table_args__ = (db.Index('ip_port_idx', 'ip', 'port'), )
 
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True) # TODO To remove
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True) # TODO To remove because useless
 
     _ip = db.Column('ip', db.Integer, nullable=False)
     port = db.Column(db.Integer, nullable=False)
@@ -253,36 +253,39 @@ def create_database():
 
 
 @app.cli.command()
-def seed_database():
-    """Seed the DB with fake data."""
-    if not app.config['DEBUG']:
-        logging.error('No.')
+def store_servers_players_counts():
+    """Store the number of players on each servers."""
+    app.logger.info('Getting servers list')
 
-        return
+    scraper = rwr.DataScraper()
 
-    try:
-        from faker import Faker
-    except ImportError:
-        logging.error('Faker is required for this action.')
+    servers = scraper.get_servers()
 
-        return
+    for server in servers:
+        app.logger.info('  {} ({}, {})'.format(server.name, server.players.current, server.ip_and_port))
 
-    import random
-
-    fake = Faker()
-
-    server_ips = [fake.ipv4() for i in range(0, 30)]
-    server_ports = [random.randint(1234, 5678) for i in range(0, 6)]
-
-    for server_ip in server_ips:
         spc = ServerPlayersCount()
-        spc.ip = server_ip
-        spc.port = random.choice(server_ports)
-        spc.count = random.randint(0, 24)
+        spc.ip = server.ip
+        spc.port = server.port
+        spc.count = server.players.current
 
         db.session.add(spc)
 
+    app.logger.info('Persisting data')
+
     db.session.commit()
+
+    app.logger.info('Done')
+
+
+@app.cli.command()
+def delete_old_counts():
+    """Delete old counts."""
+    app.logger.info('Deleting old data')
+
+    # TODO Delete all data older than one month (exclusive)
+
+    app.logger.info('Done')
 
 
 @app.cli.command()
