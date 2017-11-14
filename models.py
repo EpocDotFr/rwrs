@@ -1,7 +1,7 @@
 from sqlalchemy_utils import ArrowType
 from sqlalchemy import func
+from rwrs import db, cache, app
 from helpers import *
-from rwrs import db
 import arrow
 
 
@@ -70,6 +70,17 @@ class ServerPlayerCount(db.Model):
     def ip(self, value):
         if value:
             self._ip = ip2long(value)
+
+    @staticmethod
+    @cache.memoize(timeout=app.config['GRAPHS_DATA_CACHE_TIMEOUT'])
+    def server_players_data(ip, port):
+        ip = ip2long(ip)
+
+        return {
+            'last_day': ServerPlayerCount.query.get_player_count(ServerPlayerCount.TIMESPAN_LAST_DAY, ip, port),
+            'last_week': ServerPlayerCount.query.get_player_count(ServerPlayerCount.TIMESPAN_LAST_WEEK, ip, port),
+            'last_month': ServerPlayerCount.query.get_player_count(ServerPlayerCount.TIMESPAN_LAST_MONTH, ip, port)
+        }
 
     def __repr__(self):
         return 'ServerPlayerCount:' + self.id

@@ -6,9 +6,6 @@ import rwr
 
 @app.route('/')
 def home():
-    print(models.ServerPlayerCount.query.get_player_count(models.ServerPlayerCount.TIMESPAN_LAST_DAY)) # TODO TEMP
-    print(models.ServerPlayerCount.query.get_server_count(models.ServerPlayerCount.TIMESPAN_LAST_DAY)) # TODO TEMP
-
     return render_template(
         'home.html'
     )
@@ -121,16 +118,23 @@ def servers_list():
 def server_details(ip_and_port):
     ip, port = ip_and_port.split(':', maxsplit=1)
 
+    port = int(port)
+
     scraper = rwr.DataScraper()
 
-    server = scraper.search_server(ip, int(port))
+    server = scraper.search_server(ip, port)
 
     if not server:
         flash('Sorry, this server wasn\'t found.', 'error')
 
         return redirect(url_for('servers_list'))
 
+    server_players_data = models.ServerPlayerCount.server_players_data(ip, port)
+
+    print(server_players_data)
+
     return render_template(
         'server_details.html',
+        server_players_data=server_players_data,
         server=server
     )
