@@ -2,10 +2,10 @@ from memoized_property import memoized_property
 from collections import OrderedDict
 from geolite2 import geolite2
 from lxml import html, etree
+from rwrs import app, cache
 from PIL import Image
 from glob import glob
 import requests
-import rwrs
 import math
 import re
 import os
@@ -391,7 +391,7 @@ class DataScraper:
         else:
             raise ValueError('Invalid type parameter')
 
-    @rwrs.cache.memoize(timeout=rwrs.app.config['SERVERS_CACHE_TIMEOUT'])
+    @cache.memoize(timeout=app.config['SERVERS_CACHE_TIMEOUT'])
     def get_servers(self):
         """Get and parse the list of all available public RWR servers."""
         xml_servers = self._call(self.servers_endpoint, 'get_server_list.php', 'xml', params={'start': 0, 'size': 100})
@@ -586,7 +586,7 @@ class DataScraper:
 
         return ret
 
-    @rwrs.cache.memoize(timeout=rwrs.app.config['PLAYERS_CACHE_TIMEOUT'])
+    @cache.memoize(timeout=app.config['PLAYERS_CACHE_TIMEOUT'])
     def get_players(self, start=0, sort=PlayersSort.SCORE):
         """Get and parse a list of RWR players."""
         params = {
@@ -603,7 +603,7 @@ class DataScraper:
 
         return players
 
-    @rwrs.cache.memoize(timeout=rwrs.app.config['PLAYERS_CACHE_TIMEOUT'])
+    @cache.memoize(timeout=app.config['PLAYERS_CACHE_TIMEOUT'])
     def search_player(self, username):
         """Search for a RWR player."""
         username = username.upper()
