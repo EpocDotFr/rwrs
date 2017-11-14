@@ -30,7 +30,7 @@ def get_servers_player_count():
 
         db.session.add(server_player_count)
 
-    app.logger.info('Persisting data')
+    app.logger.info('Persisting to database')
 
     db.session.commit()
 
@@ -42,7 +42,14 @@ def clean_servers_player_count():
     """Delete old servers player count."""
     app.logger.info('Deleting old data')
 
-    # TODO Delete all data older than one month (exclusive)
+    old_servers_player_counts = models.ServerPlayerCount.query.get_old_counts()
+
+    for old_servers_player_count in old_servers_player_counts:
+        db.session.delete(old_servers_player_count)
+
+    app.logger.info('Persisting to database')
+
+    db.session.commit()
 
     app.logger.info('Done')
 

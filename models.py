@@ -1,6 +1,6 @@
 from sqlalchemy_utils import ArrowType
-from rwrs import db
 from helpers import *
+from rwrs import db
 import arrow
 
 
@@ -18,6 +18,10 @@ class ServerPlayerCount(db.Model):
 
         def get_server_count(self, timespan, online_only=False):
             pass # TODO
+
+        def get_old_counts(self):
+            """Return counts older than one month (exclusive)."""
+            return self.filter(ServerPlayerCount.measured_at > arrow.utcnow().shift(months=-1)).all()
 
     __tablename__ = 'servers_player_count'
     __bind_key__ = 'servers_player_count'
