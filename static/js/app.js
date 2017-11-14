@@ -366,6 +366,7 @@ playersChartsFeature = {
             area: false,
             y_extended_ticks: true,
             x_extended_ticks: true,
+            show_secondary_x_label: false,
             top: 20,
             bottom: 35,
             left: 30,

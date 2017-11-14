@@ -11,25 +11,26 @@ class ServerPlayerCount(db.Model):
     TIMESPAN_LAST_MONTH = 3
 
     class ServerPlayerCountQuery(db.Query):
-        def _apply_timespan_filters(self, query, timespan):
+        def _apply_timespan_filters(self, query, timespan, count):
             now = arrow.utcnow()
 
             if timespan == ServerPlayerCount.TIMESPAN_LAST_DAY:
-                # TODO select strftime('%H:%M', `measured_at`) AS `time`
                 past = now.shift(days=-1)
+                fmt = '%H:%M'
             elif timespan == ServerPlayerCount.TIMESPAN_LAST_WEEK:
-                # TODO select strftime('%w', `measured_at`) AS `time`
                 past = now.shift(weeks=-1)
+                fmt = '%w'
             elif timespan == ServerPlayerCount.TIMESPAN_LAST_MONTH:
-                # TODO select DATE(`measured_at`) AS `time`
                 past = now.shift(months=-1)
+                fmt = '%Y-%m-%d'
 
-            return query.filter(ServerPlayerCount.measured_at >= past)
-            # TODO group by `time`
+            query = query.with_entities(func.strftime(fmt, ServerPlayerCount.measured_at).label('time'), count)
+            query = query.filter(ServerPlayerCount.measured_at >= past)
+
+            return query.group_by('time')
 
         def get_player_count(self, timespan, ip=None, port=None):
-            query = self.with_entities(func.sum(ServerPlayerCount.count).label('count'))
-            query = self._apply_timespan_filters(query, timespan)
+            query = self._apply_timespan_filters(self, timespan, func.sum(ServerPlayerCount.count).label('count'))
 
             if ip and port:
                 query = query.filter(ServerPlayerCount.ip == ip and ServerPlayerCount.port == port)
@@ -37,8 +38,7 @@ class ServerPlayerCount(db.Model):
             return query.all()
 
         def get_server_count(self, timespan, active_only=False):
-            query = self.with_entities(func.count('*').label('count'))
-            query = self._apply_timespan_filters(query, timespan)
+            query = self._apply_timespan_filters(self, timespan, func.count('*').label('count'))
 
             if active_only:
                 query = query.filter(ServerPlayerCount.count > 0)
