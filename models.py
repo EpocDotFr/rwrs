@@ -10,9 +10,8 @@ class ServerPlayerCount(db.Model):
     TIMESPAN_LAST_MONTH = 3
 
     class ServerPlayerCountQuery(db.Query):
-        def _get_base_query(self, timespan):
+        def _apply_timespan(self, timespan):
             now = arrow.utcnow()
-            q = self
 
             if timespan == ServerPlayerCount.TIMESPAN_LAST_DAY:
                 past = now.shift(days=-1)
@@ -21,23 +20,25 @@ class ServerPlayerCount(db.Model):
             elif timespan == ServerPlayerCount.TIMESPAN_LAST_MONTH:
                 past = now.shift(months=-1)
 
-            return q.filter(ServerPlayerCount.measured_at >= past)
+            self.filter(ServerPlayerCount.measured_at >= past)
 
         def get_player_count(self, timespan, ip=None, port=None):
-            q = self._get_base_query(timespan)
+            self.select()
+
+            self._apply_timespan(timespan)
 
             if ip and port:
-                q = q.filter(ServerPlayerCount.ip == ip and ServerPlayerCount.port == port)
+                self.filter(ServerPlayerCount.ip == ip and ServerPlayerCount.port == port)
 
-            return q.all()
+            return self.all()
 
         def get_server_count(self, timespan, active_only=False):
-            q = self._get_base_query(timespan)
+            self._apply_timespan(timespan)
 
             if active_only:
-                q = q.filter(ServerPlayerCount.count > 0)
+                self.filter(ServerPlayerCount.count > 0)
 
-            return q.all()
+            return self.all()
 
         def get_old_entries(self):
             """Return entries older than one month (exclusive)."""

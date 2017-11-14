@@ -6,7 +6,7 @@ import rwr
 
 @app.route('/')
 def home():
-    models.ServerPlayerCount.query.get_player_count(models.ServerPlayerCount.TIMESPAN_LAST_DAY)
+    models.ServerPlayerCount.query.get_player_count(models.ServerPlayerCount.TIMESPAN_LAST_DAY) # TODO TEMP
 
     return render_template(
         'home.html'
