@@ -1,10 +1,13 @@
 from flask import render_template, abort, request, redirect, url_for, flash
 from rwrs import app
+import models
 import rwr
 
 
 @app.route('/')
 def home():
+    models.ServerPlayerCount.query.get_player_count(models.ServerPlayerCount.TIMESPAN_LAST_DAY)
+
     return render_template(
         'home.html'
     )

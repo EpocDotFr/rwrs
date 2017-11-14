@@ -42,10 +42,10 @@ def clean_servers_player_count():
     """Delete old servers player count."""
     app.logger.info('Deleting old data')
 
-    old_servers_player_counts = models.ServerPlayerCount.query.get_old_counts()
+    old_entries = models.ServerPlayerCount.query.get_old_entries()
 
-    for old_servers_player_count in old_servers_player_counts:
-        db.session.delete(old_servers_player_count)
+    for old_entry in old_entries:
+        db.session.delete(old_entry)
 
     app.logger.info('Persisting to database')
 

@@ -87,9 +87,6 @@ def http_error_handler(error, without_code=False):
     elif not isinstance(error, int):
         error = 500
 
-    g.INCLUDE_WEB_ANALYTICS = False
-    g.NO_INDEX = True
-
     body = render_template('errors/{}.html'.format(error))
 
     if not without_code:
