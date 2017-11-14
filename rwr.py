@@ -622,7 +622,7 @@ class DataScraper:
         return Player.load(node[0], alternative=True)
 
     def __repr__(self):
-        return 'rwrs_data_scraper'
+        return 'DataScraper'
 
 
 class Server:
@@ -722,7 +722,7 @@ class Server:
         return get_type_name(self.type)
 
     def __repr__(self):
-        return self.ip_and_port
+        return 'Server:' + self.ip_and_port
 
 
 class Player:
@@ -869,7 +869,7 @@ class Player:
         return ret
 
     def __repr__(self):
-        return self.username
+        return 'Player:' + self.username
 
 
 class ServerMap:
@@ -878,7 +878,7 @@ class ServerMap:
     url = None
 
     def __repr__(self):
-        return self.id
+        return 'ServerMap:' + self.id
 
 
 class ServerPlayers:
@@ -893,7 +893,7 @@ class ServerLocation:
     country_name = None
 
     def __repr__(self):
-        return self.country_code
+        return 'ServerLocation:' + self.country_code
 
 
 class PlayerRank:
@@ -901,4 +901,4 @@ class PlayerRank:
     name = None
 
     def __repr__(self):
-        return self.id
+        return 'PlayerRank:' + self.id

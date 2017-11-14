@@ -1,4 +1,5 @@
 from sqlalchemy_utils import ArrowType
+from sqlalchemy import func
 from helpers import *
 from rwrs import db
 import arrow
@@ -10,35 +11,39 @@ class ServerPlayerCount(db.Model):
     TIMESPAN_LAST_MONTH = 3
 
     class ServerPlayerCountQuery(db.Query):
-        def _apply_timespan(self, timespan):
+        def _apply_timespan_filters(self, query, timespan):
             now = arrow.utcnow()
 
             if timespan == ServerPlayerCount.TIMESPAN_LAST_DAY:
+                # TODO select strftime('%H:%M', `measured_at`) AS `time`
                 past = now.shift(days=-1)
             elif timespan == ServerPlayerCount.TIMESPAN_LAST_WEEK:
+                # TODO select strftime('%w', `measured_at`) AS `time`
                 past = now.shift(weeks=-1)
             elif timespan == ServerPlayerCount.TIMESPAN_LAST_MONTH:
+                # TODO select DATE(`measured_at`) AS `time`
                 past = now.shift(months=-1)
 
-            self.filter(ServerPlayerCount.measured_at >= past)
+            return query.filter(ServerPlayerCount.measured_at >= past)
+            # TODO group by `time`
 
         def get_player_count(self, timespan, ip=None, port=None):
-            self.select()
-
-            self._apply_timespan(timespan)
+            query = self.with_entities(func.sum(ServerPlayerCount.count).label('count'))
+            query = self._apply_timespan_filters(query, timespan)
 
             if ip and port:
-                self.filter(ServerPlayerCount.ip == ip and ServerPlayerCount.port == port)
+                query = query.filter(ServerPlayerCount.ip == ip and ServerPlayerCount.port == port)
 
-            return self.all()
+            return query.all()
 
         def get_server_count(self, timespan, active_only=False):
-            self._apply_timespan(timespan)
+            query = self.with_entities(func.count('*').label('count'))
+            query = self._apply_timespan_filters(query, timespan)
 
             if active_only:
-                self.filter(ServerPlayerCount.count > 0)
+                query = query.filter(ServerPlayerCount.count > 0)
 
-            return self.all()
+            return query.all()
 
         def get_old_entries(self):
             """Return entries older than one month (exclusive)."""
@@ -67,4 +72,4 @@ class ServerPlayerCount(db.Model):
             self._ip = ip2long(value)
 
     def __repr__(self):
-        return '<ServerPlayerCount> {}:{}'.format(self.ip, self.port)
+        return 'ServerPlayerCount:' + self.id
