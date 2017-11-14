@@ -371,16 +371,6 @@ def http_error_handler(error, without_code=False):
 
 @app.before_request
 def define_globals():
-    scraper = rwr.DataScraper()
-
-    g.all_players_with_servers_details = scraper.get_all_players_with_servers_details()
-
-    online_players, active_servers, total_servers = scraper.get_counters()
-
-    g.online_players = online_players
-    g.active_servers = active_servers
-    g.total_servers = total_servers
-
     g.INCLUDE_WEB_ANALYTICS = not app.config['DEBUG']
     g.NO_INDEX = False
     g.UNDER_MAINTENANCE = False
@@ -392,6 +382,19 @@ def check_under_maintenance():
         g.UNDER_MAINTENANCE = True
 
         abort(503)
+
+
+@app.before_request
+def get_counts():
+    scraper = rwr.DataScraper()
+
+    g.all_players_with_servers_details = scraper.get_all_players_with_servers_details()
+
+    online_players, active_servers, total_servers = scraper.get_counters()
+
+    g.online_players = online_players
+    g.active_servers = active_servers
+    g.total_servers = total_servers
 
 
 @app.url_defaults
