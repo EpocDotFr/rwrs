@@ -25,7 +25,7 @@ def player_stats(username=None):
         username = request.args.get('username').strip()
 
         # Redirect to a SEO-friendly URL if the username query parameter is detected
-        return redirect(url_for('player_stats', username=username))
+        return redirect(url_for('player_stats', username=username), code=301)
 
     if not username:
         abort(404)
@@ -56,7 +56,7 @@ def players_compare(username, username_to_compare_with=None):
         username_to_compare_with = request.args.get('username_to_compare_with').strip()
 
         # Redirect to a SEO-friendly URL if the username_to_compare_with query parameter is detected
-        return redirect(url_for('players_compare', username=username, username_to_compare_with=username_to_compare_with))
+        return redirect(url_for('players_compare', username=username, username_to_compare_with=username_to_compare_with), code=301)
 
     if not username_to_compare_with:
         abort(404)
