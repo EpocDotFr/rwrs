@@ -353,7 +353,7 @@ playersChartsFeature = {
     },
     createChart: function(container_selector) {
         $.each(this.data, function(k, v) {
-            v.x = new Date(v.x);
+            v.t = new Date(v.t);
         });
 
         MG.data_graphic({
@@ -361,8 +361,8 @@ playersChartsFeature = {
             data: this.data,
             color: '#A4CF17',
             target: container_selector,
-            x_accessor: 'x',
-            y_accessor: 'y',
+            x_accessor: 't',
+            y_accessor: 'c',
             area: false,
             y_extended_ticks: true,
             x_extended_ticks: true,

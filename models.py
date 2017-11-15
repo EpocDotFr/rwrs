@@ -6,39 +6,39 @@ import arrow
 
 
 class ServerPlayerCount(db.Model):
-    TIMESPAN_LAST_DAY = 1
-    TIMESPAN_LAST_WEEK = 2
-    TIMESPAN_LAST_MONTH = 3
+    TIMESPAN_PAST_DAY = 1
+    TIMESPAN_PAST_WEEK = 2
+    TIMESPAN_PAST_MONTH = 3
 
     class ServerPlayerCountQuery(db.Query):
-        def _apply_timespan_filters(self, query, timespan, count):
+        def _get_base_count_query(self, timespan, count):
             now = arrow.utcnow()
 
-            if timespan == ServerPlayerCount.TIMESPAN_LAST_DAY:
+            if timespan == ServerPlayerCount.TIMESPAN_PAST_DAY:
                 past = now.shift(days=-1)
-                fmt = '%H:%M'
-            elif timespan == ServerPlayerCount.TIMESPAN_LAST_WEEK:
+                fmt = '%Y-%m-%dT%H:%M:%S'
+            elif timespan == ServerPlayerCount.TIMESPAN_PAST_WEEK:
                 past = now.shift(weeks=-1)
                 fmt = '%w'
-            elif timespan == ServerPlayerCount.TIMESPAN_LAST_MONTH:
+            elif timespan == ServerPlayerCount.TIMESPAN_PAST_MONTH:
                 past = now.shift(months=-1)
                 fmt = '%Y-%m-%d'
 
-            query = query.with_entities(func.strftime(fmt, ServerPlayerCount.measured_at).label('time'), count)
-            query = query.filter(ServerPlayerCount.measured_at >= past)
+            query = self.with_entities(func.strftime(fmt, ServerPlayerCount.measured_at).label('t'), count)
+            query = query.filter(ServerPlayerCount.measured_at >= past).group_by('t')
 
-            return query.group_by('time')
+            return query
 
         def get_player_count(self, timespan, ip=None, port=None):
-            query = self._apply_timespan_filters(self, timespan, func.sum(ServerPlayerCount.count).label('count'))
+            query = self._get_base_count_query(timespan, func.sum(ServerPlayerCount.count).label('c'))
 
             if ip and port:
-                query = query.filter(ServerPlayerCount.ip == ip and ServerPlayerCount.port == port)
+                query = query.filter(ServerPlayerCount._ip == ip, ServerPlayerCount.port == port)
 
             return query.all()
 
         def get_server_count(self, timespan, active_only=False):
-            query = self._apply_timespan_filters(self, timespan, func.count('*').label('count'))
+            query = self._get_base_count_query(timespan, func.count('*').label('c'))
 
             if active_only:
                 query = query.filter(ServerPlayerCount.count > 0)
@@ -47,7 +47,9 @@ class ServerPlayerCount(db.Model):
 
         def get_old_entries(self):
             """Return entries older than one month (exclusive)."""
-            return self.filter(ServerPlayerCount.measured_at > arrow.utcnow().shift(months=-1)).all()
+            one_month_ago = arrow.utcnow().shift(months=-1)
+
+            return self.filter(ServerPlayerCount.measured_at > one_month_ago).all()
 
     __tablename__ = 'servers_player_count'
     __bind_key__ = 'servers_player_count'
@@ -72,14 +74,18 @@ class ServerPlayerCount(db.Model):
             self._ip = ip2long(value)
 
     @staticmethod
-    @cache.memoize(timeout=app.config['GRAPHS_DATA_CACHE_TIMEOUT'])
+    def _transform_data(rows):
+        return [{'t': row[0], 'c': row[1]} for row in rows]
+
+    @staticmethod
+    #@cache.memoize(timeout=app.config['GRAPHS_DATA_CACHE_TIMEOUT'])
     def server_players_data(ip, port):
         ip = ip2long(ip)
 
         return {
-            'last_day': ServerPlayerCount.query.get_player_count(ServerPlayerCount.TIMESPAN_LAST_DAY, ip, port),
-            'last_week': ServerPlayerCount.query.get_player_count(ServerPlayerCount.TIMESPAN_LAST_WEEK, ip, port),
-            'last_month': ServerPlayerCount.query.get_player_count(ServerPlayerCount.TIMESPAN_LAST_MONTH, ip, port)
+            'past_day': ServerPlayerCount._transform_data(ServerPlayerCount.query.get_player_count(ServerPlayerCount.TIMESPAN_PAST_DAY, ip, port)),
+            'past_week': ServerPlayerCount._transform_data(ServerPlayerCount.query.get_player_count(ServerPlayerCount.TIMESPAN_PAST_WEEK, ip, port)),
+            'past_month': ServerPlayerCount._transform_data(ServerPlayerCount.query.get_player_count(ServerPlayerCount.TIMESPAN_PAST_MONTH, ip, port))
         }
 
     def __repr__(self):

@@ -1,4 +1,4 @@
-from rwrs import app, db
+from rwrs import app, db, cache
 import models
 import click
 import rwr
@@ -7,8 +7,28 @@ import rwr
 @app.cli.command()
 def create_database():
     """Delete then create all the database tables."""
+    if not click.confirm('Are you sure?'):
+        app.logger.info('Aborted')
+
+        return
+
+    app.logger.info('Dropping everything')
+
     db.drop_all()
+
+    app.logger.info('Creating tables')
+
     db.create_all()
+
+    app.logger.info('Done')
+
+
+@app.cli.command()
+def cc():
+    """Clear the cache."""
+    cache.clear()
+
+    app.logger.info('Done')
 
 
 @app.cli.command()
