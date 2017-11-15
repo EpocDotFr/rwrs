@@ -91,6 +91,8 @@ friendsFeature = {
                     if (friendsFeature.removeFriend(username)) {
                         this.friends.splice(this.friends.indexOf(username), 1);
 
+                        friendsFeature.initInHeader(); // Refresh the counter in the header
+
                         return true;
                     }
 
@@ -100,6 +102,8 @@ friendsFeature = {
                     if (friendsFeature.addFriend(username)) {
                         this.friends.push(username);
                         this.friends.sort();
+
+                        friendsFeature.initInHeader(); // Refresh the counter in the header
 
                         return true;
                     }
@@ -219,6 +223,8 @@ friendsFeature = {
                 $a.addClass('is-hidden');
                 $remove_friend_link.removeClass('is-hidden');
                 $closest_tr.addClass('info');
+
+                friendsFeature.initInHeader(); // Refresh the counter in the header
             });
 
             $remove_friend_link.on('click', function(e) {
@@ -232,6 +238,8 @@ friendsFeature = {
                 $a.addClass('is-hidden');
                 $add_friend_link.removeClass('is-hidden');
                 $closest_tr.removeClass('info');
+
+                friendsFeature.initInHeader(); // Refresh the counter in the header
             });
         });
 
@@ -278,6 +286,8 @@ friendsFeature = {
 
             $(this).addClass('is-hidden');
             $remove_friend_link.removeClass('is-hidden');
+
+            friendsFeature.initInHeader(); // Refresh the counter in the header
         });
 
         $remove_friend_link.on('click', function(e) {
@@ -287,6 +297,8 @@ friendsFeature = {
 
             $(this).addClass('is-hidden');
             $add_friend_link.removeClass('is-hidden');
+
+            friendsFeature.initInHeader(); // Refresh the counter in the header
         });
 
         if ($.inArray(this.player, friends) !== -1) {
@@ -352,8 +364,10 @@ playersChartsFeature = {
         this.createChart('#server-players-chart');
     },
     createChart: function(container_selector) {
-        $.each(this.data, function(k, v) {
-            v.t = new Date(v.t);
+        $.each(this.data, function(k, line) {
+            $.each(line, function(k, point) {
+                point.t = new Date(point.t);
+            });
         });
 
         MG.data_graphic({
@@ -363,6 +377,7 @@ playersChartsFeature = {
             target: container_selector,
             x_accessor: 't',
             y_accessor: 'c',
+            legend: ['Past day', 'Past week', 'Past month'],
             area: false,
             y_extended_ticks: true,
             x_extended_ticks: true,
@@ -372,7 +387,7 @@ playersChartsFeature = {
             left: 30,
             right: 15,
             buffer: 0,
-            width: 365
+            width: 360
         });
     }
 };

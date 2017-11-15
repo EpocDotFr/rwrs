@@ -19,10 +19,10 @@ class ServerPlayerCount(db.Model):
                 fmt = '%Y-%m-%dT%H:%M:%S'
             elif timespan == ServerPlayerCount.TIMESPAN_PAST_WEEK:
                 past = now.shift(weeks=-1)
-                fmt = '%w'
+                fmt = '%Y-%m-%dT%H:%M:%S'
             elif timespan == ServerPlayerCount.TIMESPAN_PAST_MONTH:
                 past = now.shift(months=-1)
-                fmt = '%Y-%m-%d'
+                fmt = '%Y-%m-%dT%H:%M:%S'
 
             query = self.with_entities(func.strftime(fmt, ServerPlayerCount.measured_at).label('t'), count)
             query = query.filter(ServerPlayerCount.measured_at >= past).group_by('t')
@@ -78,15 +78,16 @@ class ServerPlayerCount(db.Model):
         return [{'t': row[0], 'c': row[1]} for row in rows]
 
     @staticmethod
-    #@cache.memoize(timeout=app.config['GRAPHS_DATA_CACHE_TIMEOUT'])
-    def server_players_data(ip, port):
-        ip = ip2long(ip)
+    @cache.memoize(timeout=app.config['GRAPHS_DATA_CACHE_TIMEOUT'])
+    def server_players_data(ip=None, port=None):
+        if ip:
+            ip = ip2long(ip)
 
-        return {
-            'past_day': ServerPlayerCount._transform_data(ServerPlayerCount.query.get_player_count(ServerPlayerCount.TIMESPAN_PAST_DAY, ip, port)),
-            'past_week': ServerPlayerCount._transform_data(ServerPlayerCount.query.get_player_count(ServerPlayerCount.TIMESPAN_PAST_WEEK, ip, port)),
-            'past_month': ServerPlayerCount._transform_data(ServerPlayerCount.query.get_player_count(ServerPlayerCount.TIMESPAN_PAST_MONTH, ip, port))
-        }
+        return [
+            ServerPlayerCount._transform_data(ServerPlayerCount.query.get_player_count(ServerPlayerCount.TIMESPAN_PAST_DAY, ip, port)),
+            ServerPlayerCount._transform_data(ServerPlayerCount.query.get_player_count(ServerPlayerCount.TIMESPAN_PAST_WEEK, ip, port)),
+            ServerPlayerCount._transform_data(ServerPlayerCount.query.get_player_count(ServerPlayerCount.TIMESPAN_PAST_MONTH, ip, port))
+        ]
 
     def __repr__(self):
         return 'ServerPlayerCount:' + self.id

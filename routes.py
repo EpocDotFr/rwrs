@@ -129,7 +129,7 @@ def server_details(ip_and_port):
 
         return redirect(url_for('servers_list'))
 
-    server_players_data = models.ServerPlayerCount.server_players_data(ip, port)['past_day'] # TODO TMP
+    server_players_data = models.ServerPlayerCount.server_players_data(ip, port)
 
     return render_template(
         'server_details.html',
