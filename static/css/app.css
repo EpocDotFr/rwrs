@@ -362,6 +362,10 @@ path.mg-main-line {
     stroke-width: 0.2rem;
 }
 
+.mg-voronoi path {
+    fill: none;
+}
+
 .mg-active-datapoint-container {
     font-size: 1.2rem;
     fill: #fff;
