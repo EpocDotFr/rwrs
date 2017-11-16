@@ -341,10 +341,6 @@ fieldset {
 /************************************************************************
  * Charts */
 
-.mg-x-axis line, .mg-y-axis line {
-    stroke: #fff;
-}
-
 .mg-histogram .axis text, .mg-x-axis text, .mg-y-axis text {
     fill: #fff;
     opacity: 1;
@@ -356,17 +352,7 @@ fieldset {
     stroke: #333;
 }
 
-path.mg-main-line {
-    opacity: 1;
-    fill: none;
-    stroke-width: 0.2rem;
-}
-
-.mg-voronoi path {
-    fill: none;
-}
-
-.mg-active-datapoint-container {
+.mg-active-datapoint {
     font-size: 1.2rem;
     fill: #fff;
 }

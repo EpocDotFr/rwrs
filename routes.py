@@ -6,8 +6,19 @@ import rwr
 
 @app.route('/')
 def home():
+    players_chart_data = models.ServerPlayerCount.server_players_data()
+    servers_online_chart_data = models.ServerPlayerCount.servers_data(active_only=False)
+    servers_active_chart_data = models.ServerPlayerCount.servers_data()
+
+    servers_data = {
+        'online': servers_online_chart_data,
+        'active': servers_active_chart_data
+    }
+
     return render_template(
-        'home.html'
+        'home.html',
+        players_chart_data=players_chart_data,
+        servers_data=servers_data
     )
 
 
@@ -129,10 +140,10 @@ def server_details(ip_and_port):
 
         return redirect(url_for('servers_list'))
 
-    server_players_data = models.ServerPlayerCount.server_players_data(ip, port)
+    server_players_chart_data = models.ServerPlayerCount.server_players_data(ip, port)
 
     return render_template(
         'server_details.html',
-        server_players_data=server_players_data,
+        server_players_chart_data=server_players_chart_data,
         server=server
     )

@@ -361,27 +361,42 @@ playersChartsFeature = {
      * Initialize the Players charts on the Server details page.
      */
     initOnServerDetails: function() {
-        this.createChart('#server-players-chart');
-    },
-    createChart: function(container_selector) {
-        $.each(this.data, function(k, line) {
-            $.each(line, function(k, point) {
-                point.t = new Date(point.t);
-            });
-        });
+        for (var i = 0; i < this.data.length; i++) {
+            this.data[i] = MG.convert.date(this.data[i], 't', '%Y-%m-%dT%H:%M:%S');
+        }
 
+        this.createChart('#server-players-chart', this.data);
+    },
+    /**
+     * Initialize the Players charts on the Home page.
+     */
+    initOnHome: function() {
+        for (var i = 0; i < this.players_data.length; i++) {
+            this.players_data[i] = MG.convert.date(this.players_data[i], 't', '%Y-%m-%dT%H:%M:%S');
+        }
+
+        for (var i = 0; i < this.servers_data.active.length; i++) {
+            this.servers_data.active[i] = MG.convert.date(this.servers_data.active[i], 't', '%Y-%m-%dT%H:%M:%S');
+        }
+
+        for (var i = 0; i < this.servers_data.online.length; i++) {
+            this.servers_data.online[i] = MG.convert.date(this.servers_data.online[i], 't', '%Y-%m-%dT%H:%M:%S');
+        }
+
+        //this.createChart('#servers-chart', this.servers_data);
+        this.createChart('#players-chart', this.players_data);
+    },
+    createChart: function(container_selector, data) {
         MG.data_graphic({
             show_tooltips: false,
-            data: this.data,
-            color: '#A4CF17',
+            data: data,
+            colors: ['#A4CF17', '#A4CF17', '#A4CF17'],
             target: container_selector,
             x_accessor: 't',
             y_accessor: 'c',
-            legend: ['Past day', 'Past week', 'Past month'],
             area: false,
             y_extended_ticks: true,
             x_extended_ticks: true,
-            show_secondary_x_label: false,
             top: 20,
             bottom: 35,
             left: 30,
