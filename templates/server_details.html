@@ -13,6 +13,10 @@
     <script src="{{ url_for('static', filename='js/app.js') }}"></script>
 {% endblock %}
 
+{% block cssfiles %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/metrics-graphics/2.11.0/metricsgraphics.min.css">
+{% endblock %}
+
 {% block content %}
     <p class="txtcenter mbs">
         {{ macros.server_join_button(server) }}
@@ -120,7 +124,7 @@
                     <th class="txtcenter">Players count</th>
                 </tr>
                 <tr>
-                    <td class="pan">
+                    <td class="txtcenter pan">
                         <div id="server-players-chart" class="chart"></div>
                     </td>
                 </tr>
@@ -133,48 +137,7 @@
         friendsFeature.server_ip_and_port = '{{ server.ip_and_port }}';
         friendsFeature.initOnServerDetails();
 
-        playersChartsFeature.data = [
-            {
-                "x": "2017-11-07T10:00:00Z",
-                "y": 23
-            },
-            {
-                "x": "2017-11-07T10:15:00Z",
-                "y": 20
-            },
-            {
-                "x": "2017-11-07T10:30:00Z",
-                "y": 22
-            },
-            {
-                "x": "2017-11-07T10:45:00Z",
-                "y": 10
-            },
-            {
-                "x": "2017-11-07T11:00:00Z",
-                "y": 2
-            },
-            {
-                "x": "2017-11-07T11:15:00Z",
-                "y": 0
-            },
-            {
-                "x": "2017-11-07T11:30:00Z",
-                "y": 1
-            },
-            {
-                "x": "2017-11-07T11:45:00Z",
-                "y": 8
-            },
-            {
-                "x": "2017-11-07T12:00:00Z",
-                "y": 15
-            },
-            {
-                "x": "2017-11-07T12:15:00Z",
-                "y": 24
-            }
-        ];
+        playersChartsFeature.data = {{ server_players_chart_data|tojson }};
         playersChartsFeature.initOnServerDetails();
     </script>
 {% endblock %}

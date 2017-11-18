@@ -91,6 +91,8 @@ friendsFeature = {
                     if (friendsFeature.removeFriend(username)) {
                         this.friends.splice(this.friends.indexOf(username), 1);
 
+                        friendsFeature.initInHeader(); // Refresh the counter in the header
+
                         return true;
                     }
 
@@ -100,6 +102,8 @@ friendsFeature = {
                     if (friendsFeature.addFriend(username)) {
                         this.friends.push(username);
                         this.friends.sort();
+
+                        friendsFeature.initInHeader(); // Refresh the counter in the header
 
                         return true;
                     }
@@ -219,6 +223,8 @@ friendsFeature = {
                 $a.addClass('is-hidden');
                 $remove_friend_link.removeClass('is-hidden');
                 $closest_tr.addClass('info');
+
+                friendsFeature.initInHeader(); // Refresh the counter in the header
             });
 
             $remove_friend_link.on('click', function(e) {
@@ -232,6 +238,8 @@ friendsFeature = {
                 $a.addClass('is-hidden');
                 $add_friend_link.removeClass('is-hidden');
                 $closest_tr.removeClass('info');
+
+                friendsFeature.initInHeader(); // Refresh the counter in the header
             });
         });
 
@@ -278,6 +286,8 @@ friendsFeature = {
 
             $(this).addClass('is-hidden');
             $remove_friend_link.removeClass('is-hidden');
+
+            friendsFeature.initInHeader(); // Refresh the counter in the header
         });
 
         $remove_friend_link.on('click', function(e) {
@@ -287,6 +297,8 @@ friendsFeature = {
 
             $(this).addClass('is-hidden');
             $add_friend_link.removeClass('is-hidden');
+
+            friendsFeature.initInHeader(); // Refresh the counter in the header
         });
 
         if ($.inArray(this.player, friends) !== -1) {
@@ -349,20 +361,39 @@ playersChartsFeature = {
      * Initialize the Players charts on the Server details page.
      */
     initOnServerDetails: function() {
-        this.createChart('#server-players-chart');
-    },
-    createChart: function(container_selector) {
-        $.each(this.data, function(k, v) {
-            v.x = new Date(v.x);
-        });
+        for (var i = 0; i < this.data.length; i++) {
+            this.data[i] = MG.convert.date(this.data[i], 't', '%Y-%m-%dT%H:%M:%S');
+        }
 
+        this.createChart('#server-players-chart', this.data);
+    },
+    /**
+     * Initialize the Players charts on the Home page.
+     */
+    initOnHome: function() {
+        for (var i = 0; i < this.players_data.length; i++) {
+            this.players_data[i] = MG.convert.date(this.players_data[i], 't', '%Y-%m-%dT%H:%M:%S');
+        }
+
+        for (var i = 0; i < this.servers_data.active.length; i++) {
+            this.servers_data.active[i] = MG.convert.date(this.servers_data.active[i], 't', '%Y-%m-%dT%H:%M:%S');
+        }
+
+        for (var i = 0; i < this.servers_data.online.length; i++) {
+            this.servers_data.online[i] = MG.convert.date(this.servers_data.online[i], 't', '%Y-%m-%dT%H:%M:%S');
+        }
+
+        //this.createChart('#servers-chart', this.servers_data);
+        this.createChart('#players-chart', this.players_data);
+    },
+    createChart: function(container_selector, data) {
         MG.data_graphic({
             show_tooltips: false,
-            data: this.data,
-            color: '#A4CF17',
+            data: data,
+            colors: ['#A4CF17', '#A4CF17', '#A4CF17'],
             target: container_selector,
-            x_accessor: 'x',
-            y_accessor: 'y',
+            x_accessor: 't',
+            y_accessor: 'c',
             area: false,
             y_extended_ticks: true,
             x_extended_ticks: true,
@@ -371,7 +402,7 @@ playersChartsFeature = {
             left: 30,
             right: 15,
             buffer: 0,
-            width: 365
+            width: 360
         });
     }
 };
