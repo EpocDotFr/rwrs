@@ -8,11 +8,11 @@ import arrow
 class ServerPlayerCount(db.Model):
     class ServerPlayerCountQuery(db.Query):
         def _get_base_count_query(self, count):
-            one_month_ago = arrow.utcnow().shift(months=-1)
+            past = arrow.utcnow().floor('minute').shift(weeks=-2)
 
             query = self.with_entities(ServerPlayerCount.measured_at.label('t'), count)
 
-            return query.filter(ServerPlayerCount.measured_at >= one_month_ago).group_by('t')
+            return query.filter(ServerPlayerCount.measured_at >= past).group_by('t')
 
         def get_player_count(self, ip=None, port=None):
             query = self._get_base_count_query(func.sum(ServerPlayerCount.count).label('c'))
@@ -31,10 +31,10 @@ class ServerPlayerCount(db.Model):
             return query.all()
 
         def get_old_entries(self):
-            """Return entries older than one month (exclusive)."""
-            one_month_ago = arrow.utcnow().shift(months=-1)
+            """Return entries older than 2 weeks (exclusive)."""
+            past = arrow.utcnow().floor('minute').shift(weeks=-2)
 
-            return self.filter(ServerPlayerCount.measured_at < one_month_ago).all()
+            return self.filter(ServerPlayerCount.measured_at < past).all()
 
     __tablename__ = 'servers_player_count'
     __bind_key__ = 'servers_player_count'
@@ -45,7 +45,7 @@ class ServerPlayerCount(db.Model):
 
     _ip = db.Column('ip', db.Integer, nullable=False)
     port = db.Column(db.Integer, nullable=False)
-    measured_at = db.Column(ArrowType, default=arrow.utcnow(), nullable=False)
+    measured_at = db.Column(ArrowType, default=arrow.utcnow().floor('minute'), nullable=False)
     count = db.Column(db.Integer, nullable=False)
 
     @property

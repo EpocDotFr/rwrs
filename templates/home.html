@@ -20,16 +20,16 @@
                     <input type="text" name="username" placeholder="Type a player name" required> <button type="submit"><i class="fa fa-search"></i> Find</button>
                 </form>
             </div>
-            <fieldset class="mts">
-                <legend>Online players</legend>
+            <fieldset class="man pan">
+                <legend class="mls">Online players (past 2 weeks)</legend>
                 <div id="online-players-chart" class="chart"></div>
             </fieldset>
         </div>
         <div class="pll">
             <h2><i class="fa fa-server"></i> Looking for a server?</h2>
             <p class="ptm pbm"><a href="{{ url_for('servers_list') }}" class="btn"><i class="fa fa-chevron-right"></i> Go to the servers list</a></p>
-            <fieldset class="mts">
-                <legend>Online and active servers</legend>
+            <fieldset class="man pan">
+                <legend class="mls">Online and active servers (past 2 weeks)</legend>
                 <div id="servers-chart" class="chart"></div>
             </fieldset>
         </div>

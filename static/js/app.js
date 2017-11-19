@@ -370,6 +370,7 @@ playersChartsFeature = {
         right: 15,
         buffer: 0
     },
+    dateFormat: '%Y-%m-%dT%H:%M:%S',
     /**
      * Initialize the Players charts on the Server details page.
      */
@@ -378,7 +379,7 @@ playersChartsFeature = {
             target: '#server-players-chart',
             width: 360,
             color: '#A4CF17',
-            data: MG.convert.date(this.server_players_data, 't', '%Y-%m-%dT%H:%M:%S')
+            data: MG.convert.date(this.server_players_data, 't', this.dateFormat)
         });
     },
     /**
@@ -388,25 +389,27 @@ playersChartsFeature = {
         // Online players chart
         this.createChart({
             target: '#online-players-chart',
-            width: 485,
+            width: 500,
             color: '#A4CF17',
-            data: MG.convert.date(this.online_players_data, 't', '%Y-%m-%dT%H:%M:%S')
+            data: MG.convert.date(this.online_players_data, 't', this.dateFormat)
         });
+
+        console.log(this.defaultChartOptions);
 
         // Online and active servers
         for (var i = 0; i < this.servers_data.length; i++) {
-            this.servers_data[i] = MG.convert.date(this.servers_data[i], 't', '%Y-%m-%dT%H:%M:%S');
+            this.servers_data[i] = MG.convert.date(this.servers_data[i], 't', this.dateFormat);
         }
 
         this.createChart({
             target: '#servers-chart',
-            width: 485,
+            width: 500,
             colors: ['#A4CF17', '#44b2f8'],
-            labels: ['Online servers', 'Active servers'],
+            legend: ['Online servers', 'Active servers'],
             data: this.servers_data
         });
     },
     createChart: function(options) {
-        MG.data_graphic($.extend(this.defaultChartOptions, options, true));
+        MG.data_graphic($.extend({}, this.defaultChartOptions, options, true));
     }
 };
