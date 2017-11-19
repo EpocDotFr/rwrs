@@ -15,18 +15,23 @@
     <div class="home grid mtm mbm txtcenter">
         <div class="prl">
             <h2><i class="fa fa-user"></i> Searching for a player?</h2>
-            <div>
+            <div class="ptm pbm">
                 <form method="get" action="{{ url_for('player_stats') }}">
                     <input type="text" name="username" placeholder="Type a player name" required> <button type="submit"><i class="fa fa-search"></i> Find</button>
                 </form>
             </div>
-            <p>Online players count</p>
-            <div id="players-chart" class="chart"></div>
+            <fieldset class="mts">
+                <legend>Online players</legend>
+                <div id="online-players-chart" class="chart"></div>
+            </fieldset>
         </div>
         <div class="pll">
             <h2><i class="fa fa-server"></i> Looking for a server?</h2>
-            <p><a href="{{ url_for('servers_list') }}" class="btn"><i class="fa fa-chevron-right"></i> Go to the servers list</a></p>
-            <div id="servers-chart" class="chart"></div>
+            <p class="ptm pbm"><a href="{{ url_for('servers_list') }}" class="btn"><i class="fa fa-chevron-right"></i> Go to the servers list</a></p>
+            <fieldset class="mts">
+                <legend>Online and active servers</legend>
+                <div id="servers-chart" class="chart"></div>
+            </fieldset>
         </div>
     </div>
 
@@ -34,7 +39,7 @@
         friendsFeature.all_players_with_servers_details = {{ g.all_players_with_servers_details|tojson }};
         friendsFeature.initOnHome();
 
-        playersChartsFeature.players_data = {{ players_chart_data|tojson }};
+        playersChartsFeature.online_players_data = {{ online_players_data|tojson }};
         playersChartsFeature.servers_data = {{ servers_data|tojson }};
         playersChartsFeature.initOnHome();
     </script>

@@ -137,7 +137,7 @@
         friendsFeature.server_ip_and_port = '{{ server.ip_and_port }}';
         friendsFeature.initOnServerDetails();
 
-        playersChartsFeature.data = {{ server_players_chart_data|tojson }};
+        playersChartsFeature.server_players_data = {{ server_players_data|tojson }};
         playersChartsFeature.initOnServerDetails();
     </script>
 {% endblock %}

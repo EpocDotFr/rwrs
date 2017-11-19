@@ -357,52 +357,56 @@ friendsFeature = {
  * The Players charts feature logic.
  */
 playersChartsFeature = {
+    defaultChartOptions: {
+        show_tooltips: false,
+        x_accessor: 't',
+        y_accessor: 'c',
+        area: false,
+        y_extended_ticks: true,
+        x_extended_ticks: true,
+        top: 20,
+        bottom: 35,
+        left: 30,
+        right: 15,
+        buffer: 0
+    },
     /**
      * Initialize the Players charts on the Server details page.
      */
     initOnServerDetails: function() {
-        for (var i = 0; i < this.data.length; i++) {
-            this.data[i] = MG.convert.date(this.data[i], 't', '%Y-%m-%dT%H:%M:%S');
-        }
-
-        this.createChart('#server-players-chart', this.data);
+        this.createChart({
+            target: '#server-players-chart',
+            width: 360,
+            color: '#A4CF17',
+            data: MG.convert.date(this.server_players_data, 't', '%Y-%m-%dT%H:%M:%S')
+        });
     },
     /**
      * Initialize the Players charts on the Home page.
      */
     initOnHome: function() {
-        for (var i = 0; i < this.players_data.length; i++) {
-            this.players_data[i] = MG.convert.date(this.players_data[i], 't', '%Y-%m-%dT%H:%M:%S');
-        }
-
-        for (var i = 0; i < this.servers_data.active.length; i++) {
-            this.servers_data.active[i] = MG.convert.date(this.servers_data.active[i], 't', '%Y-%m-%dT%H:%M:%S');
-        }
-
-        for (var i = 0; i < this.servers_data.online.length; i++) {
-            this.servers_data.online[i] = MG.convert.date(this.servers_data.online[i], 't', '%Y-%m-%dT%H:%M:%S');
-        }
-
-        //this.createChart('#servers-chart', this.servers_data);
-        this.createChart('#players-chart', this.players_data);
-    },
-    createChart: function(container_selector, data) {
-        MG.data_graphic({
-            show_tooltips: false,
-            data: data,
-            colors: ['#A4CF17', '#A4CF17', '#A4CF17'],
-            target: container_selector,
-            x_accessor: 't',
-            y_accessor: 'c',
-            area: false,
-            y_extended_ticks: true,
-            x_extended_ticks: true,
-            top: 20,
-            bottom: 35,
-            left: 30,
-            right: 15,
-            buffer: 0,
-            width: 360
+        // Online players chart
+        this.createChart({
+            target: '#online-players-chart',
+            width: 485,
+            color: '#A4CF17',
+            data: MG.convert.date(this.online_players_data, 't', '%Y-%m-%dT%H:%M:%S')
         });
+
+        // Online and active servers
+        for (var i = 0; i < this.servers_data.length; i++) {
+            this.servers_data[i] = MG.convert.date(this.servers_data[i], 't', '%Y-%m-%dT%H:%M:%S');
+        }
+
+        this.createChart({
+            target: '#servers-chart',
+            width: 485,
+            colors: ['#A4CF17', '#44b2f8'],
+            labels: ['Online servers', 'Active servers'],
+            data: this.servers_data
+        });
+    },
+    createChart: function(options) {
+        MG.data_graphic($.extend(this.defaultChartOptions, options, true));
     }
 };
