@@ -391,10 +391,10 @@ playersChartsFeature = {
             target: '#online-players-chart',
             width: 500,
             color: '#A4CF17',
+            legend: ['Online players'],
+            legend_target: '#online-players-legend',
             data: MG.convert.date(this.online_players_data, 't', this.dateFormat)
         });
-
-        console.log(this.defaultChartOptions);
 
         // Online and active servers
         for (var i = 0; i < this.servers_data.length; i++) {
@@ -406,6 +406,7 @@ playersChartsFeature = {
             width: 500,
             colors: ['#A4CF17', '#44b2f8'],
             legend: ['Online servers', 'Active servers'],
+            legend_target: '#servers-chart-legend',
             data: this.servers_data
         });
     },

@@ -7,8 +7,8 @@ import rwr
 @app.route('/')
 def home():
     online_players_data = models.ServerPlayerCount.server_players_data()
-    servers_online_data = models.ServerPlayerCount.servers_data(active_only=False)
-    servers_active_data = models.ServerPlayerCount.servers_data()
+    servers_online_data = models.ServerPlayerCount.servers_data()
+    servers_active_data = models.ServerPlayerCount.servers_data(active_only=True)
 
     servers_data = [
         servers_online_data,
