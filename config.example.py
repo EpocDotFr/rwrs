@@ -1,8 +1,6 @@
-import logging
-
 SECRET_KEY = 'secretkeyhere'
 DEBUG = False
-LOGGING_LEVEL = logging.warning
+LOGGER_HANDLER_POLICY = 'production'
 GAUGES_SITE_ID = None
 CACHE_THRESHOLD = 200
 SERVERS_CACHE_TIMEOUT = 60
