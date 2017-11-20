@@ -333,6 +333,25 @@ fieldset {
 }
 
 /************************************************************************
+ * Charts */
+
+.mg-histogram .axis text, .mg-x-axis text, .mg-y-axis text {
+    fill: #fff;
+    opacity: 1;
+    font-size: 1.2rem;
+}
+
+.mg-x-axis line.mg-extended-xax-ticks, .mg-y-axis line.mg-extended-yax-ticks {
+    opacity: 1;
+    stroke: #333;
+}
+
+.mg-active-datapoint {
+    font-size: 1.2rem;
+    fill: #fff;
+}
+
+/************************************************************************
  * Footer */
 
 footer {

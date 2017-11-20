@@ -91,6 +91,8 @@ friendsFeature = {
                     if (friendsFeature.removeFriend(username)) {
                         this.friends.splice(this.friends.indexOf(username), 1);
 
+                        friendsFeature.initInHeader(); // Refresh the counter in the header
+
                         return true;
                     }
 
@@ -100,6 +102,8 @@ friendsFeature = {
                     if (friendsFeature.addFriend(username)) {
                         this.friends.push(username);
                         this.friends.sort();
+
+                        friendsFeature.initInHeader(); // Refresh the counter in the header
 
                         return true;
                     }
@@ -219,6 +223,8 @@ friendsFeature = {
                 $a.addClass('is-hidden');
                 $remove_friend_link.removeClass('is-hidden');
                 $closest_tr.addClass('info');
+
+                friendsFeature.initInHeader(); // Refresh the counter in the header
             });
 
             $remove_friend_link.on('click', function(e) {
@@ -232,6 +238,8 @@ friendsFeature = {
                 $a.addClass('is-hidden');
                 $add_friend_link.removeClass('is-hidden');
                 $closest_tr.removeClass('info');
+
+                friendsFeature.initInHeader(); // Refresh the counter in the header
             });
         });
 
@@ -278,6 +286,8 @@ friendsFeature = {
 
             $(this).addClass('is-hidden');
             $remove_friend_link.removeClass('is-hidden');
+
+            friendsFeature.initInHeader(); // Refresh the counter in the header
         });
 
         $remove_friend_link.on('click', function(e) {
@@ -287,6 +297,8 @@ friendsFeature = {
 
             $(this).addClass('is-hidden');
             $add_friend_link.removeClass('is-hidden');
+
+            friendsFeature.initInHeader(); // Refresh the counter in the header
         });
 
         if ($.inArray(this.player, friends) !== -1) {
@@ -340,3 +352,65 @@ friendsFeature = {
         return true;
     }
 }
+
+/**
+ * The Players charts feature logic.
+ */
+playersChartsFeature = {
+    defaultChartOptions: {
+        show_tooltips: false,
+        x_accessor: 't',
+        y_accessor: 'c',
+        area: false,
+        y_extended_ticks: true,
+        x_extended_ticks: true,
+        top: 20,
+        bottom: 35,
+        left: 30,
+        right: 15,
+        buffer: 0
+    },
+    dateFormat: '%Y-%m-%dT%H:%M:%S',
+    /**
+     * Initialize the Players charts on the Server details page.
+     */
+    initOnServerDetails: function() {
+        this.createChart({
+            target: '#server-players-chart',
+            width: 360,
+            color: '#A4CF17',
+            data: MG.convert.date(this.server_players_data, 't', this.dateFormat)
+        });
+    },
+    /**
+     * Initialize the Players charts on the Home page.
+     */
+    initOnHome: function() {
+        // Online players chart
+        this.createChart({
+            target: '#online-players-chart',
+            width: 500,
+            color: '#A4CF17',
+            legend: ['Online players'],
+            legend_target: '#online-players-legend',
+            data: MG.convert.date(this.online_players_data, 't', this.dateFormat)
+        });
+
+        // Online and active servers
+        for (var i = 0; i < this.servers_data.length; i++) {
+            this.servers_data[i] = MG.convert.date(this.servers_data[i], 't', this.dateFormat);
+        }
+
+        this.createChart({
+            target: '#servers-chart',
+            width: 500,
+            colors: ['#A4CF17', '#44b2f8'],
+            legend: ['Online servers', 'Active servers'],
+            legend_target: '#servers-chart-legend',
+            data: this.servers_data
+        });
+    },
+    createChart: function(options) {
+        MG.data_graphic($.extend({}, this.defaultChartOptions, options, true));
+    }
+};

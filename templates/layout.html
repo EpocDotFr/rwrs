@@ -25,23 +25,28 @@
 <body>
     <header class="txtcenter pts pbs">
         <div class="w1140p center">
-            <div class="left txtleft small">
-                <strong>{{ g.total_servers }}</strong> server{{ 's' if g.total_servers > 1 else '' }} available (<strong>{{ g.active_servers }}</strong> {{ 'are' if g.active_servers > 1 else 'is' }} active)<br>
-                <strong>{{ g.online_players }}</strong> player{{ 's' if g.total_servers > 1 else '' }} online <span class="total-playing-friends is-hidden">(including <strong class="txtblue">?</strong> <span class="friend-label"></span>)</span><br>
-            </div>
-            <div class="right txtright">
-                <a href="{{ url_for('my_friends') }}" class="manage-friends-link is-hidden"><i class="fa fa-users"></i> My friends</a>
-            </div>
+            {% if not g.UNDER_MAINTENANCE %}
+                <div class="left txtleft small">
+                    <strong>{{ g.total_servers }}</strong> server{{ 's' if g.total_servers > 1 else '' }} available (<strong>{{ g.active_servers }}</strong> {{ 'are' if g.active_servers > 1 else 'is' }} active)<br>
+                    <strong>{{ g.online_players }}</strong> player{{ 's' if g.total_servers > 1 else '' }} online <span class="total-playing-friends is-hidden">(including <strong class="txtblue">?</strong> <span class="friend-label"></span>)</span><br>
+                </div>
+                <div class="right txtright">
+                    <a href="{{ url_for('my_friends') }}" class="manage-friends-link is-hidden"><i class="fa fa-users"></i> My friends</a>
+                </div>
+            {% endif %}
+
             <a href="{{ url_for('home') }}"><img src="{{ url_for('static', filename='images/logo.png') }}"></a>
         </div>
     </header>
 
-    <nav>
-        <ul class="txtcenter unstyled mbs">
-            <li class="inbl"><a href="{{ url_for('home') }}" class="btn {{ 'active' if request.endpoint == 'home' or request.path.startswith('/players') }}"><i class="fa fa-user"></i> Search for a player</a></li>
-            <li class="inbl"><a href="{{ url_for('servers_list') }}" class="btn {{ 'active' if request.path.startswith('/servers') }}"><i class="fa fa-server"></i> Servers list</a></li>
-        </ul>
-    </nav>
+    {% if not g.UNDER_MAINTENANCE %}
+        <nav>
+            <ul class="txtcenter unstyled mbs">
+                <li class="inbl"><a href="{{ url_for('home') }}" class="btn {{ 'active' if request.endpoint == 'home' or request.path.startswith('/players') }}"><i class="fa fa-user"></i> Search for a player</a></li>
+                <li class="inbl"><a href="{{ url_for('servers_list') }}" class="btn {{ 'active' if request.path.startswith('/servers') }}"><i class="fa fa-server"></i> Servers list</a></li>
+            </ul>
+        </nav>
+    {% endif %}
 
     <div class="page pts pbs">
         <div class="w1140p center">
