@@ -364,22 +364,31 @@ playersChartsFeature = {
         area: false,
         y_extended_ticks: true,
         x_extended_ticks: true,
+        utc_time: true,
+        full_width: true,
         top: 20,
         bottom: 35,
         left: 30,
         right: 15,
         buffer: 0
     },
-    dateFormat: '%Y-%m-%dT%H:%M:%S',
+    convertDates: function(data) {
+        var to_date_object = d3.utcParse('%Y-%m-%dT%H:%M:%S');
+
+        $.each(data, function(key, value) {
+            value.t = to_date_object(value.t);
+        });
+    },
     /**
      * Initialize the Players charts on the Server details page.
      */
     initOnServerDetails: function() {
+        this.convertDates(this.server_players_data);
+
         this.createChart({
             target: '#server-players-chart',
-            width: 360,
             color: '#A4CF17',
-            data: MG.convert.date(this.server_players_data, 't', this.dateFormat)
+            data: this.server_players_data
         });
     },
     /**
@@ -387,23 +396,23 @@ playersChartsFeature = {
      */
     initOnHome: function() {
         // Online players chart
+        this.convertDates(this.online_players_data);
+
         this.createChart({
             target: '#online-players-chart',
-            width: 500,
             color: '#A4CF17',
             legend: ['Online players'],
             legend_target: '#online-players-legend',
-            data: MG.convert.date(this.online_players_data, 't', this.dateFormat)
+            data: this.online_players_data
         });
 
         // Online and active servers
         for (var i = 0; i < this.servers_data.length; i++) {
-            this.servers_data[i] = MG.convert.date(this.servers_data[i], 't', this.dateFormat);
+            this.convertDates(this.servers_data[i]);
         }
 
         this.createChart({
             target: '#servers-chart',
-            width: 500,
             colors: ['#A4CF17', '#44b2f8'],
             legend: ['Online servers', 'Active servers'],
             legend_target: '#servers-chart-legend',
