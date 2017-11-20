@@ -3,9 +3,7 @@ from werkzeug.exceptions import HTTPException
 from flask_sqlalchemy import SQLAlchemy
 from flask_caching import Cache
 from helpers import *
-import logging
 import math
-import sys
 import os
 
 
@@ -47,19 +45,6 @@ app.jinja_env.globals.update(
 
 db = SQLAlchemy(app)
 cache = Cache(app)
-
-# Default Python logger
-logging.basicConfig(
-    format='%(asctime)s - %(levelname)s - %(message)s',
-    datefmt='%d/%m/%Y %H:%M:%S',
-    stream=sys.stdout
-)
-
-logging.getLogger().setLevel(logging.INFO)
-
-# Default Flask loggers
-for handler in app.logger.handlers:
-    handler.setFormatter(logging.Formatter(fmt='%(asctime)s - %(levelname)s - %(message)s', datefmt='%d/%m/%Y %H:%M:%S'))
 
 
 # -----------------------------------------------------------

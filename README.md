@@ -45,7 +45,7 @@ Available configuration parameters are:
 
   - `SECRET_KEY` Set this to a complex random value
   - `DEBUG` Enable/disable debug mode
-  - `LOGGER_HANDLER_POLICY` Policy of the default logging handler
+  - `LOGGING_LEVEL` Set the logging level of the app
 
 More informations on the three above can be found [here](http://flask.pocoo.org/docs/0.12/config/#builtin-configuration-values).
 
