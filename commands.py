@@ -26,6 +26,8 @@ def create_database():
 @app.cli.command()
 def cc():
     """Clear the cache."""
+    app.logger.info('Clearing cache')
+
     cache.clear()
 
     app.logger.info('Done')
@@ -34,9 +36,13 @@ def cc():
 @app.cli.command()
 def get_servers_player_count():
     """Store the number of players on each servers."""
-    app.logger.info('Getting servers list')
-
     scraper = rwr.DataScraper()
+
+    app.logger.info('Clearing servers list cache')
+
+    cache.delete_memoized(rwr.DataScraper.get_servers)
+
+    app.logger.info('Getting servers list')
 
     servers = scraper.get_servers()
 

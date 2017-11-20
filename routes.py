@@ -4,6 +4,9 @@ import models
 import rwr
 
 
+ERROR_PLAYER_NOT_FOUND = 'Sorry, the player "{username}" wasn\'t found. Maybe this player hasn\'t already played on a ranked server yet. If this player started to play today on a ranked server, please wait until tomorrow as stats are refreshed every days.'
+
+
 @app.route('/')
 def home():
     online_players_data = models.ServerPlayerCount.server_players_data()
@@ -46,7 +49,7 @@ def player_stats(username=None):
     player = scraper.search_player(username)
 
     if not player:
-        flash('Sorry, the player "{}" wasn\'t found. Maybe this player hasn\'t already played on a ranked server yet.'.format(username), 'error')
+        flash(ERROR_PLAYER_NOT_FOUND.format(username=username), 'error')
 
         return redirect(url_for('home'))
 
@@ -77,14 +80,14 @@ def players_compare(username, username_to_compare_with=None):
     player = scraper.search_player(username)
 
     if not player:
-        flash('Sorry, the player "{}" wasn\'t found. Maybe this player hasn\'t already played on a ranked server yet.'.format(username), 'error')
+        flash(ERROR_PLAYER_NOT_FOUND.format(username=username), 'error')
 
         return redirect(url_for('home'))
 
     player_to_compare_with = scraper.search_player(username_to_compare_with)
 
     if not player_to_compare_with:
-        flash('Sorry, the player "{}" wasn\'t found. Maybe this player hasn\'t already played on a ranked server yet.'.format(username_to_compare_with), 'error')
+        flash(ERROR_PLAYER_NOT_FOUND.format(username=username_to_compare_with), 'error')
 
         return redirect(url_for('player_stats', username=username))
 

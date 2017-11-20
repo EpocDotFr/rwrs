@@ -184,12 +184,6 @@ a:focus {
     outline: none;
 }
 
-a.disabled {
-    cursor: default;
-    color: #fff;
-    text-decoration: none;
-}
-
 /************************************************************************
  * Buttons */
 

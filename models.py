@@ -8,6 +8,7 @@ import arrow
 class ServerPlayerCount(db.Model):
     class ServerPlayerCountQuery(db.Query):
         def _get_base_count_query(self, count):
+            """Return the base query used to get the count."""
             past = arrow.utcnow().floor('minute').shift(weeks=-2)
 
             query = self.with_entities(ServerPlayerCount.measured_at.label('t'), count)
@@ -15,6 +16,7 @@ class ServerPlayerCount(db.Model):
             return query.filter(ServerPlayerCount.measured_at >= past).group_by('t')
 
         def get_player_count(self, ip=None, port=None):
+            """Return the online players count, optionally filtered by a server's IP and port."""
             query = self._get_base_count_query(func.sum(ServerPlayerCount.count).label('c'))
 
             if ip and port:
@@ -23,6 +25,7 @@ class ServerPlayerCount(db.Model):
             return query.all()
 
         def get_server_count(self, active_only=False):
+            """Return the online servers count, optionally filtered by the active ones only."""
             query = self._get_base_count_query(func.count('*').label('c'))
 
             if active_only:
@@ -60,6 +63,7 @@ class ServerPlayerCount(db.Model):
 
     @staticmethod
     def _transform_data(rows):
+        """Given a list of date => integer, convert the date to a string format."""
         return [{'t': row[0].format('YYYY-MM-DDTHH:mm:ss'), 'c': row[1]} for row in rows]
 
     @staticmethod
