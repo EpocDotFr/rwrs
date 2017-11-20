@@ -1,15 +1,19 @@
 {% extends 'layout.html' %}
 
 {% block jsfiles %}
+    {# TMP #} {% if config['DEBUG'] %}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.11.0/d3.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/metrics-graphics/2.11.0/metricsgraphics.min.js"></script>
+    {% endif %}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/zepto/1.2.0/zepto.min.js"></script>
     <script src="{{ url_for('static', filename='js/app.js') }}"></script>
 {% endblock %}
 
+{# TMP #} {% if config['DEBUG'] %}
 {% block cssfiles %}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/metrics-graphics/2.11.0/metricsgraphics.min.css">
 {% endblock %}
+{% endif %}
 
 {% block content %}
     <div class="home grid mtm mbm txtcenter">
@@ -20,20 +24,24 @@
                     <input type="text" name="username" placeholder="Type a player name" required> <button type="submit"><i class="fa fa-search"></i> Find</button>
                 </form>
             </div>
+            {# TMP #} {% if config['DEBUG'] %}
             <fieldset class="man pan">
                 <legend class="mls">Online players (past 2 weeks)</legend>
                 <p id="online-players-legend" class="small"></p>
                 <div id="online-players-chart" class="chart"></div>
             </fieldset>
+            {% endif %}
         </div>
         <div class="pll">
             <h2><i class="fa fa-server"></i> Looking for a server?</h2>
             <p class="ptm pbm"><a href="{{ url_for('servers_list') }}" class="btn"><i class="fa fa-chevron-right"></i> Go to the servers list</a></p>
+            {# TMP #} {% if config['DEBUG'] %}
             <fieldset class="man pan">
                 <legend class="mls">Online and active servers (past 2 weeks)</legend>
                 <p id="servers-chart-legend" class="small"></p>
                 <div id="servers-chart" class="chart"></div>
             </fieldset>
+            {% endif %}
         </div>
     </div>
 
@@ -41,8 +49,10 @@
         friendsFeature.all_players_with_servers_details = {{ g.all_players_with_servers_details|tojson }};
         friendsFeature.initOnHome();
 
+        {# TMP #} {% if config['DEBUG'] %}
         playersChartsFeature.online_players_data = {{ online_players_data|tojson }};
         playersChartsFeature.servers_data = {{ servers_data|tojson }};
         playersChartsFeature.initOnHome();
+        {% endif %}
     </script>
 {% endblock %}

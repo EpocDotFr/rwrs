@@ -9,14 +9,18 @@ ERROR_PLAYER_NOT_FOUND = 'Sorry, the player "{username}" wasn\'t found. Maybe th
 
 @app.route('/')
 def home():
-    online_players_data = models.ServerPlayerCount.server_players_data()
-    servers_online_data = models.ServerPlayerCount.servers_data()
-    servers_active_data = models.ServerPlayerCount.servers_data(active_only=True)
+    if app.config['DEBUG']:
+        online_players_data = models.ServerPlayerCount.server_players_data()
+        servers_online_data = models.ServerPlayerCount.servers_data()
+        servers_active_data = models.ServerPlayerCount.servers_data(active_only=True)
 
-    servers_data = [
-        servers_online_data,
-        servers_active_data
-    ]
+        servers_data = [
+            servers_online_data,
+            servers_active_data
+        ]
+    else:
+        online_players_data = None
+        servers_data = None
 
     return render_template(
         'home.html',
@@ -143,7 +147,10 @@ def server_details(ip_and_port):
 
         return redirect(url_for('servers_list'))
 
-    server_players_data = models.ServerPlayerCount.server_players_data(ip, port)
+    if app.config['DEBUG']:
+        server_players_data = models.ServerPlayerCount.server_players_data(ip, port)
+    else:
+        server_players_data = None
 
     return render_template(
         'server_details.html',
