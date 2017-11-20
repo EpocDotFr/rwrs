@@ -1,11 +1,11 @@
 from flask import Flask, render_template, make_response, request, g, abort
+from logging.handlers import RotatingFileHandler
 from werkzeug.exceptions import HTTPException
 from flask_sqlalchemy import SQLAlchemy
 from flask_caching import Cache
 from helpers import *
 import logging
 import math
-import sys
 import os
 
 
@@ -16,6 +16,7 @@ import os
 app = Flask(__name__, static_url_path='')
 app.config.from_pyfile('config.py')
 
+app.config['LOGGER_HANDLER_POLICY'] = 'production'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///storage/data/db.sqlite'
 app.config['SQLALCHEMY_BINDS'] = {
     'servers_player_count': 'sqlite:///storage/data/servers_player_count.sqlite'
@@ -48,18 +49,12 @@ app.jinja_env.globals.update(
 db = SQLAlchemy(app)
 cache = Cache(app)
 
-# Default Python logger
-logging.basicConfig(
-    format='%(asctime)s - %(levelname)s - %(message)s',
-    datefmt='%d/%m/%Y %H:%M:%S',
-    stream=sys.stdout
-)
-
-logging.getLogger().setLevel(logging.INFO)
-
-# Default Flask loggers
-for handler in app.logger.handlers:
-    handler.setFormatter(logging.Formatter(fmt='%(asctime)s - %(levelname)s - %(message)s', datefmt='%d/%m/%Y %H:%M:%S'))
+# Define the logger
+handler = RotatingFileHandler('storage/logs/errors.log', maxBytes=25000, backupCount=2)
+handler.setLevel(logging.WARNING)
+formatter = logging.Formatter(fmt='%(asctime)s - %(levelname)s - %(message)s', datefmt='%d/%m/%Y %H:%M:%S')
+handler.setFormatter(formatter)
+app.logger.addHandler(handler)
 
 
 # -----------------------------------------------------------
