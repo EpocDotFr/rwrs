@@ -1,4 +1,4 @@
-from flask import Flask, render_template, make_response, request, g
+from flask import Flask, render_template, make_response, request, g, abort
 from werkzeug.exceptions import HTTPException
 from flask_sqlalchemy import SQLAlchemy
 from flask_caching import Cache
