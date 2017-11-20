@@ -38,10 +38,6 @@ def get_servers_player_count():
     """Store the number of players on each servers."""
     scraper = rwr.DataScraper()
 
-    app.logger.info('Clearing servers list cache')
-
-    cache.delete_memoized(rwr.DataScraper.get_servers)
-
     app.logger.info('Getting servers list')
 
     servers = scraper.get_servers()
@@ -59,6 +55,12 @@ def get_servers_player_count():
     app.logger.info('Persisting to database')
 
     db.session.commit()
+
+    app.logger.info('Clearing  cache')
+
+    cache.delete_memoized(rwr.DataScraper.get_servers)
+    cache.delete_memoized(models.ServerPlayerCount.server_players_data)
+    cache.delete_memoized(models.ServerPlayerCount.servers_data)
 
     app.logger.info('Done')
 
