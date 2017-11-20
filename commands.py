@@ -8,29 +8,29 @@ import rwr
 def create_database():
     """Delete then create all the database tables."""
     if not click.confirm('Are you sure?'):
-        app.logger.info('Aborted')
+        click.secho('Aborted', fg='red')
 
         return
 
-    app.logger.info('Dropping everything')
+    click.echo('Dropping everything')
 
     db.drop_all()
 
-    app.logger.info('Creating tables')
+    click.echo('Creating tables')
 
     db.create_all()
 
-    app.logger.info('Done')
+    click.secho('Done', fg='green')
 
 
 @app.cli.command()
 def cc():
     """Clear the cache."""
-    app.logger.info('Clearing cache')
+    click.echo('Clearing cache')
 
     cache.clear()
 
-    app.logger.info('Done')
+    click.secho('Done', fg='green')
 
 
 @app.cli.command()
@@ -38,18 +38,18 @@ def get_servers_player_count():
     """Store the number of players on each servers."""
     scraper = rwr.DataScraper()
 
-    app.logger.info('Clearing  cache')
+    click.echo('Clearing  cache')
 
     cache.delete_memoized(rwr.DataScraper.get_servers)
     cache.delete_memoized(models.ServerPlayerCount.server_players_data)
     cache.delete_memoized(models.ServerPlayerCount.servers_data)
 
-    app.logger.info('Getting servers list')
+    click.echo('Getting servers list')
 
     servers = scraper.get_servers()
 
     for server in servers:
-        app.logger.info('  {} ({}, {})'.format(server.name, server.players.current, server.ip_and_port))
+        click.echo('  {} ({}, {})'.format(server.name, server.players.current, server.ip_and_port))
 
         server_player_count = models.ServerPlayerCount()
         server_player_count.ip = server.ip
@@ -58,28 +58,28 @@ def get_servers_player_count():
 
         db.session.add(server_player_count)
 
-    app.logger.info('Persisting to database')
+    click.echo('Persisting to database')
 
     db.session.commit()
 
-    app.logger.info('Done')
+    click.secho('Done', fg='green')
 
 
 @app.cli.command()
 def clean_servers_player_count():
     """Delete old servers player count."""
-    app.logger.info('Deleting old data')
+    click.echo('Deleting old data')
 
     old_entries = models.ServerPlayerCount.query.get_old_entries()
 
     for old_entry in old_entries:
         db.session.delete(old_entry)
 
-    app.logger.info('Persisting to database')
+    click.echo('Persisting to database')
 
     db.session.commit()
 
-    app.logger.info('Done')
+    click.secho('Done', fg='green')
 
 
 @app.cli.command()
@@ -92,12 +92,12 @@ def extract_ranks_images(gamedir):
         click.echo(extract_ranks_images.get_help(context))
         context.exit()
 
-    app.logger.info('Extraction started')
+    click.echo('Extraction started')
 
     extractor = rwr.RanksImageExtractor(gamedir, app.config['RANKS_IMAGES_DIR'])
     extractor.extract()
 
-    app.logger.info('Done')
+    click.secho('Done', fg='green')
 
 
 @app.cli.command()
@@ -110,9 +110,9 @@ def extract_minimaps(gamedir):
         click.echo(extract_minimaps.get_help(context))
         context.exit()
 
-    app.logger.info('Extraction started')
+    click.echo('Extraction started')
 
     extractor = rwr.MinimapsImageExtractor(gamedir, app.config['MINIMAPS_IMAGES_DIR'])
     extractor.extract()
 
-    app.logger.info('Done')
+    click.secho('Done', fg='green')
