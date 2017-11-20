@@ -3,7 +3,6 @@ from collections import OrderedDict
 from geolite2 import geolite2
 from lxml import html, etree
 from rwrs import app, cache
-from PIL import Image
 from glob import glob
 import requests
 import math
@@ -310,6 +309,8 @@ class MinimapsImageExtractor:
 
     def extract(self):
         """Actually run the extract process."""
+        from PIL import Image
+
         minimaps_paths = glob(os.path.join(self.packages_dir, '*', 'maps', '*', 'map.png'))
 
         for minimap_path in minimaps_paths:
@@ -344,6 +345,8 @@ class RanksImageExtractor:
 
     def extract(self):
         """Actually run the extract process."""
+        from PIL import Image
+
         ranks_paths = glob(os.path.join(self.textures_dir, 'hud_rank*.png'))
 
         for rank_path in ranks_paths:
