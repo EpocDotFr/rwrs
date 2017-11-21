@@ -61,7 +61,7 @@
                 </tr>
                 <tr>
                     <th>Message</th>
-                    <td colspan="4">{{ server.comment }}</td>
+                    <td colspan="4">{{ server.comment if server.comment else 'N/A' }}</td>
                 </td>
             </table>
 

@@ -15,7 +15,7 @@
     <div class="home grid mtm mbm txtcenter">
         <div class="prl">
             <h2><i class="fa fa-user"></i> Searching for a player?</h2>
-            <div class="ptm pbm">
+            <div class="pbm">
                 <form method="get" action="{{ url_for('player_stats') }}">
                     <input type="text" name="username" placeholder="Type a player name" required> <button type="submit"><i class="fa fa-search"></i> Find</button>
                 </form>
@@ -28,7 +28,7 @@
         </div>
         <div class="pll">
             <h2><i class="fa fa-server"></i> Looking for a server?</h2>
-            <p class="ptm pbm"><a href="{{ url_for('servers_list') }}" class="btn"><i class="fa fa-chevron-right"></i> Go to the servers list</a></p>
+            <p class="mtn pbm"><a href="{{ url_for('servers_list') }}" class="btn"><i class="fa fa-chevron-right"></i> Go to the servers list</a></p>
             <fieldset class="man pan">
                 <legend class="mls">Online and active servers (past 2 weeks)</legend>
                 <p id="servers-chart-legend" class="small"></p>
