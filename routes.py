@@ -143,7 +143,7 @@ def server_details(ip_and_port):
 
         return redirect(url_for('servers_list'))
 
-    server_players_data = models.ServerPlayerCount.server_players_data(ip, port)
+    server_players_data = models.ServerPlayerCount.server_players_data(ip, port) if server.is_dedicated else None
 
     return render_template(
         'server_details.html',

@@ -7,8 +7,11 @@
 {% block meta_title %}Servers › {% if server.is_ranked %}★ {% endif %}{{ server.name }}{% endblock %}
 
 {% block jsfiles %}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.11.0/d3.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/metrics-graphics/2.11.0/metricsgraphics.min.js"></script>
+    {% if server.is_dedicated %}
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.11.0/d3.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/metrics-graphics/2.11.0/metricsgraphics.min.js"></script>
+    {% endif %}
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/zepto/1.2.0/zepto.min.js"></script>
     <script src="{{ url_for('static', filename='js/app.js') }}"></script>
 {% endblock %}
@@ -119,16 +122,18 @@
                 {% endif %}
             </table>
 
-            <table class="mbn">
-                <tr>
-                    <th class="txtcenter">Players count (past 2 weeks)</th>
-                </tr>
-                <tr>
-                    <td class="txtcenter pan">
-                        <div id="server-players-chart" class="chart"></div>
-                    </td>
-                </tr>
-            </table>
+            {% if server.is_dedicated %}
+                <table class="mbn">
+                    <tr>
+                        <th class="txtcenter">Players count (past 2 weeks)</th>
+                    </tr>
+                    <tr>
+                        <td class="txtcenter pan">
+                            <div id="server-players-chart" class="chart"></div>
+                        </td>
+                    </tr>
+                </table>
+            {% endif %}
         </div>
     </div>
 
@@ -137,7 +142,9 @@
         friendsFeature.server_ip_and_port = '{{ server.ip_and_port }}';
         friendsFeature.initOnServerDetails();
 
-        playersChartsFeature.server_players_data = {{ server_players_data|tojson }};
-        playersChartsFeature.initOnServerDetails();
+        {% if server.is_dedicated %}
+            playersChartsFeature.server_players_data = {{ server_players_data|tojson }};
+            playersChartsFeature.initOnServerDetails();
+        {% endif %}
     </script>
 {% endblock %}

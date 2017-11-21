@@ -49,6 +49,9 @@ def get_servers_player_count():
     servers = scraper.get_servers()
 
     for server in servers:
+        if not server.is_dedicated:
+            continue
+
         click.echo('  {} ({}, {})'.format(server.name, server.players.current, server.ip_and_port))
 
         server_player_count = models.ServerPlayerCount()
