@@ -3,7 +3,6 @@ from logging.handlers import RotatingFileHandler
 from werkzeug.exceptions import HTTPException
 from flask_sqlalchemy import SQLAlchemy
 from flask_caching import Cache
-from helpers import *
 import logging
 import math
 import os
@@ -31,6 +30,17 @@ app.config['MY_USERNAME'] = 'epocdotfr'
 app.config['CONTRIBUTORS'] = ['street veteran', 'mastock']
 app.config['DEVS'] = ['jackmayol', 'pasik', 'pasik2', 'tremozl', 'the soldier'] # ahnold
 
+db = SQLAlchemy(app)
+cache = Cache(app)
+
+handler = RotatingFileHandler('storage/logs/errors.log', maxBytes=25000, backupCount=2)
+handler.setLevel(logging.WARNING)
+formatter = logging.Formatter(fmt='%(asctime)s - %(levelname)s - %(message)s', datefmt='%d/%m/%Y %H:%M:%S')
+handler.setFormatter(formatter)
+app.logger.addHandler(handler)
+
+from helpers import *
+
 app.jinja_env.filters.update(
     humanize_seconds=humanize_seconds,
     humanize_integer=humanize_integer
@@ -45,16 +55,6 @@ app.jinja_env.globals.update(
     fabs=math.fabs,
     isinstance=isinstance
 )
-
-db = SQLAlchemy(app)
-cache = Cache(app)
-
-# Define the logger
-handler = RotatingFileHandler('storage/logs/errors.log', maxBytes=25000, backupCount=2)
-handler.setLevel(logging.WARNING)
-formatter = logging.Formatter(fmt='%(asctime)s - %(levelname)s - %(message)s', datefmt='%d/%m/%Y %H:%M:%S')
-handler.setFormatter(formatter)
-app.logger.addHandler(handler)
 
 
 # -----------------------------------------------------------
