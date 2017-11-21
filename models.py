@@ -53,8 +53,7 @@ class ServerPlayerCount(db.Model):
 
     @property
     def ip(self):
-        if self._ip:
-            return long2ip(self._ip)
+        return long2ip(self._ip) if self._ip else None
 
     @ip.setter
     def ip(self, value):
