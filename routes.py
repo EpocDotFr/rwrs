@@ -1,6 +1,6 @@
 from flask import render_template, abort, request, redirect, url_for, flash
 from rwrs import app
-import models
+from models import *
 import rwr
 
 
@@ -9,9 +9,9 @@ ERROR_PLAYER_NOT_FOUND = 'Sorry, the player "{username}" wasn\'t found. Maybe th
 
 @app.route('/')
 def home():
-    online_players_data = models.ServerPlayerCount.server_players_data()
-    servers_online_data = models.ServerPlayerCount.servers_data()
-    servers_active_data = models.ServerPlayerCount.servers_data(active_only=True)
+    online_players_data = ServerPlayerCount.server_players_data()
+    servers_online_data = ServerPlayerCount.servers_data()
+    servers_active_data = ServerPlayerCount.servers_data(active_only=True)
 
     servers_data = [
         servers_online_data,
@@ -143,7 +143,7 @@ def server_details(ip_and_port):
 
         return redirect(url_for('servers_list'))
 
-    server_players_data = models.ServerPlayerCount.server_players_data(ip, port) if server.is_dedicated else None
+    server_players_data = ServerPlayerCount.server_players_data(ip, port) if server.is_dedicated else None
 
     return render_template(
         'server_details.html',

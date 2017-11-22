@@ -4,6 +4,10 @@ from rwrs import db, cache, app
 from helpers import *
 import arrow
 
+__all__ = [
+    'ServerPlayerCount'
+]
+
 
 class ServerPlayerCount(db.Model):
     class ServerPlayerCountQuery(db.Query):

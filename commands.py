@@ -1,5 +1,5 @@
 from rwrs import app, db, cache
-import models
+from models import *
 import click
 import rwr
 
@@ -41,8 +41,8 @@ def get_servers_player_count():
     click.echo('Clearing  cache')
 
     cache.delete_memoized(rwr.DataScraper.get_servers)
-    cache.delete_memoized(models.ServerPlayerCount.server_players_data)
-    cache.delete_memoized(models.ServerPlayerCount.servers_data)
+    cache.delete_memoized(ServerPlayerCount.server_players_data)
+    cache.delete_memoized(ServerPlayerCount.servers_data)
 
     click.echo('Getting servers list')
 
@@ -51,7 +51,7 @@ def get_servers_player_count():
     for server in servers:
         click.echo('  {} ({}, {})'.format(server.name, server.players.current, server.ip_and_port))
 
-        server_player_count = models.ServerPlayerCount()
+        server_player_count = ServerPlayerCount()
         server_player_count.ip = server.ip
         server_player_count.port = server.port
         server_player_count.count = server.players.current
@@ -70,7 +70,7 @@ def clean_servers_player_count():
     """Delete old servers player count."""
     click.echo('Deleting old data')
 
-    old_entries = models.ServerPlayerCount.query.get_old_entries()
+    old_entries = ServerPlayerCount.query.get_old_entries()
 
     for old_entry in old_entries:
         db.session.delete(old_entry)
