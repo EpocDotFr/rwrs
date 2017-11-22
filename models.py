@@ -15,27 +15,27 @@ class ServerPlayerCount(db.Model):
             """Return the base query used to get the count."""
             past = arrow.utcnow().floor('minute').shift(weeks=-2)
 
-            query = self.with_entities(ServerPlayerCount.measured_at.label('t'), count)
+            q = self.with_entities(ServerPlayerCount.measured_at.label('t'), count)
 
-            return query.filter(ServerPlayerCount.measured_at >= past).group_by('t')
+            return q.filter(ServerPlayerCount.measured_at >= past).group_by('t')
 
         def get_player_count(self, ip=None, port=None):
             """Return the online players count, optionally filtered by a server's IP and port."""
-            query = self._get_base_count_query(func.sum(ServerPlayerCount.count).label('c'))
+            q = self._get_base_count_query(func.sum(ServerPlayerCount.count).label('c'))
 
             if ip and port:
-                query = query.filter(ServerPlayerCount._ip == ip, ServerPlayerCount.port == port)
+                q = q.filter(ServerPlayerCount._ip == ip, ServerPlayerCount.port == port)
 
-            return query.all()
+            return q.all()
 
         def get_server_count(self, active_only=False):
             """Return the online servers count, optionally filtered by the active ones only."""
-            query = self._get_base_count_query(func.count('*').label('c'))
+            q = self._get_base_count_query(func.count('*').label('c'))
 
             if active_only:
-                query = query.filter(ServerPlayerCount.count > 0)
+                q = q.filter(ServerPlayerCount.count > 0)
 
-            return query.all()
+            return q.all()
 
         def get_old_entries(self):
             """Return entries older than 2 weeks (exclusive)."""
