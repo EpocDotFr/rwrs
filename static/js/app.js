@@ -362,7 +362,6 @@ playersChartsFeature = {
         x_accessor: 't',
         y_accessor: 'c',
         area: false,
-        interpolate: d3.curveCatmullRom.alpha(1),
         min_y: 0,
         y_extended_ticks: true,
         x_extended_ticks: true,
@@ -371,7 +370,7 @@ playersChartsFeature = {
         top: 20,
         bottom: 35,
         left: 30,
-        right: 15,
+        right: 20,
         buffer: 0
     },
     convertDates: function(data) {
