@@ -13,7 +13,7 @@ class ServerPlayerCount(db.Model):
     class ServerPlayerCountQuery(db.Query):
         def _get_base_count_query(self, count):
             """Return the base query used to get the count."""
-            past = arrow.utcnow().floor('minute').shift(weeks=-2)
+            past = arrow.utcnow().floor('minute').shift(weeks=-1)
 
             q = self.with_entities(ServerPlayerCount.measured_at.label('t'), count)
 
@@ -38,8 +38,8 @@ class ServerPlayerCount(db.Model):
             return q.all()
 
         def get_old_entries(self):
-            """Return entries older than 2 weeks (exclusive)."""
-            past = arrow.utcnow().floor('minute').shift(weeks=-2)
+            """Return entries older than 1 weeks (exclusive)."""
+            past = arrow.utcnow().floor('minute').shift(weeks=-1)
 
             return self.filter(ServerPlayerCount.measured_at < past).all()
 
