@@ -1,5 +1,6 @@
 config.py
 storage/logs/*.log
+storage/logs/*.log.*
 storage/data/*.sqlite
 storage/cache
 maintenance
