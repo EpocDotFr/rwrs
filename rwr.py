@@ -383,7 +383,7 @@ class DataScraper:
             'User-Agent': 'RWRS'
         }
 
-        response = requests.get(url, params=params, headers=headers)
+        response = requests.get(url, params=params, headers=headers, timeout=2)
 
         response.raise_for_status()
 
