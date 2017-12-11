@@ -369,8 +369,8 @@ playersChartsFeature = {
         full_width: true,
         top: 20,
         bottom: 35,
-        left: 30,
-        right: 20,
+        left: 35,
+        right: 25,
         buffer: 0
     },
     convertDates: function(data) {

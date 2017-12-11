@@ -216,7 +216,7 @@ UNLOCKABLES = OrderedDict([
 
 SERVER_MODES = {
     'COOP': {'short': 'Coop.', 'long': 'Cooperation'},
-    'DOM': {'short': 'Dom.', 'long': 'Domination'},
+    'DOM': {'short': 'Dom.', 'long': 'Dominance'},
     'PvP': {'short': 'PvP', 'long': 'PvP'},
     'PvE': {'short': 'PvE', 'long': 'PvE'},
     'PvPvE': {'short': 'PvPvE', 'long': 'PvPvE'}
