@@ -1,7 +1,7 @@
 # RWRS (Running With Rifles Stats)
 
-Players statistics for the official [Running With Rifles](http://www.runningwithrifles.com/wp/) (RWR) invasion servers,
-and more. Available at [rwrstats.com](https://rwrstats.com/).
+Players statistics, servers list and more for the [Running With Rifles](http://www.runningwithrifles.com/wp/) (RWR) game.
+Available at [rwrstats.com](https://rwrstats.com/).
 
 ## Features
 
