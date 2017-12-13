@@ -33,9 +33,12 @@ friendsFeature = {
      * Initialize the Friends feature in the header of all pages.
      */
     initInHeader: function() {
+        var $total_playing_players = $('.total-playing-friends');
         var friends = this.getFriends();
 
         if (friends.length == 0) {
+            $total_playing_players.addClass('is-hidden');
+
             return;
         }
 
@@ -50,10 +53,10 @@ friendsFeature = {
         });
 
         if (playing_friends == 0) {
+            $total_playing_players.addClass('is-hidden');
+
             return;
         }
-
-        var $total_playing_players = $('.total-playing-friends');
 
         $total_playing_players.children('strong').text(playing_friends);
         $total_playing_players.children('.friend-label').text(playing_friends > 1 ? 'friends' : 'friend');
