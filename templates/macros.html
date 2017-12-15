@@ -125,14 +125,21 @@
     {% endif %}
 {%- endmacro %}
 
-{% macro options(name, entries, where=request.args) -%}
+{% macro options(name, entries, where=request.args, depth=0) -%}
+    {% set spacing = '&nbsp;&nbsp;&nbsp;&nbsp;'|safe * depth if depth > 0 else '' %}
+
     {% for entry in entries %}
         {% if not entry.type or entry.type == 'option' %}
-            <option value="{{ entry.value }}" {% if where.get(name) == entry.value %}selected{% endif %}>{{ entry.label }}</option>
+            <option value="{{ entry.value }}" {% if where.get(name) == entry.value %}selected{% endif %}>{{ spacing }}{{ entry.label }}</option>
         {% elif entry.type == 'group' %}
-            <optgroup label="{{ entry.label }}">
-                {{ options(name, entry.entries, where=where) }}
-            </optgroup>
+            {% if not entry.value %}
+                <optgroup label="{{ entry.label }}">
+                    {{ options(name, entry.entries, where=where) }}
+                </optgroup>
+            {% else %}
+                <option value="{{ entry.value }}" {% if where.get(name) == entry.value %}selected{% endif %}>{{ spacing }}{{ entry.label }}</option>
+                {{ options(name, entry.entries, where=where, depth=depth + 1) }}
+            {% endif %}
         {% endif %}
     {% endfor %}
 {%- endmacro %}

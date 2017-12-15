@@ -461,6 +461,7 @@ class DataScraper:
             group = {
                 'type': 'group',
                 'label': continent['name'],
+                'value': continent_code,
                 'entries': []
             }
 
@@ -515,7 +516,7 @@ class DataScraper:
 
         ret = []
 
-        for type_id, game_type in maps.items():
+        for game_type in maps.values():
             group = {
                 'type': 'group',
                 'label': game_type['name'],
