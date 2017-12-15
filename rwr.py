@@ -439,10 +439,42 @@ class DataScraper:
 
     def get_all_servers_locations(self):
         """Return the location of all the servers."""
-        return self._get_list(
-            lambda server: server.location.country_code,
-            lambda server: server.location.country_name
-        )
+        servers = self.get_servers()
+        locations = {}
+
+        for server in servers:
+            if not server.location.country_code:
+                continue
+
+            if server.location.continent_code not in locations:
+                locations[server.location.continent_code] = {
+                    'name': server.location.continent_name,
+                    'countries': {}
+                }
+
+            if server.location.country_code not in locations[server.location.continent_code]['countries']:
+                locations[server.location.continent_code]['countries'][server.location.country_code] = server.location.country_name
+
+        ret = []
+
+        for continent_code, continent in locations.items():
+            group = {
+                'type': 'group',
+                'label': continent['name'],
+                'entries': []
+            }
+
+            for country_code, country_name in continent['countries'].items():
+                group['entries'].append({
+                    'value': country_code,
+                    'label': country_name
+                })
+
+            group['entries'] = sorted(group['entries'], key=lambda k: k['label'])
+
+            ret.append(group)
+
+        return sorted(ret, key=lambda k: k['label'])
 
     def get_all_servers_types(self):
         """Return the type of all of the servers."""
@@ -460,41 +492,47 @@ class DataScraper:
 
     def get_all_servers_maps(self):
         """Return the map of all of the servers."""
-        entries = self._get_list(
-            lambda server: server.map.id,
-            lambda server: server.map.name if server.map.name else server.map.id
-        )
+        servers = self.get_servers()
+        maps = {}
 
-        ret = []
-        vanilla_group = {
-            'type': 'group',
-            'label': SERVER_TYPES['vanilla'],
-            'entries': []
-        }
+        for server in servers:
+            if not server.map.id:
+                continue
 
-        for server_type_id, server_type_name in SERVER_TYPES.items():
-            if server_type_id.startswith('vanilla'):
-                group = vanilla_group
+            if server.type.startswith('vanilla'):
+                server_type = 'vanilla'
             else:
-                group = {
-                    'type': 'group',
-                    'label': server_type_name,
-                    'entries': []
+                server_type = server.type
+
+            if server_type not in maps:
+                maps[server_type] = {
+                    'name': server.type_name,
+                    'maps': {}
                 }
 
-            for entry in entries:
-                if entry['value'] in MAPS[server_type_id]:
-                    group['entries'].append(entry)
+            if server.map.id not in maps[server_type]['maps']:
+                maps[server_type]['maps'][server.map.id] = server.map.name if server.map.name else server.map.id
 
-            if not server_type_id.startswith('vanilla') and group['entries']:
-                ret.append(group)
+        ret = []
 
-        if vanilla_group['entries']:
-            vanilla_group['entries'] = sorted(vanilla_group['entries'], key=lambda k: k['label'])
+        for type_id, game_type in maps.items():
+            group = {
+                'type': 'group',
+                'label': game_type['name'],
+                'entries': []
+            }
 
-            ret.insert(0, vanilla_group)
+            for map_id, map_name in game_type['maps'].items():
+                group['entries'].append({
+                    'value': map_id,
+                    'label': map_name
+                })
 
-        return ret
+            group['entries'] = sorted(group['entries'], key=lambda k: k['label'])
+
+            ret.append(group)
+
+        return sorted(ret, key=lambda k: k['label'])
 
     def filter_servers(self, **filters):
         """Filter servers corresponding to the given criteria."""
@@ -696,6 +734,8 @@ class Server:
             if location:
                 ret.location.country_code = location['country']['iso_code'].lower()
                 ret.location.country_name = location['country']['names']['en']
+                ret.location.continent_code = location['continent']['code'].lower()
+                ret.location.continent_name = location['continent']['names']['en']
 
         ret.steam_join_link = 'steam://rungameid/270150//server_address={ip} server_port={port}'.format(ip=ret.ip, port=ret.port)
 
