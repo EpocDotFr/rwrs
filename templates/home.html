@@ -14,10 +14,10 @@
 {% block content %}
     <div class="home grid mtm mbm txtcenter">
         <div class="prl">
-            <h2><i class="fa fa-user"></i> Searching for a player?</h2>
+            <h2><i class="fa fa-user"></i> Looking for a player?</h2>
             <div class="pbm">
                 <form method="get" action="{{ url_for('player_stats') }}">
-                    <input type="text" name="username" placeholder="Type a player name" required> <button type="submit"><i class="fa fa-search"></i> Find</button>
+                    <a href="{{ url_for('players_list') }}" class="btn"><i class="fa fa-chevron-right"></i> Go to the players list</a> or <input type="text" name="username" placeholder="Type a player name" required> <button type="submit"><i class="fa fa-search"></i> Find</button>
                 </form>
             </div>
             <fieldset class="man pan">

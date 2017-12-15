@@ -33,6 +33,11 @@ def my_friends():
 
 
 @app.route('/players')
+def players_list():
+    return render_template('players_list.html')
+
+
+@app.route('/players')
 @app.route('/players/<username>')
 def player_stats(username=None):
     if not username:
