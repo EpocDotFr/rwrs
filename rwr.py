@@ -789,6 +789,7 @@ class Player:
         """Load a player data from an HTML <tr> node."""
         ret = cls()
 
+        position_cell = node[0]
         username_cell = node[1]
         kills_cell = node[2]
         deaths_cell = node[3]
@@ -806,6 +807,7 @@ class Player:
         xp_cell = node[15]
         rank_image_cell = node[17]
 
+        ret.position = int(position_cell.text)
         ret.username = username_cell.text
         ret.kills = int(kills_cell.text)
         ret.deaths = int(deaths_cell.text)

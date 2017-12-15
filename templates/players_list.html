@@ -12,7 +12,7 @@
 {% endblock %}
 
 {% block content %}
-    <table class="{{ 'striped clickable' if players else '' }} mbn players-list">
+    <table class="{{ 'striped' if players else '' }} mbn players-list">
         <thead>
             <tr>
                 <th>#</th>
@@ -37,22 +37,22 @@
         <tbody>
             {% for player in players %}
                 <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td>{{ player.position|humanize_integer }}</td>
+                    <td><img src="{{ url_for('static', filename='images/ranks/{rank_id}_icon.png'.format(rank_id=player.rank.id)) }}" title="{{ player.rank.name }}"> {{ macros.player_name(player, link=True) }}</td>
+                    <td>{{ player.xp|humanize_integer }}</td>
+                    <td>{{ player.kills|humanize_integer }}</td>
+                    <td>{{ player.deaths|humanize_integer }}</td>
+                    <td><span class="{{ 'txtred' if player.kd_ratio < 1 else 'txtgreen' }}">{{ player.kd_ratio }}</span></td>
+                    <td><span class="{{ 'txtred' if player.score < 0 else 'txtgreen' }}">{{ player.score|humanize_integer }}</span></td>
+                    <td>{{ player.time_played|humanize_seconds }}</td>
+                    <td>{{ player.longest_kill_streak|humanize_integer }}</td>
+                    <td>{{ player.targets_destroyed|humanize_integer }}</td>
+                    <td>{{ player.distance_moved }}km</td>
+                    <td>{{ player.vehicles_destroyed|humanize_integer }}</td>
+                    <td>{{ player.soldiers_healed|humanize_integer }}</td>
+                    <td>{{ player.teamkills|humanize_integer }}</td>
+                    <td>{{ player.shots_fired|humanize_integer }}</td>
+                    <td>{{ player.throwables_thrown|humanize_integer }}</td>
                     <td></td>
                 </tr>
             {% else %}
