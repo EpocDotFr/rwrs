@@ -375,7 +375,7 @@ class DataScraper:
     servers_endpoint = 'http://rwr.runningwithrifles.com/rwr_server_list/'
     players_endpoint = 'http://rwr.runningwithrifles.com/rwr_stats/'
 
-    def _call(self, endpoint, resource, type, params=None):
+    def _call(self, endpoint, resource, parser, params=None):
         """Perform an HTTP GET request to the desired RWR list endpoint."""
         url = endpoint + resource
 
@@ -387,12 +387,12 @@ class DataScraper:
 
         response.raise_for_status()
 
-        if type == 'html':
+        if parser == 'html':
             return html.fromstring(response.text)
-        elif type == 'xml':
+        elif parser == 'xml':
             return etree.fromstring(response.text)
         else:
-            raise ValueError('Invalid type parameter')
+            raise ValueError('Invalid parser')
 
     @cache.memoize(timeout=app.config['SERVERS_CACHE_TIMEOUT'])
     def get_servers(self):
@@ -640,11 +640,12 @@ class DataScraper:
         return ret
 
     @cache.memoize(timeout=app.config['PLAYERS_CACHE_TIMEOUT'])
-    def get_players(self, start=0, sort=PlayersSort.SCORE):
+    def get_players(self, sort=PlayersSort.SCORE, start=0, size=25):
         """Get and parse a list of RWR players."""
         params = {
+            'sort': sort,
             'start': start,
-            'sort': sort
+            'size': size
         }
 
         html_content = self._call(self.players_endpoint, 'view_players.php', 'html', params=params)
