@@ -460,14 +460,14 @@ class DataScraper:
         for continent_code, continent in locations.items():
             group = {
                 'type': 'group',
+                'value': 'continent:' + continent_code,
                 'label': continent['name'],
-                'value': continent_code,
                 'entries': []
             }
 
             for country_code, country_name in continent['countries'].items():
                 group['entries'].append({
-                    'value': country_code,
+                    'value': 'country:' + country_code,
                     'label': country_name
                 })
 
@@ -547,8 +547,19 @@ class DataScraper:
             not_empty = filters.get('not_empty')
             not_full = filters.get('not_full')
 
-            if location != 'any' and location != server.location.country_code:
-                return False
+            if location != 'any':
+                if ':' in location:
+                    location_type, location_code = location.split(':', maxsplit=1)
+                else:
+                    location_type = 'country'
+                    location_code = location
+
+                if location_type == 'continent':
+                    if location_code != server.location.continent_code:
+                        return False
+                elif location_type == 'country':
+                    if location_code != server.location.country_code:
+                        return False
 
             if map != 'any' and map != server.map.id:
                 return False
