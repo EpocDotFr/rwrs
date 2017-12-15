@@ -270,9 +270,19 @@ friendsFeature = {
         });
     },
     /**
-     * Initialize the Friends feature on the Player stats page.
+     * Initialize the Friends feature on the Players list page.
      */
-    initOnPlayerStats: function() {
+    initOnPlayersList: function() {
+        if (!this.init()) {
+            return;
+        }
+
+        // TODO
+    },
+    /**
+     * Initialize the Friends feature on the Player details page.
+     */
+    initOnPlayerDetails: function() {
         if (!this.init()) {
             return;
         }

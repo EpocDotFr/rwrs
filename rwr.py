@@ -640,12 +640,12 @@ class DataScraper:
         return ret
 
     @cache.memoize(timeout=app.config['PLAYERS_CACHE_TIMEOUT'])
-    def get_players(self, sort=PlayersSort.SCORE, start=0, size=25):
+    def get_players(self, sort=PlayersSort.SCORE, start=0, limit=25):
         """Get and parse a list of RWR players."""
         params = {
             'sort': sort,
             'start': start,
-            'size': size
+            'size': limit
         }
 
         html_content = self._call(self.players_endpoint, 'view_players.php', 'html', params=params)

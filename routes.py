@@ -34,21 +34,30 @@ def my_friends():
 
 @app.route('/players')
 def players_list():
-    return render_template('players_list.html')
-
-
-@app.route('/players')
-@app.route('/players/<username>')
-def player_stats(username=None):
-    if not username:
+    if 'username' in request.args:
         username = request.args.get('username').strip()
 
         # Redirect to a SEO-friendly URL if the username query parameter is detected
-        return redirect(url_for('player_stats', username=username), code=301)
+        return redirect(url_for('player_details', username=username), code=301)
 
-    if not username:
-        abort(404)
+    params = request.args.to_dict()
 
+    scraper = rwr.DataScraper()
+
+    players = scraper.get_players(
+        sort=params['sort'] if 'sort' in params else rwr.PlayersSort.SCORE,
+        start=params['start'] if 'start' in params else 0,
+        limit=params['limit'] if 'limit' in params else 25
+    )
+
+    return render_template(
+        'players_list.html',
+        players=players
+    )
+
+
+@app.route('/players/<username>')
+def player_details(username):
     scraper = rwr.DataScraper()
 
     player = scraper.search_player(username)
@@ -63,7 +72,7 @@ def player_stats(username=None):
     player.set_playing_on_server(servers)
 
     return render_template(
-        'player_stats.html',
+        'player_details.html',
         player=player
     )
 
@@ -71,7 +80,7 @@ def player_stats(username=None):
 @app.route('/players/<username>/compare')
 @app.route('/players/<username>/compare/<username_to_compare_with>')
 def players_compare(username, username_to_compare_with=None):
-    if not username_to_compare_with:
+    if not username_to_compare_with and 'username_to_compare_with' in request.args:
         username_to_compare_with = request.args.get('username_to_compare_with').strip()
 
         # Redirect to a SEO-friendly URL if the username_to_compare_with query parameter is detected
@@ -94,14 +103,14 @@ def players_compare(username, username_to_compare_with=None):
     if not player_to_compare_with:
         flash(ERROR_PLAYER_NOT_FOUND.format(username=username_to_compare_with), 'error')
 
-        return redirect(url_for('player_stats', username=username))
+        return redirect(url_for('player_details', username=username))
 
     servers = scraper.get_servers()
 
     player.set_playing_on_server(servers)
 
     return render_template(
-        'player_stats.html',
+        'player_details.html',
         player=player,
         player_to_compare_with=player_to_compare_with
     )

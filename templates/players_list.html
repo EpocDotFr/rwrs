@@ -6,6 +6,67 @@
 
 {% block meta_title %}Players{% endblock %}
 
-{% block content %}
+{% block jsfiles %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/zepto/1.2.0/zepto.min.js"></script>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+{% endblock %}
 
+{% block content %}
+    <table class="{{ 'striped clickable' if players else '' }} mbn players-list">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Username</th>
+                <th>XP</th>
+                <th>Kills</th>
+                <th>Deaths</th>
+                <th>K/D ratio</th>
+                <th>Score</th>
+                <th>Time played</th>
+                <th>Longest kill streak</th>
+                <th>Targets destroyed</th>
+                <th>Distance moved</th>
+                <th>Vehicles destroyed</th>
+                <th>Soldiers healed</th>
+                <th>Teamkills</th>
+                <th>Shots fired</th>
+                <th>Throwables thrown</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for player in players %}
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="7">
+                        <div class="alert info pas txtcenter">There isn't any player to display.</div>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <script>
+        friendsFeature.all_players_with_servers_details = {{ g.all_players_with_servers_details|tojson }};
+        friendsFeature.initOnPlayersList();
+    </script>
 {% endblock %}
