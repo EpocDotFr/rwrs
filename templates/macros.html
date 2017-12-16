@@ -15,9 +15,9 @@
 
     {% if link %}
         <a href="{{ url_for('player_details', username=username) }}">
-    {% endif %}
+    {%- endif -%}
         {{ username }}
-    {% if link %}
+    {%- if link -%}
         </a>
     {% endif %}
 {%- endmacro %}
