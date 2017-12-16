@@ -45,6 +45,9 @@ def players_list():
     if 'sort' not in args:
         args['sort'] = rwr.PlayersSort.SCORE
 
+    if 'target' in args:
+        args['target'] = args['target'].upper()
+
     scraper = rwr.DataScraper()
 
     servers = scraper.get_servers()
@@ -53,7 +56,7 @@ def players_list():
         sort=args['sort'],
         target=args['target'] if 'target' in args else None,
         start=args['start'] if 'start' in args else None,
-        limit=args['limit'] if 'limit' in args else 15
+        limit=args['limit'] if 'limit' in args else app.config['PLAYERS_LIST_PAGE_SIZE']
     )
 
     for player in players:

@@ -12,13 +12,13 @@
 {% endblock %}
 
 {% block content %}
-    <div class="txtcenter">
+    <div>
         <form method="get" action="{{ url_for('players_compare', username=player.username) }}" class="inbl fl">
             <input type="text" name="username_to_compare_with" placeholder="Type a player name" required> <button type="submit"><i class="fa fa-files-o"></i> Compare players</button>
         </form>
 
         <div class="fr">
-            <a href="{{ url_for('players_list', target=player.username) }}" class="btn"><i class="fa fa-list-ol"></i> Show in leaderboard</a>
+            <a href="{{ url_for('players_list', target=player.username) }}" class="btn"><i class="fa fa-list-ol"></i> Highlight in leaderboard</a>
             <a href="#" class="btn add-friend is-hidden"><i class="fa fa-user-plus"></i> Add to friends list</a>
             <a href="#" class="btn remove-friend is-hidden"><i class="fa fa-user-times"></i> Remove from friends list</a>
         </div>
@@ -154,11 +154,11 @@
         </tr>
     </table>
 
-    <div class="small txtcenter mts">Stats are updated daily and only concerns ranked servers which are tagged with a <i class="fa fa-star txtyellow"></i></div>
-
-    <p class="txtcenter">
+    <p class="txtcenter mbs">
         <a href="{{ url_for('players_list') }}" class="btn"><i class="fa fa-chevron-left"></i> Back to the players list</a>
     </p>
+
+    {{ macros.stats_notice() }}
 
     <script>
         friendsFeature.all_players_with_servers_details = {{ g.all_players_with_servers_details|tojson }};
