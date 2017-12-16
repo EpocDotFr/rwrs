@@ -12,12 +12,12 @@
 {% endblock %}
 
 {% block content %}
-    <div class="grid w1140p center mts">
+    <div class="grid w1140p center mts mbs">
         <div class="one-quarter txtleft">
             {{ macros.players_list_previous_button(players, args) }}
         </div>
         <div class="two-quarter">
-            <form method="get" class="mbs txtcenter inlb" action="{{ url_for('players_list') }}">
+            <form method="get" class="txtcenter inlb" action="{{ url_for('players_list') }}">
                 <input type="text" name="target" placeholder="Type a player name" required value="{{ args.get('target') if 'target' in args else '' }}"> <button type="submit"><i class="fa fa-list-ol"></i> Highlight this player</button>
 
                 {% if 'sort' in args %}

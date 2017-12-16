@@ -12,9 +12,17 @@
 
 {% block content %}
     <div id="app" v-cloak>
-        <form class="mbs txtcenter" v-on:submit.prevent="submitAddFriendForm()">
-            <input type="text" v-model.trim="friend_to_add" placeholder="Type a player name" required> <button type="submit"><i class="fa fa-user-plus"></i> Add new friend</button>
-        </form>
+        <div class="mbs">
+            <form class="inbl fl" v-on:submit.prevent="submitAddFriendForm()">
+                <input type="text" v-model.trim="friend_to_add" placeholder="Type a player name" required> <button type="submit"><i class="fa fa-user-plus"></i> Add new friend</button>
+            </form>
+
+            <div class="inbl fr">
+                <label><input type="checkbox" v-model="playing_only"> Only show playing friends</label>
+            </div>
+
+            <div class="clearfix"></div>
+        </div>
 
         <table :class="[friendsEnriched.length > 0 ? 'striped' : '', 'mbn']">
             <thead>

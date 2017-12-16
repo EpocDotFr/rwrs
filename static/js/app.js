@@ -82,7 +82,8 @@ friendsFeature = {
                 my_username: friendsFeature.my_username,
                 contributors: friendsFeature.contributors,
                 devs: friendsFeature.devs,
-                friend_to_add: ''
+                friend_to_add: '',
+                playing_only: false
             },
             mounted: function() {
                 this.$nextTick(function() {
@@ -133,6 +134,7 @@ friendsFeature = {
             computed: {
                 friendsEnriched: function() {
                     var enriched_friends = [];
+                    var self = this;
 
                     $.each(this.friends, function(friend_index, friend) {
                         var enriched_friend = {
@@ -142,10 +144,14 @@ friendsFeature = {
                         $.each(friendsFeature.all_players_with_servers_details, function(server_index, server) {
                             if ($.inArray(friend, server.players.list) !== -1) {
                                 enriched_friend.playing_on_server = server;
+
+                                return false;
                             }
                         });
 
-                        enriched_friends.push(enriched_friend)
+                        if (!self.playing_only || (self.playing_only && 'playing_on_server' in enriched_friend)) {
+                            enriched_friends.push(enriched_friend);
+                        }
                     });
 
                     return enriched_friends;
