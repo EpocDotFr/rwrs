@@ -40,6 +40,7 @@ handler.setFormatter(formatter)
 app.logger.addHandler(handler)
 
 from helpers import *
+import rwr
 
 app.jinja_env.filters.update(
     humanize_seconds=humanize_seconds,
@@ -53,7 +54,8 @@ app.jinja_env.globals.update(
     round=round,
     abs=abs,
     fabs=math.fabs,
-    isinstance=isinstance
+    isinstance=isinstance,
+    PlayersSort=rwr.PlayersSort
 )
 
 
@@ -61,7 +63,6 @@ app.jinja_env.globals.update(
 # After-init imports
 
 
-import rwr
 import routes
 import models
 import commands

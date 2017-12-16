@@ -15,7 +15,7 @@
         {{ username }}
     {%- if link -%}
         </a>
-    {%- endif %}
+    {%- endif -%}
 
     {% if username.lower() == config['MY_USERNAME'] %}
         <img src="{{ url_for('static', filename='images/me.png') }}" title="Hey, I'm the creator of this website! Glad to see you're using it." class="help me">
@@ -162,4 +162,20 @@
 
 {% macro checkbox(name, label, value='yes', where=request.args) -%}
     <label><input type="checkbox" name="{{ name }}" value="{{ value }}" {% if where.get(name) == value %}checked{% endif %}> {{ label }}</label>
+{%- endmacro %}
+
+{% macro players_list_header_link(label, sort, where, type='numeric', direction='desc') -%}
+    {% set same_sort = where.get('sort') == sort %}
+
+    {% if not same_sort %}
+        <a href="{{ url_for('players_list', sort=sort, target=where.get('target'), start=where.get('start')) }}">
+    {%- endif -%}
+        {{ label }}
+    {%- if not same_sort -%}
+        </a>
+    {%- endif %}
+
+    {% if same_sort -%}
+        <i class="fa fa-sort-{{ type }}-{{ direction }}"></i>
+    {%- endif -%}
 {%- endmacro %}

@@ -16,21 +16,21 @@
         <thead>
             <tr>
                 <th>#</th>
-                <th>Username</th>
-                <th>XP</th>
-                <th>Kills</th>
-                <th>Deaths</th>
-                <th>K/D ratio</th>
-                <th>Score</th>
-                <th>Time played</th>
-                <th>Longest kill streak</th>
-                <th>Targets destroyed</th>
-                <th>Distance moved</th>
-                <th>Vehicles destroyed</th>
-                <th>Soldiers healed</th>
-                <th>Teamkills</th>
-                <th>Shots fired</th>
-                <th>Throwables thrown</th>
+                <th>{{ macros.players_list_header_link('Username', PlayersSort.USERNAME, type='alpha', direction='asc', where=args) }}</th>
+                <th>{{ macros.players_list_header_link('XP', PlayersSort.XP, where=args) }}</th>
+                <th>{{ macros.players_list_header_link('Kills', PlayersSort.KILLS, where=args) }}</th>
+                <th>{{ macros.players_list_header_link('Deaths', PlayersSort.DEATHS, where=args) }}</th>
+                <th>{{ macros.players_list_header_link('K/D ratio', PlayersSort.KD_RATIO, where=args) }}</th>
+                <th>{{ macros.players_list_header_link('Score', PlayersSort.SCORE, where=args) }}</th>
+                <th>{{ macros.players_list_header_link('Time played', PlayersSort.TIME_PLAYED, where=args) }}</th>
+                <th>{{ macros.players_list_header_link('Longest kill streak', PlayersSort.LONGEST_KILL_STREAK, where=args) }}</th>
+                <th>{{ macros.players_list_header_link('Targets destroyed', PlayersSort.TARGETS_DESTROYED, where=args) }}</th>
+                <th>{{ macros.players_list_header_link('Distance moved', PlayersSort.DISTANCE_MOVED, where=args) }}</th>
+                <th>{{ macros.players_list_header_link('Vehicles destroyed', PlayersSort.VEHICLES_DESTROYED, where=args) }}</th>
+                <th>{{ macros.players_list_header_link('Soldiers healed', PlayersSort.SOLDIERS_HEALED, where=args) }}</th>
+                <th>{{ macros.players_list_header_link('Teamkills', PlayersSort.TEAMKILLS, where=args) }}</th>
+                <th>{{ macros.players_list_header_link('Shots fired', PlayersSort.SHOTS_FIRED, where=args) }}</th>
+                <th>{{ macros.players_list_header_link('Throwables thrown', PlayersSort.THROWABLES_THROWN, where=args) }}</th>
                 <th></th>
             </tr>
         </thead>

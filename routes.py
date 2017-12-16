@@ -40,17 +40,20 @@ def players_list():
         # Redirect to a SEO-friendly URL if the username query parameter is detected
         return redirect(url_for('player_details', username=username), code=301)
 
-    params = request.args.to_dict()
+    args = request.args.to_dict()
+
+    if 'sort' not in args:
+        args['sort'] = rwr.PlayersSort.SCORE
 
     scraper = rwr.DataScraper()
 
     servers = scraper.get_servers()
 
     players = scraper.get_players(
-        sort=params['sort'] if 'sort' in params else rwr.PlayersSort.SCORE,
-        target=params['target'] if 'target' in params else None,
-        start=params['start'] if 'start' in params else None,
-        limit=params['limit'] if 'limit' in params else 15
+        sort=args['sort'],
+        target=args['target'] if 'target' in args else None,
+        start=args['start'] if 'start' in args else None,
+        limit=args['limit'] if 'limit' in args else 15
     )
 
     for player in players:
@@ -60,7 +63,8 @@ def players_list():
 
     return render_template(
         'players_list.html',
-        players=players
+        players=players,
+        args=args
     )
 
 
