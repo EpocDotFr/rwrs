@@ -260,6 +260,11 @@ class PlayersSort:
     XP = 'rank_progression'
 
 
+class PlayersListGame:
+    VANILLA = 'invasion'
+    PACIFIC = 'pacific'
+
+
 def parse_time(string):
     """Parse a humanly-formatted time string."""
     time = _time_regex.match(string)
@@ -650,9 +655,10 @@ class DataScraper:
         return ret
 
     @cache.memoize(timeout=app.config['PLAYERS_CACHE_TIMEOUT'])
-    def get_players(self, sort=PlayersSort.SCORE, target=None, start=None, limit=15):
+    def get_players(self, sort=PlayersSort.SCORE, target=None, start=None, limit=15, game=PlayersListGame.VANILLA):
         """Get and parse a list of RWR players."""
         params = {
+            'db': game,
             'sort': sort,
             'start': start,
             'size': limit,
@@ -669,11 +675,12 @@ class DataScraper:
         return players
 
     @cache.memoize(timeout=app.config['PLAYERS_CACHE_TIMEOUT'])
-    def search_player(self, username):
+    def search_player(self, username, game=PlayersListGame.VANILLA):
         """Search for a RWR player."""
         username = username.upper()
 
         params = {
+            'db': game,
             'search': username
         }
 

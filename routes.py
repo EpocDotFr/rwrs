@@ -44,12 +44,17 @@ def players_list():
 
     scraper = rwr.DataScraper()
 
+    servers = scraper.get_servers()
+
     players = scraper.get_players(
         sort=params['sort'] if 'sort' in params else rwr.PlayersSort.SCORE,
         target=params['target'] if 'target' in params else None,
         start=params['start'] if 'start' in params else None,
         limit=params['limit'] if 'limit' in params else 15
     )
+
+    for player in players:
+        player.set_playing_on_server(servers)
 
     g.LAYOUT = 'large'
 

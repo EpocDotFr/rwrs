@@ -44,7 +44,7 @@
         <tbody>
             {% for server in servers %}
                 <tr onclick="window.location.href = '{{ url_for('server_details', ip_and_port=server.ip_and_port) }}';" data-server-ip-and-port="{{ server.ip_and_port }}">
-                    <td>{{ macros.location(server.location) }} {{ macros.server_name(server) }}</td>
+                    <td class="nowrap">{{ macros.location(server.location) }} {{ macros.server_name(server) }}</td>
                     <td class="{{ macros.server_slots_class(server) }}">{{ server.players.current }}</td>
                     <td>{{ server.players.max }}</td>
                     <td>{{ macros.map_name(server.map) }}</td>

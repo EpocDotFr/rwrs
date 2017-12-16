@@ -36,9 +36,9 @@
         </thead>
         <tbody>
             {% for player in players %}
-                <tr>
+                <tr{% if 'target' in request.args and request.args.get('target').upper() == player.username %} class="notice"{% endif %} data-username="{{ player.username }}">
                     <td>{{ player.position|humanize_integer }}</td>
-                    <td>{{ macros.player_name(player, link=True, show_rank=True) }}</td>
+                    <td class="nowrap">{{ macros.player_name(player, link=True, show_rank=True) }}</td>
                     <td>{{ player.xp|humanize_integer }}</td>
                     <td>{{ player.kills|humanize_integer }}</td>
                     <td>{{ player.deaths|humanize_integer }}</td>
@@ -53,7 +53,10 @@
                     <td>{{ player.teamkills|humanize_integer }}</td>
                     <td>{{ player.shots_fired|humanize_integer }}</td>
                     <td>{{ player.throwables_thrown|humanize_integer }}</td>
-                    <td></td>
+                    <td>
+                        <a href="#" title="Add {{ player.username }} to friends list" class="btn add-friend is-hidden"><i class="fa fa-user-plus"></i></a>
+                        <a href="#" title="Remove {{ player.username }} from friends list" class="btn remove-friend is-hidden"><i class="fa fa-user-times"></i></a>
+                    </td>
                 </tr>
             {% else %}
                 <tr>
@@ -64,6 +67,8 @@
             {% endfor %}
         </tbody>
     </table>
+
+    <div class="small txtcenter mts">Stats are updated daily and only concerns ranked servers which are tagged with a <i class="fa fa-star txtyellow"></i></div>
 
     <script>
         friendsFeature.all_players_with_servers_details = {{ g.all_players_with_servers_details|tojson }};
