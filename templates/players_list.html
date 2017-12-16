@@ -38,7 +38,7 @@
             {% for player in players %}
                 <tr>
                     <td>{{ player.position|humanize_integer }}</td>
-                    <td><img src="{{ url_for('static', filename='images/ranks/{rank_id}_icon.png'.format(rank_id=player.rank.id)) }}" title="{{ player.rank.name }}"> {{ macros.player_name(player, link=True) }}</td>
+                    <td>{{ macros.player_name(player, link=True, show_rank=True) }}</td>
                     <td>{{ player.xp|humanize_integer }}</td>
                     <td>{{ player.kills|humanize_integer }}</td>
                     <td>{{ player.deaths|humanize_integer }}</td>
@@ -57,7 +57,7 @@
                 </tr>
             {% else %}
                 <tr>
-                    <td colspan="7">
+                    <td colspan="17">
                         <div class="alert info pas txtcenter">There isn't any player to display.</div>
                     </td>
                 </tr>

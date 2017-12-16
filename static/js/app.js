@@ -204,7 +204,7 @@ friendsFeature = {
         }
 
         // Enable the feature on the players list
-        $('.actions-disabled').removeClass('actions-disabled').addClass('actions');
+        $('.friends-feature').removeClass('is-hidden');
 
         var friends = this.getFriends();
 

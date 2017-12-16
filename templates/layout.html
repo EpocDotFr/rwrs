@@ -49,7 +49,7 @@
     {% endif %}
 
     <div class="page pts pbs">
-        <div class="w1140p center">
+        <div class="{{ 'w1140p center' if g.LAYOUT == 'normal' else 'mls mrs' }}">
             {% block page_title %}{% endblock %}
 
             {% with flash_messages = get_flashed_messages(with_categories=true) %}

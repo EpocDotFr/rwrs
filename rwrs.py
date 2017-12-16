@@ -99,6 +99,7 @@ def define_globals():
     g.INCLUDE_WEB_ANALYTICS = not app.config['DEBUG']
     g.NO_INDEX = False
     g.UNDER_MAINTENANCE = False
+    g.LAYOUT = 'normal'
 
 
 @app.before_request

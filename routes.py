@@ -1,4 +1,4 @@
-from flask import render_template, abort, request, redirect, url_for, flash
+from flask import render_template, abort, request, redirect, url_for, flash, g
 from rwrs import app
 from models import *
 import rwr
@@ -46,9 +46,12 @@ def players_list():
 
     players = scraper.get_players(
         sort=params['sort'] if 'sort' in params else rwr.PlayersSort.SCORE,
-        start=params['start'] if 'start' in params else 0,
-        limit=params['limit'] if 'limit' in params else 25
+        target=params['target'] if 'target' in params else None,
+        start=params['start'] if 'start' in params else None,
+        limit=params['limit'] if 'limit' in params else 15
     )
+
+    g.LAYOUT = 'large'
 
     return render_template(
         'players_list.html',

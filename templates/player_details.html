@@ -18,8 +18,9 @@
         </form>
 
         <div class="fr">
-            <a href="#" class="btn add-friend is-hidden"><i class="fa fa-user-plus"></i> Add {{ player.username }} to friends list</a>
-            <a href="#" class="btn remove-friend is-hidden"><i class="fa fa-user-times"></i> Remove {{ player.username }} from friends list</a>
+            <a href="{{ url_for('players_list') }}?target={{ player.username }}" class="btn"><i class="fa fa-list-ol"></i> Locate in leaderboard</a>
+            <a href="#" class="btn add-friend is-hidden"><i class="fa fa-user-plus"></i> Add to friends list</a>
+            <a href="#" class="btn remove-friend is-hidden"><i class="fa fa-user-times"></i> Remove from friends list</a>
         </div>
 
         <div class="clearfix"></div>
@@ -154,6 +155,10 @@
     </table>
 
     <div class="small txtcenter mts">Stats are updated daily and only concerns ranked servers which are tagged with a <i class="fa fa-star txtyellow"></i></div>
+
+    <p class="txtcenter">
+        <a href="{{ url_for('players_list') }}" class="btn"><i class="fa fa-chevron-left"></i> Back to the players list</a>
+    </p>
 
     <script>
         friendsFeature.all_players_with_servers_details = {{ g.all_players_with_servers_details|tojson }};
