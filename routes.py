@@ -34,7 +34,7 @@ def my_friends():
 
 @app.route('/players')
 def players_list():
-    if 'username' in request.args:
+    if request.args.get('username'):
         username = request.args.get('username').strip()
 
         # Redirect to a SEO-friendly URL if the username query parameter is detected
@@ -42,14 +42,16 @@ def players_list():
 
     args = request.args.to_dict()
 
-    if 'sort' not in args:
+    if not args.get('sort'):
         args['sort'] = rwr.PlayersSort.SCORE
 
-    if 'limit' not in args or int(args['limit']) > app.config['PLAYERS_LIST_PAGE_SIZES'][-1]:
+    if not args.get('limit') or int(args.get('limit')) > app.config['PLAYERS_LIST_PAGE_SIZES'][-1]:
         args['limit'] = app.config['PLAYERS_LIST_PAGE_SIZES'][0]
+    else:
+        args['limit'] = int(args.get('limit'))
 
-    if 'target' in args:
-        args['target'] = args['target'].upper()
+    if args.get('target'):
+        args['target'] = args.get('target').upper()
 
     scraper = rwr.DataScraper()
 
@@ -57,8 +59,8 @@ def players_list():
 
     players = scraper.get_players(
         sort=args['sort'],
-        target=args['target'] if 'target' in args else None,
-        start=args['start'] if 'start' in args else None,
+        target=args['target'] if args.get('target') else None,
+        start=args['start'] if args.get('start') else None,
         limit=args['limit']
     )
 
@@ -98,7 +100,7 @@ def player_details(username):
 @app.route('/players/<username>/compare')
 @app.route('/players/<username>/compare/<username_to_compare_with>')
 def players_compare(username, username_to_compare_with=None):
-    if not username_to_compare_with and 'username_to_compare_with' in request.args:
+    if not username_to_compare_with and request.args.get('username_to_compare_with'):
         username_to_compare_with = request.args.get('username_to_compare_with').strip()
 
         # Redirect to a SEO-friendly URL if the username_to_compare_with query parameter is detected
