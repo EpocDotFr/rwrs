@@ -29,6 +29,7 @@ app.config['UNLOCKABLES_IMAGES_DIR'] = 'static/images/unlockables'
 app.config['MY_USERNAME'] = 'epocdotfr'
 app.config['CONTRIBUTORS'] = ['street veteran', 'mastock']
 app.config['DEVS'] = ['jackmayol', 'pasik', 'pasik2', 'tremozl', 'the soldier'] # ahnold
+app.config['PLAYERS_LIST_PAGE_SIZES'] = [15, 30, 50, 100]
 
 db = SQLAlchemy(app)
 cache = Cache(app)

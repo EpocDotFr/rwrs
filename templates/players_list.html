@@ -18,10 +18,14 @@
         </div>
         <div class="two-quarter">
             <form method="get" class="mbs txtcenter inlb" action="{{ url_for('players_list') }}">
-                <input type="text" name="target" placeholder="Type a player name" required> <button type="submit"><i class="fa fa-list-ol"></i> Highlight</button>
+                <input type="text" name="target" placeholder="Type a player name" required value="{{ args.get('target') if 'target' in args else '' }}"> <button type="submit"><i class="fa fa-list-ol"></i> Highlight this player</button>
 
                 {% if 'sort' in args %}
                     <input type="hidden" name="sort" value="{{ args.get('sort') }}">
+                {% endif %}
+
+                {% if 'limit' in args %}
+                    <input type="hidden" name="limit" value="{{ args.get('limit') }}">
                 {% endif %}
             </form>
         </div>

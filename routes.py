@@ -45,6 +45,9 @@ def players_list():
     if 'sort' not in args:
         args['sort'] = rwr.PlayersSort.SCORE
 
+    if 'limit' not in args or int(args['limit']) > app.config['PLAYERS_LIST_PAGE_SIZES'][-1]:
+        args['limit'] = app.config['PLAYERS_LIST_PAGE_SIZES'][0]
+
     if 'target' in args:
         args['target'] = args['target'].upper()
 
@@ -56,7 +59,7 @@ def players_list():
         sort=args['sort'],
         target=args['target'] if 'target' in args else None,
         start=args['start'] if 'start' in args else None,
-        limit=args['limit'] if 'limit' in args else app.config['PLAYERS_LIST_PAGE_SIZE']
+        limit=args['limit']
     )
 
     for player in players:
