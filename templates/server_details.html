@@ -2,9 +2,9 @@
 
 {% extends 'layout.html' %}
 
-{% block page_title %}<h2><i class="fa fa-server"></i> Servers › {{ macros.server_name(server, False) }}</h2>{% endblock %}
+{% block page_title %}<h2><i class="fa fa-server"></i> Servers › {{ macros.server_name(server, link=False) }}</h2>{% endblock %}
 
-{% block meta_title %}Servers › {% if server.is_ranked %}★ {% endif %}{{ server.name }}{% endblock %}
+{% block meta_title %}Servers › {{ macros.server_name(server, link=False, raw=True) }}{% endblock %}
 
 {% block jsfiles %}
     {% if server.is_dedicated %}
@@ -52,7 +52,7 @@
                 </tr>
                 <tr>
                     <th>Location</th>
-                    <td>{{ macros.location(server.location, True, True) }}</td>
+                    <td>{{ macros.location(server.location, text=True, na=True) }}</td>
                     <th>Version</th>
                     <td>{{ server.version }}</td>
                 </tr>

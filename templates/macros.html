@@ -1,16 +1,12 @@
-{% macro player_name(player, raw=False, link=False, show_rank=False) -%}
+{% macro player_name(player, raw=False, link=False, show_rank=False, show_online=False) -%}
     {% set username = player if raw else player.username %}
 
-    {% if show_rank %}
+    {% if show_rank and not raw %}
         <img src="{{ url_for('static', filename='images/ranks/{rank_id}_icon.png'.format(rank_id=player.rank.id)) }}" title="{{ player.rank.name }}" class="help">
     {% endif %}
 
-    {% if username.lower() == config['MY_USERNAME'] %}
-        <img src="{{ url_for('static', filename='images/me.png') }}" title="Hey, I'm the creator of this website! Glad to see you're using it." class="help me">
-    {% elif username.lower() in config['CONTRIBUTORS'] %}
-        <i class="fa fa-hand-peace-o help" title="This player contributed in a way or another to RWRS. Thanks to her/him!"></i>
-    {% elif username.lower() in config['DEVS'] %}
-        <img src="{{ url_for('static', filename='images/dev.png') }}" title="Say hi to one of the Running With Rifles developers!" class="help">
+    {% if show_online and not raw and player.playing_on_server %}
+        <i class="fa fa-circle help txtgreen" title="Playing on {{ server_name(player.playing_on_server, link=False, raw=True) }} ({{ player.playing_on_server.players.current }}/{{ player.playing_on_server.players.max }} - {{ map_name(player.playing_on_server.map, link=False) }})"></i>
     {% endif %}
 
     {% if link %}
@@ -19,34 +15,43 @@
         {{ username }}
     {%- if link -%}
         </a>
+    {%- endif %}
+
+    {% if username.lower() == config['MY_USERNAME'] %}
+        <img src="{{ url_for('static', filename='images/me.png') }}" title="Hey, I'm the creator of this website! Glad to see you're using it." class="help me">
+    {% elif username.lower() in config['CONTRIBUTORS'] %}
+        <i class="fa fa-hand-peace-o help" title="This player contributed in a way or another to RWRS. Thanks to her/him!"></i>
+    {% elif username.lower() in config['DEVS'] %}
+        <img src="{{ url_for('static', filename='images/dev.png') }}" title="Say hi to one of the Running With Rifles developers!" class="help">
     {% endif %}
 {%- endmacro %}
 
 {% macro map_name(map, link=True) -%}
-    {% if map.name %}
-        {% if link and map.url %}
+    {% if map.name -%}
+        {% if link and map.url -%}
             <a href="{{ map.url }}">
-        {% endif %}
+        {%- endif -%}
             {{ map.name }}
-        {% if link and map.url %}
+        {%- if link and map.url -%}
             </a>
-        {% endif %}
-    {% else %}
+        {%- endif %}
+    {%- else -%}
         {{ map.id }}
-    {% endif %}
+    {%- endif %}
 {%- endmacro %}
 
-{% macro server_name(server, link=True) -%}
-    {% if server.is_ranked %}
-        <i class="fa fa-star txtyellow help" title="Ranked server"></i>
-    {% endif %}
-    {% if link and server.website %}
+{% macro server_name(server, link=True, raw=False) -%}
+    {% if server.is_ranked -%}
+        {% if raw %}★ {% else -%}
+            <i class="fa fa-star txtyellow help" title="Ranked server"></i> {% endif %}
+    {%- endif %}
+    {%- if link and server.website -%}
         <a href="{{ server.website }}">
-    {% endif %}
+    {%- endif -%}
         {{ server.name }}
-    {% if link and server.website %}
+    {%- if link and server.website -%}
         </a>
-    {% endif %}
+    {%- endif -%}
 {%- endmacro %}
 
 {% macro location(location, text=False, na=False) -%}

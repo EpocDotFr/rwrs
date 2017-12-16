@@ -40,7 +40,7 @@
                     <div>
                         <strong><span class="{{ macros.server_slots_class(player.playing_on_server) }}">{{ player.playing_on_server.players.current }}</span>/{{ player.playing_on_server.players.max }}</strong> players on
 
-                        <strong>{{ macros.map_name(player.playing_on_server.map, False) }}</strong>
+                        <strong>{{ macros.map_name(player.playing_on_server.map, link=False) }}</strong>
                     </div>
                     <div class="mts">
                         {{ macros.server_join_button(player.playing_on_server) }}

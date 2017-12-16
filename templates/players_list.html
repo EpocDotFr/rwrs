@@ -38,7 +38,7 @@
             {% for player in players %}
                 <tr{% if 'target' in request.args and request.args.get('target').upper() == player.username %} class="notice"{% endif %} data-username="{{ player.username }}">
                     <td>{{ player.position|humanize_integer }}</td>
-                    <td class="nowrap">{{ macros.player_name(player, link=True, show_rank=True) }}</td>
+                    <td class="nowrap">{{ macros.player_name(player, link=True, show_rank=True, show_online=True) }}</td>
                     <td>{{ player.xp|humanize_integer }}</td>
                     <td>{{ player.kills|humanize_integer }}</td>
                     <td>{{ player.deaths|humanize_integer }}</td>
