@@ -79,7 +79,7 @@
                         <tr data-username="{{ player }}">
                             <td>
                                 <div class="actions fr">
-                                    <a href="{{ url_for('players_list') }}?target={{ player }}" title="Locate in leaderboard"><i class="fa fa-list-ol"></i></a>
+                                    <a href="{{ url_for('players_list', target=player) }}" title="Locate in leaderboard"><i class="fa fa-list-ol"></i></a>
 
                                     <span class="friends-feature is-hidden">
                                         <a href="#" title="Add {{ player }} to friends list" class="add-friend is-hidden"><i class="fa fa-user-plus"></i></a>

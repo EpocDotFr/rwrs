@@ -18,7 +18,7 @@
         </form>
 
         <div class="fr">
-            <a href="{{ url_for('players_list') }}?target={{ player.username }}" class="btn"><i class="fa fa-list-ol"></i> Locate in leaderboard</a>
+            <a href="{{ url_for('players_list', target=player.username) }}" class="btn"><i class="fa fa-list-ol"></i> Locate in leaderboard</a>
             <a href="#" class="btn add-friend is-hidden"><i class="fa fa-user-plus"></i> Add to friends list</a>
             <a href="#" class="btn remove-friend is-hidden"><i class="fa fa-user-times"></i> Remove from friends list</a>
         </div>
