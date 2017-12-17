@@ -162,6 +162,9 @@ def servers_list():
     modes = scraper.get_all_servers_modes()
     maps = scraper.get_all_servers_maps()
 
+    if request.args.get('view') == 'extended':
+        g.LAYOUT = 'large'
+
     return render_template(
         'servers_list.html',
         servers=servers,
