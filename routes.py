@@ -64,8 +64,18 @@ def players_list():
         limit=args['limit']
     )
 
+    target_found = False
+
     for player in players:
         player.set_playing_on_server(servers)
+
+        if args.get('target') and player.username == args.get('target'):
+            target_found = True
+
+    if args.get('target') and not target_found:
+        flash(ERROR_PLAYER_NOT_FOUND.format(username=args.get('target')), 'error')
+
+        return redirect(url_for('players_list'))
 
     g.LAYOUT = 'large'
 
