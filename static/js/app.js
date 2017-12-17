@@ -82,7 +82,8 @@ friendsFeature = {
                 my_username: friendsFeature.my_username,
                 contributors: friendsFeature.contributors,
                 devs: friendsFeature.devs,
-                friend_to_add: ''
+                friend_to_add: '',
+                playing_only: false
             },
             mounted: function() {
                 this.$nextTick(function() {
@@ -133,6 +134,7 @@ friendsFeature = {
             computed: {
                 friendsEnriched: function() {
                     var enriched_friends = [];
+                    var self = this;
 
                     $.each(this.friends, function(friend_index, friend) {
                         var enriched_friend = {
@@ -142,10 +144,14 @@ friendsFeature = {
                         $.each(friendsFeature.all_players_with_servers_details, function(server_index, server) {
                             if ($.inArray(friend, server.players.list) !== -1) {
                                 enriched_friend.playing_on_server = server;
+
+                                return false;
                             }
                         });
 
-                        enriched_friends.push(enriched_friend)
+                        if (!self.playing_only || (self.playing_only && 'playing_on_server' in enriched_friend)) {
+                            enriched_friends.push(enriched_friend);
+                        }
                     });
 
                     return enriched_friends;
@@ -204,7 +210,7 @@ friendsFeature = {
         }
 
         // Enable the feature on the players list
-        $('.actions-disabled').removeClass('actions-disabled').addClass('actions');
+        $('.friends-feature').removeClass('is-hidden');
 
         var friends = this.getFriends();
 
@@ -270,9 +276,71 @@ friendsFeature = {
         });
     },
     /**
-     * Initialize the Friends feature on the Player stats page.
+     * Initialize the Friends feature on the Players list page.
      */
-    initOnPlayerStats: function() {
+    initOnPlayersList: function() {
+        if (!this.init()) {
+            return;
+        }
+
+        var friends = this.getFriends();
+
+        var $players_list = $('.players-list > tbody > tr');
+
+        $players_list.each(function() {
+            var $tr = $(this);
+            var username = $tr.data('username');
+            var $add_friend_link = $tr.find('.add-friend');
+            var $remove_friend_link = $tr.find('.remove-friend');
+
+            $add_friend_link.on('click', function(e) {
+                e.preventDefault();
+
+                var $a = $(this);
+                var $closest_tr = $a.closest('tr[data-username]');
+
+                friendsFeature.addFriend($closest_tr.data('username'));
+
+                $a.addClass('is-hidden');
+                $remove_friend_link.removeClass('is-hidden');
+
+                if (!$closest_tr.hasClass('notice')) { // Player isn't already highlighted in the leaderboard
+                    $closest_tr.addClass('info');
+                }
+
+                friendsFeature.initInHeader(); // Refresh the counter in the header
+            });
+
+            $remove_friend_link.on('click', function(e) {
+                e.preventDefault();
+
+                var $a = $(this);
+                var $closest_tr = $a.closest('tr[data-username]');
+
+                friendsFeature.removeFriend($closest_tr.data('username'));
+
+                $a.addClass('is-hidden');
+                $add_friend_link.removeClass('is-hidden');
+                $closest_tr.removeClass('info');
+
+                friendsFeature.initInHeader(); // Refresh the counter in the header
+            });
+
+            if ($.inArray(username, friends) !== -1) {
+                if (!$tr.hasClass('notice')) { // Player isn't already highlighted in the leaderboard
+                    $tr.addClass('info');
+                }
+
+                $remove_friend_link.removeClass('is-hidden');
+            } else {
+                $add_friend_link.removeClass('is-hidden');
+            }
+        });
+    },
+    /**
+     * Initialize the Friends feature on the Player details page.
+     */
+    initOnPlayerDetails: function() {
         if (!this.init()) {
             return;
         }
@@ -314,7 +382,18 @@ friendsFeature = {
      * Get all the user's friends.
      */
     getFriends: function() {
-        return JSON.parse(localStorage.getItem('friends')) || [];
+        var friends = JSON.parse(localStorage.getItem('friends'));
+
+        if (!friends) {
+            return [];
+        }
+
+        // Force usernames to be string as they are stored either as int or string by the JSON parser
+        $.each(friends, function(key, friend) {
+            friends[key] = friend + '';
+        });
+
+        return friends;
     },
     /**
      * Set the user's friends.

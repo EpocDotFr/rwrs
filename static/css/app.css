@@ -44,6 +44,10 @@ h2 {
     font-weight: normal;
 }
 
+.nowrap {
+    white-space: nowrap;
+}
+
 /************************************************************************
  * Home page */
 
@@ -230,10 +234,10 @@ select,
 textarea,
 .btn {
     line-height: 1.5;
-    padding-left: 1.1rem;
-    padding-right: 1.1rem;
-    padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
+    padding-left: 0.9rem;
+    padding-right: 0.9rem;
+    padding-top: 0.3rem;
+    padding-bottom: 0.3rem;
 }
 
 input[type="text"],
@@ -283,8 +287,15 @@ table tr.info:hover td {
     background-color: #3b576c !important;
 }
 
-table tr .actions,
-table tr .actions-disabled {
+table tr.notice td {
+    background-color: #505737 !important;
+}
+
+table tr.notice:hover td {
+    background-color: #545d3b !important;
+}
+
+table tr .actions {
     display: none;
 }
 
@@ -298,6 +309,10 @@ table tr:hover .actions {
 fieldset {
     background-color: #444;
     border: 0.2rem solid #333;
+}
+
+label {
+    margin: 0;
 }
 
 /************************************************************************

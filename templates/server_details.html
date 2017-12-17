@@ -2,9 +2,9 @@
 
 {% extends 'layout.html' %}
 
-{% block page_title %}<h2><i class="fa fa-server"></i> Servers › {{ macros.server_name(server, False) }}</h2>{% endblock %}
+{% block page_title %}<h2><i class="fa fa-server"></i> Servers › {{ macros.server_name(server, link=False) }}</h2>{% endblock %}
 
-{% block meta_title %}Servers › {% if server.is_ranked %}★ {% endif %}{{ server.name }}{% endblock %}
+{% block meta_title %}Servers › {{ macros.server_name(server, link=False, raw=True) }}{% endblock %}
 
 {% block jsfiles %}
     {% if server.is_dedicated %}
@@ -52,7 +52,7 @@
                 </tr>
                 <tr>
                     <th>Location</th>
-                    <td>{{ macros.location(server.location, True, True) }}</td>
+                    <td>{{ macros.location(server.location, text=True, na=True) }}</td>
                     <th>Version</th>
                     <td>{{ server.version }}</td>
                 </tr>
@@ -78,9 +78,13 @@
                     {% for player in server.players.list %}
                         <tr data-username="{{ player }}">
                             <td>
-                                <div class="actions-disabled fr">
-                                    <a href="#" title="Add {{ player }} to friends list" class="add-friend is-hidden"><i class="fa fa-user-plus"></i></a>
-                                    <a href="#" title="Remove {{ player }} from friends list" class="remove-friend is-hidden"><i class="fa fa-user-times"></i></a>
+                                <div class="actions fr">
+                                    <a href="{{ url_for('players_list', target=player) }}" title="Highlight in leaderboard"><i class="fa fa-list-ol"></i></a>
+
+                                    <span class="friends-feature is-hidden">
+                                        <a href="#" title="Add {{ player }} to friends list" class="add-friend is-hidden"><i class="fa fa-user-plus"></i></a>
+                                        <a href="#" title="Remove {{ player }} from friends list" class="remove-friend is-hidden"><i class="fa fa-user-times"></i></a>
+                                    </span>
                                 </div>
 
                                 {{ macros.player_name(player, raw=True, link=True) }}

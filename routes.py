@@ -1,4 +1,4 @@
-from flask import render_template, abort, request, redirect, url_for, flash
+from flask import render_template, abort, request, redirect, url_for, flash, g
 from rwrs import app
 from models import *
 import rwr
@@ -33,17 +33,61 @@ def my_friends():
 
 
 @app.route('/players')
-@app.route('/players/<username>')
-def player_stats(username=None):
-    if not username:
+def players_list():
+    if request.args.get('username'):
         username = request.args.get('username').strip()
 
         # Redirect to a SEO-friendly URL if the username query parameter is detected
-        return redirect(url_for('player_stats', username=username), code=301)
+        return redirect(url_for('player_details', username=username), code=301)
 
-    if not username:
-        abort(404)
+    args = request.args.to_dict()
 
+    if not args.get('sort'):
+        args['sort'] = rwr.PlayersSort.SCORE
+
+    if not args.get('limit') or int(args.get('limit')) > app.config['PLAYERS_LIST_PAGE_SIZES'][-1]:
+        args['limit'] = app.config['PLAYERS_LIST_PAGE_SIZES'][0]
+    else:
+        args['limit'] = int(args.get('limit'))
+
+    if args.get('target'):
+        args['target'] = args.get('target').upper()
+
+    scraper = rwr.DataScraper()
+
+    servers = scraper.get_servers()
+
+    players = scraper.get_players(
+        sort=args['sort'],
+        target=args['target'] if args.get('target') else None,
+        start=args['start'] if args.get('start') else None,
+        limit=args['limit']
+    )
+
+    target_found = False
+
+    for player in players:
+        player.set_playing_on_server(servers)
+
+        if args.get('target') and player.username == args.get('target'):
+            target_found = True
+
+    if args.get('target') and not target_found:
+        flash(ERROR_PLAYER_NOT_FOUND.format(username=args.get('target')), 'error')
+
+        return redirect(url_for('players_list'))
+
+    g.LAYOUT = 'large'
+
+    return render_template(
+        'players_list.html',
+        players=players,
+        args=args
+    )
+
+
+@app.route('/players/<username>')
+def player_details(username):
     scraper = rwr.DataScraper()
 
     player = scraper.search_player(username)
@@ -58,7 +102,7 @@ def player_stats(username=None):
     player.set_playing_on_server(servers)
 
     return render_template(
-        'player_stats.html',
+        'player_details.html',
         player=player
     )
 
@@ -66,7 +110,7 @@ def player_stats(username=None):
 @app.route('/players/<username>/compare')
 @app.route('/players/<username>/compare/<username_to_compare_with>')
 def players_compare(username, username_to_compare_with=None):
-    if not username_to_compare_with:
+    if not username_to_compare_with and request.args.get('username_to_compare_with'):
         username_to_compare_with = request.args.get('username_to_compare_with').strip()
 
         # Redirect to a SEO-friendly URL if the username_to_compare_with query parameter is detected
@@ -89,14 +133,14 @@ def players_compare(username, username_to_compare_with=None):
     if not player_to_compare_with:
         flash(ERROR_PLAYER_NOT_FOUND.format(username=username_to_compare_with), 'error')
 
-        return redirect(url_for('player_stats', username=username))
+        return redirect(url_for('player_details', username=username))
 
     servers = scraper.get_servers()
 
     player.set_playing_on_server(servers)
 
     return render_template(
-        'player_stats.html',
+        'player_details.html',
         player=player,
         player_to_compare_with=player_to_compare_with
     )

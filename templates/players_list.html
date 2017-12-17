@@ -1,0 +1,116 @@
+{% import 'macros.html' as macros %}
+
+{% extends 'layout.html' %}
+
+{% block page_title %}<h2><i class="fa fa-user"></i> Players{% if args.get('target') %} (highlighting {{ macros.player_name(args.get('target'), raw=True) }}){% endif %}</h2>{% endblock %}
+
+{% block meta_title %}Players{% if args.get('target') %} (highlighting {{ args.get('target') }}){% endif %}{% endblock %}
+
+{% block jsfiles %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/zepto/1.2.0/zepto.min.js"></script>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+    <div class="grid w1140p center mts mbs">
+        <div class="one-fifth txtleft">
+            {{ macros.players_list_previous_button(players, args) }}
+        </div>
+        <div class="three-fifth">
+            <form method="get" class="txtcenter inlb" action="{{ url_for('players_list') }}">
+                <label>Player to highlight: <input type="text" name="target" placeholder="Type a player name" value="{{ args.get('target') if args.get('target') else '' }}"></label>
+
+                <label>
+                    Page size:
+                    <select name="limit" class="w100p">
+                        {% for page_size in config['PLAYERS_LIST_PAGE_SIZES'] -%}
+                            <option value="{{ page_size }}" {% if args.get('limit') == page_size %}selected{% endif %}>{{ page_size }}</option>
+                        {%- endfor %}
+                    </select>
+                </label>
+
+                <button type="submit"><i class="fa fa-check"></i> Apply</button>
+
+                {% if args.get('sort') %}
+                    <input type="hidden" name="sort" value="{{ args.get('sort') }}">
+                {% endif %}
+            </form>
+        </div>
+        <div class="one-fifth txtright">
+            {{ macros.players_list_next_button(players, args) }}
+        </div>
+    </div>
+
+    <table class="{{ 'striped' if players else '' }} mbn players-list">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>{{ macros.players_list_header_link('Username', PlayersSort.USERNAME, args, type='alpha', direction='asc') }}</th>
+                <th>{{ macros.players_list_header_link('XP', PlayersSort.XP, args) }}</th>
+                <th>{{ macros.players_list_header_link('Kills', PlayersSort.KILLS, args) }}</th>
+                <th>{{ macros.players_list_header_link('Deaths', PlayersSort.DEATHS, args) }}</th>
+                <th>{{ macros.players_list_header_link('K/D ratio', PlayersSort.KD_RATIO, args) }}</th>
+                <th>{{ macros.players_list_header_link('Score', PlayersSort.SCORE, args) }}</th>
+                <th>{{ macros.players_list_header_link('Time played', PlayersSort.TIME_PLAYED, args) }}</th>
+                <th>{{ macros.players_list_header_link('Longest kill streak', PlayersSort.LONGEST_KILL_STREAK, args) }}</th>
+                <th>{{ macros.players_list_header_link('Targets destroyed', PlayersSort.TARGETS_DESTROYED, args) }}</th>
+                <th>{{ macros.players_list_header_link('Distance moved', PlayersSort.DISTANCE_MOVED, args) }}</th>
+                <th>{{ macros.players_list_header_link('Vehicles destroyed', PlayersSort.VEHICLES_DESTROYED, args) }}</th>
+                <th>{{ macros.players_list_header_link('Soldiers healed', PlayersSort.SOLDIERS_HEALED, args) }}</th>
+                <th>{{ macros.players_list_header_link('Teamkills', PlayersSort.TEAMKILLS, args) }}</th>
+                <th>{{ macros.players_list_header_link('Shots fired', PlayersSort.SHOTS_FIRED, args) }}</th>
+                <th>{{ macros.players_list_header_link('Throwables thrown', PlayersSort.THROWABLES_THROWN, args) }}</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for player in players %}
+                <tr{% if args.get('target') == player.username %} class="notice"{% endif %} data-username="{{ player.username }}">
+                    <td>{{ player.position|humanize_integer }}</td>
+                    <td class="nowrap">{{ macros.player_name(player, link=True, show_rank=True, show_online=True) }}</td>
+                    <td>{{ player.xp|humanize_integer }}</td>
+                    <td>{{ player.kills|humanize_integer }}</td>
+                    <td>{{ player.deaths|humanize_integer }}</td>
+                    <td><span class="{{ 'txtred' if player.kd_ratio < 1 else 'txtgreen' }}">{{ player.kd_ratio }}</span></td>
+                    <td><span class="{{ 'txtred' if player.score < 0 else 'txtgreen' }}">{{ player.score|humanize_integer }}</span></td>
+                    <td>{{ player.time_played|humanize_seconds }}</td>
+                    <td>{{ player.longest_kill_streak|humanize_integer }}</td>
+                    <td>{{ player.targets_destroyed|humanize_integer }}</td>
+                    <td>{{ player.distance_moved }}km</td>
+                    <td>{{ player.vehicles_destroyed|humanize_integer }}</td>
+                    <td>{{ player.soldiers_healed|humanize_integer }}</td>
+                    <td>{{ player.teamkills|humanize_integer }}</td>
+                    <td>{{ player.shots_fired|humanize_integer }}</td>
+                    <td>{{ player.throwables_thrown|humanize_integer }}</td>
+                    <td>
+                        <a href="#" title="Add {{ player.username }} to friends list" class="btn add-friend is-hidden"><i class="fa fa-user-plus"></i></a>
+                        <a href="#" title="Remove {{ player.username }} from friends list" class="btn remove-friend is-hidden"><i class="fa fa-user-times"></i></a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="17">
+                        <div class="alert info pas txtcenter">There isn't any player to display.</div>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="grid w1140p center mts">
+        <div class="one-fifth txtleft">
+            {{ macros.players_list_previous_button(players, args) }}
+        </div>
+        <div class="three-fifth">
+            {{ macros.stats_notice() }}
+        </div>
+        <div class="one-fifth txtright">
+            {{ macros.players_list_next_button(players, args) }}
+        </div>
+    </div>
+
+    <script>
+        friendsFeature.all_players_with_servers_details = {{ g.all_players_with_servers_details|tojson }};
+        friendsFeature.initOnPlayersList();
+    </script>
+{% endblock %}

@@ -29,6 +29,7 @@ app.config['UNLOCKABLES_IMAGES_DIR'] = 'static/images/unlockables'
 app.config['MY_USERNAME'] = 'epocdotfr'
 app.config['CONTRIBUTORS'] = ['street veteran', 'mastock']
 app.config['DEVS'] = ['jackmayol', 'pasik', 'pasik2', 'tremozl', 'the soldier'] # ahnold
+app.config['PLAYERS_LIST_PAGE_SIZES'] = [15, 30, 50, 100]
 
 db = SQLAlchemy(app)
 cache = Cache(app)
@@ -40,6 +41,7 @@ handler.setFormatter(formatter)
 app.logger.addHandler(handler)
 
 from helpers import *
+import rwr
 
 app.jinja_env.filters.update(
     humanize_seconds=humanize_seconds,
@@ -53,7 +55,8 @@ app.jinja_env.globals.update(
     round=round,
     abs=abs,
     fabs=math.fabs,
-    isinstance=isinstance
+    isinstance=isinstance,
+    PlayersSort=rwr.PlayersSort
 )
 
 
@@ -61,7 +64,6 @@ app.jinja_env.globals.update(
 # After-init imports
 
 
-import rwr
 import routes
 import models
 import commands
@@ -99,6 +101,7 @@ def define_globals():
     g.INCLUDE_WEB_ANALYTICS = not app.config['DEBUG']
     g.NO_INDEX = False
     g.UNDER_MAINTENANCE = False
+    g.LAYOUT = 'normal'
 
 
 @app.before_request

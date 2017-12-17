@@ -1,56 +1,60 @@
-{% macro player_name(player, raw=False, link=False) -%}
+{% macro player_name(player, raw=False, link=False, show_rank=False, show_online=False) -%}
     {% set username = player if raw else player.username %}
 
-    {% if username.lower() == config['MY_USERNAME'] %}
-        <img src="{{ url_for('static', filename='images/me.png') }}" title="Hey, I'm the creator of this website! Glad to see you're using it." class="help me">
-    {% elif username.lower() in config['CONTRIBUTORS'] %}
-        <i class="fa fa-hand-peace-o help" title="This player contributed in a way or another to RWRS. Thanks to her/him!"></i>
-    {% elif username.lower() in config['DEVS'] %}
-        <img src="{{ url_for('static', filename='images/dev.png') }}" title="Say hi to one of the Running With Rifles developers!" class="help">
-    {% endif %}
+    {%- if show_rank and not raw -%}
+        <img src="{{ url_for('static', filename='images/ranks/{rank_id}_icon.png'.format(rank_id=player.rank.id)) }}" title="{{ player.rank.name }}" class="help">
+    {%- endif -%}
 
-    {% if link %}
-        <a href="{{ url_for('player_stats', username=username) }}">
-    {% endif %}
+    {% if show_online and not raw and player.playing_on_server %} <i class="fa fa-circle help txtgreen" title="Playing on {{ server_name(player.playing_on_server, link=False, raw=True) }} ({{ player.playing_on_server.type_name }} - {{ map_name(player.playing_on_server.map, link=False) }} - {{ player.playing_on_server.players.current }}/{{ player.playing_on_server.players.max }})"></i>
+    {%- endif -%}
+
+    {%- if link %} <a href="{{ url_for('player_details', username=username) }}">
+    {%- endif -%}
         {{ username }}
-    {% if link %}
+    {%- if link -%}
         </a>
-    {% endif %}
+    {%- endif -%}
+
+    {% if username.lower() == config['MY_USERNAME'] %} <img src="{{ url_for('static', filename='images/me.png') }}" title="Hey, I'm the creator of this website! Glad to see you're using it." class="help me">
+    {%- elif username.lower() in config['CONTRIBUTORS'] %} <i class="fa fa-hand-peace-o help" title="This player contributed in a way or another to RWRS. Thanks to her/him!"></i>
+    {%- elif username.lower() in config['DEVS'] %} <img src="{{ url_for('static', filename='images/dev.png') }}" title="Say hi to one of the Running With Rifles developers!" class="help">
+    {%- endif %}
 {%- endmacro %}
 
 {% macro map_name(map, link=True) -%}
-    {% if map.name %}
-        {% if link and map.url %}
+    {% if map.name -%}
+        {% if link and map.url -%}
             <a href="{{ map.url }}">
-        {% endif %}
+        {%- endif -%}
             {{ map.name }}
-        {% if link and map.url %}
+        {%- if link and map.url -%}
             </a>
-        {% endif %}
-    {% else %}
+        {%- endif %}
+    {%- else -%}
         {{ map.id }}
-    {% endif %}
+    {%- endif %}
 {%- endmacro %}
 
-{% macro server_name(server, link=True) -%}
-    {% if server.is_ranked %}
-        <i class="fa fa-star txtyellow help" title="Ranked server"></i>
-    {% endif %}
-    {% if link and server.website %}
+{% macro server_name(server, link=True, raw=False) -%}
+    {% if server.is_ranked -%}
+        {% if raw %}★ {% else -%}
+            <i class="fa fa-star txtyellow help" title="Ranked server"></i> {% endif %}
+    {%- endif %}
+    {%- if link and server.website -%}
         <a href="{{ server.website }}">
-    {% endif %}
+    {%- endif -%}
         {{ server.name }}
-    {% if link and server.website %}
+    {%- if link and server.website -%}
         </a>
-    {% endif %}
+    {%- endif -%}
 {%- endmacro %}
 
 {% macro location(location, text=False, na=False) -%}
-    {% if location.country_code %}
+    {% if location.country_code -%}
         <i class="flag flag-{{ location.country_code }}" title="{{ location.country_name }}"></i>{% if text %} {{location.country_name }}{% endif %}
-    {% elif na %}
+    {%- elif na -%}
         N/A
-    {% endif %}
+    {%- endif %}
 {%- endmacro %}
 
 {% macro server_slots_class(server) -%}
@@ -58,23 +62,23 @@
 {%- endmacro %}
 
 {% macro server_join_button(server) -%}
-    {% if server.players.free > 0 %}
+    {% if server.players.free > 0 -%}
         <a href="{{ server.steam_join_link }}" class="btn"><i class="fa fa-steam"></i> Join</a>
-    {% else %}
+    {%- else -%}
         <a href="#" class="btn disabled" onclick="return false;" title="Server is full"><i class="fa fa-steam"></i> Join</a>
-    {% endif %}
+    {%- endif %}
 {%- endmacro %}
 
 {% macro unlockables_list(player_unlocks, type) -%}
-    {% for unlock in player_unlocks[type]['list'] %}
+    {% for unlock in player_unlocks[type]['list'] -%}
         <div>
             <img src="{{ url_for('static', filename='images/unlockables/' + type + '/' + unlock['image'] + '.png') }}" class="{{ 'locked' if not unlock['unlocked'] else '' }} help" title="{{ unlock['name'] }} ({{ unlock['required_xp'] }} XP)">
         </div>
-    {% endfor %}
+    {%- endfor %}
 {%- endmacro %}
 
 {% macro compare_numbers(first, second, attribute, type=int, above_zero_is_good=True, inverse=False) -%}
-    {% if second %}
+    {% if second -%}
         {% set value = first[attribute] - second[attribute] %}
 
         {% if type == int %}
@@ -102,11 +106,11 @@
         {% endif %}
 
         <i class="fa fa-{{ icon_class }} {{ color_class }} help" title="{{ title }}"></i>
-    {% endif %}
+    {%- endif %}
 {%- endmacro %}
 
 {% macro compare_ranks(first, second) -%}
-    {% if second %}
+    {% if second -%}
         {% if first.rank.id > second.rank.id %}
             {% set icon_class = 'arrow-up' %}
             {% set color_class = 'txtgreen' %}
@@ -122,26 +126,26 @@
         {% endif %}
 
         <i class="fa fa-{{ icon_class }} {{ color_class }} help" title="{{ title }}"></i>
-    {% endif %}
+    {%- endif %}
 {%- endmacro %}
 
 {% macro options(name, entries, where=request.args, depth=0) -%}
     {% set spacing = '&nbsp;&nbsp;&nbsp;&nbsp;'|safe * depth if depth > 0 else '' %}
 
-    {% for entry in entries %}
-        {% if not entry.type or entry.type == 'option' %}
+    {%- for entry in entries -%}
+        {% if not entry.type or entry.type == 'option' -%}
             <option value="{{ entry.value }}" {% if where.get(name) == entry.value %}selected{% endif %}>{{ spacing }}{{ entry.label }}</option>
-        {% elif entry.type == 'group' %}
-            {% if not entry.value %}
+        {%- elif entry.type == 'group' -%}
+            {% if not entry.value -%}
                 <optgroup label="{{ entry.label }}">
                     {{ options(name, entry.entries, where=where) }}
                 </optgroup>
-            {% else %}
+            {%- else -%}
                 <option value="{{ entry.value }}" {% if where.get(name) == entry.value %}selected{% endif %}>{{ spacing }}{{ entry.label }}</option>
                 {{ options(name, entry.entries, where=where, depth=depth + 1) }}
-            {% endif %}
-        {% endif %}
-    {% endfor %}
+            {%- endif %}
+        {%- endif %}
+    {%- endfor %}
 {%- endmacro %}
 
 {% macro select(name, default_label, entries, default_value='any', where=request.args, class='') -%}
@@ -153,4 +157,42 @@
 
 {% macro checkbox(name, label, value='yes', where=request.args) -%}
     <label><input type="checkbox" name="{{ name }}" value="{{ value }}" {% if where.get(name) == value %}checked{% endif %}> {{ label }}</label>
+{%- endmacro %}
+
+{% macro stats_notice() -%}
+    <div class="small txtcenter">Stats are updated daily and only concerns ranked servers which are tagged with a <i class="fa fa-star txtyellow"></i></div>
+{%- endmacro %}
+
+{% macro players_list_header_link(label, sort, args, type='numeric', direction='desc') -%}
+    {% set same_sort = args.get('sort') == sort %}
+
+    {%- if not same_sort -%}
+        <a href="{{ url_for('players_list', sort=sort, target=args.get('target'), start=args.get('start'), limit=args.get('limit')) }}">
+    {%- endif -%}
+        {{ label }}
+    {%- if not same_sort -%}
+        </a>
+    {%- endif %}
+
+    {% if same_sort -%}
+        <i class="fa fa-sort-{{ type }}-{{ direction }}"></i>
+    {%- endif -%}
+{%- endmacro %}
+
+{% macro players_list_previous_button(players, args) -%}
+    {%- if not args.get('target') -%}
+        {% set start = players[0].position - (int(args.get('limit')) + 1) %}
+
+        {%- if start >= 0 -%}
+            <a href="{{ url_for('players_list', sort=args.get('sort'), target=args.get('target'), start=start, limit=args.get('limit')) }}" class="btn"><i class="fa fa-angle-double-left"></i> Previous</a>
+        {%- endif -%}
+    {%- endif -%}
+{%- endmacro %}
+
+{% macro players_list_next_button(players, args) -%}
+    {%- if not args.get('target') -%}
+        {% set start = players[-1].position %}
+
+        <a href="{{ url_for('players_list', sort=args.get('sort'), target=args.get('target'), start=start, limit=args.get('limit')) }}" class="btn">Next <i class="fa fa-angle-double-right"></i></a>
+    {%- endif -%}
 {%- endmacro %}

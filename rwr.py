@@ -260,6 +260,11 @@ class PlayersSort:
     XP = 'rank_progression'
 
 
+class PlayersListGame:
+    VANILLA = 'invasion'
+    PACIFIC = 'pacific'
+
+
 def parse_time(string):
     """Parse a humanly-formatted time string."""
     time = _time_regex.match(string)
@@ -329,7 +334,16 @@ class MinimapsImageExtractor:
 
 
 class RanksImageExtractor:
-    rank_image_size = (64, 64)
+    needed_sizes = [
+        {
+            'name': lambda rank_id: rank_id,
+            'size': (64, 64)
+        },
+        {
+            'name': lambda rank_id: rank_id + '_icon',
+            'size': (20, 20)
+        }
+    ]
 
     def __init__(self, game_dir, output_dir):
         self.game_dir = game_dir
@@ -357,18 +371,19 @@ class RanksImageExtractor:
             # Only get the actual content of the image
             rank_image = rank_image.crop(rank_image.convert('RGBa').getbbox())
 
-            # Resize it to fit in the self.rank_image_size dimension
-            rank_image.thumbnail(self.rank_image_size, Image.ANTIALIAS)
+            # Generate the needed images
+            for needed_size in self.needed_sizes:
+                needed_size_image = rank_image.copy()
+                needed_size_image.thumbnail(needed_size['size'], Image.ANTIALIAS)
 
-            paste_pos = (
-                math.floor(self.rank_image_size[0] / 2) - math.floor(rank_image.width / 2),
-                math.floor(self.rank_image_size[1] / 2) - math.floor(rank_image.height / 2)
-            )
+                paste_pos = (
+                    math.floor(needed_size['size'][0] / 2) - math.floor(needed_size_image.width / 2),
+                    math.floor(needed_size['size'][1] / 2) - math.floor(needed_size_image.height / 2)
+                )
 
-            # Paste it in a new image, centered
-            new_rank_image = Image.new('RGBA', self.rank_image_size)
-            new_rank_image.paste(rank_image, paste_pos)
-            new_rank_image.save(os.path.join(self.output_dir, rank_id + '.png'), optimize=True)
+                new_rank_image = Image.new('RGBA', needed_size['size'])
+                new_rank_image.paste(needed_size_image, paste_pos)
+                new_rank_image.save(os.path.join(self.output_dir, needed_size['name'](rank_id) + '.png'), optimize=True)
 
 
 class DataScraper:
@@ -380,10 +395,10 @@ class DataScraper:
         url = endpoint + resource
 
         headers = {
-            'User-Agent': 'RWRS'
+            'User-Agent': 'rwrstats.com'
         }
 
-        response = requests.get(url, params=params, headers=headers, timeout=2)
+        response = requests.get(url, params=params, headers=headers, timeout=5)
 
         response.raise_for_status()
 
@@ -640,12 +655,14 @@ class DataScraper:
         return ret
 
     @cache.memoize(timeout=app.config['PLAYERS_CACHE_TIMEOUT'])
-    def get_players(self, sort=PlayersSort.SCORE, start=0, size=25):
+    def get_players(self, sort=PlayersSort.SCORE, target=None, start=None, limit=app.config['PLAYERS_LIST_PAGE_SIZES'][0], game=PlayersListGame.VANILLA):
         """Get and parse a list of RWR players."""
         params = {
+            'db': game,
             'sort': sort,
             'start': start,
-            'size': size
+            'size': limit,
+            'search': target
         }
 
         html_content = self._call(self.players_endpoint, 'view_players.php', 'html', params=params)
@@ -658,11 +675,12 @@ class DataScraper:
         return players
 
     @cache.memoize(timeout=app.config['PLAYERS_CACHE_TIMEOUT'])
-    def search_player(self, username):
+    def search_player(self, username, game=PlayersListGame.VANILLA):
         """Search for a RWR player."""
         username = username.upper()
 
         params = {
+            'db': game,
             'search': username
         }
 
@@ -789,6 +807,7 @@ class Player:
         """Load a player data from an HTML <tr> node."""
         ret = cls()
 
+        position_cell = node[0]
         username_cell = node[1]
         kills_cell = node[2]
         deaths_cell = node[3]
@@ -806,6 +825,7 @@ class Player:
         xp_cell = node[15]
         rank_image_cell = node[17]
 
+        ret.position = int(position_cell.text)
         ret.username = username_cell.text
         ret.kills = int(kills_cell.text)
         ret.deaths = int(deaths_cell.text)
