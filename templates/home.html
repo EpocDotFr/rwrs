@@ -12,10 +12,10 @@
 {% endblock %}
 
 {% block content %}
-    <div class="home grid mtm mbm txtcenter">
+    <div class="home grid mtm mbm">
         <div class="prl">
-            <h2><i class="fa fa-user"></i> Looking for a player?</h2>
-            <div class="pbm">
+            <h2 class="txtcenter"><i class="fa fa-user"></i> Looking for a player?</h2>
+            <div class="pbm txtcenter">
                 <form method="get" action="{{ url_for('players_list') }}">
                     <a href="{{ url_for('players_list') }}" class="btn"><i class="fa fa-chevron-right"></i> Go to the players list</a> or <input type="text" name="username" placeholder="Type a player name" required> <button type="submit"><i class="fa fa-search"></i> Find</button>
                 </form>
@@ -27,8 +27,8 @@
             </fieldset>
         </div>
         <div class="pll">
-            <h2><i class="fa fa-server"></i> Looking for a server?</h2>
-            <p class="mtn pbm"><a href="{{ url_for('servers_list') }}" class="btn"><i class="fa fa-chevron-right"></i> Go to the servers list</a></p>
+            <h2 class="txtcenter"><i class="fa fa-server"></i> Looking for a server?</h2>
+            <p class="mtn pbm txtcenter"><a href="{{ url_for('servers_list') }}" class="btn"><i class="fa fa-chevron-right"></i> Go to the servers list</a></p>
             <fieldset class="man pan">
                 <legend class="mls">Online and active servers (past week)</legend>
                 <p id="servers-chart-legend" class="small"></p>
