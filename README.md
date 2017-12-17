@@ -10,6 +10,7 @@ Available at [rwrstats.com](https://rwrstats.com/).
     - View player stats (as well as next rank progression, unlocks, on which server he's playing on, etc). Note that stats only concerns official invasion (ranked) servers
     - Compare two players stats
     - Friends list (easily know on which servers your friends are playing on. There's no need to create a user account or whatever)
+    - Players list (leaderboard)
   - Public servers
     - Real servers location
     - Real maps name
