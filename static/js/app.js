@@ -382,7 +382,18 @@ friendsFeature = {
      * Get all the user's friends.
      */
     getFriends: function() {
-        return JSON.parse(localStorage.getItem('friends')) || [];
+        var friends = JSON.parse(localStorage.getItem('friends'));
+
+        if (!friends) {
+            return [];
+        }
+
+        // Force usernames to be string as they are stored either as int or string by the JSON parser
+        $.each(friends, function(key, friend) {
+            friends[key] = friend + '';
+        });
+
+        return friends;
     },
     /**
      * Set the user's friends.
