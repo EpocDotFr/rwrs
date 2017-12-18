@@ -88,7 +88,13 @@
         </tbody>
     </table>
 
-    <p class="txtcenter"><a href="" class="btn"><i class="fa fa-{{ 'compress' if request.args.get('view') == 'extended' else 'expand' }}"></i> Use {{ 'normal' if request.args.get('view') == 'extended' else 'extended' }} view</a></p>
+    {% set view_link_params = merge_query_string_params({'view': None if request.args.get('view') == 'extended' else 'extended'}) %}
+    {% set view_link_icon = 'compress' if request.args.get('view') == 'extended' else 'expand' %}
+    {% set view_link_text = 'normal' if request.args.get('view') == 'extended' else 'extended' %}
+
+    <p class="txtcenter">
+        <a href="{{ url_for('servers_list', **view_link_params) }}" class="btn"><i class="fa fa-{{ view_link_icon }}"></i> Use {{ view_link_text }} view</a>
+    </p>
 
     <script>
         friendsFeature.all_players_with_servers_details = {{ g.all_players_with_servers_details|tojson }};

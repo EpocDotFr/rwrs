@@ -1,3 +1,4 @@
+from flask import request
 import socket
 import struct
 
@@ -6,7 +7,8 @@ __all__ = [
     'humanize_seconds',
     'humanize_integer',
     'ip2long',
-    'long2ip'
+    'long2ip',
+    'merge_query_string_params'
 ]
 
 
@@ -55,3 +57,12 @@ def ip2long(ip):
 def long2ip(long):
     """Convert an integer IP to its string representation."""
     return socket.inet_ntoa(struct.pack('!L', long))
+
+
+def merge_query_string_params(params):
+    """Return the dict of all the current request query string parameters after merging params in it."""
+    args = request.args.to_dict()
+
+    args.update(params)
+
+    return args
