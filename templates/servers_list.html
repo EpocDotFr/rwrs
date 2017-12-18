@@ -12,7 +12,7 @@
 {% endblock %}
 
 {% block content %}
-    <form action="{{ url_for('servers_list') }}" method="GET" class="mbs{% if request.args.get('view') == 'extended' %} w1140p center{% endif %}">
+    <form action="{{ url_for('servers_list') }}" method="GET" class="mbs {{ 'w1140p center' if request.args.get('view') == 'extended' else '' }}">
         <fieldset class="man">
             <legend><i class="fa fa-filter"></i> Filters</legend>
 
@@ -35,18 +35,18 @@
                 <th>Name</th>
                 <th>Current players</th>
                 <th>Max players</th>
-                {% if request.args.get('view') == 'extended' -%}
+                {% if request.args.get('view') == 'extended' %}
                     <th>Bots</th>
-                {%- endif %}
+                {% endif %}
                 <th>Map</th>
                 <th>Type</th>
                 <th>Mode</th>
-                {% if request.args.get('view') == 'extended' -%}
+                {% if request.args.get('view') == 'extended' %}
                     <th>Version</th>
                     <th>Dedicated?</th>
                     <th>Message</th>
                     <th>Players</th>
-                {%- endif %}
+                {% endif %}
                 <th class="w150p"></th>
             </tr>
         </thead>
@@ -56,18 +56,22 @@
                     <td class="nowrap">{{ macros.location(server.location) }} {{ macros.server_name(server) }}</td>
                     <td class="{{ macros.server_slots_class(server) }}">{{ server.players.current }}</td>
                     <td>{{ server.players.max }}</td>
-                    {% if request.args.get('view') == 'extended' -%}
+                    {% if request.args.get('view') == 'extended' %}
                         <td>{{ server.bots }}</td>
-                    {%- endif %}
+                    {% endif %}
                     <td>{{ macros.map_name(server.map) }}</td>
                     <td>{{ server.type_name }}</td>
                     <td>{{ server.mode_name }}</td>
-                    {% if request.args.get('view') == 'extended' -%}
+                    {% if request.args.get('view') == 'extended' %}
                         <td>{{ server.version }}</td>
                         <td>{{ 'Yes' if server.is_dedicated else 'No' }}</td>
-                        <td>{{ server.comment if server.comment else 'N/A' }}</td>
-                        <td>TODO</td>
-                    {%- endif %}
+                        <td>{{ server.comment if server.comment else '' }}</td>
+                        <td>
+                            {% for player in server.players.list %}
+                                {{ macros.player_name(player, raw=True, link=True) }}{{ ', ' if not loop.last else '' }}
+                            {% endfor %}
+                        </td>
+                    {% endif %}
                     <td class="txtcenter">
                         {{ macros.server_join_button(server) }}
 
@@ -84,7 +88,7 @@
         </tbody>
     </table>
 
-    <p class="txtcenter"><a href="" class="btn"><i class="fa fa-{% if request.args.get('view') == 'extended' %}compress{% else %}expand{% endif %}"></i> Use {% if request.args.get('view') == 'extended' %}normal{% else %}extended{% endif %} view</a></p>
+    <p class="txtcenter"><a href="" class="btn"><i class="fa fa-{{ 'compress' if request.args.get('view') == 'extended' else 'expand' }}"></i> Use {{ 'normal' if request.args.get('view') == 'extended' else 'extended' }} view</a></p>
 
     <script>
         friendsFeature.all_players_with_servers_details = {{ g.all_players_with_servers_details|tojson }};
