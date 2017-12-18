@@ -43,7 +43,6 @@
                 <th>Mode</th>
                 {% if request.args.get('view') == 'extended' %}
                     <th>Version</th>
-                    <th>Dedicated?</th>
                     <th>Message</th>
                     <th>Players</th>
                 {% endif %}
@@ -64,7 +63,6 @@
                     <td>{{ server.mode_name }}</td>
                     {% if request.args.get('view') == 'extended' %}
                         <td>{{ server.version }}</td>
-                        <td>{{ 'Yes' if server.is_dedicated else 'No' }}</td>
                         <td>{{ server.comment if server.comment else '' }}</td>
                         <td>
                             {% for player in server.players.list %}
