@@ -33,8 +33,12 @@ def my_friends():
 
 
 @app.route('/players')
-@app.route('/players/<database>')
-def players_list(database=rwr.PlayersListDatabase.INVASION):
+def players_list_old():
+    return redirect(url_for('players_list', database=rwr.PlayersListDatabase.INVASION), code=301)
+
+
+@app.route('/players/<any(' + ','.join([rwr.PlayersListDatabase.INVASION, rwr.PlayersListDatabase.PACIFIC]) + '):database>')
+def players_list(database):
     if request.args.get('username'):
         username = request.args.get('username').strip()
 
@@ -83,13 +87,17 @@ def players_list(database=rwr.PlayersListDatabase.INVASION):
     return render_template(
         'players_list.html',
         players=players,
-        args=args,
-        database=database
+        args=args
     )
 
 
 @app.route('/players/<username>')
-def player_details(username):
+def player_details_old(username):
+    return redirect(url_for('player_details', database=rwr.PlayersListDatabase.INVASION, username=username), code=301)
+
+
+@app.route('/players/<any(' + ','.join([rwr.PlayersListDatabase.INVASION, rwr.PlayersListDatabase.PACIFIC]) + '):database>/<username>')
+def player_details(database, username):
     scraper = rwr.DataScraper()
 
     player = scraper.search_player(username)

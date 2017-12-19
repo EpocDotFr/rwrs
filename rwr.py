@@ -655,10 +655,10 @@ class DataScraper:
         return ret
 
     @cache.memoize(timeout=app.config['PLAYERS_CACHE_TIMEOUT'])
-    def get_players(self, sort=PlayersSort.SCORE, target=None, start=None, limit=app.config['PLAYERS_LIST_PAGE_SIZES'][0], game=PlayersListDatabase.INVASION):
+    def get_players(self, sort=PlayersSort.SCORE, target=None, start=None, limit=app.config['PLAYERS_LIST_PAGE_SIZES'][0], database=PlayersListDatabase.INVASION):
         """Get and parse a list of RWR players."""
         params = {
-            'db': game,
+            'db': database,
             'sort': sort,
             'start': start,
             'size': limit,
@@ -675,12 +675,12 @@ class DataScraper:
         return players
 
     @cache.memoize(timeout=app.config['PLAYERS_CACHE_TIMEOUT'])
-    def search_player(self, username, game=PlayersListDatabase.INVASION):
+    def search_player(self, username, database=PlayersListDatabase.INVASION):
         """Search for a RWR player."""
         username = username.upper()
 
         params = {
-            'db': game,
+            'db': database,
             'search': username
         }
 

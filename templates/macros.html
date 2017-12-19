@@ -167,7 +167,7 @@
     {% set same_sort = args.get('sort') == sort %}
 
     {%- if not same_sort -%}
-        <a href="{{ url_for('players_list', sort=sort, target=args.get('target'), start=args.get('start'), limit=args.get('limit')) }}">
+        <a href="{{ url_for('players_list', database=request.view_args.get('database'), sort=sort, target=args.get('target'), start=args.get('start'), limit=args.get('limit')) }}">
     {%- endif -%}
         {{ label }}
     {%- if not same_sort -%}
@@ -184,7 +184,7 @@
         {% set start = players[0].position - (int(args.get('limit')) + 1) %}
 
         {%- if start >= 0 -%}
-            <a href="{{ url_for('players_list', sort=args.get('sort'), target=args.get('target'), start=start, limit=args.get('limit')) }}" class="btn"><i class="fa fa-angle-double-left"></i> Previous</a>
+            <a href="{{ url_for('players_list', database=request.view_args.get('database'), sort=args.get('sort'), target=args.get('target'), start=start, limit=args.get('limit')) }}" class="btn"><i class="fa fa-angle-double-left"></i> Previous</a>
         {%- endif -%}
     {%- endif -%}
 {%- endmacro %}
@@ -193,6 +193,6 @@
     {%- if not args.get('target') -%}
         {% set start = players[-1].position %}
 
-        <a href="{{ url_for('players_list', sort=args.get('sort'), target=args.get('target'), start=start, limit=args.get('limit')) }}" class="btn">Next <i class="fa fa-angle-double-right"></i></a>
+        <a href="{{ url_for('players_list', database=request.view_args.get('database'), sort=args.get('sort'), target=args.get('target'), start=start, limit=args.get('limit')) }}" class="btn">Next <i class="fa fa-angle-double-right"></i></a>
     {%- endif -%}
 {%- endmacro %}

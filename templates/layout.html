@@ -42,8 +42,8 @@
     {% if not g.UNDER_MAINTENANCE %}
         <nav>
             <ul class="txtcenter unstyled mbs">
-                <li class="inbl"><a href="{{ url_for('players_list', database=PlayersListDatabase.INVASION) }}" class="btn {{ 'active' if request.path.startswith('/players') and database == PlayersListDatabase.INVASION }}"><i class="fa fa-user"></i> Players: Invasion</a></li>
-                <li class="inbl"><a href="{{ url_for('players_list', database=PlayersListDatabase.PACIFIC) }}" class="btn {{ 'active' if request.path.startswith('/players') and database == PlayersListDatabase.PACIFIC }}"><i class="fa fa-user"></i> Players: Pacific</a></li>
+                <li class="inbl"><a href="{{ url_for('players_list', database=PlayersListDatabase.INVASION) }}" class="btn {{ 'active' if request.path.startswith('/players') and request.view_args.get('database') == PlayersListDatabase.INVASION }}"><i class="fa fa-user"></i> Players: Invasion</a></li>
+                <li class="inbl"><a href="{{ url_for('players_list', database=PlayersListDatabase.PACIFIC) }}" class="btn {{ 'active' if request.path.startswith('/players') and request.view_args.get('database') == PlayersListDatabase.PACIFIC }}"><i class="fa fa-user"></i> Players: Pacific</a></li>
                 <li class="inbl"><a href="{{ url_for('servers_list') }}" class="btn {{ 'active' if request.path.startswith('/servers') }}"><i class="fa fa-server"></i> Servers</a></li>
             </ul>
         </nav>

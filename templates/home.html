@@ -16,8 +16,8 @@
         <div class="prl">
             <h2 class="txtcenter"><i class="fa fa-user"></i> Looking for a player?</h2>
             <div class="pbm txtcenter">
-                <form method="get" action="{{ url_for('players_list') }}">
-                    <a href="{{ url_for('players_list') }}" class="btn"><i class="fa fa-chevron-right"></i> Go to the players list</a> or <input type="text" name="username" placeholder="Type a player name" required> <button type="submit"><i class="fa fa-search"></i> Find</button>
+                <form method="get" action="{{ url_for('players_list', database=PlayersListDatabase.INVASION) }}">
+                    <a href="{{ url_for('players_list', database=PlayersListDatabase.INVASION) }}" class="btn"><i class="fa fa-chevron-right"></i> Go to the players list</a> or <input type="text" name="username" placeholder="Type a player name" required> <button type="submit"><i class="fa fa-search"></i> Find</button>
                 </form>
             </div>
             <fieldset class="man pan">
