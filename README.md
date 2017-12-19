@@ -11,6 +11,7 @@ and its Pacific DLC. Available at [rwrstats.com](https://rwrstats.com/).
     - Compare two players stats
     - Friends list (easily know on which servers your friends are playing on. There's no need to create a user account or whatever)
     - Players list (leaderboard)
+    - Support for both the official invasion servers and official Pacific servers
   - Public servers
     - Real servers location
     - Real maps name
