@@ -18,7 +18,7 @@
         </div>
         <div class="three-fifth">
             <form method="get" class="txtcenter inlb" action="{{ url_for('players_list') }}">
-                <label>Player to highlight: <input type="text" name="target" placeholder="Type a player name" value="{{ args.get('target') if args.get('target') else '' }}"></label>
+                <label>Player to highlight: <input type="text" name="target" placeholder="Type a player name" value="{{ args.get('target') if args.get('target') }}"></label>
 
                 <label>
                     Page size:
@@ -41,7 +41,7 @@
         </div>
     </div>
 
-    <table class="{{ 'striped' if players else '' }} mbn players-list">
+    <table class="{{ 'striped' if players }} mbn players-list">
         <thead>
             <tr>
                 <th>#</th>
