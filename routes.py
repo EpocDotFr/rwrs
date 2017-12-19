@@ -43,7 +43,7 @@ def players_list(database):
         username = request.args.get('username').strip()
 
         # Redirect to a SEO-friendly URL if the username query parameter is detected
-        return redirect(url_for('player_details', username=username), code=301)
+        return redirect(url_for('player_details', database=database, username=username), code=301)
 
     args = request.args.to_dict()
 
@@ -63,6 +63,7 @@ def players_list(database):
     servers = scraper.get_servers()
 
     players = scraper.get_players(
+        database,
         sort=args['sort'],
         target=args['target'] if args.get('target') else None,
         start=args['start'] if args.get('start') else None,
@@ -80,7 +81,7 @@ def players_list(database):
     if args.get('target') and not target_found:
         flash(ERROR_PLAYER_NOT_FOUND.format(username=args.get('target')), 'error')
 
-        return redirect(url_for('players_list'))
+        return redirect(url_for('players_list', database=database))
 
     g.LAYOUT = 'large'
 
@@ -100,7 +101,7 @@ def player_details_old(username):
 def player_details(database, username):
     scraper = rwr.DataScraper()
 
-    player = scraper.search_player(username)
+    player = scraper.search_player(database, username)
 
     if not player:
         flash(ERROR_PLAYER_NOT_FOUND.format(username=username), 'error')
@@ -131,19 +132,19 @@ def players_compare(username, username_to_compare_with=None):
 
     scraper = rwr.DataScraper()
 
-    player = scraper.search_player(username)
+    player = scraper.search_player(database, username)
 
     if not player:
         flash(ERROR_PLAYER_NOT_FOUND.format(username=username), 'error')
 
         return redirect(url_for('home'))
 
-    player_to_compare_with = scraper.search_player(username_to_compare_with)
+    player_to_compare_with = scraper.search_player(database, username_to_compare_with)
 
     if not player_to_compare_with:
         flash(ERROR_PLAYER_NOT_FOUND.format(username=username_to_compare_with), 'error')
 
-        return redirect(url_for('player_details', username=username))
+        return redirect(url_for('player_details', database=database, username=username))
 
     servers = scraper.get_servers()
 

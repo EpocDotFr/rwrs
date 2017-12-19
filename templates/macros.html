@@ -8,7 +8,7 @@
     {% if show_online and not raw and player.playing_on_server %} <i class="fa fa-circle help txtgreen" title="Playing on {{ server_name(player.playing_on_server, link=False, raw=True) }} ({{ player.playing_on_server.type_name }} - {{ map_name(player.playing_on_server.map, link=False) }} - {{ player.playing_on_server.players.current }}/{{ player.playing_on_server.players.max }})"></i>
     {%- endif -%}
 
-    {%- if link %} <a href="{{ url_for('player_details', username=username) }}">
+    {%- if link %} <a href="{{ url_for('player_details', database=request.view_args.get('database'), username=username) }}">
     {%- endif -%}
         {{ username }}
     {%- if link -%}
@@ -195,4 +195,8 @@
 
         <a href="{{ url_for('players_list', database=request.view_args.get('database'), sort=args.get('sort'), target=args.get('target'), start=start, limit=args.get('limit')) }}" class="btn">Next <i class="fa fa-angle-double-right"></i></a>
     {%- endif -%}
+{%- endmacro %}
+
+{% macro database_name() -%}
+    {{ 'Invasion' if request.view_args.get('database') == PlayersListDatabase.INVASION else 'Pacific' if request.view_args.get('database') == PlayersListDatabase.PACIFIC }}
 {%- endmacro %}

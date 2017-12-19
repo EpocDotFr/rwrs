@@ -2,9 +2,9 @@
 
 {% extends 'layout.html' %}
 
-{% block page_title %}<h2><i class="fa fa-user"></i> Players: {{ 'Invasion' if database == PlayersListDatabase.INVASION else 'Pacific' if database == PlayersListDatabase.PACIFIC }}{% if args.get('target') %} (highlighting {{ macros.player_name(args.get('target'), raw=True) }}){% endif %}</h2>{% endblock %}
+{% block page_title %}<h2><i class="fa fa-user"></i> Players: {{ macros.database_name() }}{% if args.get('target') %} (highlighting {{ macros.player_name(args.get('target'), raw=True) }}){% endif %}</h2>{% endblock %}
 
-{% block meta_title %}Players: {{ 'Invasion' if database == PlayersListDatabase.INVASION else 'Pacific' if database == PlayersListDatabase.PACIFIC }}{% if args.get('target') %} (highlighting {{ args.get('target') }}){% endif %}{% endblock %}
+{% block meta_title %}Players: {{ macros.database_name() }}{% if args.get('target') %} (highlighting {{ args.get('target') }}){% endif %}{% endblock %}
 
 {% block jsfiles %}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/zepto/1.2.0/zepto.min.js"></script>
