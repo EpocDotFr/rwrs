@@ -51,6 +51,10 @@ Available configuration parameters are:
 More informations on the three above can be found [here](http://flask.pocoo.org/docs/0.12/config/#builtin-configuration-values).
 
   - `GAUGES_SITE_ID` A [Gauges](https://gaug.es/) site ID used to track visits on RWRS (optional)
+  - `CACHE_THRESHOLD` The maximum number of items the cache will store before it starts deleting some (see [here](https://pythonhosted.org/Flask-Cache/#configuring-flask-cache) for more configuration parameters related to Flask-Cache)
+  - `SERVERS_CACHE_TIMEOUT` Cache duration of the servers list (in seconds)
+  - `PLAYERS_CACHE_TIMEOUT` Cache duration of the players list as well as data for a single player (in seconds)
+  - `GRAPHS_DATA_CACHE_TIMEOUT` Cache duration of the graphs data, both the players and the servers ones (in seconds)
 
 I'll let you search yourself about how to configure a web server along uWSGI.
 
@@ -78,7 +82,7 @@ You'll probably have to hack with this application to make it work with one of t
 ### Extracting ranks images
 
 The Flask command `flask extract_ranks_images` is used to retrieve, process (the actual images content isn't centered)
-and save all the RWR ranks images. They are saved at `static/images/ranks/{rank ID}.png`.
+and save all the RWR ranks images. They are saved at `static/images/ranks/{rank ID}.png` and `static/images/ranks/{rank ID}_icon.png`.
 
   1. `pip install -r requirements-dev.txt`
   2. `set FLASK_APP=rwrs.py`
@@ -96,6 +100,24 @@ The Flask command `flask extract_minimaps` is used to extract minimaps (the ones
   3. `flask extract_minimaps --gamedir="{path to the game root directory}"`
 
 This command requires the game to be installed.
+
+### Clearing cache
+
+```
+flask cc
+```
+
+### Clearing old graphs data
+
+```
+flask clean_servers_player_count
+```
+
+### Storing actual number of players on each servers (for graphs)
+
+```
+flask get_servers_player_count
+```
 
 ## How it works
 
