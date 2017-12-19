@@ -58,7 +58,7 @@
 {%- endmacro %}
 
 {% macro server_slots_class(server) -%}
-    {{ 'txtorange' if server.players.free in (1, 2) else 'txtred' if server.players.free == 0 else '' }}
+    {{ 'txtorange' if server.players.free in (1, 2) else 'txtred' if server.players.free == 0 }}
 {%- endmacro %}
 
 {% macro server_join_button(server) -%}
@@ -72,7 +72,7 @@
 {% macro unlockables_list(player_unlocks, type) -%}
     {% for unlock in player_unlocks[type]['list'] -%}
         <div>
-            <img src="{{ url_for('static', filename='images/unlockables/' + type + '/' + unlock['image'] + '.png') }}" class="{{ 'locked' if not unlock['unlocked'] else '' }} help" title="{{ unlock['name'] }} ({{ unlock['required_xp'] }} XP)">
+            <img src="{{ url_for('static', filename='images/unlockables/' + type + '/' + unlock['image'] + '.png') }}" class="{{ 'locked' if not unlock['unlocked'] }} help" title="{{ unlock['name'] }} ({{ unlock['required_xp'] }} XP)">
         </div>
     {%- endfor %}
 {%- endmacro %}
@@ -130,7 +130,7 @@
 {%- endmacro %}
 
 {% macro options(name, entries, where=request.args, depth=0) -%}
-    {% set spacing = '&nbsp;&nbsp;&nbsp;&nbsp;'|safe * depth if depth > 0 else '' %}
+    {% set spacing = '&nbsp;&nbsp;&nbsp;&nbsp;'|safe * depth if depth > 0 %}
 
     {%- for entry in entries -%}
         {% if not entry.type or entry.type == 'option' -%}
