@@ -6,12 +6,12 @@ and its Pacific DLC. Available at [rwrstats.com](https://rwrstats.com/).
 ## Features
 
   - Players
+    - Support stats for both the official invasion (vanilla RWR) servers and official Pacific servers
     - Search for a player
-    - View player stats (as well as next rank progression, unlocks, on which server he's playing on, etc). Note that stats only concerns official invasion (ranked) servers
+    - View player stats (as well as next rank progression, unlocks, on which server he's playing on, etc)
     - Compare two players stats
     - Friends list (easily know on which servers your friends are playing on. There's no need to create a user account or whatever)
     - Players list (leaderboard)
-    - Support for both the official invasion servers and official Pacific servers
   - Public servers
     - Real servers location
     - Real maps name
