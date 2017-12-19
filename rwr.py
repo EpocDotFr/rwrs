@@ -260,8 +260,8 @@ class PlayersSort:
     XP = 'rank_progression'
 
 
-class PlayersListGame:
-    VANILLA = 'invasion'
+class PlayersListDatabase:
+    INVASION = 'invasion'
     PACIFIC = 'pacific'
 
 
@@ -655,7 +655,7 @@ class DataScraper:
         return ret
 
     @cache.memoize(timeout=app.config['PLAYERS_CACHE_TIMEOUT'])
-    def get_players(self, sort=PlayersSort.SCORE, target=None, start=None, limit=app.config['PLAYERS_LIST_PAGE_SIZES'][0], game=PlayersListGame.VANILLA):
+    def get_players(self, sort=PlayersSort.SCORE, target=None, start=None, limit=app.config['PLAYERS_LIST_PAGE_SIZES'][0], game=PlayersListDatabase.INVASION):
         """Get and parse a list of RWR players."""
         params = {
             'db': game,
@@ -675,7 +675,7 @@ class DataScraper:
         return players
 
     @cache.memoize(timeout=app.config['PLAYERS_CACHE_TIMEOUT'])
-    def search_player(self, username, game=PlayersListGame.VANILLA):
+    def search_player(self, username, game=PlayersListDatabase.INVASION):
         """Search for a RWR player."""
         username = username.upper()
 

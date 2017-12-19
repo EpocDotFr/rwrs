@@ -33,7 +33,8 @@ def my_friends():
 
 
 @app.route('/players')
-def players_list():
+@app.route('/players/<database>')
+def players_list(database=rwr.PlayersListDatabase.INVASION):
     if request.args.get('username'):
         username = request.args.get('username').strip()
 
@@ -82,7 +83,8 @@ def players_list():
     return render_template(
         'players_list.html',
         players=players,
-        args=args
+        args=args,
+        database=database
     )
 
 

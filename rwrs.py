@@ -56,7 +56,8 @@ app.jinja_env.globals.update(
     abs=abs,
     fabs=math.fabs,
     isinstance=isinstance,
-    PlayersSort=rwr.PlayersSort
+    PlayersSort=rwr.PlayersSort,
+    PlayersListDatabase=rwr.PlayersListDatabase,
 )
 
 
