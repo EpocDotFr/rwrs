@@ -1,5 +1,7 @@
 {% extends 'layout.html' %}
 
+{% block page_title %}<h2><i class="fa fa-home"></i> Welcome</h2>{% endblock %}
+
 {% block jsfiles %}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.11.0/d3.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/metrics-graphics/2.11.0/metricsgraphics.min.js"></script>
@@ -12,23 +14,23 @@
 {% endblock %}
 
 {% block content %}
-    <div class="home grid mtm mbm">
-        <div class="prl">
-            <h2 class="txtcenter"><i class="fa fa-user"></i> Looking for a player?</h2>
-            <div class="pbm txtcenter">
-                <form method="get" action="{{ url_for('players_list', database=PlayersListDatabase.INVASION) }}">
-                    <a href="{{ url_for('players_list', database=PlayersListDatabase.INVASION) }}" class="btn"><i class="fa fa-chevron-right"></i> Go to the players list</a> or <input type="text" name="username" placeholder="Type a player name" required> <button type="submit"><i class="fa fa-search"></i> Find</button>
-                </form>
-            </div>
+    <!-- TODO Move this in players list
+    <form method="get" action="{{ url_for('players_list', database=PlayersListDatabase.INVASION) }}">
+        <a href="{{ url_for('players_list', database=PlayersListDatabase.INVASION) }}" class="btn"><i class="fa fa-chevron-right"></i> Go to the players list</a> or <input type="text" name="username" placeholder="Type a player name" required> <button type="submit"><i class="fa fa-search"></i> Find</button>
+    </form>
+    -->
+
+    <p>This is RWRS (Running With Rifles Stats), providing you a clean display of players stats (both for official RWR invasion servers and official Pacific servers).</p>
+
+    <div class="grid has-gutter-xl">
+        <div>
             <fieldset class="man pan">
                 <legend class="mls">Online players (past week)</legend>
                 <p id="online-players-legend" class="small txtcenter"></p>
                 <div id="online-players-chart" class="chart"></div>
             </fieldset>
         </div>
-        <div class="pll">
-            <h2 class="txtcenter"><i class="fa fa-server"></i> Looking for a server?</h2>
-            <p class="mtn pbm txtcenter"><a href="{{ url_for('servers_list') }}" class="btn"><i class="fa fa-chevron-right"></i> Go to the servers list</a></p>
+        <div>
             <fieldset class="man pan">
                 <legend class="mls">Online and active servers (past week)</legend>
                 <p id="servers-chart-legend" class="small txtcenter"></p>
