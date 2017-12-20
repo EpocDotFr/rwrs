@@ -755,7 +755,8 @@ class Server:
 
         ret.mode = mode_node.text
 
-        ret.is_ranked = realm_node.text == 'official_invasion' # Only server stats with this realm are shared between each other and are available to be viewed
+        ret.is_ranked = realm_node.text in ['official_invasion', 'official_pacific']
+        ret.database = PlayersListDatabase.INVASION if realm_node.text == 'official_invasion' else PlayersListDatabase.PACIFIC if realm_node.text == 'official_pacific' else None
 
         ret.location = ServerLocation()
 

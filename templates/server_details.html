@@ -79,7 +79,9 @@
                         <tr data-username="{{ player }}">
                             <td>
                                 <div class="actions fr">
-                                    <a href="{{ url_for('players_list', database=request.view_args.get('database'), target=player) }}" title="Highlight in leaderboard"><i class="fa fa-list-ol"></i></a>
+                                    {% if server.is_ranked %}
+                                        <a href="{{ url_for('players_list', database=server.database, target=player) }}" title="Highlight in {{ macros.database_name(server.database) }} leaderboard"><i class="fa fa-list-ol"></i></a>
+                                    {% endif %}
 
                                     <span class="friends-feature is-hidden">
                                         <a href="#" title="Add {{ player }} to friends list" class="add-friend is-hidden"><i class="fa fa-user-plus"></i></a>
@@ -87,7 +89,7 @@
                                     </span>
                                 </div>
 
-                                {{ macros.player_name(player, raw=True, link=True) }}
+                                {{ macros.player_name(player, raw=True, link=True, database=server.database) }}
                             </td>
                         </tr>
                     {% else %}

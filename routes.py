@@ -120,12 +120,21 @@ def player_details(database, username):
 
 @app.route('/players/<username>/compare')
 @app.route('/players/<username>/compare/<username_to_compare_with>')
-def players_compare(username, username_to_compare_with=None):
+def players_compare_old(username, username_to_compare_with=None):
+    if not username_to_compare_with and request.args.get('username_to_compare_with'):
+        username_to_compare_with = request.args.get('username_to_compare_with').strip()
+
+    return redirect(url_for('players_compare', database=rwr.PlayersListDatabase.INVASION, username=username, username_to_compare_with=username_to_compare_with), code=301)
+
+
+@app.route('/players/<any(' + ','.join([rwr.PlayersListDatabase.INVASION, rwr.PlayersListDatabase.PACIFIC]) + '):database>/<username>/compare')
+@app.route('/players/<any(' + ','.join([rwr.PlayersListDatabase.INVASION, rwr.PlayersListDatabase.PACIFIC]) + '):database>/<username>/compare/<username_to_compare_with>')
+def players_compare(database, username, username_to_compare_with=None):
     if not username_to_compare_with and request.args.get('username_to_compare_with'):
         username_to_compare_with = request.args.get('username_to_compare_with').strip()
 
         # Redirect to a SEO-friendly URL if the username_to_compare_with query parameter is detected
-        return redirect(url_for('players_compare', username=username, username_to_compare_with=username_to_compare_with), code=301)
+        return redirect(url_for('players_compare', database=database, username=username, username_to_compare_with=username_to_compare_with), code=301)
 
     if not username_to_compare_with:
         abort(404)
