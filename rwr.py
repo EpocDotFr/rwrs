@@ -232,6 +232,12 @@ SERVER_TYPES = OrderedDict([
 ])
 
 
+PLAYERS_LIST_DATABASES = {
+    'invasion': {'name': 'Invasion', 'ranks': 'us', 'realm': 'official_invasion'},
+    'pacific': {'name': 'Pacific', 'ranks': app.config['PACIFIC_PLAYERS_RANKS'], 'realm': 'official_pacific'}
+}
+
+
 def get_mode_name(mode, short=True):
     """Return the server's game mode name."""
     return SERVER_MODES[mode]['short' if short else 'long'] if mode in SERVER_MODES else mode if mode is not None else 'N/A'
@@ -240,6 +246,11 @@ def get_mode_name(mode, short=True):
 def get_type_name(type):
     """Return the server's game type name."""
     return SERVER_TYPES[type] if type in SERVER_TYPES else type if type is not None else 'N/A'
+
+
+def get_database_name(database):
+    """Return the name of a stats database."""
+    return PLAYERS_LIST_DATABASES[database]['name'] if database in PLAYERS_LIST_DATABASES else None
 
 
 class PlayersSort:
@@ -258,11 +269,6 @@ class PlayersSort:
     SHOTS_FIRED = 'shots_fired'
     THROWABLES_THROWN = 'throwables_thrown'
     XP = 'rank_progression'
-
-
-class PlayersListDatabase:
-    INVASION = 'invasion'
-    PACIFIC = 'pacific'
 
 
 def parse_time(string):
@@ -699,6 +705,7 @@ class DataScraper:
 
 class Server:
     website = None
+    database = None
 
     @classmethod
     def load(cls, xml_node, html_servers):
@@ -728,6 +735,7 @@ class Server:
         server_type, map_id = parse_map_path(map_id_node.text.replace('//', '/'))
 
         ret.type = server_type
+        ret.type_name = get_type_name(ret.type)
 
         ret.map = ServerMap()
         ret.map.id = map_id
@@ -754,9 +762,16 @@ class Server:
             ret.website = url_node.text
 
         ret.mode = mode_node.text
+        ret.mode_name = get_mode_name(ret.mode)
+        ret.mode_name_long = get_mode_name(ret.mode, False)
 
-        ret.is_ranked = realm_node.text in ['official_invasion', 'official_pacific']
-        ret.database = PlayersListDatabase.INVASION if realm_node.text == 'official_invasion' else PlayersListDatabase.PACIFIC if realm_node.text == 'official_pacific' else None
+        ret.is_ranked = realm_node.text in [database['realm'] for _, database in PLAYERS_LIST_DATABASES.items()]
+
+        if ret.is_ranked:
+            db = [database_name for database_name, database in PLAYERS_LIST_DATABASES.items() if database['realm'] == realm_node.text]
+
+            if db:
+                ret.database = db[0]
 
         ret.location = ServerLocation()
 
@@ -783,18 +798,6 @@ class Server:
                 ret.players.list.sort()
 
         return ret
-
-    @property
-    def mode_name(self):
-        return get_mode_name(self.mode)
-
-    @property
-    def mode_name_long(self):
-        return get_mode_name(self.mode, False)
-
-    @property
-    def type_name(self):
-        return get_type_name(self.type)
 
     def __repr__(self):
         return 'Server:' + self.ip_and_port

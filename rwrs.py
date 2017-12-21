@@ -58,7 +58,7 @@ app.jinja_env.globals.update(
     isinstance=isinstance,
     PlayersSort=rwr.PlayersSort,
     merge_query_string_params=merge_query_string_params,
-    PlayersListDatabase=rwr.PlayersListDatabase,
+    get_database_name=rwr.get_database_name
 )
 
 

@@ -203,5 +203,5 @@
 {% macro database_name(database=None) -%}
     {% set database = database if database else request.view_args.get('database') %}
 
-    {{- 'Invasion' if database == PlayersListDatabase.INVASION else 'Pacific' if database == PlayersListDatabase.PACIFIC }}
+    {{- get_database_name(database) }}
 {%- endmacro %}

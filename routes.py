@@ -34,10 +34,10 @@ def my_friends():
 
 @app.route('/players')
 def players_list_old():
-    return redirect(url_for('players_list', database=rwr.PlayersListDatabase.INVASION), code=301)
+    return redirect(url_for('players_list', database='invasion'), code=301)
 
 
-@app.route('/players/<any(' + ','.join([rwr.PlayersListDatabase.INVASION, rwr.PlayersListDatabase.PACIFIC]) + '):database>')
+@app.route('/players/<any(' + ','.join(rwr.PLAYERS_LIST_DATABASES.keys()) + '):database>')
 def players_list(database):
     if request.args.get('username'):
         username = request.args.get('username').strip()
@@ -94,10 +94,10 @@ def players_list(database):
 
 @app.route('/players/<username>')
 def player_details_old(username):
-    return redirect(url_for('player_details', database=rwr.PlayersListDatabase.INVASION, username=username), code=301)
+    return redirect(url_for('player_details', database='invasion', username=username), code=301)
 
 
-@app.route('/players/<any(' + ','.join([rwr.PlayersListDatabase.INVASION, rwr.PlayersListDatabase.PACIFIC]) + '):database>/<username>')
+@app.route('/players/<any(' + ','.join(rwr.PLAYERS_LIST_DATABASES.keys()) + '):database>/<username>')
 def player_details(database, username):
     scraper = rwr.DataScraper()
 
@@ -124,11 +124,11 @@ def players_compare_old(username, username_to_compare_with=None):
     if not username_to_compare_with and request.args.get('username_to_compare_with'):
         username_to_compare_with = request.args.get('username_to_compare_with').strip()
 
-    return redirect(url_for('players_compare', database=rwr.PlayersListDatabase.INVASION, username=username, username_to_compare_with=username_to_compare_with), code=301)
+    return redirect(url_for('players_compare', database='invasion', username=username, username_to_compare_with=username_to_compare_with), code=301)
 
 
-@app.route('/players/<any(' + ','.join([rwr.PlayersListDatabase.INVASION, rwr.PlayersListDatabase.PACIFIC]) + '):database>/<username>/compare')
-@app.route('/players/<any(' + ','.join([rwr.PlayersListDatabase.INVASION, rwr.PlayersListDatabase.PACIFIC]) + '):database>/<username>/compare/<username_to_compare_with>')
+@app.route('/players/<any(' + ','.join(rwr.PLAYERS_LIST_DATABASES.keys()) + '):database>/<username>/compare')
+@app.route('/players/<any(' + ','.join(rwr.PLAYERS_LIST_DATABASES.keys()) + '):database>/<username>/compare/<username_to_compare_with>')
 def players_compare(database, username, username_to_compare_with=None):
     if not username_to_compare_with and request.args.get('username_to_compare_with'):
         username_to_compare_with = request.args.get('username_to_compare_with').strip()
