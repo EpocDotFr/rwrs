@@ -66,23 +66,23 @@ MAPS = {
 }
 
 RANKS = {
-    0: {'name': 'Private', 'xp': 0},
-    1: {'name': 'Private 1st Class', 'xp': 500},
-    2: {'name': 'Corporal', 'xp': 1000},
-    3: {'name': 'Sergeant', 'xp': 2000},
-    4: {'name': 'Staff Sergeant', 'xp': 3000},
-    5: {'name': 'Staff Sergeant 1st Class', 'xp': 4000},
-    6: {'name': '2nd Lieutenant', 'xp': 6000},
-    7: {'name': 'Lieutenant', 'xp': 8000},
-    8: {'name': 'Captain', 'xp': 10000},
-    9: {'name': 'Major', 'xp': 12000},
-    10: {'name': 'Lieutenant Colonel', 'xp': 14000},
-    11: {'name': 'Colonel', 'xp': 20000},
-    12: {'name': 'Brigadier General', 'xp': 50000},
-    13: {'name': 'Major General', 'xp': 100000},
-    14: {'name': 'Lieutenant General', 'xp': 200000},
-    15: {'name': 'General', 'xp': 500000},
-    16: {'name': 'General of the Army', 'xp': 1000000}
+    0: {'name': {'us': 'Private', 'jp': 'Nitohei'}, 'xp': 0},
+    1: {'name': {'us': 'Private 1st Class', 'jp': 'Ittohei'}, 'xp': 500},
+    2: {'name': {'us': 'Corporal', 'jp': 'Gocho'}, 'xp': 1000},
+    3: {'name': {'us': 'Sergeant', 'jp': 'Gunso'}, 'xp': 2000},
+    4: {'name': {'us': 'Staff Sergeant', 'jp': 'Socho'}, 'xp': 3000},
+    5: {'name': {'us': 'Staff Sergeant 1st Class', 'jp': 'Jun-i'}, 'xp': 4000},
+    6: {'name': {'us': '2nd Lieutenant', 'jp': 'Rikugun-Shoi'}, 'xp': 6000},
+    7: {'name': {'us': 'Lieutenant', 'jp': 'Rikugun-Chui'}, 'xp': 8000},
+    8: {'name': {'us': 'Captain', 'jp': 'Rikugun-Tai-i'}, 'xp': 10000},
+    9: {'name': {'us': 'Major', 'jp': 'Rikugun-Shosa'}, 'xp': 12000},
+    10: {'name': {'us': 'Lieutenant Colonel', 'jp': 'Rikugun-Chusa'}, 'xp': 14000},
+    11: {'name': {'us': 'Colonel', 'jp': 'Rikugun-Taisa'}, 'xp': 20000},
+    12: {'name': {'us': 'Brigadier General', 'jp': 'Rikugun-Shosho'}, 'xp': 50000},
+    13: {'name': {'us': 'Major General', 'jp': 'Rikugun-Chujo'}, 'xp': 100000},
+    14: {'name': {'us': 'Lieutenant General', 'jp': 'Rikugun-Taisho'}, 'xp': 200000},
+    15: {'name': {'us': 'General', 'jp': 'Gensui-Rikugun-Taisho'}, 'xp': 500000},
+    16: {'name': {'us': 'General of the Army', 'jp': 'Daigensui-Rikugun-Taisho'}, 'xp': 1000000}
 }
 
 SQUADMATES_STEPS_XP = 1000 # One squad mate is gained every 1000 XP
@@ -694,7 +694,7 @@ class DataScraper:
         players = []
 
         for node in html_content.xpath('//table/tr[position() > 1]'):
-            players.append(Player.load(node))
+            players.append(Player.load(database, node))
 
         return players
 
@@ -715,7 +715,7 @@ class DataScraper:
         if not node:
             return None
 
-        return Player.load(node[0], alternative=True)
+        return Player.load(database, node[0], alternative=True)
 
     def __repr__(self):
         return 'DataScraper'
@@ -825,7 +825,7 @@ class Player:
     playing_on_server = None
 
     @classmethod
-    def load(cls, node, alternative=False):
+    def load(cls, database, node, alternative=False):
         """Load a player data from an HTML <tr> node."""
         ret = cls()
 
@@ -864,6 +864,8 @@ class Player:
         ret.throwables_thrown = int(throwables_thrown_cell.text)
         ret.xp = int(xp_cell.text)
 
+        ret.database = database
+
         ret.rank = PlayerRank()
 
         rank_id = _rank_image_regex.search(rank_image_cell[0].get('src'))
@@ -872,7 +874,8 @@ class Player:
             ret.rank.id = int(rank_id.groupdict()['rank_id'])
 
             if ret.rank.id in RANKS:
-                ret.rank.name = RANKS[ret.rank.id]['name']
+                ret.rank.name = RANKS[ret.rank.id]['name'][PLAYERS_LIST_DATABASES[ret.database]['faction']]
+                ret.rank.xp = RANKS[ret.rank.id]['xp']
 
         return ret
 
@@ -901,8 +904,11 @@ class Player:
         if next_rank_id not in RANKS:
             return None
 
-        ret = RANKS[next_rank_id]
-        ret.update({'id': next_rank_id})
+        ret = PlayerRank()
+
+        ret.id = next_rank_id
+        ret.name = RANKS[next_rank_id]['name'][PLAYERS_LIST_DATABASES[self.database]['faction']]
+        ret.xp = RANKS[next_rank_id]['xp']
 
         return ret
 
@@ -912,7 +918,7 @@ class Player:
         if not self.next_rank:
             return None
 
-        return self.next_rank['xp'] - self.xp
+        return self.next_rank.xp - self.xp
 
     @memoized_property
     def xp_percent_completion_to_next_rank(self):
@@ -920,7 +926,7 @@ class Player:
         if not self.next_rank:
             return None
 
-        return round((self.xp * 100) / self.next_rank['xp'], 2)
+        return round((self.xp * 100) / self.next_rank.xp, 2)
 
     @memoized_property
     def unlocks(self):
@@ -997,6 +1003,7 @@ class ServerLocation:
 class PlayerRank:
     id = None
     name = None
+    xp = 0
 
     def __repr__(self):
         return 'PlayerRank:' + self.id
