@@ -4,7 +4,7 @@ from models import *
 import rwr
 
 
-ERROR_PLAYER_NOT_FOUND = 'Sorry, the player "{username}" wasn\'t found. Maybe this player hasn\'t already played on a ranked server yet. If this player started to play today on a ranked server, please wait until tomorrow as stats are refreshed daily.'
+ERROR_PLAYER_NOT_FOUND = 'Sorry, the player "{username}" wasn\'t found in the {database} players list. Maybe this player hasn\'t already played on a ranked server yet. If this player started to play today on a ranked server, please wait until tomorrow as stats are refreshed daily.'
 
 
 @app.route('/')
@@ -79,7 +79,7 @@ def players_list(database):
             target_found = True
 
     if args.get('target') and not target_found:
-        flash(ERROR_PLAYER_NOT_FOUND.format(username=args.get('target')), 'error')
+        flash(ERROR_PLAYER_NOT_FOUND.format(username=args.get('target'), database=rwr.get_database_name(database)), 'error')
 
         return redirect(url_for('players_list', database=database))
 
@@ -104,9 +104,9 @@ def player_details(database, username):
     player = scraper.search_player(database, username)
 
     if not player:
-        flash(ERROR_PLAYER_NOT_FOUND.format(username=username), 'error')
+        flash(ERROR_PLAYER_NOT_FOUND.format(username=username, database=rwr.get_database_name(database)), 'error')
 
-        return redirect(url_for('home'))
+        return redirect(url_for('players_list', database=database))
 
     servers = scraper.get_servers()
 
@@ -144,14 +144,14 @@ def players_compare(database, username, username_to_compare_with=None):
     player = scraper.search_player(database, username)
 
     if not player:
-        flash(ERROR_PLAYER_NOT_FOUND.format(username=username), 'error')
+        flash(ERROR_PLAYER_NOT_FOUND.format(username=username, database=rwr.get_database_name(database)), 'error')
 
-        return redirect(url_for('home'))
+        return redirect(url_for('players_list', database=database))
 
     player_to_compare_with = scraper.search_player(database, username_to_compare_with)
 
     if not player_to_compare_with:
-        flash(ERROR_PLAYER_NOT_FOUND.format(username=username_to_compare_with), 'error')
+        flash(ERROR_PLAYER_NOT_FOUND.format(username=username_to_compare_with, database=rwr.get_database_name(database)), 'error')
 
         return redirect(url_for('player_details', database=database, username=username))
 

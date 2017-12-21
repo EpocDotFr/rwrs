@@ -233,8 +233,8 @@ SERVER_TYPES = OrderedDict([
 
 
 PLAYERS_LIST_DATABASES = {
-    'invasion': {'name': 'Invasion', 'ranks': 'us', 'realm': 'official_invasion'},
-    'pacific': {'name': 'Pacific', 'ranks': app.config['PACIFIC_PLAYERS_RANKS'], 'realm': 'official_pacific'}
+    'invasion': {'name': 'Invasion', 'faction': 'us', 'realm': 'official_invasion'},
+    'pacific': {'name': 'Pacific', 'faction': app.config['PACIFIC_PLAYERS_RANKS_FACTION'], 'realm': 'official_pacific'}
 }
 
 
