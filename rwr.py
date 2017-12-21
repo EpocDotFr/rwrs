@@ -12,6 +12,7 @@ import os
 _time_regex = re.compile(r'(?:(?P<h>\d+)h(?:\s+)?)?(?:(?P<m>\d+)m(?:in)?(?:\s+)?)?(?:(?P<s>\d+)s)?')
 _rank_image_regex = re.compile(r'rank(?P<rank_id>\d+)')
 _map_path_regex = re.compile(r'media/packages/(?P<server_type>.+)/maps/(?P<map_id>.+)$')
+_rank_path_regex = re.compile(r'media/packages/(?P<server_type>.+)/textures/hud_rank(?P<rank_id>\d+)(?:.*).png$')
 
 _one_minute = 60
 _one_hour = _one_minute * 60
@@ -303,9 +304,23 @@ def parse_map_path(map_path):
     return server_type, map_id
 
 
-class MinimapsImageExtractor:
-    minimap_image_size = (320, 320)
+def parse_rank_path(rank_path):
+    """Parse a map path to extract the game type it belong to as well as the map identifier."""
+    server_type = None
+    rank_id = None
 
+    parsed = _rank_path_regex.search(rank_path)
+
+    if parsed:
+        parsed = parsed.groupdict()
+
+        server_type = parsed['server_type']
+        rank_id = parsed['rank_id']
+
+    return server_type, rank_id
+
+
+class BaseExtractor:
     def __init__(self, game_dir, output_dir):
         self.game_dir = game_dir
         self.output_dir = output_dir
@@ -317,6 +332,13 @@ class MinimapsImageExtractor:
             raise FileNotFoundError(self.output_dir + ' does not exists')
 
         self.packages_dir = os.path.join(self.game_dir, 'media/packages')
+
+    def extract(self):
+        raise NotImplemented('Must be implemented')
+
+
+class MinimapsImageExtractor(BaseExtractor):
+    minimap_image_size = (320, 320)
 
     def extract(self):
         """Actually run the extract process."""
@@ -339,7 +361,7 @@ class MinimapsImageExtractor:
             minimap.save(os.path.join(self.output_dir, server_type, map_id + '_thumb.png'), optimize=True)
 
 
-class RanksImageExtractor:
+class RanksImageExtractor(BaseExtractor):
     needed_sizes = [
         {
             'name': lambda rank_id: rank_id,
@@ -351,26 +373,22 @@ class RanksImageExtractor:
         }
     ]
 
-    def __init__(self, game_dir, output_dir):
-        self.game_dir = game_dir
-        self.output_dir = output_dir
-
-        if not os.path.isdir(self.game_dir):
-            raise FileNotFoundError(self.game_dir + ' does not exists')
-
-        if not os.path.isdir(self.output_dir):
-            raise FileNotFoundError(self.output_dir + ' does not exists')
-
-        self.textures_dir = os.path.join(self.game_dir, 'media/packages/vanilla/textures')
-
     def extract(self):
         """Actually run the extract process."""
         from PIL import Image
 
-        ranks_paths = glob(os.path.join(self.textures_dir, 'hud_rank*.png'))
+        ranks_paths = glob(os.path.join(self.packages_dir, '*', 'textures', 'hud_rank*.png'))
 
         for rank_path in ranks_paths:
-            rank_id = os.path.splitext(os.path.basename(rank_path))[0].replace('hud_rank', '')
+            server_type, rank_id = parse_rank_path(rank_path.replace('\\', '/'))
+
+            if server_type not in ['vanilla', 'pacific']:
+                continue
+
+            if server_type == 'vanilla':
+                faction = 'us'
+            elif server_type == 'pacific':
+                faction = 'jp'
 
             rank_image = Image.open(rank_path)
 
@@ -389,7 +407,7 @@ class RanksImageExtractor:
 
                 new_rank_image = Image.new('RGBA', needed_size['size'])
                 new_rank_image.paste(needed_size_image, paste_pos)
-                new_rank_image.save(os.path.join(self.output_dir, needed_size['name'](rank_id) + '.png'), optimize=True)
+                new_rank_image.save(os.path.join(self.output_dir, faction, needed_size['name'](rank_id) + '.png'), optimize=True)
 
 
 class DataScraper:
