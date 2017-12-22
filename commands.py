@@ -2,6 +2,7 @@ from rwrs import app, db, cache
 from models import *
 import click
 import rwr
+import os
 
 
 @app.cli.command()
@@ -112,7 +113,7 @@ def extract_ranks_data(gamedir):
 
     click.echo('Extraction started')
 
-    extractor = rwr.RanksDataExtractor(gamedir, app.config['RANKS_FILE'])
+    extractor = rwr.RanksDataExtractor(gamedir, os.path.dirname(app.config['RANKS_FILE']))
     extractor.extract()
 
     click.secho('Done', fg='green')
