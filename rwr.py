@@ -343,7 +343,10 @@ class MinimapsImageExtractor(BaseExtractor):
         """Actually run the extract process."""
         from PIL import Image
 
-        minimaps_paths = glob(os.path.join(self.packages_dir, '*', 'maps', '*', 'map.png'))
+        minimaps_paths = []
+
+        for type in ['vanilla', 'pacific']:
+            minimaps_paths.extend(glob(os.path.join(self.packages_dir, type, 'maps', '*', 'map.png')))
 
         for minimap_path in minimaps_paths:
             server_type, map_id = parse_map_path(minimap_path.replace('\\', '/').replace('/map.png', ''))
@@ -376,13 +379,13 @@ class RanksImageExtractor(BaseExtractor):
         """Actually run the extract process."""
         from PIL import Image
 
-        ranks_paths = glob(os.path.join(self.packages_dir, '*', 'textures', 'hud_rank*.png'))
+        ranks_paths = []
+
+        for type in ['vanilla', 'pacific']:
+            ranks_paths.extend(glob(os.path.join(self.packages_dir, 'vanilla', 'textures', 'hud_rank*.png')))
 
         for rank_path in ranks_paths:
             server_type, rank_id = parse_rank_path(rank_path.replace('\\', '/'))
-
-            if server_type not in ['vanilla', 'pacific']:
-                continue
 
             if server_type == 'vanilla':
                 country = 'us'
@@ -407,6 +410,18 @@ class RanksImageExtractor(BaseExtractor):
                 new_rank_image = Image.new('RGBA', needed_size['size'])
                 new_rank_image.paste(needed_size_image, paste_pos)
                 new_rank_image.save(os.path.join(self.output_dir, country, needed_size['name'](rank_id) + '.png'), optimize=True)
+
+
+class RanksDataExtractor(BaseExtractor):
+    def extract(self):
+        """Actually run the extract process."""
+        ranks_paths = [
+            os.path.join(self.packages_dir, 'vanilla', 'factions', 'brown.xml'), # Every factions in vanilla has the same ranks
+            os.path.join(self.packages_dir, 'pacific', 'factions', 'ija.xml') # USMC in Pacific have the same ranks as vanilla RWR
+        ]
+
+        for rank_path in ranks_paths:
+            print(rank_path)
 
 
 class DataScraper:
