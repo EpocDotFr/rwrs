@@ -27,7 +27,7 @@
 {% macro rank_image(rank, database=None, icon=False) -%}
     {% set database = database if database else request.view_args.get('database') -%}
 
-    <img src="{{ url_for('static', filename='images/ranks/{faction}/{rank_id}{icon}.png'.format(faction=PLAYERS_LIST_DATABASES[database].faction, rank_id=rank.id, icon='_icon' if icon)) }}" title="{{ rank.name }}" class="{{ 'help' if icon }}">
+    <img src="{{ url_for('static', filename='images/ranks/{ranks_country}/{rank_id}{icon}.png'.format(ranks_country=PLAYERS_LIST_DATABASES[database].ranks_country, rank_id=rank.id, icon='_icon' if icon)) }}" title="{{ rank.name }}" class="{{ 'help' if icon }}">
 {%- endmacro %}
 
 {% macro map_name(map, link=True) -%}

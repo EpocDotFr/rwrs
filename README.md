@@ -55,7 +55,7 @@ More informations on the three above can be found [here](http://flask.pocoo.org/
   - `SERVERS_CACHE_TIMEOUT` Cache duration of the servers list (in seconds)
   - `PLAYERS_CACHE_TIMEOUT` Cache duration of the players list as well as data for a single player (in seconds)
   - `GRAPHS_DATA_CACHE_TIMEOUT` Cache duration of the graphs data, both the players and the servers ones (in seconds)
-  - `PACIFIC_PLAYERS_RANKS_FACTION` Ranks image / name to show for the Pacific players stats (`us`, `jp`)
+  - `PACIFIC_PLAYERS_RANKS_COUNTRY` Ranks image / name to show for the Pacific players stats (`us`, `jp`)
 
 I'll let you search yourself about how to configure a web server along uWSGI.
 
@@ -83,7 +83,7 @@ You'll probably have to hack with this application to make it work with one of t
 ### Extracting ranks images
 
 The Flask command `flask extract_ranks_images` is used to retrieve, process (the actual images content isn't centered)
-and save all the RWR ranks images. They are saved at `static/images/ranks/{faction}/{rank ID}.png` and `static/images/ranks/{faction}/{rank ID}_icon.png`.
+and save all the RWR ranks images. They are saved at `static/images/ranks/{country}/{rank ID}.png` and `static/images/ranks/{country}/{rank ID}_icon.png`.
 
   1. `pip install -r requirements-dev.txt`
   2. `set FLASK_APP=rwrs.py`

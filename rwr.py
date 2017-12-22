@@ -233,8 +233,8 @@ SERVER_TYPES = OrderedDict([
 
 
 PLAYERS_LIST_DATABASES = {
-    'invasion': {'name': 'Invasion', 'faction': 'us', 'realm': 'official_invasion'},
-    'pacific': {'name': 'Pacific', 'faction': app.config['PACIFIC_PLAYERS_RANKS_FACTION'], 'realm': 'official_pacific'}
+    'invasion': {'name': 'Invasion', 'ranks_country': 'us', 'realm': 'official_invasion'},
+    'pacific': {'name': 'Pacific', 'ranks_country': app.config['PACIFIC_PLAYERS_RANKS_COUNTRY'], 'realm': 'official_pacific'}
 }
 
 
@@ -385,9 +385,9 @@ class RanksImageExtractor(BaseExtractor):
                 continue
 
             if server_type == 'vanilla':
-                faction = 'us'
+                country = 'us'
             elif server_type == 'pacific':
-                faction = 'jp'
+                country = 'jp'
 
             rank_image = Image.open(rank_path)
 
@@ -406,7 +406,7 @@ class RanksImageExtractor(BaseExtractor):
 
                 new_rank_image = Image.new('RGBA', needed_size['size'])
                 new_rank_image.paste(needed_size_image, paste_pos)
-                new_rank_image.save(os.path.join(self.output_dir, faction, needed_size['name'](rank_id) + '.png'), optimize=True)
+                new_rank_image.save(os.path.join(self.output_dir, country, needed_size['name'](rank_id) + '.png'), optimize=True)
 
 
 class DataScraper:
@@ -873,7 +873,7 @@ class Player:
             ret.rank.id = int(rank_id)
 
             if ret.rank.id in RANKS:
-                ret.rank.name = RANKS[ret.rank.id]['name'][PLAYERS_LIST_DATABASES[ret.database]['faction']]
+                ret.rank.name = RANKS[ret.rank.id]['name'][PLAYERS_LIST_DATABASES[ret.database]['ranks_country']]
                 ret.rank.xp = RANKS[ret.rank.id]['xp']
 
         return ret
@@ -906,7 +906,7 @@ class Player:
         ret = PlayerRank()
 
         ret.id = next_rank_id
-        ret.name = RANKS[next_rank_id]['name'][PLAYERS_LIST_DATABASES[self.database]['faction']]
+        ret.name = RANKS[next_rank_id]['name'][PLAYERS_LIST_DATABASES[self.database]['ranks_country']]
         ret.xp = RANKS[next_rank_id]['xp']
 
         return ret
