@@ -30,7 +30,6 @@ app.config['MY_USERNAME'] = 'epocdotfr'
 app.config['CONTRIBUTORS'] = ['street veteran', 'mastock']
 app.config['DEVS'] = ['jackmayol', 'pasik', 'pasik2', 'tremozl', 'the soldier'] # ahnold
 app.config['PLAYERS_LIST_PAGE_SIZES'] = [15, 30, 50, 100]
-app.config['RANKS_FILE'] = 'storage/data/ranks.json'
 
 db = SQLAlchemy(app)
 cache = Cache(app)

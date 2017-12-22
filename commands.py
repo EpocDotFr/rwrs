@@ -2,7 +2,6 @@ from rwrs import app, db, cache
 from models import *
 import click
 import rwr
-import os
 
 
 @app.cli.command()
@@ -96,24 +95,6 @@ def extract_ranks_images(gamedir):
     click.echo('Extraction started')
 
     extractor = rwr.RanksImageExtractor(gamedir, app.config['RANKS_IMAGES_DIR'])
-    extractor.extract()
-
-    click.secho('Done', fg='green')
-
-
-@app.cli.command()
-@click.option('--gamedir', '-g', help='Game root directory')
-def extract_ranks_data(gamedir):
-    """Extract ranks data from RWR."""
-    context = click.get_current_context()
-
-    if not gamedir:
-        click.echo(extract_ranks_data.get_help(context))
-        context.exit()
-
-    click.echo('Extraction started')
-
-    extractor = rwr.RanksDataExtractor(gamedir, os.path.dirname(app.config['RANKS_FILE']))
     extractor.extract()
 
     click.secho('Done', fg='green')

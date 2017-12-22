@@ -1,6 +1,5 @@
 from memoized_property import memoized_property
 from collections import OrderedDict
-from helpers import save_json
 from geolite2 import geolite2
 from lxml import html, etree
 from rwrs import app, cache
@@ -416,28 +415,6 @@ class RanksImageExtractor(BaseExtractor):
                 new_rank_image = Image.new('RGBA', needed_size['size'])
                 new_rank_image.paste(needed_size_image, paste_pos)
                 new_rank_image.save(os.path.join(self.output_dir, country, needed_size['name'](rank_id) + '.png'), optimize=True)
-
-
-class RanksDataExtractor(BaseExtractor):
-    def extract(self):
-        """Actually run the extract process."""
-        ranks = {}
-
-        factions_paths = [
-            os.path.join(self.packages_dir, 'vanilla', 'factions', 'brown.xml'), # Every factions in vanilla have the same ranks
-            os.path.join(self.packages_dir, 'pacific', 'factions', 'ija.xml') # USMC in Pacific have the same ranks as vanilla RWR
-        ]
-
-        for faction_path in factions_paths:
-            faction_xml = etree.parse(faction_path)
-            faction_xml_root = faction_xml.getroot()
-
-            for rank in faction_xml_root.iterchildren('rank'):
-                print(rank)
-
-            # TODO
-
-        save_json(app.config['RANKS_FILE'], ranks)
 
 
 class DataScraper:
