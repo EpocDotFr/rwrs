@@ -33,14 +33,18 @@ MAPS = {
         'map11': {'name': 'Copehill Down', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Copehill_Down'},
         'map13': {'name': 'Iron Enclave', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Iron_Enclave'},
         'map14': {'name': 'Misty Heights', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Misty_Heights'},
-        'map15': {'name': 'Islet of Eflen', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Islet_of_Eflen'},
-        'pvp1': {'name': 'Islet of Eflen', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Islet_of_Eflen'}
+        'map15': {'name': 'Islet of Eflen', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Islet_of_Eflen'}
     },
 
     # Official vanilla maps (winter)
     'vanilla.winter': {
         'map4': {'name': 'Fridge Valley', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Fridge_Valley'},
         'map12': {'name': 'Frozen Canyon', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Frozen_Canyon'}
+    },
+
+    # Official vanilla PvP maps
+    'pvp': {
+        'pvp1': {'name': 'Islet of Eflen', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Islet_of_Eflen'}
     },
 
     # Official RWR: PACIFIC maps
@@ -227,6 +231,7 @@ SERVER_MODES = {
 SERVER_TYPES = OrderedDict([
     ('vanilla', 'Vanilla'),
     ('vanilla.winter', 'Vanilla'),
+    ('pvp', 'Vanilla'),
     ('pacific', 'RWR: PACIFIC'),
     ('Running_with_the_Dead', 'Running with the Dead'),
     ('overlord_defense', 'Overlord Defense')
@@ -544,7 +549,7 @@ class DataScraper:
     def get_all_servers_types(self):
         """Return the type of all of the servers."""
         return self._get_list(
-            lambda server: server.type if server.type != 'vanilla.winter' else False,
+            lambda server: server.type if server.type not in ['vanilla.winter', 'pvp'] else False,
             lambda server: server.type_name
         )
 
@@ -564,7 +569,7 @@ class DataScraper:
             if not server.map.id:
                 continue
 
-            if server.type.startswith('vanilla'):
+            if server.type.startswith('vanilla') or server.type == 'pvp':
                 server_type = 'vanilla'
             else:
                 server_type = server.type
@@ -629,8 +634,8 @@ class DataScraper:
                 return False
 
             if type != 'any':
-                if type.startswith('vanilla'):
-                    if not server.type.startswith('vanilla'):
+                if type.startswith('vanilla') or type == 'pvp':
+                    if not server.type.startswith('vanilla') or server.type != 'pvp':
                         return False
                 else:
                     if type != server.type:
