@@ -10,9 +10,8 @@ import re
 import os
 
 _time_regex = re.compile(r'(?:(?P<h>\d+)h(?:\s+)?)?(?:(?P<m>\d+)m(?:in)?(?:\s+)?)?(?:(?P<s>\d+)s)?')
-_rank_image_regex = re.compile(r'rank(?P<rank_id>\d+)')
 _map_path_regex = re.compile(r'/(?P<server_type>.[^/]+)/maps/(?P<map_id>.+)$')
-_rank_path_regex = re.compile(r'media/packages/(?P<server_type>.+)/textures/hud_rank(?P<rank_id>\d+)(?:.*).png$')
+_rank_path_regex = re.compile(r'(?:/(?P<server_type>.[^/]+)/)?textures/hud_rank(?P<rank_id>\d+)(?:.*).png$')
 
 _one_minute = 60
 _one_hour = _one_minute * 60
@@ -292,8 +291,6 @@ def parse_map_path(map_path):
     """Parse a map path to extract the game type it belong to as well as the map identifier."""
     server_type = None
     map_id = None
-
-    print(map_path)
 
     parsed = _map_path_regex.search(map_path)
 
@@ -870,10 +867,10 @@ class Player:
 
         ret.rank = PlayerRank()
 
-        rank_id = _rank_image_regex.search(rank_image_cell[0].get('src'))
+        _, rank_id = parse_rank_path(rank_image_cell[0].get('src'))
 
         if rank_id:
-            ret.rank.id = int(rank_id.groupdict()['rank_id'])
+            ret.rank.id = int(rank_id)
 
             if ret.rank.id in RANKS:
                 ret.rank.name = RANKS[ret.rank.id]['name'][PLAYERS_LIST_DATABASES[ret.database]['faction']]
