@@ -789,13 +789,9 @@ class Server:
         ret.mode_name = get_mode_name(ret.mode)
         ret.mode_name_long = get_mode_name(ret.mode, False)
 
-        ret.is_ranked = realm_node.text in [database['realm'] for _, database in PLAYERS_LIST_DATABASES.items()]
-
-        if ret.is_ranked:
-            db = [database_name for database_name, database in PLAYERS_LIST_DATABASES.items() if database['realm'] == realm_node.text]
-
-            if db:
-                ret.database = db[0]
+        ret.realm = realm_node.text
+        ret.is_ranked = ret.realm in [database['realm'] for _, database in PLAYERS_LIST_DATABASES.items()]
+        ret.database = ret.get_database()
 
         ret.location = ServerLocation()
 
@@ -822,6 +818,15 @@ class Server:
                 ret.players.list.sort()
 
         return ret
+
+    def get_database(self):
+        """Return the players list database name of this server."""
+        if self.is_ranked:
+            for database_name, database in PLAYERS_LIST_DATABASES.items():
+                if database['realm'] == self.realm:
+                    return database_name
+
+        return None
 
     def __repr__(self):
         return 'Server:' + self.ip_and_port
