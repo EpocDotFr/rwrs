@@ -80,7 +80,7 @@
                             <td>
                                 <div class="actions fr">
                                     {% if server.is_ranked %}
-                                        <a href="{{ url_for('players_list', database=server.database, target=player) }}" title="Highlight in {{ macros.database_name(server.database) }} leaderboard"><i class="fa fa-list-ol"></i></a>
+                                        <a href="{{ url_for('players_list', database=server.database, target=player) }}" title="Highlight in {{ server.database_name }} leaderboard"><i class="fa fa-list-ol"></i></a>
                                     {% endif %}
 
                                     <span class="friends-feature is-hidden">

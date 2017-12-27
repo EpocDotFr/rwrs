@@ -792,6 +792,7 @@ class Server:
         ret.realm = realm_node.text
         ret.is_ranked = ret.realm in [database['realm'] for _, database in PLAYERS_LIST_DATABASES.items()]
         ret.database = ret.get_database()
+        ret.database_name = get_database_name(ret.database)
 
         ret.location = ServerLocation()
 
@@ -876,17 +877,12 @@ class Player:
         ret.xp = int(xp_cell.text)
 
         ret.database = database
-
-        ret.rank = PlayerRank()
+        ret.database_name = get_database_name(ret.database)
 
         _, rank_id = parse_rank_path(rank_image_cell[0].get('src'))
 
         if rank_id:
-            ret.rank.id = int(rank_id)
-
-            if ret.rank.id in RANKS:
-                ret.rank.name = RANKS[ret.rank.id]['name'][PLAYERS_LIST_DATABASES[ret.database]['ranks_country']]
-                ret.rank.xp = RANKS[ret.rank.id]['xp']
+            ret.rank = ret.get_rank_object(int(rank_id), return_none=False)
 
         ret.next_rank = ret.get_next_rank()
         ret.xp_to_next_rank = ret.get_xp_to_next_rank()
@@ -916,16 +912,7 @@ class Player:
 
         next_rank_id = self.rank.id + 1
 
-        if next_rank_id not in RANKS:
-            return None
-
-        ret = PlayerRank()
-
-        ret.id = next_rank_id
-        ret.name = RANKS[next_rank_id]['name'][PLAYERS_LIST_DATABASES[self.database]['ranks_country']]
-        ret.xp = RANKS[next_rank_id]['xp']
-
-        return ret
+        return self.get_rank_object(next_rank_id)
 
     def get_xp_to_next_rank(self):
         """Return the amount of XP the player needs to be promoted to the next rank."""
@@ -940,6 +927,19 @@ class Player:
             return None
 
         return round((self.xp * 100) / self.next_rank.xp, 2)
+
+    def get_rank_object(self, rank_id, return_none=False):
+        """Return a new PlayerRank object given a rank ID."""
+        ret = PlayerRank()
+
+        if rank_id not in RANKS:
+            return None if return_none else ret
+
+        ret.id = rank_id
+        ret.name = RANKS[rank_id]['name'][PLAYERS_LIST_DATABASES[self.database]['ranks_country']]
+        ret.xp = RANKS[rank_id]['xp']
+
+        return ret
 
     def get_unlocks(self):
         """Compute what the player unlocked (or not)."""

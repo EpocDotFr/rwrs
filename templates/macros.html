@@ -47,7 +47,7 @@
 {% macro server_name(server, link=True, raw=False) -%}
     {% if server.is_ranked -%}
         {% if raw %}★ {% else -%}
-            <i class="fa fa-star txtyellow help" title="Ranked {{ database_name(server.database) }} server"></i> {% endif %}
+            <i class="fa fa-star txtyellow help" title="Ranked {{ server.database_name }} server"></i> {% endif %}
     {%- endif %}
     {%- if link and server.website -%}
         <a href="{{ server.website }}">
