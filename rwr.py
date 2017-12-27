@@ -1,4 +1,3 @@
-from memoized_property import memoized_property
 from collections import OrderedDict
 from geolite2 import geolite2
 from lxml import html, etree
@@ -884,6 +883,11 @@ class Player:
                 ret.rank.name = RANKS[ret.rank.id]['name'][PLAYERS_LIST_DATABASES[ret.database]['ranks_country']]
                 ret.rank.xp = RANKS[ret.rank.id]['xp']
 
+        ret.next_rank = ret.get_next_rank()
+        ret.xp_to_next_rank = ret.get_xp_to_next_rank()
+        ret.xp_percent_completion_to_next_rank = ret.get_xp_percent_completion_to_next_rank()
+        ret.unlocks = ret.get_unlocks()
+
         return ret
 
     def set_playing_on_server(self, servers):
@@ -897,8 +901,7 @@ class Player:
 
                 return
 
-    @memoized_property
-    def next_rank(self):
+    def get_next_rank(self):
         """Get the next rank of the player (if applicable)."""
         if self.rank.id is None:
             return None
@@ -919,24 +922,21 @@ class Player:
 
         return ret
 
-    @memoized_property
-    def xp_to_next_rank(self):
+    def get_xp_to_next_rank(self):
         """Return the amount of XP the player needs to be promoted to the next rank."""
         if not self.next_rank:
             return None
 
         return self.next_rank.xp - self.xp
 
-    @memoized_property
-    def xp_percent_completion_to_next_rank(self):
+    def get_xp_percent_completion_to_next_rank(self):
         """Return the percentage of XP the player obtained for the next rank."""
         if not self.next_rank:
             return None
 
         return round((self.xp * 100) / self.next_rank.xp, 2)
 
-    @memoized_property
-    def unlocks(self):
+    def get_unlocks(self):
         """Compute what the player unlocked (or not)."""
         def _init_unlockable(ret, type):
             ret[type] = {
