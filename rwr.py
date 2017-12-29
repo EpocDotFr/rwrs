@@ -585,8 +585,8 @@ class DataScraper:
                 return False
 
             if type != 'any':
-                if type.startswith('vanilla') or type == 'pvp':
-                    if not server.type.startswith('vanilla') or server.type != 'pvp':
+                if type.startswith('vanilla'):
+                    if not server.type.startswith('vanilla') and server.type != 'pvp':
                         return False
                 else:
                     if type != server.type:
