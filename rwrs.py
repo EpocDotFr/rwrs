@@ -27,7 +27,7 @@ app.config['RANKS_IMAGES_DIR'] = 'static/images/ranks'
 app.config['MINIMAPS_IMAGES_DIR'] = 'static/images/maps/minimap'
 app.config['UNLOCKABLES_IMAGES_DIR'] = 'static/images/unlockables'
 app.config['MY_USERNAME'] = 'epocdotfr'
-app.config['CONTRIBUTORS'] = ['street veteran', 'mastock']
+app.config['CONTRIBUTORS'] = ['street veteran', 'mastock', 'dio']
 app.config['DEVS'] = ['jackmayol', 'pasik', 'pasik2', 'tremozl', 'the soldier'] # ahnold
 app.config['PLAYERS_LIST_PAGE_SIZES'] = [15, 30, 50, 100]
 
