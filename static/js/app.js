@@ -443,6 +443,7 @@ playersChartsFeature = {
         show_tooltips: false,
         x_accessor: 't',
         y_accessor: 'c',
+        x_mouseover: '%b %e, %Y %H:%M%p ',
         area: false,
         min_y: 0,
         y_extended_ticks: true,
@@ -499,6 +500,7 @@ playersChartsFeature = {
             colors: ['#A4CF17', '#44b2f8'],
             legend: ['Online servers', 'Active servers'],
             legend_target: '#servers-chart-legend',
+            aggregate_rollover: true,
             data: this.servers_data
         });
     },
