@@ -64,6 +64,11 @@ MAPS = {
     # Overlord Defense mod maps
     'overlord_defense': {
         'def_dday': {'name': 'D-Day (defense)', 'has_images': False}
+    },
+
+    # Lab Defense mod maps
+    'lab_defense': {
+        'def_lab': {'name': 'Laboratory', 'has_images': False}
     }
 }
 
@@ -232,7 +237,8 @@ SERVER_TYPES = OrderedDict([
     ('pvp', 'Vanilla'),
     ('pacific', 'RWR: PACIFIC'),
     ('Running_with_the_Dead', 'Running with the Dead'),
-    ('overlord_defense', 'Overlord Defense')
+    ('overlord_defense', 'Overlord Defense'),
+    ('lab_defense', 'Lab Defense Mod')
 ])
 
 
