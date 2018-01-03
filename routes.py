@@ -33,22 +33,24 @@ def my_friends():
 
 
 @app.route('/players')
-def players_list_old():
-    return redirect(url_for('players_list', database='invasion'), code=301)
+def players_list_without_db():
+    database = request.args.get('database', 'invasion')
+    username = request.args.get('username')
 
-
-@app.route('/players/<any(' + ','.join(rwr.PLAYERS_LIST_DATABASES.keys()) + '):database>')
-def players_list(database):
-    if request.args.get('username'):
-        username = request.args.get('username').strip()
+    if username:
+        username = username.strip()
 
         # Redirect to a SEO-friendly URL if the username query parameter is detected
         return redirect(url_for('player_details', database=database, username=username), code=301)
 
+    return redirect(url_for('players_list', database=database), code=301)
+
+
+@app.route('/players/<any(' + ','.join(rwr.PLAYERS_LIST_DATABASES.keys()) + '):database>')
+def players_list(database):
     args = request.args.to_dict()
 
-    if not args.get('sort'):
-        args['sort'] = rwr.PlayersSort.SCORE
+    args['sort'] = args.get('sort', rwr.PlayersSort.SCORE)
 
     if not args.get('limit') or int(args.get('limit')) > app.config['PLAYERS_LIST_PAGE_SIZES'][-1]:
         args['limit'] = app.config['PLAYERS_LIST_PAGE_SIZES'][0]
@@ -93,7 +95,7 @@ def players_list(database):
 
 
 @app.route('/players/<username>')
-def player_details_old(username):
+def player_details_without_db(username):
     return redirect(url_for('player_details', database='invasion', username=username), code=301)
 
 
@@ -120,7 +122,7 @@ def player_details(database, username):
 
 @app.route('/players/<username>/compare')
 @app.route('/players/<username>/compare/<username_to_compare_with>')
-def players_compare_old(username, username_to_compare_with=None):
+def players_compare_without_db(username, username_to_compare_with=None):
     if not username_to_compare_with and request.args.get('username_to_compare_with'):
         username_to_compare_with = request.args.get('username_to_compare_with').strip()
 
