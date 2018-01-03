@@ -54,6 +54,7 @@ More informations on the three above can be found [here](http://flask.pocoo.org/
   - `SERVERS_CACHE_TIMEOUT` Cache duration of the servers list (in seconds)
   - `PLAYERS_CACHE_TIMEOUT` Cache duration of the players list as well as data for a single player (in seconds)
   - `GRAPHS_DATA_CACHE_TIMEOUT` Cache duration of the graphs data, both the players and the servers ones (in seconds)
+  - `BETA` Whether or not to enable the beta mode
 
 I'll let you search yourself about how to configure a web server along uWSGI.
 
