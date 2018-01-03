@@ -348,6 +348,22 @@ label {
 }
 
 /************************************************************************
+ * Top bar */
+
+.top-bar {
+    background-color: #e9b700;
+    color: #000;
+    border-bottom: 0.1rem solid #ffd94e;
+}
+
+.top-bar a,
+.top-bar a:visited,
+.top-bar a:hover,
+.top-bar a:focus {
+    color: inherit;
+}
+
+/************************************************************************
  * Charts */
 
 .mg-histogram .axis text, .mg-x-axis text, .mg-y-axis text {
