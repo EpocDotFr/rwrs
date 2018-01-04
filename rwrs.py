@@ -140,7 +140,7 @@ def check_beta_access():
 
 @app.before_request
 def set_beta_data():
-    if app.config['BETA'] and auth.username() == '' or auth.username() == None:
+    if app.config['BETA'] and auth.username() != '' and auth.username() != None:
         from git import Repo
 
         repo = Repo(app.root_path)
