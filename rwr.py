@@ -59,17 +59,22 @@ MAPS = {
 
     # Running with the Dead mod maps
     'Running_with_the_Dead': {
-        'rwd_map1': {'name': 'Moorland Trenches (RWD)', 'has_images': False}
+        'rwd_map1': {'name': 'Moorland Apocalypse', 'has_images': False}
     },
 
     # Overlord Defense mod maps
     'overlord_defense': {
-        'def_dday': {'name': 'D-Day (defense)', 'has_images': False}
+        'def_dday': {'name': 'D-Day Defense', 'has_images': False}
     },
 
     # Lab Defense mod maps
     'lab_defense': {
-        'def_lab': {'name': 'Laboratory', 'has_images': False}
+        'def_lab': {'name': 'Dark Soul Island', 'has_images': False}
+    },
+
+    # Lab Defense KOTH mod maps
+    'lab_def_koth': {
+        'def_lab_koth': {'name': 'Lab Def KOTH', 'has_images': False}
     }
 }
 
@@ -239,7 +244,8 @@ SERVER_TYPES = OrderedDict([
     ('pacific', 'RWR: PACIFIC'),
     ('Running_with_the_Dead', 'Running with the Dead'),
     ('overlord_defense', 'Overlord Defense'),
-    ('lab_defense', 'Lab Defense Mod')
+    ('lab_defense', 'Lab Defense'),
+    ('lab_def_koth', 'Lab Defense KOTH')
 ])
 
 
