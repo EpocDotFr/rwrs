@@ -140,6 +140,17 @@ def check_beta_access():
         return _check_login()
 
 
+@app.before_request
+def set_beta_data():
+    if app.config['BETA']:
+        from git import Repo
+
+        repo = Repo(app.root_path)
+
+        g.BETA_BRANCH = repo.active_branch.name
+        g.BETA_COMMIT = repo.head.commit.hexsha
+
+
 @app.url_defaults
 def hashed_static_file(endpoint, values):
     """Add a cache-buster value in the URL of each static assets."""
