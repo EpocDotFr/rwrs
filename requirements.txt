@@ -1,6 +1,7 @@
 flask
 Flask-Caching
 Flask-SQLAlchemy
+flask_httpauth
 requests
 maxminddb-geolite2
 lxml

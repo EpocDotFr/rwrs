@@ -23,6 +23,14 @@
     {% if g.NO_INDEX %}<meta name="robots" content="noindex,nofollow,noarchive" />{% endif %}
 </head>
 <body>
+    {% if config['BETA'] %}
+        <div class="top-bar">
+            <div class="w1140p center txtcenter pas small">
+                <i class="fa fa-wrench"></i> You are using the beta version of RWRS, meant to test new features before public release. Please report issues to <strong>EpocDotFr</strong> on the <a href="https://discord.gg/010ixMlfmhK5BhYOv">RWR Discord server</a> by PM.
+            </div>
+        </div>
+    {% endif %}
+
     <header class="txtcenter pts pbs">
         <div class="w1140p center">
             {% if not g.UNDER_MAINTENANCE %}
