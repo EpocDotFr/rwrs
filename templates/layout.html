@@ -25,8 +25,8 @@
 <body>
     {% if config['BETA'] %}
         <div class="top-bar">
-            <div class="w1140p center txtcenter pas small">
-                <i class="fa fa-wrench"></i> You are using the beta version of RWRS, meant to test new features before public release. Please report issues to <strong>EpocDotFr</strong> on the <a href="https://discord.gg/010ixMlfmhK5BhYOv">RWR Discord server</a> by PM.
+            <div class="w1140p center txtcenter pts pbs small">
+                <i class="fa fa-wrench"></i> You are using the beta version of RWRS. Please report issues to <strong>EpocDotFr</strong> on the <a href="https://discord.gg/010ixMlfmhK5BhYOv">RWR Discord server</a> by PM. Version: <a href="https://github.com/EpocDotFr/rwrs/commit/{{ g.BETA_COMMIT }}">{{ g.BETA_COMMIT[:7] }}</a>@<a href="https://github.com/EpocDotFr/rwrs/tree/{{ g.BETA_BRANCH }}">{{ g.BETA_BRANCH }}</a>
             </div>
         </div>
     {% endif %}
