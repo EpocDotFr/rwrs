@@ -1,6 +1,7 @@
 from flask import Flask, render_template, make_response, request, g, abort
 from logging.handlers import RotatingFileHandler
 from werkzeug.exceptions import HTTPException
+from flask_httpauth import HTTPBasicAuth
 from flask_sqlalchemy import SQLAlchemy
 from flask_caching import Cache
 import logging
@@ -33,6 +34,7 @@ app.config['PLAYERS_LIST_PAGE_SIZES'] = [15, 30, 50, 100]
 
 db = SQLAlchemy(app)
 cache = Cache(app)
+auth = HTTPBasicAuth()
 
 handler = RotatingFileHandler('storage/logs/errors.log', maxBytes=10000000, backupCount=2)
 handler.setLevel(logging.WARNING)
@@ -126,6 +128,16 @@ def get_counts():
     g.total_servers = total_servers
 
 
+@app.before_request
+def check_beta_access():
+    if app.config['BETA']:
+        @auth.login_required
+        def _check_login():
+            return None
+
+        return _check_login()
+
+
 @app.url_defaults
 def hashed_static_file(endpoint, values):
     """Add a cache-buster value in the URL of each static assets."""
@@ -147,3 +159,16 @@ def hashed_static_file(endpoint, values):
 
             if os.path.exists(fp):
                 values[int(os.stat(fp).st_mtime)] = ''
+
+
+@auth.get_password
+def get_password(username):
+    if username in app.config['BETA_USERS']:
+        return app.config['BETA_USERS'].get(username)
+
+    return None
+
+
+@auth.error_handler
+def auth_error():
+    return http_error_handler(403, without_code=True)
