@@ -119,36 +119,37 @@ def check_under_maintenance():
 
 @app.before_request
 def get_counts():
-    scraper = rwr.DataScraper()
+    if request.endpoint != 'static':
+        scraper = rwr.DataScraper()
 
-    g.all_players_with_servers_details = scraper.get_all_players_with_servers_details()
+        g.all_players_with_servers_details = scraper.get_all_players_with_servers_details()
 
-    online_players, active_servers, total_servers = scraper.get_counters()
+        online_players, active_servers, total_servers = scraper.get_counters()
 
-    g.online_players = online_players
-    g.active_servers = active_servers
-    g.total_servers = total_servers
-
-
-@app.before_request
-def check_beta_access():
-    if app.config['BETA']:
-        @auth.login_required
-        def _check_login():
-            return None
-
-        return _check_login()
+        g.online_players = online_players
+        g.active_servers = active_servers
+        g.total_servers = total_servers
 
 
 @app.before_request
 def set_beta_data():
-    if app.config['BETA'] and auth.username() != '' and auth.username() != None:
+    if request.endpoint != 'static' and app.config['BETA']:
         from git import Repo
 
         repo = Repo(app.root_path)
 
         g.BETA_BRANCH = repo.active_branch.name
         g.BETA_COMMIT = repo.head.commit.hexsha
+
+
+@app.before_request
+def check_beta_access():
+    if request.endpoint != 'static' and app.config['BETA']:
+        @auth.login_required
+        def _check_login():
+            return None
+
+        return _check_login()
 
 
 @app.url_defaults
