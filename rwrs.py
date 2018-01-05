@@ -111,7 +111,7 @@ def define_globals():
 
 @app.before_request
 def check_under_maintenance():
-    if request.endpoint != 'static' and os.path.exists('maintenance'):
+    if os.path.exists('maintenance'):
         g.UNDER_MAINTENANCE = True
 
         abort(503)
@@ -119,21 +119,20 @@ def check_under_maintenance():
 
 @app.before_request
 def get_counts():
-    if request.endpoint != 'static':
-        scraper = rwr.DataScraper()
+    scraper = rwr.DataScraper()
 
-        g.all_players_with_servers_details = scraper.get_all_players_with_servers_details()
+    g.all_players_with_servers_details = scraper.get_all_players_with_servers_details()
 
-        online_players, active_servers, total_servers = scraper.get_counters()
+    online_players, active_servers, total_servers = scraper.get_counters()
 
-        g.online_players = online_players
-        g.active_servers = active_servers
-        g.total_servers = total_servers
+    g.online_players = online_players
+    g.active_servers = active_servers
+    g.total_servers = total_servers
 
 
 @app.before_request
 def set_beta_data():
-    if request.endpoint != 'static' and app.config['BETA']:
+    if app.config['BETA']:
         from git import Repo
 
         repo = Repo(app.root_path)
@@ -144,7 +143,7 @@ def set_beta_data():
 
 @app.before_request
 def check_beta_access():
-    if request.endpoint != 'static' and app.config['BETA']:
+    if app.config['BETA']:
         @auth.login_required
         def _check_login():
             return None
