@@ -100,131 +100,301 @@ RANKS = {
 SQUADMATES_STEPS_XP = 1000 # One squad mate is gained every 1000 XP
 MAX_SQUADMATES = 10 # Maximum squad mates allowed
 
-UNLOCKABLES = OrderedDict([
-    (0, {
-        'weapons': [
-            {'image': 'assault_rifles', 'name': 'Assault rifles'},
-            {'image': 'shotguns', 'name': 'Shotguns'}
-        ],
-        'equipment': [
-            {'image': 'riot_shield', 'name': 'Riot shield'}
-        ],
-        'throwables': [
-            {'image': 'hand_stun_grenades', 'name': '2 hand/stun grenades'}
-        ]
-    }),
-    (500, {
-        'weapons': [
-            {'image': 'bazooka', 'name': 'Bazooka'},
-            {'image': 'pistols_sd', 'name': 'Silenced pistols'}
-        ],
-        'equipment': [
-            {'image': 'cover', 'name': 'Deployable cover'}
-        ],
-        'throwables': [
-            {'image': 'impact_grenade', 'name': '2 impact grenades'}
-        ]
-    }),
-    (1000, {
-        'radio_calls': [
-            {'image': 'mortar_1', 'name': 'Mortar strike 1x8'},
-            {'image': 'sandbag_drop', 'name': 'Sandbag drop'}
-        ],
-        'weapons': [
-            {'image': 'machineguns', 'name': 'Machineguns'},
-            {'image': 'desert_eagle', 'name': 'Desert Eagle pistol'}
-        ],
-        'throwables': [
-            {'image': 'c4', 'name': '1 C4'}
-        ]
-    }),
-    (1500, {
-        'weapons': [
-            {'image': 'snipers', 'name': 'Sniper rifles'},
-            {'image': 'adv_assault_rifles', 'name': 'Advanced assault rifles'},
-            {'image': 'smgs_sd', 'name': 'Silent SMGs'},
-            {'image': 'l85a2', 'name': 'L85A2'},
-            {'image': 'pepperdust', 'name': 'Pepperdust shotgun'}
-        ],
-        'throwables': [
-            {'image': 'claymore', 'name': '1 Claymore mine'}
-        ]
-    }),
-    (2000, {
-        'weapons': [
-            {'image': 'bazooka', 'name': 'Second bazooka'}
-        ],
-        'equipment': [
-            {'image': 'deployable_mg', 'name': 'Deployable machinegun'},
-            {'image': 'deployable_minigun', 'name': 'Deployable minigun'},
-            {'image': 'deployable_mortar', 'name': 'Deployable mortar'}
-        ],
-        'throwables': [
-            {'image': 'hand_stun_impact_grenades', 'name': '3 hand/stun/impact grenades'},
-            {'image': 'c4', 'name': '2 C4'}
-        ]
-    }),
-    (3000, {
-        'radio_calls': [
-            {'image': 'mortar_2', 'name': 'Mortar strike 3x8'},
-            {'image': 'paratroopers_1', 'name': '4 paratroopers'},
-            {'image': 'rubber_boat_drop', 'name': 'Boat drop'},
-            {'image': 'buggy_drop', 'name': 'Buggy drop'}
-        ],
-        'weapons': [
-            {'image': 'aa-12', 'name': 'AA-12 shotgun'},
-            {'image': 'xm8', 'name': 'XM-8 assault rifle'},
-            {'image': 'f2000', 'name': 'F2000 assault rifle'},
-            {'image': 'p90', 'name': 'P90 submachinegun'}
-        ],
-        'throwables': [
-            {'image': 'claymore', 'name': '2 Claymore mines'},
-            {'image': 'c4', 'name': '3 C4'}
-        ]
-    }),
-    (4000, {
-        'radio_calls': [
-            {'image': 'artillery_1', 'name': 'Artillery strike 2x16'},
-            {'image': 'paratroopers_2', 'name': '8 paratroopers'},
-            {'image': 'humvee_drop', 'name': 'Humvee drop'}
-        ],
-        'weapons': [
-            {'image': 'benelli_m4', 'name': 'Benelli M4 shotgun'},
-            {'image': 'vss_vintorez', 'name': 'VSS Vintorez sniper rifle'},
-            {'image': 'ns2000', 'name': 'Neostead 2000 shotgun'},
-            {'image': 'xm25', 'name': 'XM-25 launcher'},
-            {'image': 'barrett_m107', 'name': 'Barrett M-107 sniper rifle'}
-        ],
-        'throwables': [
-            {'image': 'hand_stun_impact_grenades', 'name': '4 hand/stun/impact grenades'},
-            {'image': 'flare', 'name': '1 paratroopers flare'}
-        ]
-    }),
-    (5000, {
-        'radio_calls': [
-            {'image': 'tank_drop', 'name': 'Tank drop'}
-        ],
-        'equipment': [
-            {'image': 'deployable_tow', 'name': 'Deployable TOW missile nest'}
-        ]
-    }),
-    (6000, {
-        'throwables': [
-            {'image': 'flare', 'name': '2 paratroopers flares'},
-            {'image': 'claymore', 'name': '3 Claymore mines'}
-        ]
-    }),
-    (7000, {
-        'radio_calls': [
-            {'image': 'artillery_2', 'name': 'Artillery strike 8x16'}
-        ]
-    }),
-    (10000, {
-        'equipment': [
-            {'image': 'deployable_tow', 'name': '2nd deployable TOW missile nest'}
-        ]
-    })
-])
+UNLOCKABLES = {
+    'vanilla': OrderedDict([
+        (0, {
+            'weapons': [
+                {'image': 'assault_rifles', 'name': 'Assault rifles'},
+                {'image': 'shotguns', 'name': 'Shotguns'}
+            ],
+            'equipment': [
+                {'image': 'riot_shield', 'name': 'Riot shield'}
+            ],
+            'throwables': [
+                {'image': 'hand_stun_grenades', 'name': '2 hand/stun grenades'}
+            ]
+        }),
+        (500, {
+            'weapons': [
+                {'image': 'bazooka', 'name': 'Bazooka'},
+                {'image': 'pistols_sd', 'name': 'Silenced pistols'}
+            ],
+            'equipment': [
+                {'image': 'cover', 'name': 'Deployable cover'}
+            ],
+            'throwables': [
+                {'image': 'impact_grenade', 'name': '2 impact grenades'}
+            ]
+        }),
+        (1000, {
+            'radio_calls': [
+                {'image': 'mortar_1', 'name': 'Mortar strike 1x8'},
+                {'image': 'sandbag_drop', 'name': 'Sandbag drop'}
+            ],
+            'weapons': [
+                {'image': 'machineguns', 'name': 'Machineguns'},
+                {'image': 'desert_eagle', 'name': 'Desert Eagle pistol'}
+            ],
+            'throwables': [
+                {'image': 'c4', 'name': '1 C4'}
+            ]
+        }),
+        (1500, {
+            'weapons': [
+                {'image': 'snipers', 'name': 'Sniper rifles'},
+                {'image': 'adv_assault_rifles', 'name': 'Advanced assault rifles'},
+                {'image': 'smgs_sd', 'name': 'Silent SMGs'},
+                {'image': 'l85a2', 'name': 'L85A2'},
+                {'image': 'pepperdust', 'name': 'Pepperdust shotgun'}
+            ],
+            'throwables': [
+                {'image': 'claymore', 'name': '1 Claymore mine'}
+            ]
+        }),
+        (2000, {
+            'weapons': [
+                {'image': 'bazooka', 'name': 'Second bazooka'}
+            ],
+            'equipment': [
+                {'image': 'deployable_mg', 'name': 'Deployable machinegun'},
+                {'image': 'deployable_minigun', 'name': 'Deployable minigun'},
+                {'image': 'deployable_mortar', 'name': 'Deployable mortar'}
+            ],
+            'throwables': [
+                {'image': 'hand_stun_impact_grenades', 'name': '3 hand/stun/impact grenades'},
+                {'image': 'c4', 'name': '2 C4'}
+            ]
+        }),
+        (3000, {
+            'radio_calls': [
+                {'image': 'mortar_2', 'name': 'Mortar strike 3x8'},
+                {'image': 'paratroopers_1', 'name': '4 paratroopers'},
+                {'image': 'rubber_boat_drop', 'name': 'Boat drop'},
+                {'image': 'buggy_drop', 'name': 'Buggy drop'}
+            ],
+            'weapons': [
+                {'image': 'aa-12', 'name': 'AA-12 shotgun'},
+                {'image': 'xm8', 'name': 'XM-8 assault rifle'},
+                {'image': 'f2000', 'name': 'F2000 assault rifle'},
+                {'image': 'p90', 'name': 'P90 submachinegun'}
+            ],
+            'throwables': [
+                {'image': 'claymore', 'name': '2 Claymore mines'},
+                {'image': 'c4', 'name': '3 C4'}
+            ]
+        }),
+        (4000, {
+            'radio_calls': [
+                {'image': 'artillery_1', 'name': 'Artillery strike 2x16'},
+                {'image': 'paratroopers_2', 'name': '8 paratroopers'},
+                {'image': 'humvee_drop', 'name': 'Humvee drop'}
+            ],
+            'weapons': [
+                {'image': 'benelli_m4', 'name': 'Benelli M4 shotgun'},
+                {'image': 'vss_vintorez', 'name': 'VSS Vintorez sniper rifle'},
+                {'image': 'ns2000', 'name': 'Neostead 2000 shotgun'},
+                {'image': 'xm25', 'name': 'XM-25 launcher'},
+                {'image': 'barrett_m107', 'name': 'Barrett M-107 sniper rifle'}
+            ],
+            'throwables': [
+                {'image': 'hand_stun_impact_grenades', 'name': '4 hand/stun/impact grenades'},
+                {'image': 'flare', 'name': '1 paratroopers flare'}
+            ]
+        }),
+        (5000, {
+            'radio_calls': [
+                {'image': 'tank_drop', 'name': 'Tank drop'}
+            ],
+            'equipment': [
+                {'image': 'deployable_tow', 'name': 'Deployable TOW missile nest'}
+            ]
+        }),
+        (6000, {
+            'throwables': [
+                {'image': 'flare', 'name': '2 paratroopers flares'},
+                {'image': 'claymore', 'name': '3 Claymore mines'}
+            ]
+        }),
+        (7000, {
+            'radio_calls': [
+                {'image': 'artillery_2', 'name': 'Artillery strike 8x16'}
+            ]
+        }),
+        (10000, {
+            'equipment': [
+                {'image': 'deployable_tow', 'name': '2nd deployable TOW missile nest'}
+            ]
+        })
+    ]),
+    'pacific': OrderedDict([
+        (0, {
+            'weapons': [
+
+            ],
+            'equipment': [
+
+            ],
+            'throwables': [
+
+            ]
+        }),
+        (500, {
+            'weapons': [
+
+            ],
+            'equipment': [
+
+            ],
+            'throwables': [
+
+            ]
+        }),
+        (1000, {
+            'radio_calls': [
+                {'image': 'mortar_1', 'name': 'Mortar strike (light)'}
+            ],
+            'weapons': [
+
+            ],
+            'equipment': [
+
+            ],
+            'throwables': [
+
+            ]
+        }),
+        (1500, {
+            'radio_calls': [
+                {'image': 'rifle_squad', 'name': 'USMC rifle squad'},
+                {'image': 'banzai_charge', 'name': 'Banzai Charge'}
+            ],
+            'weapons': [
+
+            ],
+            'equipment': [
+
+            ],
+            'throwables': [
+
+            ]
+        }),
+        (2000, {
+            'radio_calls': [
+                {'image': 'mortar_2', 'name': 'Mortar strike (heavy, rockets)'},
+                {'image': 'airstrike_1', 'name': 'Airstrike (rockets)'}
+            ],
+            'weapons': [
+
+            ],
+            'equipment': [
+
+            ],
+            'throwables': [
+
+            ]
+        }),
+        (3000, {
+            'radio_calls': [
+                {'image': 'airstrike_2', 'name': 'Airstrike (precision bombing)'},
+                {'image': 'rubber_boat_drop', 'name': 'Boat drop'},
+                {'image': 'lvt_4', 'name': 'LVT-4'},
+                {'image': 'type_1', 'name': 'Type 1 Ho-Ha'}
+            ],
+            'weapons': [
+
+            ],
+            'equipment': [
+
+            ],
+            'throwables': [
+
+            ]
+        }),
+        (4000, {
+            'radio_calls': [
+                {'image': 'm3', 'name': 'M3 Stuart'},
+                {'image': 'type_95', 'name': 'Type 95 Ha-Go'},
+                {'image': 'naval_guns_1', 'name': 'Naval Guns (light, saturation)'}
+            ],
+            'weapons': [
+
+            ],
+            'equipment': [
+
+            ],
+            'throwables': [
+
+            ]
+        }),
+        (5000, {
+            'radio_calls': [
+
+            ],
+            'weapons': [
+
+            ],
+            'equipment': [
+
+            ],
+            'throwables': [
+
+            ]
+        }),
+        (6000, {
+            'radio_calls': [
+
+            ],
+            'weapons': [
+
+            ],
+            'equipment': [
+
+            ],
+            'throwables': [
+
+            ]
+        }),
+        (7000, {
+            'weapons': [
+
+            ],
+            'equipment': [
+
+            ],
+            'throwables': [
+
+            ]
+        }),
+        (8000, {
+            'radio_calls': [
+                {'image': 'naval_guns_2', 'name': 'Naval Guns (heavy)'}
+            ],
+            'weapons': [
+
+            ],
+            'equipment': [
+
+            ],
+            'throwables': [
+
+            ]
+        }),
+        (10000, {
+            'radio_calls': [
+
+            ],
+            'weapons': [
+
+            ],
+            'equipment': [
+
+            ],
+            'throwables': [
+
+            ]
+        })
+    ])
+}
 
 
 SERVER_MODES = {
@@ -892,6 +1062,7 @@ class Player:
 
         ret.database = database
         ret.database_name = get_database_name(ret.database)
+        ret.database_game_type = ret.get_game_type_from_database()
 
         _, rank_id = parse_rank_path(rank_image_cell[0].get('src'))
 
@@ -955,13 +1126,20 @@ class Player:
 
         return ret
 
+    def get_game_type_from_database(self):
+        """Return the game type from this player's database name."""
+        if self.database == 'invasion':
+            return 'vanilla'
+        else:
+            return self.database
+
     def get_unlocks(self):
         """Compute what the player unlocked (or not)."""
         def _init_unlockable(ret, type):
             ret[type] = {
                 'list': [],
                 'current': 0,
-                'max': len([un for required_xp, unlocks in UNLOCKABLES.items() for unlock_id, unlock in unlocks.items() if unlock_id == type for un in unlock])
+                'max': len([un for required_xp, unlocks in UNLOCKABLES[self.database_game_type].items() for unlock_id, unlock in unlocks.items() if unlock_id == type for un in unlock])
             }
 
         def _compute_unlockable(unlocks, ret, type):
@@ -990,7 +1168,7 @@ class Player:
         _init_unlockable(ret, 'equipment')
         _init_unlockable(ret, 'throwables')
 
-        for required_xp, unlocks in UNLOCKABLES.items():
+        for required_xp, unlocks in UNLOCKABLES[self.database_game_type].items():
             _compute_unlockable(unlocks, ret, 'radio_calls')
             _compute_unlockable(unlocks, ret, 'weapons')
             _compute_unlockable(unlocks, ret, 'equipment')

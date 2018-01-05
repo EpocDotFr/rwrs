@@ -78,10 +78,10 @@
     {%- endif %}
 {%- endmacro %}
 
-{% macro unlockables_list(player_unlocks, type) -%}
-    {% for unlock in player_unlocks[type]['list'] -%}
+{% macro unlockables_list(player, unlocks_type) -%}
+    {% for unlock in player.unlocks[unlocks_type]['list'] -%}
         <div>
-            <img src="{{ url_for('static', filename='images/unlockables/' + type + '/' + unlock['image'] + '.png') }}" class="{{ 'locked' if not unlock['unlocked'] }} help" title="{{ unlock['name'] }} ({{ unlock['required_xp'] }} XP)">
+            <img src="{{ url_for('static', filename='images/unlockables/' + player.database_game_type + '/' + unlocks_type + '/' + unlock['image'] + '.png') }}" class="{{ 'locked' if not unlock['unlocked'] }} help" title="{{ unlock['name'] }} ({{ unlock['required_xp'] }} XP)">
         </div>
     {%- endfor %}
 {%- endmacro %}
