@@ -233,12 +233,9 @@ UNLOCKABLES = {
             ],
             'equipment': [
 
-            ],
-            'throwables': [
-
             ]
         }),
-        (500, {
+        (250, {
             'weapons': [
 
             ],
@@ -246,6 +243,15 @@ UNLOCKABLES = {
 
             ],
             'throwables': [
+                {'image': '', 'name': '2 Satchel charges'}, # TODO
+                {'image': '', 'name': '2 Type 99 magnetic AT'} # TODO
+            ]
+        }),
+        (500, {
+            'weapons': [
+
+            ],
+            'equipment': [
 
             ]
         }),
@@ -260,7 +266,7 @@ UNLOCKABLES = {
 
             ],
             'throwables': [
-
+                {'image': '', 'name': '1 Demolition charges'} # TODO
             ]
         }),
         (1500, {
@@ -272,9 +278,6 @@ UNLOCKABLES = {
 
             ],
             'equipment': [
-
-            ],
-            'throwables': [
 
             ]
         }),
@@ -290,7 +293,11 @@ UNLOCKABLES = {
 
             ],
             'throwables': [
-
+                {'image': '', 'name': '2 Demolition charges'}, # TODO
+                {'image': '', 'name': '3 MkII grenades'}, # TODO
+                {'image': '', 'name': '3 Satchel charges'}, # TODO
+                {'image': '', 'name': '3 Type 99 magnetic AT'}, # TODO
+                {'image': '', 'name': '4 Type 97 grenades'} # TODO
             ]
         }),
         (3000, {
@@ -307,7 +314,7 @@ UNLOCKABLES = {
 
             ],
             'throwables': [
-
+                {'image': '', 'name': '2 Demolition charges'} # TODO
             ]
         }),
         (4000, {
@@ -323,7 +330,10 @@ UNLOCKABLES = {
 
             ],
             'throwables': [
-
+                {'image': '', 'name': '4 MkII grenades'}, # TODO
+                {'image': '', 'name': '4 Satchel charges'}, # TODO
+                {'image': '', 'name': '5 Type 97 grenades'}, # TODO
+                {'image': '', 'name': '4 Type 99 magnetic AT'} # TODO
             ]
         }),
         (5000, {
@@ -334,9 +344,6 @@ UNLOCKABLES = {
 
             ],
             'equipment': [
-
-            ],
-            'throwables': [
 
             ]
         }),
@@ -349,9 +356,6 @@ UNLOCKABLES = {
             ],
             'equipment': [
 
-            ],
-            'throwables': [
-
             ]
         }),
         (7000, {
@@ -359,9 +363,6 @@ UNLOCKABLES = {
 
             ],
             'equipment': [
-
-            ],
-            'throwables': [
 
             ]
         }),
@@ -374,9 +375,6 @@ UNLOCKABLES = {
             ],
             'equipment': [
 
-            ],
-            'throwables': [
-
             ]
         }),
         (10000, {
@@ -387,9 +385,6 @@ UNLOCKABLES = {
 
             ],
             'equipment': [
-
-            ],
-            'throwables': [
 
             ]
         })
