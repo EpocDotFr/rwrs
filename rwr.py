@@ -676,6 +676,8 @@ class DataScraper:
                 'steam_join_link': server.steam_join_link,
                 'type': server.type_name,
                 'mode': server.mode_name,
+                'database': server.database,
+                'database_name': server.database_name,
                 'location': {
                     'country_code': server.location.country_code,
                     'country_name': server.location.country_name
