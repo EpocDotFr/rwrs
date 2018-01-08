@@ -1,6 +1,6 @@
 from sqlalchemy_utils import ArrowType
-from sqlalchemy import func
 from rwrs import db, cache, app
+from sqlalchemy import func
 from helpers import *
 import arrow
 
