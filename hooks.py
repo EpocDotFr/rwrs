@@ -1,7 +1,7 @@
 from flask import request, g, abort, render_template, make_response
 from werkzeug.exceptions import HTTPException
 from rwrs import app, auth
-import rwr
+import rwr.scraper
 import os
 
 
@@ -23,7 +23,7 @@ def check_under_maintenance():
 
 @app.before_request
 def get_counts():
-    scraper = rwr.DataScraper()
+    scraper = rwr.scraper.DataScraper()
 
     g.all_players_with_servers_details = scraper.get_all_players_with_servers_details()
 

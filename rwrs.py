@@ -41,7 +41,8 @@ handler.setFormatter(formatter)
 app.logger.addHandler(handler)
 
 from helpers import *
-import rwr
+import rwr.constants
+import rwr.utils
 
 app.jinja_env.filters.update(
     humanize_seconds=humanize_seconds,
@@ -56,10 +57,10 @@ app.jinja_env.globals.update(
     abs=abs,
     fabs=math.fabs,
     isinstance=isinstance,
-    PlayersSort=rwr.PlayersSort,
+    PlayersSort=rwr.constants.PlayersSort,
     merge_query_string_params=merge_query_string_params,
-    get_database_name=rwr.get_database_name,
-    PLAYERS_LIST_DATABASES=rwr.PLAYERS_LIST_DATABASES
+    get_database_name=rwr.utils.get_database_name,
+    PLAYERS_LIST_DATABASES=rwr.constants.PLAYERS_LIST_DATABASES
 )
 
 

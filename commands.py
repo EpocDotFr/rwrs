@@ -1,7 +1,8 @@
 from rwrs import app, db, cache
 from models import *
+import rwr.extractors
+import rwr.scraper
 import click
-import rwr
 
 
 @app.cli.command()
@@ -36,11 +37,11 @@ def cc():
 @app.cli.command()
 def get_servers_player_count():
     """Store the number of players on each servers."""
-    scraper = rwr.DataScraper()
+    scraper = rwr.scraper.DataScraper()
 
     click.echo('Clearing  cache')
 
-    cache.delete_memoized(rwr.DataScraper.get_servers)
+    cache.delete_memoized(rwr.scraper.DataScraper.get_servers)
     cache.delete_memoized(ServerPlayerCount.server_players_data)
     cache.delete_memoized(ServerPlayerCount.servers_data)
 
@@ -94,7 +95,7 @@ def extract_ranks_images(gamedir):
 
     click.echo('Extraction started')
 
-    extractor = rwr.RanksImageExtractor(gamedir, app.config['RANKS_IMAGES_DIR'])
+    extractor = rwr.extractors.RanksImageExtractor(gamedir, app.config['RANKS_IMAGES_DIR'])
     extractor.extract()
 
     click.secho('Done', fg='green')
@@ -112,7 +113,7 @@ def extract_minimaps(gamedir):
 
     click.echo('Extraction started')
 
-    extractor = rwr.MinimapsImageExtractor(gamedir, app.config['MINIMAPS_IMAGES_DIR'])
+    extractor = rwr.extractors.MinimapsImageExtractor(gamedir, app.config['MINIMAPS_IMAGES_DIR'])
     extractor.extract()
 
     click.secho('Done', fg='green')
