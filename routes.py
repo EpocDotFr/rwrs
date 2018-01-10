@@ -9,9 +9,15 @@ ERROR_PLAYER_NOT_FOUND = 'Sorry, the player "{username}" wasn\'t found. Maybe th
 
 @app.route('/')
 def home():
+    current_players_data = SteamPlayerCount.players_data()
     online_players_data = ServerPlayerCount.server_players_data()
     servers_online_data = ServerPlayerCount.servers_data()
     servers_active_data = ServerPlayerCount.servers_data(active_only=True)
+
+    players_data = [
+        current_players_data,
+        online_players_data
+    ]
 
     servers_data = [
         servers_online_data,
@@ -20,7 +26,7 @@ def home():
 
     return render_template(
         'home.html',
-        online_players_data=online_players_data,
+        players_data=players_data,
         servers_data=servers_data
     )
 

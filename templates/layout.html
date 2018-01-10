@@ -35,8 +35,8 @@
         <div class="w1140p center">
             {% if not g.UNDER_MAINTENANCE %}
                 <div class="left txtleft small">
-                    <strong>{{ g.total_servers }}</strong> server{{ 's' if g.total_servers > 1 }} available (<strong>{{ g.active_servers }}</strong> {{ 'are' if g.active_servers > 1 else 'is' }} active)<br>
-                    <strong>99</strong> players currently (<strong>{{ g.online_players }}</strong> plays online <span class="total-playing-friends is-hidden">including <strong class="txtblue">?</strong> <span class="friend-label"></span></span>)<br>
+                    <strong>{{ g.current_players }}</strong> current players (<strong>{{ g.online_players }}</strong> {{ 'are' if g.online_players > 1 else 'is' }} online<span class="total-playing-friends is-hidden">, including <strong class="txtblue">?</strong> <span class="friend-label"></span></span>)<br>
+                    <strong>{{ g.total_servers }}</strong> server{{ 's' if g.total_servers > 1 }} online (<strong>{{ g.active_servers }}</strong> {{ 'are' if g.active_servers > 1 else 'is' }} active)<br>
                 </div>
                 <div class="right txtright">
                     <a href="{{ url_for('my_friends') }}" class="manage-friends-link is-hidden"><i class="fa fa-users"></i> My friends</a>

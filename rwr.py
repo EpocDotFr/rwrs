@@ -428,7 +428,7 @@ class DataScraper:
 
     @cache.memoize(timeout=app.config['SERVERS_CACHE_TIMEOUT'])
     def get_servers(self):
-        """Get and parse the list of all available public RWR servers."""
+        """Get and parse the list of all public RWR servers."""
         xml_servers = self._call(self.servers_endpoint, 'get_server_list.php', 'xml', params={'start': 0, 'size': 100})
         html_servers = self._call(self.servers_endpoint, 'view_servers.php', 'html')
 
@@ -624,7 +624,7 @@ class DataScraper:
         return [server for server in self.get_servers() if _filter_server(server, filters)]
 
     def get_counters(self):
-        """Get the number of players online, the active servers as well as the total number of available servers."""
+        """Get the number of players online, the active servers as well as the total number of online servers."""
         servers = self.get_servers()
 
         online_players = sum([server.players.current for server in servers])
