@@ -479,7 +479,7 @@ playersChartsFeature = {
      * Initialize the Players charts on the Home page.
      */
     initOnHome: function() {
-        // Online players chart
+        // Total and online players chart
         for (var i = 0; i < this.players_data.length; i++) {
             this.convertDates(this.players_data[i]);
         }
@@ -487,7 +487,7 @@ playersChartsFeature = {
         this.createChart({
             target: '#players-chart',
             colors: ['#A4CF17', '#44b2f8'],
-            legend: ['Current players', 'Online players'],
+            legend: ['Total players', 'Online players'],
             legend_target: '#players-legend',
             aggregate_rollover: true,
             data: this.players_data

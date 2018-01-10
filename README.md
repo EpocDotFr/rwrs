@@ -20,7 +20,7 @@ Available at [rwrstats.com](https://rwrstats.com/).
     - Public server details (players list with link to their profile, current map preview and minimap, etc)
     - Filtering capabilities
   - Online servers count (+ the active ones)
-  - Online players count (+ current players count + number of playing friends)
+  - Total players count (+ online ones + number of playing friends)
   - Charts (for the past week)
     - Number of online players
     - Number of online servers (+ the active ones)
@@ -55,7 +55,7 @@ More informations on the three above can be found [here](http://flask.pocoo.org/
   - `CACHE_THRESHOLD` The maximum number of items the cache will store before it starts deleting some (see [here](https://pythonhosted.org/Flask-Cache/#configuring-flask-cache) for more configuration parameters related to Flask-Cache)
   - `SERVERS_CACHE_TIMEOUT` Cache duration of the servers list (in seconds)
   - `PLAYERS_CACHE_TIMEOUT` Cache duration of the players list as well as data for a single player (in seconds)
-  - `STEAM_PLAYERS_CACHE_TIMEOUT` Cache duration of the current number of RWR players (in seconds)
+  - `STEAM_PLAYERS_CACHE_TIMEOUT` Cache duration of the total number of players (in seconds)
   - `GRAPHS_DATA_CACHE_TIMEOUT` Cache duration of the graphs data, both the players and the servers ones (in seconds)
   - `BETA` Whether or not to enable the beta mode
   - `BETA_USERS` The credentials required to access the app when beta mode is enabled. You can specify multiple ones. **It is highly recommended to serve RWRS through HTTPS** because it uses [HTTP basic auth](https://en.wikipedia.org/wiki/Basic_access_authentication)

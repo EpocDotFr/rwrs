@@ -129,7 +129,7 @@ def get_counts():
 
     online_players, active_servers, total_servers = scraper.get_counters()
 
-    g.current_players = steam_api_client.get_current_players_count_for_app(app.config['RWR_STEAM_APP_ID'])
+    g.total_players = steam_api_client.get_current_players_count_for_app(app.config['RWR_STEAM_APP_ID'])
     g.online_players = online_players
     g.active_servers = active_servers
     g.total_servers = total_servers
