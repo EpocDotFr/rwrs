@@ -3,6 +3,7 @@ from logging.handlers import RotatingFileHandler
 from werkzeug.exceptions import HTTPException
 from flask_httpauth import HTTPBasicAuth
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 from flask_caching import Cache
 import logging
 import math
@@ -33,6 +34,7 @@ app.config['DEVS'] = ['jackmayol', 'pasik', 'pasik2', 'tremozl', 'the soldier'] 
 app.config['PLAYERS_LIST_PAGE_SIZES'] = [15, 30, 50, 100]
 
 db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 cache = Cache(app)
 auth = HTTPBasicAuth()
 
