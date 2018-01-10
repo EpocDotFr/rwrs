@@ -62,6 +62,7 @@ def clean_players_count():
     click.echo('Deleting old data')
 
     old_entries = ServerPlayerCount.query.get_old_entries()
+    old_entries.extend(SteamPlayerCount.query.get_old_entries())
 
     for old_entry in old_entries:
         db.session.delete(old_entry)
