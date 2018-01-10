@@ -111,13 +111,13 @@ flask cc
 ### Clearing old graphs data
 
 ```
-flask clean_servers_player_count
+flask clean_players_count
 ```
 
-### Storing actual number of players on each servers (for graphs)
+### Storing actual number of players (for graphs)
 
 ```
-flask get_servers_player_count
+flask get_players_count
 ```
 
 ## How it works

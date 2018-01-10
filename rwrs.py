@@ -20,7 +20,8 @@ app.config.from_pyfile('config.py')
 app.config['LOGGER_HANDLER_POLICY'] = 'production'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///storage/data/db.sqlite'
 app.config['SQLALCHEMY_BINDS'] = {
-    'servers_player_count': 'sqlite:///storage/data/servers_player_count.sqlite'
+    'servers_player_count': 'sqlite:///storage/data/servers_player_count.sqlite',
+    'steam_players_count': 'sqlite:///storage/data/steam_players_count.sqlite'
 }
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['CACHE_TYPE'] = 'filesystem'
@@ -32,6 +33,7 @@ app.config['MY_USERNAME'] = 'epocdotfr'
 app.config['CONTRIBUTORS'] = ['street veteran', 'mastock', 'dio']
 app.config['DEVS'] = ['jackmayol', 'pasik', 'pasik2', 'tremozl', 'the soldier'] # ahnold
 app.config['PLAYERS_LIST_PAGE_SIZES'] = [15, 30, 50, 100]
+app.config['RWR_STEAM_APP_ID'] = 270150
 
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)

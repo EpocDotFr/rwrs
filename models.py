@@ -5,7 +5,8 @@ from helpers import *
 import arrow
 
 __all__ = [
-    'ServerPlayerCount'
+    'ServerPlayerCount',
+    'SteamPlayerCount'
 ]
 
 
@@ -86,3 +87,13 @@ class ServerPlayerCount(db.Model):
 
     def __repr__(self):
         return 'ServerPlayerCount:' + self.id
+
+
+class SteamPlayerCount(db.Model):
+    __tablename__ = 'steam_players_count'
+    __bind_key__ = 'steam_players_count'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True) # TODO To remove because useless not efficient
+
+    measured_at = db.Column(ArrowType, default=arrow.utcnow().floor('minute'), nullable=False)
+    count = db.Column(db.Integer, nullable=False)
