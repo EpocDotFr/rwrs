@@ -3,6 +3,7 @@ from logging.handlers import RotatingFileHandler
 from werkzeug.exceptions import HTTPException
 from flask_httpauth import HTTPBasicAuth
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 from flask_caching import Cache
 import logging
 import math
@@ -19,7 +20,8 @@ app.config.from_pyfile('config.py')
 app.config['LOGGER_HANDLER_POLICY'] = 'production'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///storage/data/db.sqlite'
 app.config['SQLALCHEMY_BINDS'] = {
-    'servers_player_count': 'sqlite:///storage/data/servers_player_count.sqlite'
+    'servers_player_count': 'sqlite:///storage/data/servers_player_count.sqlite',
+    'steam_players_count': 'sqlite:///storage/data/steam_players_count.sqlite'
 }
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['CACHE_TYPE'] = 'filesystem'
@@ -31,8 +33,10 @@ app.config['MY_USERNAME'] = 'epocdotfr'
 app.config['CONTRIBUTORS'] = ['street veteran', 'mastock', 'dio']
 app.config['DEVS'] = ['jackmayol', 'pasik', 'pasik2', 'tremozl', 'the soldier'] # ahnold
 app.config['PLAYERS_LIST_PAGE_SIZES'] = [15, 30, 50, 100]
+app.config['RWR_STEAM_APP_ID'] = 270150
 
 db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 cache = Cache(app)
 auth = HTTPBasicAuth()
 
@@ -44,6 +48,7 @@ app.logger.addHandler(handler)
 
 from helpers import *
 import rwr
+import steam_api
 
 app.jinja_env.filters.update(
     humanize_seconds=humanize_seconds,
@@ -118,11 +123,13 @@ def check_under_maintenance():
 @app.before_request
 def get_counts():
     scraper = rwr.DataScraper()
+    steam_api_client = steam_api.Client(app.config['STEAM_API_KEY'])
 
     g.all_players_with_servers_details = scraper.get_all_players_with_servers_details()
 
     online_players, active_servers, total_servers = scraper.get_counters()
 
+    g.total_players = steam_api_client.get_current_players_count_for_app(app.config['RWR_STEAM_APP_ID'])
     g.online_players = online_players
     g.active_servers = active_servers
     g.total_servers = total_servers
