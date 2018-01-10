@@ -56,6 +56,7 @@ More informations on the three above can be found [here](http://flask.pocoo.org/
   - `GRAPHS_DATA_CACHE_TIMEOUT` Cache duration of the graphs data, both the players and the servers ones (in seconds)
   - `BETA` Whether or not to enable the beta mode
   - `BETA_USERS` The credentials required to access the app when beta mode is enabled. You can specify multiple ones. **It is highly recommended to serve RWRS through HTTPS** because it uses [HTTP basic auth](https://en.wikipedia.org/wiki/Basic_access_authentication)
+  - `STEAM_API_KEY` A [Steam API](https://steamcommunity.com/dev) key
 
 I'll let you search yourself about how to configure a web server along uWSGI.
 
