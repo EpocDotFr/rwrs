@@ -97,7 +97,7 @@ class SteamPlayerCount(db.Model, Measurable):
     class SteamPlayerCountQuery(db.Query):
         def get_player_count(self):
             """Return the Steam players count."""
-            q = self.with_entities(SteamPlayerCount.measured_at.label('t'), func.count('*').label('c'))
+            q = self.with_entities(SteamPlayerCount.measured_at.label('t'), SteamPlayerCount.count.label('c'))
             q = q.filter(SteamPlayerCount.measured_at >= Measurable.past()).group_by('t')
 
             return q.all()
