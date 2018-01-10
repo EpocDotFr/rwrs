@@ -25,6 +25,8 @@ def get_players_count():
     cache.delete_memoized(rwr.DataScraper.get_servers)
     cache.delete_memoized(ServerPlayerCount.server_players_data)
     cache.delete_memoized(ServerPlayerCount.servers_data)
+    cache.delete_memoized(steam_api.Client.get_current_players_count_for_app)
+    cache.delete_memoized(SteamPlayerCount.players_data)
 
     click.echo('Getting current players on Steam')
 

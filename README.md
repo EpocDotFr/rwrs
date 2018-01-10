@@ -37,6 +37,8 @@ Available at [rwrstats.com](https://rwrstats.com/).
 
   1. Clone this repo somewhere
   2. `pip install -r requirements.txt`
+  3. `set FLASK_APP=rwrs.py`
+  4. `flask db upgrade`
 
 ## Configuration
 
@@ -53,6 +55,7 @@ More informations on the three above can be found [here](http://flask.pocoo.org/
   - `CACHE_THRESHOLD` The maximum number of items the cache will store before it starts deleting some (see [here](https://pythonhosted.org/Flask-Cache/#configuring-flask-cache) for more configuration parameters related to Flask-Cache)
   - `SERVERS_CACHE_TIMEOUT` Cache duration of the servers list (in seconds)
   - `PLAYERS_CACHE_TIMEOUT` Cache duration of the players list as well as data for a single player (in seconds)
+  - `STEAM_PLAYERS_CACHE_TIMEOUT` Cache duration of the current number of RWR players (in seconds)
   - `GRAPHS_DATA_CACHE_TIMEOUT` Cache duration of the graphs data, both the players and the servers ones (in seconds)
   - `BETA` Whether or not to enable the beta mode
   - `BETA_USERS` The credentials required to access the app when beta mode is enabled. You can specify multiple ones. **It is highly recommended to serve RWRS through HTTPS** because it uses [HTTP basic auth](https://en.wikipedia.org/wiki/Basic_access_authentication)
@@ -119,6 +122,12 @@ flask clean_players_count
 
 ```
 flask get_players_count
+```
+
+### Migrating the database
+
+```
+flask db upgrade
 ```
 
 ## How it works

@@ -1,3 +1,4 @@
+from rwrs import app, cache
 import requests
 
 
@@ -44,6 +45,7 @@ class Client:
         else:
             raise NotImplemented('Output format {} not supported'.format(self.output_format))
 
+    @cache.memoize(timeout=app.config['STEAM_PLAYERS_CACHE_TIMEOUT'])
     def get_current_players_count_for_app(self, appid):
         """Get the number of current players for a specific application."""
         params = {
