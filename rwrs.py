@@ -25,6 +25,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['CACHE_TYPE'] = 'filesystem'
 app.config['CACHE_DIR'] = 'storage/cache'
 app.config['RANKS_IMAGES_DIR'] = 'static/images/ranks'
+app.config['RANKS_DATA_FILE'] = 'storage/data/ranks.json'
 app.config['MINIMAPS_IMAGES_DIR'] = 'static/images/maps/minimap'
 app.config['UNLOCKABLES_IMAGES_DIR'] = 'static/images/unlockables'
 app.config['MY_USERNAME'] = 'epocdotfr'

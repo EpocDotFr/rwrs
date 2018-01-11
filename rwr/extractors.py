@@ -1,19 +1,21 @@
+from collections import OrderedDict
 from glob import glob
 from . import utils
+import helpers
 import math
 import os
 
 
 class BaseExtractor:
-    def __init__(self, game_dir, output_dir):
+    def __init__(self, game_dir, output_location):
         self.game_dir = game_dir
-        self.output_dir = output_dir
+        self.output_location = output_location
 
         if not os.path.isdir(self.game_dir):
             raise FileNotFoundError(self.game_dir + ' does not exists')
 
-        if not os.path.isdir(self.output_dir):
-            raise FileNotFoundError(self.output_dir + ' does not exists')
+        if not os.path.exists(self.output_location):
+            raise FileNotFoundError(self.output_location + ' does not exists')
 
         self.packages_dir = os.path.join(self.game_dir, 'media/packages')
 
@@ -41,11 +43,38 @@ class MinimapsImageExtractor(BaseExtractor):
 
             # Copy the original minimap first
             minimap = Image.open(minimap_path)
-            minimap.save(os.path.join(self.output_dir, server_type, map_id + '.png'), optimize=True)
+            minimap.save(os.path.join(self.output_location, server_type, map_id + '.png'), optimize=True)
 
             # Create the thumbnail
             minimap.thumbnail(self.minimap_image_size, Image.ANTIALIAS)
-            minimap.save(os.path.join(self.output_dir, server_type, map_id + '_thumb.png'), optimize=True)
+            minimap.save(os.path.join(self.output_location, server_type, map_id + '_thumb.png'), optimize=True)
+
+
+class RanksDataExtractor(BaseExtractor):
+    def extract(self):
+        """Actually run the extract process."""
+        from lxml import etree
+
+        ranks_files_paths = {
+            'us': os.path.join(self.packages_dir, 'vanilla', 'factions', 'brown.xml'), # In Vanilla, ranks from all factions are the same, inspired by the US Army
+            'jp': os.path.join(self.packages_dir, 'pacific', 'factions', 'ija.xml') # In Pacific, US factions are the same as the Vanilla ones, so only parse IJA ranks
+        }
+
+        data = {}
+
+        for country, ranks_file_path in ranks_files_paths.items():
+            data[country] = OrderedDict()
+
+            faction_xml = etree.parse(ranks_file_path)
+
+            i = 0
+
+            for rank_node in faction_xml.xpath('/faction/rank'):
+                data[country][i] = {'name': rank_node.get('name'), 'xp': int(float(rank_node.get('xp')) * 10000)}
+
+                i += 1
+
+        helpers.save_json(self.output_location, data)
 
 
 class RanksImageExtractor(BaseExtractor):
@@ -94,4 +123,4 @@ class RanksImageExtractor(BaseExtractor):
 
                 new_rank_image = Image.new('RGBA', needed_size['size'])
                 new_rank_image.paste(needed_size_image, paste_pos)
-                new_rank_image.save(os.path.join(self.output_dir, country, needed_size['name'](rank_id) + '.png'), optimize=True)
+                new_rank_image.save(os.path.join(self.output_location, country, needed_size['name'](rank_id) + '.png'), optimize=True)
