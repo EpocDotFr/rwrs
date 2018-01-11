@@ -479,15 +479,18 @@ playersChartsFeature = {
      * Initialize the Players charts on the Home page.
      */
     initOnHome: function() {
-        // Online players chart
-        this.convertDates(this.online_players_data);
+        // Total and online players chart
+        for (var i = 0; i < this.players_data.length; i++) {
+            this.convertDates(this.players_data[i]);
+        }
 
         this.createChart({
-            target: '#online-players-chart',
-            color: '#A4CF17',
-            legend: ['Online players'],
-            legend_target: '#online-players-legend',
-            data: this.online_players_data
+            target: '#players-chart',
+            colors: ['#A4CF17', '#44b2f8'],
+            legend: ['Total players', 'Online players'],
+            legend_target: '#players-legend',
+            aggregate_rollover: true,
+            data: this.players_data
         });
 
         // Online and active servers

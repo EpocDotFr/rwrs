@@ -26,9 +26,9 @@
                 </form>
             </div>
             <fieldset class="man pan">
-                <legend class="mls">Online players (past week)</legend>
-                <p id="online-players-legend" class="small txtcenter"></p>
-                <div id="online-players-chart" class="chart"></div>
+                <legend class="mls">Total and online players (past week)</legend>
+                <p id="players-legend" class="small txtcenter"></p>
+                <div id="players-chart" class="chart"></div>
             </fieldset>
         </div>
         <div>
@@ -46,7 +46,7 @@
         friendsFeature.all_players_with_servers_details = {{ g.all_players_with_servers_details|tojson }};
         friendsFeature.initOnHome();
 
-        playersChartsFeature.online_players_data = {{ online_players_data|tojson }};
+        playersChartsFeature.players_data = {{ players_data|tojson }};
         playersChartsFeature.servers_data = {{ servers_data|tojson }};
         playersChartsFeature.initOnHome();
     </script>

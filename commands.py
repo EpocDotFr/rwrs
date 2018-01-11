@@ -2,26 +2,9 @@ from rwrs import app, db, cache
 from models import *
 import rwr.extractors
 import rwr.scraper
+import steam_api
 import click
 
-
-@app.cli.command()
-def create_database():
-    """Delete then create all the database tables."""
-    if not click.confirm('Are you sure?'):
-        click.secho('Aborted', fg='red')
-
-        return
-
-    click.echo('Dropping everything')
-
-    db.drop_all()
-
-    click.echo('Creating tables')
-
-    db.create_all()
-
-    click.secho('Done', fg='green')
 
 
 @app.cli.command()
@@ -35,17 +18,28 @@ def cc():
 
 
 @app.cli.command()
-def get_servers_player_count():
-    """Store the number of players on each servers."""
+def get_players_count():
+    """Store the number of players."""
     scraper = rwr.scraper.DataScraper()
 
-    click.echo('Clearing  cache')
+    click.echo('Clearing cache')
 
     cache.delete_memoized(rwr.scraper.DataScraper.get_servers)
     cache.delete_memoized(ServerPlayerCount.server_players_data)
     cache.delete_memoized(ServerPlayerCount.servers_data)
+    cache.delete_memoized(steam_api.Client.get_current_players_count_for_app)
+    cache.delete_memoized(SteamPlayerCount.players_data)
 
-    click.echo('Getting servers list')
+    click.echo('Getting current players on Steam')
+
+    steam_api_client = steam_api.Client(app.config['STEAM_API_KEY'])
+
+    steam_player_count = SteamPlayerCount()
+    steam_player_count.count = steam_api_client.get_current_players_count_for_app(app.config['RWR_STEAM_APP_ID'])
+
+    db.session.add(steam_player_count)
+
+    click.echo('Getting current players on servers')
 
     servers = scraper.get_servers()
 
@@ -67,11 +61,12 @@ def get_servers_player_count():
 
 
 @app.cli.command()
-def clean_servers_player_count():
-    """Delete old servers player count."""
+def clean_players_count():
+    """Delete old players count."""
     click.echo('Deleting old data')
 
     old_entries = ServerPlayerCount.query.get_old_entries()
+    old_entries.extend(SteamPlayerCount.query.get_old_entries())
 
     for old_entry in old_entries:
         db.session.delete(old_entry)
