@@ -47,7 +47,6 @@ app.logger.addHandler(handler)
 from helpers import *
 import rwr.constants
 import rwr.utils
-import steam_api
 
 app.jinja_env.filters.update(
     humanize_seconds=humanize_seconds,
