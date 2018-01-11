@@ -102,12 +102,14 @@ class Player:
         """Return a new PlayerRank object given a rank ID."""
         ret = PlayerRank()
 
-        if rank_id not in constants.RANKS:
+        applicable_ranks = constants.RANKS[constants.PLAYERS_LIST_DATABASES[self.database]['ranks_country']]
+
+        if str(rank_id) not in applicable_ranks:
             return None if return_none else ret
 
         ret.id = rank_id
-        ret.name = constants.RANKS[rank_id]['name'][constants.PLAYERS_LIST_DATABASES[self.database]['ranks_country']]
-        ret.xp = constants.RANKS[rank_id]['xp']
+        ret.name = applicable_ranks[str(rank_id)]['name']
+        ret.xp = applicable_ranks[str(rank_id)]['xp']
 
         return ret
 

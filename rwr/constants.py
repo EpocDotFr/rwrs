@@ -1,5 +1,6 @@
 from collections import OrderedDict
 from rwrs import app
+import helpers
 
 
 MAPS = {
@@ -64,25 +65,7 @@ MAPS = {
     }
 }
 
-RANKS = {
-    0: {'name': {'us': 'Private', 'jp': 'Nitohei'}, 'xp': 0},
-    1: {'name': {'us': 'Private 1st Class', 'jp': 'Ittohei'}, 'xp': 500},
-    2: {'name': {'us': 'Corporal', 'jp': 'Gocho'}, 'xp': 1000},
-    3: {'name': {'us': 'Sergeant', 'jp': 'Gunso'}, 'xp': 2000},
-    4: {'name': {'us': 'Staff Sergeant', 'jp': 'Socho'}, 'xp': 3000},
-    5: {'name': {'us': 'Staff Sergeant 1st Class', 'jp': 'Jun-i'}, 'xp': 4000},
-    6: {'name': {'us': '2nd Lieutenant', 'jp': 'Rikugun-Shoi'}, 'xp': 6000},
-    7: {'name': {'us': 'Lieutenant', 'jp': 'Rikugun-Chui'}, 'xp': 8000},
-    8: {'name': {'us': 'Captain', 'jp': 'Rikugun-Tai-i'}, 'xp': 10000},
-    9: {'name': {'us': 'Major', 'jp': 'Rikugun-Shosa'}, 'xp': 12000},
-    10: {'name': {'us': 'Lieutenant Colonel', 'jp': 'Rikugun-Chusa'}, 'xp': 14000},
-    11: {'name': {'us': 'Colonel', 'jp': 'Rikugun-Taisa'}, 'xp': 20000},
-    12: {'name': {'us': 'Brigadier General', 'jp': 'Rikugun-Shosho'}, 'xp': 50000},
-    13: {'name': {'us': 'Major General', 'jp': 'Rikugun-Chujo'}, 'xp': 100000},
-    14: {'name': {'us': 'Lieutenant General', 'jp': 'Rikugun-Taisho'}, 'xp': 200000},
-    15: {'name': {'us': 'General', 'jp': 'Gensui-Rikugun-Taisho'}, 'xp': 500000},
-    16: {'name': {'us': 'General of the Army', 'jp': 'Daigensui-Rikugun-Taisho'}, 'xp': 1000000}
-}
+RANKS = helpers.load_json(app.config['RANKS_DATA_FILE'])
 
 SQUADMATES_STEPS_XP = 1000 # One squad mate is gained every 1000 XP
 MAX_SQUADMATES = 10 # Maximum squad mates allowed
