@@ -1,5 +1,6 @@
 from collections import OrderedDict
 from glob import glob
+from rwrs import app
 from . import utils
 import helpers
 import click
@@ -74,8 +75,6 @@ class MapsDataExtractor(BaseExtractor):
 
             map_infos = map_xml.xpath('//rect[@inkscape:label=\'#general\']/desc/text()', namespaces={'inkscape': 'http://www.inkscape.org/namespaces/inkscape'})
 
-            print(map_infos)
-
             if not map_infos:
                 continue
 
@@ -90,7 +89,9 @@ class MapsDataExtractor(BaseExtractor):
                 data[server_type] = OrderedDict()
 
             data[server_type][map_id] = {
-                'name': map_infos['name']
+                'name': map_infos['name'],
+                'has_minimap': os.path.isfile(os.path.join(app.config['MINIMAPS_IMAGES_DIR'], server_type, map_id + '.png')),
+                'has_preview': os.path.isfile(os.path.join(app.config['MAPS_PREVIEW_IMAGES_DIR'], server_type, map_id + '.png'))
             }
 
         helpers.save_json(self.output_location, data)

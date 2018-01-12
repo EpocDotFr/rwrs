@@ -15,7 +15,6 @@ and its Pacific DLC. Available at [rwrstats.com](https://rwrstats.com/).
   - Public servers
     - Real servers location
     - Real maps name
-    - Maps are linked to their [official RWR wiki](https://runningwithrifles.gamepedia.com/Running_with_Rifles_Wiki) page
     - Official invasion (ranked) servers are highlighted
     - Game mode (coop, PvPvE, etc) and type (vanilla RWR, Pacific DLC, etc)
     - Public server details (players list with link to their profile, current map preview and minimap, etc)
