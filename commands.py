@@ -115,6 +115,24 @@ def extract_ranks_images(gamedir):
 
 @app.cli.command()
 @click.option('--gamedir', '-g', help='Game root directory')
+def extract_maps_data(gamedir):
+    """Extract maps data from RWR."""
+    context = click.get_current_context()
+
+    if not gamedir:
+        click.echo(extract_maps_data.get_help(context))
+        context.exit()
+
+    click.echo('Extraction started')
+
+    extractor = rwr.extractors.MapsDataExtractor(gamedir, app.config['MAPS_DATA_FILE'])
+    extractor.extract()
+
+    click.secho('Done', fg='green')
+
+
+@app.cli.command()
+@click.option('--gamedir', '-g', help='Game root directory')
 def extract_minimaps(gamedir):
     """Extract minimaps from RWR."""
     context = click.get_current_context()

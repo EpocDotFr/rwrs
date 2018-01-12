@@ -27,6 +27,7 @@ app.config['CACHE_DIR'] = 'storage/cache'
 app.config['RANKS_IMAGES_DIR'] = 'static/images/ranks'
 app.config['RANKS_DATA_FILE'] = 'storage/data/ranks.json'
 app.config['MINIMAPS_IMAGES_DIR'] = 'static/images/maps/minimap'
+app.config['MAPS_DATA_FILE'] = 'storage/data/maps.json'
 app.config['UNLOCKABLES_IMAGES_DIR'] = 'static/images/unlockables'
 app.config['MY_USERNAME'] = 'epocdotfr'
 app.config['CONTRIBUTORS'] = ['street veteran', 'mastock', 'dio']

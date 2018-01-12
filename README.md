@@ -86,6 +86,15 @@ The uWSGI file you'll have to set in your uWSGI configuration is `uwsgi.py`. The
 You'll probably have to hack with this application to make it work with one of the solutions described
 [here](http://flask.pocoo.org/docs/0.12/deploying/). Send me a pull request if you make it work.
 
+### Extracting ranks data
+
+The Flask command `flask extract_ranks_data` is used to extract and save all ranks data to a JSON file located at `storage/data/ranks.json`.
+
+  1. `set FLASK_APP=rwrs.py`
+  2. `flask extract_ranks_data --gamedir="{path to the game root directory}"`
+
+This command requires the game to be installed.
+
 ### Extracting ranks images
 
 The Flask command `flask extract_ranks_images` is used to retrieve, process (the actual images content isn't centered)
@@ -94,6 +103,15 @@ and save all the RWR ranks images. They are saved at `static/images/ranks/{count
   1. `pip install -r requirements-dev.txt`
   2. `set FLASK_APP=rwrs.py`
   3. `flask extract_ranks_images --gamedir="{path to the game root directory}"`
+
+This command requires the game to be installed.
+
+### Extracting maps data
+
+The Flask command `flask extract_maps_data` is used to extract and save all maps data to a JSON file located at `storage/data/maps.json`.
+
+  1. `set FLASK_APP=rwrs.py`
+  2. `flask extract_maps_data --gamedir="{path to the game root directory}"`
 
 This command requires the game to be installed.
 
@@ -110,27 +128,23 @@ This command requires the game to be installed.
 
 ### Clearing cache
 
-```
-flask cc
-```
+  1. `set FLASK_APP=rwrs.py`
+  2. `flask cc`
 
 ### Clearing old graphs data
 
-```
-flask clean_players_count
-```
+  1. `set FLASK_APP=rwrs.py`
+  2. `flask clean_players_count`
 
 ### Storing actual number of players (for graphs)
 
-```
-flask get_players_count
-```
+  1. `set FLASK_APP=rwrs.py`
+  2. `flask get_players_count`
 
 ### Migrating the database
 
-```
-flask db upgrade
-```
+  1. `set FLASK_APP=rwrs.py`
+  2. `flask db upgrade`
 
 ## How it works
 
