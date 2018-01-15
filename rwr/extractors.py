@@ -88,11 +88,12 @@ class MapsDataExtractor(BaseExtractor):
 
             map_xml = etree.parse(map_path)
 
-            map_infos = map_xml.xpath('//rect[@inkscape:label=\'#general\']/desc/text()', namespaces={'inkscape': 'http://www.inkscape.org/namespaces/inkscape'})
+            map_infos = map_xml.xpath('//svg:rect[@inkscape:label=\'#general\']/svg:desc/text()', namespaces={'svg': 'http://www.w3.org/2000/svg', 'inkscape': 'http://www.inkscape.org/namespaces/inkscape'})
 
             if not map_infos:
                 continue
 
+            map_infos = map_infos[0]
             map_infos = self._parse_map_data(map_infos)
 
             if 'name' not in map_infos:
@@ -104,7 +105,7 @@ class MapsDataExtractor(BaseExtractor):
                 data[server_type] = OrderedDict()
 
             data[server_type][map_id] = {
-                'name': map_infos['name'],
+                'name': map_infos['name'].replace('Pacific: ', '').title(),
                 'has_minimap': os.path.isfile(os.path.join(app.config['MINIMAPS_IMAGES_DIR'], server_type, map_id + '.png')),
                 'has_preview': os.path.isfile(os.path.join(app.config['MAPS_PREVIEW_IMAGES_DIR'], server_type, map_id + '.png'))
             }
