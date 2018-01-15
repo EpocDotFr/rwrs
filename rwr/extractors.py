@@ -14,15 +14,11 @@ INVALID_MAPS = ['lobby']
 
 
 class BaseExtractor:
-    def __init__(self, steam_dir, output_location):
+    def __init__(self, steam_dir,):
         self.steam_dir = steam_dir
-        self.output_location = output_location
 
         if not os.path.isdir(self.steam_dir):
             raise FileNotFoundError(self.steam_dir + ' does not exists')
-
-        if not os.path.exists(self.output_location):
-            raise FileNotFoundError(self.output_location + ' does not exists')
 
         self.game_dir = os.path.join(self.steam_dir, 'steamapps', 'common', 'RunningWithRifles')
         self.workshop_dir = os.path.join(self.steam_dir, 'steamapps', 'workshop', 'content', str(app.config['RWR_STEAM_APP_ID']))
@@ -53,7 +49,7 @@ class MinimapsImageExtractor(BaseExtractor):
 
             click.echo(server_type + ':' + map_id)
 
-            output_dir = os.path.join(self.output_location, server_type)
+            output_dir = os.path.join(app.config['MINIMAPS_IMAGES_DIR'], server_type)
 
             if not os.path.isdir(output_dir):
                 os.makedirs(output_dir)
@@ -110,33 +106,53 @@ class MapsDataExtractor(BaseExtractor):
                 'has_preview': os.path.isfile(os.path.join(app.config['MAPS_PREVIEW_IMAGES_DIR'], server_type, map_id + '.png'))
             }
 
-        helpers.save_json(self.output_location, data)
+        helpers.save_json(app.config['MAPS_DATA_FILE'], data)
 
     def _parse_map_data(self, map_infos):
         """Parse a map's semicolon-separated data and return its dict representation as key-value pairs."""
         return {entry[0]: entry[1] for entry in [[kv.strip() for kv in param.strip().split('=', maxsplit=1)] for param in filter(None, map_infos.strip().split(';'))]}
 
 
-class RanksDataExtractor(BaseExtractor):
-    """Extract ranks data from RWR."""
+class RanksExtractor(BaseExtractor):
+    """Extract ranks data and images from RWR."""
+    images_sizes = [
+        {
+            'name': lambda rank_id: str(rank_id),
+            'size': (64, 64)
+        },
+        {
+            'name': lambda rank_id: str(rank_id) + '_icon',
+            'size': (20, 20)
+        }
+    ]
+
     def extract(self):
         """Actually run the extract process."""
         from lxml import etree
+        from PIL import Image
 
-        # Only take official ranks data
-        ranks_files_paths = {
-            'us': os.path.join(self.packages_dir, 'vanilla', 'factions', 'brown.xml'), # In Vanilla, ranks from all factions are the same, inspired by the US Army
-            'jp': os.path.join(self.packages_dir, 'pacific', 'factions', 'ija.xml') # In Pacific, US factions are the same as the Vanilla ones, so only parse IJA ranks
-        }
+        # Only handle official ranks
+        ranks_files_paths = [
+            { # In Vanilla, ranks from all factions are the same, inspired by the US Army
+                'country': 'us',
+                'path': os.path.join(self.packages_dir, 'vanilla', 'factions', 'brown.xml'),
+                'game_type': 'vanilla'
+            },
+            { # In Pacific, US factions are the same as the Vanilla ones, so only parse IJA ranks
+                'country': 'jp',
+                'path': os.path.join(self.packages_dir, 'pacific', 'factions', 'ija.xml'),
+                'game_type': 'pacific'
+            }
+        ]
 
         data = OrderedDict()
 
-        for country, ranks_file_path in ranks_files_paths.items():
-            click.echo(country)
+        for ranks_file_path in ranks_files_paths:
+            click.echo(ranks_file_path['country'])
 
-            data[country] = OrderedDict()
+            data[ranks_file_path['country']] = OrderedDict()
 
-            faction_xml = etree.parse(ranks_file_path)
+            faction_xml = etree.parse(ranks_file_path['path'])
 
             i = 0
 
@@ -145,63 +161,29 @@ class RanksDataExtractor(BaseExtractor):
 
                 click.echo(rank_name)
 
-                data[country][i] = {'name': rank_name, 'xp': int(float(rank_node.get('xp')) * 10000)}
+                data[ranks_file_path['country']][i] = {'name': rank_name, 'xp': int(float(rank_node.get('xp')) * 10000)}
+
+                rank_image = Image.open(os.path.join(self.packages_dir, ranks_file_path['game_type'], 'textures', rank_node.find('hud_icon').get('filename')))
+
+                # Only get the actual content of the image
+                rank_image = rank_image.crop(rank_image.convert('RGBa').getbbox())
+
+                # Generate the desired images
+                for image_size in self.images_sizes:
+                    click.echo(image_size['size'])
+
+                    desired_size_image = rank_image.copy()
+                    desired_size_image.thumbnail(image_size['size'], Image.ANTIALIAS)
+
+                    paste_pos = (
+                        math.floor(image_size['size'][0] / 2) - math.floor(desired_size_image.width / 2),
+                        math.floor(image_size['size'][1] / 2) - math.floor(desired_size_image.height / 2)
+                    )
+
+                    new_rank_image = Image.new('RGBA', image_size['size'])
+                    new_rank_image.paste(desired_size_image, paste_pos)
+                    new_rank_image.save(os.path.join(app.config['RANKS_IMAGES_DIR'], ranks_file_path['country'], image_size['name'](i) + '.png'), optimize=True)
 
                 i += 1
 
-        helpers.save_json(self.output_location, data)
-
-
-class RanksImageExtractor(BaseExtractor):
-    """Extract ranks images from RWR."""
-    desired_sizes = [
-        {
-            'name': lambda rank_id: rank_id,
-            'size': (64, 64)
-        },
-        {
-            'name': lambda rank_id: rank_id + '_icon',
-            'size': (20, 20)
-        }
-    ]
-
-    def extract(self):
-        """Actually run the extract process."""
-        from PIL import Image
-
-        ranks_paths = []
-
-        # Only take official ranks images
-        for type in ['vanilla', 'pacific']:
-            ranks_paths.extend(glob(os.path.join(self.packages_dir, 'vanilla', 'textures', 'hud_rank*.png')))
-
-        for rank_path in ranks_paths:
-            click.echo(rank_path)
-
-            server_type, rank_id = utils.parse_rank_path(rank_path.replace('\\', '/'))
-
-            if server_type == 'vanilla':
-                country = 'us'
-            elif server_type == 'pacific':
-                country = 'jp'
-
-            rank_image = Image.open(rank_path)
-
-            # Only get the actual content of the image
-            rank_image = rank_image.crop(rank_image.convert('RGBa').getbbox())
-
-            # Generate the desired images
-            for desired_size in self.desired_sizes:
-                click.echo(desired_size['size'])
-
-                desired_size_image = rank_image.copy()
-                desired_size_image.thumbnail(desired_size['size'], Image.ANTIALIAS)
-
-                paste_pos = (
-                    math.floor(desired_size['size'][0] / 2) - math.floor(desired_size_image.width / 2),
-                    math.floor(desired_size['size'][1] / 2) - math.floor(desired_size_image.height / 2)
-                )
-
-                new_rank_image = Image.new('RGBA', desired_size['size'])
-                new_rank_image.paste(desired_size_image, paste_pos)
-                new_rank_image.save(os.path.join(self.output_location, country, desired_size['name'](rank_id) + '.png'), optimize=True)
+        helpers.save_json(app.config['RANKS_DATA_FILE'], data)

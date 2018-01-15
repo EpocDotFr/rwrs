@@ -79,8 +79,8 @@ def clean_players_count():
 
 @app.cli.command()
 @click.option('--steamdir', '-g', help='Steam root directory')
-def extract_ranks_data(steamdir):
-    """Extract ranks data from RWR."""
+def extract_ranks(steamdir):
+    """Extract ranks data and images from RWR."""
     context = click.get_current_context()
 
     if not steamdir:
@@ -89,25 +89,7 @@ def extract_ranks_data(steamdir):
 
     click.echo('Extraction started')
 
-    extractor = rwr.extractors.RanksDataExtractor(steamdir, app.config['RANKS_DATA_FILE'])
-    extractor.extract()
-
-    click.secho('Done', fg='green')
-
-
-@app.cli.command()
-@click.option('--steamdir', '-g', help='Steam root directory')
-def extract_ranks_images(steamdir):
-    """Extract ranks images from RWR."""
-    context = click.get_current_context()
-
-    if not steamdir:
-        click.echo(extract_ranks_images.get_help(context))
-        context.exit()
-
-    click.echo('Extraction started')
-
-    extractor = rwr.extractors.RanksImageExtractor(steamdir, app.config['RANKS_IMAGES_DIR'])
+    extractor = rwr.extractors.RanksExtractor(steamdir)
     extractor.extract()
 
     click.secho('Done', fg='green')
