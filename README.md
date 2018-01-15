@@ -90,7 +90,7 @@ You'll probably have to hack with this application to make it work with one of t
 The Flask command `flask extract_ranks_data` is used to extract and save all ranks data to a JSON file located at `storage/data/ranks.json`.
 
   1. `set FLASK_APP=rwrs.py`
-  2. `flask extract_ranks_data --gamedir="{path to the game root directory}"`
+  2. `flask extract_ranks_data --steamdir="{path to the Steam root directory}"`
 
 This command requires the game to be installed.
 
@@ -101,7 +101,7 @@ and save all the RWR ranks images. They are saved at `static/images/ranks/{count
 
   1. `pip install -r requirements-dev.txt`
   2. `set FLASK_APP=rwrs.py`
-  3. `flask extract_ranks_images --gamedir="{path to the game root directory}"`
+  3. `flask extract_ranks_images --steamdir="{path to the Steam root directory}"`
 
 This command requires the game to be installed.
 
@@ -110,7 +110,7 @@ This command requires the game to be installed.
 The Flask command `flask extract_maps_data` is used to extract and save all maps data to a JSON file located at `storage/data/maps.json`.
 
   1. `set FLASK_APP=rwrs.py`
-  2. `flask extract_maps_data --gamedir="{path to the game root directory}"`
+  2. `flask extract_maps_data --steamdir="{path to the Steam root directory}"`
 
 This command requires the game to be installed.
 
@@ -121,7 +121,7 @@ The Flask command `flask extract_minimaps` is used to extract minimaps (the ones
 
   1. `pip install -r requirements-dev.txt`
   2. `set FLASK_APP=rwrs.py`
-  3. `flask extract_minimaps --gamedir="{path to the game root directory}"`
+  3. `flask extract_minimaps --steamdir="{path to the Steam root directory}"`
 
 This command requires the game to be installed.
 

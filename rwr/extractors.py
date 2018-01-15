@@ -8,18 +8,25 @@ import math
 import os
 
 
+VALID_GAME_TYPES = ['vanilla', 'pacific']
+INVALID_GAME_TYPES = ['teddy_hunt']
+INVALID_MAPS = ['lobby']
+
+
 class BaseExtractor:
-    def __init__(self, game_dir, output_location):
-        self.game_dir = game_dir
+    def __init__(self, steam_dir, output_location):
+        self.steam_dir = steam_dir
         self.output_location = output_location
 
-        if not os.path.isdir(self.game_dir):
-            raise FileNotFoundError(self.game_dir + ' does not exists')
+        if not os.path.isdir(self.steam_dir):
+            raise FileNotFoundError(self.steam_dir + ' does not exists')
 
         if not os.path.exists(self.output_location):
             raise FileNotFoundError(self.output_location + ' does not exists')
 
-        self.packages_dir = os.path.join(self.game_dir, 'media/packages')
+        self.game_dir = os.path.join(self.steam_dir, 'steamapps', 'common', 'RunningWithRifles')
+        self.workshop_dir = os.path.join(self.steam_dir, 'steamapps', 'workshop', 'content', str(app.config['RWR_STEAM_APP_ID']))
+        self.packages_dir = os.path.join(self.game_dir, 'media', 'packages')
 
     def extract(self):
         raise NotImplemented('Must be implemented')
@@ -35,24 +42,29 @@ class MinimapsImageExtractor(BaseExtractor):
 
         minimaps_paths = []
 
-        for type in ['vanilla', 'pacific']:
-            minimaps_paths.extend(glob(os.path.join(self.packages_dir, type, 'maps', '*', 'map.png')))
+        minimaps_paths.extend(glob(os.path.join(self.packages_dir, '*', 'maps', '*', 'map.png'))) # Maps in RWR game directory
+        minimaps_paths.extend(glob(os.path.join(self.workshop_dir, '*', 'media', 'packages', '*', 'maps', '*', 'map.png'))) # Maps in RWR workshop directory
 
         for minimap_path in minimaps_paths:
             server_type, map_id = utils.parse_map_path(minimap_path.replace('\\', '/').replace('/map.png', ''))
 
-            if not map_id or map_id == 'lobby' or server_type == 'teddy_hunt':
+            if not map_id or map_id in INVALID_MAPS or server_type in INVALID_GAME_TYPES:
                 continue
 
-            click.echo(minimap_path)
+            click.echo(server_type + ':' + map_id)
+
+            output_dir = os.path.join(self.output_location, server_type)
+
+            if not os.path.isdir(output_dir):
+                os.makedirs(output_dir)
 
             # Copy the original minimap first
             minimap = Image.open(minimap_path)
-            minimap.save(os.path.join(self.output_location, server_type, map_id + '.png'), optimize=True)
+            minimap.save(os.path.join(output_dir, map_id + '.png'), optimize=True)
 
             # Create the thumbnail
             minimap.thumbnail(self.minimap_image_size, Image.ANTIALIAS)
-            minimap.save(os.path.join(self.output_location, server_type, map_id + '_thumb.png'), optimize=True)
+            minimap.save(os.path.join(output_dir, map_id + '_thumb.png'), optimize=True)
 
 
 class MapsDataExtractor(BaseExtractor):
@@ -68,7 +80,7 @@ class MapsDataExtractor(BaseExtractor):
         for map_path in maps_paths:
             server_type, map_id = utils.parse_map_path(map_path.replace('\\', '/').replace('/objects.svg', ''))
 
-            if not map_id or map_id == 'lobby' or server_type == 'teddy_hunt':
+            if not map_id or map_id in INVALID_MAPS or server_type in INVALID_GAME_TYPES:
                 continue
 
             map_xml = etree.parse(map_path)
@@ -78,12 +90,12 @@ class MapsDataExtractor(BaseExtractor):
             if not map_infos:
                 continue
 
-            map_infos = self._parse_map_infos(map_infos)
+            map_infos = self._parse_map_data(map_infos)
 
             if 'name' not in map_infos:
                 continue
 
-            click.echo(map_path)
+            click.echo(server_type + ':' + map_id)
 
             if server_type not in data:
                 data[server_type] = OrderedDict()
@@ -96,8 +108,8 @@ class MapsDataExtractor(BaseExtractor):
 
         helpers.save_json(self.output_location, data)
 
-    def _parse_map_infos(self, map_infos):
-        """Parse map string metadata and return its dict representation."""
+    def _parse_map_data(self, map_infos):
+        """Parse a map's semicolon-separated data and return its dict representation as key-value pairs."""
         return {entry[0]: entry[1] for entry in [[kv.strip() for kv in param.strip().split('=', maxsplit=1)] for param in filter(None, map_infos.strip().split(';'))]}
 
 
@@ -107,6 +119,7 @@ class RanksDataExtractor(BaseExtractor):
         """Actually run the extract process."""
         from lxml import etree
 
+        # Only take official ranks data
         ranks_files_paths = {
             'us': os.path.join(self.packages_dir, 'vanilla', 'factions', 'brown.xml'), # In Vanilla, ranks from all factions are the same, inspired by the US Army
             'jp': os.path.join(self.packages_dir, 'pacific', 'factions', 'ija.xml') # In Pacific, US factions are the same as the Vanilla ones, so only parse IJA ranks
@@ -154,6 +167,7 @@ class RanksImageExtractor(BaseExtractor):
 
         ranks_paths = []
 
+        # Only take official ranks images
         for type in ['vanilla', 'pacific']:
             ranks_paths.extend(glob(os.path.join(self.packages_dir, 'vanilla', 'textures', 'hud_rank*.png')))
 

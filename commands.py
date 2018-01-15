@@ -78,72 +78,72 @@ def clean_players_count():
 
 
 @app.cli.command()
-@click.option('--gamedir', '-g', help='Game root directory')
-def extract_ranks_data(gamedir):
+@click.option('--steamdir', '-g', help='Steam root directory')
+def extract_ranks_data(steamdir):
     """Extract ranks data from RWR."""
     context = click.get_current_context()
 
-    if not gamedir:
+    if not steamdir:
         click.echo(extract_ranks_data.get_help(context))
         context.exit()
 
     click.echo('Extraction started')
 
-    extractor = rwr.extractors.RanksDataExtractor(gamedir, app.config['RANKS_DATA_FILE'])
+    extractor = rwr.extractors.RanksDataExtractor(steamdir, app.config['RANKS_DATA_FILE'])
     extractor.extract()
 
     click.secho('Done', fg='green')
 
 
 @app.cli.command()
-@click.option('--gamedir', '-g', help='Game root directory')
-def extract_ranks_images(gamedir):
+@click.option('--steamdir', '-g', help='Steam root directory')
+def extract_ranks_images(steamdir):
     """Extract ranks images from RWR."""
     context = click.get_current_context()
 
-    if not gamedir:
+    if not steamdir:
         click.echo(extract_ranks_images.get_help(context))
         context.exit()
 
     click.echo('Extraction started')
 
-    extractor = rwr.extractors.RanksImageExtractor(gamedir, app.config['RANKS_IMAGES_DIR'])
+    extractor = rwr.extractors.RanksImageExtractor(steamdir, app.config['RANKS_IMAGES_DIR'])
     extractor.extract()
 
     click.secho('Done', fg='green')
 
 
 @app.cli.command()
-@click.option('--gamedir', '-g', help='Game root directory')
-def extract_maps_data(gamedir):
+@click.option('--steamdir', '-g', help='Steam root directory')
+def extract_maps_data(steamdir):
     """Extract maps data from RWR."""
     context = click.get_current_context()
 
-    if not gamedir:
+    if not steamdir:
         click.echo(extract_maps_data.get_help(context))
         context.exit()
 
     click.echo('Extraction started')
 
-    extractor = rwr.extractors.MapsDataExtractor(gamedir, app.config['MAPS_DATA_FILE'])
+    extractor = rwr.extractors.MapsDataExtractor(steamdir, app.config['MAPS_DATA_FILE'])
     extractor.extract()
 
     click.secho('Done', fg='green')
 
 
 @app.cli.command()
-@click.option('--gamedir', '-g', help='Game root directory')
-def extract_minimaps(gamedir):
+@click.option('--steamdir', '-g', help='Steam root directory')
+def extract_minimaps(steamdir):
     """Extract minimaps from RWR."""
     context = click.get_current_context()
 
-    if not gamedir:
+    if not steamdir:
         click.echo(extract_minimaps.get_help(context))
         context.exit()
 
     click.echo('Extraction started')
 
-    extractor = rwr.extractors.MinimapsImageExtractor(gamedir, app.config['MINIMAPS_IMAGES_DIR'])
+    extractor = rwr.extractors.MinimapsImageExtractor(steamdir, app.config['MINIMAPS_IMAGES_DIR'])
     extractor.extract()
 
     click.secho('Done', fg='green')
