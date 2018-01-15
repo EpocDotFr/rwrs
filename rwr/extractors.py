@@ -73,7 +73,10 @@ class MapsDataExtractor(BaseExtractor):
         """Actually run the extract process."""
         from lxml import etree
 
-        maps_paths = glob(os.path.join(self.packages_dir, '*', 'maps', '*', 'objects.svg'))
+        maps_paths = []
+
+        maps_paths.extend(glob(os.path.join(self.packages_dir, '*', 'maps', '*', 'objects.svg'))) # Maps in RWR game directory
+        maps_paths.extend(glob(os.path.join(self.workshop_dir, '*', 'media', 'packages', '*', 'maps', '*', 'objects.svg'))) # Maps in RWR workshop directory
 
         data = OrderedDict()
 
