@@ -3,68 +3,7 @@ from rwrs import app
 import helpers
 
 
-MAPS = {
-    # Official vanilla maps
-    'vanilla': {
-        'map1': {'name': 'Moorland Trenches', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Moorland_Trenches'},
-        'map1_2': {'name': 'Moorland Trenches (v2)', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Moorland_Trenches'},
-        'map2': {'name': 'Keepsake Bay', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Keepsake_Bay'},
-        'map3': {'name': 'Old Fort Creek', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Old_Fort_Creek'},
-        'map5': {'name': 'Bootleg Islands', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Bootleg_Islands'},
-        'map6': {'name': 'Rattlesnake Crescent', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Rattlesnake_Crescent'},
-        'map7': {'name': 'Power Junction', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Power_Junction'},
-        'map8': {'name': 'Vigil Island', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Vigil_Island'},
-        'map9': {'name': 'Black Gold Estuary', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Black_Gold_Estuary'},
-        'map10': {'name': 'Railroad Gap', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Railroad_Gap'},
-        'map11': {'name': 'Copehill Down', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Copehill_Down'},
-        'map13': {'name': 'Iron Enclave', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Iron_Enclave'},
-        'map14': {'name': 'Misty Heights', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Misty_Heights'},
-        'map15': {'name': 'Islet of Eflen', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Islet_of_Eflen'}
-    },
-
-    # Official vanilla maps (winter)
-    'vanilla.winter': {
-        'map4': {'name': 'Fridge Valley', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Fridge_Valley'},
-        'map12': {'name': 'Frozen Canyon', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Frozen_Canyon'}
-    },
-
-    # Official vanilla PvP maps
-    'pvp': {
-        'pvp1': {'name': 'Islet of Eflen', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Islet_of_Eflen'}
-    },
-
-    # Official RWR: PACIFIC maps
-    'pacific': {
-        'island1': {'name': 'Guadalcanal', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Guadalcanal'},
-        'island2': {'name': 'Russell Islands', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Russell_Islands'},
-        'island3': {'name': 'Bougainville Island', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Bougainville_Island'},
-        'island4': {'name': 'Tarawa', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Tarawa'},
-        'island5': {'name': 'Saipan', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Saipan'},
-        'island6': {'name': 'Iwo Jima', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Iwo_Jima'},
-        'island7': {'name': 'Operation Downfall', 'has_images': True, 'url': 'https://runningwithrifles.gamepedia.com/Operation_Downfall'}
-    },
-
-    # Running with the Dead mod maps
-    'Running_with_the_Dead': {
-        'rwd_map1': {'name': 'Moorland Apocalypse', 'has_images': False}
-    },
-
-    # Overlord Defense mod maps
-    'overlord_defense': {
-        'def_dday': {'name': 'D-Day Defense', 'has_images': False}
-    },
-
-    # Lab Defense mod maps
-    'lab_defense': {
-        'def_lab': {'name': 'Dark Soul Island', 'has_images': False}
-    },
-
-    # Lab Defense KOTH mod maps
-    'lab_def_koth': {
-        'def_lab_koth': {'name': 'Lab Def KOTH', 'has_images': False}
-    }
-}
-
+MAPS = helpers.load_json(app.config['MAPS_DATA_FILE'])
 RANKS = helpers.load_json(app.config['RANKS_DATA_FILE'])
 
 SQUADMATES_STEPS_XP = 1000 # One squad mate is gained every 1000 XP

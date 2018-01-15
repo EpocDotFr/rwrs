@@ -263,8 +263,8 @@ class DataScraper:
                 'map': {
                     'id': server.map.id,
                     'name': server.map.name,
-                    'has_images': server.map.has_images,
-                    'url': server.map.url,
+                    'has_minimap': server.map.has_minimap,
+                    'has_preview': server.map.has_preview
                 },
                 'players': {
                     'current': server.players.current,

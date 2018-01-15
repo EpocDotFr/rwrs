@@ -40,11 +40,11 @@ class Server:
         ret.map.id = map_id
 
         if ret.type in constants.MAPS and ret.map.id in constants.MAPS[ret.type]:
-            ret.map.name = constants.MAPS[ret.type][ret.map.id]['name']
-            ret.map.has_images = constants.MAPS[ret.type][ret.map.id]['has_images']
+            target_map = constants.MAPS[ret.type][ret.map.id]
 
-            if 'url' in constants.MAPS[ret.type][ret.map.id]:
-                ret.map.url = constants.MAPS[ret.type][ret.map.id]['url']
+            ret.map.name = target_map['name']
+            ret.map.has_minimap = target_map['has_minimap']
+            ret.map.has_preview = target_map['has_preview']
 
         ret.bots = int(bots_node.text)
 
@@ -110,7 +110,8 @@ class Server:
 
 class ServerMap:
     name = None
-    has_images = False
+    has_minimap = False
+    has_preview = False
     url = None
 
     def __repr__(self):

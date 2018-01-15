@@ -114,12 +114,14 @@
                 <tr>
                     <td class="txtcenter">{{ macros.map_name(server.map) }}</td>
                 </tr>
-                {% if server.map.has_images %}
+                {% if server.map.has_preview %}
                     <tr>
                         <td class="txtcenter">
                             <img src="{{ url_for('static', filename='images/maps/preview/{game_type}/{map_id}.png'.format(game_type=server.type, map_id=server.map.id)) }}">
                         </td>
                     </tr>
+                {% endif %}
+                {% if server.map.has_minimap %}
                     <tr>
                         <td class="txtcenter">
                             <a href="{{ url_for('static', filename='images/maps/minimap/{game_type}/{map_id}.png'.format(game_type=server.type, map_id=server.map.id)) }}"><img src="{{ url_for('static', filename='images/maps/minimap/{game_type}/{map_id}_thumb.png'.format(game_type=server.type, map_id=server.map.id)) }}"></a>

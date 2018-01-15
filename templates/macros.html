@@ -8,7 +8,7 @@
         {{ rank_image(player.rank, database, icon=True) }}
     {%- endif -%}
 
-    {% if show_online and not raw and player.playing_on_server %} <i class="fa fa-circle help txtgreen" title="Playing on {{ server_name(player.playing_on_server, link=False, raw=True) }} ({{ player.playing_on_server.type_name }} - {{ map_name(player.playing_on_server.map, link=False) }} - {{ player.playing_on_server.players.current }}/{{ player.playing_on_server.players.max }})"></i>
+    {% if show_online and not raw and player.playing_on_server %} <i class="fa fa-circle help txtgreen" title="Playing on {{ server_name(player.playing_on_server, link=False, raw=True) }} ({{ player.playing_on_server.type_name }} - {{ map_name(player.playing_on_server.map) }} - {{ player.playing_on_server.players.current }}/{{ player.playing_on_server.players.max }})"></i>
     {%- endif -%}
 
     {%- if make_link %} <a href="{{ url_for('player_details', database=database, username=username) }}">
@@ -30,15 +30,9 @@
     <img src="{{ url_for('static', filename='images/ranks/{ranks_country}/{rank_id}{icon}.png'.format(ranks_country=PLAYERS_LIST_DATABASES[database].ranks_country, rank_id=rank.id, icon='_icon' if icon)) }}" title="{{ rank.name }}" class="{{ 'help' if icon }}">
 {%- endmacro %}
 
-{% macro map_name(map, link=True) -%}
+{% macro map_name(map) -%}
     {% if map.name -%}
-        {% if link and map.url -%}
-            <a href="{{ map.url }}">
-        {%- endif -%}
-            {{ map.name }}
-        {%- if link and map.url -%}
-            </a>
-        {%- endif %}
+        {{ map.name }}
     {%- else -%}
         {{ map.id }}
     {%- endif %}
