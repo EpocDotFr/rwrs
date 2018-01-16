@@ -211,7 +211,7 @@ class UnlockablesExtractor(BaseExtractor):
 
             data[game_type] = OrderedDict()
 
-            # self._extract_radio_calls(data[game_type], game_type)
+            self._extract_radio_calls(data[game_type], game_type)
             self._extract_throwables(data[game_type], game_type)
 
             # TODO Implement the others
@@ -252,8 +252,9 @@ class UnlockablesExtractor(BaseExtractor):
                 call_node = call_xml_root.find('call[@radio_view_text]')
 
             capacity_node = call_node.find('capacity[@value="100"][@source="rank"]')
+            hud_icon_node = call_node.find('hud_icon')
 
-            if not capacity_node:
+            if capacity_node is None or hud_icon_node is None or (not call_node.get('name') and not call_node.get('radio_view_text')):
                 click.secho('Not usable', fg='yellow')
 
                 continue
@@ -266,17 +267,17 @@ class UnlockablesExtractor(BaseExtractor):
             ])
 
             if call_xp not in data:
-                data[call_xp] = {}
+                data[call_xp] = OrderedDict()
 
             if 'radio_calls' not in data[call_xp]:
                 data[call_xp]['radio_calls'] = []
 
             data[call_xp]['radio_calls'].append(call)
 
-            call_image_file = os.path.join(self.packages_dir, game_type, 'textures', call_node.find('hud_icon').get('filename'))
+            call_image_file = os.path.join(self.packages_dir, game_type, 'textures', hud_icon_node.get('filename'))
 
             if not os.path.isfile(call_image_file) and game_type != 'vanilla': # Try to use call image inherited from Vanilla
-                call_image_file = os.path.join(self.packages_dir, 'vanilla', 'textures', call_node.find('hud_icon').get('filename'))
+                call_image_file = os.path.join(self.packages_dir, 'vanilla', 'textures', hud_icon_node.get('filename'))
 
                 if not os.path.isfile(call_image_file):
                     click.secho('No applicable file found', fg='yellow')
@@ -343,9 +344,10 @@ class UnlockablesExtractor(BaseExtractor):
             throwable_xml = etree.parse(throwable_file)
             throwable_xml_root = throwable_xml.getroot()
 
-            capacity_nodes = throwable_xml_root.findall('capacity[@value!="0"][@source="rank"]') # FIXME Doesn't work
+            capacity_nodes = throwable_xml_root.xpath('capacity[@value!="0"][@source="rank"]')
+            hud_icon_node = throwable_xml_root.find('hud_icon')
 
-            if not capacity_nodes:
+            if not capacity_nodes or hud_icon_node is None or not throwable_xml_root.get('name'):
                 click.secho('Not usable', fg='yellow')
 
                 continue
@@ -360,7 +362,7 @@ class UnlockablesExtractor(BaseExtractor):
                 ])
 
                 if throwable_xp not in data:
-                    data[throwable_xp] = {}
+                    data[throwable_xp] = OrderedDict()
 
                 if 'throwables' not in data[throwable_xp]:
                     data[throwable_xp]['throwables'] = []
