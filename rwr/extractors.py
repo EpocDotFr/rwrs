@@ -45,6 +45,8 @@ class MinimapsImageExtractor(BaseExtractor):
             server_type, map_id = utils.parse_map_path(minimap_path.replace('\\', '/').replace('/map.png', ''))
 
             if not map_id or map_id in INVALID_MAPS or server_type in INVALID_GAME_TYPES:
+                click.secho('Invalid map ID ({}) or server type ({})'.format(map_id, server_type), fg='yellow')
+
                 continue
 
             click.echo(server_type + ':' + map_id)
@@ -78,6 +80,8 @@ class MapsDataExtractor(BaseExtractor):
             server_type, map_id = utils.parse_map_path(map_path.replace('\\', '/').replace('/objects.svg', ''))
 
             if not map_id or map_id in INVALID_MAPS or server_type in INVALID_GAME_TYPES:
+                click.secho('Invalid map ID ({}) or server type ({})'.format(map_id, server_type), fg='yellow')
+
                 continue
 
             map_xml = etree.parse(map_path)
@@ -85,11 +89,15 @@ class MapsDataExtractor(BaseExtractor):
             map_infos = map_xml.findtext('//svg:rect[@inkscape:label=\'#general\']/svg:desc', namespaces={'svg': 'http://www.w3.org/2000/svg', 'inkscape': 'http://www.inkscape.org/namespaces/inkscape'})
 
             if not map_infos:
+                click.secho('No general map info found', fg='yellow')
+
                 continue
 
             map_infos = self._parse_map_data(map_infos)
 
             if 'name' not in map_infos:
+                click.secho('Map name not found', fg='yellow')
+
                 continue
 
             click.echo(server_type + ':' + map_id)
@@ -203,7 +211,8 @@ class UnlockablesExtractor(BaseExtractor):
 
             data[game_type] = OrderedDict()
 
-            self._extract_radio_calls(data[game_type], game_type)
+            # self._extract_radio_calls(data[game_type], game_type)
+            self._extract_throwables(data[game_type], game_type)
 
             # TODO Implement the others
 
@@ -228,10 +237,11 @@ class UnlockablesExtractor(BaseExtractor):
                 call_file = os.path.join(self.packages_dir, 'vanilla', 'calls', main_call_node.get('file'))
 
                 if not os.path.isfile(call_file): # Abort as there's nothing we can do
+                    click.secho('No applicable file found', fg='yellow')
+
                     continue
 
             click.echo(call_file)
-            click.echo('Data')
 
             call_xml = etree.parse(call_file)
             call_xml_root = call_xml.getroot()
@@ -241,7 +251,14 @@ class UnlockablesExtractor(BaseExtractor):
             elif call_xml_root.tag == 'calls':
                 call_node = call_xml_root.find('call[@radio_view_text]')
 
-            call_xp = int(float(call_node.find('capacity[@value="100"][@source="rank"]').get('source_value')) * 10000)
+            capacity_node = call_node.find('capacity[@value="100"][@source="rank"]')
+
+            if not capacity_node:
+                click.secho('Not usable', fg='yellow')
+
+                continue
+
+            call_xp = int(float(capacity_node.get('source_value')) * 10000)
 
             call = OrderedDict([
                 ('name', call_node.get('name').title() if call_node.get('name') else call_node.get('radio_view_text').title()),
@@ -256,14 +273,14 @@ class UnlockablesExtractor(BaseExtractor):
 
             data[call_xp]['radio_calls'].append(call)
 
-            click.echo('Image')
-
             call_image_file = os.path.join(self.packages_dir, game_type, 'textures', call_node.find('hud_icon').get('filename'))
 
             if not os.path.isfile(call_image_file) and game_type != 'vanilla': # Try to use call image inherited from Vanilla
                 call_image_file = os.path.join(self.packages_dir, 'vanilla', 'textures', call_node.find('hud_icon').get('filename'))
 
                 if not os.path.isfile(call_image_file):
+                    click.secho('No applicable file found', fg='yellow')
+
                     continue
 
             call_image = Image.open(call_image_file)
@@ -288,20 +305,66 @@ class UnlockablesExtractor(BaseExtractor):
 
             new_rank_image.save(os.path.join(output_dir, call['image'] + '.png'), optimize=True)
 
-    def _extract_weapons(self):
+    def _extract_weapons(self, data, game_type):
         """Extract weapons data and images from RWR ."""
         click.echo('Extracting weapons')
 
         # TODO Use weapons/all_weapons.xml
 
-    def _extract_equipment(self):
+    def _extract_equipment(self, data, game_type):
         """Extract equipment data and images from RWR."""
         click.echo('Extracting equipment')
 
         # TODO Use weapons/all_weapons.xml
 
-    def _extract_throwables(self):
+    def _extract_throwables(self, data, game_type):
         """Extract throwables data and images from RWR."""
         click.echo('Extracting throwables')
 
-        # TODO Use weapons/all_throwables.xml
+        main_throwables_file = os.path.join(self.packages_dir, game_type, 'weapons', 'all_throwables.xml')
+        throwables_directory = os.path.dirname(main_throwables_file)
+
+        main_throwables_xml = etree.parse(main_throwables_file)
+        main_throwables_xml_root = main_throwables_xml.getroot()
+
+        for main_throwable_node in main_throwables_xml_root.iterchildren('projectile'):
+            throwable_file = os.path.join(throwables_directory, main_throwable_node.get('file'))
+
+            if not os.path.isfile(throwable_file) and game_type != 'vanilla': # Try to use throwable inherited from Vanilla
+                throwable_file = os.path.join(self.packages_dir, 'vanilla', 'weapons', main_throwable_node.get('file'))
+
+                if not os.path.isfile(throwable_file): # Abort as there's nothing we can do
+                    click.secho('No applicable file found', fg='yellow')
+
+                    continue
+
+            click.echo(throwable_file)
+
+            throwable_xml = etree.parse(throwable_file)
+            throwable_xml_root = throwable_xml.getroot()
+
+            capacity_nodes = throwable_xml_root.findall('capacity[@value!="0"][@source="rank"]') # FIXME Doesn't work
+
+            if not capacity_nodes:
+                click.secho('Not usable', fg='yellow')
+
+                continue
+
+            for capacity_node in capacity_nodes:
+                throwable_xp = int(float(capacity_node.get('source_value')) * 10000)
+
+                throwable = OrderedDict([
+                    ('name', throwable_xml_root.get('name').title()),
+                    ('image', throwable_xml_root.get('key').replace('.projectile', '')),
+                    ('amount', capacity_node.get('value'))
+                ])
+
+                if throwable_xp not in data:
+                    data[throwable_xp] = {}
+
+                if 'throwables' not in data[throwable_xp]:
+                    data[throwable_xp]['throwables'] = []
+
+                data[throwable_xp]['throwables'].append(throwable)
+
+            # TODO Throwable image
