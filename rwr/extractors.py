@@ -192,10 +192,10 @@ class RanksExtractor(BaseExtractor):
 
 class UnlockablesExtractor(BaseExtractor):
     """Extract unlockables data and images from RWR."""
+    radio_call_size = (64, 64)
+
     def extract(self):
         """Actually run the extract process."""
-        click.echo('Extracting data')
-
         data = OrderedDict()
 
         for game_type in VALID_GAME_TYPES:
@@ -210,10 +210,6 @@ class UnlockablesExtractor(BaseExtractor):
             data[game_type] = OrderedDict(sorted(data[game_type].items(), key=lambda k: k[0]))
 
         helpers.save_json(app.config['UNLOCKABLES_DATA_FILE'], data)
-
-        click.echo('Extracting images')
-
-        # TODO
 
     def _extract_radio_calls(self, data, game_type):
         """Extract radio calls data and images from RWR."""
@@ -235,6 +231,7 @@ class UnlockablesExtractor(BaseExtractor):
                     continue
 
             click.echo(call_file)
+            click.echo('Data')
 
             call_xml = etree.parse(call_file)
             call_xml_root = call_xml.getroot()
@@ -258,6 +255,38 @@ class UnlockablesExtractor(BaseExtractor):
                 data[call_xp]['radio_calls'] = []
 
             data[call_xp]['radio_calls'].append(call)
+
+            click.echo('Image')
+
+            call_image_file = os.path.join(self.packages_dir, game_type, 'textures', call_node.find('hud_icon').get('filename'))
+
+            if not os.path.isfile(call_image_file) and game_type != 'vanilla': # Try to use call image inherited from Vanilla
+                call_image_file = os.path.join(self.packages_dir, 'vanilla', 'textures', call_node.find('hud_icon').get('filename'))
+
+                if not os.path.isfile(call_image_file):
+                    continue
+
+            call_image = Image.open(call_image_file)
+
+            # Only get the actual content of the image
+            call_image = call_image.crop(call_image.convert('RGBa').getbbox())
+
+            call_image.thumbnail(self.radio_call_size, Image.ANTIALIAS)
+
+            paste_pos = (
+                math.floor(self.radio_call_size[0] / 2) - math.floor(call_image.width / 2),
+                math.floor(self.radio_call_size[1] / 2) - math.floor(call_image.height / 2)
+            )
+
+            new_rank_image = Image.new('RGBA', self.radio_call_size)
+            new_rank_image.paste(call_image, paste_pos)
+
+            output_dir = os.path.join(app.config['UNLOCKABLES_IMAGES_DIR'], game_type, 'radio_calls')
+
+            if not os.path.isdir(output_dir):
+                os.makedirs(output_dir)
+
+            new_rank_image.save(os.path.join(output_dir, call['image'] + '.png'), optimize=True)
 
     def _extract_weapons(self):
         """Extract weapons data and images from RWR ."""
