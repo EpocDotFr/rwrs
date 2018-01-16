@@ -1,4 +1,6 @@
 from collections import OrderedDict
+from lxml import etree
+from PIL import Image
 from glob import glob
 from rwrs import app
 from . import utils
@@ -34,8 +36,6 @@ class MinimapsImageExtractor(BaseExtractor):
 
     def extract(self):
         """Actually run the extract process."""
-        from PIL import Image
-
         minimaps_paths = []
 
         minimaps_paths.extend(glob(os.path.join(self.packages_dir, '*', 'maps', '*', 'map.png'))) # Maps in RWR game directory
@@ -67,8 +67,6 @@ class MapsDataExtractor(BaseExtractor):
     """Extract maps data from RWR."""
     def extract(self):
         """Actually run the extract process."""
-        from lxml import etree
-
         maps_paths = []
 
         maps_paths.extend(glob(os.path.join(self.packages_dir, '*', 'maps', '*', 'objects.svg'))) # Maps in RWR game directory
@@ -128,12 +126,9 @@ class RanksExtractor(BaseExtractor):
 
     def extract(self):
         """Actually run the extract process."""
-        from lxml import etree
-        from PIL import Image
-
         # Only handle official ranks
         ranks_files_paths = [
-            { # In Vanilla, ranks from all factions are the same, inspired by the US Army
+            { # In Vanilla, ranks from all factions are the same, inspired from the US Army
                 'country': 'us',
                 'path': os.path.join(self.packages_dir, 'vanilla', 'factions', 'brown.xml'),
                 'game_type': 'vanilla'
@@ -163,27 +158,30 @@ class RanksExtractor(BaseExtractor):
 
                 data[ranks_file_path['country']][i] = {'name': rank_name, 'xp': int(float(rank_node.get('xp')) * 10000)}
 
-                rank_image = Image.open(os.path.join(self.packages_dir, ranks_file_path['game_type'], 'textures', rank_node.find('hud_icon').get('filename')))
-
-                # Only get the actual content of the image
-                rank_image = rank_image.crop(rank_image.convert('RGBa').getbbox())
-
-                # Generate the desired images
-                for image_size in self.images_sizes:
-                    click.echo(image_size['size'])
-
-                    desired_size_image = rank_image.copy()
-                    desired_size_image.thumbnail(image_size['size'], Image.ANTIALIAS)
-
-                    paste_pos = (
-                        math.floor(image_size['size'][0] / 2) - math.floor(desired_size_image.width / 2),
-                        math.floor(image_size['size'][1] / 2) - math.floor(desired_size_image.height / 2)
-                    )
-
-                    new_rank_image = Image.new('RGBA', image_size['size'])
-                    new_rank_image.paste(desired_size_image, paste_pos)
-                    new_rank_image.save(os.path.join(app.config['RANKS_IMAGES_DIR'], ranks_file_path['country'], image_size['name'](i) + '.png'), optimize=True)
+                self._extract_images(i, ranks_file_path['game_type'], ranks_file_path['country'], rank_node.find('hud_icon').get('filename'))
 
                 i += 1
 
         helpers.save_json(app.config['RANKS_DATA_FILE'], data)
+
+    def _extract_images(self, rank_id, game_type, country, filename):
+        rank_image = Image.open(os.path.join(self.packages_dir, game_type, 'textures', filename))
+
+        # Only get the actual content of the image
+        rank_image = rank_image.crop(rank_image.convert('RGBa').getbbox())
+
+        # Generate the desired images
+        for image_size in self.images_sizes:
+            click.echo(image_size['size'])
+
+            desired_size_image = rank_image.copy()
+            desired_size_image.thumbnail(image_size['size'], Image.ANTIALIAS)
+
+            paste_pos = (
+                math.floor(image_size['size'][0] / 2) - math.floor(desired_size_image.width / 2),
+                math.floor(image_size['size'][1] / 2) - math.floor(desired_size_image.height / 2)
+            )
+
+            new_rank_image = Image.new('RGBA', image_size['size'])
+            new_rank_image.paste(desired_size_image, paste_pos)
+            new_rank_image.save(os.path.join(app.config['RANKS_IMAGES_DIR'], country, image_size['name'](rank_id) + '.png'), optimize=True)
