@@ -11,7 +11,7 @@ import os
 
 
 VALID_GAME_TYPES = ['vanilla', 'pacific']
-INVALID_GAME_TYPES = ['teddy_hunt']
+INVALID_GAME_TYPES = ['teddy_hunt', 'minimodes', 'man_vs_world']
 INVALID_MAPS = ['lobby']
 
 
@@ -82,12 +82,11 @@ class MapsDataExtractor(BaseExtractor):
 
             map_xml = etree.parse(map_path)
 
-            map_infos = map_xml.xpath('//svg:rect[@inkscape:label=\'#general\']/svg:desc/text()', namespaces={'svg': 'http://www.w3.org/2000/svg', 'inkscape': 'http://www.inkscape.org/namespaces/inkscape'})
+            map_infos = map_xml.findtext('//svg:rect[@inkscape:label=\'#general\']/svg:desc', namespaces={'svg': 'http://www.w3.org/2000/svg', 'inkscape': 'http://www.inkscape.org/namespaces/inkscape'})
 
             if not map_infos:
                 continue
 
-            map_infos = map_infos[0]
             map_infos = self._parse_map_data(map_infos)
 
             if 'name' not in map_infos:
@@ -98,11 +97,11 @@ class MapsDataExtractor(BaseExtractor):
             if server_type not in data:
                 data[server_type] = OrderedDict()
 
-            data[server_type][map_id] = {
-                'name': map_infos['name'].replace('Pacific: ', '').title(),
-                'has_minimap': os.path.isfile(os.path.join(app.config['MINIMAPS_IMAGES_DIR'], server_type, map_id + '.png')),
-                'has_preview': os.path.isfile(os.path.join(app.config['MAPS_PREVIEW_IMAGES_DIR'], server_type, map_id + '.png'))
-            }
+            data[server_type][map_id] = OrderedDict([
+                ('name', map_infos['name'].replace('Pacific: ', '').title()),
+                ('has_minimap', os.path.isfile(os.path.join(app.config['MINIMAPS_IMAGES_DIR'], server_type, map_id + '.png'))),
+                ('has_preview', os.path.isfile(os.path.join(app.config['MAPS_PREVIEW_IMAGES_DIR'], server_type, map_id + '.png')))
+            ])
 
         helpers.save_json(app.config['MAPS_DATA_FILE'], data)
 
@@ -148,15 +147,19 @@ class RanksExtractor(BaseExtractor):
             data[ranks_file_path['country']] = OrderedDict()
 
             faction_xml = etree.parse(ranks_file_path['path'])
+            faction_xml_root = faction_xml.getroot()
 
             i = 0
 
-            for rank_node in faction_xml.xpath('/faction/rank'):
+            for rank_node in faction_xml_root.iterchildren('rank'):
                 rank_name = rank_node.get('name')
 
                 click.echo(rank_name)
 
-                data[ranks_file_path['country']][i] = {'name': rank_name, 'xp': int(float(rank_node.get('xp')) * 10000)}
+                data[ranks_file_path['country']][i] = OrderedDict([
+                    ('name', rank_name),
+                    ('xp', int(float(rank_node.get('xp')) * 10000))
+                ])
 
                 self._extract_images(i, ranks_file_path['game_type'], ranks_file_path['country'], rank_node.find('hud_icon').get('filename'))
 
@@ -185,3 +188,91 @@ class RanksExtractor(BaseExtractor):
             new_rank_image = Image.new('RGBA', image_size['size'])
             new_rank_image.paste(desired_size_image, paste_pos)
             new_rank_image.save(os.path.join(app.config['RANKS_IMAGES_DIR'], country, image_size['name'](rank_id) + '.png'), optimize=True)
+
+
+class UnlockablesExtractor(BaseExtractor):
+    """Extract unlockables data and images from RWR."""
+    def extract(self):
+        """Actually run the extract process."""
+        click.echo('Extracting data')
+
+        data = OrderedDict()
+
+        for game_type in VALID_GAME_TYPES:
+            click.echo(game_type)
+
+            data[game_type] = OrderedDict()
+
+            self._extract_radio_calls(data[game_type], game_type)
+
+            # TODO Implement the others
+
+            data[game_type] = OrderedDict(sorted(data[game_type].items(), key=lambda k: k[0]))
+
+        helpers.save_json(app.config['UNLOCKABLES_DATA_FILE'], data)
+
+        click.echo('Extracting images')
+
+        # TODO
+
+    def _extract_radio_calls(self, data, game_type):
+        """Extract radio calls data and images from RWR."""
+        click.echo('Extracting radio calls')
+
+        main_calls_file = os.path.join(self.packages_dir, game_type, 'calls', 'all_calls.xml')
+        calls_directory = os.path.dirname(main_calls_file)
+
+        main_calls_xml = etree.parse(main_calls_file)
+        main_calls_xml_root = main_calls_xml.getroot()
+
+        for main_call_node in main_calls_xml_root.iterchildren('call'):
+            call_file = os.path.join(calls_directory, main_call_node.get('file'))
+
+            if not os.path.isfile(call_file) and game_type != 'vanilla': # Try to use call inherited from Vanilla
+                call_file = os.path.join(self.packages_dir, 'vanilla', 'calls', main_call_node.get('file'))
+
+                if not os.path.isfile(call_file): # Abort as there's nothing we can do
+                    continue
+
+            click.echo(call_file)
+
+            call_xml = etree.parse(call_file)
+            call_xml_root = call_xml.getroot()
+
+            if call_xml_root.tag == 'call':
+                call_node = call_xml_root
+            elif call_xml_root.tag == 'calls':
+                call_node = call_xml_root.find('call[@radio_view_text]')
+
+            call_xp = int(float(call_node.find('capacity[@value="100"][@source="rank"]').get('source_value')) * 10000)
+
+            call = OrderedDict([
+                ('name', call_node.get('name').title() if call_node.get('name') else call_node.get('radio_view_text').title()),
+                ('image', call_node.get('key').replace('.call', ''))
+            ])
+
+            if call_xp not in data:
+                data[call_xp] = {}
+
+            if 'radio_calls' not in data[call_xp]:
+                data[call_xp]['radio_calls'] = []
+
+            data[call_xp]['radio_calls'].append(call)
+
+    def _extract_weapons(self):
+        """Extract weapons data and images from RWR ."""
+        click.echo('Extracting weapons')
+
+        # TODO
+
+    def _extract_equipment(self):
+        """Extract equipment data and images from RWR."""
+        click.echo('Extracting equipment')
+
+        # TODO
+
+    def _extract_throwables(self):
+        """Extract throwables data and images from RWR."""
+        click.echo('Extracting throwables')
+
+        # TODO

@@ -84,12 +84,30 @@ def extract_ranks(steamdir):
     context = click.get_current_context()
 
     if not steamdir:
-        click.echo(extract_ranks_data.get_help(context))
+        click.echo(extract_ranks.get_help(context))
         context.exit()
 
     click.echo('Extraction started')
 
     extractor = rwr.extractors.RanksExtractor(steamdir)
+    extractor.extract()
+
+    click.secho('Done', fg='green')
+
+
+@app.cli.command()
+@click.option('--steamdir', '-g', help='Steam root directory')
+def extract_unlockables(steamdir):
+    """Extract unlockables data and images from RWR."""
+    context = click.get_current_context()
+
+    if not steamdir:
+        click.echo(extract_unlockables.get_help(context))
+        context.exit()
+
+    click.echo('Extraction started')
+
+    extractor = rwr.extractors.UnlockablesExtractor(steamdir)
     extractor.extract()
 
     click.secho('Done', fg='green')
@@ -107,7 +125,7 @@ def extract_maps_data(steamdir):
 
     click.echo('Extraction started')
 
-    extractor = rwr.extractors.MapsDataExtractor(steamdir, app.config['MAPS_DATA_FILE'])
+    extractor = rwr.extractors.MapsDataExtractor(steamdir)
     extractor.extract()
 
     click.secho('Done', fg='green')
@@ -125,7 +143,7 @@ def extract_minimaps(steamdir):
 
     click.echo('Extraction started')
 
-    extractor = rwr.extractors.MinimapsImageExtractor(steamdir, app.config['MINIMAPS_IMAGES_DIR'])
+    extractor = rwr.extractors.MinimapsImageExtractor(steamdir)
     extractor.extract()
 
     click.secho('Done', fg='green')
