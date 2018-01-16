@@ -292,16 +292,16 @@ class UnlockablesExtractor(BaseExtractor):
         """Extract weapons data and images from RWR ."""
         click.echo('Extracting weapons')
 
-        # TODO
+        # TODO Use weapons/all_weapons.xml
 
     def _extract_equipment(self):
         """Extract equipment data and images from RWR."""
         click.echo('Extracting equipment')
 
-        # TODO
+        # TODO Use weapons/all_weapons.xml
 
     def _extract_throwables(self):
         """Extract throwables data and images from RWR."""
         click.echo('Extracting throwables')
 
-        # TODO
+        # TODO Use weapons/all_throwables.xml
