@@ -214,8 +214,8 @@ class UnlockablesExtractor(BaseExtractor):
 
             self._extract_radio_calls(data[game_type], game_type)
             self._extract_throwables(data[game_type], game_type)
-
-            # TODO Implement the others
+            self._extract_weapons(data[game_type], game_type)
+            self._extract_equipment(data[game_type], game_type)
 
             data[game_type] = OrderedDict(sorted(data[game_type].items(), key=lambda k: k[0]))
 
@@ -311,7 +311,26 @@ class UnlockablesExtractor(BaseExtractor):
         """Extract weapons data and images from RWR ."""
         click.echo('Extracting weapons')
 
-        # TODO Use weapons/all_weapons.xml
+        main_weapons_file = os.path.join(self.packages_dir, game_type, 'weapons', 'all_weapons.xml')
+        weapons_directory = os.path.dirname(main_weapons_file)
+
+        main_weapons_xml = etree.parse(main_weapons_file)
+        main_weapons_xml_root = main_weapons_xml.getroot()
+
+        for main_weapon_node in main_weapons_xml_root.iterchildren('weapon'):
+            weapon_file = os.path.join(weapons_directory, main_weapon_node.get('file'))
+
+            if not os.path.isfile(weapon_file) and game_type != 'vanilla': # Try to use weapon inherited from Vanilla
+                weapon_file = os.path.join(self.packages_dir, 'vanilla', 'weapons', main_weapon_node.get('file'))
+
+                if not os.path.isfile(weapon_file): # Abort as there's nothing we can do
+                    click.secho('No applicable file found', fg='yellow')
+
+                    continue
+
+            click.echo(weapon_file)
+
+            # TODO Continue
 
     def _extract_equipment(self, data, game_type):
         """Extract equipment data and images from RWR."""
