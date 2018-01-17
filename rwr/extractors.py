@@ -201,6 +201,7 @@ class RanksExtractor(BaseExtractor):
 class UnlockablesExtractor(BaseExtractor):
     """Extract unlockables data and images from RWR."""
     radio_call_size = (64, 64)
+    throwable_size = (48, 48)
 
     def extract(self):
         """Actually run the extract process."""
@@ -296,15 +297,15 @@ class UnlockablesExtractor(BaseExtractor):
                 math.floor(self.radio_call_size[1] / 2) - math.floor(call_image.height / 2)
             )
 
-            new_rank_image = Image.new('RGBA', self.radio_call_size)
-            new_rank_image.paste(call_image, paste_pos)
+            new_call_image = Image.new('RGBA', self.radio_call_size)
+            new_call_image.paste(call_image, paste_pos)
 
             output_dir = os.path.join(app.config['UNLOCKABLES_IMAGES_DIR'], game_type, 'radio_calls')
 
             if not os.path.isdir(output_dir):
                 os.makedirs(output_dir)
 
-            new_rank_image.save(os.path.join(output_dir, call['image'] + '.png'), optimize=True)
+            new_call_image.save(os.path.join(output_dir, call['image'] + '.png'), optimize=True)
 
     def _extract_weapons(self, data, game_type):
         """Extract weapons data and images from RWR ."""
@@ -352,12 +353,15 @@ class UnlockablesExtractor(BaseExtractor):
 
                 continue
 
+            throwable_name = throwable_xml_root.get('name').title()
+            throwable_image_name = throwable_xml_root.get('key').replace('.projectile', '')
+
             for capacity_node in capacity_nodes:
                 throwable_xp = int(float(capacity_node.get('source_value')) * 10000)
 
                 throwable = OrderedDict([
-                    ('name', throwable_xml_root.get('name').title()),
-                    ('image', throwable_xml_root.get('key').replace('.projectile', '')),
+                    ('name', throwable_name),
+                    ('image', throwable_image_name),
                     ('amount', capacity_node.get('value'))
                 ])
 
@@ -369,4 +373,34 @@ class UnlockablesExtractor(BaseExtractor):
 
                 data[throwable_xp]['throwables'].append(throwable)
 
-            # TODO Throwable image
+            throwable_image_file = os.path.join(self.packages_dir, game_type, 'textures', hud_icon_node.get('filename'))
+
+            if not os.path.isfile(throwable_image_file) and game_type != 'vanilla': # Try to use call image inherited from Vanilla
+                throwable_image_file = os.path.join(self.packages_dir, 'vanilla', 'textures', hud_icon_node.get('filename'))
+
+                if not os.path.isfile(throwable_image_file):
+                    click.secho('No applicable file found', fg='yellow')
+
+                    continue
+
+            throwable_image = Image.open(throwable_image_file)
+
+            # Only get the actual content of the image
+            throwable_image = throwable_image.crop(throwable_image.convert('RGBa').getbbox())
+
+            throwable_image.thumbnail(self.throwable_size, Image.ANTIALIAS)
+
+            paste_pos = (
+                math.floor(self.throwable_size[0] / 2) - math.floor(throwable_image.width / 2),
+                math.floor(self.throwable_size[1] / 2) - math.floor(throwable_image.height / 2)
+            )
+
+            new_throwable_image = Image.new('RGBA', self.throwable_size)
+            new_throwable_image.paste(throwable_image, paste_pos)
+
+            output_dir = os.path.join(app.config['UNLOCKABLES_IMAGES_DIR'], game_type, 'throwables')
+
+            if not os.path.isdir(output_dir):
+                os.makedirs(output_dir)
+
+            new_throwable_image.save(os.path.join(output_dir, throwable_image_name + '.png'), optimize=True)
