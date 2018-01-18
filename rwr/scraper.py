@@ -22,8 +22,6 @@ class DataScraper:
 
         response.raise_for_status()
 
-        response.encoding = 'utf-8'
-
         if parser == 'html':
             return html.fromstring(response.text)
         elif parser == 'xml':
