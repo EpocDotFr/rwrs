@@ -131,7 +131,7 @@
             </table>
 
             {% if server.is_dedicated %}
-                <table class="mbn">
+                <table class="mbs">
                     <tr>
                         <th class="txtcenter">Players count (past week)</th>
                     </tr>
@@ -142,6 +142,8 @@
                     </tr>
                 </table>
             {% endif %}
+
+            {{ macros.stats_notice() }}
         </div>
     </div>
 
