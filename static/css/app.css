@@ -106,6 +106,35 @@ h2 {
 }
 
 /************************************************************************
+ * Tabs */
+
+.tabs {
+    border-bottom: 0.2rem solid #333;
+    background-color: #444;
+}
+
+.tabs li a,
+.tabs li a:visited {
+    color: #FFF;
+    text-decoration: none;
+    font-weight: bold;
+    border-top: 0.2rem solid #333;
+    border-left: 0.2rem solid #333;
+    border-right: 0.2rem solid #333;
+}
+
+.tabs li a:hover,
+.tabs li a:focus {
+    background-color: #606060;
+    border-color: #333;
+}
+
+.tabs li.active a {
+    background-color: #7da109;
+    border-color: #9cc321;
+}
+
+/************************************************************************
  * Text colors */
 
 .txtred {

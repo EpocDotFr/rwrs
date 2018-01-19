@@ -108,7 +108,8 @@ def player_details_without_db(username):
 
 
 @app.route('/players/<any(' + ','.join(rwr.constants.PLAYERS_LIST_DATABASES.keys()) + '):database>/<username>')
-def player_details(database, username):
+@app.route('/players/<any(' + ','.join(rwr.constants.PLAYERS_LIST_DATABASES.keys()) + '):database>/<username>/<any(unlockables):tab>')
+def player_details(database, username, tab=None):
     scraper = rwr.scraper.DataScraper()
 
     player = scraper.search_player(database, username)
@@ -123,7 +124,7 @@ def player_details(database, username):
     player.set_playing_on_server(servers)
 
     return render_template(
-        'player_details.html',
+        'player_details/main.html',
         player=player
     )
 
@@ -170,7 +171,7 @@ def players_compare(database, username, username_to_compare_with=None):
     player.set_playing_on_server(servers)
 
     return render_template(
-        'player_details.html',
+        'player_details/main.html',
         player=player,
         player_to_compare_with=player_to_compare_with
     )

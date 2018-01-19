@@ -1,0 +1,92 @@
+<table class="mtn mbn">
+    <tr>
+        <th class="txtcenter w30">Current rank</th>
+        <th class="txtcenter w40">Playing right now?</th>
+        <th class="txtcenter w30">Next rank</th>
+    </tr>
+    <tr>
+        <td class="big txtcenter">{{ macros.compare_ranks(player, player_to_compare_with) }} {{ macros.rank_image(player.rank) }} {{ player.rank.name }}</td>
+        <td class="txtcenter">
+            {% if player.playing_on_server %}
+                <div>{{ macros.location(player.playing_on_server.location) }} {{ macros.server_name(player.playing_on_server) }}</div>
+                <div>
+                    <strong><span class="{{ macros.server_slots_class(player.playing_on_server) }}">{{ player.playing_on_server.players.current }}</span>/{{ player.playing_on_server.players.max }}</strong> players on <strong>{{ macros.map_name(player.playing_on_server.map) }}</strong> ({{ player.playing_on_server.type_name }})
+                </div>
+                <div class="mts">
+                    {{ macros.server_join_button(player.playing_on_server) }}
+
+                    <a href="{{ url_for('server_details', ip_and_port=player.playing_on_server.ip_and_port) }}" class="btn"><i class="fa fa-eye"></i> Details</a>
+                </div>
+            {% else %}
+                Nope.
+            {% endif %}
+        </td>
+        <td class="{{ 'big' if player.next_rank }} txtcenter">
+            {% if player.next_rank %}
+                {{ macros.rank_image(player.next_rank) }} {{ player.next_rank.name }}
+            {% else %}
+                {{ player.username }} reached the highest possible rank.
+            {% endif %}
+        </td>
+    </tr>
+    <tr>
+        <th class="txtcenter">Current XP</th>
+        <th class="txtcenter">Next rank progression</th>
+        <th class="txtcenter">Required XP</th>
+    </tr>
+    <tr>
+        <td class="txtcenter">{{ macros.compare_numbers(player, player_to_compare_with, 'xp') }} {{ player.xp|humanize_integer }}</td>
+        <td class="txtcenter pan">
+            {% if player.next_rank %}
+                <div class="progress-bar">
+                    <div class="text pls pts prs w100">
+                        <span class="fl">{{ player.xp_percent_completion_to_next_rank }}%</span>
+                        <span class="fr">{{ player.xp_to_next_rank|humanize_integer }} XP remaining</span>
+                    </div>
+                    <div class="bar" style="width: {{ player.xp_percent_completion_to_next_rank }}%"></div>
+                </div>
+            {% else %}
+                N/A
+            {% endif %}
+        </td>
+        <td class="txtcenter">{{ player.next_rank.xp|humanize_integer if player.next_rank else 'N/A' }}</td>
+    </tr>
+</table>
+
+<table class="mtm mbn">
+    <tr>
+        <th>Kills</th>
+        <td>{{ macros.compare_numbers(player, player_to_compare_with, 'kills') }} {{ player.kills|humanize_integer }}</td>
+        <th>Deaths</th>
+        <td>{{ macros.compare_numbers(player, player_to_compare_with, 'deaths', above_zero_is_good=False) }} {{ player.deaths|humanize_integer }}</td>
+        <th>K/D ratio</th>
+        <td>{{ macros.compare_numbers(player, player_to_compare_with, 'kd_ratio', type=float) }} <span class="{{ 'txtred' if player.kd_ratio < 1 else 'txtgreen' }}">{{ player.kd_ratio }}</span></td>
+        <th>Score</th>
+        <td>{{ macros.compare_numbers(player, player_to_compare_with, 'score') }} <span class="{{ 'txtred' if player.score < 0 else 'txtgreen' }}">{{ player.score|humanize_integer }}</span></td>
+    </tr>
+    <tr>
+        <th>Time played</th>
+        <td>{{ macros.compare_numbers(player, player_to_compare_with, 'time_played', type='time') }} {{ player.time_played|humanize_seconds }}</td>
+        <th>Longest kill streak</th>
+        <td>{{ macros.compare_numbers(player, player_to_compare_with, 'longest_kill_streak') }} {{ player.longest_kill_streak|humanize_integer }}</td>
+        <th>Targets destroyed</th>
+        <td>{{ macros.compare_numbers(player, player_to_compare_with, 'targets_destroyed') }} {{ player.targets_destroyed|humanize_integer }}</td>
+        <th>Distance moved</th>
+        <td>{{ macros.compare_numbers(player, player_to_compare_with, 'distance_moved', type=float) }} {{ player.distance_moved }}km</td>
+    </tr>
+    <tr>
+        <th>Vehicles destroyed</th>
+        <td>{{ macros.compare_numbers(player, player_to_compare_with, 'vehicles_destroyed') }} {{ player.vehicles_destroyed|humanize_integer }}</td>
+        <th>Soldiers healed</th>
+        <td>{{ macros.compare_numbers(player, player_to_compare_with, 'soldiers_healed') }} {{ player.soldiers_healed|humanize_integer }}</td>
+        <th>Teamkills</th>
+        <td>{{ macros.compare_numbers(player, player_to_compare_with, 'teamkills', above_zero_is_good=False) }} {{ player.teamkills|humanize_integer }}</td>
+        <th>Shots fired</th>
+        <td>{{ macros.compare_numbers(player, player_to_compare_with, 'shots_fired') }} {{ player.shots_fired|humanize_integer }}</td>
+    </tr>
+    <tr>
+        <th>Throwables thrown</th>
+        <td>{{ macros.compare_numbers(player, player_to_compare_with, 'throwables_thrown') }} {{ player.throwables_thrown|humanize_integer }}</td>
+        <td colspan="6"></td>
+    </tr>
+</table>
