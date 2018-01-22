@@ -1,8 +1,9 @@
 from rwrs import app, db, cache
 from models import *
+import rwr.extractors
+import rwr.scraper
 import steam_api
 import click
-import rwr
 
 
 @app.cli.command()
@@ -18,11 +19,11 @@ def cc():
 @app.cli.command()
 def get_players_count():
     """Store the number of players."""
-    scraper = rwr.DataScraper()
+    scraper = rwr.scraper.DataScraper()
 
     click.echo('Clearing cache')
 
-    cache.delete_memoized(rwr.DataScraper.get_servers)
+    cache.delete_memoized(rwr.scraper.DataScraper.get_servers)
     cache.delete_memoized(ServerPlayerCount.server_players_data)
     cache.delete_memoized(ServerPlayerCount.servers_data)
     cache.delete_memoized(steam_api.Client.get_current_players_count_for_app)
@@ -77,36 +78,72 @@ def clean_players_count():
 
 
 @app.cli.command()
-@click.option('--gamedir', '-g', help='Game root directory')
-def extract_ranks_images(gamedir):
-    """Extract ranks images from RWR."""
+@click.option('--steamdir', '-g', help='Steam root directory')
+def extract_ranks(steamdir):
+    """Extract ranks data and images from RWR."""
     context = click.get_current_context()
 
-    if not gamedir:
-        click.echo(extract_ranks_images.get_help(context))
+    if not steamdir:
+        click.echo(extract_ranks.get_help(context))
         context.exit()
 
     click.echo('Extraction started')
 
-    extractor = rwr.RanksImageExtractor(gamedir, app.config['RANKS_IMAGES_DIR'])
+    extractor = rwr.extractors.RanksExtractor(steamdir)
     extractor.extract()
 
     click.secho('Done', fg='green')
 
 
 @app.cli.command()
-@click.option('--gamedir', '-g', help='Game root directory')
-def extract_minimaps(gamedir):
+@click.option('--steamdir', '-g', help='Steam root directory')
+def extract_unlockables(steamdir):
+    """Extract unlockables data and images from RWR."""
+    context = click.get_current_context()
+
+    if not steamdir:
+        click.echo(extract_unlockables.get_help(context))
+        context.exit()
+
+    click.echo('Extraction started')
+
+    extractor = rwr.extractors.UnlockablesExtractor(steamdir)
+    extractor.extract()
+
+    click.secho('Done', fg='green')
+
+
+@app.cli.command()
+@click.option('--steamdir', '-g', help='Steam root directory')
+def extract_maps_data(steamdir):
+    """Extract maps data from RWR."""
+    context = click.get_current_context()
+
+    if not steamdir:
+        click.echo(extract_maps_data.get_help(context))
+        context.exit()
+
+    click.echo('Extraction started')
+
+    extractor = rwr.extractors.MapsDataExtractor(steamdir)
+    extractor.extract()
+
+    click.secho('Done', fg='green')
+
+
+@app.cli.command()
+@click.option('--steamdir', '-g', help='Steam root directory')
+def extract_minimaps(steamdir):
     """Extract minimaps from RWR."""
     context = click.get_current_context()
 
-    if not gamedir:
+    if not steamdir:
         click.echo(extract_minimaps.get_help(context))
         context.exit()
 
     click.echo('Extraction started')
 
-    extractor = rwr.MinimapsImageExtractor(gamedir, app.config['MINIMAPS_IMAGES_DIR'])
+    extractor = rwr.extractors.MinimapsImageExtractor(steamdir)
     extractor.extract()
 
     click.secho('Done', fg='green')

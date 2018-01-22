@@ -1,3 +1,5 @@
+{% import 'macros.html' as macros %}
+
 {% extends 'layout.html' %}
 
 {% block page_title %}<h2><i class="fa fa-users"></i> My friends</h2>{% endblock %}
@@ -27,7 +29,7 @@
             </fieldset>
         </div>
 
-        <table :class="[friendsEnriched.length > 0 ? 'striped' : '', 'mbn']">
+        <table :class="[friendsEnriched.length > 0 ? 'striped' : '', 'mbs']">
             <thead>
                 <tr>
                     <th>Friend name</th>
@@ -43,16 +45,17 @@
             <tbody>
                 <tr v-for="friend in friendsEnriched">
                     <td class="nowrap">
-                        <a :href="'/players/' + friend.username">${ friend.username }</a>
+                        <a :href="'/players/' + friend.playing_on_server.database + '/' + friend.username" v-if="friend.playing_on_server && friend.playing_on_server.is_ranked">${ friend.username }</a>
+                        <template v-if="!friend.playing_on_server || !friend.playing_on_server.is_ranked">${ friend.username }</template>
                         <img src="{{ url_for('static', filename='images/me.png') }}" title="Hey, I'm the creator of this website! Glad to see you're using it." class="help me" v-if="friend.username.toLowerCase() == my_username">
                         <i class="fa fa-hand-peace-o help" title="This player contributed in a way or another to RWRS. Thanks to her/him!" v-if="inArray(friend.username.toLowerCase(), contributors)"></i>
                         <img src="{{ url_for('static', filename='images/dev.png') }}" title="Say hi to one of the Running With Rifles developers!" class="help" v-if="inArray(friend.username.toLowerCase(), devs)">
                     </td>
                     <td>
                         <template v-if="friend.playing_on_server">
-                            <a :href="friend.playing_on_server.players.free > 0 ? friend.playing_on_server.steam_join_link : '#'" :class="['btn', friend.playing_on_server.players.free == 0 ? 'disabled' : '']" onclick="return false;" :title="friend.playing_on_server.players.free == 0 ? 'Server is full' : ''" v-if="friend.playing_on_server"><i class="fa fa-steam"></i> Join</a>
+                            <a :href="friend.playing_on_server.players.free > 0 ? friend.playing_on_server.steam_join_link : '#'" :class="['btn', friend.playing_on_server.players.free == 0 ? 'disabled' : '']" :title="friend.playing_on_server.players.free == 0 ? 'Server is full' : ''" v-if="friend.playing_on_server"><i class="fa fa-steam"></i> Join</a>
                             <i :class="['flag', 'flag-' + friend.playing_on_server.location.country_code]" :title="friend.playing_on_server.location.country_name" v-if="friend.playing_on_server.location.country_code"></i>
-                            <i class="fa fa-star txtyellow help" title="Ranked server" v-if="friend.playing_on_server.is_ranked"></i>
+                            <i class="fa fa-star txtyellow help" :title="'Ranked ' + friend.playing_on_server.database_name + ' server'" v-if="friend.playing_on_server.is_ranked"></i>
                             <a :href="'/servers/' + friend.playing_on_server.ip_and_port">${ friend.playing_on_server.name }</a>
                         </template>
                     </td>
@@ -70,8 +73,7 @@
                     </td>
                     <td>
                         <template v-if="friend.playing_on_server">
-                            <a :href="friend.playing_on_server.map.url" v-if="friend.playing_on_server.map.url && friend.playing_on_server.map.name">${ friend.playing_on_server.map.name }</a>
-                            <template v-if="!friend.playing_on_server.map.url && friend.playing_on_server.map.name">${ friend.playing_on_server.map.name }</template>
+                            <template v-if="friend.playing_on_server.map.name">${ friend.playing_on_server.map.name }</template>
                             <template v-if="!friend.playing_on_server.map.name">${ friend.playing_on_server.map.id }</template>
                         </template>
                     </td>
@@ -86,7 +88,7 @@
                         </template>
                     </td>
                     <td class="txtcenter">
-                        <a :href="'/players?target=' + friend.username" class="btn" title="Highlight in leaderboard"><i class="fa fa-list-ol"></i></a>
+                        <a :href="'/players/' + friend.playing_on_server.database + '?target=' + friend.username" class="btn" :title="'Highlight in ' + friend.playing_on_server.database_name + ' leaderboard'" v-if="friend.playing_on_server && friend.playing_on_server.is_ranked"><i class="fa fa-list-ol"></i></a>
                         <a href="#" class="btn" @click.prevent="removeFriend(friend.username)" :title="'Remove ' + friend.username + ' from friends list'"><i class="fa fa-user-times"></i></a>
                     </td>
                 </tr>
@@ -97,6 +99,8 @@
                 </tr>
             </tbody>
         </table>
+
+        {{ macros.stats_notice() }}
     </div>
 
     <script>

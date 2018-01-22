@@ -1,0 +1,36 @@
+{% if config['DEBUG'] %}
+    <table class="mtn mbn">
+        <tr>
+            <th>Radio calls<br><span class="no-bold">{{ player.unlocks.radio_calls.current }}/{{ player.unlocks.radio_calls.max }}</span></th>
+            <td class="unlockables-list radio-calls">
+                {{ macros.unlockables_list(player, 'radio_calls') }}
+            </td>
+        </tr>
+        <tr>
+            <th>Weapons<br><span class="no-bold">{{ player.unlocks.weapons.current }}/{{ player.unlocks.weapons.max }}</span></th>
+            <td class="unlockables-list weapons">
+                {{ macros.unlockables_list(player, 'weapons') }}
+            </td>
+        </tr>
+        <tr>
+            <th>Equipment<br><span class="no-bold">{{ player.unlocks.equipment.current }}/{{ player.unlocks.equipment.max }}</span></th>
+            <td class="unlockables-list equipment">
+                {{ macros.unlockables_list(player, 'equipment') }}
+            </td>
+        </tr>
+        <tr>
+            <th>Throwables<br><span class="no-bold">{{ player.unlocks.throwables.current }}/{{ player.unlocks.throwables.max }}</span></th>
+            <td class="unlockables-list throwables">
+                {{ macros.unlockables_list(player, 'throwables') }}
+            </td>
+        </tr>
+        <tr>
+            <th>Squad mates<br><span class="no-bold">{{ player.unlocks.squad_mates.current }}/{{ player.unlocks.squad_mates.max }}</span></th>
+            <td>
+                <img src="{{ url_for('static', filename='images/unlockables/squad_mates/{squad_mates}.png'.format(squad_mates=player.unlocks.squad_mates.current)) }}" title="You may have up to {{ player.unlocks.squad_mates.current }} soldiers at your orders. 1 soldier every {{ player.unlocks.squad_mates.xp_steps }} XP, maximum {{ player.unlocks.squad_mates.max }}." class="help">
+            </td>
+        </tr>
+    </table>
+{% else %}
+    <p class="alert info pas"><i class="fa fa-wrench"></i> Sorry, this content isn't available for the moment as it is under full redesign.</p>
+{% endif %}

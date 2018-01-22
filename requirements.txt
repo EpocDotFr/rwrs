@@ -6,7 +6,6 @@ Flask-Migrate
 requests
 maxminddb-geolite2
 lxml
-memoized-property
 arrow
 SQLAlchemy
 sqlalchemy-utils

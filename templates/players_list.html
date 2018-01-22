@@ -2,9 +2,9 @@
 
 {% extends 'layout.html' %}
 
-{% block page_title %}<h2><i class="fa fa-user"></i> Players{% if args.get('target') %} (highlighting {{ macros.player_name(args.get('target'), raw=True) }}){% endif %}</h2>{% endblock %}
+{% block page_title %}<h2><i class="fa fa-user"></i> Players › {{ macros.database_name() }}{% if args.get('target') %} (highlighting {{ macros.player_name(args.get('target'), raw=True) }}){% endif %}</h2>{% endblock %}
 
-{% block meta_title %}Players{% if args.get('target') %} (highlighting {{ args.get('target') }}){% endif %}{% endblock %}
+{% block meta_title %}Players › {{ macros.database_name() }}{% if args.get('target') %} (highlighting {{ args.get('target') }}){% endif %}{% endblock %}
 
 {% block jsfiles %}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/zepto/1.2.0/zepto.min.js"></script>
@@ -17,7 +17,7 @@
             {{ macros.players_list_previous_button(players, args) }}
         </div>
         <div class="three-fifth">
-            <form method="get" class="txtcenter inlb" action="{{ url_for('players_list') }}">
+            <form method="get" class="txtcenter inlb" action="{{ url_for('players_list', database=request.view_args.get('database')) }}">
                 <label>Player to highlight: <input type="text" name="target" placeholder="Type a player name" value="{{ args.get('target') if args.get('target') }}"></label>
 
                 <label>

@@ -1,6 +1,9 @@
+from collections import OrderedDict
 from flask import request
 import socket
 import struct
+import json
+import os
 
 
 __all__ = [
@@ -66,3 +69,20 @@ def merge_query_string_params(params):
     args.update(params)
 
     return args
+
+
+def load_json(file):
+    """Load a JSON file."""
+    if not os.path.isfile(file):
+        raise FileNotFoundError('The {} file does not exists'.format(file))
+
+    with open(file, 'r', encoding='utf-8') as f:
+        return json.load(f, object_pairs_hook=OrderedDict)
+
+
+def save_json(file, data):
+    """Save data to a JSON file."""
+    with open(file, 'w', encoding='utf-8') as f:
+        json.dump(data, f)
+
+    return data

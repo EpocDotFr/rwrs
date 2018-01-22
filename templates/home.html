@@ -1,3 +1,5 @@
+{% import 'macros.html' as macros %}
+
 {% extends 'layout.html' %}
 
 {% block jsfiles %}
@@ -12,12 +14,15 @@
 {% endblock %}
 
 {% block content %}
-    <div class="home grid mtm mbm">
-        <div class="prl">
+    <div class="grid has-gutter-xl ptm pbm">
+        <div>
             <h2 class="txtcenter"><i class="fa fa-user"></i> Looking for a player?</h2>
             <div class="pbm txtcenter">
-                <form method="get" action="{{ url_for('players_list') }}">
-                    <a href="{{ url_for('players_list') }}" class="btn"><i class="fa fa-chevron-right"></i> Go to the players list</a> or <input type="text" name="username" placeholder="Type a player name" required> <button type="submit"><i class="fa fa-search"></i> Find</button>
+                <form method="get" action="{{ url_for('players_list_without_db') }}">
+                    <input type="text" name="username" placeholder="Type a player name" required>
+                    <label><input type="radio" name="database" value="invasion" checked required> {{ macros.database_name('invasion') }}</label>
+                    <label><input type="radio" name="database" value="pacific" required> {{ macros.database_name('pacific') }}</label>
+                    <button type="submit"><i class="fa fa-search"></i> Find</button>
                 </form>
             </div>
             <fieldset class="man pan">
@@ -26,7 +31,7 @@
                 <div id="players-chart" class="chart"></div>
             </fieldset>
         </div>
-        <div class="pll">
+        <div>
             <h2 class="txtcenter"><i class="fa fa-server"></i> Looking for a server?</h2>
             <p class="mtn pbm txtcenter"><a href="{{ url_for('servers_list') }}" class="btn"><i class="fa fa-chevron-right"></i> Go to the servers list</a></p>
             <fieldset class="man pan">

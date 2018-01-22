@@ -79,7 +79,9 @@
                         <tr data-username="{{ player }}">
                             <td>
                                 <div class="actions fr">
-                                    <a href="{{ url_for('players_list', target=player) }}" title="Highlight in leaderboard"><i class="fa fa-list-ol"></i></a>
+                                    {% if server.is_ranked %}
+                                        <a href="{{ url_for('players_list', database=server.database, target=player) }}" title="Highlight in {{ server.database_name }} leaderboard"><i class="fa fa-list-ol"></i></a>
+                                    {% endif %}
 
                                     <span class="friends-feature is-hidden">
                                         <a href="#" title="Add {{ player }} to friends list" class="add-friend is-hidden"><i class="fa fa-user-plus"></i></a>
@@ -87,7 +89,7 @@
                                     </span>
                                 </div>
 
-                                {{ macros.player_name(player, raw=True, link=True) }}
+                                {{ macros.player_name(player, raw=True, link=True, database=server.database) }}
                             </td>
                         </tr>
                     {% else %}
@@ -112,12 +114,14 @@
                 <tr>
                     <td class="txtcenter">{{ macros.map_name(server.map) }}</td>
                 </tr>
-                {% if server.map.has_images %}
+                {% if server.map.has_preview %}
                     <tr>
                         <td class="txtcenter">
                             <img src="{{ url_for('static', filename='images/maps/preview/{game_type}/{map_id}.png'.format(game_type=server.type, map_id=server.map.id)) }}">
                         </td>
                     </tr>
+                {% endif %}
+                {% if server.map.has_minimap %}
                     <tr>
                         <td class="txtcenter">
                             <a href="{{ url_for('static', filename='images/maps/minimap/{game_type}/{map_id}.png'.format(game_type=server.type, map_id=server.map.id)) }}"><img src="{{ url_for('static', filename='images/maps/minimap/{game_type}/{map_id}_thumb.png'.format(game_type=server.type, map_id=server.map.id)) }}"></a>
@@ -127,7 +131,7 @@
             </table>
 
             {% if server.is_dedicated %}
-                <table class="mbn">
+                <table class="mbs">
                     <tr>
                         <th class="txtcenter">Players count (past week)</th>
                     </tr>
@@ -138,6 +142,8 @@
                     </tr>
                 </table>
             {% endif %}
+
+            {{ macros.stats_notice() }}
         </div>
     </div>
 

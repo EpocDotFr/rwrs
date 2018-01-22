@@ -1,20 +1,20 @@
 # RWRS (Running With Rifles Stats)
 
-Players statistics, servers list and more for the [Running With Rifles](http://www.runningwithrifles.com/wp/) (RWR) game.
-Available at [rwrstats.com](https://rwrstats.com/).
+Players statistics, servers list and more for the [Running With Rifles](http://www.runningwithrifles.com/wp/) (RWR) game
+and its Pacific DLC. Available at [rwrstats.com](https://rwrstats.com/).
 
 ## Features
 
   - Players
+    - Support stats for both the official invasion (vanilla RWR) servers and official Pacific servers
     - Search for a player
-    - View player stats (as well as next rank progression, unlocks, on which server he's playing on, etc). Note that stats only concerns official invasion (ranked) servers
+    - View player stats (as well as next rank progression, unlocks, on which server he's playing on, etc)
     - Compare two players stats
-    - Friends list (easily know on which servers your friends are playing on. There's no need to create a user account or whatever)
+    - Friends list (easily know on which server your friends are playing on. There's no need to create a user account or whatever)
     - Players list (leaderboard)
   - Public servers
     - Real servers location
     - Real maps name
-    - Maps are linked to their [official RWR wiki](https://runningwithrifles.gamepedia.com/Running_with_Rifles_Wiki) page
     - Official invasion (ranked) servers are highlighted
     - Game mode (coop, PvPvE, etc) and type (vanilla RWR, Pacific DLC, etc)
     - Public server details (players list with link to their profile, current map preview and minimap, etc)
@@ -51,15 +51,16 @@ Available configuration parameters are:
 
 More informations on the three above can be found [here](http://flask.pocoo.org/docs/0.12/config/#builtin-configuration-values).
 
+  - `BETA` Whether or not to enable the beta mode
   - `GAUGES_SITE_ID` A [Gauges](https://gaug.es/) site ID used to track visits on RWRS (optional)
   - `CACHE_THRESHOLD` The maximum number of items the cache will store before it starts deleting some (see [here](https://pythonhosted.org/Flask-Cache/#configuring-flask-cache) for more configuration parameters related to Flask-Cache)
   - `SERVERS_CACHE_TIMEOUT` Cache duration of the servers list (in seconds)
   - `PLAYERS_CACHE_TIMEOUT` Cache duration of the players list as well as data for a single player (in seconds)
-  - `STEAM_PLAYERS_CACHE_TIMEOUT` Cache duration of the total number of players (in seconds)
   - `GRAPHS_DATA_CACHE_TIMEOUT` Cache duration of the graphs data, both the players and the servers ones (in seconds)
-  - `BETA` Whether or not to enable the beta mode
+  - `STEAM_PLAYERS_CACHE_TIMEOUT` Cache duration of the total number of players (in seconds)
   - `BETA_USERS` The credentials required to access the app when beta mode is enabled. You can specify multiple ones. **It is highly recommended to serve RWRS through HTTPS** because it uses [HTTP basic auth](https://en.wikipedia.org/wiki/Basic_access_authentication)
   - `STEAM_API_KEY` A [Steam API](https://steamcommunity.com/dev) key
+  - `PACIFIC_PLAYERS_RANKS_COUNTRY` Ranks image / name to show for the Pacific players stats (`us`, `jp`)
 
 I'll let you search yourself about how to configure a web server along uWSGI.
 
@@ -84,14 +85,24 @@ The uWSGI file you'll have to set in your uWSGI configuration is `uwsgi.py`. The
 You'll probably have to hack with this application to make it work with one of the solutions described
 [here](http://flask.pocoo.org/docs/0.12/deploying/). Send me a pull request if you make it work.
 
-### Extracting ranks images
+### Extracting ranks data and images
 
-The Flask command `flask extract_ranks_images` is used to retrieve, process (the actual images content isn't centered)
-and save all the RWR ranks images. They are saved at `static/images/ranks/{rank ID}.png` and `static/images/ranks/{rank ID}_icon.png`.
+The Flask command `flask extract_ranks` is used to extract and save all ranks data to a JSON file located at `storage/data/ranks.json`.
+It also retrieve, process (the actual images content isn't centered) and save all the RWR ranks images. They are saved
+at `static/images/ranks/{country}/{rank ID}.png` and `static/images/ranks/{country}/{rank ID}_icon.png`.
 
   1. `pip install -r requirements-dev.txt`
   2. `set FLASK_APP=rwrs.py`
-  3. `flask extract_ranks_images --gamedir="{path to the game root directory}"`
+  3. `flask extract_ranks --steamdir="{path to the Steam root directory}"`
+
+This command requires the game to be installed.
+
+### Extracting maps data
+
+The Flask command `flask extract_maps_data` is used to extract and save all maps data to a JSON file located at `storage/data/maps.json`.
+
+  1. `set FLASK_APP=rwrs.py`
+  2. `flask extract_maps_data --steamdir="{path to the Steam root directory}"`
 
 This command requires the game to be installed.
 
@@ -102,33 +113,29 @@ The Flask command `flask extract_minimaps` is used to extract minimaps (the ones
 
   1. `pip install -r requirements-dev.txt`
   2. `set FLASK_APP=rwrs.py`
-  3. `flask extract_minimaps --gamedir="{path to the game root directory}"`
+  3. `flask extract_minimaps --steamdir="{path to the Steam root directory}"`
 
 This command requires the game to be installed.
 
 ### Clearing cache
 
-```
-flask cc
-```
+  1. `set FLASK_APP=rwrs.py`
+  2. `flask cc`
 
 ### Clearing old graphs data
 
-```
-flask clean_players_count
-```
+  1. `set FLASK_APP=rwrs.py`
+  2. `flask clean_players_count`
 
 ### Storing actual number of players (for graphs)
 
-```
-flask get_players_count
-```
+  1. `set FLASK_APP=rwrs.py`
+  2. `flask get_players_count`
 
 ### Migrating the database
 
-```
-flask db upgrade
-```
+  1. `set FLASK_APP=rwrs.py`
+  2. `flask db upgrade`
 
 ## How it works
 
@@ -148,7 +155,7 @@ As the provided servers location is most of the time either missing or invalid, 
   - Flag icons by [Flag Sprites](https://www.flag-sprites.com/en/) and [GoSquared](https://www.gosquared.com/resources/flag-icons/) (freeware)
   - Maps previews comes from the [official RWR wiki](https://runningwithrifles.gamepedia.com/Running_with_Rifles_Wiki)
   - This project uses GeoLite2 data created by MaxMind, available from [www.maxmind.com](https://www.maxmind.com/)
-  - All Running With Rifles assets © 2015 - 2017 Osumia Games
+  - All Running With Rifles assets © 2015 - 2018 Osumia Games
   - This project is not affiliated with Osumia Games
 
 ## End words

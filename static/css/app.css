@@ -49,13 +49,6 @@ h2 {
 }
 
 /************************************************************************
- * Home page */
-
-.home > div:first-child {
-    border-right: 0.1rem solid #514f4f;
-}
-
-/************************************************************************
  * Player stats page */
 
 .unlockables-list {
@@ -110,6 +103,35 @@ h2 {
 .progress-bar > .bar {
     background-color: #657B26;
     height: 4.2rem;
+}
+
+/************************************************************************
+ * Tabs */
+
+.tabs {
+    border-bottom: 0.2rem solid #333;
+    background-color: #444;
+}
+
+.tabs li a,
+.tabs li a:visited {
+    color: #FFF;
+    text-decoration: none;
+    font-weight: bold;
+    border-top: 0.2rem solid #333;
+    border-left: 0.2rem solid #333;
+    border-right: 0.2rem solid #333;
+}
+
+.tabs li a:hover,
+.tabs li a:focus {
+    background-color: #606060;
+    border-color: #333;
+}
+
+.tabs li.active a {
+    background-color: #7da109;
+    border-color: #9cc321;
 }
 
 /************************************************************************
