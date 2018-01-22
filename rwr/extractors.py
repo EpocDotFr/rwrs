@@ -16,7 +16,7 @@ INVALID_MAPS = ['lobby']
 
 
 class BaseExtractor:
-    def __init__(self, steam_dir,):
+    def __init__(self, steam_dir):
         self.steam_dir = steam_dir
 
         if not os.path.isdir(self.steam_dir):
@@ -330,7 +330,41 @@ class UnlockablesExtractor(BaseExtractor):
 
             click.echo(weapon_file)
 
-            # TODO Continue
+            weapon_xml = etree.parse(weapon_file)
+            weapon_xml_root = weapon_xml.getroot()
+
+            specification_node = weapon_xml_root.find('specification')
+            hud_icon_node = weapon_xml_root.find('hud_icon')
+
+            if specification_node is None or hud_icon_node is None or not specification_node.get('name'):
+                click.secho('Not usable', fg='yellow')
+
+                continue
+
+            weapon_name = specification_node.get('name').title()
+            capacity_nodes = weapon_xml_root.xpath('capacity[@value!="0"][@source="rank"]')
+
+            if capacity_nodes:
+                for capacity_node in capacity_nodes:
+                    weapon_xp = int(float(capacity_node.get('source_value')) * 10000)
+
+                    weapon = OrderedDict([
+                        ('name', weapon_name),
+                        ('image', 'TODO')
+                    ])
+
+                    if int(capacity_node.get('value')) > 1:
+                        weapon['amount'] = int(capacity_node.get('value'))
+
+                    if weapon_xp not in data:
+                        data[weapon_xp] = OrderedDict()
+
+                    if 'weapons' not in data[weapon_xp]:
+                        data[weapon_xp]['weapons'] = []
+
+                    data[weapon_xp]['weapons'].append(weapon)
+
+            # TODO
 
     def _extract_equipment(self, data, game_type):
         """Extract equipment data and images from RWR."""
@@ -380,9 +414,11 @@ class UnlockablesExtractor(BaseExtractor):
 
                 throwable = OrderedDict([
                     ('name', throwable_name),
-                    ('image', throwable_image_name),
-                    ('amount', capacity_node.get('value'))
+                    ('image', throwable_image_name)
                 ])
+
+                if int(capacity_node.get('value')) > 1:
+                    throwable['amount'] = int(capacity_node.get('value'))
 
                 if throwable_xp not in data:
                     data[throwable_xp] = OrderedDict()

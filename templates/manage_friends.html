@@ -29,7 +29,7 @@
             </fieldset>
         </div>
 
-        <table :class="[friendsEnriched.length > 0 ? 'striped' : '', 'mbn']">
+        <table :class="[friendsEnriched.length > 0 ? 'striped' : '', 'mbs']">
             <thead>
                 <tr>
                     <th>Friend name</th>
@@ -99,6 +99,8 @@
                 </tr>
             </tbody>
         </table>
+
+        {{ macros.stats_notice() }}
     </div>
 
     <script>
