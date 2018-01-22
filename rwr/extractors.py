@@ -1,6 +1,5 @@
 from collections import OrderedDict
 from lxml import etree
-from PIL import Image
 from glob import glob
 from rwrs import app
 from . import utils
@@ -36,6 +35,8 @@ class MinimapsImageExtractor(BaseExtractor):
 
     def extract(self):
         """Actually run the extract process."""
+        from PIL import Image
+
         minimaps_paths = []
 
         minimaps_paths.extend(glob(os.path.join(self.packages_dir, '*', 'maps', '*', 'map.png'))) # Maps in RWR game directory
@@ -176,6 +177,8 @@ class RanksExtractor(BaseExtractor):
         helpers.save_json(app.config['RANKS_DATA_FILE'], data)
 
     def _extract_images(self, rank_id, game_type, country, filename):
+        from PIL import Image
+
         rank_image = Image.open(os.path.join(self.packages_dir, game_type, 'textures', filename))
 
         # Only get the actual content of the image
@@ -223,6 +226,8 @@ class UnlockablesExtractor(BaseExtractor):
 
     def _extract_radio_calls(self, data, game_type):
         """Extract radio calls data and images from RWR."""
+        from PIL import Image
+
         click.echo('Extracting radio calls')
 
         main_calls_file = os.path.join(self.packages_dir, game_type, 'calls', 'all_calls.xml')
@@ -374,6 +379,8 @@ class UnlockablesExtractor(BaseExtractor):
 
     def _extract_throwables(self, data, game_type):
         """Extract throwables data and images from RWR."""
+        from PIL import Image
+
         click.echo('Extracting throwables')
 
         main_throwables_file = os.path.join(self.packages_dir, game_type, 'weapons', 'all_throwables.xml')
