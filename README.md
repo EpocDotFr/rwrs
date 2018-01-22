@@ -10,7 +10,7 @@ and its Pacific DLC. Available at [rwrstats.com](https://rwrstats.com/).
     - Search for a player
     - View player stats (as well as next rank progression, unlocks, on which server he's playing on, etc)
     - Compare two players stats
-    - Friends list (only for ranked servers. Easily know on which server your friends are playing on. There's no need to create a user account or whatever)
+    - Friends list (easily know on which server your friends are playing on. There's no need to create a user account or whatever)
     - Players list (leaderboard)
   - Public servers
     - Real servers location
