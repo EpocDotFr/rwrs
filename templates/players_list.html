@@ -2,7 +2,7 @@
 
 {% extends 'layout.html' %}
 
-{% block page_title %}<h2><i class="fa fa-user"></i> Players › {{ macros.database_name() }}{% if args.get('target') %} (highlighting {{ macros.player_name(args.get('target'), raw=True) }}){% endif %}</h2>{% endblock %}
+{% block page_title %}<h1><i class="fa fa-user"></i> Players › {{ macros.database_name() }}{% if args.get('target') %} (highlighting {{ macros.player_name(args.get('target'), raw=True) }}){% endif %}</h1>{% endblock %}
 
 {% block meta_title %}Players › {{ macros.database_name() }}{% if args.get('target') %} (highlighting {{ args.get('target') }}){% endif %}{% endblock %}
 

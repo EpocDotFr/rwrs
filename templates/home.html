@@ -17,7 +17,7 @@
     <div class="grid has-gutter-xl ptm pbm">
         <div>
             <h2 class="txtcenter"><i class="fa fa-user"></i> Looking for a player?</h2>
-            <div class="pbm txtcenter">
+            <div class="pbm ptm txtcenter">
                 <form method="get" action="{{ url_for('players_list_without_db') }}">
                     <input type="text" name="username" placeholder="Type a player name" required>
                     <label><input type="radio" name="database" value="invasion" checked required> {{ macros.database_name('invasion') }}</label>
@@ -33,7 +33,7 @@
         </div>
         <div>
             <h2 class="txtcenter"><i class="fa fa-server"></i> Looking for a server?</h2>
-            <p class="mtn pbm txtcenter"><a href="{{ url_for('servers_list') }}" class="btn"><i class="fa fa-chevron-right"></i> Go to the servers list</a></p>
+            <p class="mtn pbm ptm txtcenter"><a href="{{ url_for('servers_list') }}" class="btn"><i class="fa fa-chevron-right"></i> Go to the servers list</a></p>
             <fieldset class="man pan">
                 <legend class="mls">Online and active servers (past week)</legend>
                 <p id="servers-chart-legend" class="small txtcenter"></p>
