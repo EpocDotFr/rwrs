@@ -15,6 +15,17 @@ def define_globals():
 
 
 @app.before_request
+def set_beta_data():
+    if app.config['BETA']:
+        from git import Repo
+
+        repo = Repo(app.root_path)
+
+        g.BETA_BRANCH = repo.active_branch.name
+        g.BETA_COMMIT = repo.head.commit.hexsha
+
+
+@app.before_request
 def check_under_maintenance():
     if os.path.exists('maintenance'):
         g.UNDER_MAINTENANCE = True
@@ -35,17 +46,6 @@ def get_counts():
     g.online_players = online_players
     g.active_servers = active_servers
     g.total_servers = total_servers
-
-
-@app.before_request
-def set_beta_data():
-    if app.config['BETA']:
-        from git import Repo
-
-        repo = Repo(app.root_path)
-
-        g.BETA_BRANCH = repo.active_branch.name
-        g.BETA_COMMIT = repo.head.commit.hexsha
 
 
 @app.before_request
