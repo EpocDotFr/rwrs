@@ -18,11 +18,10 @@
         <div>
             <h2 class="txtcenter"><i class="fa fa-user"></i> Looking for a player?</h2>
             <div class="pbm ptm txtcenter">
-                <form method="get" action="{{ url_for('players_list_without_db') }}" itemprop="potentialAction" itemscope itemtype="http://schema.org/SearchAction">
-                    <meta itemprop="target" content="{{ url_for('players_list_without_db') }}?username={username}&database={database}">
-                    <input type="text" name="username" placeholder="Type a player name" itemprop="query-input" required>
-                    <label><input type="radio" name="database" value="invasion" itemprop="query-input" checked required> {{ macros.database_name('invasion') }}</label>
-                    <label><input type="radio" name="database" value="pacific" itemprop="query-input" required> {{ macros.database_name('pacific') }}</label>
+                <form method="get" action="{{ url_for('players_list_without_db') }}">
+                    <input type="text" name="username" placeholder="Type a player name" required>
+                    <label><input type="radio" name="database" value="invasion" checked required> {{ macros.database_name('invasion') }}</label>
+                    <label><input type="radio" name="database" value="pacific" required> {{ macros.database_name('pacific') }}</label>
                     <button type="submit"><i class="fa fa-search"></i> Find</button>
                 </form>
             </div>
