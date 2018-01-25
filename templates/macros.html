@@ -38,8 +38,8 @@
     {%- endif %}
 {%- endmacro %}
 
-{% macro server_name(server, link=True, raw=False) -%}
-    {% if server.is_ranked -%}
+{% macro server_name(server, link=True, raw=False, no_icon=False) -%}
+    {% if server.is_ranked and not no_icon -%}
         {% if raw %}★ {% else -%}
             <i class="fa fa-star txtyellow help" title="Ranked {{ server.database_name }} server"></i> {% endif %}
     {%- endif %}

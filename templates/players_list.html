@@ -6,6 +6,8 @@
 
 {% block meta_title %}Players › {{ macros.database_name() }}{% if args.get('target') %} (highlighting {{ args.get('target') }}){% endif %}{% endblock %}
 
+{% block meta_description %}Leaderboard for ranked (official) {{ macros.database_name() }} RWR servers.{% endblock %}
+
 {% block jsfiles %}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/zepto/1.2.0/zepto.min.js"></script>
     <script src="{{ url_for('static', filename='js/app.js') }}"></script>
