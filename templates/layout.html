@@ -24,7 +24,7 @@
 
     <meta name="google-site-verification" content="58YRXAqZgsPP1fJar_ymC-4xSWtW3O2NmYwuRDzyRpg" />
 </head>
-<body>
+<body itemscope itemtype="http://schema.org/WebSite">
     {% if config['BETA'] %}
         <div class="top-bar">
             <div class="w1140p center txtcenter pts pbs small">
@@ -76,7 +76,11 @@
         </div>
     </div>
 
-    <footer class="w1140p center small grid pts pbs">
+    <footer class="w1140p center small grid pts pbs" itemscope itemtype="http://schema.org/Organization">
+        <meta itemprop="name" content="Running With Rifles Stats">
+        <meta itemprop="alternateName" content="RWRS">
+        <meta itemprop="url" content="https://rwrstats.com/">
+
         <div>
             © 2017 - 2018 <a href="https://epoc.fr"><img src="{{ url_for('static', filename='images/me.png') }}"></a> <a href="https://epoc.fr">Maxime "Epoc" G.</a><br>
             This site is not affiliated with Osumia Games.<br>
