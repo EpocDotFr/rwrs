@@ -54,7 +54,7 @@
 
 {% macro location(location, text=False, na=False) -%}
     {% if location.country_code -%}
-        <i class="flag flag-{{ location.country_code }}" title="{{ location.country_name }}"></i>{% if text %} {{location.country_name }}{% endif %}
+        <i class="flag flag-{{ location.country_code }}" title="{{ location.country_name }}"></i>{% if text %} {{ location.country_name }}{% endif %}
     {%- elif na -%}
         N/A
     {%- endif %}
