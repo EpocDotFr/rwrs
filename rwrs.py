@@ -46,7 +46,8 @@ assets = Environment(app)
 
 assets.cache = 'storage/webassets-cache/'
 
-assets.register('js_app', Bundle('js/common.js', 'js/friends.js', 'js/charts.js', filters='jsmin', output='js/app.min.js'))
+assets.register('js_friends_charts', Bundle('js/common.js', 'js/friends.js', 'js/charts.js', filters='jsmin', output='js/friends_charts.min.js'))
+assets.register('js_friends', Bundle('js/common.js', 'js/friends.js', filters='jsmin', output='js/friends.min.js'))
 assets.register('css_app', Bundle('css/flags.css', 'css/app.css', filters='cssutils', output='css/app.min.css'))
 
 handler = RotatingFileHandler('storage/logs/errors.log', maxBytes=10000000, backupCount=2)
