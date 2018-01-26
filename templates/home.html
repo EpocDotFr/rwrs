@@ -46,8 +46,8 @@
         friendsFeature.all_players_with_servers_details = {{ g.all_players_with_servers_details|tojson }};
         friendsFeature.initOnHome();
 
-        playersChartsFeature.players_data = {{ players_data|tojson }};
-        playersChartsFeature.servers_data = {{ servers_data|tojson }};
-        playersChartsFeature.initOnHome();
+        chartsFeature.players_data = {{ players_data|tojson }};
+        chartsFeature.servers_data = {{ servers_data|tojson }};
+        chartsFeature.initOnHome();
     </script>
 {% endblock %}
