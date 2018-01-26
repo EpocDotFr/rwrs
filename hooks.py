@@ -1,4 +1,4 @@
-from flask import request, g, abort, render_template, make_response
+from flask import g, abort, render_template, make_response
 from werkzeug.exceptions import HTTPException
 from rwrs import app, auth
 import rwr.scraper
