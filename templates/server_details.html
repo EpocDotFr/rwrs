@@ -15,7 +15,7 @@
     {% endif %}
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/zepto/1.2.0/zepto.min.js"></script>
-    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+    {% assets 'js_app' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
 {% endblock %}
 
 {% block cssfiles %}
@@ -155,8 +155,8 @@
         friendsFeature.initOnServerDetails();
 
         {% if server.is_dedicated %}
-            playersChartsFeature.server_players_data = {{ server_players_data|tojson }};
-            playersChartsFeature.initOnServerDetails();
+            chartsFeature.server_players_data = {{ server_players_data|tojson }};
+            chartsFeature.initOnServerDetails();
         {% endif %}
     </script>
 {% endblock %}
