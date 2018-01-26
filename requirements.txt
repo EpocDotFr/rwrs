@@ -3,6 +3,9 @@ Flask-Caching
 Flask-SQLAlchemy
 flask_httpauth
 Flask-Migrate
+Flask-Assets
+jsmin
+cssutils
 requests
 maxminddb-geolite2
 lxml
