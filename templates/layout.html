@@ -3,11 +3,16 @@
 <head>
     <meta charset="UTF-8">
 
+    <title>{% block meta_title %}{% endblock %}{% if self.meta_title() | trim %} • {% endif %} Running With Rifles Stats (RWRS)</title>
+
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="{% block meta_description %}Players statistics, servers list and more for the Running With Rifles (RWR) game and its Pacific DLC.{% endblock %}">
 
-    <title>{% block meta_title %}{% endblock %}{% if self.meta_title() | trim %} • {% endif %}RWRS (Running With Rifles Stats)</title>
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Running With Rifles Stats (RWRS)">
+    <meta property="og:title" content="{{ self.meta_title() }}">
+    <meta property="og:description" content="{{ self.meta_description() }}">
 
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png') }}" />
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" />
