@@ -4,6 +4,7 @@ storage/logs/*.log.*
 storage/data/*.sqlite
 storage/cache
 storage/webassets-cache/*
+!storage/webassets-cache/.gitkeep
 maintenance
 static/js/*.min.js
 static/css/*.min.css
