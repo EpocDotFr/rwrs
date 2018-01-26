@@ -1,4 +1,4 @@
-from flask import request, g, abort, render_template, make_response
+from flask import g, abort, render_template, make_response
 from werkzeug.exceptions import HTTPException
 from rwrs import app, auth
 import rwr.scraper
@@ -9,7 +9,6 @@ import os
 @app.before_request
 def define_globals():
     g.INCLUDE_WEB_ANALYTICS = not app.config['DEBUG']
-    g.NO_INDEX = False
     g.UNDER_MAINTENANCE = False
     g.LAYOUT = 'normal'
 
@@ -56,29 +55,6 @@ def check_beta_access():
             return None
 
         return _check_login()
-
-
-@app.url_defaults
-def hashed_static_file(endpoint, values):
-    """Add a cache-buster value in the URL of each static assets."""
-    if endpoint == 'static':
-        filename = values.get('filename')
-
-        if filename:
-            blueprint = request.blueprint
-
-            if '.' in endpoint:
-                blueprint = endpoint.rsplit('.', 1)[0]
-
-            static_folder = app.static_folder
-
-            if blueprint and app.blueprints[blueprint].static_folder:
-                static_folder = app.blueprints[blueprint].static_folder
-
-            fp = os.path.join(static_folder, filename)
-
-            if os.path.exists(fp):
-                values[int(os.stat(fp).st_mtime)] = ''
 
 
 @auth.get_password
