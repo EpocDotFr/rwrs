@@ -75,6 +75,9 @@ class Server:
             location = gl2.reader().get(ret.ip)
 
             if location:
+                if 'city' in location:
+                    ret.location.city_name = location['city']['names']['en']
+
                 ret.location.country_code = location['country']['iso_code'].lower()
                 ret.location.country_name = location['country']['names']['en']
                 ret.location.continent_code = location['continent']['code'].lower()
@@ -126,8 +129,11 @@ class ServerPlayers:
 
 
 class ServerLocation:
+    city_name = None
     country_code = None
     country_name = None
+    continent_code = None
+    continent_name = None
 
     def __repr__(self):
         return 'ServerLocation:' + self.country_code
