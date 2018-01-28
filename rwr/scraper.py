@@ -20,6 +20,8 @@ class DataScraper:
 
         response = requests.get(url, params=params, headers=headers, timeout=5)
 
+        response.encoding = 'unicode'
+
         response.raise_for_status()
 
         if parser == 'html':
