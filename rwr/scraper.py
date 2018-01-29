@@ -20,6 +20,8 @@ class DataScraper:
 
         response = requests.get(url, params=params, headers=headers, timeout=5)
 
+        response.encoding = 'unicode'
+
         response.raise_for_status()
 
         if parser == 'html':
@@ -257,6 +259,7 @@ class DataScraper:
                 'database': server.database,
                 'database_name': server.database_name,
                 'location': {
+                    'city_name': server.location.city_name,
                     'country_code': server.location.country_code,
                     'country_name': server.location.country_name
                 },
