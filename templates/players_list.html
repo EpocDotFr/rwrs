@@ -19,6 +19,8 @@
     {% assets 'js_friends' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
 {% endblock %}
 
+{% set canonical_url = url_for('players_list', database=request.view_args.get('database'), _external=True) %}
+
 {% block content %}
     <div class="grid w1140p center mts mbs">
         <div class="one-fifth txtleft">

@@ -27,6 +27,8 @@
 
     {% block jsfiles %} {% endblock %}
 
+    {% if canonical_url %}<link rel="canonical" href="{{ canonical_url }}">{% endif %}
+
     <meta name="google-site-verification" content="58YRXAqZgsPP1fJar_ymC-4xSWtW3O2NmYwuRDzyRpg" />
 </head>
 <body itemscope itemtype="http://schema.org/WebSite">

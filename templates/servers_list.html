@@ -13,6 +13,8 @@
     {% assets 'js_friends' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
 {% endblock %}
 
+{% set canonical_url = url_for('servers_list', _external=True) %}
+
 {% block content %}
     <form action="{{ url_for('servers_list') }}" method="GET" class="mbs {{ 'w1140p center' if request.args.get('view') == 'extended' else '' }}">
         <fieldset class="man">
