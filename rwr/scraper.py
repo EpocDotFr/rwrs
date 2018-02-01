@@ -258,6 +258,7 @@ class DataScraper:
                 'mode': server.mode_name,
                 'database': server.database,
                 'database_name': server.database_name,
+                'link': server.link,
                 'location': {
                     'city_name': server.location.city_name,
                     'country_code': server.location.country_code,

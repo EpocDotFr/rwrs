@@ -1,5 +1,7 @@
-from geolite2 import geolite2
 from . import constants, utils
+from geolite2 import geolite2
+from slugify import slugify
+from flask import url_for
 
 
 class Server:
@@ -26,6 +28,7 @@ class Server:
         realm_node = xml_node.find('realm')
 
         ret.name = name_node.text
+        ret.name_slug = slugify(ret.name)
 
         ret.ip = address_node.text
         ret.port = int(port_node.text)
@@ -95,6 +98,8 @@ class Server:
             if players_node.text:
                 ret.players.list = [player_name.strip() for player_name in players_node.text.split(',')]
                 ret.players.list.sort()
+
+        ret.link = url_for('server_details', ip=ret.ip, port=ret.port, slug=ret.name_slug)
 
         return ret
 

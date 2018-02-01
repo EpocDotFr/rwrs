@@ -58,7 +58,7 @@
                             <a :href="friend.playing_on_server.players.free > 0 ? friend.playing_on_server.steam_join_link : '#'" :class="['btn', friend.playing_on_server.players.free == 0 ? 'disabled' : '']" :title="friend.playing_on_server.players.free == 0 ? 'Server is full' : ''" v-if="friend.playing_on_server"><i class="fa fa-steam"></i> Join</a>
                             <i :class="['flag', 'flag-' + friend.playing_on_server.location.country_code]" :title="(friend.playing_on_server.location.city_name ? friend.playing_on_server.location.city_name + ', ' : '') + friend.playing_on_server.location.country_name" v-if="friend.playing_on_server.location.country_code"></i>
                             <i class="fa fa-star txtyellow help" :title="'Ranked ' + friend.playing_on_server.database_name + ' server'" v-if="friend.playing_on_server.is_ranked"></i>
-                            <a :href="'/servers/' + friend.playing_on_server.ip_and_port">${ friend.playing_on_server.name }</a>
+                            <a :href="friend.playing_on_server.link">${ friend.playing_on_server.name }</a>
                         </template>
                     </td>
                     <td>

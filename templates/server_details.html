@@ -22,7 +22,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/metrics-graphics/2.11.0/metricsgraphics.min.css">
 {% endblock %}
 
-{% set canonical_url = url_for('server_details', ip_and_port=server.ip_and_port, _external=True) %}
+{% set canonical_url = url_for('server_details', ip=server.ip, port=server.port, slug=server.name_slug, _external=True) %}
 
 {% block content %}
     <p class="txtcenter mbs">

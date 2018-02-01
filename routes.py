@@ -206,12 +206,22 @@ def servers_list():
     )
 
 
-@app.route('/servers/<ip_and_port>')
-def server_details(ip_and_port):
-    ip, port = ip_and_port.split(':', maxsplit=1)
+@app.route('/servers/<ip>:<int:port>')
+def server_details_without_slug(ip, port):
+    scraper = rwr.scraper.DataScraper()
 
-    port = int(port)
+    server = scraper.search_server(ip, port)
 
+    if not server:
+        flash('Sorry, this server wasn\'t found.', 'error')
+
+        return redirect(url_for('servers_list'))
+
+    return redirect(server.link, code=301)
+
+
+@app.route('/servers/<ip>:<int:port>/<slug>')
+def server_details(ip, port, slug):
     scraper = rwr.scraper.DataScraper()
 
     server = scraper.search_server(ip, port)
