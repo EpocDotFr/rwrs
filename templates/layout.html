@@ -40,33 +40,28 @@
         </div>
     {% endif %}
 
-    <div class="currently-bar pts pbs">
-        <div class="w1140p center txtcenter small">
-            Currently <strong>{{ g.total_players }}</strong> players in total (<strong>{{ g.online_players }}</strong> are playing online<span class="total-playing-friends is-hidden">, including <strong class="txtblue">?</strong> <span class="friend-label"></span></span>) and <strong>{{ g.total_servers }}</strong> online server{{ 's' if g.total_servers > 1 }} (<strong>{{ g.active_servers }}</strong> {{ 'are' if g.active_servers > 1 else 'is' }} active)<br>
+    {% if not g.UNDER_MAINTENANCE %}
+        <div class="currently-bar pts pbs">
+            <div class="w1140p center txtcenter small">
+                Currently <strong>{{ g.total_players }}</strong> players in total (<strong>{{ g.online_players }}</strong> are playing online<span class="total-playing-friends is-hidden">, including <strong class="txtblue">?</strong> <span class="friend-label"></span></span>) and <strong>{{ g.total_servers }}</strong> online server{{ 's' if g.total_servers > 1 }} (<strong>{{ g.active_servers }}</strong> {{ 'are' if g.active_servers > 1 else 'is' }} active)<br>
+            </div>
         </div>
-    </div>
+    {% endif %}
 
     <header class="w1140p center pts pbs">
         <div class="txtleft">
             <a href="{{ url_for('home') }}"><img src="http://via.placeholder.com/400x80"></a>
         </div>
         {% if not g.UNDER_MAINTENANCE %}
-        <nav class="txtright">
-            <ul class="unstyled inbl">
-                <li class="inbl"><a href="{{ url_for('players_list', database='invasion') }}" class="btn {{ 'active' if request.path.startswith('/players') and request.view_args.get('database') == 'invasion' }}"><i class="fa fa-user"></i> Players: Invasion</a></li>
-                <li class="inbl"><a href="{{ url_for('players_list', database='pacific') }}" class="btn {{ 'active' if request.path.startswith('/players') and request.view_args.get('database') == 'pacific' }}"><i class="fa fa-user"></i> Players: Pacific</a></li>
-                <li class="inbl"><a href="{{ url_for('servers_list') }}" class="btn {{ 'active' if request.path.startswith('/servers') }}"><i class="fa fa-server"></i> Servers</a></li>
-                <li class="inbl manage-friends-link is-hidden"><a href="{{ url_for('my_friends') }}" class="btn {{ 'active' if request.path.startswith('/my-friends') }}"><i class="fa fa-users"></i> My friends</a></li>
-            </ul>
-        </nav>
+            <nav class="txtright">
+                <ul class="unstyled inbl">
+                    <li class="inbl"><a href="{{ url_for('players_list', database='invasion') }}" class="btn {{ 'active' if request.path.startswith('/players') and request.view_args.get('database') == 'invasion' }}"><i class="fa fa-user"></i> Players: Invasion</a></li>
+                    <li class="inbl"><a href="{{ url_for('players_list', database='pacific') }}" class="btn {{ 'active' if request.path.startswith('/players') and request.view_args.get('database') == 'pacific' }}"><i class="fa fa-user"></i> Players: Pacific</a></li>
+                    <li class="inbl"><a href="{{ url_for('servers_list') }}" class="btn {{ 'active' if request.path.startswith('/servers') }}"><i class="fa fa-server"></i> Servers</a></li>
+                    <li class="inbl manage-friends-link is-hidden"><a href="{{ url_for('my_friends') }}" class="btn {{ 'active' if request.path.startswith('/my-friends') }}"><i class="fa fa-users"></i> My friends</a></li>
+                </ul>
+            </nav>
         {% endif %}
-
-<!--
-            {% if not g.UNDER_MAINTENANCE %}
-                <strong>{{ g.total_players }}</strong> players total (<strong>{{ g.online_players }}</strong> plays online<span class="total-playing-friends is-hidden">, including <strong class="txtblue">?</strong> <span class="friend-label"></span></span>)<br>
-                <strong>{{ g.total_servers }}</strong> server{{ 's' if g.total_servers > 1 }} online (<strong>{{ g.active_servers }}</strong> {{ 'are' if g.active_servers > 1 else 'is' }} active)<br>
-            {% endif %}
--->
     </header>
 
     <div class="page pts pbs">
