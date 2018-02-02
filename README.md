@@ -151,7 +151,7 @@ As the provided servers location is most of the time either missing or invalid, 
 
 ## Credits
 
-  - RWRS icon by [Dot on Paper](https://www.iconfinder.com/icons/753920/gun_military_shield_war_weapon_weapons_icon) (freeware)
+  - RWRS icon by [goodware std.](https://www.iconfinder.com/icons/2760623/army_bomb_grenade_military_navy_tank_weapon_icon#size=256) (CC BY 3.0)
   - Font by [Typesgal](https://www.dafont.com/fr/top-secret-kb.font) (freeware)
   - Flag icons by [Flag Sprites](https://www.flag-sprites.com/en/) and [GoSquared](https://www.gosquared.com/resources/flag-icons/) (freeware)
   - Maps previews comes from the [official RWR wiki](https://runningwithrifles.gamepedia.com/Running_with_Rifles_Wiki)
