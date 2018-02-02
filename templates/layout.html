@@ -33,39 +33,36 @@
 </head>
 <body itemscope itemtype="http://schema.org/WebSite">
     {% if config['BETA'] %}
-        <div class="top-bar">
-            <div class="w1140p center txtcenter pts pbs small">
+        <div class="beta-bar pts pbs">
+            <div class="w1140p center txtcenter small">
                 <i class="fa fa-wrench"></i> You are using the beta version of RWRS. Please report issues to <strong>EpocDotFr</strong> on the <a href="https://discord.gg/010ixMlfmhK5BhYOv">RWR Discord server</a> by PM. Version: <a href="https://github.com/EpocDotFr/rwrs/commit/{{ g.BETA_COMMIT }}">{{ g.BETA_COMMIT[:7] }}</a>@<a href="https://github.com/EpocDotFr/rwrs/tree/{{ g.BETA_BRANCH }}">{{ g.BETA_BRANCH }}</a>
             </div>
         </div>
     {% endif %}
 
-    <header class="txtcenter pts pbs">
-        <div class="w1140p center">
-            {% if not g.UNDER_MAINTENANCE %}
-                <div class="left txtleft small">
-                    <strong>{{ g.total_players }}</strong> players total (<strong>{{ g.online_players }}</strong> plays online<span class="total-playing-friends is-hidden">, including <strong class="txtblue">?</strong> <span class="friend-label"></span></span>)<br>
-                    <strong>{{ g.total_servers }}</strong> server{{ 's' if g.total_servers > 1 }} online (<strong>{{ g.active_servers }}</strong> {{ 'are' if g.active_servers > 1 else 'is' }} active)<br>
-                </div>
-                <div class="right txtright">
-                    <a href="{{ url_for('my_friends') }}" class="manage-friends-link is-hidden"><i class="fa fa-users"></i> My friends</a>
-                </div>
-            {% endif %}
-
-            <a href="{{ url_for('home') }}"><img src="{{ url_for('static', filename='images/logo.png') }}"></a>
-        </div>
-    </header>
-
     {% if not g.UNDER_MAINTENANCE %}
-        <nav>
-            <ul class="txtcenter unstyled mbs">
-                <li class="inbl"><a href="{{ url_for('home') }}" class="btn {{ 'active' if request.endpoint == 'home' }}" itemprop="url"><i class="fa fa-home"></i> Home</a></li>
-                <li class="inbl"><a href="{{ url_for('players_list', database='invasion') }}" class="btn {{ 'active' if request.path.startswith('/players') and request.view_args.get('database') == 'invasion' }}"><i class="fa fa-user"></i> Players: Invasion</a></li>
-                <li class="inbl"><a href="{{ url_for('players_list', database='pacific') }}" class="btn {{ 'active' if request.path.startswith('/players') and request.view_args.get('database') == 'pacific' }}"><i class="fa fa-user"></i> Players: Pacific</a></li>
-                <li class="inbl"><a href="{{ url_for('servers_list') }}" class="btn {{ 'active' if request.path.startswith('/servers') }}"><i class="fa fa-server"></i> Servers</a></li>
-            </ul>
-        </nav>
+        <div class="currently-bar pts pbs">
+            <div class="w1140p center txtcenter small">
+                Currently <strong>{{ g.total_players }}</strong> players in total (<strong>{{ g.online_players }}</strong> are playing online<span class="total-playing-friends is-hidden">, including <strong class="txtblue">?</strong> <span class="friend-label"></span></span>) and <strong>{{ g.total_servers }}</strong> online server{{ 's' if g.total_servers > 1 }} (<strong>{{ g.active_servers }}</strong> {{ 'are' if g.active_servers > 1 else 'is' }} active)<br>
+            </div>
+        </div>
     {% endif %}
+
+    <header class="w1140p center pts pbs">
+        <div class="txtleft">
+            <a href="{{ url_for('home') }}"><img src="{{ url_for('static', filename='images/logo_white.png') }}" title="RWRS logo"></a>
+        </div>
+        {% if not g.UNDER_MAINTENANCE %}
+            <nav class="txtright">
+                <ul class="unstyled inbl">
+                    <li class="inbl"><a href="{{ url_for('players_list', database='invasion') }}" class="btn {{ 'active' if request.path.startswith('/players') and request.view_args.get('database') == 'invasion' }}"><i class="fa fa-user"></i> Players: Invasion</a></li>
+                    <li class="inbl"><a href="{{ url_for('players_list', database='pacific') }}" class="btn {{ 'active' if request.path.startswith('/players') and request.view_args.get('database') == 'pacific' }}"><i class="fa fa-user"></i> Players: Pacific</a></li>
+                    <li class="inbl"><a href="{{ url_for('servers_list') }}" class="btn {{ 'active' if request.path.startswith('/servers') }}"><i class="fa fa-server"></i> Servers</a></li>
+                    <li class="inbl manage-friends-link is-hidden"><a href="{{ url_for('my_friends') }}" class="btn {{ 'active' if request.path.startswith('/my-friends') }}"><i class="fa fa-users"></i> My friends</a></li>
+                </ul>
+            </nav>
+        {% endif %}
+    </header>
 
     <div class="page pts pbs">
         <div class="{{ 'w1140p center' if g.LAYOUT == 'normal' else 'mls mrs' }}">
@@ -83,11 +80,11 @@
         </div>
     </div>
 
-    <footer class="w1140p center small grid pts pbs" itemscope itemtype="http://schema.org/Organization">
+    <footer class="w1140p center small pts pbs" itemscope itemtype="http://schema.org/Organization">
         <meta itemprop="name" content="Running With Rifles Stats">
         <meta itemprop="alternateName" content="RWRS">
         <meta itemprop="url" content="https://rwrstats.com/">
-        <meta itemprop="logo" content="{{ url_for('static', filename='images/icon_black.png', _external=True) }}">
+        <meta itemprop="logo" content="{{ url_for('static', filename='images/logo_black.png', _external=True) }}">
 
         <div>
             © 2017 - 2018 <a href="https://epoc.fr"><img src="{{ url_for('static', filename='images/epoc.png') }}"></a> <a href="https://epoc.fr">Maxime "Epoc" G.</a><br>
