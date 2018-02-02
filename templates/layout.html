@@ -50,7 +50,7 @@
 
     <header class="w1140p center pts pbs">
         <div class="txtleft">
-            <a href="{{ url_for('home') }}"><img src="http://via.placeholder.com/400x80"></a>
+            <a href="{{ url_for('home') }}"><img src="{{ url_for('static', filename='images/logo_white.png') }}" title="RWRS logo"></a>
         </div>
         {% if not g.UNDER_MAINTENANCE %}
             <nav class="txtright">
@@ -84,7 +84,7 @@
         <meta itemprop="name" content="Running With Rifles Stats">
         <meta itemprop="alternateName" content="RWRS">
         <meta itemprop="url" content="https://rwrstats.com/">
-        <meta itemprop="logo" content="{{ url_for('static', filename='images/icon_black.png', _external=True) }}">
+        <meta itemprop="logo" content="{{ url_for('static', filename='images/logo_black.png', _external=True) }}">
 
         <div>
             © 2017 - 2018 <a href="https://epoc.fr"><img src="{{ url_for('static', filename='images/epoc.png') }}"></a> <a href="https://epoc.fr">Maxime "Epoc" G.</a><br>
