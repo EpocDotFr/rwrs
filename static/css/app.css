@@ -356,16 +356,16 @@ label {
 /************************************************************************
  * Top bar */
 
-.top-bar {
+.beta-bar {
     background-color: #e9b700;
     color: #000;
     border-bottom: 0.1rem solid #ffcd15;
 }
 
-.top-bar a,
-.top-bar a:visited,
-.top-bar a:hover,
-.top-bar a:focus {
+.beta-bar a,
+.beta-bar a:visited,
+.beta-bar a:hover,
+.beta-bar a:focus {
     color: inherit;
 }
 
