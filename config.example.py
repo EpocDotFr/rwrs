@@ -1,5 +1,6 @@
 SECRET_KEY = 'secretkeyhere'
 DEBUG = False
+SERVER_NAME = 'localhost:8080'
 BETA = False
 GAUGES_SITE_ID = None
 CACHE_THRESHOLD = 200

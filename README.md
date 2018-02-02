@@ -48,6 +48,7 @@ Available configuration parameters are:
 
   - `SECRET_KEY` Set this to a complex random value
   - `DEBUG` Enable/disable debug mode
+  - `SERVER_NAME` The IP or hostname where RWRS will be available
 
 More informations on the three above can be found [here](http://flask.pocoo.org/docs/0.12/config/#builtin-configuration-values).
 

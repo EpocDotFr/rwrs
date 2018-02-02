@@ -11,4 +11,5 @@ maxminddb-geolite2
 lxml
 arrow
 SQLAlchemy
+python-slugify
 sqlalchemy-utils

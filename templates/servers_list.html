@@ -13,6 +13,8 @@
     {% assets 'js_friends' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
 {% endblock %}
 
+{% set canonical_url = url_for('servers_list', _external=True) %}
+
 {% block content %}
     <form action="{{ url_for('servers_list') }}" method="GET" class="mbs {{ 'w1140p center' if request.args.get('view') == 'extended' else '' }}">
         <fieldset class="man">
@@ -53,7 +55,7 @@
         </thead>
         <tbody>
             {% for server in servers %}
-                <tr onclick="window.location.href = '{{ url_for('server_details', ip_and_port=server.ip_and_port) }}';" data-server-ip-and-port="{{ server.ip_and_port }}">
+                <tr onclick="window.location.href = '{{ server.link }}';" data-server-ip-and-port="{{ server.ip_and_port }}">
                     <td class="nowrap">{{ macros.location(server.location) }} {{ macros.server_name(server) }}</td>
                     <td class="{{ macros.server_slots_class(server) }}">{{ server.players.current }}</td>
                     <td>{{ server.players.max }}</td>
@@ -75,7 +77,7 @@
                     <td class="txtcenter">
                         {{ macros.server_join_button(server) }}
 
-                        <a href="{{ url_for('server_details', ip_and_port=server.ip_and_port) }}" class="btn" title="Details"><i class="fa fa-eye"></i></a>
+                        <a href="{{ server.link }}" class="btn" title="Details"><i class="fa fa-eye"></i></a>
                     </td>
                 </tr>
             {% else %}
