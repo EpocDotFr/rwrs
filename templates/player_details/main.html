@@ -13,7 +13,7 @@
     {% assets 'js_friends' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
 {% endblock %}
 
-{% set canonical_url = url_for('player_details', database=request.view_args.get('database'), username=player.username, _external=True) %}
+{% set canonical_url = url_for('player_details', database=request.view_args.get('database'), username=player.username, tab=request.view_args.get('tab'), _external=True) %}
 
 {% block content %}
     <div class="mtm">
