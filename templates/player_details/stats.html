@@ -66,7 +66,7 @@
     </tr>
     <tr>
         <th>Time played</th>
-        <td>{{ macros.compare_numbers(player, player_to_compare_with, 'time_played', type='time') }} {{ player.time_played|humanize_seconds }}</td>
+        <td>{{ macros.compare_numbers(player, player_to_compare_with, 'time_played', type='time') }} {{ player.time_played|humanize_seconds_to_hours }} <small>({{ player.time_played|humanize_seconds_to_days }})</small></td>
         <th>Longest kill streak</th>
         <td>{{ macros.compare_numbers(player, player_to_compare_with, 'longest_kill_streak') }} {{ player.longest_kill_streak|humanize_integer }}</td>
         <th>Targets destroyed</th>

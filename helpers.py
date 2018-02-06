@@ -7,7 +7,8 @@ import os
 
 
 __all__ = [
-    'humanize_seconds',
+    'humanize_seconds_to_days',
+    'humanize_seconds_to_hours',
     'humanize_integer',
     'ip2long',
     'long2ip',
@@ -15,8 +16,8 @@ __all__ = [
 ]
 
 
-def humanize_seconds(seconds):
-    """Return a human-readable representation of the given number of seconds."""
+def humanize_seconds_to_days(seconds):
+    """Return a human-readable representation of the given number of seconds to days / hours / minutes / seconds."""
     if not seconds:
         return ''
 
@@ -38,6 +39,27 @@ def humanize_seconds(seconds):
 
     if s:
         ret.append(('{:>02}s', s))
+
+    f, v = zip(*ret)
+
+    return ' '.join(f).format(*v)
+
+
+def humanize_seconds_to_hours(seconds):
+    """Return a human-readable representation of the given number of seconds to hours / minutes."""
+    if not seconds:
+        return ''
+
+    h = int(seconds / (60 * 60))
+    m = int((seconds % (60 * 60)) / 60)
+
+    ret = []
+
+    if h:
+        ret.append(('{}h', h))
+
+    if m:
+        ret.append(('{:>02}m', m))
 
     f, v = zip(*ret)
 

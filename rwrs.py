@@ -61,7 +61,8 @@ import rwr.constants
 import rwr.utils
 
 app.jinja_env.filters.update(
-    humanize_seconds=humanize_seconds,
+    humanize_seconds_to_days=humanize_seconds_to_days,
+    humanize_seconds_to_hours=humanize_seconds_to_hours,
     humanize_integer=humanize_integer
 )
 
