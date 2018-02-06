@@ -6,7 +6,13 @@
 
 {% block meta_title %}Players › {{ player.database_name }} › {{ player.username }}{% if request.view_args.get('tab') == 'unlockables' %} › Unlockables{% endif %}{% if player_to_compare_with %} (Comparison with {{ player_to_compare_with.username }}){% endif %}{% endblock %}
 
-{% block meta_description %}Player profile of {{ player.username }}{{ ', compared to ' + player_to_compare_with.username + ',' if player_to_compare_with }} on RWR {{ player.database_name }} ranked servers.{% endblock %}
+{% block meta_description -%}
+    {% if request.view_args.get('tab') == 'unlockables' -%}
+        Items unlocked by {{ player.username }} on RWR {{ player.database_name }} ranked servers.
+    {%- else -%}
+        Player statistics of {{ player.username }}{{ ', compared to ' + player_to_compare_with.username + ',' if player_to_compare_with }} on RWR {{ player.database_name }} ranked servers.
+    {%- endif %}
+{%- endblock %}
 
 {% block jsfiles %}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/zepto/1.2.0/zepto.min.js"></script>
