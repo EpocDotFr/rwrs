@@ -16,12 +16,4 @@
         <loc>https://rwrstats.com/servers</loc>
         <changefreq>always</changefreq>
     </url>
-    <url>
-        <loc>https://rwrstats.com/players/pacific/EPOCDOTFR</loc>
-        <changefreq>daily</changefreq>
-    </url>
-    <url>
-        <loc>https://rwrstats.com/players/invasion/EPOCDOTFR</loc>
-        <changefreq>daily</changefreq>
-    </url>
 </urlset>
