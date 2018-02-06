@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-    <url>
-        <loc>https://rwrstats.com/</loc>
-        <changefreq>weekly</changefreq>
-    </url>
-    <url>
-        <loc>https://rwrstats.com/players/invasion</loc>
-        <changefreq>daily</changefreq>
-    </url>
-    <url>
-        <loc>https://rwrstats.com/players/pacific</loc>
-        <changefreq>daily</changefreq>
-    </url>
-    <url>
-        <loc>https://rwrstats.com/servers</loc>
-        <changefreq>always</changefreq>
-    </url>
+  <url>
+    <loc>https://rwrstats.com</loc>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://rwrstats.com/players/invasion</loc>
+    <changefreq>daily</changefreq>
+  </url>
+  <url>
+    <loc>https://rwrstats.com/players/pacific</loc>
+    <changefreq>daily</changefreq>
+  </url>
+  <url>
+    <loc>https://rwrstats.com/servers</loc>
+    <changefreq>always</changefreq>
+  </url>
 </urlset>
