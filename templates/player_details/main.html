@@ -8,9 +8,9 @@
 
 {% block meta_description -%}
     {% if request.view_args.get('tab') == 'unlockables' -%}
-        Items unlocked by {{ player.username }} on RWR {{ player.database_name }} ranked servers.
+        Items unlocked by {{ player.username }} on Running With Rifles (RWR) {{ player.database_name }} ranked servers.
     {%- else -%}
-        Player statistics of {{ player.username }}{{ ', compared to ' + player_to_compare_with.username + ',' if player_to_compare_with }} on RWR {{ player.database_name }} ranked servers.
+        Player statistics of {{ player.username }}{{ ', compared to ' + player_to_compare_with.username + ',' if player_to_compare_with }} on Running With Rifles (RWR) {{ player.database_name }} ranked servers.
     {%- endif %}
 {%- endblock %}
 
