@@ -324,6 +324,70 @@ PLAYERS_LIST_DATABASES = {
     'pacific': {'name': 'Pacific', 'ranks_country': app.config['PACIFIC_PLAYERS_RANKS_COUNTRY'], 'realm': 'official_pacific'}
 }
 
+SERVERS_TO_MONITOR = {
+    'master_servers': [
+        {
+            'continent_name': 'Asia',
+            'servers': [
+                {
+                    'location': 'Hangzhou, China #1',
+                    'host': 'cn1.runningwithrifles.com'
+                },
+                {
+                    'location': 'Hangzhou, China #2',
+                    'host': 'cn2.runningwithrifles.com'
+                },
+                {
+                    'location': 'Tokyo, Japan',
+                    'host': 'jp1.runningwithrifles.com'
+                }
+                # asia.runningwithrifles.com point to the same destination as jp1.runningwithrifles.com
+            ]
+        },
+        {
+            'continent_name': 'North America',
+            'servers': [
+                {
+                    'location': 'St Louis, United States',
+                    'host': 'us3.runningwithrifles.com'
+                },
+                {
+                    'location': 'Chicago, United States #1',
+                    'host': 'us6.runningwithrifles.com'
+                },
+                {
+                    'location': 'Chicago, United States #2',
+                    'host': 'us7.runningwithrifles.com'
+                }
+                # us2.runningwithrifles.com DNS entry exists but point to nothing
+            ]
+        },
+        {
+            'continent_name': 'Europe',
+            'servers': [
+                {
+                    'location': 'Frankfurt am Main, Germany',
+                    'host': 'eu3.runningwithrifles.com'
+                }
+                # eu2.runningwithrifles.com DNS entry exists but point to nothing
+            ]
+        },
+        {
+            'continent_name': 'Oceania',
+            'servers': [
+                {
+                    'location': 'Melbourne, Australia',
+                    'host': 'au1.runningwithrifles.com'
+                }
+            ]
+        }
+    ],
+    'stats_server': {
+        'location': 'Chicago, United States',
+        'host': 'rwr.runningwithrifles.com'
+    }
+}
+
 
 class PlayersSort:
     USERNAME = 'username'

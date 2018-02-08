@@ -114,18 +114,19 @@ def save_json(file, data):
 
 def ping(host, timeout=3):
     """Send a ping packet to the specified host, using the system "ping" command."""
-    platform_os = platform.system()
-
     args = [
         'ping'
     ]
 
+    platform_os = platform.system()
+    timeout = str(timeout)
+
     if platform_os == 'Windows':
         args.extend(['-n', '1'])
-        args.extend(['-w', str(timeout)])
+        args.extend(['-w', timeout])
     elif platform_os == 'Linux':
         args.extend(['-c', '1'])
-        args.extend(['-W', str(timeout)])
+        args.extend(['-W', timeout])
     else:
         raise NotImplemented('Unsupported OS: {}'.format(platform_os))
 

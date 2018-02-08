@@ -16,7 +16,7 @@ body {
     border-top: 0.1rem solid #514f4f;
 }
 
-h1, h2 {
+h1, .h1-like {
     background-color: #7da109;
     border: 0.1rem solid #9cc321;
     font-size: 2.1rem;
@@ -25,6 +25,10 @@ h1, h2 {
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
     margin-bottom: 0.5rem;
+}
+
+h2, .h2-like {
+    font-size: 1.9rem;
 }
 
 .flag {

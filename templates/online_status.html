@@ -4,10 +4,75 @@
 
 {% block meta_title %}RWR online status{% endblock %}
 
-{% block meta_description %}Current status of master servers needed to play Running With Rifles (RWR) online as well as the ranked stats server.{% endblock %}
+{% block meta_description %}Current status of the Running With Rifles (RWR) master servers (needed to play online) as well as the ranked stats server (providing data used by RWRS).{% endblock %}
 
 {% set canonical_url = url_for('online_status', _external=True) %}
 
 {% block content %}
+    <h2>Master servers <small class="txtgrey">(they are needed to play RWR online)</small></h2>
 
+    <div class="grid-3 has-gutter">
+        <div>
+            <table>
+                <thead>
+                    <tr>
+                        <th><i class="fa fa-exclamation-triangle fa-lg fa-fw txtorange"></i> Asia</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><i class="fa fa-check-square fa-lg fa-fw txtgreen"></i> Hangzhou, China #1</td>
+                    </tr>
+                    <tr>
+                        <td><i class="fa fa-times-rectangle fa-lg fa-fw txtred"></i> Hangzhou, China #2</td>
+                    </tr>
+                    <tr>
+                        <td><i class="fa fa-check-square fa-lg fa-fw txtgreen"></i> Tokyo, Japan</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div>
+            <table>
+                <thead>
+                    <tr>
+                        <th><i class="fa fa-check-square fa-lg fa-fw txtgreen"></i> North America</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><i class="fa fa-check-square fa-lg fa-fw txtgreen"></i> St Louis, United States</td>
+                    </tr>
+                    <tr>
+                        <td><i class="fa fa-check-square fa-lg fa-fw txtgreen"></i> Chicago, United States #1</td>
+                    </tr>
+                    <tr>
+                        <td><i class="fa fa-check-square fa-lg fa-fw txtgreen"></i> Chicago, United States #2</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div>
+            <table>
+                <thead>
+                    <tr>
+                        <th><i class="fa fa-check-square fa-lg fa-fw txtorange"></i> Asia</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><i class="fa fa-check-square fa-lg fa-fw txtgreen"></i> Hangzhou, China #1</td>
+                    </tr>
+                    <tr>
+                        <td><i class="fa fa-check-square fa-lg fa-fw txtred"></i> Hangzhou, China #2</td>
+                    </tr>
+                    <tr>
+                        <td><i class="fa fa-check-square fa-lg fa-fw txtgreen"></i> Tokyo, Japan</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <h2>Stats server <small class="txtgrey">(they are needed to keep track of your stats on ranked - or official - servers)</small></h2>
 {% endblock %}
