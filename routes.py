@@ -40,6 +40,13 @@ def my_friends():
     )
 
 
+@app.route('/online-status')
+def online_status():
+    return render_template(
+        'online_status.html'
+    )
+
+
 @app.route('/players')
 def players_list_without_db():
     database = request.args.get('database', 'invasion')

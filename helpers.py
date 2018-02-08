@@ -1,5 +1,7 @@
 from collections import OrderedDict
 from flask import request
+import subprocess
+import platform
 import socket
 import struct
 import json
@@ -108,3 +110,30 @@ def save_json(file, data):
         json.dump(data, f)
 
     return data
+
+
+def ping(host, timeout=3):
+    """Send a ping packet to the specified host, using the system "ping" command."""
+    platform_os = platform.system()
+
+    args = [
+        'ping'
+    ]
+
+    if platform_os == 'Windows':
+        args.extend(['-n', '1'])
+        args.extend(['-w', str(timeout)])
+    elif platform_os == 'Linux':
+        args.extend(['-c', '1'])
+        args.extend(['-W', str(timeout)])
+    else:
+        raise NotImplemented('Unsupported OS: {}'.format(platform_os))
+
+    args.append(host)
+
+    try:
+        subprocess.run(args, check=True)
+
+        return True
+    except (subprocess.CalledProcessError, subprocess.TimeoutExpired):
+        return False
