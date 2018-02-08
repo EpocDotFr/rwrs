@@ -8,9 +8,9 @@
 
 {% block meta_description -%}
     {% if args.get('target') -%}
-        Position of {{ args.get('target') }} on the {{ macros.database_name() }} RWR servers leaderboard.
+        Position of {{ args.get('target') }} on the {{ macros.database_name() }} Running With Rifles (RWR) servers leaderboard.
     {%- else -%}
-        Leaderboard for ranked {{ macros.database_name() }} RWR servers.
+        Leaderboard for ranked {{ macros.database_name() }} Running With Rifles (RWR) servers.
     {%- endif %}
 {%- endblock %}
 
