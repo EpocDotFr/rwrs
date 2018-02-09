@@ -43,7 +43,8 @@ def my_friends():
 @app.route('/online-status')
 def online_status():
     return render_template(
-        'online_status.html'
+        'online_status.html',
+        servers_to_monitor=rwr.constants.SERVERS_TO_MONITOR
     )
 
 

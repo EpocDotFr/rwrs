@@ -6,73 +6,62 @@
 
 {% block meta_description %}Current status of the Running With Rifles (RWR) master servers (needed to play online) as well as the ranked stats server (providing data used by RWRS).{% endblock %}
 
+{% block jsfiles %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/zepto/1.2.0/zepto.min.js"></script>
+    {% assets 'js_friends' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
+{% endblock %}
+
 {% set canonical_url = url_for('online_status', _external=True) %}
 
 {% block content %}
-    <h2>Master servers <small class="txtgrey">(they are needed to play RWR online)</small></h2>
+    {% for group in servers_to_monitor %}
+        <h2>{{ group.label }} <small class="txtgrey">{{ group.description }}</small></h2>
 
-    <div class="grid-3 has-gutter">
-        <div>
-            <table>
-                <thead>
-                    <tr>
-                        <th><i class="fa fa-exclamation-triangle fa-lg fa-fw txtorange"></i> Asia</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><i class="fa fa-check-square fa-lg fa-fw txtgreen"></i> Hangzhou, China #1</td>
-                    </tr>
-                    <tr>
-                        <td><i class="fa fa-times-rectangle fa-lg fa-fw txtred"></i> Hangzhou, China #2</td>
-                    </tr>
-                    <tr>
-                        <td><i class="fa fa-check-square fa-lg fa-fw txtgreen"></i> Tokyo, Japan</td>
-                    </tr>
-                </tbody>
-            </table>
+        <div class="grid-4 has-gutter">
+            {% for continent in group.continents %}
+                <div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th><i class="fa fa-exclamation-circle fa-lg fa-fw txtorange help" title="Partial outage"></i> {{ continent.name }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for server in continent.servers %}
+                                <tr>
+                                    <td><i class="fa fa-check-circle fa-lg fa-fw txtgreen help" title="Partial outage"></i> {{ server.location }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% endfor %}
         </div>
-        <div>
-            <table>
-                <thead>
-                    <tr>
-                        <th><i class="fa fa-check-square fa-lg fa-fw txtgreen"></i> North America</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><i class="fa fa-check-square fa-lg fa-fw txtgreen"></i> St Louis, United States</td>
-                    </tr>
-                    <tr>
-                        <td><i class="fa fa-check-square fa-lg fa-fw txtgreen"></i> Chicago, United States #1</td>
-                    </tr>
-                    <tr>
-                        <td><i class="fa fa-check-square fa-lg fa-fw txtgreen"></i> Chicago, United States #2</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        <div>
-            <table>
-                <thead>
-                    <tr>
-                        <th><i class="fa fa-check-square fa-lg fa-fw txtorange"></i> Asia</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><i class="fa fa-check-square fa-lg fa-fw txtgreen"></i> Hangzhou, China #1</td>
-                    </tr>
-                    <tr>
-                        <td><i class="fa fa-check-square fa-lg fa-fw txtred"></i> Hangzhou, China #2</td>
-                    </tr>
-                    <tr>
-                        <td><i class="fa fa-check-square fa-lg fa-fw txtgreen"></i> Tokyo, Japan</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
+    {% endfor %}
 
-    <h2>Stats server <small class="txtgrey">(they are needed to keep track of your stats on ranked - or official - servers)</small></h2>
+    <!--<div>
+        <table>
+            <thead>
+                <tr>
+                    <th><i class="fa fa-exclamation-circle fa-lg fa-fw txtorange help"></i> Asia</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><i class="fa fa-check-circle fa-lg fa-fw txtgreen help"></i> Hangzhou, China #1</td>
+                </tr>
+                <tr>
+                    <td><i class="fa fa-times-circle fa-lg fa-fw txtred help"></i> Hangzhou, China #2</td>
+                </tr>
+                <tr>
+                    <td><i class="fa fa-check-circle fa-lg fa-fw txtgreen help"></i> Tokyo, Japan</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>-->
+
+    <script>
+        friendsFeature.all_players_with_servers_details = {{ g.all_players_with_servers_details|tojson }};
+        friendsFeature.init();
+    </script>
 {% endblock %}
