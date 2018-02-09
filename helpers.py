@@ -133,7 +133,13 @@ def ping(host, timeout=3):
     args.append(host)
 
     try:
-        subprocess.run(args, check=True)
+        if platform_os == 'Windows':
+            output = subprocess.run(args, check=True, stdout=subprocess.PIPE, universal_newlines=True).stdout.strip()
+
+            if 'TTL' not in output: # See https://stackoverflow.com/a/3485344/1252290
+                return False
+        else:
+            subprocess.run(args, check=True)
 
         return True
     except (subprocess.CalledProcessError, subprocess.TimeoutExpired):
