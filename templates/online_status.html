@@ -23,13 +23,13 @@
                     <table>
                         <thead>
                             <tr>
-                                <th><i class="fa fa-exclamation-circle fa-lg fa-fw txtorange help" title="Partial outage"></i> {{ continent.name }}</th>
+                                <th><i class="fa fa-exclamation-circle fa-fw txtorange help" title="Partial outage"></i> {{ continent.name }} <a href="#" class="fr"><i class="fa fa-minus-square"></i></a></th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for server in continent.servers %}
                                 <tr>
-                                    <td><i class="fa fa-check-circle fa-lg fa-fw txtgreen help" title="Partial outage"></i> {{ server.location }}</td>
+                                    <td><i class="fa fa-check-circle fa-fw txtgreen help" title="Partial outage"></i> {{ server.location }}</td>
                                 </tr>
                             {% endfor %}
                         </tbody>
