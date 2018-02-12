@@ -1,12 +1,15 @@
 from sqlalchemy_utils import ArrowType
 from rwrs import db, cache, app
 from sqlalchemy import func
+from enum import Enum
 from helpers import *
 import arrow
 
 __all__ = [
     'ServerPlayerCount',
-    'SteamPlayerCount'
+    'SteamPlayerCount',
+    'RwrMasterServerStatus',
+    'RwrMasterServer'
 ]
 
 
@@ -118,3 +121,22 @@ class SteamPlayerCount(db.Model, Measurable):
 
     def __repr__(self):
         return 'SteamPlayerCount:' + self.id
+
+
+class RwrMasterServerStatus(Enum):
+    UNKNOWN = 'UNKNOWN'
+    UP = 'UP'
+    DOWN = 'DOWN'
+
+
+class RwrMasterServer(db.Model):
+    class RwrMasterServerQuery(db.Query):
+        pass
+
+    __tablename__ = 'rwr_master_servers'
+    query_class = RwrMasterServerQuery
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+
+    host = db.Column(db.String(255), nullable=False)
+    status = db.Column(db.Enum(RwrMasterServerStatus), default=RwrMasterServerStatus.UNKNOWN)
