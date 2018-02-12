@@ -155,7 +155,7 @@ class RwrMasterServer(db.Model):
     @property
     def status_text(self):
         if self.status == RwrMasterServerStatus.UP:
-            return 'OK'
+            return 'Up'
         elif self.status == RwrMasterServerStatus.DOWN:
             return 'Down'
         elif self.status == RwrMasterServerStatus.UNKNOWN:
@@ -175,14 +175,15 @@ class RwrMasterServer(db.Model):
         servers_statuses = rwr.constants.SERVERS_TO_MONITOR
 
         master_servers = RwrMasterServer.query.all()
-        is_everything_ok = True
+        servers_down_count = 0
 
         for group in servers_statuses:
             for continent in group['continents']:
-                continent['status_icon'] = 'check' # exclamation, times
-                continent['status_text'] = 'All good' # Partial outage, Major outage
-                continent['status_color'] = 'green' # orange, red
-                continent['is_everything_ok'] = True
+                continent['status_icon'] = 'check'
+                continent['status_text'] = 'Everything operating normally'
+                continent['status_color'] = 'green'
+
+                continent_servers_down_count = 0
 
                 for server in continent['servers']:
                     server['status_icon'] = 'question'
@@ -196,11 +197,22 @@ class RwrMasterServer(db.Model):
                             server['status_color'] = master_server.status_color
 
                             if master_server.status == RwrMasterServerStatus.DOWN:
-                                continent['status_icon'] = master_server.status_icon
-                                continent['status_text'] = 'TODO'
-                                continent['status_color'] = master_server.status_color
-                                continent['is_everything_ok'] = False
+                                servers_down_count += 1
+                                continent_servers_down_count += 1
 
                             break
+
+                continent['is_everything_ok'] = continent_servers_down_count == 0
+
+                if continent_servers_down_count == len(continent['servers']):
+                    continent['status_icon'] = 'times'
+                    continent['status_text'] = 'Major outage'
+                    continent['status_color'] = 'red'
+                elif continent_servers_down_count > 0 and continent_servers_down_count < len(continent['servers']):
+                    continent['status_icon'] = 'exclamation'
+                    continent['status_text'] = 'Partial outage'
+                    continent['status_color'] = 'orange'
+
+        is_everything_ok = servers_down_count == 0
 
         return (is_everything_ok, servers_statuses)

@@ -15,9 +15,9 @@
 
 {% block content %}
     {% if is_everything_ok %}
-        <p class="alert success pas"><i class="fa fa-check"></i> Everything is working fine. Go play!</p>
+        <p class="alert success pas mtm center w50 txtcenter"><i class="fa fa-check fa-2x"></i><br>Everything is working fine. Go play!</p>
     {% else %}
-        <p class="alert error pas"><i class="fa fa-warning"></i> Looks like RWR online is encountering some issues. For updates on the situation, head over the <a href="https://twitter.com/osumiagames">RWR Twitter account</a> or the <a href="https://discord.gg/010ixMlfmhK5BhYOv">RWR Discord server</a>.</p>
+        <p class="alert error pas mtm center w50 txtcenter"><i class="fa fa-warning fa-2x"></i><br>Looks like RWR online is encountering issues. For updates on the situation, head over the <a href="https://twitter.com/osumiagames">RWR Twitter account</a> or the <a href="https://discord.gg/010ixMlfmhK5BhYOv">RWR Discord server</a>.</p>
     {% endif %}
 
     {% for group in servers_statuses %}
