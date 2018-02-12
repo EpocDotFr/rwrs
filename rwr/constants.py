@@ -331,6 +331,9 @@ SERVERS_TO_MONITOR = [
         'continents': [
             {
                 'name': 'Asia',
+                'status_icon': 'exclamation', # TODO TMP
+                'status_text': 'Partial outage', # TODO TMP
+                'status_color': 'orange', # TODO TMP
                 'servers': [
                     {
                         'location': 'Hangzhou, China #1',
@@ -349,6 +352,9 @@ SERVERS_TO_MONITOR = [
             },
             {
                 'name': 'Europe',
+                'status_icon': 'times', # TODO TMP
+                'status_text': 'Full outage', # TODO TMP
+                'status_color': 'red', # TODO TMP
                 'servers': [
                     {
                         'location': 'Frankfurt am Main, Germany',
@@ -359,6 +365,9 @@ SERVERS_TO_MONITOR = [
             },
             {
                 'name': 'North America',
+                'status_icon': 'exclamation', # TODO TMP
+                'status_text': 'Partial outage', # TODO TMP
+                'status_color': 'orange', # TODO TMP
                 'servers': [
                     {
                         'location': 'Chicago, United States #1',
@@ -377,6 +386,9 @@ SERVERS_TO_MONITOR = [
             },
             {
                 'name': 'Oceania',
+                'status_icon': 'check', # TODO TMP
+                'status_text': 'No outage', # TODO TMP
+                'status_color': 'green', # TODO TMP
                 'servers': [
                     {
                         'location': 'Melbourne, Australia',
@@ -392,6 +404,9 @@ SERVERS_TO_MONITOR = [
         'continents': [
             {
                 'name': 'North America',
+                'status_icon': 'exclamation', # TODO TMP
+                'status_text': 'Partial outage', # TODO TMP
+                'status_color': 'orange', # TODO TMP
                 'servers': [
                     {
                         'location': 'Chicago, United States',

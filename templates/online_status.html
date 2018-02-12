@@ -8,25 +8,29 @@
 
 {% block jsfiles %}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/zepto/1.2.0/zepto.min.js"></script>
-    {% assets 'js_friends' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
+    {% assets 'js_friends_status' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
 {% endblock %}
 
 {% set canonical_url = url_for('online_status', _external=True) %}
 
 {% block content %}
+    <p class="alert error pas"><i class="fa fa-warning"></i> Looks like RWR online is encountering some issues. For updates on the situation, head over the <a href="https://twitter.com/osumiagames">RWR Twitter account</a> or the <a href="https://discord.gg/010ixMlfmhK5BhYOv">RWR Discord server</a>.</p>
+
+    <p class="alert success pas"><i class="fa fa-check"></i> Everything work fine. Go play!</p>
+
     {% for group in servers_to_monitor %}
         <h2>{{ group.label }} <small class="txtgrey">{{ group.description }}</small></h2>
 
         <div class="grid-4 has-gutter">
             {% for continent in group.continents %}
                 <div>
-                    <table>
+                    <table class="servers-list">
                         <thead>
                             <tr>
-                                <th><i class="fa fa-exclamation-circle fa-fw txtorange help" title="Partial outage"></i> {{ continent.name }} <a href="#" class="fr"><i class="fa fa-minus-square"></i></a></th>
+                                <th><i class="fa fa-{{ continent.status_icon }}-circle fa-fw txt{{ continent.status_color }} help" title="{{ continent.status_text }}"></i> {{ continent.name }} <span class="fr"><i class="fa fa-{{ 'minus' if continent.status_icon != 'check' else 'plus'}}-square toggle-icon"></i></span></th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody class="{{ 'has-outages' if continent.status_icon != 'check' }}">
                             {% for server in continent.servers %}
                                 <tr>
                                     <td><i class="fa fa-check-circle fa-fw txtgreen help" title="Partial outage"></i> {{ server.location }}</td>
@@ -63,5 +67,7 @@
     <script>
         friendsFeature.all_players_with_servers_details = {{ g.all_players_with_servers_details|tojson }};
         friendsFeature.init();
+
+        onlineStatusFeature.init();
     </script>
 {% endblock %}
