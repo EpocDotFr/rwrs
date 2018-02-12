@@ -42,9 +42,12 @@ def my_friends():
 
 @app.route('/online-status')
 def online_status():
+    is_everything_ok, servers_statuses = RwrMasterServer.get_data_for_display()
+
     return render_template(
         'online_status.html',
-        servers_to_monitor=rwr.constants.SERVERS_TO_MONITOR
+        is_everything_ok=is_everything_ok,
+        servers_statuses=servers_statuses
     )
 
 

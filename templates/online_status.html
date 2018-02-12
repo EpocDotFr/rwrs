@@ -14,11 +14,13 @@
 {% set canonical_url = url_for('online_status', _external=True) %}
 
 {% block content %}
-    <p class="alert error pas"><i class="fa fa-warning"></i> Looks like RWR online is encountering some issues. For updates on the situation, head over the <a href="https://twitter.com/osumiagames">RWR Twitter account</a> or the <a href="https://discord.gg/010ixMlfmhK5BhYOv">RWR Discord server</a>.</p>
+    {% if is_everything_ok %}
+        <p class="alert success pas"><i class="fa fa-check"></i> Everything is working fine. Go play!</p>
+    {% else %}
+        <p class="alert error pas"><i class="fa fa-warning"></i> Looks like RWR online is encountering some issues. For updates on the situation, head over the <a href="https://twitter.com/osumiagames">RWR Twitter account</a> or the <a href="https://discord.gg/010ixMlfmhK5BhYOv">RWR Discord server</a>.</p>
+    {% endif %}
 
-    <p class="alert success pas"><i class="fa fa-check"></i> Everything work fine. Go play!</p>
-
-    {% for group in servers_to_monitor %}
+    {% for group in servers_statuses %}
         <h2>{{ group.label }} <small class="txtgrey">{{ group.description }}</small></h2>
 
         <div class="grid-4 has-gutter">
@@ -27,13 +29,13 @@
                     <table class="servers-list">
                         <thead>
                             <tr>
-                                <th><i class="fa fa-{{ continent.status_icon }}-circle fa-fw txt{{ continent.status_color }} help" title="{{ continent.status_text }}"></i> {{ continent.name }} <span class="fr"><i class="fa fa-{{ 'minus' if continent.status_icon != 'check' else 'plus'}}-square toggle-icon"></i></span></th>
+                                <th><i class="fa fa-{{ continent.status_icon }}-circle fa-fw txt{{ continent.status_color }} help" title="{{ continent.status_text }}"></i> {{ continent.name }} <span class="fr"><i class="fa fa-{{ 'minus' if not continent.is_everything_ok else 'plus'}}-square toggle-icon"></i></span></th>
                             </tr>
                         </thead>
-                        <tbody class="{{ 'has-outages' if continent.status_icon != 'check' }}">
+                        <tbody class="{{ 'has-outages' if not continent.is_everything_ok }}">
                             {% for server in continent.servers %}
                                 <tr>
-                                    <td><i class="fa fa-check-circle fa-fw txtgreen help" title="Partial outage"></i> {{ server.location }}</td>
+                                    <td><i class="fa fa-{{ server.status_icon }}-circle fa-fw txt{{ server.status_color }} help" title="{{ server.status_text }}"></i> {{ server.location }}</td>
                                 </tr>
                             {% endfor %}
                         </tbody>

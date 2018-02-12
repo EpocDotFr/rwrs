@@ -3,6 +3,7 @@ from rwrs import db, cache, app
 from sqlalchemy import func
 from enum import Enum
 from helpers import *
+import rwr.constants
 import arrow
 
 __all__ = [
@@ -141,3 +142,65 @@ class RwrMasterServer(db.Model):
 
     host = db.Column(db.String(255), nullable=False)
     status = db.Column(db.Enum(RwrMasterServerStatus), default=RwrMasterServerStatus.UNKNOWN)
+
+    @property
+    def status_icon(self):
+        if self.status == RwrMasterServerStatus.UP:
+            return 'check'
+        elif self.status == RwrMasterServerStatus.DOWN:
+            return 'times'
+        elif self.status == RwrMasterServerStatus.UNKNOWN:
+            return 'question'
+
+    @property
+    def status_text(self):
+        if self.status == RwrMasterServerStatus.UP:
+            return 'OK'
+        elif self.status == RwrMasterServerStatus.DOWN:
+            return 'Down'
+        elif self.status == RwrMasterServerStatus.UNKNOWN:
+            return 'Status unknown'
+
+    @property
+    def status_color(self):
+        if self.status == RwrMasterServerStatus.UP:
+            return 'green'
+        elif self.status == RwrMasterServerStatus.DOWN:
+            return 'red'
+        elif self.status == RwrMasterServerStatus.UNKNOWN:
+            return 'grey'
+
+    @staticmethod
+    def get_data_for_display():
+        servers_statuses = rwr.constants.SERVERS_TO_MONITOR
+
+        master_servers = RwrMasterServer.query.all()
+        is_everything_ok = True
+
+        for group in servers_statuses:
+            for continent in group['continents']:
+                continent['status_icon'] = 'check' # exclamation, times
+                continent['status_text'] = 'All good' # Partial outage, Major outage
+                continent['status_color'] = 'green' # orange, red
+                continent['is_everything_ok'] = True
+
+                for server in continent['servers']:
+                    server['status_icon'] = 'question'
+                    server['status_text'] = 'Status unknown'
+                    server['status_color'] = 'grey'
+
+                    for master_server in master_servers:
+                        if master_server.host == server['host']:
+                            server['status_icon'] = master_server.status_icon
+                            server['status_text'] = master_server.status_text
+                            server['status_color'] = master_server.status_color
+
+                            if master_server.status == RwrMasterServerStatus.DOWN:
+                                continent['status_icon'] = master_server.status_icon
+                                continent['status_text'] = 'TODO'
+                                continent['status_color'] = master_server.status_color
+                                continent['is_everything_ok'] = False
+
+                            break
+
+        return (is_everything_ok, servers_statuses)
