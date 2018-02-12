@@ -134,6 +134,7 @@ class RwrMasterServer(db.Model):
         pass
 
     __tablename__ = 'rwr_master_servers'
+    __table_args__ = (db.Index('host_idx', 'host'), )
     query_class = RwrMasterServerQuery
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
