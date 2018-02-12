@@ -16,4 +16,8 @@
     <loc>https://rwrstats.com/servers</loc>
     <changefreq>always</changefreq>
   </url>
+  <url>
+    <loc>https://rwrstats.com/online-status</loc>
+    <changefreq>daily</changefreq>
+  </url>
 </urlset>

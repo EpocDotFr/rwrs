@@ -12,6 +12,13 @@ body {
     border-bottom: 0.1rem solid #514f4f;
 }
 
+.currently-bar a,
+.currently-bar a:visited,
+.currently-bar a:hover,
+.currently-bar a:focus {
+    color: inherit;
+}
+
 .page {
     border-top: 0.1rem solid #514f4f;
 }
