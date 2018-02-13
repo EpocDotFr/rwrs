@@ -2,8 +2,8 @@ from sqlalchemy_utils import ArrowType
 from rwrs import db, cache, app
 from sqlalchemy import func
 from enum import Enum
-from helpers import *
 import rwr.constants
+import helpers
 import arrow
 
 __all__ = [
@@ -71,19 +71,19 @@ class ServerPlayerCount(db.Model, Measurable):
 
     @property
     def ip(self):
-        return long2ip(self._ip) if self._ip else None
+        return helpers.long2ip(self._ip) if self._ip else None
 
     @ip.setter
     def ip(self, value):
         if value:
-            self._ip = ip2long(value)
+            self._ip = helpers.ip2long(value)
 
     @staticmethod
     @cache.memoize(timeout=app.config['GRAPHS_DATA_CACHE_TIMEOUT'])
     def server_players_data(ip=None, port=None):
         """Return the servers players chart data, optionally filtering by a server's IP and port."""
         if ip:
-            ip = ip2long(ip)
+            ip = helpers.ip2long(ip)
 
         return Measurable.transform_data(ServerPlayerCount.query.get_player_count(ip, port))
 
@@ -125,7 +125,6 @@ class SteamPlayerCount(db.Model, Measurable):
 
 
 class RwrMasterServerStatus(Enum):
-    UNKNOWN = 'UNKNOWN'
     UP = 'UP'
     DOWN = 'DOWN'
 
@@ -141,7 +140,7 @@ class RwrMasterServer(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 
     host = db.Column(db.String(255), nullable=False)
-    status = db.Column(db.Enum(RwrMasterServerStatus), default=RwrMasterServerStatus.UNKNOWN)
+    status = db.Column(db.Enum(RwrMasterServerStatus), nullable=False)
 
     @property
     def status_icon(self):
@@ -149,8 +148,6 @@ class RwrMasterServer(db.Model):
             return 'check'
         elif self.status == RwrMasterServerStatus.DOWN:
             return 'times'
-        elif self.status == RwrMasterServerStatus.UNKNOWN:
-            return 'question'
 
     @property
     def status_text(self):
@@ -158,8 +155,6 @@ class RwrMasterServer(db.Model):
             return 'Up'
         elif self.status == RwrMasterServerStatus.DOWN:
             return 'Down'
-        elif self.status == RwrMasterServerStatus.UNKNOWN:
-            return 'Status unknown'
 
     @property
     def status_color(self):
@@ -167,8 +162,6 @@ class RwrMasterServer(db.Model):
             return 'green'
         elif self.status == RwrMasterServerStatus.DOWN:
             return 'red'
-        elif self.status == RwrMasterServerStatus.UNKNOWN:
-            return 'grey'
 
     @staticmethod
     def get_data_for_display():

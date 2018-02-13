@@ -28,10 +28,26 @@ def get_master_servers_status():
     for host in hosts_to_ping:
         click.echo(host, nl=False)
 
-        if helpers.ping(host):
+        is_server_up = helpers.ping(host)
+
+        if is_server_up:
             click.secho(' Up', fg='green')
         else:
             click.secho(' Down', fg='red')
+
+        rwr_master_server = RwrMasterServer.query.filter(RwrMasterServer.host == host).first()
+
+        if not rwr_master_server:
+            rwr_master_server = RwrMasterServer()
+            rwr_master_server.host = host
+
+        rwr_master_server.status = RwrMasterServerStatus.UP if is_server_up else RwrMasterServerStatus.DOWN
+
+        db.session.add(rwr_master_server)
+
+    click.echo('Persisting to database')
+
+    db.session.commit()
 
     click.secho('Done', fg='green')
 
