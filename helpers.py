@@ -119,14 +119,13 @@ def ping(host, network_timeout=3):
     ]
 
     platform_os = platform.system()
-    network_timeout = str(network_timeout)
 
     if platform_os == 'Windows':
         args.extend(['-n', '1'])
-        args.extend(['-w', network_timeout])
+        args.extend(['-w', str(network_timeout * 1000)])
     elif platform_os in ('Linux', 'Darwin'):
         args.extend(['-c', '1'])
-        args.extend(['-W', network_timeout])
+        args.extend(['-W', str(network_timeout)])
     else:
         raise NotImplemented('Unsupported OS: {}'.format(platform_os))
 
@@ -134,9 +133,9 @@ def ping(host, network_timeout=3):
 
     try:
         if platform_os == 'Windows':
-            output = subprocess.run(args, check=True, stdout=subprocess.PIPE, universal_newlines=True).stdout.strip()
+            output = subprocess.run(args, check=True, universal_newlines=True).stdout
 
-            if 'TTL' not in output: # See https://stackoverflow.com/a/3485344/1252290
+            if output and 'TTL' not in output:
                 return False
         else:
             subprocess.run(args, check=True)

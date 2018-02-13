@@ -1,8 +1,10 @@
 from rwrs import app, db, cache
 from models import *
 import rwr.extractors
+import rwr.constants
 import rwr.scraper
 import steam_api
+import helpers
 import click
 
 
@@ -12,6 +14,24 @@ def cc():
     click.echo('Clearing cache')
 
     cache.clear()
+
+    click.secho('Done', fg='green')
+
+
+@app.cli.command()
+def get_master_servers_status():
+    """Check the status of the RWR master servers."""
+    click.echo('Pinging servers')
+
+    hosts_to_ping = [server['host'] for group in rwr.constants.SERVERS_TO_MONITOR for continent in group['continents'] for server in continent['servers']]
+
+    for host in hosts_to_ping:
+        click.echo(host, nl=False)
+
+        if helpers.ping(host):
+            click.secho(' Up', fg='green')
+        else:
+            click.secho(' Down', fg='red')
 
     click.secho('Done', fg='green')
 
