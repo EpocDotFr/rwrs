@@ -1,7 +1,6 @@
 from flask import g, abort, render_template, make_response
 from werkzeug.exceptions import HTTPException
 from rwrs import app, auth
-from models import *
 import rwr.scraper
 import steam_api
 import os
