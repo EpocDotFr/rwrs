@@ -25,6 +25,7 @@ and its Pacific DLC. Available at [rwrstats.com](https://rwrstats.com/).
     - Number of online players
     - Number of online servers (+ the active ones)
     - Number of players on a server
+  - RWR online status
 
 ## Prerequisites
 
