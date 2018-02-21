@@ -40,12 +40,12 @@ def my_friends():
     )
 
 
-@app.route('/online-status')
-def online_status():
-    is_everything_ok, servers_statuses = RwrMasterServer.get_data_for_display()
+@app.route('/online-multiplayer-status')
+def online_multiplayer_status():
+    is_everything_ok, servers_statuses = RwrRootServer.get_data_for_display()
 
     return render_template(
-        'online_status.html',
+        'online_multiplayer_status.html',
         is_everything_ok=is_everything_ok,
         servers_statuses=servers_statuses
     )

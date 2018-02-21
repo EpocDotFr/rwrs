@@ -9,8 +9,8 @@ import arrow
 __all__ = [
     'ServerPlayerCount',
     'SteamPlayerCount',
-    'RwrMasterServerStatus',
-    'RwrMasterServer'
+    'RwrRootServerStatus',
+    'RwrRootServer'
 ]
 
 
@@ -124,50 +124,50 @@ class SteamPlayerCount(db.Model, Measurable):
         return 'SteamPlayerCount:' + self.id
 
 
-class RwrMasterServerStatus(Enum):
+class RwrRootServerStatus(Enum):
     UP = 'UP'
     DOWN = 'DOWN'
 
 
-class RwrMasterServer(db.Model):
-    class RwrMasterServerQuery(db.Query):
+class RwrRootServer(db.Model):
+    class RwrRootServerQuery(db.Query):
         pass
 
-    __tablename__ = 'rwr_master_servers'
+    __tablename__ = 'rwr_root_servers'
     __table_args__ = (db.Index('host_idx', 'host'), )
-    query_class = RwrMasterServerQuery
+    query_class = RwrRootServerQuery
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 
     host = db.Column(db.String(255), nullable=False)
-    status = db.Column(db.Enum(RwrMasterServerStatus), nullable=False)
+    status = db.Column(db.Enum(RwrRootServerStatus), nullable=False)
 
     @property
     def status_icon(self):
-        if self.status == RwrMasterServerStatus.UP:
+        if self.status == RwrRootServerStatus.UP:
             return 'check'
-        elif self.status == RwrMasterServerStatus.DOWN:
+        elif self.status == RwrRootServerStatus.DOWN:
             return 'times'
 
     @property
     def status_text(self):
-        if self.status == RwrMasterServerStatus.UP:
+        if self.status == RwrRootServerStatus.UP:
             return 'Up'
-        elif self.status == RwrMasterServerStatus.DOWN:
+        elif self.status == RwrRootServerStatus.DOWN:
             return 'Down'
 
     @property
     def status_color(self):
-        if self.status == RwrMasterServerStatus.UP:
+        if self.status == RwrRootServerStatus.UP:
             return 'green'
-        elif self.status == RwrMasterServerStatus.DOWN:
+        elif self.status == RwrRootServerStatus.DOWN:
             return 'red'
 
     @staticmethod
     def get_data_for_display():
-        servers_statuses = rwr.constants.SERVERS_TO_MONITOR
+        servers_statuses = rwr.constants.ROOT_RWR_SERVERS
 
-        master_servers = RwrMasterServer.query.all()
+        root_servers = RwrRootServer.query.all()
         servers_down_count = 0
 
         for group in servers_statuses:
@@ -182,13 +182,13 @@ class RwrMasterServer(db.Model):
                 server['status_text'] = 'Status unknown'
                 server['status_color'] = 'grey'
 
-                for master_server in master_servers:
-                    if master_server.host == server['host']:
-                        server['status_icon'] = master_server.status_icon
-                        server['status_text'] = master_server.status_text
-                        server['status_color'] = master_server.status_color
+                for root_server in root_servers:
+                    if root_server.host == server['host']:
+                        server['status_icon'] = root_server.status_icon
+                        server['status_text'] = root_server.status_text
+                        server['status_color'] = root_server.status_color
 
-                        if master_server.status == RwrMasterServerStatus.DOWN:
+                        if root_server.status == RwrRootServerStatus.DOWN:
                             servers_down_count += 1
                             group_servers_down_count += 1
 

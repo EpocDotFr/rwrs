@@ -19,11 +19,11 @@ def cc():
 
 
 @app.cli.command()
-def get_master_servers_status():
-    """Check the status of the RWR master servers."""
+def get_root_rwr_servers_status():
+    """Check the status of the RWR root servers."""
     click.echo('Pinging servers')
 
-    hosts_to_ping = [server['host'] for group in rwr.constants.SERVERS_TO_MONITOR for server in group['servers']]
+    hosts_to_ping = [server['host'] for group in rwr.constants.ROOT_RWR_SERVERS for server in group['servers']]
 
     for host in hosts_to_ping:
         click.echo(host, nl=False)
@@ -35,15 +35,15 @@ def get_master_servers_status():
         else:
             click.secho(' Down', fg='red')
 
-        rwr_master_server = RwrMasterServer.query.filter(RwrMasterServer.host == host).first()
+        rwr_root_server = RwrRootServer.query.filter(RwrRootServer.host == host).first()
 
-        if not rwr_master_server:
-            rwr_master_server = RwrMasterServer()
-            rwr_master_server.host = host
+        if not rwr_root_server:
+            rwr_root_server = RwrRootServer()
+            rwr_root_server.host = host
 
-        rwr_master_server.status = RwrMasterServerStatus.UP if is_server_up else RwrMasterServerStatus.DOWN
+        rwr_root_server.status = RwrRootServerStatus.UP if is_server_up else RwrRootServer.DOWN
 
-        db.session.add(rwr_master_server)
+        db.session.add(rwr_root_server)
 
     click.echo('Persisting to database')
 

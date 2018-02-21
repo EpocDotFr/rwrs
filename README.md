@@ -25,7 +25,7 @@ and its Pacific DLC. Available at [rwrstats.com](https://rwrstats.com/).
     - Number of online players
     - Number of online servers (+ the active ones)
     - Number of players on a server
-  - RWR online status
+  - Root RWR servers status (online multiplayer)
 
 ## Prerequisites
 
@@ -143,12 +143,12 @@ Will save the current number of Steam players which have RWR running, and the cu
   1. `set FLASK_APP=rwrs.py`
   2. `flask db upgrade`
 
-### Save master servers status
+### Save RWR root servers status
 
-Will ping RWR online master servers and store their status (up or down).
+Will ping RWR root servers and store their status (up or down).
 
   1. `set FLASK_APP=rwrs.py`
-  2. `flask get_master_servers_status`
+  2. `flask get_root_rwr_servers_status`
 
 ## How it works
 

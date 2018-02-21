@@ -324,10 +324,10 @@ PLAYERS_LIST_DATABASES = {
     'pacific': {'name': 'Pacific', 'ranks_country': app.config['PACIFIC_PLAYERS_RANKS_COUNTRY'], 'realm': 'official_pacific'}
 }
 
-SERVERS_TO_MONITOR = [
+ROOT_RWR_SERVERS = [
     {
         'label': 'Master servers',
-        'description': 'Needed to play RWR online.',
+        'description': 'Needed to play online with other people.',
         'servers': [
             {
                 'location': 'St Louis, United States',
