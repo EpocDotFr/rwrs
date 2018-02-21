@@ -23,7 +23,7 @@ def get_master_servers_status():
     """Check the status of the RWR master servers."""
     click.echo('Pinging servers')
 
-    hosts_to_ping = [server['host'] for group in rwr.constants.SERVERS_TO_MONITOR for continent in group['continents'] for server in continent['servers']]
+    hosts_to_ping = [server['host'] for group in rwr.constants.SERVERS_TO_MONITOR for server in group['servers']]
 
     for host in hosts_to_ping:
         click.echo(host, nl=False)

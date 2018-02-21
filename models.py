@@ -171,40 +171,39 @@ class RwrMasterServer(db.Model):
         servers_down_count = 0
 
         for group in servers_statuses:
-            for continent in group['continents']:
-                continent['status_icon'] = 'check'
-                continent['status_text'] = 'Everything operating normally'
-                continent['status_color'] = 'green'
+            group['status_icon'] = 'check'
+            group['status_text'] = 'Everything operating normally'
+            group['status_color'] = 'green'
 
-                continent_servers_down_count = 0
+            group_servers_down_count = 0
 
-                for server in continent['servers']:
-                    server['status_icon'] = 'question'
-                    server['status_text'] = 'Status unknown'
-                    server['status_color'] = 'grey'
+            for server in group['servers']:
+                server['status_icon'] = 'question'
+                server['status_text'] = 'Status unknown'
+                server['status_color'] = 'grey'
 
-                    for master_server in master_servers:
-                        if master_server.host == server['host']:
-                            server['status_icon'] = master_server.status_icon
-                            server['status_text'] = master_server.status_text
-                            server['status_color'] = master_server.status_color
+                for master_server in master_servers:
+                    if master_server.host == server['host']:
+                        server['status_icon'] = master_server.status_icon
+                        server['status_text'] = master_server.status_text
+                        server['status_color'] = master_server.status_color
 
-                            if master_server.status == RwrMasterServerStatus.DOWN:
-                                servers_down_count += 1
-                                continent_servers_down_count += 1
+                        if master_server.status == RwrMasterServerStatus.DOWN:
+                            servers_down_count += 1
+                            group_servers_down_count += 1
 
-                            break
+                        break
 
-                continent['is_everything_ok'] = continent_servers_down_count == 0
+            group['is_everything_ok'] = group_servers_down_count == 0
 
-                if continent_servers_down_count == len(continent['servers']):
-                    continent['status_icon'] = 'times'
-                    continent['status_text'] = 'Major outage'
-                    continent['status_color'] = 'red'
-                elif continent_servers_down_count > 0 and continent_servers_down_count < len(continent['servers']):
-                    continent['status_icon'] = 'exclamation'
-                    continent['status_text'] = 'Partial outage'
-                    continent['status_color'] = 'orange'
+            if group_servers_down_count == len(group['servers']):
+                group['status_icon'] = 'times'
+                group['status_text'] = 'Major outage'
+                group['status_color'] = 'red'
+            elif group_servers_down_count > 0 and group_servers_down_count < len(group['servers']):
+                group['status_icon'] = 'exclamation'
+                group['status_text'] = 'Partial outage'
+                group['status_color'] = 'orange'
 
         is_everything_ok = servers_down_count == 0
 

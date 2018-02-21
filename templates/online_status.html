@@ -15,35 +15,34 @@
 
 {% block content %}
     {% if is_everything_ok %}
-        <p class="alert success pas mtm center w50 txtcenter"><i class="fa fa-check fa-2x"></i><br>Everything is working fine. Go play!</p>
+        <p class="alert success pas mtm mbm"><i class="fa fa-check"></i> Everything is working fine. Go play!</p>
     {% else %}
-        <p class="alert error pas mtm center w50 txtcenter"><i class="fa fa-warning fa-2x"></i><br>Looks like RWR online is encountering issues. For updates on the situation, head over the <a href="https://twitter.com/osumiagames">RWR Twitter account</a> or the <a href="https://discord.gg/010ixMlfmhK5BhYOv">RWR Discord server</a>.</p>
+        <p class="alert error pas mtm mbm"><i class="fa fa-warning"></i> Looks like RWR online is encountering issues. For updates on the situation, head over the <a href="https://twitter.com/osumiagames">RWR Twitter account</a> or the <a href="https://discord.gg/010ixMlfmhK5BhYOv">RWR Discord server</a>.</p>
     {% endif %}
 
-    {% for group in servers_statuses %}
-        <h2>{{ group.label }} <small class="txtgrey">{{ group.description }}</small></h2>
-
-        <div class="grid-4 has-gutter">
-            {% for continent in group.continents %}
+    <div class="w70 center">
+        <div class="grid-2 has-gutter">
+            {% for group in servers_statuses %}
                 <div>
-                    <table class="servers-list">
+                    <table class="servers-list mbn">
                         <thead>
                             <tr>
-                                <th><i class="fa fa-{{ continent.status_icon }}-circle fa-fw txt{{ continent.status_color }} help" title="{{ continent.status_text }}"></i> {{ continent.name }} <span class="fr"><i class="fa fa-{{ 'minus' if not continent.is_everything_ok else 'plus'}}-square toggle-icon"></i></span></th>
+                                <th><i class="fa fa-{{ group.status_icon }}-circle fa-fw txt{{ group.status_color }} help" title="{{ group.status_text }}"></i> {{ group.label }} <span class="fr"><i class="fa fa-{{ 'minus' if not group.is_everything_ok else 'plus'}}-square toggle-icon" title="Show / hide details"></i></span></th>
                             </tr>
                         </thead>
-                        <tbody class="{{ 'has-outages' if not continent.is_everything_ok }}">
-                            {% for server in continent.servers %}
+                        <tbody class="{{ 'has-outages' if not group.is_everything_ok }}">
+                            {% for server in group.servers %}
                                 <tr>
                                     <td><i class="fa fa-{{ server.status_icon }}-circle fa-fw txt{{ server.status_color }} help" title="{{ server.status_text }}"></i> {{ server.location }}</td>
                                 </tr>
                             {% endfor %}
                         </tbody>
                     </table>
+                    <p class="small txtgrey txtcenter mts">{{ group.description }}</p>
                 </div>
             {% endfor %}
         </div>
-    {% endfor %}
+    </div>
 
     <script>
         friendsFeature.all_players_with_servers_details = {{ g.all_players_with_servers_details|tojson }};
