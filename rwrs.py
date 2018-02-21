@@ -47,6 +47,7 @@ assets = Environment(app)
 assets.cache = 'storage/webassets-cache/'
 
 assets.register('js_friends_charts', Bundle('js/common.js', 'js/friends.js', 'js/charts.js', filters='jsmin', output='js/friends_charts.min.js'))
+assets.register('js_friends_status', Bundle('js/common.js', 'js/friends.js', 'js/status.js', filters='jsmin', output='js/friends_status.min.js'))
 assets.register('js_friends', Bundle('js/common.js', 'js/friends.js', filters='jsmin', output='js/friends.min.js'))
 assets.register('css_app', Bundle('css/flags.css', 'css/app.css', filters='cssutils', output='css/app.min.css'))
 
@@ -56,14 +57,14 @@ formatter = logging.Formatter(fmt='%(asctime)s - %(levelname)s - %(message)s', d
 handler.setFormatter(formatter)
 app.logger.addHandler(handler)
 
-from helpers import *
+import helpers
 import rwr.constants
 import rwr.utils
 
 app.jinja_env.filters.update(
-    humanize_seconds_to_days=humanize_seconds_to_days,
-    humanize_seconds_to_hours=humanize_seconds_to_hours,
-    humanize_integer=humanize_integer
+    humanize_seconds_to_days=helpers.humanize_seconds_to_days,
+    humanize_seconds_to_hours=helpers.humanize_seconds_to_hours,
+    humanize_integer=helpers.humanize_integer
 )
 
 app.jinja_env.globals.update(
@@ -75,7 +76,7 @@ app.jinja_env.globals.update(
     fabs=math.fabs,
     isinstance=isinstance,
     PlayersSort=rwr.constants.PlayersSort,
-    merge_query_string_params=merge_query_string_params,
+    merge_query_string_params=helpers.merge_query_string_params,
     get_database_name=rwr.utils.get_database_name,
     PLAYERS_LIST_DATABASES=rwr.constants.PLAYERS_LIST_DATABASES
 )

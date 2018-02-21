@@ -40,6 +40,17 @@ def my_friends():
     )
 
 
+@app.route('/online-multiplayer-status')
+def online_multiplayer_status():
+    is_everything_ok, servers_statuses = RwrRootServer.get_data_for_display()
+
+    return render_template(
+        'online_multiplayer_status.html',
+        is_everything_ok=is_everything_ok,
+        servers_statuses=servers_statuses
+    )
+
+
 @app.route('/players')
 def players_list_without_db():
     database = request.args.get('database', 'invasion')

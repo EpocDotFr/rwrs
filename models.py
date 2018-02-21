@@ -1,12 +1,16 @@
 from sqlalchemy_utils import ArrowType
 from rwrs import db, cache, app
 from sqlalchemy import func
-from helpers import *
+from enum import Enum
+import rwr.constants
+import helpers
 import arrow
 
 __all__ = [
     'ServerPlayerCount',
-    'SteamPlayerCount'
+    'SteamPlayerCount',
+    'RwrRootServerStatus',
+    'RwrRootServer'
 ]
 
 
@@ -67,19 +71,19 @@ class ServerPlayerCount(db.Model, Measurable):
 
     @property
     def ip(self):
-        return long2ip(self._ip) if self._ip else None
+        return helpers.long2ip(self._ip) if self._ip else None
 
     @ip.setter
     def ip(self, value):
         if value:
-            self._ip = ip2long(value)
+            self._ip = helpers.ip2long(value)
 
     @staticmethod
     @cache.memoize(timeout=app.config['GRAPHS_DATA_CACHE_TIMEOUT'])
     def server_players_data(ip=None, port=None):
         """Return the servers players chart data, optionally filtering by a server's IP and port."""
         if ip:
-            ip = ip2long(ip)
+            ip = helpers.ip2long(ip)
 
         return Measurable.transform_data(ServerPlayerCount.query.get_player_count(ip, port))
 
@@ -118,3 +122,89 @@ class SteamPlayerCount(db.Model, Measurable):
 
     def __repr__(self):
         return 'SteamPlayerCount:' + self.id
+
+
+class RwrRootServerStatus(Enum):
+    UP = 'UP'
+    DOWN = 'DOWN'
+
+
+class RwrRootServer(db.Model):
+    class RwrRootServerQuery(db.Query):
+        pass
+
+    __tablename__ = 'rwr_root_servers'
+    __table_args__ = (db.Index('host_idx', 'host'), )
+    query_class = RwrRootServerQuery
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+
+    host = db.Column(db.String(255), nullable=False)
+    status = db.Column(db.Enum(RwrRootServerStatus), nullable=False)
+
+    @property
+    def status_icon(self):
+        if self.status == RwrRootServerStatus.UP:
+            return 'check'
+        elif self.status == RwrRootServerStatus.DOWN:
+            return 'times'
+
+    @property
+    def status_text(self):
+        if self.status == RwrRootServerStatus.UP:
+            return 'Up'
+        elif self.status == RwrRootServerStatus.DOWN:
+            return 'Down'
+
+    @property
+    def status_color(self):
+        if self.status == RwrRootServerStatus.UP:
+            return 'green'
+        elif self.status == RwrRootServerStatus.DOWN:
+            return 'red'
+
+    @staticmethod
+    def get_data_for_display():
+        servers_statuses = rwr.constants.ROOT_RWR_SERVERS
+
+        root_servers = RwrRootServer.query.all()
+        servers_down_count = 0
+
+        for group in servers_statuses:
+            group['status_icon'] = 'check'
+            group['status_text'] = 'Everything operating normally'
+            group['status_color'] = 'green'
+
+            group_servers_down_count = 0
+
+            for server in group['servers']:
+                server['status_icon'] = 'question'
+                server['status_text'] = 'Status unknown'
+                server['status_color'] = 'grey'
+
+                for root_server in root_servers:
+                    if root_server.host == server['host']:
+                        server['status_icon'] = root_server.status_icon
+                        server['status_text'] = root_server.status_text
+                        server['status_color'] = root_server.status_color
+
+                        if root_server.status == RwrRootServerStatus.DOWN:
+                            servers_down_count += 1
+                            group_servers_down_count += 1
+
+                        break
+
+            group['is_everything_ok'] = group_servers_down_count == 0
+
+            if group_servers_down_count == len(group['servers']):
+                group['status_icon'] = 'times'
+                group['status_text'] = 'Major outage'
+                group['status_color'] = 'red'
+            elif group_servers_down_count > 0 and group_servers_down_count < len(group['servers']):
+                group['status_icon'] = 'exclamation'
+                group['status_text'] = 'Partial outage'
+                group['status_color'] = 'orange'
+
+        is_everything_ok = servers_down_count == 0
+
+        return (is_everything_ok, servers_statuses)

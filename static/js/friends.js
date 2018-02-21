@@ -147,16 +147,6 @@ friendsFeature = {
         });
     },
     /**
-     * Initialize the Friends feature on the Home page.
-     */
-    initOnHome: function() {
-        if (!this.init()) {
-            return;
-        }
-
-        // Nothing special to do
-    },
-    /**
      * Initialize the Friends feature on the Servers list page.
      */
     initOnServersList: function() {

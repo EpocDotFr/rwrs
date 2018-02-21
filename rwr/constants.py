@@ -324,6 +324,33 @@ PLAYERS_LIST_DATABASES = {
     'pacific': {'name': 'Pacific', 'ranks_country': app.config['PACIFIC_PLAYERS_RANKS_COUNTRY'], 'realm': 'official_pacific'}
 }
 
+ROOT_RWR_SERVERS = [
+    {
+        'label': 'Master servers',
+        'description': 'Needed to play online with other people.',
+        'servers': [
+            {
+                'location': 'St Louis, United States',
+                'host': 'us3.runningwithrifles.com'
+            },
+            {
+                'location': 'Tokyo, Japan',
+                'host': 'jp1.runningwithrifles.com'
+            }
+        ]
+    },
+    {
+        'label': 'Stats servers',
+        'description': 'Needed to keep track of your stats on ranked (official) servers.',
+        'servers': [
+            {
+                'location': 'Chicago, United States',
+                'host': 'us6.runningwithrifles.com'
+            }
+        ]
+    }
+]
+
 
 class PlayersSort:
     USERNAME = 'username'

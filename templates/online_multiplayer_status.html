@@ -1,0 +1,53 @@
+{% extends 'layout.html' %}
+
+{% block page_title %}<h1><i class="fa fa-heartbeat"></i> Online multiplayer status</h1>{% endblock %}
+
+{% block meta_title %}Online multiplayer status{% endblock %}
+
+{% block meta_description %}Current status of the Running With Rifles (RWR) root servers.{% endblock %}
+
+{% block jsfiles %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/zepto/1.2.0/zepto.min.js"></script>
+    {% assets 'js_friends_status' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
+{% endblock %}
+
+{% set canonical_url = url_for('online_multiplayer_status', _external=True) %}
+
+{% block content %}
+    {% if is_everything_ok %}
+        <p class="alert success pas mtm mbm"><i class="fa fa-check"></i> Everything is working fine. Go play with others!</p>
+    {% else %}
+        <p class="alert error pas mtm mbm"><i class="fa fa-warning"></i> Looks like online multiplayer is encountering issues. For updates on the situation, head over the <a href="https://twitter.com/osumiagames">RWR Twitter account</a> or the <a href="https://discord.gg/010ixMlfmhK5BhYOv">RWR Discord server</a>.</p>
+    {% endif %}
+
+    <div class="w70 center">
+        <div class="grid-2 has-gutter">
+            {% for group in servers_statuses %}
+                <div>
+                    <table class="servers-list mbn">
+                        <thead>
+                            <tr>
+                                <th><i class="fa fa-{{ group.status_icon }}-circle fa-fw txt{{ group.status_color }} help" title="{{ group.status_text }}"></i> {{ group.label }} <span class="fr"><i class="fa fa-{{ 'minus' if not group.is_everything_ok else 'plus'}}-square toggle-icon" title="Show / hide details"></i></span></th>
+                            </tr>
+                        </thead>
+                        <tbody class="{{ 'has-outages' if not group.is_everything_ok }}">
+                            {% for server in group.servers %}
+                                <tr>
+                                    <td><i class="fa fa-{{ server.status_icon }}-circle fa-fw txt{{ server.status_color }} help" title="{{ server.status_text }}"></i> {{ server.location }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <p class="small txtgrey txtcenter mts">{{ group.description }}</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script>
+        friendsFeature.all_players_with_servers_details = {{ g.all_players_with_servers_details|tojson }};
+        friendsFeature.init();
+
+        onlineStatusFeature.init();
+    </script>
+{% endblock %}

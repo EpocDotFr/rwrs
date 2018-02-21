@@ -1,8 +1,10 @@
 from rwrs import app, db, cache
 from models import *
 import rwr.extractors
+import rwr.constants
 import rwr.scraper
 import steam_api
+import helpers
 import click
 
 
@@ -12,6 +14,40 @@ def cc():
     click.echo('Clearing cache')
 
     cache.clear()
+
+    click.secho('Done', fg='green')
+
+
+@app.cli.command()
+def get_root_rwr_servers_status():
+    """Check the status of the RWR root servers."""
+    click.echo('Pinging servers')
+
+    hosts_to_ping = [server['host'] for group in rwr.constants.ROOT_RWR_SERVERS for server in group['servers']]
+
+    for host in hosts_to_ping:
+        click.echo(host, nl=False)
+
+        is_server_up = helpers.ping(host)
+
+        if is_server_up:
+            click.secho(' Up', fg='green')
+        else:
+            click.secho(' Down', fg='red')
+
+        rwr_root_server = RwrRootServer.query.filter(RwrRootServer.host == host).first()
+
+        if not rwr_root_server:
+            rwr_root_server = RwrRootServer()
+            rwr_root_server.host = host
+
+        rwr_root_server.status = RwrRootServerStatus.UP if is_server_up else RwrRootServer.DOWN
+
+        db.session.add(rwr_root_server)
+
+    click.echo('Persisting to database')
+
+    db.session.commit()
 
     click.secho('Done', fg='green')
 
