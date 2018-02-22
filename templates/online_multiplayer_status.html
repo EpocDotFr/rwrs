@@ -4,7 +4,7 @@
 
 {% block meta_title %}Online multiplayer status{% endblock %}
 
-{% block meta_description %}Current status of the Running With Rifles (RWR) root servers.{% endblock %}
+{% block meta_description %}Current status of the Running With Rifles (RWR) online multiplayer.{% endblock %}
 
 {% block jsfiles %}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/zepto/1.2.0/zepto.min.js"></script>
@@ -19,6 +19,8 @@
     {% else %}
         <p class="alert error pas mtm mbm"><i class="fa fa-warning"></i> Looks like online multiplayer is encountering issues. For updates on the situation, head over the <a href="https://twitter.com/osumiagames">RWR Twitter account</a> or the <a href="https://discord.gg/010ixMlfmhK5BhYOv">RWR Discord server</a>.</p>
     {% endif %}
+
+    <p class="small txtcenter txtgrey mbm mtn">This page is updated every 5 minutes.</p>
 
     <div class="w70 center">
         <div class="grid-2 has-gutter">
