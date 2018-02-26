@@ -203,30 +203,9 @@ def extract_minimaps(steamdir):
 
 
 @app.cli.command()
-def discord_bot():
+def run_discord_bot():
     """Run the RWRS Discord bot."""
-    import disco.util.logging
-    import disco.client
-    import disco.bot
+    from discord_bot import DiscordBot
 
-    class testPlugin(disco.bot.Plugin):
-        @disco.bot.Plugin.command('ping')
-        def on_ping_command(self, event):
-            event.msg.reply('Pong!')
-
-    disco.util.logging.setup_logging(level='DEBUG')
-
-    client_config = disco.client.ClientConfig()
-    client_config.token = app.config['DISCORD_BOT_TOKEN']
-
-    client = disco.client.Client(client_config)
-
-    bot_config = disco.bot.BotConfig()
-    bot_config.commands_enabled = True
-    bot_config.commands_require_mention = False
-
-    bot = disco.bot.Bot(client, bot_config)
-
-    # bot.add_plugin(testPlugin)
-
-    bot.run_forever()
+    rwrs_discord_bot = DiscordBot()
+    rwrs_discord_bot.run()
