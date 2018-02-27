@@ -1,4 +1,5 @@
 from . import constants, utils
+from flask import url_for
 import math
 
 
@@ -58,6 +59,8 @@ class Player:
         ret.xp_to_next_rank = ret.get_xp_to_next_rank()
         ret.xp_percent_completion_to_next_rank = ret.get_xp_percent_completion_to_next_rank()
         ret.unlocks = ret.get_unlocks()
+
+        ret.link = url_for('player_details', database=ret.database, username=ret.username)
 
         return ret
 
