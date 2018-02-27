@@ -1,16 +1,12 @@
-from rwrs import app, db, cache
-from models import *
-import rwr.extractors
-import rwr.constants
-import rwr.scraper
-import steam_api
-import helpers
+from rwrs import app
 import click
 
 
 @app.cli.command()
 def cc():
     """Clear the cache."""
+    from rwrs import cache
+
     click.echo('Clearing cache')
 
     cache.clear()
@@ -21,6 +17,11 @@ def cc():
 @app.cli.command()
 def get_root_rwr_servers_status():
     """Check the status of the RWR root servers."""
+    from models import RwrRootServer, RwrRootServerStatus
+    from rwrs import db
+    import rwr.constants
+    import helpers
+
     click.echo('Pinging servers')
 
     hosts_to_ping = [server['host'] for group in rwr.constants.ROOT_RWR_SERVERS for server in group['servers']]
@@ -55,6 +56,11 @@ def get_root_rwr_servers_status():
 @app.cli.command()
 def get_players_count():
     """Store the number of players."""
+    from models import ServerPlayerCount, SteamPlayerCount
+    from rwrs import cache, db
+    import rwr.scraper
+    import steam_api
+
     scraper = rwr.scraper.DataScraper()
 
     click.echo('Clearing cache')
@@ -98,6 +104,9 @@ def get_players_count():
 @app.cli.command()
 def clean_players_count():
     """Delete old players count."""
+    from models import ServerPlayerCount, SteamPlayerCount
+    from rwrs import db
+
     click.echo('Deleting old data')
 
     old_entries = ServerPlayerCount.query.get_old_entries()
@@ -117,6 +126,8 @@ def clean_players_count():
 @click.option('--steamdir', '-g', help='Steam root directory')
 def extract_ranks(steamdir):
     """Extract ranks data and images from RWR."""
+    import rwr.extractors
+
     context = click.get_current_context()
 
     if not steamdir:
@@ -135,6 +146,8 @@ def extract_ranks(steamdir):
 @click.option('--steamdir', '-g', help='Steam root directory')
 def extract_unlockables(steamdir):
     """Extract unlockables data and images from RWR."""
+    import rwr.extractors
+
     context = click.get_current_context()
 
     if not steamdir:
@@ -153,6 +166,8 @@ def extract_unlockables(steamdir):
 @click.option('--steamdir', '-g', help='Steam root directory')
 def extract_maps_data(steamdir):
     """Extract maps data from RWR."""
+    import rwr.extractors
+
     context = click.get_current_context()
 
     if not steamdir:
@@ -171,6 +186,8 @@ def extract_maps_data(steamdir):
 @click.option('--steamdir', '-g', help='Steam root directory')
 def extract_minimaps(steamdir):
     """Extract minimaps from RWR."""
+    import rwr.extractors
+
     context = click.get_current_context()
 
     if not steamdir:
