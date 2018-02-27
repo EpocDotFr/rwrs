@@ -123,7 +123,7 @@ def player_details_without_db(username):
 def player_details(database, username, tab=None):
     scraper = rwr.scraper.DataScraper()
 
-    player = scraper.search_player(database, username)
+    player = scraper.search_player_by_username(database, username)
 
     if not player:
         flash(ERROR_PLAYER_NOT_FOUND.format(username=username, database=rwr.utils.get_database_name(database)), 'error')
@@ -163,14 +163,14 @@ def players_compare(database, username, username_to_compare_with=None):
 
     scraper = rwr.scraper.DataScraper()
 
-    player = scraper.search_player(database, username)
+    player = scraper.search_player_by_username(database, username)
 
     if not player:
         flash(ERROR_PLAYER_NOT_FOUND.format(username=username, database=rwr.utils.get_database_name(database)), 'error')
 
         return redirect(url_for('players_list', database=database))
 
-    player_to_compare_with = scraper.search_player(database, username_to_compare_with)
+    player_to_compare_with = scraper.search_player_by_username(database, username_to_compare_with)
 
     if not player_to_compare_with:
         flash(ERROR_PLAYER_NOT_FOUND.format(username=username_to_compare_with, database=rwr.utils.get_database_name(database)), 'error')
@@ -221,7 +221,7 @@ def servers_list():
 def server_details_without_slug(ip, port):
     scraper = rwr.scraper.DataScraper()
 
-    server = scraper.search_server(ip, port)
+    server = scraper.get_server_by_ip_and_port(ip, port)
 
     if not server:
         flash('Sorry, this server wasn\'t found.', 'error')
@@ -235,7 +235,7 @@ def server_details_without_slug(ip, port):
 def server_details(ip, port, slug):
     scraper = rwr.scraper.DataScraper()
 
-    server = scraper.search_server(ip, port)
+    server = scraper.get_server_by_ip_and_port(ip, port)
 
     if not server:
         flash('Sorry, this server wasn\'t found.', 'error')

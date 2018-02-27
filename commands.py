@@ -204,7 +204,7 @@ def extract_minimaps(steamdir):
 
 @app.cli.command()
 def run_discord_bot():
-    """Run the RWRS Discord bot."""
+    """Runs the RWRS Discord bot."""
     from discord_bot import DiscordBot
 
     rwrs_discord_bot = DiscordBot()
