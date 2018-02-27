@@ -2,8 +2,11 @@ from disco.client import Client, ClientConfig
 from disco.util.logging import setup_logging
 from disco.types.message import MessageEmbed
 from disco.bot import Bot, BotConfig, Plugin
+from flask import url_for
 from rwrs import app
 import rwr.scraper
+import rwr.utils
+import helpers
 
 
 class RwrsDiscoBotPlugin(Plugin):
@@ -21,7 +24,40 @@ class RwrsDiscoBotPlugin(Plugin):
         if not player:
             event.msg.reply('D\'oh, I didn\'t found this player :disappointed:')
         else:
-            event.msg.reply('There ya go :thumbsup:', embed=self.create_player_message_embed(player))
+            embed = self.create_base_message_embed()
+
+            embed.url = player.link
+            embed.title = 'Players › {} › {} › Rank'.format(rwr.utils.get_database_name(servers), player.username)
+            embed.description = 'Rank information of {} on {} RWR ranked servers.'.format(player.username, rwr.utils.get_database_name(servers))
+
+            embed.add_field(
+                name='Current rank',
+                value='{}\n\n{} XP'.format(
+                    player.rank.name,
+                    helpers.humanize_integer(player.xp)
+                ),
+                inline=True
+            )
+
+            embed.add_field(
+                name='Next rank progression',
+                value='{}%\n\n{} XP remaining'.format(
+                    player.xp_percent_completion_to_next_rank,
+                    helpers.humanize_integer(player.xp_to_next_rank)
+                ) if player.next_rank else 'N/A',
+                inline=True
+            )
+
+            embed.add_field(
+                name='Next rank',
+                value='{}\n\n{} XP'.format(
+                    player.next_rank.name,
+                    helpers.humanize_integer(player.next_rank.xp)
+                ) if player.next_rank else 'Highest possible rank reached',
+                inline=True
+            )
+
+            event.msg.reply('There ya go :thumbsup:', embed=embed)
 
     @Plugin.command('stats <username:str> [<servers:str>]')
     def on_stats_command(self, event, username, servers='invasion'): # TODO Limit servers to invasion|pacific
@@ -31,17 +67,25 @@ class RwrsDiscoBotPlugin(Plugin):
         if not player:
             event.msg.reply('Sorry dude, this player don\'t exist :confused:')
         else:
-            event.msg.reply('At your service :muscle:', embed=self.create_player_message_embed(player))
+            embed = self.create_base_message_embed()
+
+            embed.url = player.link
+            embed.title = 'Players › {} › {} › Stats'.format(rwr.utils.get_database_name(servers), player.username)
+            embed.description = 'Statistics of {} on {} RWR ranked servers.'.format(player.username, rwr.utils.get_database_name(servers))
+
+            # TODO Add stat fields
+
+            event.msg.reply('At your service :muscle:', embed=embed)
 
     @Plugin.command('whereis <username:str>')
     def on_whereis_command(self, event, username):
-        """Get information about the server the specified player is currently playing on, if any."""
+        """Get information about the server the specified player is currently playing on."""
         server = self.rwr_scraper.get_current_server_of_player(username)
 
         if not server:
             event.msg.reply('Nah, this player isn\'t currently online :confused:')
         else:
-            event.msg.reply('I found {} playing on this server'.format(username), embed=self.create_server_message_embed(server))
+            event.msg.reply('I found {} playing on this server:'.format(username), embed=self.create_server_message_embed(server))
 
     @Plugin.command('server <name:str>')
     def on_server_command(self, event, name):
@@ -52,15 +96,6 @@ class RwrsDiscoBotPlugin(Plugin):
             event.msg.reply('Sorry mate, I didn\'t found this server :disappointed:')
         else:
             event.msg.reply('My pleasure :smirk:', embed=self.create_server_message_embed(server))
-
-    def create_player_message_embed(self, player):
-        """Create a RWRS player rich Discord message."""
-        embed = self.create_base_message_embed()
-
-        embed.url = player.link
-        embed.title = player.username
-
-        return embed
 
     def create_server_message_embed(self, server):
         """Create a RWRS server rich Discord message."""
@@ -75,7 +110,12 @@ class RwrsDiscoBotPlugin(Plugin):
         """Create a rich Discord message."""
         embed = MessageEmbed()
 
-        embed.set_author(name='Running With Rifles Stats (RWRS)', url='https://rwrstats.com/', icon_url='') # TODO
+        embed.set_author(
+            name='Running With Rifles Stats (RWRS)',
+            url='https://rwrstats.com/',
+            icon_url=url_for('static', filename='images/icon_dark_256.png')
+        )
+
         embed.color = 10800919 # The well-known main RWRS color #A4CF17, in the decimal format
 
         return embed
