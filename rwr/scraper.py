@@ -44,12 +44,24 @@ class DataScraper:
 
         return servers
 
-    def search_server(self, ip, port):
-        """Search for a RWR public server."""
+    def get_server_by_ip_and_port(self, ip, port):
+        """Search for a RWR public server based on its IP and port."""
         servers = self.get_servers()
 
         for server in servers:
             if server.ip == ip and server.port == port:
+                return server
+
+        return None
+
+    def get_server_by_name(self, name):
+        """Search for a RWR public server based on its name."""
+        servers = self.get_servers()
+
+        name = name.lower()
+
+        for server in servers:
+            if name in server.name.lower():
                 return server
 
         return None
@@ -299,7 +311,7 @@ class DataScraper:
         return players
 
     @cache.memoize(timeout=app.config['PLAYERS_CACHE_TIMEOUT'])
-    def search_player(self, database, username):
+    def search_player_by_username(self, database, username):
         """Search for a RWR player."""
         username = username.upper()
 
@@ -316,6 +328,23 @@ class DataScraper:
             return None
 
         return Player.load(database, node[0], alternative=True)
+
+    def get_current_server_of_player(self, username):
+        """Return the server where the specified player is playing on, if any."""
+        servers = self.get_servers()
+
+        username = username.lower()
+
+        for server in servers:
+            if not server.players.list:
+                continue
+
+            players_list = [player.lower() for player in server.players.list]
+
+            if username in players_list:
+                return server
+
+        return None
 
     def __repr__(self):
         return 'DataScraper'
