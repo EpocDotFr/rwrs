@@ -131,13 +131,15 @@ class RwrsDiscoBotPlugin(Plugin):
         )
 
         if player.playing_on_server:
-            embed.set_footer(text='Currently playing online on {} ({} - {} - {}/{})'.format(
+            embed.description = 'Playing on {} ({} - {} - {}/{})'.format( # TODO Find a green emoji to put as a prefix. Also put this in the description?
                 player.playing_on_server.name_display,
                 player.playing_on_server.type_name,
                 player.playing_on_server.map.name_display,
                 player.playing_on_server.players.current,
                 player.playing_on_server.players.max
-            ))
+            )
+
+        # TODO Icons next to the username on the website: same here but in the footer (or description) using emojis, see macros.player_name. Create the attribute username_display in the player scraper object
 
         return embed
 
@@ -146,15 +148,15 @@ class RwrsDiscoBotPlugin(Plugin):
         embed = self.create_base_message_embed()
 
         embed.url = server.link_absolute
-        embed.title = 'Servers › {}'.format(server.name_display)
-        embed.description = '[Join]({})'.format(server.steam_join_link)
+        embed.title = 'Servers › {}'.format(server.name)
+        embed.description = '[Join via Steam]({})'.format(server.steam_join_link) # FIXME Don't work
 
         if server.website:
-            embed.description += ' • [Website]({})'.format(server.website)
+            embed.description += ' • [Server website]({})'.format(server.website)
 
         if server.map.has_preview:
             with app.app_context():
-                embed.set_thumbnail(
+                embed.set_thumbnail( # FIXME Don't work
                     url=url_for('static', filename='images/maps/preview/{game_type}/{map_id}.png'.format(game_type=server.type, map_id=server.map.id))
                 )
 
@@ -188,11 +190,19 @@ class RwrsDiscoBotPlugin(Plugin):
             inline=True
         )
 
-        embed.add_field(
-            name='Location',
-            value='TODO', # TODO Emoji of the country flag + (city) + country name
-            inline=True
-        )
+        if server.location.country_code:
+            embed.add_field(
+                name='Location',
+                value=':flag_{}: {}{}'.format(
+                    server.location.country_code,
+                    server.location.city_name + ', ' if server.location.city_name else '',
+                    server.location.country_name
+                ),
+                inline=True
+            )
+
+        if server.is_ranked:
+            embed.set_footer(text='⭐️ Ranked (official) server')
 
         return embed
 
