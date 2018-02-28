@@ -152,11 +152,11 @@ class RwrsDiscoBotPlugin(Plugin):
         embed.description = '[Join via Steam]({})'.format(server.steam_join_link) # FIXME Don't work
 
         if server.website:
-            embed.description += ' • [Server website]({})'.format(server.website)
+            embed.description += ' • [Server website]({})'.format(server.website) # FIXME Don't work
 
         if server.map.has_preview:
             with app.app_context():
-                embed.set_thumbnail( # FIXME Don't work
+                embed.set_thumbnail(
                     url=url_for('static', filename='images/maps/preview/{game_type}/{map_id}.png'.format(game_type=server.type, map_id=server.map.id))
                 )
 
