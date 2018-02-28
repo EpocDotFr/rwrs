@@ -47,7 +47,7 @@ class RwrsDiscoBotPlugin(Plugin):
 
             return
 
-        event.msg.reply('I found {} playing on this server:'.format(username), embed=self.create_server_message_embed(server))
+        event.msg.reply('I found **{}** playing on this server:'.format(username), embed=self.create_server_message_embed(server))
 
     @Plugin.command('server', '<name:str>')
     def on_server_command(self, event, name):
@@ -66,7 +66,7 @@ class RwrsDiscoBotPlugin(Plugin):
         embed = self.create_base_message_embed()
 
         embed.url = player.link_absolute
-        embed.title = 'Statistics of {} on {} RWR ranked servers'.format(player.username, player.database_name)
+        embed.title = 'Players › {} › {}'.format(player.database_name, player.username)
 
         with app.app_context():
             embed.set_thumbnail(
@@ -146,10 +146,49 @@ class RwrsDiscoBotPlugin(Plugin):
         embed = self.create_base_message_embed()
 
         embed.url = server.link_absolute
-        embed.title = server.name_display
+        embed.title = 'Servers › {}'.format(server.name_display)
 
-        # TODO Add info
-        # Use server.map.name_display
+        if server.map.has_preview:
+            with app.app_context():
+                embed.set_thumbnail(
+                    url=url_for('static', filename='images/maps/preview/{game_type}/{map_id}.png'.format(game_type=server.type, map_id=server.map.id))
+                )
+
+        embed.add_field(
+            name='Type',
+            value=server.type_name,
+            inline=True
+        )
+
+        embed.add_field(
+            name='Mode',
+            value=server.mode_name,
+            inline=True
+        )
+
+        embed.add_field(
+            name='Map',
+            value=server.map.name_display,
+            inline=True
+        )
+
+        embed.add_field(
+            name='Current players',
+            value=server.players.current,
+            inline=True
+        )
+
+        embed.add_field(
+            name='Max players',
+            value=server.players.max,
+            inline=True
+        )
+
+        embed.add_field(
+            name='Location',
+            value='TODO', # TODO Emoji of the country flag + (city) + country name
+            inline=True
+        )
 
         return embed
 
