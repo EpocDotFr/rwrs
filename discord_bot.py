@@ -147,6 +147,10 @@ class RwrsDiscoBotPlugin(Plugin):
 
         embed.url = server.link_absolute
         embed.title = 'Servers › {}'.format(server.name_display)
+        embed.description = '[Join]({})'.format(server.steam_join_link)
+
+        if server.website:
+            embed.description += ' • [Website]({})'.format(server.website)
 
         if server.map.has_preview:
             with app.app_context():
@@ -189,9 +193,6 @@ class RwrsDiscoBotPlugin(Plugin):
             value='TODO', # TODO Emoji of the country flag + (city) + country name
             inline=True
         )
-
-        # TODO Add link to website if any
-        # TODO Add link "Join via Steam"
 
         return embed
 
