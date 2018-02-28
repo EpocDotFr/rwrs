@@ -11,7 +11,7 @@
     {% if show_online and not raw and player.playing_on_server %} <i class="fa fa-circle help txtgreen" title="Playing on {{ player.playing_on_server.name_display }} ({{ player.playing_on_server.type_name }} - {{ player.playing_on_server.map.name_display }} - {{ player.playing_on_server.players.current }}/{{ player.playing_on_server.players.max }})"></i>
     {%- endif -%}
 
-    {%- if make_link %} <a href="{{ player.link }}">
+    {%- if make_link %} <a href="{{ url_for('player_details', database=database, username=username) }}">
     {%- endif -%}
         {{ username }}
     {%- if make_link -%}
