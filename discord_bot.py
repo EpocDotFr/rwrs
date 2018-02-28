@@ -5,6 +5,7 @@ from disco.bot import Bot, BotConfig, Plugin
 from gevent import monkey
 from flask import url_for
 from rwrs import app
+import rwr.constants
 import rwr.scraper
 import helpers
 import logging
@@ -65,8 +66,12 @@ class RwrsDiscoBotPlugin(Plugin):
         embed = self.create_base_message_embed()
 
         embed.url = player.link_absolute
-
         embed.title = 'Statistics of {} on {} RWR ranked servers'.format(player.username, player.database_name)
+
+        with app.app_context():
+            embed.set_thumbnail(
+                url=url_for('static', filename='images/ranks/{ranks_country}/{rank_id}.png'.format(ranks_country=rwr.constants.PLAYERS_LIST_DATABASES[player.database]['ranks_country'], rank_id=player.rank.id), _external=True) # TODO
+            )
 
         embed.add_field(
             name='Current rank',
