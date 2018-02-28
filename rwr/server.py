@@ -100,6 +100,7 @@ class Server:
                 ret.players.list.sort()
 
         ret.link = url_for('server_details', ip=ret.ip, port=ret.port, slug=ret.name_slug)
+        ret.link_absolute = url_for('server_details', ip=ret.ip, port=ret.port, slug=ret.name_slug, _external=True)
 
         return ret
 

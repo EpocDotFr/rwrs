@@ -61,6 +61,7 @@ class Player:
         ret.unlocks = ret.get_unlocks()
 
         ret.link = url_for('player_details', database=ret.database, username=ret.username)
+        ret.link_absolute = url_for('player_details', database=ret.database, username=ret.username, _external=True)
 
         return ret
 
