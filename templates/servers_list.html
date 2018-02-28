@@ -70,7 +70,7 @@
                         <td>{{ server.comment if server.comment else '' }}</td>
                         <td>
                             {% for player in server.players.list %}
-                                {{ macros.player_name(player, raw=True, link=True, database=server.database) }}{{ ', ' if not loop.last else '' }}
+                                {{ macros.player_name(player, raw=True, link=True) }}{{ ', ' if not loop.last else '' }}
                             {% endfor %}
                         </td>
                     {% endif %}
