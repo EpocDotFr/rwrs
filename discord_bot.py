@@ -43,7 +43,7 @@ class RwrsDiscoBotPlugin(Plugin):
         server = self.rwr_scraper.get_current_server_of_player(username)
 
         if not server:
-            event.msg.reply('Nah, this player isn\'t currently online :confused:')
+            event.msg.reply('Nah, this player isn\'t currently playing online :confused:')
 
             return
 
@@ -70,12 +70,12 @@ class RwrsDiscoBotPlugin(Plugin):
 
         with app.app_context():
             embed.set_thumbnail(
-                url=url_for('static', filename='images/ranks/{ranks_country}/{rank_id}.png'.format(ranks_country=rwr.constants.PLAYERS_LIST_DATABASES[player.database]['ranks_country'], rank_id=player.rank.id), _external=True) # TODO
+                url=player.rank.image_absolute
             )
 
         embed.add_field(
             name='Current rank',
-            value='{}\n\n{} XP'.format(
+            value='{}\n{} XP'.format(
                 player.rank.name,
                 helpers.humanize_integer(player.xp)
             ),
@@ -83,27 +83,61 @@ class RwrsDiscoBotPlugin(Plugin):
         )
 
         embed.add_field(
-            name='Next rank progression',
-            value='{}%\n\n{} XP remaining'.format(
-                player.xp_percent_completion_to_next_rank,
-                helpers.humanize_integer(player.xp_to_next_rank)
-            ) if player.next_rank else 'N/A',
-            inline=True
-        )
-
-        embed.add_field(
             name='Next rank',
-            value='{}\n\n{} XP'.format(
+            value='{}\n{} XP'.format(
                 player.next_rank.name,
                 helpers.humanize_integer(player.next_rank.xp)
             ) if player.next_rank else 'Highest possible rank reached',
             inline=True
         )
 
-        # TODO Add stats fields
+        if player.next_rank:
+            embed.add_field(
+                name='Next rank progression',
+                value='{}% - {} XP remaining'.format(
+                    player.xp_percent_completion_to_next_rank,
+                    helpers.humanize_integer(player.xp_to_next_rank)
+                )
+            )
+
+        embed.add_field(
+            name='Kills',
+            value=helpers.humanize_integer(player.kills),
+            inline=True
+        )
+
+        embed.add_field(
+            name='Deaths',
+            value=helpers.humanize_integer(player.deaths),
+            inline=True
+        )
+
+        embed.add_field(
+            name='K/D ratio',
+            value=player.kd_ratio,
+            inline=True
+        )
+
+        embed.add_field(
+            name='Score',
+            value=helpers.humanize_integer(player.score),
+            inline=True
+        )
+
+        embed.add_field(
+            name='Time played',
+            value=helpers.humanize_seconds_to_hours(player.time_played) + ' (' + helpers.humanize_seconds_to_days(player.time_played) + ')',
+            inline=True
+        )
 
         if player.playing_on_server:
-            embed.set_footer(text='FYI: {} is currently playing on {}.'.format(player.username, player.playing_on_server.name)) # TODO Use macro for server name
+            embed.set_footer(text='Currently playing online on {} ({} - {} - {}/{})'.format(
+                player.playing_on_server.name_display,
+                player.playing_on_server.type_name,
+                player.playing_on_server.map.name_display,
+                player.playing_on_server.players.current,
+                player.playing_on_server.players.max
+            ))
 
         return embed
 
@@ -112,9 +146,10 @@ class RwrsDiscoBotPlugin(Plugin):
         embed = self.create_base_message_embed()
 
         embed.url = server.link_absolute
-        embed.title = server.name # TODO
+        embed.title = server.name_display
 
         # TODO Add info
+        # Use server.map.name_display
 
         return embed
 

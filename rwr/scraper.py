@@ -161,7 +161,7 @@ class DataScraper:
                 }
 
             if server.map.id not in maps[server_type]['maps']:
-                maps[server_type]['maps'][server.map.id] = server.map.name if server.map.name else server.map.id
+                maps[server_type]['maps'][server.map.id] = server.map.name_display
 
         ret = []
 
@@ -278,7 +278,7 @@ class DataScraper:
                 },
                 'map': {
                     'id': server.map.id,
-                    'name': server.map.name
+                    'name': server.map.name_display
                 },
                 'players': {
                     'current': server.players.current,

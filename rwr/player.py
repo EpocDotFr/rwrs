@@ -71,8 +71,13 @@ class Player:
 
     def set_links(self):
         """Set the relative and absolute URLs of this player's details page."""
-        self.link = url_for('player_details', database=self.database, username=self.username)
-        self.link_absolute = url_for('player_details', database=self.database, username=self.username, _external=True)
+        params = {
+            'database': self.database,
+            'username': self.username
+        }
+
+        self.link = url_for('player_details', **params)
+        self.link_absolute = url_for('player_details', **params, _external=True)
 
     def set_playing_on_server(self, servers):
         """Determine if this user is playing on one of the given servers."""
@@ -123,6 +128,12 @@ class Player:
         ret.id = rank_id
         ret.name = applicable_ranks[str(rank_id)]['name']
         ret.xp = applicable_ranks[str(rank_id)]['xp']
+
+        if current_app:
+            ret.set_images_and_icons(self.database)
+        else:
+            with app.app_context():
+                ret.set_images_and_icons(self.database)
 
         return ret
 
@@ -187,3 +198,19 @@ class PlayerRank:
 
     def __repr__(self):
         return 'PlayerRank:' + self.id
+
+    def set_images_and_icons(self, database):
+        """Set the relative and absolute URLs to the images and icon of this rank."""
+        params = {
+            'ranks_country': constants.PLAYERS_LIST_DATABASES[database]['ranks_country'],
+            'rank_id': self.id
+        }
+
+        image_url = 'images/ranks/{ranks_country}/{rank_id}.png'.format(**params)
+        icon_url = 'images/ranks/{ranks_country}/{rank_id}_icon.png'.format(**params)
+
+        self.image = url_for('static', filename=image_url)
+        self.image_absolute = url_for('static', filename=image_url, _external=True)
+
+        self.icon = url_for('static', filename=icon_url)
+        self.icon_absolute = url_for('static', filename=icon_url, _external=True)

@@ -10,7 +10,7 @@
             {% if player.playing_on_server %}
                 <div>{{ macros.location(player.playing_on_server.location) }} {{ macros.server_name(player.playing_on_server) }}</div>
                 <div>
-                    <strong><span class="{{ macros.server_slots_class(player.playing_on_server) }}">{{ player.playing_on_server.players.current }}</span>/{{ player.playing_on_server.players.max }}</strong> players on <strong>{{ macros.map_name(player.playing_on_server.map) }}</strong> ({{ player.playing_on_server.type_name }})
+                    <strong><span class="{{ macros.server_slots_class(player.playing_on_server) }}">{{ player.playing_on_server.players.current }}</span>/{{ player.playing_on_server.players.max }}</strong> players on <strong>{{ player.playing_on_server.map.name_display }}</strong> ({{ player.playing_on_server.type_name }})
                 </div>
                 <div class="mts">
                     {{ macros.server_join_button(player.playing_on_server) }}

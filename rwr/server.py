@@ -49,6 +49,7 @@ class Server:
             ret.map.name = target_map['name']
             ret.map.has_minimap = target_map['has_minimap']
             ret.map.has_preview = target_map['has_preview']
+            ret.map.name_display = ret.map.name if ret.map.name else ret.map.id
 
         ret.bots = int(bots_node.text)
 
@@ -99,6 +100,8 @@ class Server:
             if players_node.text:
                 ret.players.list = [player_name.strip() for player_name in players_node.text.split(',')]
                 ret.players.list.sort()
+
+        ret.name_display = '★ ' + ret.name if ret.is_ranked else ret.name
 
         if current_app:
             ret.set_links()

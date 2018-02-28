@@ -75,8 +75,7 @@
                     </td>
                     <td>
                         <template v-if="friend.playing_on_server">
-                            <template v-if="friend.playing_on_server.map.name">${ friend.playing_on_server.map.name }</template>
-                            <template v-if="!friend.playing_on_server.map.name">${ friend.playing_on_server.map.id }</template>
+                            ${ friend.playing_on_server.map.name }
                         </template>
                     </td>
                     <td>

@@ -62,7 +62,7 @@
                     {% if request.args.get('view') == 'extended' %}
                         <td>{{ server.bots }}</td>
                     {% endif %}
-                    <td>{{ macros.map_name(server.map) }}</td>
+                    <td>{{ server.map.name_display }}</td>
                     <td>{{ server.type_name }}</td>
                     <td>{{ server.mode_name }}</td>
                     {% if request.args.get('view') == 'extended' %}
