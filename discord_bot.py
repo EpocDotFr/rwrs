@@ -190,6 +190,9 @@ class RwrsDiscoBotPlugin(Plugin):
             inline=True
         )
 
+        # TODO Add link to website if any
+        # TODO Add link "Join via Steam"
+
         return embed
 
     def create_base_message_embed(self):
