@@ -1,7 +1,8 @@
+from flask import url_for, current_app
 from . import constants, utils
 from geolite2 import geolite2
 from slugify import slugify
-from flask import url_for
+from rwrs import app
 
 
 class Server:
@@ -99,10 +100,18 @@ class Server:
                 ret.players.list = [player_name.strip() for player_name in players_node.text.split(',')]
                 ret.players.list.sort()
 
-        ret.link = url_for('server_details', ip=ret.ip, port=ret.port, slug=ret.name_slug)
-        ret.link_absolute = url_for('server_details', ip=ret.ip, port=ret.port, slug=ret.name_slug, _external=True)
+        if current_app:
+            ret.set_links()
+        else:
+            with app.app_context():
+                ret.set_links()
 
         return ret
+
+    def set_links(self):
+        """Set the relative and absolute URLs of this server's details page."""
+        self.link = url_for('server_details', ip=self.ip, port=self.port, slug=self.name_slug)
+        self.link_absolute = url_for('server_details', ip=self.ip, port=self.port, slug=self.name_slug, _external=True)
 
     def get_database(self):
         """Return the players list database name of this server."""

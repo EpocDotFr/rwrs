@@ -1,5 +1,6 @@
+from flask import url_for, current_app
 from . import constants, utils
-from flask import url_for
+from rwrs import app
 import math
 
 
@@ -60,10 +61,18 @@ class Player:
         ret.xp_percent_completion_to_next_rank = ret.get_xp_percent_completion_to_next_rank()
         ret.unlocks = ret.get_unlocks()
 
-        ret.link = url_for('player_details', database=ret.database, username=ret.username)
-        ret.link_absolute = url_for('player_details', database=ret.database, username=ret.username, _external=True)
+        if current_app:
+            ret.set_links()
+        else:
+            with app.app_context():
+                ret.set_links()
 
         return ret
+
+    def set_links(self):
+        """Set the relative and absolute URLs of this player's details page."""
+        self.link = url_for('player_details', database=self.database, username=self.username)
+        self.link_absolute = url_for('player_details', database=self.database, username=self.username, _external=True)
 
     def set_playing_on_server(self, servers):
         """Determine if this user is playing on one of the given servers."""
