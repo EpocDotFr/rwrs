@@ -5,10 +5,10 @@
     {% set make_link = link and database %}
 
     {%- if show_rank -%}
-        {{ rank_image(player.rank, database, icon=True) }}
+        {{ rank_image(player.rank, icon=True) }}
     {%- endif -%}
 
-    {% if show_online and not raw and player.playing_on_server %} <i class="fa fa-circle help txtgreen" title="Playing on {{ server_name(player.playing_on_server, link=False, raw=True) }} ({{ player.playing_on_server.type_name }} - {{ map_name(player.playing_on_server.map) }} - {{ player.playing_on_server.players.current }}/{{ player.playing_on_server.players.max }})"></i>
+    {% if show_online and not raw and player.playing_on_server %} <i class="fa fa-circle help txtgreen" title="Playing on {{ player.playing_on_server.name_display }} ({{ player.playing_on_server.type_name }} - {{ player.playing_on_server.map.name_display }} - {{ player.playing_on_server.players.current }}/{{ player.playing_on_server.players.max }})"></i>
     {%- endif -%}
 
     {%- if make_link %} <a href="{{ url_for('player_details', database=database, username=username) }}">
@@ -24,18 +24,8 @@
     {%- endif %}
 {%- endmacro %}
 
-{% macro rank_image(rank, database=None, icon=False) -%}
-    {% set database = database if database else request.view_args.get('database') -%}
-
-    <img src="{{ url_for('static', filename='images/ranks/{ranks_country}/{rank_id}{icon}.png'.format(ranks_country=PLAYERS_LIST_DATABASES[database].ranks_country, rank_id=rank.id, icon='_icon' if icon)) }}" title="{{ rank.name }}" class="{{ 'help' if icon }}">
-{%- endmacro %}
-
-{% macro map_name(map) -%}
-    {% if map.name -%}
-        {{ map.name }}
-    {%- else -%}
-        {{ map.id }}
-    {%- endif %}
+{% macro rank_image(rank, icon=False) -%}
+    <img src="{{ rank.icon if icon else rank.image }}" title="{{ rank.name }}" class="{{ 'help' if icon }}">
 {%- endmacro %}
 
 {% macro server_name(server, link=True, raw=False, no_icon=False) -%}

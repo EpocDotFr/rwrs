@@ -1,7 +1,8 @@
+from flask import url_for, current_app
 from . import constants, utils
 from geolite2 import geolite2
 from slugify import slugify
-from flask import url_for
+from rwrs import app
 
 
 class Server:
@@ -47,6 +48,7 @@ class Server:
             ret.map.name = target_map['name']
             ret.map.has_minimap = target_map['has_minimap']
             ret.map.has_preview = target_map['has_preview']
+            ret.map.name_display = ret.map.name if ret.map.name else ret.map.id
 
         ret.bots = int(bots_node.text)
 
@@ -96,9 +98,20 @@ class Server:
                 ret.players.list = [player_name.strip() for player_name in players_node.text.split(',')]
                 ret.players.list.sort()
 
-        ret.link = url_for('server_details', ip=ret.ip, port=ret.port, slug=ret.name_slug)
+        ret.name_display = '⭐️ ' + ret.name if ret.is_ranked else ret.name
+
+        if current_app:
+            ret.set_links()
+        else:
+            with app.app_context():
+                ret.set_links()
 
         return ret
+
+    def set_links(self):
+        """Set the relative and absolute URLs of this server's details page."""
+        self.link = url_for('server_details', ip=self.ip, port=self.port, slug=self.name_slug)
+        self.link_absolute = url_for('server_details', ip=self.ip, port=self.port, slug=self.name_slug, _external=True)
 
     def get_database(self):
         """Return the players list database name of this server."""

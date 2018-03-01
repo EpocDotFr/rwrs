@@ -1,12 +1,17 @@
-from disco.client import Client, ClientConfig
-from disco.util.logging import setup_logging
 from disco.types.message import MessageEmbed
+from disco.util.logging import setup_logging
+from disco.client import Client, ClientConfig
 from disco.bot import Bot, BotConfig, Plugin
+from gevent import monkey
 from flask import url_for
 from rwrs import app
+import rwr.constants
 import rwr.scraper
-import rwr.utils
 import helpers
+import logging
+
+
+monkey.patch_all()
 
 
 class RwrsDiscoBotPlugin(Plugin):
@@ -16,93 +21,196 @@ class RwrsDiscoBotPlugin(Plugin):
 
         self.rwr_scraper = rwr.scraper.DataScraper()
 
-    @Plugin.command('rank <username:str> [<servers:str>]')
-    def on_rank_command(self, event, username, servers='invasion'): # TODO Limit servers to invasion|pacific
-        """Get rank information about the specified player."""
-        player = self.rwr_scraper.search_player_by_username(username, servers)
-
-        if not player:
-            event.msg.reply('D\'oh, I didn\'t found this player :disappointed:')
-        else:
-            embed = self.create_base_message_embed()
-
-            embed.url = player.link
-            embed.title = 'Players › {} › {} › Rank'.format(rwr.utils.get_database_name(servers), player.username)
-            embed.description = 'Rank information of {} on {} RWR ranked servers.'.format(player.username, rwr.utils.get_database_name(servers))
-
-            embed.add_field(
-                name='Current rank',
-                value='{}\n\n{} XP'.format(
-                    player.rank.name,
-                    helpers.humanize_integer(player.xp)
-                ),
-                inline=True
-            )
-
-            embed.add_field(
-                name='Next rank progression',
-                value='{}%\n\n{} XP remaining'.format(
-                    player.xp_percent_completion_to_next_rank,
-                    helpers.humanize_integer(player.xp_to_next_rank)
-                ) if player.next_rank else 'N/A',
-                inline=True
-            )
-
-            embed.add_field(
-                name='Next rank',
-                value='{}\n\n{} XP'.format(
-                    player.next_rank.name,
-                    helpers.humanize_integer(player.next_rank.xp)
-                ) if player.next_rank else 'Highest possible rank reached',
-                inline=True
-            )
-
-            event.msg.reply('There ya go :thumbsup:', embed=embed)
-
-    @Plugin.command('stats <username:str> [<servers:str>]')
-    def on_stats_command(self, event, username, servers='invasion'): # TODO Limit servers to invasion|pacific
+    @Plugin.command('stats', parser=True)
+    @Plugin.parser.add_argument('username')
+    @Plugin.parser.add_argument('database', choices=rwr.constants.PLAYERS_LIST_DATABASES.keys(), nargs='?', default='invasion')
+    def on_stats_command(self, event, args):
         """Get stats about the specified player."""
-        player = self.rwr_scraper.search_player_by_username(username, servers)
+        player = self.rwr_scraper.search_player_by_username(args.database, args.username)
 
         if not player:
             event.msg.reply('Sorry dude, this player don\'t exist :confused:')
-        else:
-            embed = self.create_base_message_embed()
 
-            embed.url = player.link
-            embed.title = 'Players › {} › {} › Stats'.format(rwr.utils.get_database_name(servers), player.username)
-            embed.description = 'Statistics of {} on {} RWR ranked servers.'.format(player.username, rwr.utils.get_database_name(servers))
+            return
 
-            # TODO Add stat fields
+        servers = self.rwr_scraper.get_servers()
 
-            event.msg.reply('At your service :muscle:', embed=embed)
+        player.set_playing_on_server(servers)
 
-    @Plugin.command('whereis <username:str>')
+        event.msg.reply('There ya go :thumbsup:', embed=self.create_player_message_embed(player))
+
+    @Plugin.command('whereis', '<username:str>')
     def on_whereis_command(self, event, username):
         """Get information about the server the specified player is currently playing on."""
         server = self.rwr_scraper.get_current_server_of_player(username)
 
         if not server:
-            event.msg.reply('Nah, this player isn\'t currently online :confused:')
-        else:
-            event.msg.reply('I found {} playing on this server:'.format(username), embed=self.create_server_message_embed(server))
+            event.msg.reply('Nah, this player isn\'t currently playing online :confused:')
 
-    @Plugin.command('server <name:str>')
+            return
+
+        event.msg.reply('I found **{}** playing on this server:'.format(username), embed=self.create_server_message_embed(server))
+
+    @Plugin.command('server', '<name:str>')
     def on_server_command(self, event, name):
         """Get information about the specified server."""
         server = self.rwr_scraper.get_server_by_name(name)
 
         if not server:
             event.msg.reply('Sorry mate, I didn\'t found this server :disappointed:')
-        else:
-            event.msg.reply('My pleasure :smirk:', embed=self.create_server_message_embed(server))
+
+            return
+
+        event.msg.reply('At your service :muscle:', embed=self.create_server_message_embed(server))
+
+    def create_player_message_embed(self, player):
+        """Create a RWRS player rich Discord message."""
+        embed = self.create_base_message_embed()
+
+        embed.url = player.link_absolute
+        embed.title = 'Players › {} › {}'.format(player.database_name, player.username)
+
+        username_lower = player.username.lower()
+
+        if username_lower == app.config['MY_USERNAME']:
+            embed.description = ':wave: Hey, I\'m the creator of RWRS! Glad to see you\'re using this bot.'
+        elif username_lower in app.config['CONTRIBUTORS']:
+            embed.description = ':v: This player contributed in a way or another to RWRS. Thanks to her/him!'
+        elif username_lower in app.config['DEVS']:
+            embed.description = ':military_medal: Say hi to one of the Running With Rifles developers!'
+
+        embed.set_thumbnail(
+            url=player.rank.image_absolute
+        )
+
+        embed.add_field(
+            name='Current rank',
+            value='{}\n{} XP'.format(
+                player.rank.name,
+                helpers.humanize_integer(player.xp)
+            ),
+            inline=True
+        )
+
+        embed.add_field(
+            name='Next rank',
+            value='{}\n{} XP'.format(
+                player.next_rank.name,
+                helpers.humanize_integer(player.next_rank.xp)
+            ) if player.next_rank else 'Highest possible rank reached',
+            inline=True
+        )
+
+        if player.next_rank:
+            embed.add_field(
+                name='Next rank progression',
+                value='{}% - {} XP remaining'.format(
+                    player.xp_percent_completion_to_next_rank,
+                    helpers.humanize_integer(player.xp_to_next_rank)
+                )
+            )
+
+        embed.add_field(
+            name='Kills',
+            value=helpers.humanize_integer(player.kills),
+            inline=True
+        )
+
+        embed.add_field(
+            name='Deaths',
+            value=helpers.humanize_integer(player.deaths),
+            inline=True
+        )
+
+        embed.add_field(
+            name='K/D ratio',
+            value=player.kd_ratio,
+            inline=True
+        )
+
+        embed.add_field(
+            name='Score',
+            value=helpers.humanize_integer(player.score),
+            inline=True
+        )
+
+        embed.add_field(
+            name='Time played',
+            value=helpers.humanize_seconds_to_hours(player.time_played) + ' (' + helpers.humanize_seconds_to_days(player.time_played) + ')',
+            inline=True
+        )
+
+        if player.playing_on_server:
+            embed.set_footer(text='🎮 Playing on {} ({} - {} - {}/{})'.format(
+                player.playing_on_server.name_display,
+                player.playing_on_server.type_name,
+                player.playing_on_server.map.name_display,
+                player.playing_on_server.players.current,
+                player.playing_on_server.players.max
+            ))
+
+        return embed
 
     def create_server_message_embed(self, server):
         """Create a RWRS server rich Discord message."""
         embed = self.create_base_message_embed()
 
-        embed.url = server.link
-        embed.title = server.name
+        embed.url = server.link_absolute
+        embed.title = 'Servers › {}'.format(server.name)
+        embed.description = '[Join via Steam]({})'.format(server.steam_join_link) # FIXME Don't work
+
+        if server.website:
+            embed.description += ' • [Server website]({})'.format(server.website) # FIXME Don't work
+
+        if server.map.has_preview:
+            with app.app_context():
+                embed.set_thumbnail(
+                    url=url_for('static', filename='images/maps/preview/{game_type}/{map_id}.png'.format(game_type=server.type, map_id=server.map.id))
+                )
+
+        embed.add_field(
+            name='Type',
+            value=server.type_name,
+            inline=True
+        )
+
+        embed.add_field(
+            name='Mode',
+            value=server.mode_name,
+            inline=True
+        )
+
+        embed.add_field(
+            name='Map',
+            value=server.map.name_display,
+            inline=True
+        )
+
+        embed.add_field(
+            name='Current players',
+            value=server.players.current,
+            inline=True
+        )
+
+        embed.add_field(
+            name='Max players',
+            value=server.players.max,
+            inline=True
+        )
+
+        if server.location.country_code:
+            embed.add_field(
+                name='Location',
+                value=':flag_{}: {}{}'.format(
+                    server.location.country_code,
+                    server.location.city_name + ', ' if server.location.city_name else '',
+                    server.location.country_name
+                ),
+                inline=True
+            )
+
+        if server.is_ranked:
+            embed.set_footer(text='⭐️ Ranked (official) server')
 
         return embed
 
@@ -110,13 +218,14 @@ class RwrsDiscoBotPlugin(Plugin):
         """Create a rich Discord message."""
         embed = MessageEmbed()
 
-        embed.set_author(
-            name='Running With Rifles Stats (RWRS)',
-            url='https://rwrstats.com/',
-            icon_url=url_for('static', filename='images/icon_dark_256.png')
-        )
+        with app.app_context():
+            embed.set_author(
+                name='Running With Rifles Stats (RWRS)',
+                url=url_for('home', _external=True),
+                icon_url=url_for('static', filename='images/icon_dark_256.png', _external=True)
+            )
 
-        embed.color = 10800919 # The well-known main RWRS color #A4CF17, in the decimal format
+        embed.color = 10800919 # The well-known primary RWRS color #A4CF17, in the decimal format
 
         return embed
 
@@ -124,7 +233,7 @@ class RwrsDiscoBotPlugin(Plugin):
 class DiscordBot:
     """The high-level class that wraps the RWRS Discord bot logic."""
     def __init__(self):
-        setup_logging(level='DEBUG')
+        setup_logging(level=logging.WARNING)
 
         self.client_config = ClientConfig()
         self.client_config.token = app.config['DISCORD_BOT_TOKEN']
@@ -140,5 +249,5 @@ class DiscordBot:
         self.bot.add_plugin(RwrsDiscoBotPlugin)
 
     def run(self):
-        """Run the RWRS Discord bot."""
+        """Actually run the RWRS Discord bot."""
         self.bot.run_forever()

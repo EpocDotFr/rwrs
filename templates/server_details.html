@@ -116,7 +116,7 @@
                     <th class="txtcenter">Current map</th>
                 </tr>
                 <tr>
-                    <td class="txtcenter">{{ macros.map_name(server.map) }}</td>
+                    <td class="txtcenter">{{ server.map.name_display }}</td>
                 </tr>
                 {% if server.map.has_preview %}
                     <tr>
