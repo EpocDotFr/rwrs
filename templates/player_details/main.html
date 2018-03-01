@@ -21,7 +21,7 @@
 
 {% set canonical_url = url_for('player_details', database=request.view_args.get('database'), username=player.username, tab=request.view_args.get('tab'), _external=True) %}
 
-{% set meta_image = player.rank.image_absolute %}
+{% set meta_image = url_for('static', filename='images/ranks/{ranks_country}/{rank_id}.png'.format(ranks_country=PLAYERS_LIST_DATABASES[request.view_args.get('database')].ranks_country, rank_id=player.rank.id), _external=True) %}
 
 {% block content %}
     <div class="mtm">
