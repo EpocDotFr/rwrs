@@ -222,7 +222,7 @@ class RwrsDiscoBotPlugin(Plugin):
             embed.set_author(
                 name='Running With Rifles Stats (RWRS)',
                 url=url_for('home', _external=True),
-                icon_url=url_for('static', filename='images/icon_dark_256.png', _external=True)
+                icon_url=url_for('static', filename='images/icon_square_dark_256.png', _external=True)
             )
 
         embed.color = 10800919 # The well-known primary RWRS color #A4CF17, in the decimal format
