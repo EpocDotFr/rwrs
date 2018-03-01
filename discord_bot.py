@@ -21,10 +21,12 @@ class RwrsDiscoBotPlugin(Plugin):
 
         self.rwr_scraper = rwr.scraper.DataScraper()
 
-    @Plugin.command('stats', '<username:str> [database:str]')
-    def on_stats_command(self, event, username, database='invasion'): # TODO Limit database to invasion|pacific
+    @Plugin.command('stats', parser=True)
+    @Plugin.parser.add_argument('username')
+    @Plugin.parser.add_argument('database', choices=rwr.constants.PLAYERS_LIST_DATABASES.keys(), nargs='?', default='invasion')
+    def on_stats_command(self, event, args):
         """Get stats about the specified player."""
-        player = self.rwr_scraper.search_player_by_username(database, username)
+        player = self.rwr_scraper.search_player_by_username(args.database, args.username)
 
         if not player:
             event.msg.reply('Sorry dude, this player don\'t exist :confused:')
@@ -47,7 +49,7 @@ class RwrsDiscoBotPlugin(Plugin):
 
             return
 
-        event.msg.reply('I found **{}** playing on this server:'.format(username), embed=self.create_server_message_embed(server))
+        event.msg.reply('I found **{}** playing on this server:'.format(username.upper()), embed=self.create_server_message_embed(server))
 
     @Plugin.command('server', '<name:str>')
     def on_server_command(self, event, name):
@@ -68,10 +70,9 @@ class RwrsDiscoBotPlugin(Plugin):
         embed.url = player.link_absolute
         embed.title = 'Players › {} › {}'.format(player.database_name, player.username)
 
-        with app.app_context():
-            embed.set_thumbnail(
-                url=player.rank.image_absolute
-            )
+        embed.set_thumbnail(
+            url=player.rank.image_absolute
+        )
 
         embed.add_field(
             name='Current rank',
@@ -131,13 +132,13 @@ class RwrsDiscoBotPlugin(Plugin):
         )
 
         if player.playing_on_server:
-            embed.description = 'Playing on {} ({} - {} - {}/{})'.format( # TODO Find a green emoji to put as a prefix. Also put this in the description?
+            embed.set_footer(text='🎮 Playing on {} ({} - {} - {}/{})'.format(
                 player.playing_on_server.name_display,
                 player.playing_on_server.type_name,
                 player.playing_on_server.map.name_display,
                 player.playing_on_server.players.current,
                 player.playing_on_server.players.max
-            )
+            ))
 
         # TODO Icons next to the username on the website: same here but in the footer (or description) using emojis, see macros.player_name. Create the attribute username_display in the player scraper object
 
@@ -241,5 +242,5 @@ class DiscordBot:
         self.bot.add_plugin(RwrsDiscoBotPlugin)
 
     def run(self):
-        """Run the RWRS Discord bot."""
+        """Actually run the RWRS Discord bot."""
         self.bot.run_forever()
