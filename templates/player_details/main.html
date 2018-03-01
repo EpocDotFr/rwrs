@@ -21,6 +21,8 @@
 
 {% set canonical_url = url_for('player_details', database=request.view_args.get('database'), username=player.username, tab=request.view_args.get('tab'), _external=True) %}
 
+{% set meta_image = player.rank.image_absolute %}
+
 {% block content %}
     <div class="mtm">
         <form method="get" action="{{ url_for('players_compare', database=request.view_args.get('database'), username=player.username) }}" class="inbl fl">
