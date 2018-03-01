@@ -49,7 +49,7 @@ class RwrsDiscoBotPlugin(Plugin):
 
             return
 
-        event.msg.reply('I found **{}** playing on this server:'.format(username.upper()), embed=self.create_server_message_embed(server))
+        event.msg.reply('I found **{}** playing on this server:'.format(username), embed=self.create_server_message_embed(server))
 
     @Plugin.command('server', '<name:str>')
     def on_server_command(self, event, name):
@@ -69,6 +69,15 @@ class RwrsDiscoBotPlugin(Plugin):
 
         embed.url = player.link_absolute
         embed.title = 'Players › {} › {}'.format(player.database_name, player.username)
+
+        username_lower = player.username.lower()
+
+        if username_lower == app.config['MY_USERNAME']:
+            embed.description = ':wave: Hey, I\'m the creator of RWRS! Glad to see you\'re using this bot.'
+        elif username_lower in app.config['CONTRIBUTORS']:
+            embed.description = ':v: This player contributed in a way or another to RWRS. Thanks to her/him!'
+        elif username_lower in app.config['DEVS']:
+            embed.description = ':military_medal: Say hi to one of the Running With Rifles developers!'
 
         embed.set_thumbnail(
             url=player.rank.image_absolute
@@ -139,8 +148,6 @@ class RwrsDiscoBotPlugin(Plugin):
                 player.playing_on_server.players.current,
                 player.playing_on_server.players.max
             ))
-
-        # TODO Icons next to the username on the website: same here but in the footer (or description) using emojis, see macros.player_name. Create the attribute username_display in the player scraper object
 
         return embed
 

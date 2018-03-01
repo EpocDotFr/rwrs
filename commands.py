@@ -207,5 +207,10 @@ def run_discord_bot():
     """Runs the RWRS Discord bot."""
     from discord_bot import DiscordBot
 
+    click.echo('Initializing bot')
+
     rwrs_discord_bot = DiscordBot()
+
+    click.echo('Running bot')
+
     rwrs_discord_bot.run()
