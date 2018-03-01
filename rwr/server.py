@@ -27,7 +27,7 @@ class Server:
         mode_node = xml_node.find('mode')
         realm_node = xml_node.find('realm')
 
-        ret.name = name_node.text
+        ret.name = name_node.text.strip()
         ret.name_slug = slugify(ret.name)
 
         ret.ip = address_node.text
@@ -58,10 +58,10 @@ class Server:
 
         ret.version = version_node.text
         ret.is_dedicated = True if dedicated_node.text == '1' else False
-        ret.comment = comment_node.text
+        ret.comment = comment_node.text.strip()
 
         if url_node.text:
-            ret.website = url_node.text
+            ret.website = url_node.text.strip()
 
         ret.mode = mode_node.text
         ret.mode_name = utils.get_mode_name(ret.mode)
