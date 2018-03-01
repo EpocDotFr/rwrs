@@ -5,7 +5,6 @@ from flask import url_for
 
 
 class Server:
-    website = None
     database = None
 
     @classmethod
@@ -58,10 +57,8 @@ class Server:
 
         ret.version = version_node.text
         ret.is_dedicated = True if dedicated_node.text == '1' else False
-        ret.comment = comment_node.text.strip()
-
-        if url_node.text:
-            ret.website = url_node.text.strip()
+        ret.comment = comment_node.text.strip() if comment_node.text else None
+        ret.website = url_node.text.strip() if url_node.text else None
 
         ret.mode = mode_node.text
         ret.mode_name = utils.get_mode_name(ret.mode)
