@@ -57,7 +57,7 @@ class RwrsDiscoBotPlugin(Plugin):
         server = self.rwr_scraper.get_server_by_name(name)
 
         if not server:
-            event.msg.reply('Sorry mate, I didn\'t found this server :disappointed:')
+            event.msg.reply('Sorry mate, I didn\'t find this server :disappointed:')
 
             return
 
@@ -157,10 +157,10 @@ class RwrsDiscoBotPlugin(Plugin):
 
         embed.url = server.link_absolute
         embed.title = 'Servers › {}'.format(server.name)
-        embed.description = '[Join via Steam]({})'.format(server.steam_join_link) # FIXME Don't work
+        embed.description = '[Join via Steam]({})'.format(server.steam_join_link.replace(' ', '%20')) # FIXME Don't work
 
         if server.website:
-            embed.description += ' • [Server website]({})'.format(server.website) # FIXME Don't work
+            embed.description += ' • [Server website]({})'.format(server.website)
 
         if server.map.has_preview:
             with app.app_context():
