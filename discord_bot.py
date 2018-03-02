@@ -61,7 +61,7 @@ class RwrsDiscoBotPlugin(Plugin):
 
             return
 
-        event.msg.reply('At your service :muscle:', embed=self.create_server_message_embed(server))
+        event.msg.reply('At your service :muscle:', embed=self.create_server_message_embed(server, with_players_list=True))
 
     def create_player_message_embed(self, player):
         """Create a RWRS player rich Discord message."""
@@ -151,16 +151,31 @@ class RwrsDiscoBotPlugin(Plugin):
 
         return embed
 
-    def create_server_message_embed(self, server):
+    def create_server_message_embed(self, server, with_players_list=False):
         """Create a RWRS server rich Discord message."""
         embed = self.create_base_message_embed()
 
         embed.url = server.link_absolute
         embed.title = 'Servers › {}'.format(server.name)
-        embed.description = '[Join via Steam]({})'.format(server.steam_join_link.replace(' ', '%20')) # FIXME Don't work
+        embed.description = '[Join now]({})'.format(server.steam_join_link.replace(' ', '%20')) # FIXME Don't work
 
         if server.website:
             embed.description += ' • [Server website]({})'.format(server.website)
+
+        if with_players_list and server.players.list:
+            players_list = []
+
+            with app.app_context():
+                for player in server.players.list:
+                    if server.database:
+                        players_list.append('[{}]({})'.format(player, url_for('player_details', database=server.database, username=player)))
+                    else:
+                        players_list.append(player)
+
+            embed.add_field(
+                name='Players',
+                value=', '.join(players_list)
+            )
 
         if server.map.has_preview:
             with app.app_context():
