@@ -2,6 +2,7 @@ from disco.types.message import MessageEmbed
 from disco.util.logging import setup_logging
 from disco.client import Client, ClientConfig
 from disco.bot import Bot, BotConfig, Plugin
+from models import RwrRootServer
 from gevent import monkey
 from flask import url_for
 from rwrs import app
@@ -86,6 +87,16 @@ class RwrsDiscoBotPlugin(Plugin):
             active_servers=active_servers,
             active_servers_plural='are' if active_servers > 1 else 'is'
         ))
+
+    @Plugin.command('status')
+    def on_status_command(self, event):
+        """Get status about the RWR online multiplayer architecture."""
+        is_everything_ok, servers_statuses = RwrRootServer.get_data_for_display()
+
+        if is_everything_ok:
+            event.msg.reply('✅ Online multiplayer is working fine. Go play with others!')
+        else:
+            event.msg.reply('⚠️ Looks like online multiplayer is encountering issues. For details, head over here: https://rwrstats.com/online-multiplayer-status')
 
     def create_player_message_embed(self, player):
         """Create a RWRS player rich Discord message."""
