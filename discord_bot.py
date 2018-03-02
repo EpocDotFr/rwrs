@@ -7,6 +7,7 @@ from flask import url_for
 from rwrs import app
 import rwr.constants
 import rwr.scraper
+import steam_api
 import helpers
 import logging
 
@@ -20,6 +21,7 @@ class RwrsDiscoBotPlugin(Plugin):
         super(RwrsDiscoBotPlugin, self).load(ctx)
 
         self.rwr_scraper = rwr.scraper.DataScraper()
+        self.steam_api_client = steam_api.Client(app.config['STEAM_API_KEY'])
 
     @Plugin.command('stats', parser=True)
     @Plugin.parser.add_argument('username')
@@ -62,6 +64,28 @@ class RwrsDiscoBotPlugin(Plugin):
             return
 
         event.msg.reply('At your service :muscle:', embed=self.create_server_message_embed(server, with_players_list=True))
+
+    @Plugin.command('now')
+    def on_now_command(self, event):
+        """Get numbers about the current RWR players and servers."""
+        answer = [
+            'There\'s currently **{total_players}** RWR player{total_players_plural} in total. **{online_players}** of them {online_players_plural} playing multiplayer online.',
+            'There\'s also **{total_servers}** online multiplayer servers, **{active_servers}** of which {active_servers_plural} active :wink:'
+        ]
+
+        total_players = self.steam_api_client.get_current_players_count_for_app(app.config['RWR_STEAM_APP_ID'])
+        online_players, active_servers, total_servers = self.rwr_scraper.get_counters()
+
+        event.msg.reply('\n'.join(answer).format(
+            total_players=total_players,
+            total_players_plural='s' if total_players > 1 else '',
+            online_players=online_players,
+            online_players_plural='are' if online_players > 1 else 'is',
+            total_servers=total_servers,
+            total_servers_plural='s' if total_servers > 1 else '',
+            active_servers=active_servers,
+            active_servers_plural='are' if active_servers > 1 else 'is'
+        ))
 
     def create_player_message_embed(self, player):
         """Create a RWRS player rich Discord message."""
