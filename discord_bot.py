@@ -199,18 +199,9 @@ class RwrsDiscoBotPlugin(Plugin):
             embed.description += ' • [Server website]({})'.format(server.website)
 
         if with_players_list and server.players.list:
-            players_list = []
-
-            with app.app_context():
-                for player in server.players.list:
-                    if server.database:
-                        players_list.append('[{}]({})'.format(player, url_for('player_details', database=server.database, username=player)))
-                    else:
-                        players_list.append(player)
-
             embed.add_field(
                 name='Players',
-                value=', '.join(players_list)
+                value=', '.join(server.players.list)
             )
 
         if server.map.has_preview:
