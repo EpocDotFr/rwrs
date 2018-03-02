@@ -96,7 +96,8 @@ class RwrsDiscoBotPlugin(Plugin):
         if is_everything_ok:
             event.msg.reply('✅ Online multiplayer is working fine. Go play with others!')
         else:
-            event.msg.reply('⚠️ Looks like online multiplayer is encountering issues. For details, head over here: https://rwrstats.com/online-multiplayer-status')
+            with app.app_context():
+                event.msg.reply('⚠️ Looks like online multiplayer is encountering issues. For details, head over here: {}'.format(url_for('online_multiplayer_status')))
 
     def create_player_message_embed(self, player):
         """Create a RWRS player rich Discord message."""
