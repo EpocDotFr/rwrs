@@ -70,7 +70,7 @@ class RwrsDiscoBotPlugin(Plugin):
     def on_now_command(self, event):
         """Get numbers about the current RWR players and servers."""
         answer = [
-            'There\'s currently **{total_players}** RWR player{total_players_plural} in total. **{online_players}** of them {online_players_plural} playing multiplayer online.',
+            'There\'s currently **{total_players}** player{total_players_plural} in total. **{online_players}** of them {online_players_plural} playing multiplayer online.',
             'There\'s also **{total_servers}** online multiplayer servers, **{active_servers}** of which {active_servers_plural} active :wink:'
         ]
 
@@ -97,7 +97,35 @@ class RwrsDiscoBotPlugin(Plugin):
             event.msg.reply('✅ Online multiplayer is working fine. Go play with others!')
         else:
             with app.app_context():
-                event.msg.reply('⚠️ Looks like online multiplayer is encountering issues. For details, head over here: {}'.format(url_for('online_multiplayer_status')))
+                event.msg.reply('⚠️ Looks like online multiplayer is encountering issues.\nFor details, head over here: {}'.format(url_for('online_multiplayer_status', _external=True)))
+
+    @Plugin.command('servers')
+    def on_servers_command(self, event):
+        """Return the top active RWR servers."""
+        limit = 10
+
+        embed = self.create_base_message_embed()
+
+        with app.app_context():
+            embed.url = url_for('servers_list', _external=True)
+
+        embed.title = 'Servers'
+        embed.description = 'Top {} currently active servers:'.format(limit)
+
+        servers = self.rwr_scraper.filter_servers(limit=limit, not_empty='yes', not_full='yes')
+
+        for server in servers:
+            embed.add_field(
+                name=server.name_display,
+                value='{} - {} - {}/{}'.format(
+                    server.type_name,
+                    server.map.name_display,
+                    server.players.current,
+                    server.players.max
+                )
+            )
+
+        event.msg.reply('Here, sir :nerd:', embed=embed)
 
     def create_player_message_embed(self, player):
         """Create a RWRS player rich Discord message."""
@@ -109,7 +137,7 @@ class RwrsDiscoBotPlugin(Plugin):
         username_lower = player.username.lower()
 
         if username_lower == app.config['MY_USERNAME']:
-            embed.description = ':wave: Hey, I\'m the creator of RWRS! Glad to see you\'re using this bot.'
+            embed.description = ':wave: Hey, I\'m the creator of RWRS and this bot! Glad to see you\'re using it.'
         elif username_lower in app.config['CONTRIBUTORS']:
             embed.description = ':v: This player contributed in a way or another to RWRS. Thanks to her/him!'
         elif username_lower in app.config['DEVS']:
@@ -207,7 +235,7 @@ class RwrsDiscoBotPlugin(Plugin):
         if server.map.has_preview:
             with app.app_context():
                 embed.set_thumbnail(
-                    url=url_for('static', filename='images/maps/preview/{game_type}/{map_id}.png'.format(game_type=server.type, map_id=server.map.id))
+                    url=url_for('static', filename='images/maps/preview/{game_type}/{map_id}.png'.format(game_type=server.type, map_id=server.map.id), _external=True)
                 )
 
         embed.add_field(

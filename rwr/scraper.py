@@ -238,7 +238,14 @@ class DataScraper:
 
             return True
 
-        return [server for server in self.get_servers() if _filter_server(server, filters)]
+        servers = [server for server in self.get_servers() if _filter_server(server, filters)]
+
+        limit = filters.get('limit')
+
+        if limit:
+            return servers[:limit]
+
+        return servers
 
     def get_counters(self):
         """Get the number of players online, the active servers as well as the total number of online servers."""
