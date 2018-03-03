@@ -49,11 +49,11 @@ class RwrsDiscoBotPlugin(Plugin):
         server = self.rwr_scraper.get_current_server_of_player(username)
 
         if not server:
-            event.msg.reply('Nah, this player isn\'t currently playing online :confused:')
+            event.msg.reply('Nah, this player isn\'t currently playing online :disappointed:')
 
             return
 
-        event.msg.reply('I found **{}** playing on this server:'.format(username), embed=self.create_server_message_embed(server))
+        event.msg.reply('I found **{}** playing on this server :ok_hand:'.format(username), embed=self.create_server_message_embed(server))
 
     @Plugin.command('server', '<name:str>')
     def on_server_command(self, event, name):
@@ -144,7 +144,32 @@ class RwrsDiscoBotPlugin(Plugin):
                 inline=True
             )
 
-        event.msg.reply('Everyone! The top {} {} players (by score)!'.format(limit, rwr.utils.get_database_name(args.database)), embed=embed)
+        event.msg.reply('Everyone! The top {} **{}** players (ordered by score) :medal:'.format(limit, rwr.utils.get_database_name(args.database)), embed=embed)
+
+    @Plugin.command('pos', parser=True)
+    @Plugin.parser.add_argument('username')
+    @Plugin.parser.add_argument('database', choices=rwr.constants.PLAYERS_LIST_DATABASES.keys(), nargs='?', default='invasion')
+    def on_pos_command(self, event, args):
+        """Return the position of the specified player in the leaderboard, order by score."""
+        limit = 15
+
+        embed = self.create_base_message_embed()
+
+        with app.app_context():
+            embed.url = url_for('players_list', database=args.database, target=args.username, _external=True)
+
+        embed.title = 'Players › {} (highlighting {})'.format(rwr.utils.get_database_name(args.database), args.username)
+
+        players = self.rwr_scraper.get_players(args.database, limit=limit, target=args.username)
+
+        for player in players:
+            embed.add_field(
+                name='{}#{} {}'.format('➡️ ' if player.username.lower() == args.username else '', player.position, player.username),
+                value=helpers.humanize_integer(player.score),
+                inline=True
+            )
+
+        event.msg.reply('Here\'s the position of **{}** on the **{}** leaderboard (ordered by score):'.format(args.username, rwr.utils.get_database_name(args.database)), embed=embed)
 
     def create_player_message_embed(self, player):
         """Create a RWRS player rich Discord message."""
