@@ -99,6 +99,12 @@ class Server:
                 ret.players.list.sort()
 
         ret.name_display = '⭐️ ' + ret.name if ret.is_ranked else ret.name
+        ret.summary = '{} - {} - {}/{}'.format(
+            ret.type_name,
+            ret.map.name_display,
+            ret.players.current,
+            ret.players.max
+        )
 
         if current_app:
             ret.set_links()

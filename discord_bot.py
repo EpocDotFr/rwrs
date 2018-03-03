@@ -116,12 +116,7 @@ class RwrsDiscoBotPlugin(Plugin):
         for server in servers:
             embed.add_field(
                 name='{}{}'.format(':flag_' + server.location.country_code + ': ' if server.location.country_code else '', server.name_display),
-                value='{} - {} - {}/{}'.format(
-                    server.type_name,
-                    server.map.name_display,
-                    server.players.current,
-                    server.players.max
-                )
+                value=server.summary
             )
 
         event.msg.reply('Here sir, the top {} currently active servers:'.format(limit), embed=embed)
@@ -202,12 +197,9 @@ class RwrsDiscoBotPlugin(Plugin):
         )
 
         if player.playing_on_server:
-            embed.set_footer(text='🎮 Playing on {} ({} - {} - {}/{})'.format(
+            embed.set_footer(text='🎮 Playing on {} ({})'.format(
                 player.playing_on_server.name_display,
-                player.playing_on_server.type_name,
-                player.playing_on_server.map.name_display,
-                player.playing_on_server.players.current,
-                player.playing_on_server.players.max
+                player.playing_on_server.summary
             ))
 
         return embed
