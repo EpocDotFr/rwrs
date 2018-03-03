@@ -113,7 +113,7 @@ class Server:
             '⭐️ ' if ret.is_ranked else '',
             ret.name
         )
-        ret.summary = '{} - {} - {}/{}'.format(
+        ret.summary = '{} • {} • {}/{}'.format(
             ret.type_name,
             ret.map.name_display,
             ret.players.current,
