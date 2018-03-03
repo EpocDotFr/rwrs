@@ -110,7 +110,6 @@ class RwrsDiscoBotPlugin(Plugin):
             embed.url = url_for('servers_list', _external=True)
 
         embed.title = 'Servers'
-        embed.description = 'Top {} currently active servers:'.format(limit)
 
         servers = self.rwr_scraper.filter_servers(limit=limit, not_empty='yes', not_full='yes')
 
@@ -125,7 +124,7 @@ class RwrsDiscoBotPlugin(Plugin):
                 )
             )
 
-        event.msg.reply('Here, sir :nerd:', embed=embed)
+        event.msg.reply('Here sir, the top {} currently active servers:'.format(limit), embed=embed)
 
     def create_player_message_embed(self, player):
         """Create a RWRS player rich Discord message."""
