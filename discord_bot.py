@@ -8,6 +8,7 @@ from flask import url_for
 from rwrs import app
 import rwr.constants
 import rwr.scraper
+import rwr.utils
 import steam_api
 import helpers
 import logging
@@ -120,6 +121,30 @@ class RwrsDiscoBotPlugin(Plugin):
             )
 
         event.msg.reply('Here sir, the top {} currently active servers:'.format(limit), embed=embed)
+
+    @Plugin.command('top', parser=True)
+    @Plugin.parser.add_argument('database', choices=rwr.constants.PLAYERS_LIST_DATABASES.keys(), nargs='?', default='invasion')
+    def on_top_command(self, event, args):
+        """Return the top RWR players, by score."""
+        limit = 15
+
+        embed = self.create_base_message_embed()
+
+        with app.app_context():
+            embed.url = url_for('players_list', database=args.database, _external=True)
+
+        embed.title = 'Players › {}'.format(rwr.utils.get_database_name(args.database))
+
+        players = self.rwr_scraper.get_players(args.database, limit=limit)
+
+        for player in players:
+            embed.add_field(
+                name='#{} {}'.format(player.position, player.username),
+                value=helpers.humanize_integer(player.score),
+                inline=True
+            )
+
+        event.msg.reply('Everyone! The top {} {} players (by score)!'.format(limit, rwr.utils.get_database_name(args.database)), embed=embed)
 
     def create_player_message_embed(self, player):
         """Create a RWRS player rich Discord message."""
