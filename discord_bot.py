@@ -101,10 +101,10 @@ class RwrsDiscoBotPlugin(Plugin):
         is_everything_ok, servers_statuses = RwrRootServer.get_data_for_display()
 
         if is_everything_ok:
-            event.msg.reply('✅ Online multiplayer is working fine. Go play with others!')
+            event.msg.reply(':white_check_mark: Online multiplayer is working fine. Go play with others!')
         else:
             with app.app_context():
-                event.msg.reply('⚠️ Looks like online multiplayer is encountering issues.\nFor details, head over here: {}'.format(url_for('online_multiplayer_status', _external=True)))
+                event.msg.reply(':warning: Looks like online multiplayer is encountering issues.\nFor details, head over here: {}'.format(url_for('online_multiplayer_status', _external=True)))
 
     @Plugin.command('servers', parser=True)
     @Plugin.parser.add_argument('--ranked', action='store_const', const='yes')
@@ -116,7 +116,7 @@ class RwrsDiscoBotPlugin(Plugin):
         with app.app_context():
             embed.url = url_for('servers_list', _external=True)
 
-        embed.title = 'Servers'
+        embed.title = ':desktop: Servers'
 
         servers = self.rwr_scraper.filter_servers(
             limit=self.servers_limit,
@@ -152,7 +152,7 @@ class RwrsDiscoBotPlugin(Plugin):
         with app.app_context():
             embed.url = url_for('players_list', database=args.database, _external=True)
 
-        embed.title = 'Players › {}'.format(rwr.utils.get_database_name(args.database))
+        embed.title = ':bust_in_silhouette: Players › {}'.format(rwr.utils.get_database_name(args.database))
 
         players = self.rwr_scraper.get_players(args.database, limit=self.players_limit)
 
@@ -163,7 +163,7 @@ class RwrsDiscoBotPlugin(Plugin):
                 inline=True
             )
 
-        event.msg.reply('Everyone! The top {} **{}** players (ordered by score) :medal:'.format(self.players_limit, rwr.utils.get_database_name(args.database)), embed=embed)
+        event.msg.reply('Everyone! The top {} **{}** players (ordered by score) :military_medal:'.format(self.players_limit, rwr.utils.get_database_name(args.database)), embed=embed)
 
     @Plugin.command('pos', aliases=['position', 'rank'], parser=True)
     @Plugin.parser.add_argument('username')
@@ -177,7 +177,7 @@ class RwrsDiscoBotPlugin(Plugin):
         with app.app_context():
             embed.url = url_for('players_list', database=args.database, target=args.username, _external=True)
 
-        embed.title = 'Players › {} (highlighting {})'.format(rwr.utils.get_database_name(args.database), args.username)
+        embed.title = ':bust_in_silhouette: Players › {} (highlighting {})'.format(rwr.utils.get_database_name(args.database), args.username)
 
         players = self.rwr_scraper.get_players(args.database, limit=self.players_limit, target=args.username)
 
@@ -195,7 +195,7 @@ class RwrsDiscoBotPlugin(Plugin):
         embed = self._create_base_message_embed()
 
         embed.url = player.link_absolute
-        embed.title = 'Players › {} › {}'.format(player.database_name, player.username)
+        embed.title = ':bust_in_silhouette: Players › {} › {}'.format(player.database_name, player.username)
 
         if player.is_me:
             embed.description = ':wave: Hey, I\'m the creator of RWRS and this bot! Glad to see you\'re using it.'
@@ -278,7 +278,7 @@ class RwrsDiscoBotPlugin(Plugin):
         embed = self._create_base_message_embed()
 
         embed.url = server.link_absolute
-        embed.title = 'Servers › {}'.format(server.name)
+        embed.title = ':desktop: Servers › {}'.format(server.name)
 
         if server.website:
             embed.description = '[Server website]({})'.format(server.website)
