@@ -25,7 +25,7 @@ class RwrsDiscoBotPlugin(Plugin):
         self.rwr_scraper = rwr.scraper.DataScraper()
         self.steam_api_client = steam_api.Client(app.config['STEAM_API_KEY'])
 
-    @Plugin.command('stats', parser=True)
+    @Plugin.command('stats', aliases=['statistics'], parser=True)
     @Plugin.parser.add_argument('username')
     @Plugin.parser.add_argument('database', choices=rwr.constants.PLAYERS_LIST_DATABASES.keys(), nargs='?', default='invasion')
     def on_stats_command(self, event, args):
@@ -41,11 +41,13 @@ class RwrsDiscoBotPlugin(Plugin):
 
         player.set_playing_on_server(servers)
 
-        event.msg.reply('There ya go :thumbsup:', embed=self.create_player_message_embed(player))
+        event.msg.reply('There ya go :thumbsup:', embed=self._create_player_message_embed(player))
 
-    @Plugin.command('whereis', '<username:str>')
+    @Plugin.command('whereis', '<username:str>', aliases=['where is', 'where'])
     def on_whereis_command(self, event, username):
         """Get information about the server the specified player is currently playing on."""
+        username = username.upper()
+
         server = self.rwr_scraper.get_current_server_of_player(username)
 
         if not server:
@@ -53,7 +55,7 @@ class RwrsDiscoBotPlugin(Plugin):
 
             return
 
-        event.msg.reply('I found **{}** playing on this server :ok_hand:'.format(username), embed=self.create_server_message_embed(server))
+        event.msg.reply('I found **{}** playing on this server :ok_hand:'.format(username), embed=self._create_server_message_embed(server))
 
     @Plugin.command('server', '<name:str>')
     def on_server_command(self, event, name):
@@ -65,9 +67,9 @@ class RwrsDiscoBotPlugin(Plugin):
 
             return
 
-        event.msg.reply('At your service :muscle:', embed=self.create_server_message_embed(server, with_players_list=True))
+        event.msg.reply('At your service :muscle:', embed=self._create_server_message_embed(server, with_players_list=True))
 
-    @Plugin.command('now')
+    @Plugin.command('now', aliases=['currently'])
     def on_now_command(self, event):
         """Get numbers about the current RWR players and servers."""
         answer = [
@@ -102,10 +104,10 @@ class RwrsDiscoBotPlugin(Plugin):
 
     @Plugin.command('servers')
     def on_servers_command(self, event):
-        """Return the top currently active RWR servers."""
+        """Return the first 10 currently active RWR servers."""
         limit = 10
 
-        embed = self.create_base_message_embed()
+        embed = self._create_base_message_embed()
 
         with app.app_context():
             embed.url = url_for('servers_list', _external=True)
@@ -120,15 +122,15 @@ class RwrsDiscoBotPlugin(Plugin):
                 value=server.summary
             )
 
-        event.msg.reply('Here sir, the top {} currently active servers:'.format(limit), embed=embed)
+        event.msg.reply('Here sir, the first {} currently active servers:'.format(limit), embed=embed)
 
-    @Plugin.command('top', parser=True)
+    @Plugin.command('top', aliases=['leaderboard'], parser=True)
     @Plugin.parser.add_argument('database', choices=rwr.constants.PLAYERS_LIST_DATABASES.keys(), nargs='?', default='invasion')
     def on_top_command(self, event, args):
-        """Return the top RWR players, by score."""
+        """Return the top RWR players, ordered by score."""
         limit = 15
 
-        embed = self.create_base_message_embed()
+        embed = self._create_base_message_embed()
 
         with app.app_context():
             embed.url = url_for('players_list', database=args.database, _external=True)
@@ -146,14 +148,15 @@ class RwrsDiscoBotPlugin(Plugin):
 
         event.msg.reply('Everyone! The top {} **{}** players (ordered by score) :medal:'.format(limit, rwr.utils.get_database_name(args.database)), embed=embed)
 
-    @Plugin.command('pos', parser=True)
+    @Plugin.command('pos', aliases=['position', 'rank'], parser=True)
     @Plugin.parser.add_argument('username')
     @Plugin.parser.add_argument('database', choices=rwr.constants.PLAYERS_LIST_DATABASES.keys(), nargs='?', default='invasion')
     def on_pos_command(self, event, args):
         """Return the position of the specified player in the leaderboard, order by score."""
+        args.username = args.username.upper()
         limit = 15
 
-        embed = self.create_base_message_embed()
+        embed = self._create_base_message_embed()
 
         with app.app_context():
             embed.url = url_for('players_list', database=args.database, target=args.username, _external=True)
@@ -164,16 +167,16 @@ class RwrsDiscoBotPlugin(Plugin):
 
         for player in players:
             embed.add_field(
-                name='{}#{} {}'.format('➡️ ' if player.username.lower() == args.username else '', player.position, player.username),
+                name='{}#{} {}'.format('➡️ ' if player.username == args.username else '', player.position, player.username),
                 value=helpers.humanize_integer(player.score),
                 inline=True
             )
 
         event.msg.reply('Here\'s the position of **{}** on the **{}** leaderboard (ordered by score):'.format(args.username, rwr.utils.get_database_name(args.database)), embed=embed)
 
-    def create_player_message_embed(self, player):
+    def _create_player_message_embed(self, player):
         """Create a RWRS player rich Discord message."""
-        embed = self.create_base_message_embed()
+        embed = self._create_base_message_embed()
 
         embed.url = player.link_absolute
         embed.title = 'Players › {} › {}'.format(player.database_name, player.username)
@@ -254,9 +257,9 @@ class RwrsDiscoBotPlugin(Plugin):
 
         return embed
 
-    def create_server_message_embed(self, server, with_players_list=False):
+    def _create_server_message_embed(self, server, with_players_list=False):
         """Create a RWRS server rich Discord message."""
-        embed = self.create_base_message_embed()
+        embed = self._create_base_message_embed()
 
         embed.url = server.link_absolute
         embed.title = 'Servers › {}'.format(server.name)
@@ -320,7 +323,7 @@ class RwrsDiscoBotPlugin(Plugin):
 
         return embed
 
-    def create_base_message_embed(self):
+    def _create_base_message_embed(self):
         """Create a rich Discord message."""
         embed = MessageEmbed()
 
