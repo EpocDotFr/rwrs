@@ -259,10 +259,9 @@ class RwrsDiscoBotPlugin(Plugin):
         if server.location.country_code:
             embed.add_field(
                 name='Location',
-                value=':flag_{}: {}{}'.format(
+                value=':flag_{}: {}'.format(
                     server.location.country_code,
-                    server.location.city_name + ', ' if server.location.city_name else '',
-                    server.location.country_name
+                    server.location.text
                 ),
                 inline=True
             )

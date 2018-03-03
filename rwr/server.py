@@ -91,6 +91,10 @@ class Server:
                 ret.location.country_name = location['country']['names']['en']
                 ret.location.continent_code = location['continent']['code'].lower()
                 ret.location.continent_name = location['continent']['names']['en']
+                ret.location.text = '{}{}'.format(
+                    ret.location.city_name + ', ' if ret.location.city_name else '',
+                    ret.location.country_name
+                )
 
         ret.steam_join_link = 'steam://rungameid/270150//server_address={ip} server_port={port}'.format(ip=ret.ip, port=ret.port)
 
@@ -173,6 +177,7 @@ class ServerLocation:
     country_name = None
     continent_code = None
     continent_name = None
+    text = None
 
     def __repr__(self):
         return 'ServerLocation:' + self.country_code
