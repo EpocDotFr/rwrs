@@ -48,7 +48,6 @@ class Server:
             ret.map.name = target_map['name']
             ret.map.has_minimap = target_map['has_minimap']
             ret.map.has_preview = target_map['has_preview']
-            ret.map.name_display = ret.map.name if ret.map.name else ret.map.id
 
             if ret.map.has_preview:
                 if current_app:
@@ -56,6 +55,8 @@ class Server:
                 else:
                     with app.app_context():
                         ret.map.set_preview_image_urls(ret.type)
+
+        ret.map.name_display = ret.map.name if ret.map.name else ret.map.id
 
         ret.bots = int(bots_node.text)
 
