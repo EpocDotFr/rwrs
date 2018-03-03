@@ -96,7 +96,11 @@ class Server:
                     ret.location.country_name
                 )
 
-        ret.steam_join_link = 'steam://rungameid/270150//server_address={ip} server_port={port}'.format(ip=ret.ip, port=ret.port)
+        ret.steam_join_link = 'steam://rungameid/{gameid}//server_address={ip} server_port={port}'.format(
+            gameid=app.config['RWR_STEAM_APP_ID'],
+            ip=ret.ip,
+            port=ret.port
+        )
 
         html_server_node = html_servers.xpath('(//table/tr[(td[3] = \'{ip}\') and (td[4] = \'{port}\')])[1]'.format(ip=ret.ip, port=ret.port))
 
