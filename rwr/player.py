@@ -45,6 +45,7 @@ class Player:
         ret.score = int(score_cell.text)
         ret.kd_ratio = float(kd_ratio_cell.text)
         ret.time_played = utils.parse_time(time_played_cell.text)
+        ret.display_time_played_in_days = ret.time_played > 60 * 60 * 24
         ret.longest_kill_streak = int(longest_kill_streak_cell.text)
         ret.targets_destroyed = int(targets_destroyed_cell.text)
         ret.vehicles_destroyed = int(vehicles_destroyed_cell.text)

@@ -192,7 +192,7 @@ class RwrsDiscoBotPlugin(Plugin):
 
         embed.add_field(
             name='Time played',
-            value=helpers.humanize_seconds_to_hours(player.time_played) + ' (' + helpers.humanize_seconds_to_days(player.time_played) + ')',
+            value=helpers.humanize_seconds_to_hours(player.time_played) + ' (' + helpers.humanize_seconds_to_days(player.time_played) + ')' if player.display_time_played_in_days else '',
             inline=True
         )
 
