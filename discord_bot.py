@@ -101,7 +101,7 @@ class RwrsDiscoBotPlugin(Plugin):
 
     @Plugin.command('servers')
     def on_servers_command(self, event):
-        """Return the top active RWR servers."""
+        """Return the top currently active RWR servers."""
         limit = 10
 
         embed = self.create_base_message_embed()
@@ -116,7 +116,7 @@ class RwrsDiscoBotPlugin(Plugin):
 
         for server in servers:
             embed.add_field(
-                name=server.name_display,
+                name='{}{}'.format(':flag_' + server.location.country_code + ': ' if server.location.country_code else '', server.name_display),
                 value='{} - {} - {}/{}'.format(
                     server.type_name,
                     server.map.name_display,
@@ -280,7 +280,7 @@ class RwrsDiscoBotPlugin(Plugin):
             )
 
         if server.is_ranked:
-            embed.set_footer(text='⭐️ Ranked (official) server')
+            embed.set_footer(text='⭐️ Ranked {} server'.format(server.database_name))
 
         return embed
 
