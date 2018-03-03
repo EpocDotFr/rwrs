@@ -24,7 +24,7 @@
 
 {% set canonical_url = url_for('server_details', ip=server.ip, port=server.port, slug=server.name_slug, _external=True) %}
 
-{% set meta_image = url_for('static', filename='images/maps/preview/{game_type}/{map_id}.png'.format(game_type=server.type, map_id=server.map.id), _external=True) if server.map.has_preview %}
+{% set meta_image = server.map.preview_absolute if server.map.has_preview %}
 
 {% block content %}
     <p class="txtcenter mbs">
@@ -123,7 +123,7 @@
                 {% if server.map.has_preview %}
                     <tr>
                         <td class="txtcenter">
-                            <img src="{{ url_for('static', filename='images/maps/preview/{game_type}/{map_id}.png'.format(game_type=server.type, map_id=server.map.id)) }}">
+                            <img src="{{ server.map.preview }}">
                         </td>
                     </tr>
                 {% endif %}

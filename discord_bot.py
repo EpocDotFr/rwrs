@@ -222,10 +222,9 @@ class RwrsDiscoBotPlugin(Plugin):
             )
 
         if server.map.has_preview:
-            with app.app_context():
-                embed.set_thumbnail(
-                    url=url_for('static', filename='images/maps/preview/{game_type}/{map_id}.png'.format(game_type=server.type, map_id=server.map.id), _external=True)
-                )
+            embed.set_thumbnail(
+                url=server.map.preview_absolute
+            )
 
         embed.add_field(
             name='Type',

@@ -50,6 +50,13 @@ class Server:
             ret.map.has_preview = target_map['has_preview']
             ret.map.name_display = ret.map.name if ret.map.name else ret.map.id
 
+            if ret.map.has_preview:
+                if current_app:
+                    ret.map.set_preview_image_urls(ret.type)
+                else:
+                    with app.app_context():
+                        ret.map.set_preview_image_urls(ret.type)
+
         ret.bots = int(bots_node.text)
 
         ret.players = ServerPlayers()
@@ -136,10 +143,21 @@ class ServerMap:
     name = None
     has_minimap = False
     has_preview = False
-    url = None
 
     def __repr__(self):
         return 'ServerMap:' + self.id
+
+    def set_preview_image_urls(self, game_type):
+        """Set the relative and absolute URLs to the preview image of this map."""
+        params = {
+            'game_type': game_type,
+            'map_id': self.id
+        }
+
+        preview_url = 'images/maps/preview/{game_type}/{map_id}.png'.format(**params)
+
+        self.preview = url_for('static', filename=preview_url)
+        self.preview_absolute = url_for('static', filename=preview_url, _external=True)
 
 
 class ServerPlayers:
