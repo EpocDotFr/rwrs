@@ -324,6 +324,8 @@ PLAYERS_LIST_DATABASES = {
     'pacific': {'name': 'Pacific', 'ranks_country': app.config['PACIFIC_PLAYERS_RANKS_COUNTRY'], 'realm': 'official_pacific'}
 }
 
+VALID_DATABASES = PLAYERS_LIST_DATABASES.keys()
+
 ROOT_RWR_SERVERS = [
     {
         'label': 'Master servers',

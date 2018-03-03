@@ -18,6 +18,10 @@ monkey.patch_all()
 
 
 class RwrsDiscoBotPlugin(Plugin):
+    embed_color = 10800919 # The well-known primary RWRS color #A4CF17, in the decimal format
+    players_limit = 15
+    servers_limit = 10
+
     """The RWRS Disco Bot plugin."""
     def load(self, ctx):
         super(RwrsDiscoBotPlugin, self).load(ctx)
@@ -27,7 +31,7 @@ class RwrsDiscoBotPlugin(Plugin):
 
     @Plugin.command('stats', aliases=['statistics'], parser=True)
     @Plugin.parser.add_argument('username')
-    @Plugin.parser.add_argument('database', choices=rwr.constants.PLAYERS_LIST_DATABASES.keys(), nargs='?', default='invasion')
+    @Plugin.parser.add_argument('database', choices=rwr.constants.VALID_DATABASES, nargs='?', default='invasion')
     def on_stats_command(self, event, args):
         """Get stats about the specified player."""
         player = self.rwr_scraper.search_player_by_username(args.database, args.username)
@@ -102,11 +106,11 @@ class RwrsDiscoBotPlugin(Plugin):
             with app.app_context():
                 event.msg.reply('⚠️ Looks like online multiplayer is encountering issues.\nFor details, head over here: {}'.format(url_for('online_multiplayer_status', _external=True)))
 
-    @Plugin.command('servers')
-    def on_servers_command(self, event):
+    @Plugin.command('servers', parser=True)
+    @Plugin.parser.add_argument('--ranked', action='store_const', const='yes')
+    @Plugin.parser.add_argument('--not-full', action='store_const', const='yes')
+    def on_servers_command(self, event, args):
         """Return the first 10 currently active RWR servers."""
-        limit = 10
-
         embed = self._create_base_message_embed()
 
         with app.app_context():
@@ -114,7 +118,12 @@ class RwrsDiscoBotPlugin(Plugin):
 
         embed.title = 'Servers'
 
-        servers = self.rwr_scraper.filter_servers(limit=limit, not_empty='yes', not_full='yes')
+        servers = self.rwr_scraper.filter_servers(
+            limit=self.servers_limit,
+            not_empty='yes',
+            not_full=args.not_full,
+            ranked=args.ranked
+        )
 
         for server in servers:
             embed.add_field(
@@ -122,14 +131,12 @@ class RwrsDiscoBotPlugin(Plugin):
                 value=server.summary
             )
 
-        event.msg.reply('Here sir, the first {} currently active servers:'.format(limit), embed=embed)
+        event.msg.reply('Here sir, the first {} currently active servers:'.format(self.servers_limit), embed=embed)
 
     @Plugin.command('top', aliases=['leaderboard'], parser=True)
-    @Plugin.parser.add_argument('database', choices=rwr.constants.PLAYERS_LIST_DATABASES.keys(), nargs='?', default='invasion')
+    @Plugin.parser.add_argument('database', choices=rwr.constants.VALID_DATABASES, nargs='?', default='invasion')
     def on_top_command(self, event, args):
         """Return the top RWR players, ordered by score."""
-        limit = 15
-
         embed = self._create_base_message_embed()
 
         with app.app_context():
@@ -137,7 +144,7 @@ class RwrsDiscoBotPlugin(Plugin):
 
         embed.title = 'Players › {}'.format(rwr.utils.get_database_name(args.database))
 
-        players = self.rwr_scraper.get_players(args.database, limit=limit)
+        players = self.rwr_scraper.get_players(args.database, limit=self.players_limit)
 
         for player in players:
             embed.add_field(
@@ -146,15 +153,14 @@ class RwrsDiscoBotPlugin(Plugin):
                 inline=True
             )
 
-        event.msg.reply('Everyone! The top {} **{}** players (ordered by score) :medal:'.format(limit, rwr.utils.get_database_name(args.database)), embed=embed)
+        event.msg.reply('Everyone! The top {} **{}** players (ordered by score) :medal:'.format(self.players_limit, rwr.utils.get_database_name(args.database)), embed=embed)
 
     @Plugin.command('pos', aliases=['position', 'rank'], parser=True)
     @Plugin.parser.add_argument('username')
-    @Plugin.parser.add_argument('database', choices=rwr.constants.PLAYERS_LIST_DATABASES.keys(), nargs='?', default='invasion')
+    @Plugin.parser.add_argument('database', choices=rwr.constants.VALID_DATABASES, nargs='?', default='invasion')
     def on_pos_command(self, event, args):
         """Return the position of the specified player in the leaderboard, order by score."""
         args.username = args.username.upper()
-        limit = 15
 
         embed = self._create_base_message_embed()
 
@@ -163,7 +169,7 @@ class RwrsDiscoBotPlugin(Plugin):
 
         embed.title = 'Players › {} (highlighting {})'.format(rwr.utils.get_database_name(args.database), args.username)
 
-        players = self.rwr_scraper.get_players(args.database, limit=limit, target=args.username)
+        players = self.rwr_scraper.get_players(args.database, limit=self.players_limit, target=args.username)
 
         for player in players:
             embed.add_field(
@@ -334,7 +340,7 @@ class RwrsDiscoBotPlugin(Plugin):
                 icon_url=url_for('static', filename='images/icon_square_dark_256.png', _external=True)
             )
 
-        embed.color = 10800919 # The well-known primary RWRS color #A4CF17, in the decimal format
+        embed.color = self.embed_color
 
         return embed
 
