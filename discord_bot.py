@@ -131,7 +131,17 @@ class RwrsDiscoBotPlugin(Plugin):
                 value=server.summary
             )
 
-        event.msg.reply('Here sir, the first {} currently active servers:'.format(self.servers_limit), embed=embed)
+        filters = []
+
+        if args.not_full:
+            filters.append('not full')
+
+        if args.ranked:
+            filters.append('ranked')
+
+        filters_string = ', ' + ', '.join(filters) if filters else ''
+
+        event.msg.reply('Here sir, the first {} currently active{} servers:'.format(self.servers_limit, filters_string), embed=embed)
 
     @Plugin.command('top', aliases=['leaderboard'], parser=True)
     @Plugin.parser.add_argument('database', choices=rwr.constants.VALID_DATABASES, nargs='?', default='invasion')
