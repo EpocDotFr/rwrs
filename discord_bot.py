@@ -133,13 +133,11 @@ class RwrsDiscoBotPlugin(Plugin):
         embed.url = player.link_absolute
         embed.title = 'Players › {} › {}'.format(player.database_name, player.username)
 
-        username_lower = player.username.lower()
-
-        if username_lower == app.config['MY_USERNAME']:
+        if player.is_me:
             embed.description = ':wave: Hey, I\'m the creator of RWRS and this bot! Glad to see you\'re using it.'
-        elif username_lower in app.config['CONTRIBUTORS']:
+        elif player.is_contributor:
             embed.description = ':v: This player contributed in a way or another to RWRS. Thanks to her/him!'
-        elif username_lower in app.config['DEVS']:
+        elif player.is_rwr_dev:
             embed.description = ':military_medal: Say hi to one of the Running With Rifles developers!'
 
         embed.set_thumbnail(

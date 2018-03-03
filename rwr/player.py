@@ -31,7 +31,15 @@ class Player:
         rank_image_cell = node[17]
 
         ret.position = int(position_cell.text)
+
         ret.username = username_cell.text
+
+        username_lower = ret.username.lower()
+
+        ret.is_me = username_lower == app.config['MY_USERNAME']
+        ret.is_contributor = username_lower in app.config['CONTRIBUTORS']
+        ret.is_rwr_dev = username_lower in app.config['DEVS']
+
         ret.kills = int(kills_cell.text)
         ret.deaths = int(deaths_cell.text)
         ret.score = int(score_cell.text)

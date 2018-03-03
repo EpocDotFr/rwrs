@@ -1,6 +1,5 @@
 {% macro player_name(player, raw=False, link=False, show_rank=False, show_online=False, database=None) -%}
     {% set username = player if raw else player.username %}
-    {% set username_lower = username.lower() %}
     {% set database = database if database else request.view_args.get('database') %}
     {% set make_link = link and database %}
 
@@ -18,9 +17,9 @@
         </a>
     {%- endif -%}
 
-    {% if username_lower == config['MY_USERNAME'] %} <img src="{{ url_for('static', filename='images/epoc.png') }}" title="Hey, I'm the creator of this website! Glad to see you're using it." class="help me">
-    {%- elif username_lower in config['CONTRIBUTORS'] %} <i class="fa fa-hand-peace-o help" title="This player contributed in a way or another to RWRS. Thanks to her/him!"></i>
-    {%- elif username_lower in config['DEVS'] %} <img src="{{ url_for('static', filename='images/rwr_icon.png') }}" title="Say hi to one of the Running With Rifles developers!" class="help">
+    {% if player.is_me %} <img src="{{ url_for('static', filename='images/epoc.png') }}" title="Hey, I'm the creator of this website! Glad to see you're using it." class="help me">
+    {%- elif player.is_contributor %} <i class="fa fa-hand-peace-o help" title="This player contributed in a way or another to RWRS. Thanks to her/him!"></i>
+    {%- elif player.is_rwr_dev %} <img src="{{ url_for('static', filename='images/rwr_icon.png') }}" title="Say hi to one of the Running With Rifles developers!" class="help">
     {%- endif %}
 {%- endmacro %}
 
