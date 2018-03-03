@@ -116,7 +116,7 @@ class RwrsDiscoBotPlugin(Plugin):
         for server in servers:
             embed.add_field(
                 name='{}{}'.format(':flag_' + server.location.country_code + ': ' if server.location.country_code else '', server.name_display),
-                value=server.summary
+                value=server.summary + ' [Join now]({})'.format(server.steam_join_link.replace(' ', '%20')) # FIXME Don't work
             )
 
         event.msg.reply('Here sir, the top {} currently active servers:'.format(limit), embed=embed)

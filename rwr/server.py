@@ -109,7 +109,10 @@ class Server:
                 ret.players.list = [player_name.strip() for player_name in players_node.text.split(',')]
                 ret.players.list.sort()
 
-        ret.name_display = '⭐️ ' + ret.name if ret.is_ranked else ret.name
+        ret.name_display = '{}{}'.format(
+            '⭐️ ' if ret.is_ranked else '',
+            ret.name
+        )
         ret.summary = '{} - {} - {}/{}'.format(
             ret.type_name,
             ret.map.name_display,
