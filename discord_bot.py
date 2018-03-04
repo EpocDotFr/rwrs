@@ -20,12 +20,12 @@ with open('discord_bot.md', 'r', encoding='utf-8') as f:
     HELP_CONTENT = f.read()
 
 VALID_PLAYER_SORTS = {
-    'score': {'name': 'score', 'value': rwr.constants.PlayersSort.SCORE},
-    'xp': {'name': 'experience', 'value': rwr.constants.PlayersSort.XP},
-    'kills': {'name': 'kills', 'value': rwr.constants.PlayersSort.KILLS},
-    'deaths': {'name': 'deaths', 'value': rwr.constants.PlayersSort.DEATHS},
-    'ratio': {'name': 'K/D ratio', 'value': rwr.constants.PlayersSort.KD_RATIO},
-    'time': {'name': 'time played', 'value': rwr.constants.PlayersSort.TIME_PLAYED}
+    'score': {'name': 'score', 'value': rwr.constants.PlayersSort.SCORE, 'getter': lambda player: helpers.humanize_integer(player.score)},
+    'xp': {'name': 'experience', 'value': rwr.constants.PlayersSort.XP, 'getter': lambda player: helpers.humanize_integer(player.xp)},
+    'kills': {'name': 'kills', 'value': rwr.constants.PlayersSort.KILLS, 'getter': lambda player: helpers.humanize_integer(player.kills)},
+    'deaths': {'name': 'deaths', 'value': rwr.constants.PlayersSort.DEATHS, 'getter': lambda player: helpers.humanize_integer(player.deaths)},
+    'ratio': {'name': 'K/D ratio', 'value': rwr.constants.PlayersSort.KD_RATIO, 'getter': lambda player: player.kd_ratio},
+    'time': {'name': 'time played', 'value': rwr.constants.PlayersSort.TIME_PLAYED, 'getter': lambda player: helpers.humanize_seconds_to_hours(player.time_played)}
 }
 
 
@@ -164,7 +164,7 @@ class RwrsDiscoBotPlugin(Plugin):
     @Plugin.parser.add_argument('sort', choices=VALID_PLAYER_SORTS.keys(), nargs='?', default='score')
     @Plugin.parser.add_argument('database', choices=rwr.constants.VALID_DATABASES, nargs='?', default='invasion')
     def on_top_command(self, event, args):
-        """Displays the top 15 players, ordered by score."""
+        """Displays the top 15 players."""
         embed = self._create_base_message_embed()
 
         with app.app_context():
@@ -181,7 +181,7 @@ class RwrsDiscoBotPlugin(Plugin):
         for player in players:
             embed.add_field(
                 name='#{} {}'.format(player.position, player.username),
-                value=helpers.humanize_integer(player.score),
+                value=VALID_PLAYER_SORTS[args.sort]['getter'](player),
                 inline=True
             )
 
@@ -196,7 +196,7 @@ class RwrsDiscoBotPlugin(Plugin):
     @Plugin.parser.add_argument('sort', choices=VALID_PLAYER_SORTS.keys(), nargs='?', default='score')
     @Plugin.parser.add_argument('database', choices=rwr.constants.VALID_DATABASES, nargs='?', default='invasion')
     def on_pos_command(self, event, args):
-        """Highlights the specified player in the leaderboard, ordered by score."""
+        """Highlights the specified player in the leaderboard."""
         args.username = args.username.upper()
 
         embed = self._create_base_message_embed()
@@ -219,7 +219,7 @@ class RwrsDiscoBotPlugin(Plugin):
         for player in players:
             embed.add_field(
                 name='{}#{} {}'.format('➡️ ' if player.username == args.username else '', player.position, player.username),
-                value=helpers.humanize_integer(player.score),
+                value=VALID_PLAYER_SORTS[args.sort]['getter'](player),
                 inline=True
             )
 

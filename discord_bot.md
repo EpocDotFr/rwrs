@@ -18,7 +18,7 @@
     - **--ranked**: only return ranked (official) servers
     - **--not-full**: only return servers with room
 
-- **!top** (alias: **!leaderboard**): displays the top players. Parameters:
+- **!top** (alias: **!leaderboard**): displays the top 15 players. Parameters:
     - **sort**: optional, one of **score**, **xp**, **kills**, **deaths**, **ratio** or **time**. Defaults to **score**
     - **database**: optional, one of **invasion** or **pacific**. Defaults to **invasion**
 
