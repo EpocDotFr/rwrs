@@ -82,8 +82,6 @@ def players_list(database):
 
     scraper = rwr.scraper.DataScraper()
 
-    servers = scraper.get_servers()
-
     players = scraper.get_players(
         database,
         sort=args['sort'],
@@ -92,18 +90,15 @@ def players_list(database):
         limit=args['limit']
     )
 
-    target_found = False
-
-    for player in players:
-        player.set_playing_on_server(servers)
-
-        if args.get('target') and player.username == args.get('target'):
-            target_found = True
-
-    if args.get('target') and not target_found:
+    if args.get('target') and not players:
         flash(ERROR_PLAYER_NOT_FOUND.format(username=args.get('target'), database=rwr.utils.get_database_name(database)), 'error')
 
         return redirect(url_for('players_list', database=database))
+
+    servers = scraper.get_servers()
+
+    for player in players:
+        player.set_playing_on_server(servers)
 
     g.LAYOUT = 'large'
 

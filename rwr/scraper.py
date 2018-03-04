@@ -315,6 +315,9 @@ class DataScraper:
         for node in html_content.xpath('//table/tr[position() > 1]'):
             players.append(Player.load(database, node))
 
+        if target and target not in [player.username for player in players]:
+            return []
+
         return players
 
     @cache.memoize(timeout=app.config['PLAYERS_CACHE_TIMEOUT'])

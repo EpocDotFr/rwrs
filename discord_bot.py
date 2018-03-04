@@ -199,6 +199,18 @@ class RwrsDiscoBotPlugin(Plugin):
         """Highlights the specified player in the leaderboard."""
         args.username = args.username.upper()
 
+        players = self.rwr_scraper.get_players(
+            args.database,
+            limit=self.players_limit,
+            target=args.username,
+            sort=VALID_PLAYER_SORTS[args.sort]['value']
+        )
+
+        if not players:
+            event.msg.reply('Sorry dude, this player don\'t exist :confused:')
+
+            return
+
         embed = self._create_base_message_embed()
 
         with app.app_context():
@@ -207,13 +219,6 @@ class RwrsDiscoBotPlugin(Plugin):
         embed.title = ':bust_in_silhouette: Players › {} (highlighting {})'.format(
             rwr.utils.get_database_name(args.database),
             args.username
-        )
-
-        players = self.rwr_scraper.get_players(
-            args.database,
-            limit=self.players_limit,
-            target=args.username,
-            sort=VALID_PLAYER_SORTS[args.sort]['value']
         )
 
         for player in players:
