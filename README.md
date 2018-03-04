@@ -26,7 +26,7 @@ and its Pacific DLC. Available at [rwrstats.com](https://rwrstats.com/).
     - Number of online servers (+ the active ones)
     - Number of players on a server
   - Root RWR servers status (online multiplayer)
-  - Discord bot able to give information about players and servers (available on the [RWR Discord Server](https://discord.gg/010ixMlfmhK5BhYOv)). [Available commands](discord_bot.md)
+  - Discord bot able to give several kind of information. Available on the [RWR Discord Server](https://discord.gg/010ixMlfmhK5BhYOv). [Commands documentation](discord_bot.md)
 
 ## Prerequisites
 
