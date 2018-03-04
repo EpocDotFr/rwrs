@@ -41,10 +41,21 @@ class RwrsDiscoBotPlugin(Plugin):
         self.rwr_scraper = rwr.scraper.DataScraper()
         self.steam_api_client = steam_api.Client(app.config['STEAM_API_KEY'])
 
-    @Plugin.command('help', aliases=['wut', 'what', 'how'])
+    @Plugin.command('help')
     def on_help_command(self, event):
         """Get help about the bot."""
         event.msg.reply(HELP_CONTENT)
+
+    @Plugin.command('info')
+    def on_info_command(self, event):
+        """Get information about the bot."""
+        info = [
+            'ℹ️ Hi! I was created by @Epoc#4256 - the guy behind https://rwrstats.com - around the beginning of March 2018.',
+            'Like the rwrstats.com website, my brain is powered by the Python programming language.',
+            'P.S. You look beautiful today.'
+        ]
+
+        event.msg.reply('\n'.join(info))
 
     @Plugin.command('stats', aliases=['statistics'], parser=True)
     @Plugin.parser.add_argument('username')
@@ -191,7 +202,7 @@ class RwrsDiscoBotPlugin(Plugin):
             VALID_PLAYER_SORTS[args.sort]['name']
         ), embed=embed)
 
-    @Plugin.command('pos', aliases=['position', 'rank'], parser=True)
+    @Plugin.command('pos', aliases=['position', 'ranking'], parser=True)
     @Plugin.parser.add_argument('username')
     @Plugin.parser.add_argument('sort', choices=VALID_PLAYER_SORTS.keys(), nargs='?', default='score')
     @Plugin.parser.add_argument('database', choices=rwr.constants.VALID_DATABASES, nargs='?', default='invasion')
