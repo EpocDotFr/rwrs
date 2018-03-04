@@ -16,6 +16,9 @@ import logging
 
 monkey.patch_all()
 
+with open('discord_bot.md', 'r', encoding='utf-8') as f:
+    HELP_CONTENT = f.read()
+
 
 class RwrsDiscoBotPlugin(Plugin):
     embed_color = 10800919 # The well-known primary RWRS color #A4CF17, in the decimal format
@@ -29,11 +32,16 @@ class RwrsDiscoBotPlugin(Plugin):
         self.rwr_scraper = rwr.scraper.DataScraper()
         self.steam_api_client = steam_api.Client(app.config['STEAM_API_KEY'])
 
+    @Plugin.command('help', aliases=['wut', 'what', 'how'])
+    def on_help_command(self, event):
+        """Get help about the bot."""
+        event.msg.reply(HELP_CONTENT)
+
     @Plugin.command('stats', aliases=['statistics'], parser=True)
     @Plugin.parser.add_argument('username')
     @Plugin.parser.add_argument('database', choices=rwr.constants.VALID_DATABASES, nargs='?', default='invasion')
     def on_stats_command(self, event, args):
-        """Get stats about the specified player."""
+        """Displays stats about the specified player."""
         player = self.rwr_scraper.search_player_by_username(args.database, args.username)
 
         if not player:
@@ -49,7 +57,7 @@ class RwrsDiscoBotPlugin(Plugin):
 
     @Plugin.command('whereis', '<username:str>', aliases=['where is', 'where'])
     def on_whereis_command(self, event, username):
-        """Get information about the server the specified player is currently playing on."""
+        """Displays information about the server the specified player is currently playing on."""
         username = username.upper()
 
         server = self.rwr_scraper.get_current_server_of_player(username)
@@ -63,7 +71,7 @@ class RwrsDiscoBotPlugin(Plugin):
 
     @Plugin.command('server', '<name:str>')
     def on_server_command(self, event, name):
-        """Get information about the specified server."""
+        """Displays information about the specified server."""
         server = self.rwr_scraper.get_server_by_name(name)
 
         if not server:
@@ -75,7 +83,7 @@ class RwrsDiscoBotPlugin(Plugin):
 
     @Plugin.command('now', aliases=['currently'])
     def on_now_command(self, event):
-        """Get numbers about the current RWR players and servers."""
+        """Displays numbers about the current players and servers."""
         answer = [
             'There\'s currently **{total_players}** player{total_players_plural} in total. **{online_players}** of them {online_players_plural} playing multiplayer online.',
             'There\'s also **{total_servers}** online multiplayer servers, **{active_servers}** of which {active_servers_plural} active :wink:'
@@ -97,7 +105,7 @@ class RwrsDiscoBotPlugin(Plugin):
 
     @Plugin.command('status')
     def on_status_command(self, event):
-        """Get status about the RWR online multiplayer architecture."""
+        """Displays the current status of the online multiplayer."""
         is_everything_ok, servers_statuses = RwrRootServer.get_data_for_display()
 
         if is_everything_ok:
@@ -110,7 +118,7 @@ class RwrsDiscoBotPlugin(Plugin):
     @Plugin.parser.add_argument('--ranked', action='store_const', const='yes')
     @Plugin.parser.add_argument('--not-full', action='store_const', const='yes')
     def on_servers_command(self, event, args):
-        """Return the first 10 currently active RWR servers."""
+        """Displays the first 10 currently active servers."""
         embed = self._create_base_message_embed()
 
         with app.app_context():
@@ -146,7 +154,7 @@ class RwrsDiscoBotPlugin(Plugin):
     @Plugin.command('top', aliases=['leaderboard'], parser=True)
     @Plugin.parser.add_argument('database', choices=rwr.constants.VALID_DATABASES, nargs='?', default='invasion')
     def on_top_command(self, event, args):
-        """Return the top RWR players, ordered by score."""
+        """Displays the top 15 players, ordered by score."""
         embed = self._create_base_message_embed()
 
         with app.app_context():
@@ -169,7 +177,7 @@ class RwrsDiscoBotPlugin(Plugin):
     @Plugin.parser.add_argument('username')
     @Plugin.parser.add_argument('database', choices=rwr.constants.VALID_DATABASES, nargs='?', default='invasion')
     def on_pos_command(self, event, args):
-        """Return the position of the specified player in the leaderboard, order by score."""
+        """Highlights the specified player in the leaderboard, ordered by score."""
         args.username = args.username.upper()
 
         embed = self._create_base_message_embed()
