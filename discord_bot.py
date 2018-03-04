@@ -19,6 +19,15 @@ monkey.patch_all()
 with open('discord_bot.md', 'r', encoding='utf-8') as f:
     HELP_CONTENT = f.read()
 
+VALID_PLAYER_SORTS = {
+    'score': {'name': 'score', 'value': rwr.constants.PlayersSort.SCORE},
+    'xp': {'name': 'experience', 'value': rwr.constants.PlayersSort.XP},
+    'kills': {'name': 'kills', 'value': rwr.constants.PlayersSort.KILLS},
+    'deaths': {'name': 'deaths', 'value': rwr.constants.PlayersSort.DEATHS},
+    'ratio': {'name': 'K/D ratio', 'value': rwr.constants.PlayersSort.KD_RATIO},
+    'time': {'name': 'time played', 'value': rwr.constants.PlayersSort.TIME_PLAYED}
+}
+
 
 class RwrsDiscoBotPlugin(Plugin):
     embed_color = 10800919 # The well-known primary RWRS color #A4CF17, in the decimal format
@@ -152,6 +161,7 @@ class RwrsDiscoBotPlugin(Plugin):
         event.msg.reply('Here sir, the first {} currently active{} servers:'.format(self.servers_limit, filters_string), embed=embed)
 
     @Plugin.command('top', aliases=['leaderboard'], parser=True)
+    @Plugin.parser.add_argument('sort', choices=VALID_PLAYER_SORTS.keys(), nargs='?', default='score')
     @Plugin.parser.add_argument('database', choices=rwr.constants.VALID_DATABASES, nargs='?', default='invasion')
     def on_top_command(self, event, args):
         """Displays the top 15 players, ordered by score."""
@@ -162,7 +172,11 @@ class RwrsDiscoBotPlugin(Plugin):
 
         embed.title = ':bust_in_silhouette: Players › {}'.format(rwr.utils.get_database_name(args.database))
 
-        players = self.rwr_scraper.get_players(args.database, limit=self.players_limit)
+        players = self.rwr_scraper.get_players(
+            args.database,
+            limit=self.players_limit,
+            sort=VALID_PLAYER_SORTS[args.sort]['value']
+        )
 
         for player in players:
             embed.add_field(
@@ -171,10 +185,15 @@ class RwrsDiscoBotPlugin(Plugin):
                 inline=True
             )
 
-        event.msg.reply('Everyone! The top {} **{}** players (ordered by score) :military_medal:'.format(self.players_limit, rwr.utils.get_database_name(args.database)), embed=embed)
+        event.msg.reply('Everyone! The top {} **{}** players, ordered by {} :military_medal:'.format(
+            self.players_limit,
+            rwr.utils.get_database_name(args.database),
+            VALID_PLAYER_SORTS[args.sort]['name']
+        ), embed=embed)
 
     @Plugin.command('pos', aliases=['position', 'rank'], parser=True)
     @Plugin.parser.add_argument('username')
+    @Plugin.parser.add_argument('sort', choices=VALID_PLAYER_SORTS.keys(), nargs='?', default='score')
     @Plugin.parser.add_argument('database', choices=rwr.constants.VALID_DATABASES, nargs='?', default='invasion')
     def on_pos_command(self, event, args):
         """Highlights the specified player in the leaderboard, ordered by score."""
@@ -185,9 +204,17 @@ class RwrsDiscoBotPlugin(Plugin):
         with app.app_context():
             embed.url = url_for('players_list', database=args.database, target=args.username, _external=True)
 
-        embed.title = ':bust_in_silhouette: Players › {} (highlighting {})'.format(rwr.utils.get_database_name(args.database), args.username)
+        embed.title = ':bust_in_silhouette: Players › {} (highlighting {})'.format(
+            rwr.utils.get_database_name(args.database),
+            args.username
+        )
 
-        players = self.rwr_scraper.get_players(args.database, limit=self.players_limit, target=args.username)
+        players = self.rwr_scraper.get_players(
+            args.database,
+            limit=self.players_limit,
+            target=args.username,
+            sort=VALID_PLAYER_SORTS[args.sort]['value']
+        )
 
         for player in players:
             embed.add_field(
@@ -196,7 +223,11 @@ class RwrsDiscoBotPlugin(Plugin):
                 inline=True
             )
 
-        event.msg.reply('Here\'s the position of **{}** on the **{}** leaderboard (ordered by score):'.format(args.username, rwr.utils.get_database_name(args.database)), embed=embed)
+        event.msg.reply('Here\'s the position of **{}** on the **{}** leaderboard, ordered by {}:'.format(
+            args.username,
+            rwr.utils.get_database_name(args.database),
+            VALID_PLAYER_SORTS[args.sort]['name']
+        ), embed=embed)
 
     def _create_player_message_embed(self, player):
         """Create a RWRS player rich Discord message."""

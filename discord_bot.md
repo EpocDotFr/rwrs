@@ -5,10 +5,10 @@
     - **database**: optional, one of **invasion** or **pacific**. Defaults to **invasion**
 
 - **!whereis** (aliases: **!where is**, **!where**): displays information about the server the specified player is currently playing on. Parameters:
-    - **username**: required. Giving full username isn't required
+    - **username**: required. Full username isn't required
 
 - **!server**: displays information about the specified server. Parameters:
-    - **name**: required. Giving full server name isn't required
+    - **name**: required. Full server name isn't required
 
 - **!now** (alias: **!currently**): displays numbers about the current players and servers.
 
@@ -18,9 +18,11 @@
     - **--ranked**: only return ranked (official) servers
     - **--not-full**: only return servers with room
 
-- **!top** (alias: **!leaderboard**): displays the top players, ordered by score. Parameters:
+- **!top** (alias: **!leaderboard**): displays the top players. Parameters:
+    - **sort**: optional, one of **score**, **xp**, **kills**, **deaths**, **ratio** or **time**. Defaults to **score**
     - **database**: optional, one of **invasion** or **pacific**. Defaults to **invasion**
 
-- **!pos** (aliases: **!position**, **!rank**): highlights the specified player in the leaderboard, ordered by score. Parameters:
+- **!pos** (aliases: **!position**, **!rank**): highlights the specified player in the leaderboard. Parameters:
     - **username**: required. Full username is required
+    - **sort**: optional, one of **score**, **xp**, **kills**, **deaths**, **ratio** or **time**. Defaults to **score**
     - **database**: optional, one of **invasion** or **pacific**. Defaults to **invasion**
