@@ -26,7 +26,7 @@ class Server:
         mode_node = xml_node.find('mode')
         realm_node = xml_node.find('realm')
 
-        ret.name = name_node.text.strip()
+        ret.name = name_node.text.strip() if name_node.text else 'N/A'
         ret.name_slug = slugify(ret.name)
 
         ret.ip = address_node.text
