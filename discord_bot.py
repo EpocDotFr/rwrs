@@ -420,12 +420,7 @@ class DiscordBot:
 
         self.client = Client(self.client_config)
 
-        self.bot_config = BotConfig()
-        self.bot_config.commands_enabled = True
-        self.bot_config.commands_require_mention = False
-        self.bot_config.commands_prefix = '!'
-
-        self.bot = Bot(self.client, self.bot_config)
+        self.bot = Bot(self.client)
         self.bot.add_plugin(RwrsDiscoBotPlugin)
 
     def run(self):
