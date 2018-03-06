@@ -73,7 +73,7 @@ class RwrsDiscoBotPlugin(Plugin):
 
         player.set_playing_on_server(servers)
 
-        event.msg.reply('There ya go :thumbsup:', embed=self._create_player_message_embed(player))
+        event.msg.reply('Here\'s stats for **{}** on **{}** ranked servers:'.format(player.username, player.database_name), embed=self._create_player_message_embed(player))
 
     @Plugin.command('whereis', '<username:str>', aliases=['where is', 'where'])
     def on_whereis_command(self, event, username):
@@ -248,9 +248,6 @@ class RwrsDiscoBotPlugin(Plugin):
     def _create_player_message_embed(self, player):
         """Create a RWRS player rich Discord message."""
         embed = self._create_base_message_embed()
-
-        embed.url = player.link_absolute
-        embed.title = ':bust_in_silhouette: Players › {} › {}'.format(player.database_name, player.username)
 
         if player.is_me:
             embed.description = ':wave: Hey, I\'m the creator of RWRS and this bot! Glad to see you\'re using it.'
