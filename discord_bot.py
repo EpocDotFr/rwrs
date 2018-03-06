@@ -1,7 +1,7 @@
 from disco.types.message import MessageEmbed
 from disco.util.logging import setup_logging
 from disco.client import Client, ClientConfig
-from disco.bot import Bot, BotConfig, Plugin
+from disco.bot import Bot, Plugin
 from models import RwrRootServer
 from gevent import monkey
 from flask import url_for
@@ -87,7 +87,7 @@ class RwrsDiscoBotPlugin(Plugin):
 
             return
 
-        event.msg.reply('I found **{}** playing on this server :ok_hand:'.format(username), embed=self._create_server_message_embed(server))
+        event.msg.reply('I found **{}** playing on **{}**:'.format(username, server.name), embed=self._create_server_message_embed(server))
 
     @Plugin.command('server', '<name:str>')
     def on_server_command(self, event, name):
@@ -99,7 +99,7 @@ class RwrsDiscoBotPlugin(Plugin):
 
             return
 
-        event.msg.reply('At your service :muscle:', embed=self._create_server_message_embed(server, with_players_list=True))
+        event.msg.reply('Here\'s information about **{}**:'.format(server.name), embed=self._create_server_message_embed(server, with_players_list=True))
 
     @Plugin.command('now', aliases=['currently'])
     def on_now_command(self, event):
@@ -332,11 +332,7 @@ class RwrsDiscoBotPlugin(Plugin):
         """Create a RWRS server rich Discord message."""
         embed = self._create_base_message_embed()
 
-        embed.url = server.link_absolute
-        embed.title = ':desktop: Servers › {}'.format(server.name)
-
-        if server.website:
-            embed.description = '[Server website]({})'.format(server.website)
+        embed.description = server.steam_join_link.replace(' ', '%20')
 
         if with_players_list and server.players.list:
             embed.add_field(
@@ -350,14 +346,8 @@ class RwrsDiscoBotPlugin(Plugin):
             )
 
         embed.add_field(
-            name='Type',
-            value=server.type_name,
-            inline=True
-        )
-
-        embed.add_field(
-            name='Mode',
-            value=server.mode_name,
+            name='Players',
+            value='{}/{}'.format(server.players.current, server.players.max),
             inline=True
         )
 
@@ -368,14 +358,14 @@ class RwrsDiscoBotPlugin(Plugin):
         )
 
         embed.add_field(
-            name='Current players',
-            value=server.players.current,
+            name='Type',
+            value=server.type_name,
             inline=True
         )
 
         embed.add_field(
-            name='Max players',
-            value=server.players.max,
+            name='Mode',
+            value=server.mode_name,
             inline=True
         )
 
@@ -397,13 +387,6 @@ class RwrsDiscoBotPlugin(Plugin):
     def _create_base_message_embed(self):
         """Create a rich Discord message."""
         embed = MessageEmbed()
-
-        with app.app_context():
-            embed.set_author(
-                name='Running With Rifles Stats (RWRS)',
-                url=url_for('home', _external=True),
-                icon_url=url_for('static', filename='images/icon_square_dark_256.png', _external=True)
-            )
 
         embed.color = self.embed_color
 
