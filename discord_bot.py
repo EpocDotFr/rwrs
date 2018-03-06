@@ -139,25 +139,12 @@ class RwrsDiscoBotPlugin(Plugin):
     @Plugin.parser.add_argument('--not-full', action='store_const', const='yes')
     def on_servers_command(self, event, args):
         """Displays the first 10 currently active servers."""
-        embed = self._create_base_message_embed()
-
-        with app.app_context():
-            embed.url = url_for('servers_list', _external=True)
-
-        embed.title = ':desktop: Servers'
-
         servers = self.rwr_scraper.filter_servers(
             limit=self.servers_limit,
             not_empty='yes',
             not_full=args.not_full,
             ranked=args.ranked
         )
-
-        for server in servers:
-            embed.add_field(
-                name='{}**{}** ({})'.format(':flag_' + server.location.country_code + ': ' if server.location.country_code else '', server.name_display, server.summary),
-                value='Join now: ' + server.steam_join_link.replace(' ', '%20')
-            )
 
         filters = []
 
@@ -169,7 +156,29 @@ class RwrsDiscoBotPlugin(Plugin):
 
         filters_string = ', ' + ', '.join(filters) if filters else ''
 
-        event.msg.reply('Here sir, the first {} currently active{} servers:'.format(self.servers_limit, filters_string), embed=embed)
+        response = [
+            'Here sir, the first {} currently active{} servers:\n'.format(self.servers_limit, filters_string)
+        ]
+
+        for server in servers:
+            # '{}/{} • {} • {}'.format(
+            #     ret.players.current,
+            #     ret.players.max,
+            #     ret.type_name,
+            #     ret.map.name_display
+            # )
+
+            response.append('{}`{}/{}` **{}** ({} • {})\n{}\n'.format(
+                ':flag_' + server.location.country_code + ': ' if server.location.country_code else '',
+                server.players.current,
+                server.players.max,
+                server.name_display,
+                server.type_name,
+                server.map.name_display,
+                server.steam_join_link.replace(' ', '%20')
+            ))
+
+        event.msg.reply('\n'.join(response))
 
     @Plugin.command('top', aliases=['leaderboard'], parser=True)
     @Plugin.parser.add_argument('sort', choices=VALID_PLAYER_SORTS.keys(), nargs='?', default='score')
