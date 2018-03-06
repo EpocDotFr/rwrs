@@ -99,7 +99,7 @@ class RwrsDiscoBotPlugin(Plugin):
 
             return
 
-        event.msg.reply('Here\'s information about **{}**:'.format(server.name), embed=self._create_server_message_embed(server, with_players_list=True))
+        event.msg.reply('Here\'s information about **{}**:'.format(server.name), embed=self._create_server_message_embed(server))
 
     @Plugin.command('now', aliases=['currently'])
     def on_now_command(self, event):
@@ -328,13 +328,13 @@ class RwrsDiscoBotPlugin(Plugin):
 
         return embed
 
-    def _create_server_message_embed(self, server, with_players_list=False):
+    def _create_server_message_embed(self, server):
         """Create a RWRS server rich Discord message."""
         embed = self._create_base_message_embed()
 
         embed.description = server.steam_join_link.replace(' ', '%20')
 
-        if with_players_list and server.players.list:
+        if server.players.list:
             embed.add_field(
                 name='Players list',
                 value=', '.join(server.players.list)
