@@ -118,11 +118,12 @@ class Server:
             '⭐️ ' if ret.is_ranked else '',
             ret.name
         )
-        ret.summary = '{} • {} • {}/{}'.format(
-            ret.type_name,
-            ret.map.name_display,
+
+        ret.summary = '{}/{} • {} • {}'.format(
             ret.players.current,
-            ret.players.max
+            ret.players.max,
+            ret.type_name,
+            ret.map.name_display
         )
 
         if current_app:

@@ -155,8 +155,8 @@ class RwrsDiscoBotPlugin(Plugin):
 
         for server in servers:
             embed.add_field(
-                name='{}{}'.format(':flag_' + server.location.country_code + ': ' if server.location.country_code else '', server.name_display),
-                value=server.summary
+                name='{}**{}** ({})'.format(':flag_' + server.location.country_code + ': ' if server.location.country_code else '', server.name_display, server.summary),
+                value='Join now: ' + server.steam_join_link.replace(' ', '%20')
             )
 
         filters = []
@@ -321,7 +321,7 @@ class RwrsDiscoBotPlugin(Plugin):
         )
 
         if player.playing_on_server:
-            embed.set_footer(text='🎮 Playing on {} ({})'.format(
+            embed.set_footer(text='🖱 Playing on **{}** ({})'.format(
                 player.playing_on_server.name_display,
                 player.playing_on_server.summary
             ))
