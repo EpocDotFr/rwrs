@@ -161,13 +161,6 @@ class RwrsDiscoBotPlugin(Plugin):
         ]
 
         for server in servers:
-            # '{}/{} • {} • {}'.format(
-            #     ret.players.current,
-            #     ret.players.max,
-            #     ret.type_name,
-            #     ret.map.name_display
-            # )
-
             response.append('{}`{}/{}` **{}** ({} • {})\n{}\n'.format(
                 ':flag_' + server.location.country_code + ': ' if server.location.country_code else '',
                 server.players.current,
@@ -309,7 +302,7 @@ class RwrsDiscoBotPlugin(Plugin):
 
         embed.add_field(
             name='Time played',
-            value=helpers.humanize_seconds_to_hours(player.time_played) + ' (' + helpers.humanize_seconds_to_days(player.time_played) + ')' if player.display_time_played_in_days else '',
+            value=helpers.humanize_seconds_to_hours(player.time_played) + ' (' + helpers.humanize_seconds_to_days(player.time_played) + ')' if player.display_time_played_in_days else helpers.humanize_seconds_to_hours(player.time_played),
             inline=True
         )
 
