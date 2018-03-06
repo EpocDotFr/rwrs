@@ -178,11 +178,6 @@ class RwrsDiscoBotPlugin(Plugin):
         """Displays the top 15 players."""
         embed = self._create_base_message_embed()
 
-        with app.app_context():
-            embed.url = url_for('players_list', database=args.database, _external=True)
-
-        embed.title = ':bust_in_silhouette: Players › {}'.format(rwr.utils.get_database_name(args.database))
-
         players = self.rwr_scraper.get_players(
             args.database,
             limit=self.players_limit,
@@ -223,14 +218,6 @@ class RwrsDiscoBotPlugin(Plugin):
             return
 
         embed = self._create_base_message_embed()
-
-        with app.app_context():
-            embed.url = url_for('players_list', database=args.database, target=args.username, _external=True)
-
-        embed.title = ':bust_in_silhouette: Players › {} (highlighting {})'.format(
-            rwr.utils.get_database_name(args.database),
-            args.username
-        )
 
         for player in players:
             embed.add_field(
