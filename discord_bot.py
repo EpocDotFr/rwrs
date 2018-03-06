@@ -336,7 +336,7 @@ class RwrsDiscoBotPlugin(Plugin):
 
         if with_players_list and server.players.list:
             embed.add_field(
-                name='Players',
+                name='Players list',
                 value=', '.join(server.players.list)
             )
 
@@ -346,7 +346,7 @@ class RwrsDiscoBotPlugin(Plugin):
             )
 
         embed.add_field(
-            name='Players',
+            name='Players count',
             value='{}/{}'.format(server.players.current, server.players.max),
             inline=True
         )
