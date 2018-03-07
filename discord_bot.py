@@ -28,12 +28,12 @@ VALID_PLAYER_SORTS = {
     'time': {'name': 'time played', 'value': rwr.constants.PlayersSort.TIME_PLAYED, 'getter': lambda player: helpers.humanize_seconds_to_hours(player.time_played)}
 }
 
+EMBED_COLOR = 10800919 # The well-known primary RWRS color #A4CF17, in the decimal format
+PLAYERS_LIMIT = 15
+SERVERS_LIMIT = 10
+
 
 class RwrsDiscoBotPlugin(Plugin):
-    embed_color = 10800919 # The well-known primary RWRS color #A4CF17, in the decimal format
-    players_limit = 15
-    servers_limit = 10
-
     """The RWRS Disco Bot plugin."""
     def load(self, ctx):
         super(RwrsDiscoBotPlugin, self).load(ctx)
@@ -140,7 +140,7 @@ class RwrsDiscoBotPlugin(Plugin):
     def on_servers_command(self, event, args):
         """Displays the first 10 currently active servers."""
         servers = self.rwr_scraper.filter_servers(
-            limit=self.servers_limit,
+            limit=SERVERS_LIMIT,
             not_empty='yes',
             not_full=args.not_full,
             ranked=args.ranked
@@ -157,7 +157,7 @@ class RwrsDiscoBotPlugin(Plugin):
         filters_string = ', ' + ', '.join(filters) if filters else ''
 
         response = [
-            'Here sir, the first {} currently active{} servers:\n'.format(self.servers_limit, filters_string)
+            'Here sir, the first {} currently active{} servers:\n'.format(SERVERS_LIMIT, filters_string)
         ]
 
         for server in servers:
@@ -182,7 +182,7 @@ class RwrsDiscoBotPlugin(Plugin):
 
         players = self.rwr_scraper.get_players(
             args.database,
-            limit=self.players_limit,
+            limit=PLAYERS_LIMIT,
             sort=VALID_PLAYER_SORTS[args.sort]['value']
         )
 
@@ -194,7 +194,7 @@ class RwrsDiscoBotPlugin(Plugin):
             )
 
         event.msg.reply('Everyone! The top {} **{}** players, ordered by {} :military_medal:'.format(
-            self.players_limit,
+            PLAYERS_LIMIT,
             rwr.utils.get_database_name(args.database),
             VALID_PLAYER_SORTS[args.sort]['name']
         ), embed=embed)
@@ -209,7 +209,7 @@ class RwrsDiscoBotPlugin(Plugin):
 
         players = self.rwr_scraper.get_players(
             args.database,
-            limit=self.players_limit,
+            limit=PLAYERS_LIMIT,
             target=args.username,
             sort=VALID_PLAYER_SORTS[args.sort]['value']
         )
@@ -374,7 +374,7 @@ class RwrsDiscoBotPlugin(Plugin):
         """Create a rich Discord message."""
         embed = MessageEmbed()
 
-        embed.color = self.embed_color
+        embed.color = EMBED_COLOR
 
         return embed
 
