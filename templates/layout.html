@@ -44,7 +44,7 @@
     {% if not g.UNDER_MAINTENANCE %}
         <div class="currently-bar pts pbs">
             <div class="w1140p center txtcenter small">
-                Currently <strong>{{ g.total_players }}</strong> players in total (<strong>{{ g.online_players }}</strong> are playing online<span class="total-playing-friends is-hidden">, including <strong class="txtblue">?</strong> <span class="friend-label"></span></span>) and <strong>{{ g.total_servers }}</strong> online server{{ 's' if g.total_servers > 1 }} (<strong>{{ g.active_servers }}</strong> {{ 'are' if g.active_servers > 1 else 'is' }} active) • <a href="{{ url_for('online_multiplayer_status') }}">Online multiplayer status</a>
+                Currently <strong>{{ g.total_players }}</strong> player{{ 's' if g.total_players > 1 }} in total (<strong>{{ g.online_players }}</strong> {{ 'are' if g.online_players > 1 else 'is' }} playing multiplayer online<span class="total-playing-friends is-hidden">, including <strong class="txtblue">?</strong> <span class="friend-label"></span></span>) and <strong>{{ g.total_servers }}</strong> online multiplayer server{{ 's' if g.total_servers > 1 }} (<strong>{{ g.active_servers }}</strong> {{ 'are' if g.active_servers > 1 else 'is' }} active) • <a href="{{ url_for('online_multiplayer_status') }}">Online multiplayer status</a>
             </div>
         </div>
     {% endif %}
@@ -84,7 +84,7 @@
     <footer class="w1140p center small pts pbs" itemscope itemtype="http://schema.org/Organization">
         <meta itemprop="name" content="Running With Rifles Stats">
         <meta itemprop="alternateName" content="RWRS">
-        <meta itemprop="url" content="https://rwrstats.com/">
+        <meta itemprop="url" content="{{ url_for('home', _external=True) }}">
         <meta itemprop="logo" content="{{ url_for('static', filename='images/logo_dark.png', _external=True) }}">
 
         <div>

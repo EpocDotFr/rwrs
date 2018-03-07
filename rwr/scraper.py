@@ -44,12 +44,24 @@ class DataScraper:
 
         return servers
 
-    def search_server(self, ip, port):
-        """Search for a RWR public server."""
+    def get_server_by_ip_and_port(self, ip, port):
+        """Search for a RWR public server based on its IP and port."""
         servers = self.get_servers()
 
         for server in servers:
             if server.ip == ip and server.port == port:
+                return server
+
+        return None
+
+    def get_server_by_name(self, name):
+        """Search for a RWR public server based on its name (partial match)."""
+        servers = self.get_servers()
+
+        name = name.lower()
+
+        for server in servers:
+            if name in server.name.lower():
                 return server
 
         return None
@@ -149,7 +161,7 @@ class DataScraper:
                 }
 
             if server.map.id not in maps[server_type]['maps']:
-                maps[server_type]['maps'][server.map.id] = server.map.name if server.map.name else server.map.id
+                maps[server_type]['maps'][server.map.id] = server.map.name_display
 
         ret = []
 
@@ -226,7 +238,14 @@ class DataScraper:
 
             return True
 
-        return [server for server in self.get_servers() if _filter_server(server, filters)]
+        servers = [server for server in self.get_servers() if _filter_server(server, filters)]
+
+        limit = filters.get('limit')
+
+        if limit:
+            return servers[:limit]
+
+        return servers
 
     def get_counters(self):
         """Get the number of players online, the active servers as well as the total number of online servers."""
@@ -266,7 +285,7 @@ class DataScraper:
                 },
                 'map': {
                     'id': server.map.id,
-                    'name': server.map.name
+                    'name': server.map.name_display
                 },
                 'players': {
                     'current': server.players.current,
@@ -296,11 +315,14 @@ class DataScraper:
         for node in html_content.xpath('//table/tr[position() > 1]'):
             players.append(Player.load(database, node))
 
+        if target and target not in [player.username for player in players]:
+            return []
+
         return players
 
     @cache.memoize(timeout=app.config['PLAYERS_CACHE_TIMEOUT'])
-    def search_player(self, database, username):
-        """Search for a RWR player."""
+    def search_player_by_username(self, database, username):
+        """Search for a RWR player (exact match)."""
         username = username.upper()
 
         params = {
@@ -316,6 +338,24 @@ class DataScraper:
             return None
 
         return Player.load(database, node[0], alternative=True)
+
+    def get_current_server_of_player(self, username):
+        """Return the server where the specified player is playing on, if any (partial match)."""
+        servers = self.get_servers()
+
+        username = username.lower()
+
+        for server in servers:
+            if not server.players.list:
+                continue
+
+            players_list = [player.lower() for player in server.players.list]
+
+            for player in players_list:
+                if username in player:
+                    return server
+
+        return None
 
     def __repr__(self):
         return 'DataScraper'

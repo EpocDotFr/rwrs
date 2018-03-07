@@ -1,4 +1,6 @@
+from flask import url_for, current_app
 from . import constants, utils
+from rwrs import app
 import math
 
 
@@ -29,12 +31,21 @@ class Player:
         rank_image_cell = node[17]
 
         ret.position = int(position_cell.text)
+
         ret.username = username_cell.text
+
+        username_lower = ret.username.lower()
+
+        ret.is_me = username_lower == app.config['MY_USERNAME']
+        ret.is_contributor = username_lower in app.config['CONTRIBUTORS']
+        ret.is_rwr_dev = username_lower in app.config['DEVS']
+
         ret.kills = int(kills_cell.text)
         ret.deaths = int(deaths_cell.text)
         ret.score = int(score_cell.text)
         ret.kd_ratio = float(kd_ratio_cell.text)
         ret.time_played = utils.parse_time(time_played_cell.text)
+        ret.display_time_played_in_days = ret.time_played > 60 * 60 * 24
         ret.longest_kill_streak = int(longest_kill_streak_cell.text)
         ret.targets_destroyed = int(targets_destroyed_cell.text)
         ret.vehicles_destroyed = int(vehicles_destroyed_cell.text)
@@ -59,7 +70,23 @@ class Player:
         ret.xp_percent_completion_to_next_rank = ret.get_xp_percent_completion_to_next_rank()
         ret.unlocks = ret.get_unlocks()
 
+        if current_app:
+            ret.set_links()
+        else:
+            with app.app_context():
+                ret.set_links()
+
         return ret
+
+    def set_links(self):
+        """Set the relative and absolute URLs of this player's details page."""
+        params = {
+            'database': self.database,
+            'username': self.username
+        }
+
+        self.link = url_for('player_details', **params)
+        self.link_absolute = url_for('player_details', **params, _external=True)
 
     def set_playing_on_server(self, servers):
         """Determine if this user is playing on one of the given servers."""
@@ -110,6 +137,12 @@ class Player:
         ret.id = rank_id
         ret.name = applicable_ranks[str(rank_id)]['name']
         ret.xp = applicable_ranks[str(rank_id)]['xp']
+
+        if current_app:
+            ret.set_images_and_icons(self.database)
+        else:
+            with app.app_context():
+                ret.set_images_and_icons(self.database)
 
         return ret
 
@@ -174,3 +207,19 @@ class PlayerRank:
 
     def __repr__(self):
         return 'PlayerRank:' + self.id
+
+    def set_images_and_icons(self, database):
+        """Set the relative and absolute URLs to the images and icon of this rank."""
+        params = {
+            'ranks_country': constants.PLAYERS_LIST_DATABASES[database]['ranks_country'],
+            'rank_id': self.id
+        }
+
+        image_url = 'images/ranks/{ranks_country}/{rank_id}.png'.format(**params)
+        icon_url = 'images/ranks/{ranks_country}/{rank_id}_icon.png'.format(**params)
+
+        self.image = url_for('static', filename=image_url)
+        self.image_absolute = url_for('static', filename=image_url, _external=True)
+
+        self.icon = url_for('static', filename=icon_url)
+        self.icon_absolute = url_for('static', filename=icon_url, _external=True)

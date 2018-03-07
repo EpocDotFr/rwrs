@@ -1,7 +1,8 @@
+from flask import url_for, current_app
 from . import constants, utils
 from geolite2 import geolite2
 from slugify import slugify
-from flask import url_for
+from rwrs import app
 
 
 class Server:
@@ -48,6 +49,15 @@ class Server:
             ret.map.has_minimap = target_map['has_minimap']
             ret.map.has_preview = target_map['has_preview']
 
+            if ret.map.has_preview:
+                if current_app:
+                    ret.map.set_preview_image_urls(ret.type)
+                else:
+                    with app.app_context():
+                        ret.map.set_preview_image_urls(ret.type)
+
+        ret.map.name_display = ret.map.name if ret.map.name else ret.map.id
+
         ret.bots = int(bots_node.text)
 
         ret.players = ServerPlayers()
@@ -82,8 +92,16 @@ class Server:
                 ret.location.country_name = location['country']['names']['en']
                 ret.location.continent_code = location['continent']['code'].lower()
                 ret.location.continent_name = location['continent']['names']['en']
+                ret.location.text = '{}{}'.format(
+                    ret.location.city_name + ', ' if ret.location.city_name else '',
+                    ret.location.country_name
+                )
 
-        ret.steam_join_link = 'steam://rungameid/270150//server_address={ip} server_port={port}'.format(ip=ret.ip, port=ret.port)
+        ret.steam_join_link = 'steam://rungameid/{gameid}//server_address={ip} server_port={port}'.format(
+            gameid=app.config['RWR_STEAM_APP_ID'],
+            ip=ret.ip,
+            port=ret.port
+        )
 
         html_server_node = html_servers.xpath('(//table/tr[(td[3] = \'{ip}\') and (td[4] = \'{port}\')])[1]'.format(ip=ret.ip, port=ret.port))
 
@@ -96,9 +114,30 @@ class Server:
                 ret.players.list = [player_name.strip() for player_name in players_node.text.split(',')]
                 ret.players.list.sort()
 
-        ret.link = url_for('server_details', ip=ret.ip, port=ret.port, slug=ret.name_slug)
+        ret.name_display = '{}{}'.format(
+            '⭐️ ' if ret.is_ranked else '',
+            ret.name
+        )
+
+        ret.summary = '{}/{} • {} • {}'.format(
+            ret.players.current,
+            ret.players.max,
+            ret.type_name,
+            ret.map.name_display
+        )
+
+        if current_app:
+            ret.set_links()
+        else:
+            with app.app_context():
+                ret.set_links()
 
         return ret
+
+    def set_links(self):
+        """Set the relative and absolute URLs of this server's details page."""
+        self.link = url_for('server_details', ip=self.ip, port=self.port, slug=self.name_slug)
+        self.link_absolute = url_for('server_details', ip=self.ip, port=self.port, slug=self.name_slug, _external=True)
 
     def get_database(self):
         """Return the players list database name of this server."""
@@ -117,10 +156,21 @@ class ServerMap:
     name = None
     has_minimap = False
     has_preview = False
-    url = None
 
     def __repr__(self):
         return 'ServerMap:' + self.id
+
+    def set_preview_image_urls(self, game_type):
+        """Set the relative and absolute URLs to the preview image of this map."""
+        params = {
+            'game_type': game_type,
+            'map_id': self.id
+        }
+
+        preview_url = 'images/maps/preview/{game_type}/{map_id}.png'.format(**params)
+
+        self.preview = url_for('static', filename=preview_url)
+        self.preview_absolute = url_for('static', filename=preview_url, _external=True)
 
 
 class ServerPlayers:
@@ -136,6 +186,7 @@ class ServerLocation:
     country_name = None
     continent_code = None
     continent_name = None
+    text = None
 
     def __repr__(self):
         return 'ServerLocation:' + self.country_code

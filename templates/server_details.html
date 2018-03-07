@@ -6,7 +6,7 @@
 
 {% block meta_title %}Servers › {{ macros.server_name(server, link=False, raw=True) }}{% endblock %}
 
-{% block meta_description %}Details about the{{ ' ranked ' + server.database_name if server.is_ranked else ' dedicated' if server.is_dedicated }} Running With Rifles (RWR) server named {{ macros.server_name(server, link=False, no_icon=True) }}{% if server.location.country_code %} hosted in {{ server.location.city_name + ', ' if server.location.city_name }}{{ server.location.country_name }}{% endif %}.{% endblock %}
+{% block meta_description %}Details about the{{ ' ranked ' + server.database_name if server.is_ranked else ' dedicated' if server.is_dedicated }} Running With Rifles (RWR) server named {{ macros.server_name(server, link=False, no_icon=True) }}{% if server.location.country_code %} hosted in {{ server.location.text }}{% endif %}.{% endblock %}
 
 {% block jsfiles %}
     {% if server.is_dedicated %}
@@ -24,7 +24,7 @@
 
 {% set canonical_url = url_for('server_details', ip=server.ip, port=server.port, slug=server.name_slug, _external=True) %}
 
-{% set meta_image = url_for('static', filename='images/maps/preview/{game_type}/{map_id}.png'.format(game_type=server.type, map_id=server.map.id), _external=True) if server.map.has_preview %}
+{% set meta_image = server.map.preview_absolute if server.map.has_preview %}
 
 {% block content %}
     <p class="txtcenter mbs">
@@ -118,12 +118,12 @@
                     <th class="txtcenter">Current map</th>
                 </tr>
                 <tr>
-                    <td class="txtcenter">{{ macros.map_name(server.map) }}</td>
+                    <td class="txtcenter">{{ server.map.name_display }}</td>
                 </tr>
                 {% if server.map.has_preview %}
                     <tr>
                         <td class="txtcenter">
-                            <img src="{{ url_for('static', filename='images/maps/preview/{game_type}/{map_id}.png'.format(game_type=server.type, map_id=server.map.id)) }}">
+                            <img src="{{ server.map.preview }}">
                         </td>
                     </tr>
                 {% endif %}

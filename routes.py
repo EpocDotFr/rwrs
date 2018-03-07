@@ -7,6 +7,7 @@ import rwr.utils
 
 
 ERROR_PLAYER_NOT_FOUND = 'Sorry, the player "{username}" wasn\'t found in the {database} players list. Maybe this player hasn\'t already played on a ranked server yet. If this player started to play today on a ranked server, please wait until tomorrow as stats are refreshed daily.'
+VALID_DATABASES_STRING_LIST = ','.join(rwr.constants.VALID_DATABASES)
 
 
 @app.route('/')
@@ -65,7 +66,7 @@ def players_list_without_db():
     return redirect(url_for('players_list', database=database), code=301)
 
 
-@app.route('/players/<any(' + ','.join(rwr.constants.PLAYERS_LIST_DATABASES.keys()) + '):database>')
+@app.route('/players/<any({}):database>'.format(VALID_DATABASES_STRING_LIST))
 def players_list(database):
     args = request.args.to_dict()
 
@@ -81,8 +82,6 @@ def players_list(database):
 
     scraper = rwr.scraper.DataScraper()
 
-    servers = scraper.get_servers()
-
     players = scraper.get_players(
         database,
         sort=args['sort'],
@@ -91,18 +90,15 @@ def players_list(database):
         limit=args['limit']
     )
 
-    target_found = False
-
-    for player in players:
-        player.set_playing_on_server(servers)
-
-        if args.get('target') and player.username == args.get('target'):
-            target_found = True
-
-    if args.get('target') and not target_found:
+    if args.get('target') and not players:
         flash(ERROR_PLAYER_NOT_FOUND.format(username=args.get('target'), database=rwr.utils.get_database_name(database)), 'error')
 
         return redirect(url_for('players_list', database=database))
+
+    servers = scraper.get_servers()
+
+    for player in players:
+        player.set_playing_on_server(servers)
 
     g.LAYOUT = 'large'
 
@@ -118,12 +114,12 @@ def player_details_without_db(username):
     return redirect(url_for('player_details', database='invasion', username=username), code=301)
 
 
-@app.route('/players/<any(' + ','.join(rwr.constants.PLAYERS_LIST_DATABASES.keys()) + '):database>/<username>')
-@app.route('/players/<any(' + ','.join(rwr.constants.PLAYERS_LIST_DATABASES.keys()) + '):database>/<username>/<any(unlockables):tab>')
+@app.route('/players/<any({}):database>/<username>'.format(VALID_DATABASES_STRING_LIST))
+@app.route('/players/<any({}):database>/<username>/<any(unlockables):tab>'.format(VALID_DATABASES_STRING_LIST))
 def player_details(database, username, tab=None):
     scraper = rwr.scraper.DataScraper()
 
-    player = scraper.search_player(database, username)
+    player = scraper.search_player_by_username(database, username)
 
     if not player:
         flash(ERROR_PLAYER_NOT_FOUND.format(username=username, database=rwr.utils.get_database_name(database)), 'error')
@@ -149,8 +145,8 @@ def players_compare_without_db(username, username_to_compare_with=None):
     return redirect(url_for('players_compare', database='invasion', username=username, username_to_compare_with=username_to_compare_with), code=301)
 
 
-@app.route('/players/<any(' + ','.join(rwr.constants.PLAYERS_LIST_DATABASES.keys()) + '):database>/<username>/compare')
-@app.route('/players/<any(' + ','.join(rwr.constants.PLAYERS_LIST_DATABASES.keys()) + '):database>/<username>/compare/<username_to_compare_with>')
+@app.route('/players/<any({}):database>/<username>/compare'.format(VALID_DATABASES_STRING_LIST))
+@app.route('/players/<any({}):database>/<username>/compare/<username_to_compare_with>'.format(VALID_DATABASES_STRING_LIST))
 def players_compare(database, username, username_to_compare_with=None):
     if not username_to_compare_with and request.args.get('username_to_compare_with'):
         username_to_compare_with = request.args.get('username_to_compare_with').strip()
@@ -163,14 +159,14 @@ def players_compare(database, username, username_to_compare_with=None):
 
     scraper = rwr.scraper.DataScraper()
 
-    player = scraper.search_player(database, username)
+    player = scraper.search_player_by_username(database, username)
 
     if not player:
         flash(ERROR_PLAYER_NOT_FOUND.format(username=username, database=rwr.utils.get_database_name(database)), 'error')
 
         return redirect(url_for('players_list', database=database))
 
-    player_to_compare_with = scraper.search_player(database, username_to_compare_with)
+    player_to_compare_with = scraper.search_player_by_username(database, username_to_compare_with)
 
     if not player_to_compare_with:
         flash(ERROR_PLAYER_NOT_FOUND.format(username=username_to_compare_with, database=rwr.utils.get_database_name(database)), 'error')
@@ -221,7 +217,7 @@ def servers_list():
 def server_details_without_slug(ip, port):
     scraper = rwr.scraper.DataScraper()
 
-    server = scraper.search_server(ip, port)
+    server = scraper.get_server_by_ip_and_port(ip, port)
 
     if not server:
         flash('Sorry, this server wasn\'t found.', 'error')
@@ -235,7 +231,7 @@ def server_details_without_slug(ip, port):
 def server_details(ip, port, slug):
     scraper = rwr.scraper.DataScraper()
 
-    server = scraper.search_server(ip, port)
+    server = scraper.get_server_by_ip_and_port(ip, port)
 
     if not server:
         flash('Sorry, this server wasn\'t found.', 'error')
