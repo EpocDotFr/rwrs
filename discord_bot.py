@@ -50,7 +50,7 @@ class RwrsDiscoBotPlugin(Plugin):
     def on_info_command(self, event):
         """Get information about the bot."""
         info = [
-            'ℹ️ Hi! I was created by @Epoc#4256 - the guy behind https://rwrstats.com - around the beginning of March 2018.',
+            'ℹ️ Hi! I was created by <@66543750725246976> - the guy behind https://rwrstats.com - around the beginning of March 2018.',
             'Like the rwrstats.com website, my brain is powered by the Python programming language.',
             'P.S. You look beautiful today.'
         ]
