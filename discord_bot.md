@@ -1,8 +1,14 @@
-❓ Here's the available commands. **The parameters order is important**, unless otherwise stated. If a parameter contains one or more spaces, you'll have to surround it with double-quotes.
+❓ **The parameters order is important**, unless otherwise stated. If a parameter contains one or more spaces, **you'll have to surround it with double or simple quotes**. Here's the common valid parameters values:
+
+- `sort`: `score`, `xp`, `kills`, `deaths`, `ratio`, `streak`, `tk`, `heals`, `shots`, `distance`, `throws`, `vehicles`, `targets`, `time`
+
+- `database`: `invasion`, `pacific`
+
+**Commands list:**
 
 - `stats` (alias: `statistics`): displays stats about the specified player. Parameters:
     - `username`: required. Full username is required
-    - `database`: optional, one of `invasion` or `pacific`. Defaults to `invasion`
+    - `database`: optional. Defaults to `invasion`
 
 - `whereis` (aliases: `where is`, `where`): displays information about the server the specified player is currently playing on. Parameters:
     - `username`: required. Full username isn't required
@@ -15,13 +21,13 @@
     - `--not-full`: only return servers with room
 
 - `top` (alias: `leaderboard`): displays the top 15 players. Parameters:
-    - `sort`: optional, one of `score`, `xp`, `kills`, `deaths`, `ratio`, `streak`, `tk` or `time`. Defaults to `score`
-    - `database`: optional, one of `invasion` or `pacific`. Defaults to `invasion`
+    - `sort`: optional. Defaults to `score`
+    - `database`: optional. Defaults to `invasion`
 
 - `pos` (aliases: `position`, `ranking`): highlights the specified player in the leaderboard. Parameters:
     - `username`: required. Full username is required
-    - `sort`: optional, one of `score`, `xp`, `kills`, `deaths`, `ratio`, `streak`, `tk` or `time`. Defaults to `score`
-    - `database`: optional, one of `invasion` or `pacific`. Defaults to `invasion`
+    - `sort`: optional. Defaults to `score`
+    - `database`: optional. Defaults to `invasion`
 
 - `now` (alias: `currently`): displays numbers about the current players and servers.
 

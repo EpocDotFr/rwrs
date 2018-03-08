@@ -27,7 +27,13 @@ VALID_PLAYER_SORTS = {
     'ratio': {'name': 'K/D ratio', 'value': rwr.constants.PlayersSort.KD_RATIO, 'getter': lambda player: player.kd_ratio},
     'time': {'name': 'time played', 'value': rwr.constants.PlayersSort.TIME_PLAYED, 'getter': lambda player: helpers.humanize_seconds_to_hours(player.time_played)},
     'streak': {'name': 'longest kill streak', 'value': rwr.constants.PlayersSort.LONGEST_KILL_STREAK, 'getter': lambda player: helpers.humanize_integer(player.longest_kill_streak)},
-    'tk': {'name': 'teamkills', 'value': rwr.constants.PlayersSort.TEAMKILLS, 'getter': lambda player: helpers.humanize_integer(player.teamkills)}
+    'tk': {'name': 'teamkills', 'value': rwr.constants.PlayersSort.TEAMKILLS, 'getter': lambda player: helpers.humanize_integer(player.teamkills)},
+    'heals': {'name': 'soldiers healed', 'value': rwr.constants.PlayersSort.SOLDIERS_HEALED, 'getter': lambda player: helpers.humanize_integer(player.soldiers_healed)},
+    'shots': {'name': 'shots fired', 'value': rwr.constants.PlayersSort.SHOTS_FIRED, 'getter': lambda player: helpers.humanize_integer(player.shots_fired)},
+    'distance': {'name': 'distance moved', 'value': rwr.constants.PlayersSort.DISTANCE_MOVED, 'getter': lambda player: '{}km'.format(player.distance_moved)},
+    'throws': {'name': 'throwables thrown', 'value': rwr.constants.PlayersSort.THROWABLES_THROWN, 'getter': lambda player: helpers.humanize_integer(player.throwables_thrown)},
+    'vehicles': {'name': 'vehicles destroyed', 'value': rwr.constants.PlayersSort.VEHICLES_DESTROYED, 'getter': lambda player: helpers.humanize_integer(player.vehicles_destroyed)},
+    'targets': {'name': 'targets destroyed', 'value': rwr.constants.PlayersSort.TARGETS_DESTROYED, 'getter': lambda player: helpers.humanize_integer(player.targets_destroyed)},
 }
 
 EMBED_COLOR = 10800919 # The well-known primary RWRS color #A4CF17, in the decimal format
