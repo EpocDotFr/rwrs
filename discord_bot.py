@@ -25,7 +25,9 @@ VALID_PLAYER_SORTS = {
     'kills': {'name': 'kills', 'value': rwr.constants.PlayersSort.KILLS, 'getter': lambda player: helpers.humanize_integer(player.kills)},
     'deaths': {'name': 'deaths', 'value': rwr.constants.PlayersSort.DEATHS, 'getter': lambda player: helpers.humanize_integer(player.deaths)},
     'ratio': {'name': 'K/D ratio', 'value': rwr.constants.PlayersSort.KD_RATIO, 'getter': lambda player: player.kd_ratio},
-    'time': {'name': 'time played', 'value': rwr.constants.PlayersSort.TIME_PLAYED, 'getter': lambda player: helpers.humanize_seconds_to_hours(player.time_played)}
+    'time': {'name': 'time played', 'value': rwr.constants.PlayersSort.TIME_PLAYED, 'getter': lambda player: helpers.humanize_seconds_to_hours(player.time_played)},
+    'streak': {'name': 'longest kill streak', 'value': rwr.constants.PlayersSort.LONGEST_KILL_STREAK, 'getter': lambda player: helpers.humanize_integer(player.longest_kill_streak)},
+    'tk': {'name': 'teamkills', 'value': rwr.constants.PlayersSort.TEAMKILLS, 'getter': lambda player: helpers.humanize_integer(player.teamkills)}
 }
 
 EMBED_COLOR = 10800919 # The well-known primary RWRS color #A4CF17, in the decimal format
@@ -238,6 +240,8 @@ class RwrsDiscoBotPlugin(Plugin):
         """Create a RWRS player rich Discord message."""
         embed = self._create_base_message_embed()
 
+        embed.url = player.link_absolute
+
         if player.is_me:
             embed.description = ':wave: Hey, I\'m the creator of RWRS and this bot! Glad to see you\'re using it.'
         elif player.is_contributor:
@@ -263,7 +267,7 @@ class RwrsDiscoBotPlugin(Plugin):
             value='{}\n{} XP'.format(
                 player.next_rank.name,
                 helpers.humanize_integer(player.next_rank.xp)
-            ) if player.next_rank else 'Highest possible rank reached',
+            ) if player.next_rank else 'Highest possible\nrank reached',
             inline=True
         )
 
@@ -307,7 +311,7 @@ class RwrsDiscoBotPlugin(Plugin):
         )
 
         if player.playing_on_server:
-            embed.set_footer(text='🖱 Playing on **{}** ({})'.format(
+            embed.set_footer(text='🖱 Playing on {} ({})'.format(
                 player.playing_on_server.name_display,
                 player.playing_on_server.summary
             ))
@@ -318,6 +322,7 @@ class RwrsDiscoBotPlugin(Plugin):
         """Create a RWRS server rich Discord message."""
         embed = self._create_base_message_embed()
 
+        embed.url = server.link_absolute
         embed.description = server.steam_join_link.replace(' ', '%20')
 
         if server.players.list:
