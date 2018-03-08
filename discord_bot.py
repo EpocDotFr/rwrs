@@ -310,7 +310,7 @@ class RwrsDiscoBotPlugin(Plugin):
         )
 
         if player.playing_on_server:
-            embed.set_footer(text='🖱 Playing on **{}** ({})'.format(
+            embed.set_footer(text='🖱 Playing on {} ({})'.format(
                 player.playing_on_server.name_display,
                 player.playing_on_server.summary
             ))
