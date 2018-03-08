@@ -1,5 +1,4 @@
-❓ Here's the available commands. **The parameters order is important**, unless otherwise stated. If a parameter contains
-one or more spaces, you'll have to surround it with double-quotes.
+❓ Here's the available commands. **The parameters order is important**, unless otherwise stated. If a parameter contains one or more spaces, you'll have to surround it with double-quotes.
 
 - **stats** (alias: **statistics**): displays stats about the specified player. Parameters:
     - **username**: required. Full username is required
