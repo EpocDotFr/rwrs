@@ -15,12 +15,12 @@
     - `--not-full`: only return servers with room
 
 - `top` (alias: `leaderboard`): displays the top 15 players. Parameters:
-    - `sort`: optional, one of `score`, `xp`, `kills`, `deaths`, `ratio`, `streak` or `time`. Defaults to `score`
+    - `sort`: optional, one of `score`, `xp`, `kills`, `deaths`, `ratio`, `streak`, `tk` or `time`. Defaults to `score`
     - `database`: optional, one of `invasion` or `pacific`. Defaults to `invasion`
 
 - `pos` (aliases: `position`, `ranking`): highlights the specified player in the leaderboard. Parameters:
     - `username`: required. Full username is required
-    - `sort`: optional, one of `score`, `xp`, `kills`, `deaths`, `ratio`, `streak` or `time`. Defaults to `score`
+    - `sort`: optional, one of `score`, `xp`, `kills`, `deaths`, `ratio`, `streak`, `tk` or `time`. Defaults to `score`
     - `database`: optional, one of `invasion` or `pacific`. Defaults to `invasion`
 
 - `now` (alias: `currently`): displays numbers about the current players and servers.

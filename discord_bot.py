@@ -26,7 +26,8 @@ VALID_PLAYER_SORTS = {
     'deaths': {'name': 'deaths', 'value': rwr.constants.PlayersSort.DEATHS, 'getter': lambda player: helpers.humanize_integer(player.deaths)},
     'ratio': {'name': 'K/D ratio', 'value': rwr.constants.PlayersSort.KD_RATIO, 'getter': lambda player: player.kd_ratio},
     'time': {'name': 'time played', 'value': rwr.constants.PlayersSort.TIME_PLAYED, 'getter': lambda player: helpers.humanize_seconds_to_hours(player.time_played)},
-    'streak': {'name': 'longest kill streak', 'value': rwr.constants.PlayersSort.LONGEST_KILL_STREAK, 'getter': lambda player: helpers.humanize_integer(player.longest_kill_streak)}
+    'streak': {'name': 'longest kill streak', 'value': rwr.constants.PlayersSort.LONGEST_KILL_STREAK, 'getter': lambda player: helpers.humanize_integer(player.longest_kill_streak)},
+    'tk': {'name': 'teamkills', 'value': rwr.constants.PlayersSort.TEAMKILLS, 'getter': lambda player: helpers.humanize_integer(player.teamkills)}
 }
 
 
