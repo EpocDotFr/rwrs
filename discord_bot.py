@@ -238,6 +238,8 @@ class RwrsDiscoBotPlugin(Plugin):
         """Create a RWRS player rich Discord message."""
         embed = self._create_base_message_embed()
 
+        embed.url = player.link_absolute
+
         if player.is_me:
             embed.description = ':wave: Hey, I\'m the creator of RWRS and this bot! Glad to see you\'re using it.'
         elif player.is_contributor:
@@ -263,7 +265,7 @@ class RwrsDiscoBotPlugin(Plugin):
             value='{}\n{} XP'.format(
                 player.next_rank.name,
                 helpers.humanize_integer(player.next_rank.xp)
-            ) if player.next_rank else 'Highest possible rank reached',
+            ) if player.next_rank else 'Highest possible\nrank reached',
             inline=True
         )
 
@@ -318,6 +320,7 @@ class RwrsDiscoBotPlugin(Plugin):
         """Create a RWRS server rich Discord message."""
         embed = self._create_base_message_embed()
 
+        embed.url = server.link_absolute
         embed.description = server.steam_join_link.replace(' ', '%20')
 
         if server.players.list:
