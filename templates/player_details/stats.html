@@ -35,7 +35,7 @@
         <th class="txtcenter">Required XP</th>
     </tr>
     <tr>
-        <td class="txtcenter">{{ macros.compare_numbers(player, player_to_compare_with, 'xp') }} {{ player.xp|humanize_integer }}</td>
+        <td class="txtcenter">{{ macros.compare_numbers(player, player_to_compare_with, 'xp') }} {{ player.xp_display }}</td>
         <td class="txtcenter pan">
             {% if player.next_rank %}
                 <div class="progress-bar">
@@ -56,37 +56,37 @@
 <table class="mtm mbn">
     <tr>
         <th>Kills</th>
-        <td>{{ macros.compare_numbers(player, player_to_compare_with, 'kills') }} {{ player.kills|humanize_integer }}</td>
+        <td>{{ macros.compare_numbers(player, player_to_compare_with, 'kills') }} {{ player.kills_display }}</td>
         <th>Deaths</th>
-        <td>{{ macros.compare_numbers(player, player_to_compare_with, 'deaths', above_zero_is_good=False) }} {{ player.deaths|humanize_integer }}</td>
+        <td>{{ macros.compare_numbers(player, player_to_compare_with, 'deaths', above_zero_is_good=False) }} {{ player.deaths_display }}</td>
         <th>K/D ratio</th>
         <td>{{ macros.compare_numbers(player, player_to_compare_with, 'kd_ratio', type=float) }} <span class="{{ 'txtred' if player.kd_ratio < 1 else 'txtgreen' }}">{{ player.kd_ratio }}</span></td>
         <th>Score</th>
-        <td>{{ macros.compare_numbers(player, player_to_compare_with, 'score') }} <span class="{{ 'txtred' if player.score < 0 else 'txtgreen' }}">{{ player.score|humanize_integer }}</span></td>
+        <td>{{ macros.compare_numbers(player, player_to_compare_with, 'score') }} <span class="{{ 'txtred' if player.score < 0 else 'txtgreen' }}">{{ player.score_display }}</span></td>
     </tr>
     <tr>
         <th>Time played</th>
         <td>{{ macros.compare_numbers(player, player_to_compare_with, 'time_played', type='time') }} {{ player.time_played|humanize_seconds_to_hours }}{% if player.display_time_played_in_days %} <small>({{ player.time_played|humanize_seconds_to_days }})</small>{% endif %}</td>
         <th>Longest kill streak</th>
-        <td>{{ macros.compare_numbers(player, player_to_compare_with, 'longest_kill_streak') }} {{ player.longest_kill_streak|humanize_integer }}</td>
+        <td>{{ macros.compare_numbers(player, player_to_compare_with, 'longest_kill_streak') }} {{ player.longest_kill_streak_display }}</td>
         <th>Targets destroyed</th>
-        <td>{{ macros.compare_numbers(player, player_to_compare_with, 'targets_destroyed') }} {{ player.targets_destroyed|humanize_integer }}</td>
+        <td>{{ macros.compare_numbers(player, player_to_compare_with, 'targets_destroyed') }} {{ player.targets_destroyed_display }}</td>
         <th>Distance moved</th>
         <td>{{ macros.compare_numbers(player, player_to_compare_with, 'distance_moved', type=float) }} {{ player.distance_moved }}km</td>
     </tr>
     <tr>
         <th>Vehicles destroyed</th>
-        <td>{{ macros.compare_numbers(player, player_to_compare_with, 'vehicles_destroyed') }} {{ player.vehicles_destroyed|humanize_integer }}</td>
+        <td>{{ macros.compare_numbers(player, player_to_compare_with, 'vehicles_destroyed') }} {{ player.vehicles_destroyed_display }}</td>
         <th>Soldiers healed</th>
-        <td>{{ macros.compare_numbers(player, player_to_compare_with, 'soldiers_healed') }} {{ player.soldiers_healed|humanize_integer }}</td>
+        <td>{{ macros.compare_numbers(player, player_to_compare_with, 'soldiers_healed') }} {{ player.soldiers_healed_display }}</td>
         <th>Teamkills</th>
-        <td>{{ macros.compare_numbers(player, player_to_compare_with, 'teamkills', above_zero_is_good=False) }} {{ player.teamkills|humanize_integer }}</td>
+        <td>{{ macros.compare_numbers(player, player_to_compare_with, 'teamkills', above_zero_is_good=False) }} {{ player.teamkills_display }}</td>
         <th>Shots fired</th>
-        <td>{{ macros.compare_numbers(player, player_to_compare_with, 'shots_fired') }} {{ player.shots_fired|humanize_integer }}</td>
+        <td>{{ macros.compare_numbers(player, player_to_compare_with, 'shots_fired') }} {{ player.shots_fired_display }}</td>
     </tr>
     <tr>
         <th>Throwables thrown</th>
-        <td>{{ macros.compare_numbers(player, player_to_compare_with, 'throwables_thrown') }} {{ player.throwables_thrown|humanize_integer }}</td>
+        <td>{{ macros.compare_numbers(player, player_to_compare_with, 'throwables_thrown') }} {{ player.throwables_thrown_display }}</td>
         <td colspan="6"></td>
     </tr>
 </table>

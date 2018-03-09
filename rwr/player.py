@@ -1,6 +1,7 @@
 from flask import url_for, current_app
 from . import constants, utils
 from rwrs import app
+import helpers
 import math
 
 
@@ -31,6 +32,7 @@ class Player:
         rank_image_cell = node[17]
 
         ret.position = int(position_cell.text)
+        ret.position_display = helpers.humanize_integer(ret.position)
 
         ret.username = username_cell.text
 
@@ -41,20 +43,44 @@ class Player:
         ret.is_rwr_dev = username_lower in app.config['DEVS']
 
         ret.kills = int(kills_cell.text)
+        ret.kills_display = helpers.humanize_integer(ret.kills)
+
         ret.deaths = int(deaths_cell.text)
+        ret.deaths_display = helpers.humanize_integer(ret.deaths)
+
         ret.score = int(score_cell.text)
+        ret.score_display = helpers.humanize_integer(ret.score)
+
         ret.kd_ratio = float(kd_ratio_cell.text)
+
         ret.time_played = utils.parse_time(time_played_cell.text)
         ret.display_time_played_in_days = ret.time_played > 60 * 60 * 24
+
         ret.longest_kill_streak = int(longest_kill_streak_cell.text)
+        ret.longest_kill_streak_display = helpers.humanize_integer(ret.longest_kill_streak)
+
         ret.targets_destroyed = int(targets_destroyed_cell.text)
+        ret.targets_destroyed_display = helpers.humanize_integer(ret.targets_destroyed)
+
         ret.vehicles_destroyed = int(vehicles_destroyed_cell.text)
+        ret.vehicles_destroyed_display = helpers.humanize_integer(ret.vehicles_destroyed)
+
         ret.soldiers_healed = int(soldiers_healed_cell.text)
+        ret.soldiers_healed_display = helpers.humanize_integer(ret.soldiers_healed)
+
         ret.teamkills = int(teamkills_cell.text)
+        ret.teamkills_display = helpers.humanize_integer(ret.teamkills)
+
         ret.distance_moved = float(distance_moved_cell.text.replace('km', ''))
+
         ret.shots_fired = int(shots_fired_cell.text)
+        ret.shots_fired_display = helpers.humanize_integer(ret.shots_fired)
+
         ret.throwables_thrown = int(throwables_thrown_cell.text)
+        ret.throwables_thrown_display = helpers.humanize_integer(ret.throwables_thrown)
+
         ret.xp = int(xp_cell.text)
+        ret.xp_display = helpers.humanize_integer(ret.xp)
 
         ret.database = database
         ret.database_name = utils.get_database_name(ret.database)

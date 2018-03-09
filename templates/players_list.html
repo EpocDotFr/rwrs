@@ -76,22 +76,22 @@
         <tbody>
             {% for player in players %}
                 <tr{% if args.get('target') == player.username %} class="notice"{% endif %} data-username="{{ player.username }}">
-                    <td>{{ player.position|humanize_integer }}</td>
+                    <td>{{ player.position_display }}</td>
                     <td class="nowrap">{{ macros.player_name(player, link=True, show_rank=True, show_online=True) }}</td>
-                    <td>{{ player.xp|humanize_integer }}</td>
-                    <td>{{ player.kills|humanize_integer }}</td>
-                    <td>{{ player.deaths|humanize_integer }}</td>
+                    <td>{{ player.xp_display }}</td>
+                    <td>{{ player.kills_display }}</td>
+                    <td>{{ player.deaths_display }}</td>
                     <td><span class="{{ 'txtred' if player.kd_ratio < 1 else 'txtgreen' }}">{{ player.kd_ratio }}</span></td>
-                    <td><span class="{{ 'txtred' if player.score < 0 else 'txtgreen' }}">{{ player.score|humanize_integer }}</span></td>
+                    <td><span class="{{ 'txtred' if player.score < 0 else 'txtgreen' }}">{{ player.score_display }}</span></td>
                     <td>{{ player.time_played|humanize_seconds_to_hours }}{% if player.display_time_played_in_days %} <small>({{ player.time_played|humanize_seconds_to_days }})</small>{% endif %}</td>
-                    <td>{{ player.longest_kill_streak|humanize_integer }}</td>
-                    <td>{{ player.targets_destroyed|humanize_integer }}</td>
+                    <td>{{ player.longest_kill_streak_display }}</td>
+                    <td>{{ player.targets_destroyed_display }}</td>
                     <td>{{ player.distance_moved }}km</td>
-                    <td>{{ player.vehicles_destroyed|humanize_integer }}</td>
-                    <td>{{ player.soldiers_healed|humanize_integer }}</td>
-                    <td>{{ player.teamkills|humanize_integer }}</td>
-                    <td>{{ player.shots_fired|humanize_integer }}</td>
-                    <td>{{ player.throwables_thrown|humanize_integer }}</td>
+                    <td>{{ player.vehicles_destroyed_display }}</td>
+                    <td>{{ player.soldiers_healed_display }}</td>
+                    <td>{{ player.teamkills_display }}</td>
+                    <td>{{ player.shots_fired_display }}</td>
+                    <td>{{ player.throwables_thrown_display }}</td>
                     <td>
                         <a href="#" title="Add {{ player.username }} to friends list" class="btn add-friend is-hidden"><i class="fa fa-user-plus"></i></a>
                         <a href="#" title="Remove {{ player.username }} from friends list" class="btn remove-friend is-hidden"><i class="fa fa-user-times"></i></a>
