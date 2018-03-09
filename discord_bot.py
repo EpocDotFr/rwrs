@@ -316,6 +316,54 @@ class RwrsDiscoBotPlugin(Plugin):
             inline=True
         )
 
+        embed.add_field(
+            name='Kill streak',
+            value=player.longest_kill_streak_display,
+            inline=True
+        )
+
+        embed.add_field(
+            name='Teamkills',
+            value=player.teamkills_display,
+            inline=True
+        )
+
+        embed.add_field(
+            name='Heals',
+            value=player.soldiers_healed_display,
+            inline=True
+        )
+
+        embed.add_field(
+            name='Shots fired',
+            value=player.shots_fired_display,
+            inline=True
+        )
+
+        embed.add_field(
+            name='Distance moved',
+            value='{}km'.format(player.distance_moved),
+            inline=True
+        )
+
+        embed.add_field(
+            name='Throwables thrown',
+            value=player.throwables_thrown_display,
+            inline=True
+        )
+
+        embed.add_field(
+            name='Vehicles destroyed',
+            value=player.vehicles_destroyed_display,
+            inline=True
+        )
+
+        embed.add_field(
+            name='Targets destroyed',
+            value=player.targets_destroyed_display,
+            inline=True
+        )
+
         if player.playing_on_server:
             embed.set_footer(text='🖱 Playing on {} ({})'.format(
                 player.playing_on_server.name_display,
