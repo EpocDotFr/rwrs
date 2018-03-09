@@ -10,6 +10,20 @@
     - `username`: required. Full username is required
     - `database`: optional. Defaults to `invasion`
 
+- `top` (alias: `leaderboard`): displays the top 15 players. Parameters:
+    - `sort`: optional. Defaults to `score`
+    - `database`: optional. Defaults to `invasion`
+
+- `pos` (aliases: `position`, `ranking`): highlights the specified player in the leaderboard. Parameters:
+    - `username`: required. Full username is required
+    - `sort`: optional. Defaults to `score`
+    - `database`: optional. Defaults to `invasion`
+
+- `compare`: compare stats of two players. Parameters:
+    - `source_username`: required. Full username is required
+    - `target_username`: required. Full username is required
+    - `database`: optional. Defaults to `invasion`
+
 - `whereis` (aliases: `where is`, `where`): displays information about the server the specified player is currently playing on. Parameters:
     - `username`: required. Full username isn't required
 
@@ -19,15 +33,6 @@
 - `servers`: displays the first 10 currently active servers. Options (order doesn't matter):
     - `--ranked`: only return ranked (official) servers
     - `--not-full`: only return servers with room
-
-- `top` (alias: `leaderboard`): displays the top 15 players. Parameters:
-    - `sort`: optional. Defaults to `score`
-    - `database`: optional. Defaults to `invasion`
-
-- `pos` (aliases: `position`, `ranking`): highlights the specified player in the leaderboard. Parameters:
-    - `username`: required. Full username is required
-    - `sort`: optional. Defaults to `score`
-    - `database`: optional. Defaults to `invasion`
 
 - `now` (alias: `currently`): displays numbers about the current players and servers.
 

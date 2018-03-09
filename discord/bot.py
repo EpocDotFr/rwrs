@@ -215,6 +215,38 @@ class RwrsBotCore(Plugin):
             constants.VALID_PLAYER_SORTS[args.sort]['name']
         ), embed=embed)
 
+    @Plugin.command('compare', parser=True)
+    @Plugin.parser.add_argument('source_username')
+    @Plugin.parser.add_argument('target_username')
+    @Plugin.parser.add_argument('database', choices=rwr.constants.VALID_DATABASES, nargs='?', default='invasion')
+    def on_compare_command(self, event, args):
+        args.source_username = args.source_username.upper()
+        args.target_username = args.target_username.upper()
+
+        source_player = self.rwr_scraper.search_player_by_username(args.database, args.source_username)
+
+        if not source_player:
+            event.msg.reply('I\'m sorry, I cannot find **{}** :disappointed:'.format(args.source_username))
+
+            return
+
+        target_player = self.rwr_scraper.search_player_by_username(args.database, args.target_username)
+
+        if not target_player:
+            event.msg.reply('Nah, I cannot find **{}** :disappointed:'.format(args.target_username))
+
+            return
+
+        embed = utils.create_base_message_embed()
+
+        # TODO
+
+        event.msg.reply('At your service, comparison of **{}** and **{}** on the **{}** leaderboard:'.format(
+            args.source_username,
+            args.target_username,
+            rwr.utils.get_database_name(args.database)
+        ), embed=embed)
+
 
 class RwrsBot:
     """The high-level class that wraps the RWRS Discord bot logic."""
