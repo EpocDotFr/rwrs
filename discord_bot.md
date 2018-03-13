@@ -30,8 +30,11 @@
 - `server`: displays information about the specified server. Parameters:
     - `name`: required. Full server name isn't required
 
-- `servers`: displays the first 10 currently active servers with room. Options (order doesn't matter):
-    - `--ranked`: only return ranked (official) servers
+- `servers`: displays the first 10 currently active servers with room.
+    - Parameters:
+        - `type`: optional. Filter servers by game type. One of `vanilla`, `pacific` or `rwd`. Defaults to no filtering
+    - Options (order doesn't matter):
+        - `--ranked`: only return ranked (official) servers
 
 - `now` (alias: `currently`): displays numbers about the current players and servers.
 

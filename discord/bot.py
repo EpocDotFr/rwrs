@@ -116,6 +116,7 @@ class RwrsBotCore(Plugin):
                 event.msg.reply(':warning: Looks like online multiplayer is encountering issues.\nFor details, head over here: {}'.format(url_for('online_multiplayer_status', _external=True)))
 
     @Plugin.command('servers', parser=True)
+    @Plugin.parser.add_argument('type', choices=constants.VALID_SERVER_TYPES.keys(), nargs='?', default='any')
     @Plugin.parser.add_argument('--ranked', action='store_const', const='yes')
     def on_servers_command(self, event, args):
         """Displays the first 10 currently active servers with room."""
@@ -123,13 +124,17 @@ class RwrsBotCore(Plugin):
             limit=constants.SERVERS_LIMIT,
             not_empty='yes',
             not_full='yes',
-            ranked=args.ranked
+            ranked=args.ranked,
+            type=constants.VALID_SERVER_TYPES[args.type]
         )
 
         filters = []
 
         if args.ranked:
             filters.append('ranked')
+
+        if args.type:
+            filters.append(rwr.constants.SERVER_TYPES[constants.VALID_SERVER_TYPES[args.type]])
 
         filters_string = ', ' + ', '.join(filters) if filters else ''
 

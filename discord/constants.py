@@ -21,6 +21,12 @@ VALID_PLAYER_SORTS = {
     'targets': {'name': 'targets destroyed', 'value': rwr.constants.PlayersSort.TARGETS_DESTROYED, 'getter': lambda player: player.targets_destroyed_display},
 }
 
+VALID_SERVER_TYPES = {
+    'vanilla': 'vanilla',
+    'pacific': 'pacific',
+    'rwd': 'Running_with_the_Dead'
+}
+
 EMBED_COLOR = 10800919 # The well-known primary RWRS color #A4CF17, in the decimal format
 PLAYERS_LIMIT = 24
 SERVERS_LIMIT = 10
