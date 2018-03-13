@@ -117,20 +117,16 @@ class RwrsBotCore(Plugin):
 
     @Plugin.command('servers', parser=True)
     @Plugin.parser.add_argument('--ranked', action='store_const', const='yes')
-    @Plugin.parser.add_argument('--not-full', action='store_const', const='yes')
     def on_servers_command(self, event, args):
-        """Displays the first 10 currently active servers."""
+        """Displays the first 10 currently active servers with room."""
         servers = self.rwr_scraper.filter_servers(
             limit=constants.SERVERS_LIMIT,
             not_empty='yes',
-            not_full=args.not_full,
+            not_full='yes',
             ranked=args.ranked
         )
 
         filters = []
-
-        if args.not_full:
-            filters.append('not full')
 
         if args.ranked:
             filters.append('ranked')
@@ -138,7 +134,7 @@ class RwrsBotCore(Plugin):
         filters_string = ', ' + ', '.join(filters) if filters else ''
 
         response = [
-            'Here sir, the first {} currently active{} servers:\n'.format(constants.SERVERS_LIMIT, filters_string)
+            'Here sir, the first {} currently active{} servers with room:\n'.format(constants.SERVERS_LIMIT, filters_string)
         ]
 
         for server in servers:

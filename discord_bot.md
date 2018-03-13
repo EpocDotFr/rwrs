@@ -30,9 +30,8 @@
 - `server`: displays information about the specified server. Parameters:
     - `name`: required. Full server name isn't required
 
-- `servers`: displays the first 10 currently active servers. Options (order doesn't matter):
+- `servers`: displays the first 10 currently active servers with room. Options (order doesn't matter):
     - `--ranked`: only return ranked (official) servers
-    - `--not-full`: only return servers with room
 
 - `now` (alias: `currently`): displays numbers about the current players and servers.
 
