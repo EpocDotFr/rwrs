@@ -1,3 +1,4 @@
+from disco.types.user import GameType, Game, Status
 from disco.client import Client, ClientConfig
 from disco.util.logging import setup_logging
 from disco.bot import Bot, Plugin
@@ -21,6 +22,11 @@ class RwrsBotCore(Plugin):
 
         self.rwr_scraper = rwr.scraper.DataScraper()
         self.steam_api_client = steam_api.Client(app.config['STEAM_API_KEY'])
+
+    @Plugin.listen('Ready')
+    def on_ready_event(self, event):
+        """Performs things when the bot is ready."""
+        self.bot.client.update_presence(Status.ONLINE, Game(type=GameType.DEFAULT, name='rwrstats.com'))
 
     @Plugin.command('help')
     def on_help_command(self, event):
