@@ -4,6 +4,7 @@ from disco.util.logging import setup_logging
 from disco.bot import Bot, Plugin
 from models import RwrRootServer
 from . import constants, utils
+from tabulate import tabulate
 from flask import url_for
 from gevent import monkey
 from rwrs import app
@@ -11,6 +12,7 @@ import rwr.scraper
 import rwr.utils
 import steam_api
 import logging
+import helpers
 
 monkey.patch_all()
 
@@ -249,13 +251,33 @@ class RwrsBotCore(Plugin):
 
             return
 
-        response = ''
+        table_headers = ['', source_player.username, target_player.username]
 
-        event.msg.reply('Comparison of **{}** and **{}** on the **{}** leaderboard:\n```\n{}\n```'.format(
+        table_data = [
+            ['Rank', source_player.rank.name, target_player.rank.name],
+            ['XP', source_player.xp_display, target_player.xp_display],
+            ['Kills', source_player.kills_display, target_player.kills_display],
+            ['Deaths', source_player.deaths_display, target_player.deaths_display],
+            ['K/D ratio', source_player.kd_ratio, target_player.kd_ratio],
+            ['Score', source_player.score_display, target_player.score_display],
+            ['Time played', helpers.humanize_seconds_to_hours(source_player.time_played), helpers.humanize_seconds_to_hours(target_player.time_played)],
+            ['Kill streak', source_player.longest_kill_streak_display, target_player.longest_kill_streak_display],
+            ['Teamkills', source_player.teamkills_display, target_player.teamkills_display],
+            ['Heals', source_player.soldiers_healed_display, target_player.soldiers_healed_display],
+            ['Shots fired', source_player.shots_fired_display, target_player.shots_fired_display],
+            ['Distance moved', '{}km'.format(source_player.distance_moved), '{}km'.format(target_player.distance_moved)],
+            ['Throwables thrown', source_player.throwables_thrown_display, target_player.throwables_thrown_display],
+            ['Vehicles destroyed', source_player.vehicles_destroyed_display, target_player.vehicles_destroyed_display],
+            ['Targets destroyed', source_player.targets_destroyed_display, target_player.targets_destroyed_display]
+        ]
+
+        table = tabulate(table_data, headers=table_headers, tablefmt='presto')
+
+        event.msg.reply('Who has the biggest between **{}** and **{}** on the **{}** leaderboard?\n```\n{}\n```'.format(
             args.source_username,
             args.target_username,
             rwr.utils.get_database_name(args.database),
-            response
+            table
         ))
 
 

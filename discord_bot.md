@@ -1,4 +1,5 @@
-❓ **The parameters order is important** unless otherwise stated. If a parameter contains one or more spaces **you'll have to surround it with double or simple quotes**. Valid common parameters values:
+
+❓ **The parameters order is important** unless otherwise stated. If a parameter contains one or more spaces **you'll have to surround it with double or simple quotes**. Valid common parameters values are:
 
 - `sort`: `score`, `xp`, `kills`, `deaths`, `ratio`, `streak`, `tk`, `heals`, `shots`, `distance`, `throws`, `vehicles`, `targets`, `time`
 
@@ -6,20 +7,25 @@
 
 **Commands list:**
 
-- `stats` (alias: `statistics`): displays stats about the specified player. Parameters:
+- `stats`: displays stats about the specified player. Parameters:
     - `username`: required. Full username is required
     - `database`: optional. Defaults to `invasion`
 
-- `top` (alias: `leaderboard`): displays the top 15 players. Parameters:
+- `top`: displays the top 15 players. Parameters:
     - `sort`: optional. Defaults to `score`
     - `database`: optional. Defaults to `invasion`
 
-- `pos` (aliases: `position`, `ranking`): highlights the specified player in the leaderboard. Parameters:
+- `pos`: highlights the specified player in the leaderboard. Parameters:
     - `username`: required. Full username is required
     - `sort`: optional. Defaults to `score`
     - `database`: optional. Defaults to `invasion`
 
-- `whereis` (aliases: `where is`, `where`): displays information about the server the specified player is currently playing on. Parameters:
+- `compare`: compare stats of two players. Parameters:
+    - `source_username`: required. Full username is required
+    - `target_username`: required. Full username is required
+    - `database`: optional. Defaults to `invasion`
+
+- `whereis`: displays information about the server the specified player is currently playing on. Parameters:
     - `username`: required. Full username isn't required
 
 - `server`: displays information about the specified server. Parameters:
@@ -31,7 +37,7 @@
     - Options (order doesn't matter):
         - `--ranked`: only return ranked (official) servers
 
-- `now` (alias: `currently`): displays numbers about the current players and servers.
+- `now`: displays numbers about the current players and servers.
 
 - `status`: displays the current status of the online multiplayer.
 

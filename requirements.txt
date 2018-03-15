@@ -14,3 +14,4 @@ SQLAlchemy
 python-slugify
 sqlalchemy-utils
 disco-py[performance]
+tabulate
