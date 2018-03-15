@@ -232,26 +232,25 @@ class RwrsBotCore(Plugin):
         source_player = self.rwr_scraper.search_player_by_username(args.database, args.source_username)
 
         if not source_player:
-            event.msg.reply('I\'m sorry, I cannot find **{}** :disappointed:'.format(args.source_username))
+            event.msg.reply('I\'m sorry, I cannot find **{}** :confused:'.format(args.source_username))
 
             return
 
         target_player = self.rwr_scraper.search_player_by_username(args.database, args.target_username)
 
         if not target_player:
-            event.msg.reply('Nah, I cannot find **{}** :disappointed:'.format(args.target_username))
+            event.msg.reply('Nah, I cannot find **{}** :confused:'.format(args.target_username))
 
             return
 
-        embed = utils.create_base_message_embed()
+        response = ''
 
-        # TODO
-
-        event.msg.reply('At your service, comparison of **{}** and **{}** on the **{}** leaderboard:'.format(
+        event.msg.reply('Comparison of **{}** and **{}** on the **{}** leaderboard:\n```\n{}\n```'.format(
             args.source_username,
             args.target_username,
-            rwr.utils.get_database_name(args.database)
-        ), embed=embed)
+            rwr.utils.get_database_name(args.database),
+            response
+        ))
 
 
 class RwrsBot:
