@@ -44,7 +44,7 @@ class Player:
 
         ret.username_display = '{}{}'.format(
             ret.username,
-            ' 👋' if ret.is_me else ' ✌️' if ret.is_contributor else ' 🎖' if ret.is_rwr_dev else ''
+            ' 👋' if ret.is_me else ' ✌️' if ret.is_contributor else ' 🛠' if ret.is_rwr_dev else ''
         )
 
         ret.kills = int(kills_cell.text)

@@ -14,7 +14,7 @@ def create_player_message_embed(player):
     elif player.is_contributor:
         embed.description = ':v: This player contributed in a way or another to RWRS. Thanks to her/him!'
     elif player.is_rwr_dev:
-        embed.description = ':military_medal: Say hi to one of the Running With Rifles developers!'
+        embed.description = ':hammer_and_wrench: Say hi to one of the Running With Rifles developers!'
 
     embed.set_thumbnail(
         url=player.rank.image_absolute
@@ -199,3 +199,16 @@ def create_base_message_embed():
     embed.color = constants.EMBED_COLOR
 
     return embed
+
+
+def compare_values(source, target, getter):
+    """Create the comparison cell for the compare command."""
+    source_value = getter(source)
+    target_value = getter(target)
+
+    if source_value > target_value:
+        return '>'
+    elif source_value < target_value:
+        return '<'
+    else:
+        return '='
