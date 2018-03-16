@@ -42,6 +42,11 @@ class Player:
         ret.is_contributor = username_lower in app.config['CONTRIBUTORS']
         ret.is_rwr_dev = username_lower in app.config['DEVS']
 
+        ret.username_display = '{}{}'.format(
+            ret.username,
+            ' 👋' if ret.is_me else ' ✌️' if ret.is_contributor else ' 🎖' if ret.is_rwr_dev else ''
+        )
+
         ret.kills = int(kills_cell.text)
         ret.kills_display = helpers.humanize_integer(ret.kills)
 

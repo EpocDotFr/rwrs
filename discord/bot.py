@@ -39,7 +39,7 @@ class RwrsBotCore(Plugin):
     def on_info_command(self, event):
         """Get information about the bot."""
         info = [
-            'ℹ️ Hi! I was created by <@66543750725246976> - the guy behind https://rwrstats.com - around the beginning of March 2018.',
+            'ℹ️ Hi! I was created by <@{}> - the guy behind https://rwrstats.com - around the beginning of March 2018.'.format(app.config['MY_DISCORD_ID']),
             'Like the rwrstats.com website, my brain is powered by the Python programming language.',
             'P.S. You look beautiful today.'
         ]
@@ -62,7 +62,7 @@ class RwrsBotCore(Plugin):
 
         player.set_playing_on_server(servers)
 
-        event.msg.reply('Here\'s stats for **{}** on **{}** ranked servers:'.format(player.username, player.database_name), embed=utils.create_player_message_embed(player))
+        event.msg.reply('Here\'s stats for **{}** on **{}** ranked servers:'.format(player.username_display, player.database_name), embed=utils.create_player_message_embed(player))
 
     @Plugin.command('whereis', '<username:str>', aliases=['where is', 'where'])
     def on_whereis_command(self, event, username):
@@ -183,7 +183,7 @@ class RwrsBotCore(Plugin):
 
         for player in players:
             embed.add_field(
-                name='#{} {}'.format(player.position_display, player.username),
+                name='#{} {}'.format(player.position_display, player.username_display),
                 value=constants.VALID_PLAYER_SORTS[args.sort]['getter'](player),
                 inline=True
             )
@@ -216,15 +216,20 @@ class RwrsBotCore(Plugin):
 
         embed = utils.create_base_message_embed()
 
+        username = args.username
+
         for player in players:
+            if player.username == args.username:
+                username = player.username_display
+
             embed.add_field(
-                name='{}#{} {}'.format('➡️ ' if player.username == args.username else '', player.position, player.username),
+                name='{}#{} {}'.format('➡️ ' if player.username == args.username else '', player.position, player.username_display),
                 value=constants.VALID_PLAYER_SORTS[args.sort]['getter'](player),
                 inline=True
             )
 
         event.msg.reply('Here\'s the position of **{}** on the **{}** leaderboard, ordered by {}:'.format(
-            args.username,
+            username,
             rwr.utils.get_database_name(args.database),
             constants.VALID_PLAYER_SORTS[args.sort]['name']
         ), embed=embed)
@@ -251,7 +256,7 @@ class RwrsBotCore(Plugin):
 
             return
 
-        table_headers = ['', source_player.username, target_player.username]
+        table_headers = ['', source_player.username_display, target_player.username_display]
 
         table_data = [
             ['Rank', source_player.rank.name, target_player.rank.name],

@@ -37,6 +37,7 @@ app.config['CONTRIBUTORS'] = ['street veteran', 'mastock', 'dio', 'jatimatik', '
 app.config['DEVS'] = ['jackmayol', 'pasik', 'pasik2', 'tremozl', 'the soldier'] # ahnold
 app.config['PLAYERS_LIST_PAGE_SIZES'] = [15, 30, 50, 100]
 app.config['RWR_STEAM_APP_ID'] = 270150
+app.config['MY_DISCORD_ID'] = 66543750725246976
 
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
