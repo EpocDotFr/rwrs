@@ -1,10 +1,16 @@
-❓ **The parameters order is important** unless otherwise stated. If a parameter contains one or more spaces **you'll have to surround it with double or simple quotes**. Valid common parameters values are:
+**Read first**
+
+- The parameters order is important
+- Parameters containing spaces **must be surrounded by double `"` or simple `'` quotes**
+- Usernames starting with a `-` **must be directly prepended with a `\`**
+
+Valid common parameters values are:
 
 - `sort`: `score`, `xp`, `kills`, `deaths`, `ratio`, `streak`, `tk`, `heals`, `shots`, `distance`, `throws`, `vehicles`, `targets`, `time`
 
 - `database`: `invasion`, `pacific`
 
-**Commands list:**
+**Commands list**
 
 - `stats`: displays stats about the specified player. Parameters:
     - `username`: required. Full username is required

@@ -51,7 +51,7 @@ class RwrsBotCore(Plugin):
     @Plugin.parser.add_argument('database', choices=rwr.constants.VALID_DATABASES, nargs='?', default='invasion')
     def on_stats_command(self, event, args):
         """Displays stats about the specified player."""
-        player = self.rwr_scraper.search_player_by_username(args.database, args.username)
+        player = self.rwr_scraper.search_player_by_username(args.database, utils.prepare_username(args.username))
 
         if not player:
             event.msg.reply('Sorry dude, this player don\'t exist :confused:')
@@ -200,7 +200,7 @@ class RwrsBotCore(Plugin):
     @Plugin.parser.add_argument('database', choices=rwr.constants.VALID_DATABASES, nargs='?', default='invasion')
     def on_pos_command(self, event, args):
         """Highlights the specified player in the leaderboard."""
-        args.username = args.username.upper()
+        args.username = utils.prepare_username(args.username)
 
         players = self.rwr_scraper.get_players(
             args.database,
@@ -239,8 +239,8 @@ class RwrsBotCore(Plugin):
     @Plugin.parser.add_argument('target_username')
     @Plugin.parser.add_argument('database', choices=rwr.constants.VALID_DATABASES, nargs='?', default='invasion')
     def on_compare_command(self, event, args):
-        args.source_username = args.source_username.upper()
-        args.target_username = args.target_username.upper()
+        args.source_username = utils.prepare_username(args.source_username)
+        args.target_username = utils.prepare_username(args.target_username)
 
         source_player = self.rwr_scraper.search_player_by_username(args.database, args.source_username)
 
