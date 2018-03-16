@@ -11,7 +11,7 @@ import os
 def humanize_seconds_to_days(seconds):
     """Return a human-readable representation of the given number of seconds to days / hours / minutes / seconds."""
     if not seconds:
-        return ''
+        return '0m'
 
     d = int(seconds / (60 * 60 * 24))
     h = int((seconds % (60 * 60 * 24)) / (60 * 60))
@@ -40,7 +40,7 @@ def humanize_seconds_to_days(seconds):
 def humanize_seconds_to_hours(seconds):
     """Return a human-readable representation of the given number of seconds to hours / minutes."""
     if not seconds:
-        return ''
+        return '0m'
 
     h = int(seconds / (60 * 60))
     m = int((seconds % (60 * 60)) / 60)

@@ -31,9 +31,9 @@ def parse_time(string):
         one_minute = 60
         one_hour = one_minute * 60
 
-        hours = int(time['h']) if 'h' in time else 0
-        minutes = int(time['m']) if 'm' in time else 0
-        seconds = int(time['s']) if 's' in time else 0
+        hours = int(time['h']) if time['h'] else 0
+        minutes = int(time['m']) if time['m'] else 0
+        seconds = int(time['s']) if time['s'] else 0
 
         return seconds + minutes * one_minute + hours * one_hour
 
