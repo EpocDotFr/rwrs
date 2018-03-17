@@ -1,8 +1,8 @@
 **ℹ️ Read first**
 
 - The parameters order is important
-- Parameters containing spaces **must be surrounded by double `"` or simple `'` quotes**
-- Usernames starting with a dash `-` **must be directly prepended with a backslash `\`**
+- Parameters containing spaces **must be surrounded by `"` or  `'`**
+- Usernames starting with a `-` **must be directly prepended with a `\`**
 
 Valid common parameters values are:
 
