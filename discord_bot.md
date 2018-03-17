@@ -1,4 +1,4 @@
-**Read first**
+**ℹ️ Read first**
 
 - The parameters order is important
 - Parameters containing spaces **must be surrounded by double `"` or simple `'` quotes**
@@ -10,7 +10,7 @@ Valid common parameters values are:
 
 - `database`: `invasion`, `pacific`
 
-**Commands list**
+**📄 Commands list**
 
 - `stats`: displays stats about the specified player. Parameters:
     - `username`: required. Full username is required
