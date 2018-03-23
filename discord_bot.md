@@ -16,7 +16,7 @@ Valid common parameters values are:
     - `username`: required. Full username is required
     - `database`: optional. Defaults to `invasion`
 
-- `top`: displays the top 15 players. Parameters:
+- `top`: displays the top 24 players. Parameters:
     - `sort`: optional. Defaults to `score`
     - `database`: optional. Defaults to `invasion`
 
