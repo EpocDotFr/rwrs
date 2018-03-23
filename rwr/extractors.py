@@ -11,7 +11,7 @@ import os
 
 VALID_GAME_TYPES = ['vanilla', 'pacific']
 INVALID_GAME_TYPES = ['teddy_hunt', 'minimodes', 'man_vs_world']
-INVALID_MAPS = ['lobby']
+INVALID_MAPS = ['lobby', 'lobby_2p']
 
 
 class BaseExtractor:
