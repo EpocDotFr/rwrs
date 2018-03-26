@@ -217,6 +217,6 @@ def compare_values(source, target, getter):
 def prepare_username(username):
     """Perform some action to a RWR username to be ready to be consumed by the bot."""
     if not username.startswith('\-'):
-        return username
+        return username.upper()
 
     return username.replace('\-', '-', 1).upper()
