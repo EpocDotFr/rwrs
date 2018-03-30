@@ -21,6 +21,7 @@
     <div class="grid has-gutter-xl">
         <div>
             <h2 class="h1-like txtcenter"><i class="fa fa-user"></i> Looking for a player?</h2>
+
             <div class="pbm ptm txtcenter">
                 <form method="get" action="{{ url_for('players_list_without_db') }}" itemprop="potentialAction" itemscope itemtype="http://schema.org/SearchAction">
                     <meta itemprop="target" content="{{ url_for('players_list_without_db') }}?username={username}&amp;database=invasion"/>
@@ -31,20 +32,53 @@
                     <button type="submit"><i class="fa fa-search"></i> Find</button>
                 </form>
             </div>
+
             <fieldset class="man pan">
                 <legend class="mls">Total and online players (past week)</legend>
                 <p id="players-legend" class="small txtcenter"></p>
                 <div id="players-chart" class="chart"></div>
             </fieldset>
+
+            <table class="mts mbn">
+                <thead>
+                    <tr>
+                        <th class="txtcenter txtgraphgreen">Total players peak</th>
+                        <th class="txtcenter txtgraphblue">Online players peak</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="txtcenter"><strong>156</strong> <small>(23 mar 2017)</small></td>
+                        <td class="txtcenter"><strong>156</strong> <small>(23 mar 2017)</small></td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
         <div>
             <h2 class="h1-like txtcenter"><i class="fa fa-server"></i> Looking for a server?</h2>
+
             <p class="mtn pbm ptm txtcenter"><a href="{{ url_for('servers_list') }}" class="btn"><i class="fa fa-chevron-right"></i> Go to the servers list</a></p>
+
             <fieldset class="man pan">
                 <legend class="mls">Online and active servers (past week)</legend>
                 <p id="servers-chart-legend" class="small txtcenter"></p>
                 <div id="servers-chart" class="chart"></div>
             </fieldset>
+
+            <table class="mts mbn">
+                <thead>
+                    <tr>
+                        <th class="txtcenter txtgraphgreen">Online servers peak</th>
+                        <th class="txtcenter txtgraphblue">Active servers peak</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="txtcenter"><strong>156</strong> <small>(23 mar 2017)</small></td>
+                        <td class="txtcenter"><strong>156</strong> <small>(23 mar 2017)</small></td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 
