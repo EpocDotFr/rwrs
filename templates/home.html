@@ -41,10 +41,10 @@
 
             <div class="grid small mts">
                 <div class="txtcenter">
-                    <span class="txtgraphgreen">Total players peak</span> <strong>{{ peaks.total_players_peak_count if peaks.total_players_peak_count else '?' }}</strong> ({{ peaks.total_players_peak_date.format('MMM D, YYYY') if peaks.total_players_peak_date else '?' }})
+                    <span class="txtgraphgreen">Total players peak</span> <strong>{{ peaks.total_players_peak_count }}</strong> ({{ peaks.total_players_peak_date }})
                 </div>
                 <div class="txtcenter">
-                    <span class="txtgraphblue">Online players peak</span> <strong>{{ peaks.online_players_peak_count if peaks.online_players_peak_count else '?' }}</strong> ({{ peaks.online_players_peak_date.format('MMM D, YYYY') if peaks.online_players_peak_date else '?' }})
+                    <span class="txtgraphblue">Online players peak</span> <strong>{{ peaks.online_players_peak_count }}</strong> ({{ peaks.online_players_peak_date }})
                 </div>
             </div>
         </div>
@@ -62,10 +62,10 @@
 
             <div class="grid small mts">
                 <div class="txtcenter">
-                    <span class="txtgraphgreen">Online servers peak</span> <strong>{{ peaks.online_servers_peak_count if peaks.online_servers_peak_count else '?' }}</strong> ({{ peaks.online_servers_peak_date.format('MMM D, YYYY') if peaks.online_servers_peak_date else '?' }})
+                    <span class="txtgraphgreen">Online servers peak</span> <strong>{{ peaks.online_servers_peak_count }}</strong> ({{ peaks.online_servers_peak_date }})
                 </div>
                 <div class="txtcenter">
-                    <span class="txtgraphblue">Active servers peak</span> <strong>{{ peaks.active_servers_peak_count if peaks.active_servers_peak_count else '?' }}</strong> ({{ peaks.active_servers_peak_date.format('MMM D, YYYY') if peaks.active_servers_peak_date else '?' }})
+                    <span class="txtgraphblue">Active servers peak</span> <strong>{{ peaks.active_servers_peak_count }}</strong> ({{ peaks.active_servers_peak_date }})
                 </div>
             </div>
         </div>

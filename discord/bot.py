@@ -1,8 +1,8 @@
 from disco.types.user import GameType, Game, Status
 from disco.client import Client, ClientConfig
 from disco.util.logging import setup_logging
+from models import RwrRootServer, Variable
 from disco.bot import Bot, Plugin
-from models import RwrRootServer
 from . import constants, utils
 from tabulate import tabulate
 from flask import url_for
@@ -95,11 +95,19 @@ class RwrsBotCore(Plugin):
         """Displays numbers about the current players and servers."""
         answer = [
             'There\'s currently **{total_players}** player{total_players_plural} in total. **{online_players}** of them {online_players_plural} playing multiplayer online.',
-            'There\'s also **{total_servers}** online multiplayer servers, **{active_servers}** of which {active_servers_plural} active :wink:'
+            'There\'s also **{total_servers}** online multiplayer servers, **{active_servers}** of which {active_servers_plural} active :wink:',
+            '',
+            'Talking about these numbers, here\'s some peaks:',
+            '  - Total players peak: **{total_players_peak_count}** ({total_players_peak_date})',
+            '  - Online players peak: **{online_players_peak_count}** ({online_players_peak_date})',
+            '  - Online servers peak: **{online_servers_peak_count}** ({online_servers_peak_date})',
+            '  - Active servers peak: **{active_servers_peak_count}** ({active_servers_peak_date})'
         ]
 
         total_players = self.steam_api_client.get_current_players_count_for_app(app.config['RWR_STEAM_APP_ID'])
         online_players, active_servers, total_servers = self.rwr_scraper.get_counters()
+
+        peaks = Variable.get_peaks_for_display()
 
         event.msg.reply('\n'.join(answer).format(
             total_players=total_players,
@@ -109,7 +117,8 @@ class RwrsBotCore(Plugin):
             total_servers=total_servers,
             total_servers_plural='s' if total_servers > 1 else '',
             active_servers=active_servers,
-            active_servers_plural='are' if active_servers > 1 else 'is'
+            active_servers_plural='are' if active_servers > 1 else 'is',
+            **peaks
         ))
 
     @Plugin.command('status')

@@ -27,12 +27,7 @@ def home():
         servers_active_data
     ]
 
-    peaks = Variable.get_many_values([
-        'total_players_peak_count', 'total_players_peak_date',
-        'online_players_peak_count', 'online_players_peak_date',
-        'online_servers_peak_count', 'online_servers_peak_date',
-        'active_servers_peak_count', 'active_servers_peak_date'
-    ])
+    peaks = Variable.get_peaks_for_display()
 
     return render_template(
         'home.html',

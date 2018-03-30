@@ -303,3 +303,23 @@ class Variable(db.Model):
             var.value = value
 
             db.session.add(var)
+
+    @staticmethod
+    def get_peaks_for_display():
+        """Return the list of peak players and servers counts."""
+        var_names = [
+            'total_players_peak_count', 'total_players_peak_date',
+            'online_players_peak_count', 'online_players_peak_date',
+            'online_servers_peak_count', 'online_servers_peak_date',
+            'active_servers_peak_count', 'active_servers_peak_date'
+        ]
+
+        peaks = Variable.get_many_values(var_names)
+
+        for name in var_names:
+            if name not in peaks:
+                peaks[name] = '?'
+            elif name.endswith('_date'):
+                    peaks[name] = peaks[name].format('MMM D, YYYY')
+
+        return peaks
