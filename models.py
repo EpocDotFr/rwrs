@@ -230,3 +230,27 @@ class Variable(db.Model):
     name = db.Column(db.String(255), nullable=False, unique=True)
     type = db.Column(db.Enum(VariableType), nullable=False)
     value = db.Column(db.String)
+
+    @property
+    def real_value(self):
+        """Get the real (cast) value of this Variable."""
+        if self.type == VariableType.INTEGER:
+            return int(self.value)
+        elif self.type == VariableType.FLOAT:
+            return float(self.value)
+        elif self.type == VariableType.BOOL:
+            return bool(self.value)
+        elif self.type == VariableType.ARROW:
+            return arrow.get(self.value)
+
+        return self.value
+
+    @staticmethod
+    def get_or_new(**kwargs):
+        """Get the Variable corresponding to the given columns or create a new object if it doesn't exists in DB."""
+        var = Variable.query().filter_by(**kwargs).first()
+
+        if var:
+            return var
+        else:
+            return Variable(**kwargs)
