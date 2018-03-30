@@ -130,12 +130,8 @@ class RwrRootServerStatus(Enum):
 
 
 class RwrRootServer(db.Model):
-    class RwrRootServerQuery(db.Query):
-        pass
-
     __tablename__ = 'rwr_root_servers'
     __table_args__ = (db.Index('host_idx', 'host'), )
-    query_class = RwrRootServerQuery
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 
@@ -219,11 +215,7 @@ class VariableType(Enum):
 
 
 class Variable(db.Model):
-    class VariableQuery(db.Query):
-        pass
-
     __tablename__ = 'variables'
-    query_class = VariableQuery
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 
@@ -251,28 +243,28 @@ class Variable(db.Model):
         """Set the value of this Variable."""
         if isinstance(value, int):
             self.type = VariableType.INTEGER
-            self._value = value
+            self._value = str(value)
         elif isinstance(value, float):
             self.type = VariableType.FLOAT
-            self._value = value
+            self._value = str(value)
         elif isinstance(value, str):
             self.type = VariableType.STRING
             self._value = value
         elif isinstance(value, bool):
             self.type = VariableType.BOOL
-            self._value = int(value)
+            self._value = str(int(value))
         elif arrow.is_arroc(value):
             self.type = VariableType.ARROW
-            self._value = value.to('UTC').datetime
+            self._value = value.format()
 
     @staticmethod
     def get(name):
         """Get the value of the Variable corresponding to the given name."""
-        var = Variable.query().filter(Variable.name == name).first()
+        var = Variable.query.filter(Variable.name == name).first()
 
         return var.value if var else None
 
     @staticmethod
     def get_many(names):
         """Get several values of several Variables corresponding to the given names."""
-        return {var.name: var.value for var in Variable.query().filter(Variable.name.in_(names)).all()}
+        return {var.name: var.value for var in Variable.query.filter(Variable.name.in_(names)).all()}
