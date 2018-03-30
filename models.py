@@ -208,3 +208,25 @@ class RwrRootServer(db.Model):
         is_everything_ok = servers_down_count == 0
 
         return (is_everything_ok, servers_statuses)
+
+
+class VariableType(Enum):
+    INTEGER = 'INTEGER'
+    FLOAT = 'FLOAT'
+    STRING = 'STRING'
+    BOOL = 'BOOL'
+    ARROW = 'ARROW'
+
+
+class Variable(db.Model):
+    class VariableQuery(db.Query):
+        pass
+
+    __tablename__ = 'variables'
+    query_class = VariableQuery
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+
+    name = db.Column(db.String(255), nullable=False, unique=True)
+    type = db.Column(db.Enum(VariableType), nullable=False)
+    value = db.Column(db.String)
