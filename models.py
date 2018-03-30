@@ -235,6 +235,8 @@ class Variable(db.Model):
                 return bool(int(self._value))
             elif self.type == VariableType.ARROW:
                 return arrow.get(self._value)
+            else:
+                raise ValueError('Unhandled value type')
 
         return self._value
 
@@ -253,9 +255,11 @@ class Variable(db.Model):
         elif isinstance(value, bool):
             self.type = VariableType.BOOL
             self._value = str(int(value))
-        elif arrow.is_arroc(value):
+        elif isinstance(value, arrow.Arrow):
             self.type = VariableType.ARROW
             self._value = value.format()
+        else:
+            raise ValueError('Unhandled value type')
 
     @staticmethod
     def get_value(name):
@@ -292,6 +296,9 @@ class Variable(db.Model):
         """Set the value of several Variables corresponding to the given names.
 
         If a Variable doesn't exists, it is created. Ccommiting DB operation is needed after calling this method."""
+        if not names_and_values:
+            return
+
         existing_vars = {var.name: var for var in Variable.query.filter(Variable.name.in_(names_and_values.keys())).all()}
 
         for name, value in names_and_values.items():
@@ -299,6 +306,7 @@ class Variable(db.Model):
                 var = existing_vars[name]
             else:
                 var = Variable()
+                var.name = name
 
             var.value = value
 
