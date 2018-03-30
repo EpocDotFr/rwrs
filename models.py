@@ -229,28 +229,50 @@ class Variable(db.Model):
 
     name = db.Column(db.String(255), nullable=False, unique=True)
     type = db.Column(db.Enum(VariableType), nullable=False)
-    value = db.Column(db.String)
+    _value = db.Column('value', db.String)
 
     @property
-    def real_value(self):
+    def value(self):
         """Get the real (cast) value of this Variable."""
-        if self.type == VariableType.INTEGER:
-            return int(self.value)
-        elif self.type == VariableType.FLOAT:
-            return float(self.value)
-        elif self.type == VariableType.BOOL:
-            return bool(self.value)
-        elif self.type == VariableType.ARROW:
-            return arrow.get(self.value)
+        if self._value and self.type != VariableType.STRING: # No need to cast STRING values
+            if self.type == VariableType.INTEGER:
+                return int(self._value)
+            elif self.type == VariableType.FLOAT:
+                return float(self._value)
+            elif self.type == VariableType.BOOL:
+                return bool(int(self._value))
+            elif self.type == VariableType.ARROW:
+                return arrow.get(self._value)
 
-        return self.value
+        return self._value
+
+    @value.setter
+    def value(self, value):
+        """Set the value of this Variable."""
+        if isinstance(value, int):
+            self.type = VariableType.INTEGER
+            self._value = value
+        elif isinstance(value, float):
+            self.type = VariableType.FLOAT
+            self._value = value
+        elif isinstance(value, str):
+            self.type = VariableType.STRING
+            self._value = value
+        elif isinstance(value, bool):
+            self.type = VariableType.BOOL
+            self._value = int(value)
+        elif arrow.is_arroc(value):
+            self.type = VariableType.ARROW
+            self._value = value.to('UTC').datetime
 
     @staticmethod
-    def get_or_new(**kwargs):
-        """Get the Variable corresponding to the given columns or create a new object if it doesn't exists in DB."""
-        var = Variable.query().filter_by(**kwargs).first()
+    def get(name):
+        """Get the value of the Variable corresponding to the given name."""
+        var = Variable.query().filter(Variable.name == name).first()
 
-        if var:
-            return var
-        else:
-            return Variable(**kwargs)
+        return var.value if var else None
+
+    @staticmethod
+    def get_many(names):
+        """Get several values of several Variables corresponding to the given names."""
+        return {var.name: var.value for var in Variable.query().filter(Variable.name.in_(names)).all()}
