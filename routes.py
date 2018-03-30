@@ -27,7 +27,7 @@ def home():
         servers_active_data
     ]
 
-    peaks = Variable.get_many([
+    peaks = Variable.get_many_values([
         'total_players_peak_count', 'total_players_peak_date',
         'online_players_peak_count', 'online_players_peak_date',
         'online_servers_peak_count', 'online_servers_peak_date',

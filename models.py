@@ -258,13 +258,48 @@ class Variable(db.Model):
             self._value = value.format()
 
     @staticmethod
-    def get(name):
-        """Get the value of the Variable corresponding to the given name."""
+    def get_value(name):
+        """Get the value of the Variable corresponding to the given name.
+
+        Return None if the Variable doesn't exists or its value is empty."""
         var = Variable.query.filter(Variable.name == name).first()
 
         return var.value if var else None
 
     @staticmethod
-    def get_many(names):
-        """Get several values of several Variables corresponding to the given names."""
+    def get_many_values(names):
+        """Get the values of several Variables corresponding to the given names.
+
+        Variable key may not be present if it doesn't exists."""
         return {var.name: var.value for var in Variable.query.filter(Variable.name.in_(names)).all()}
+
+    @staticmethod
+    def set_value(name, value):
+        """Set the value of the Variable corresponding to the given name.
+
+        If the Variable doesn't exists, it is created. Commiting DB operation is needed after calling this method."""
+        var = Variable.query.filter(Variable.name == name).first()
+
+        if not var:
+            var = Variable()
+
+        var.value = value
+
+        db.session.add(var)
+
+    @staticmethod
+    def set_many_values(names_and_values):
+        """Set the value of several Variables corresponding to the given names.
+
+        If a Variable doesn't exists, it is created. Ccommiting DB operation is needed after calling this method."""
+        existing_vars = {var.name: var for var in Variable.query.filter(Variable.name.in_(names_and_values.keys())).all()}
+
+        for name, value in names_and_values.items():
+            if name in existing_vars:
+                var = existing_vars[name]
+            else:
+                var = Variable()
+
+            var.value = value
+
+            db.session.add(var)
