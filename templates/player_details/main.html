@@ -31,8 +31,8 @@
 
         <div class="inbl fr">
             <a href="{{ url_for('players_list', database=request.view_args.get('database'), target=player.username) }}" class="btn"><i class="fa fa-list-ol"></i> Highlight in {{ player.database_name }} leaderboard</a>
-            <a href="#" class="btn add-friend is-hidden"><i class="fa fa-user-plus"></i> Add to friends list</a>
-            <a href="#" class="btn remove-friend is-hidden"><i class="fa fa-user-times"></i> Remove from friends list</a>
+            <a href="#" class="btn add-friend is-hidden" data-username="{{ player.username }}"><i class="fa fa-user-plus"></i> Add to friends list</a>
+            <a href="#" class="btn remove-friend is-hidden" data-username="{{ player.username }}"><i class="fa fa-user-times"></i> Remove from friends list</a>
         </div>
 
         <div class="clearfix"></div>
@@ -59,7 +59,6 @@
 
     <script>
         friendsFeature.all_players_with_servers_details = {{ g.all_players_with_servers_details|tojson }};
-        friendsFeature.player = '{{ player.username }}';
         friendsFeature.initOnPlayerDetails();
     </script>
 {% endblock %}
