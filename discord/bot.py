@@ -98,6 +98,7 @@ class RwrsBotCore(Plugin):
             'There\'s also **{total_servers}** online multiplayer servers, **{active_servers}** of which {active_servers_plural} active :wink:',
             '',
             'Talking about these numbers, here\'s some peaks:',
+            '',
             '  - Total players peak: **{total_players_peak_count}** ({total_players_peak_date})',
             '  - Online players peak: **{online_players_peak_count}** ({online_players_peak_date})',
             '  - Online servers peak: **{online_servers_peak_count}** ({online_servers_peak_date})',
