@@ -226,7 +226,7 @@ class Variable(db.Model):
     @property
     def value(self):
         """Get the real (cast) value of this Variable."""
-        if self._value and self.type != VariableType.STRING: # No need to cast STRING values
+        if self._value and self.type != VariableType.STRING: # No need to cast STRING values as they are stored as string in the DB
             if self.type == VariableType.INTEGER:
                 return int(self._value)
             elif self.type == VariableType.FLOAT:
@@ -242,7 +242,7 @@ class Variable(db.Model):
 
     @value.setter
     def value(self, value):
-        """Set the value of this Variable."""
+        """Set the value an d type of this Variable."""
         if isinstance(value, int):
             self.type = VariableType.INTEGER
             self._value = str(value)
@@ -286,6 +286,7 @@ class Variable(db.Model):
 
         if not var:
             var = Variable()
+            var.name = name
 
         var.value = value
 
