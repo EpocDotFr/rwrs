@@ -17,10 +17,11 @@ def cc():
 @app.cli.command()
 def get_root_rwr_servers_status():
     """Check the status of the RWR root servers."""
-    from models import RwrRootServer, RwrRootServerStatus
+    from models import RwrRootServer, RwrRootServerStatus, Variable
     from rwrs import db
     import rwr.constants
     import helpers
+    import arrow
 
     click.echo('Pinging servers')
 
@@ -45,6 +46,8 @@ def get_root_rwr_servers_status():
         rwr_root_server.status = RwrRootServerStatus.UP if is_server_up else RwrRootServer.DOWN
 
         db.session.add(rwr_root_server)
+
+    Variable.set_value('last_root_rwr_servers_check', arrow.utcnow().floor('minute'))
 
     click.echo('Persisting to database')
 

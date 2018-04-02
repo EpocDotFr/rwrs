@@ -48,10 +48,14 @@ def my_friends():
 def online_multiplayer_status():
     is_everything_ok, servers_statuses = RwrRootServer.get_data_for_display()
 
+    last_root_rwr_servers_check = Variable.get_value('last_root_rwr_servers_check')
+    next_root_rwr_servers_check = last_root_rwr_servers_check.shift(minutes=app.config['ROOT_RWR_SERVERS_CHECK_INTERVAL']) if last_root_rwr_servers_check else None
+
     return render_template(
         'online_multiplayer_status.html',
         is_everything_ok=is_everything_ok,
-        servers_statuses=servers_statuses
+        servers_statuses=servers_statuses,
+        next_root_rwr_servers_check=next_root_rwr_servers_check
     )
 
 
