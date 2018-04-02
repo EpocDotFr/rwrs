@@ -1,6 +1,6 @@
 from flask import render_template, abort, request, redirect, url_for, flash, g
+from models import SteamPlayerCount, ServerPlayerCount, RwrRootServer, Variable
 from rwrs import app
-from models import *
 import rwr.constants
 import rwr.scraper
 import rwr.utils
@@ -27,10 +27,13 @@ def home():
         servers_active_data
     ]
 
+    peaks = Variable.get_peaks_for_display()
+
     return render_template(
         'home.html',
         players_data=players_data,
-        servers_data=servers_data
+        servers_data=servers_data,
+        peaks=peaks
     )
 
 
@@ -45,10 +48,14 @@ def my_friends():
 def online_multiplayer_status():
     is_everything_ok, servers_statuses = RwrRootServer.get_data_for_display()
 
+    last_root_rwr_servers_check = Variable.get_value('last_root_rwr_servers_check')
+    next_root_rwr_servers_check = last_root_rwr_servers_check.shift(minutes=app.config['ROOT_RWR_SERVERS_CHECK_INTERVAL']) if last_root_rwr_servers_check else None
+
     return render_template(
         'online_multiplayer_status.html',
         is_everything_ok=is_everything_ok,
-        servers_statuses=servers_statuses
+        servers_statuses=servers_statuses,
+        next_root_rwr_servers_check=next_root_rwr_servers_check
     )
 
 
@@ -176,9 +183,10 @@ def players_compare(database, username, username_to_compare_with=None):
     servers = scraper.get_servers()
 
     player.set_playing_on_server(servers)
+    player_to_compare_with.set_playing_on_server(servers)
 
     return render_template(
-        'player_details/main.html',
+        'players_compare.html',
         player=player,
         player_to_compare_with=player_to_compare_with
     )

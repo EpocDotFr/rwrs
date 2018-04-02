@@ -130,12 +130,8 @@ class RwrRootServerStatus(Enum):
 
 
 class RwrRootServer(db.Model):
-    class RwrRootServerQuery(db.Query):
-        pass
-
     __tablename__ = 'rwr_root_servers'
     __table_args__ = (db.Index('host_idx', 'host'), )
-    query_class = RwrRootServerQuery
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 
@@ -208,3 +204,131 @@ class RwrRootServer(db.Model):
         is_everything_ok = servers_down_count == 0
 
         return (is_everything_ok, servers_statuses)
+
+
+class VariableType(Enum):
+    INTEGER = 'INTEGER'
+    FLOAT = 'FLOAT'
+    STRING = 'STRING'
+    BOOL = 'BOOL'
+    ARROW = 'ARROW'
+
+
+class Variable(db.Model):
+    __tablename__ = 'variables'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+
+    name = db.Column(db.String(255), nullable=False, unique=True)
+    type = db.Column(db.Enum(VariableType), nullable=False)
+    _value = db.Column('value', db.String)
+
+    @property
+    def value(self):
+        """Get the real (cast) value of this Variable."""
+        if self._value and self.type != VariableType.STRING: # No need to cast STRING values as they are stored as string in the DB
+            if self.type == VariableType.INTEGER:
+                return int(self._value)
+            elif self.type == VariableType.FLOAT:
+                return float(self._value)
+            elif self.type == VariableType.BOOL:
+                return bool(int(self._value))
+            elif self.type == VariableType.ARROW:
+                return arrow.get(self._value)
+            else:
+                raise ValueError('Unhandled value type')
+
+        return self._value
+
+    @value.setter
+    def value(self, value):
+        """Set the value an d type of this Variable."""
+        if isinstance(value, int):
+            self.type = VariableType.INTEGER
+            self._value = str(value)
+        elif isinstance(value, float):
+            self.type = VariableType.FLOAT
+            self._value = str(value)
+        elif isinstance(value, str):
+            self.type = VariableType.STRING
+            self._value = value
+        elif isinstance(value, bool):
+            self.type = VariableType.BOOL
+            self._value = str(int(value))
+        elif isinstance(value, arrow.Arrow):
+            self.type = VariableType.ARROW
+            self._value = value.format()
+        else:
+            raise ValueError('Unhandled value type')
+
+    @staticmethod
+    def get_value(name):
+        """Get the value of the Variable corresponding to the given name.
+
+        Return None if the Variable doesn't exists or its value is empty."""
+        var = Variable.query.filter(Variable.name == name).first()
+
+        return var.value if var else None
+
+    @staticmethod
+    def get_many_values(names):
+        """Get the values of several Variables corresponding to the given names.
+
+        Variable key may not be present if it doesn't exists."""
+        return {var.name: var.value for var in Variable.query.filter(Variable.name.in_(names)).all()}
+
+    @staticmethod
+    def set_value(name, value):
+        """Set the value of the Variable corresponding to the given name.
+
+        If the Variable doesn't exists, it is created. Commiting DB operation is needed after calling this method."""
+        var = Variable.query.filter(Variable.name == name).first()
+
+        if not var:
+            var = Variable()
+            var.name = name
+
+        var.value = value
+
+        db.session.add(var)
+
+    @staticmethod
+    def set_many_values(names_and_values):
+        """Set the value of several Variables corresponding to the given names.
+
+        If a Variable doesn't exists, it is created. Ccommiting DB operation is needed after calling this method."""
+        if not names_and_values:
+            return
+
+        existing_vars = {var.name: var for var in Variable.query.filter(Variable.name.in_(names_and_values.keys())).all()}
+
+        for name, value in names_and_values.items():
+            if name in existing_vars:
+                var = existing_vars[name]
+            else:
+                var = Variable()
+                var.name = name
+
+            var.value = value
+
+            db.session.add(var)
+
+    @staticmethod
+    def get_peaks_for_display():
+        """Return the list of peak players and servers counts."""
+        var_names = [
+            'total_players_peak_count', 'total_players_peak_date',
+            'online_players_peak_count', 'online_players_peak_date',
+            'online_servers_peak_count', 'online_servers_peak_date',
+            'active_servers_peak_count', 'active_servers_peak_date'
+        ]
+
+        peaks = Variable.get_many_values(var_names)
+
+        for name in var_names:
+            if name not in peaks:
+                peaks[name] = '?'
+            elif name.endswith('_date'):
+                    peaks[name] = peaks[name].format('MMM D, YYYY')
+
+        return peaks

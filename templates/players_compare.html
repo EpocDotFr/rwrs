@@ -1,0 +1,156 @@
+{% import 'macros.html' as macros %}
+
+{% extends 'layout.html' %}
+
+{% block page_title %}<h1><i class="fa fa-user"></i> Players › {{ player.database_name }} › {{ player.username }} vs {{ player_to_compare_with.username }}</h1>{% endblock %}
+
+{% block meta_title %}Players › {{ player.database_name }} › {{ player.username }} vs {{ player_to_compare_with.username }}{% endblock %}
+
+{% block meta_description -%}
+    Statistics comparison of {{ player.username }} and {{ player_to_compare_with.username }} on Running With Rifles (RWR) {{ player.database_name }} ranked servers.
+{%- endblock %}
+
+{% block jsfiles %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/zepto/1.2.0/zepto.min.js"></script>
+    {% assets 'js_friends' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
+{% endblock %}
+
+{% set canonical_url = url_for('players_compare', database=request.view_args.get('database'), username=player.username, username_to_compare_with=player_to_compare_with.username, _external=True) %}
+
+{% block content %}
+    <table class="mtm mbn striped">
+        <thead>
+            <tr>
+                <th class="w200p"></th>
+                <th class="txtcenter no-bold" colspan="2"><span class="fl">
+                    <a href="{{ url_for('players_list', database=request.view_args.get('database'), target=player.username) }}" class="btn" title="Highlight {{ player.username }} in {{ player.database_name }} leaderboard"><i class="fa fa-list-ol"></i></a>
+                    <a href="#" class="btn add-friend is-hidden" title="Add {{ player.username }} to friends list" data-username="{{ player.username }}"><i class="fa fa-user-plus"></i></a>
+                    <a href="#" class="btn remove-friend is-hidden" title="Remove {{ player.username }} from friends list" data-username="{{ player.username }}"><i class="fa fa-user-times"></i></a></span> {{ macros.player_name(player, link=True, show_online=True) }}
+                </th>
+                <th class="txtcenter no-bold" colspan="2">{{ macros.player_name(player_to_compare_with, link=True, show_online=True) }} <span class="fr">
+                    <a href="{{ url_for('players_list', database=request.view_args.get('database'), target=player_to_compare_with.username) }}" class="btn" title="Highlight {{ player_to_compare_with.username }} in {{ player_to_compare_with.database_name }} leaderboard"><i class="fa fa-list-ol"></i></a>
+                    <a href="#" class="btn add-friend is-hidden" title="Add {{ player_to_compare_with.username }} to friends list" data-username="{{ player_to_compare_with.username }}"><i class="fa fa-user-plus"></i></a>
+                    <a href="#" class="btn remove-friend is-hidden" title="Remove {{ player_to_compare_with.username }} from friends list" data-username="{{ player_to_compare_with.username }}"><i class="fa fa-user-times"></i></a></span>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>Rank</th>
+                <td class="txtcenter">{{ macros.rank_image(player.rank, icon=True) }} {{ player.rank.name }}</td>
+                <td class="txtcenter w50p">{{ macros.compare_ranks(player, player_to_compare_with) }}</td>
+                <td class="txtcenter w50p">{{ macros.compare_ranks(player_to_compare_with, player) }}</td>
+                <td class="txtcenter">{{ macros.rank_image(player_to_compare_with.rank, icon=True) }} {{ player_to_compare_with.rank.name }}</td>
+            </tr>
+            <tr>
+                <th>XP</th>
+                <td class="txtcenter">{{ player.xp_display }}</td>
+                <td class="txtcenter w50p">{{ macros.compare_numbers(player, player_to_compare_with, 'xp') }}</td>
+                <td class="txtcenter w50p">{{ macros.compare_numbers(player_to_compare_with, player, 'xp') }}</td>
+                <td class="txtcenter">{{ player_to_compare_with.xp_display }}</td>
+            </tr>
+            <tr>
+                <th>Kills</th>
+                <td class="txtcenter">{{ player.kills_display }}</td>
+                <td class="txtcenter w50p">{{ macros.compare_numbers(player, player_to_compare_with, 'kills') }}</td>
+                <td class="txtcenter w50p">{{ macros.compare_numbers(player_to_compare_with, player, 'kills') }}</td>
+                <td class="txtcenter">{{ player_to_compare_with.kills_display }}</td>
+            </tr>
+            <tr>
+                <th>Deaths</th>
+                <td class="txtcenter">{{ player.deaths_display }}</td>
+                <td class="txtcenter w50p">{{ macros.compare_numbers(player, player_to_compare_with, 'deaths', above_zero_is_good=False) }}</td>
+                <td class="txtcenter w50p">{{ macros.compare_numbers(player_to_compare_with, player, 'deaths', above_zero_is_good=False) }}</td>
+                <td class="txtcenter">{{ player_to_compare_with.deaths_display }}</td>
+            </tr>
+            <tr>
+                <th>K/D ratio</th>
+                <td class="txtcenter {{ 'txtred' if player.kd_ratio < 1 else 'txtgreen' }}">{{ player.kd_ratio }}</td>
+                <td class="txtcenter w50p">{{ macros.compare_numbers(player, player_to_compare_with, 'kd_ratio', type=float) }}</td>
+                <td class="txtcenter w50p">{{ macros.compare_numbers(player_to_compare_with, player, 'kd_ratio', type=float) }}</td>
+                <td class="txtcenter {{ 'txtred' if player_to_compare_with.kd_ratio < 1 else 'txtgreen' }}">{{ player_to_compare_with.kd_ratio }}</td>
+            </tr>
+            <tr>
+                <th>Score</th>
+                <td class="txtcenter {{ 'txtred' if player.score < 0 else 'txtgreen' }}">{{ player.score_display }}</td>
+                <td class="txtcenter w50p">{{ macros.compare_numbers(player, player_to_compare_with, 'score') }}</td>
+                <td class="txtcenter w50p">{{ macros.compare_numbers(player_to_compare_with, player, 'score') }}</td>
+                <td class="txtcenter {{ 'txtred' if player_to_compare_with.score < 0 else 'txtgreen' }}">{{ player_to_compare_with.score_display }}</td>
+            </tr>
+            <tr>
+                <th>Time played</th>
+                <td class="txtcenter">{{ player.time_played|humanize_seconds_to_hours }}{% if player.display_time_played_in_days %} <small>({{ player.time_played|humanize_seconds_to_days }})</small>{% endif %}</td>
+                <td class="txtcenter w50p">{{ macros.compare_numbers(player, player_to_compare_with, 'time_played', type='time') }}</td>
+                <td class="txtcenter w50p">{{ macros.compare_numbers(player_to_compare_with, player, 'time_played', type='time') }}</td>
+                <td class="txtcenter">{{ player_to_compare_with.time_played|humanize_seconds_to_hours }}{% if player_to_compare_with.display_time_played_in_days %} <small>({{ player_to_compare_with.time_played|humanize_seconds_to_days }})</small>{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Longest kill streak</th>
+                <td class="txtcenter">{{ player.longest_kill_streak_display }}</td>
+                <td class="txtcenter w50p">{{ macros.compare_numbers(player, player_to_compare_with, 'longest_kill_streak') }}</td>
+                <td class="txtcenter w50p">{{ macros.compare_numbers(player_to_compare_with, player, 'longest_kill_streak') }}</td>
+                <td class="txtcenter">{{ player_to_compare_with.longest_kill_streak_display }}</td>
+            </tr>
+            <tr>
+                <th>Teamkills</th>
+                <td class="txtcenter">{{ player.teamkills_display }}</td>
+                <td class="txtcenter w50p">{{ macros.compare_numbers(player, player_to_compare_with, 'teamkills', above_zero_is_good=False) }}</td>
+                <td class="txtcenter w50p">{{ macros.compare_numbers(player_to_compare_with, player, 'teamkills', above_zero_is_good=False) }}</td>
+                <td class="txtcenter">{{ player_to_compare_with.teamkills_display }}</td>
+            </tr>
+            <tr>
+                <th>Soldiers healed</th>
+                <td class="txtcenter">{{ player.soldiers_healed_display }}</td>
+                <td class="txtcenter w50p">{{ macros.compare_numbers(player, player_to_compare_with, 'soldiers_healed') }}</td>
+                <td class="txtcenter w50p">{{ macros.compare_numbers(player_to_compare_with, player, 'soldiers_healed') }}</td>
+                <td class="txtcenter">{{ player_to_compare_with.soldiers_healed_display }}</td>
+            </tr>
+            <tr>
+                <th>Shots fired</th>
+                <td class="txtcenter">{{ player.shots_fired_display }}</td>
+                <td class="txtcenter w50p">{{ macros.compare_numbers(player, player_to_compare_with, 'shots_fired') }}</td>
+                <td class="txtcenter w50p">{{ macros.compare_numbers(player_to_compare_with, player, 'shots_fired') }}</td>
+                <td class="txtcenter">{{ player_to_compare_with.shots_fired_display }}</td>
+            </tr>
+            <tr>
+                <th>Distance moved</th>
+                <td class="txtcenter">{{ player.distance_moved }}km</td>
+                <td class="txtcenter w50p">{{ macros.compare_numbers(player, player_to_compare_with, 'distance_moved', type=float) }}</td>
+                <td class="txtcenter w50p">{{ macros.compare_numbers(player_to_compare_with, player, 'distance_moved', type=float) }}</td>
+                <td class="txtcenter">{{ player_to_compare_with.distance_moved }}km</td>
+            </tr>
+            <tr>
+                <th>Throwables thrown</th>
+                <td class="txtcenter">{{ player.throwables_thrown_display }}</td>
+                <td class="txtcenter w50p">{{ macros.compare_numbers(player, player_to_compare_with, 'throwables_thrown') }}</td>
+                <td class="txtcenter w50p">{{ macros.compare_numbers(player_to_compare_with, player, 'throwables_thrown') }}</td>
+                <td class="txtcenter">{{ player_to_compare_with.throwables_thrown_display }}</td>
+            </tr>
+            <tr>
+                <th>Vehicles destroyed</th>
+                <td class="txtcenter">{{ player.vehicles_destroyed_display }}</td>
+                <td class="txtcenter w50p">{{ macros.compare_numbers(player, player_to_compare_with, 'vehicles_destroyed') }}</td>
+                <td class="txtcenter w50p">{{ macros.compare_numbers(player_to_compare_with, player, 'vehicles_destroyed') }}</td>
+                <td class="txtcenter">{{ player_to_compare_with.vehicles_destroyed_display }}</td>
+            </tr>
+            <tr>
+                <th>Targets destroyed</th>
+                <td class="txtcenter">{{ player.targets_destroyed_display }}</td>
+                <td class="txtcenter w50p">{{ macros.compare_numbers(player, player_to_compare_with, 'targets_destroyed') }}</td>
+                <td class="txtcenter w50p">{{ macros.compare_numbers(player_to_compare_with, player, 'targets_destroyed') }}</td>
+                <td class="txtcenter">{{ player_to_compare_with.targets_destroyed_display }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <p class="txtcenter mbs">
+        <a href="{{ url_for('players_list', database=request.view_args.get('database')) }}" class="btn"><i class="fa fa-chevron-left"></i> Back to the {{ player.database_name }} players list</a>
+    </p>
+
+    {{ macros.stats_notice() }}
+
+    <script>
+        friendsFeature.all_players_with_servers_details = {{ g.all_players_with_servers_details|tojson }};
+        friendsFeature.initOnPlayersComparison();
+    </script>
+{% endblock %}

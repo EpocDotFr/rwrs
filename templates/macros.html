@@ -110,11 +110,11 @@
         {% if first.rank.id > second.rank.id %}
             {% set icon_class = 'arrow-up' %}
             {% set color_class = 'txtgreen' %}
-            {% set title = first.username + ' is higher-ranked than ' + second.username + ' (' + second.rank.name + ')' %}
+            {% set title = first.username + ' is higher ranked than ' + second.username %}
         {% elif first.rank.id < second.rank.id %}
             {% set icon_class = 'arrow-down' %}
             {% set color_class = 'txtred' %}
-            {% set title = first.username + ' is less-ranked than ' + second.username + ' (' + second.rank.name + ')' %}
+            {% set title = first.username + ' is lower ranked than ' + second.username %}
         {% else %}
             {% set icon_class = 'balance-scale' %}
             {% set color_class = 'txtgrey' %}
