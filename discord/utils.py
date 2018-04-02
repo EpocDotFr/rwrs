@@ -201,17 +201,20 @@ def create_base_message_embed():
     return embed
 
 
-def compare_values(source, target, getter):
+def compare_values(source_player, target_player, getter):
     """Create the comparison cell for the compare command."""
-    source_value = getter(source)
-    target_value = getter(target)
+    source_value = getter(source_player)
+    target_value = getter(target_player)
 
-    if source_value > target_value:
-        return '>'
-    elif source_value < target_value:
-        return '<'
-    else:
-        return '='
+    def _compare(source_value, target_value):
+        if source_value > target_value:
+            return '▲'
+        elif source_value < target_value:
+            return '▼'
+        else:
+            return '='
+
+    return _compare(source_value, target_value) + '  ' + _compare(target_value, source_value)
 
 
 def prepare_username(username):
