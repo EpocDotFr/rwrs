@@ -110,24 +110,26 @@ def get_players_count():
     click.echo('Getting peaks')
 
     peak_refs = {
-        'total_players_peak_count': {'date_var_name': 'total_players_peak_date', 'current': current_total_players_count},
-        'online_players_peak_count': {'date_var_name': 'online_players_peak_date', 'current': current_online_players_count},
-        'online_servers_peak_count': {'date_var_name': 'online_servers_peak_date', 'current': current_online_servers_count},
-        'active_servers_peak_count': {'date_var_name': 'active_servers_peak_date', 'current': current_active_servers_count}
+        'total_players_peak': current_total_players_count,
+        'online_players_peak': current_online_players_count,
+        'online_servers_peak': current_online_servers_count,
+        'active_servers_peak': current_active_servers_count
     }
 
-    peak_values = Variable.get_many_values(peak_refs.keys())
+    peak_values = Variable.get_many_values([name + '_count' for name in peak_refs.keys()])
     vars_to_update = {}
 
     for name in peak_refs.keys():
         click.echo('  ' + name)
 
-        if name not in peak_values:
-            peak_values[name] = 0
+        name_count = name + '_count'
+        name_date = name + '_date'
 
-        if peak_refs[name]['current'] > peak_values[name]:
-            vars_to_update[name] = peak_refs[name]['current']
-            vars_to_update[peak_refs[name]['date_var_name']] = arrow.utcnow().floor('minute')
+        peak_value = peak_values[name_count] if name_count in peak_values else 0
+
+        if peak_refs[name] >= peak_value:
+            vars_to_update[name_count] = peak_refs[name]
+            vars_to_update[name_date] = arrow.utcnow().floor('minute')
 
     Variable.set_many_values(vars_to_update)
 
