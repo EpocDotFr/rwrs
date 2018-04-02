@@ -183,9 +183,10 @@ def players_compare(database, username, username_to_compare_with=None):
     servers = scraper.get_servers()
 
     player.set_playing_on_server(servers)
+    player_to_compare_with.set_playing_on_server(servers)
 
     return render_template(
-        'player_details/main.html',
+        'players_compare.html',
         player=player,
         player_to_compare_with=player_to_compare_with
     )
