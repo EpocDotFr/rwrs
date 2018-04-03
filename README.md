@@ -25,6 +25,8 @@ and its Pacific DLC. Available at [rwrstats.com](https://rwrstats.com/).
     - Number of online players
     - Number of online servers (+ the active ones)
     - Number of players on a server
+  - Root RWR servers status (online multiplayer)
+  - Discord bot able to give several kind of information. Available on the [RWR Discord Server](https://discord.gg/010ixMlfmhK5BhYOv). [Commands documentation](discord_bot.md)
 
 ## Prerequisites
 
@@ -62,6 +64,7 @@ More informations on the three above can be found [here](http://flask.pocoo.org/
   - `BETA_USERS` The credentials required to access the app when beta mode is enabled. You can specify multiple ones. **It is highly recommended to serve RWRS through HTTPS** because it uses [HTTP basic auth](https://en.wikipedia.org/wiki/Basic_access_authentication)
   - `STEAM_API_KEY` A [Steam API](https://steamcommunity.com/dev) key
   - `PACIFIC_PLAYERS_RANKS_COUNTRY` Ranks image / name to show for the Pacific players stats (`us`, `jp`)
+  - `DISCORD_BOT_TOKEN` Authentication token used by the RWRS Discord bot
 
 I'll let you search yourself about how to configure a web server along uWSGI.
 
@@ -125,10 +128,14 @@ This command requires the game to be installed.
 
 ### Clearing old graphs data
 
+Data older than one week old will be deleted.
+
   1. `set FLASK_APP=rwrs.py`
   2. `flask clean_players_count`
 
 ### Storing actual number of players (for graphs)
+
+Will save the current number of Steam players which have RWR running, and the current number of players playing online.
 
   1. `set FLASK_APP=rwrs.py`
   2. `flask get_players_count`
@@ -137,6 +144,18 @@ This command requires the game to be installed.
 
   1. `set FLASK_APP=rwrs.py`
   2. `flask db upgrade`
+
+### Save RWR root servers status
+
+Will ping RWR root servers and store their status (up or down).
+
+  1. `set FLASK_APP=rwrs.py`
+  2. `flask get_root_rwr_servers_status`
+
+### Run the RWRS Discord bot
+
+  1. `set FLASK_APP=rwrs.py`
+  2. `flask run_discord_bot`
 
 ## How it works
 

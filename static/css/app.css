@@ -12,11 +12,18 @@ body {
     border-bottom: 0.1rem solid #514f4f;
 }
 
+.currently-bar a,
+.currently-bar a:visited,
+.currently-bar a:hover,
+.currently-bar a:focus {
+    color: inherit;
+}
+
 .page {
     border-top: 0.1rem solid #514f4f;
 }
 
-h1, h2 {
+h1, .h1-like {
     background-color: #7da109;
     border: 0.1rem solid #9cc321;
     font-size: 2.1rem;
@@ -25,6 +32,10 @@ h1, h2 {
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
     margin-bottom: 0.5rem;
+}
+
+h2, .h2-like {
+    font-size: 1.9rem;
 }
 
 .flag {
@@ -111,6 +122,13 @@ h1, h2 {
 }
 
 /************************************************************************
+ * Online status page */
+
+.servers-list thead:hover th {
+    cursor: pointer;
+}
+
+/************************************************************************
  * Tabs */
 
 .tabs {
@@ -166,6 +184,14 @@ h1, h2 {
     color: #44b2f8;
 }
 
+.txtgraphgreen {
+    color: #A4CF17;
+}
+
+.txtgraphblue {
+    color: #44b2f8;
+}
+
 /************************************************************************
  * Header */
 
@@ -197,24 +223,35 @@ a:focus {
 /************************************************************************
  * Buttons */
 
+a.btn,
+a.btn:visited,
+a.btn:hover,
+a.btn:focus {
+    text-decoration: none;
+}
+
 button,
-input[type="button"][type="submit"],
+input[type="button"], input[type="submit"],
 .btn,
 .btn:visited {
     background-color: #606060;
     border: 0.1rem solid #727272;
-    color: #FFF;
     text-decoration: none;
     font-weight: bold;
     border-radius: 0;
+    color: #FFF;
+    padding-left: 0.8rem !important;
+    padding-right: 0.8rem !important;
 }
 
 button:hover, button:focus, button.active,
 .btn:hover, .btn:focus, .btn.active,
-input[type="button"][type="submit"]:hover, input[type="button"][type="submit"]:focus, input[type="button"][type="submit"].active {
-    color: #FFF;
+input[type="button"]:hover, input[type="submit"]:hover,
+input[type="button"]:focus, input[type="submit"]:focus,
+input[type="button"].active, input[type="submit"].active {
     background-color: #7da109;
     border-color: #9cc321;
+    color: #FFF;
 }
 
 button[disabled],
@@ -234,7 +271,7 @@ input[type="button"][type="submit"][disabled]:hover, input[type="button"][type="
  * Inputs */
 
 button,
-input[type="text"],
+input[type="text"], input[type="url"], input[type="number"], input[type="file"],
 optgroup,
 select,
 textarea,
@@ -244,9 +281,10 @@ textarea,
     padding-right: 0.9rem;
     padding-top: 0.3rem;
     padding-bottom: 0.3rem;
+    margin-top: 0;
 }
 
-input[type="text"],
+input[type="text"], input[type="url"], input[type="number"], input[type="file"],
 select,
 textarea {
     border: 0.1rem solid #333;

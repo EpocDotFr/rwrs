@@ -13,6 +13,7 @@
     <meta property="og:site_name" content="Running With Rifles Stats (RWRS)">
     <meta property="og:title" content="{{ self.meta_title() }}">
     <meta property="og:description" content="{{ self.meta_description() }}">
+    <meta property="og:image" content="{{ meta_image if meta_image else url_for('static', filename='images/icon_round_dark_256.png', _external=True) }}">
 
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png') }}" />
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" />
@@ -35,7 +36,7 @@
     {% if config['BETA'] %}
         <div class="beta-bar pts pbs">
             <div class="w1140p center txtcenter small">
-                <i class="fa fa-wrench"></i> You are using the beta version of RWRS. Please report issues to <strong>EpocDotFr</strong> on the <a href="https://discord.gg/010ixMlfmhK5BhYOv">RWR Discord server</a> by PM. Version: <a href="https://github.com/EpocDotFr/rwrs/commit/{{ g.BETA_COMMIT }}">{{ g.BETA_COMMIT[:7] }}</a>@<a href="https://github.com/EpocDotFr/rwrs/tree/{{ g.BETA_BRANCH }}">{{ g.BETA_BRANCH }}</a>
+                <i class="fa fa-wrench"></i> You are using the beta version of RWRS. Please report issues by PM to <strong>@Epoc#4256</strong> on Discord. Version: <a href="https://github.com/EpocDotFr/rwrs/commit/{{ g.BETA_COMMIT }}">{{ g.BETA_COMMIT[:7] }}</a>@<a href="https://github.com/EpocDotFr/rwrs/tree/{{ g.BETA_BRANCH }}">{{ g.BETA_BRANCH }}</a>
             </div>
         </div>
     {% endif %}
@@ -43,14 +44,14 @@
     {% if not g.UNDER_MAINTENANCE %}
         <div class="currently-bar pts pbs">
             <div class="w1140p center txtcenter small">
-                Currently <strong>{{ g.total_players }}</strong> players in total (<strong>{{ g.online_players }}</strong> are playing online<span class="total-playing-friends is-hidden">, including <strong class="txtblue">?</strong> <span class="friend-label"></span></span>) and <strong>{{ g.total_servers }}</strong> online server{{ 's' if g.total_servers > 1 }} (<strong>{{ g.active_servers }}</strong> {{ 'are' if g.active_servers > 1 else 'is' }} active)<br>
+                Currently <strong>{{ g.total_players }}</strong> player{{ 's' if g.total_players > 1 }} in total (<strong>{{ g.online_players }}</strong> {{ 'are' if g.online_players > 1 else 'is' }} playing multiplayer online<span class="total-playing-friends is-hidden">, including <strong class="txtblue">?</strong> <span class="friend-label"></span></span>) and <strong>{{ g.total_servers }}</strong> online multiplayer server{{ 's' if g.total_servers > 1 }} (<strong>{{ g.active_servers }}</strong> {{ 'are' if g.active_servers > 1 else 'is' }} active) • <a href="{{ url_for('online_multiplayer_status') }}">Online multiplayer status</a>
             </div>
         </div>
     {% endif %}
 
     <header class="w1140p center pts pbs">
         <div class="txtleft">
-            <a href="{{ url_for('home') }}"><img src="{{ url_for('static', filename='images/logo_white.png') }}" title="RWRS logo"></a>
+            <a href="{{ url_for('home') }}"><img src="{{ url_for('static', filename='images/logo_light.png') }}" title="Running With Rifles Stats logo"></a>
         </div>
         {% if not g.UNDER_MAINTENANCE %}
             <nav class="txtright">
@@ -83,8 +84,8 @@
     <footer class="w1140p center small pts pbs" itemscope itemtype="http://schema.org/Organization">
         <meta itemprop="name" content="Running With Rifles Stats">
         <meta itemprop="alternateName" content="RWRS">
-        <meta itemprop="url" content="https://rwrstats.com/">
-        <meta itemprop="logo" content="{{ url_for('static', filename='images/logo_black.png', _external=True) }}">
+        <meta itemprop="url" content="{{ url_for('home', _external=True) }}">
+        <meta itemprop="logo" content="{{ url_for('static', filename='images/logo_dark.png', _external=True) }}">
 
         <div>
             © 2017 - 2018 <a href="https://epoc.fr"><img src="{{ url_for('static', filename='images/epoc.png') }}"></a> <a href="https://epoc.fr">Maxime "Epoc" G.</a><br>
@@ -92,7 +93,7 @@
             All Running With Rifles assets © 2015 - 2018 Osumia Games.
         </div>
         <div class="txtright">
-            <a href="http://www.runningwithrifles.com/">RWR website</a> • <a href="http://www.runningwithrifles.com/phpBB3/">RWR forums</a> • <a href="https://runningwithrifles.gamepedia.com/Running_with_Rifles_Wiki">RWR wiki</a> • <a href="http://steamcommunity.com/app/270150">RWR on Steam</a> • <a href="https://www.reddit.com/r/Runningwithrifles/">RWR on Reddit</a> • <a href="https://discord.gg/010ixMlfmhK5BhYOv">RWR on Discord</a><br><br>
+            <a href="http://www.runningwithrifles.com/">RWR website</a> • <a href="http://www.runningwithrifles.com/phpBB3/">RWR forums</a> • <a href="https://runningwithrifles.gamepedia.com/Running_with_Rifles_Wiki">RWR wiki</a> • <a href="http://steamcommunity.com/app/270150">RWR on Steam</a> • <a href="https://www.reddit.com/r/Runningwithrifles/">RWR on Reddit</a> • <a href="https://discord.gg/010ixMlfmhK5BhYOv">RWR on Discord</a> • <a href="https://twitter.com/osumiagames">RWR on Twitter</a><br><br>
             Any feedback? Post a message <a href="http://www.runningwithrifles.com/phpBB3/viewtopic.php?f=12&t=3376">in this RWR forum topic</a> or <a href="https://steamcommunity.com/app/270150/discussions/0/1520386297704428050/">in this Steam discussions topic</a>.
         </div>
     </footer>

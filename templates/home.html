@@ -6,13 +6,13 @@
 
 {% block jsfiles %}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.11.0/d3.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/metrics-graphics/2.11.0/metricsgraphics.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/metrics-graphics/2.13.0/metricsgraphics.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/zepto/1.2.0/zepto.min.js"></script>
     {% assets 'js_friends_charts' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
 {% endblock %}
 
 {% block cssfiles %}
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/metrics-graphics/2.11.0/metricsgraphics.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/metrics-graphics/2.13.0/metricsgraphics.min.css">
 {% endblock %}
 
 {% set canonical_url = url_for('home', _external=True) %}
@@ -20,7 +20,8 @@
 {% block content %}
     <div class="grid has-gutter-xl">
         <div>
-            <h2 class="txtcenter"><i class="fa fa-user"></i> Looking for a player?</h2>
+            <h2 class="h1-like txtcenter"><i class="fa fa-user"></i> Looking for a player?</h2>
+
             <div class="pbm ptm txtcenter">
                 <form method="get" action="{{ url_for('players_list_without_db') }}" itemprop="potentialAction" itemscope itemtype="http://schema.org/SearchAction">
                     <meta itemprop="target" content="{{ url_for('players_list_without_db') }}?username={username}&amp;database=invasion"/>
@@ -31,26 +32,48 @@
                     <button type="submit"><i class="fa fa-search"></i> Find</button>
                 </form>
             </div>
+
             <fieldset class="man pan">
                 <legend class="mls">Total and online players (past week)</legend>
                 <p id="players-legend" class="small txtcenter"></p>
                 <div id="players-chart" class="chart"></div>
             </fieldset>
+
+            <div class="grid small mts">
+                <div class="txtcenter">
+                    <span class="txtgraphgreen">Total players peak</span> <strong>{{ peaks.total_players_peak_count }}</strong> ({{ peaks.total_players_peak_date }})
+                </div>
+                <div class="txtcenter">
+                    <span class="txtgraphblue">Online players peak</span> <strong>{{ peaks.online_players_peak_count }}</strong> ({{ peaks.online_players_peak_date }})
+                </div>
+            </div>
         </div>
         <div>
-            <h2 class="txtcenter"><i class="fa fa-server"></i> Looking for a server?</h2>
+            <h2 class="h1-like txtcenter"><i class="fa fa-server"></i> Looking for a server?</h2>
+
             <p class="mtn pbm ptm txtcenter"><a href="{{ url_for('servers_list') }}" class="btn"><i class="fa fa-chevron-right"></i> Go to the servers list</a></p>
+
             <fieldset class="man pan">
                 <legend class="mls">Online and active servers (past week)</legend>
                 <p id="servers-chart-legend" class="small txtcenter"></p>
                 <div id="servers-chart" class="chart"></div>
             </fieldset>
+
+
+            <div class="grid small mts">
+                <div class="txtcenter">
+                    <span class="txtgraphgreen">Online servers peak</span> <strong>{{ peaks.online_servers_peak_count }}</strong> ({{ peaks.online_servers_peak_date }})
+                </div>
+                <div class="txtcenter">
+                    <span class="txtgraphblue">Active servers peak</span> <strong>{{ peaks.active_servers_peak_count }}</strong> ({{ peaks.active_servers_peak_date }})
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
         friendsFeature.all_players_with_servers_details = {{ g.all_players_with_servers_details|tojson }};
-        friendsFeature.initOnHome();
+        friendsFeature.init();
 
         chartsFeature.players_data = {{ players_data|tojson }};
         chartsFeature.servers_data = {{ servers_data|tojson }};

@@ -313,6 +313,7 @@ SERVER_TYPES = OrderedDict([
     ('vanilla.winter', 'Vanilla'),
     ('pvp', 'Vanilla'),
     ('pacific', 'RWR: PACIFIC'),
+    ('man_vs_world_mp', 'Man vs World (MP)'),
     ('Running_with_the_Dead', 'Running with the Dead'),
     ('overlord_defense', 'Overlord Defense'),
     ('lab_defense', 'Lab Defense'),
@@ -323,6 +324,35 @@ PLAYERS_LIST_DATABASES = {
     'invasion': {'name': 'Invasion', 'ranks_country': 'us', 'realm': 'official_invasion'},
     'pacific': {'name': 'Pacific', 'ranks_country': app.config['PACIFIC_PLAYERS_RANKS_COUNTRY'], 'realm': 'official_pacific'}
 }
+
+VALID_DATABASES = PLAYERS_LIST_DATABASES.keys()
+
+ROOT_RWR_SERVERS = [
+    {
+        'label': 'Master servers',
+        'description': 'Needed to play online with other people.',
+        'servers': [
+            {
+                'location': 'St Louis, United States',
+                'host': 'us3.runningwithrifles.com'
+            },
+            {
+                'location': 'Tokyo, Japan',
+                'host': 'jp1.runningwithrifles.com'
+            }
+        ]
+    },
+    {
+        'label': 'Stats servers',
+        'description': 'Needed to keep track of your stats on ranked (official) servers.',
+        'servers': [
+            {
+                'location': 'Chicago, United States',
+                'host': 'us6.runningwithrifles.com'
+            }
+        ]
+    }
+]
 
 
 class PlayersSort:

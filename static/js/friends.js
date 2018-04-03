@@ -147,16 +147,6 @@ friendsFeature = {
         });
     },
     /**
-     * Initialize the Friends feature on the Home page.
-     */
-    initOnHome: function() {
-        if (!this.init()) {
-            return;
-        }
-
-        // Nothing special to do
-    },
-    /**
      * Initialize the Friends feature on the Servers list page.
      */
     initOnServersList: function() {
@@ -340,7 +330,9 @@ friendsFeature = {
         $add_friend_link.on('click', function(e) {
             e.preventDefault();
 
-            friendsFeature.addFriend(friendsFeature.player);
+            var username = $(this).data('username');
+
+            friendsFeature.addFriend(username);
 
             $(this).addClass('is-hidden');
             $remove_friend_link.removeClass('is-hidden');
@@ -351,7 +343,9 @@ friendsFeature = {
         $remove_friend_link.on('click', function(e) {
             e.preventDefault();
 
-            friendsFeature.removeFriend(friendsFeature.player);
+            var username = $(this).data('username');
+
+            friendsFeature.removeFriend(username);
 
             $(this).addClass('is-hidden');
             $add_friend_link.removeClass('is-hidden');
@@ -359,11 +353,64 @@ friendsFeature = {
             friendsFeature.initInHeader(); // Refresh the counter in the header
         });
 
-        if ($.inArray(this.player, friends) !== -1) {
+        if ($.inArray($remove_friend_link.data('username'), friends) !== -1) {
             $remove_friend_link.removeClass('is-hidden');
-        } else {
+        }
+
+        if ($.inArray($add_friend_link.data('username'), friends) === -1) {
             $add_friend_link.removeClass('is-hidden');
         }
+    },
+    /**
+     * Initialize the Friends feature on the Players comparison page.
+     */
+    initOnPlayersComparison: function() {
+        if (!this.init()) {
+            return;
+        }
+
+        var friends = this.getFriends();
+
+        var $add_friend_links = $('.add-friend');
+        var $remove_friend_links = $('.remove-friend');
+
+        $add_friend_links.on('click', function(e) {
+            e.preventDefault();
+
+            var username = $(this).data('username');
+
+            friendsFeature.addFriend(username);
+
+            $(this).addClass('is-hidden');
+            $(this).siblings('.remove-friend[data-username="' + username + '"]').removeClass('is-hidden');
+
+            friendsFeature.initInHeader(); // Refresh the counter in the header
+        });
+
+        $remove_friend_links.on('click', function(e) {
+            e.preventDefault();
+
+            var username = $(this).data('username');
+
+            friendsFeature.removeFriend(username);
+
+            $(this).addClass('is-hidden');
+            $(this).siblings('.add-friend[data-username="' + username + '"]').removeClass('is-hidden');
+
+            friendsFeature.initInHeader(); // Refresh the counter in the header
+        });
+
+        $remove_friend_links.each(function() {
+            if ($.inArray($(this).data('username'), friends) !== -1) {
+                $(this).removeClass('is-hidden');
+            }
+        });
+
+        $add_friend_links.each(function() {
+            if ($.inArray($(this).data('username'), friends) === -1) {
+                $(this).removeClass('is-hidden');
+            }
+        });
     },
     /**
      * Get all the user's friends.

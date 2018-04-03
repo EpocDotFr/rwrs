@@ -1,24 +1,17 @@
 from collections import OrderedDict
 from flask import request
+import subprocess
+import platform
 import socket
 import struct
 import json
 import os
 
 
-__all__ = [
-    'humanize_seconds',
-    'humanize_integer',
-    'ip2long',
-    'long2ip',
-    'merge_query_string_params'
-]
-
-
-def humanize_seconds(seconds):
-    """Return a human-readable representation of the given number of seconds."""
+def humanize_seconds_to_days(seconds):
+    """Return a human-readable representation of the given number of seconds to days / hours / minutes / seconds."""
     if not seconds:
-        return ''
+        return '0m'
 
     d = int(seconds / (60 * 60 * 24))
     h = int((seconds % (60 * 60 * 24)) / (60 * 60))
@@ -38,6 +31,27 @@ def humanize_seconds(seconds):
 
     if s:
         ret.append(('{:>02}s', s))
+
+    f, v = zip(*ret)
+
+    return ' '.join(f).format(*v)
+
+
+def humanize_seconds_to_hours(seconds):
+    """Return a human-readable representation of the given number of seconds to hours / minutes."""
+    if not seconds:
+        return '0m'
+
+    h = int(seconds / (60 * 60))
+    m = int((seconds % (60 * 60)) / 60)
+
+    ret = []
+
+    if h:
+        ret.append(('{}h', h))
+
+    if m:
+        ret.append(('{:>02}m', m))
 
     f, v = zip(*ret)
 
@@ -86,3 +100,36 @@ def save_json(file, data):
         json.dump(data, f)
 
     return data
+
+
+def ping(host, network_timeout=3):
+    """Send a ping packet to the specified host, using the system "ping" command."""
+    args = [
+        'ping'
+    ]
+
+    platform_os = platform.system()
+
+    if platform_os == 'Windows':
+        args.extend(['-n', '1'])
+        args.extend(['-w', str(network_timeout * 1000)])
+    elif platform_os in ('Linux', 'Darwin'):
+        args.extend(['-c', '1'])
+        args.extend(['-W', str(network_timeout)])
+    else:
+        raise NotImplemented('Unsupported OS: {}'.format(platform_os))
+
+    args.append(host)
+
+    try:
+        if platform_os == 'Windows':
+            output = subprocess.run(args, check=True, universal_newlines=True).stdout
+
+            if output and 'TTL' not in output:
+                return False
+        else:
+            subprocess.run(args, check=True)
+
+        return True
+    except (subprocess.CalledProcessError, subprocess.TimeoutExpired):
+        return False
