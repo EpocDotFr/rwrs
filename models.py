@@ -205,6 +205,9 @@ class RwrRootServer(db.Model):
 
         return (is_everything_ok, servers_statuses)
 
+    def __repr__(self):
+        return 'RwrRootServer:' + self.id
+
 
 class VariableType(Enum):
     INTEGER = 'INTEGER'
@@ -332,3 +335,57 @@ class Variable(db.Model):
                     peaks[name] = peaks[name].format('MMM D, YYYY')
 
         return peaks
+
+    def __repr__(self):
+        return 'Variable:' + self.id
+
+
+class RwrAccountType(Enum):
+    INVASION = 'INVASION'
+    PACIFIC = 'PACIFIC'
+
+
+class RwrAccount(db.Model):
+    __tablename__ = 'rwr_accounts'
+    __table_args__ = (db.Index('type_username_idx', 'type', 'username'), )
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+
+    type = db.Column(db.Enum(RwrAccountType), nullable=False)
+    username = db.Column(db.String(16), nullable=False)
+    created_at = db.Column(ArrowType, default=arrow.utcnow().floor('minute'), nullable=False)
+    updated_at = db.Column(ArrowType, default=arrow.utcnow().floor('minute'), nullable=False)
+
+    stats = db.relationship('RwrAccountStat', backref=db.backref('rwr_account', lazy='dynamic'))
+
+    def __repr__(self):
+        return 'RwrAccount:' + self.id
+
+
+class RwrAccountStat(db.Model):
+    __tablename__ = 'rwr_account_stats'
+    __bind_key__ = 'rwr_account_stats'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+
+    leaderboard_position = db.Column(db.Integer, nullable=False)
+    xp = db.Column(db.Integer, nullable=False)
+    score = db.Column(db.Integer, nullable=False)
+    kills = db.Column(db.Integer, nullable=False)
+    deaths = db.Column(db.Integer, nullable=False)
+    kd_ratio = db.Column(db.Float, nullable=False)
+    time_played = db.Column(db.Integer, nullable=False)
+    longest_kill_streak = db.Column(db.Integer, nullable=False)
+    targets_destroyed = db.Column(db.Integer, nullable=False)
+    vehicles_destroyed = db.Column(db.Integer, nullable=False)
+    soldiers_healed = db.Column(db.Integer, nullable=False)
+    teamkills = db.Column(db.Integer, nullable=False)
+    distance_moved = db.Column(db.Float, nullable=False)
+    shots_fired = db.Column(db.Integer, nullable=False)
+    throwables_thrown = db.Column(db.Integer, nullable=False)
+    created_at = db.Column(ArrowType, default=arrow.utcnow().floor('minute'), nullable=False)
+
+    rwr_account_id = db.Column(db.Integer, db.ForeignKey('rwr_accounts.id'), nullable=False)
+
+    def __repr__(self):
+        return 'RwrAccountStat:' + self.id

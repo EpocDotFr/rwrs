@@ -20,7 +20,8 @@ app.config['LOGGER_HANDLER_POLICY'] = 'production'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///storage/data/db.sqlite'
 app.config['SQLALCHEMY_BINDS'] = {
     'servers_player_count': 'sqlite:///storage/data/servers_player_count.sqlite',
-    'steam_players_count': 'sqlite:///storage/data/steam_players_count.sqlite'
+    'steam_players_count': 'sqlite:///storage/data/steam_players_count.sqlite',
+    'rwr_account_stats': 'sqlite:///storage/data/rwr_account_stats.sqlite'
 }
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['CACHE_TYPE'] = 'filesystem'
