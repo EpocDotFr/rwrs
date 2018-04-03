@@ -5,6 +5,8 @@ from .player import Player
 from . import constants
 import requests
 
+scraper_requests_session = requests.Session()
+
 
 class DataScraper:
     servers_endpoint = 'http://rwr.runningwithrifles.com/rwr_server_list/'
@@ -18,7 +20,7 @@ class DataScraper:
             'User-Agent': 'rwrstats.com'
         }
 
-        response = requests.get(url, params=params, headers=headers, timeout=5)
+        response = scraper_requests_session.get(url, params=params, headers=headers, timeout=5)
 
         response.encoding = 'unicode'
 
