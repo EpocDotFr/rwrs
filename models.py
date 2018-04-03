@@ -63,7 +63,7 @@ class ServerPlayerCount(db.Model, Measurable):
 
     __tablename__ = 'servers_player_count'
     __bind_key__ = 'servers_player_count'
-    __table_args__ = (db.Index('ip_port_idx', 'ip', 'port'), )
+    __table_args__ = (db.Index('ip_port_idx', 'ip', 'port'), {'schema': 'servers_player_count'})
     query_class = ServerPlayerCountQuery
 
     _ip = db.Column('ip', db.Integer, nullable=False)
@@ -112,6 +112,7 @@ class SteamPlayerCount(db.Model, Measurable):
 
     __tablename__ = 'steam_players_count'
     __bind_key__ = 'steam_players_count'
+    __table_args__ = {'schema': 'steam_players_count'}
     query_class = SteamPlayerCountQuery
 
     @staticmethod
@@ -131,7 +132,7 @@ class RwrRootServerStatus(Enum):
 
 class RwrRootServer(db.Model):
     __tablename__ = 'rwr_root_servers'
-    __table_args__ = (db.Index('host_idx', 'host'), )
+    __table_args__ = (db.Index('host_idx', 'host'), {'schema': 'main'})
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 
@@ -219,6 +220,7 @@ class VariableType(Enum):
 
 class Variable(db.Model):
     __tablename__ = 'variables'
+    __table_args__ = {'schema': 'main'}
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 
@@ -347,7 +349,7 @@ class RwrAccountType(Enum):
 
 class RwrAccount(db.Model):
     __tablename__ = 'rwr_accounts'
-    __table_args__ = (db.Index('type_username_idx', 'type', 'username'), )
+    __table_args__ = (db.Index('type_username_idx', 'type', 'username'), {'schema': 'main'})
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 
@@ -365,6 +367,7 @@ class RwrAccount(db.Model):
 class RwrAccountStat(db.Model):
     __tablename__ = 'rwr_account_stats'
     __bind_key__ = 'rwr_account_stats'
+    __table_args__ = {'schema': 'rwr_account_stats'}
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 
@@ -385,7 +388,7 @@ class RwrAccountStat(db.Model):
     throwables_thrown = db.Column(db.Integer, nullable=False)
     created_at = db.Column(ArrowType, default=arrow.utcnow().floor('minute'), nullable=False)
 
-    rwr_account_id = db.Column(db.Integer, db.ForeignKey('rwr_accounts.id'), nullable=False)
+    rwr_account_id = db.Column(db.Integer, db.ForeignKey('main.rwr_accounts.id'), nullable=False) # FIXME Doesn't work: sqlalchemy.exc.NoReferencedTableError
 
     def __repr__(self):
         return 'RwrAccountStat:' + self.id
