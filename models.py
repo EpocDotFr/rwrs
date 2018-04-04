@@ -301,7 +301,7 @@ class Variable(db.Model):
     def set_many_values(names_and_values):
         """Set the value of several Variables corresponding to the given names.
 
-        If a Variable doesn't exists, it is created. Ccommiting DB operation is needed after calling this method."""
+        If a Variable doesn't exists, it is created. Ccmmiting DB operation is needed after calling this method."""
         if not names_and_values:
             return
 
@@ -320,7 +320,7 @@ class Variable(db.Model):
 
     @staticmethod
     def get_peaks_for_display():
-        """Return the list of peak players and servers counts."""
+        """Return the list of peak players and servers counts for display."""
         var_names = [
             'total_players_peak_count', 'total_players_peak_date',
             'online_players_peak_count', 'online_players_peak_date',
@@ -358,7 +358,7 @@ class RwrAccount(db.Model):
     created_at = db.Column(ArrowType, default=arrow.utcnow().floor('minute'), nullable=False)
     updated_at = db.Column(ArrowType, default=arrow.utcnow().floor('minute'), nullable=False)
 
-    stats = db.relationship('RwrAccountStat', backref=db.backref('rwr_account', lazy='dynamic'))
+    stats = db.relationship('RwrAccountStat')
 
     def __repr__(self):
         return 'RwrAccount:' + self.id

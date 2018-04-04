@@ -265,6 +265,7 @@ def save_players_stats(database):
     from models import RwrAccount, RwrAccountType, RwrAccountStat
     from rwrs import db
     import rwr.scraper
+    import arrow
 
     scraper = rwr.scraper.DataScraper()
 
@@ -273,7 +274,7 @@ def save_players_stats(database):
     chunks_size = 200
     rwr_account_type = RwrAccountType(database.upper())
 
-    click.echo('Getting the first {} {} players stats, ordered by {}, chunk size {}'.format(
+    click.echo('Saving the first {} {} players stats (ordered by {}, chunk size {})'.format(
         max_players,
         database,
         sort,
@@ -283,34 +284,38 @@ def save_players_stats(database):
     for start in range(0, max_players, chunks_size):
         click.echo('  Chunk start: {}'.format(start))
 
-        players = scraper.get_players(database, sort=sort, start=start, limit=chunks_size)
+        players = scraper.get_players(database, sort=sort, start=start, limit=chunks_size, basic=True)
 
         if not players:
             click.echo('No more players to handle')
 
-            continue
+            break
 
-        click.echo('Getting existing RWR accounts')
+        click.echo('  Checking for existing RWR accounts')
 
         all_player_names = [player.username for player in players]
 
         existing_rwr_accounts = RwrAccount.query.filter(
-            RwrAccount.username.in_(all_player_names),
-            RwrAccount.type == rwr_account_type
+            RwrAccount.type == rwr_account_type,
+            RwrAccount.username.in_(all_player_names)
         ).all()
 
         existing_rwr_accounts_by_username = {rwr_account.username: rwr_account for rwr_account in existing_rwr_accounts}
 
         for player in players:
+            click.echo('  ' + player.username)
+
             if player.username not in existing_rwr_accounts_by_username:
                 rwr_account = RwrAccount()
 
                 rwr_account.username = player.username
                 rwr_account.type = rwr_account_type
-
-                db.session.add(rwr_account)
             else:
                 rwr_account = existing_rwr_accounts_by_username[player.username]
+
+                rwr_account.updated_at = arrow.utcnow().floor('minute')
+
+            db.session.add(rwr_account)
 
             rwr_account_stat = RwrAccountStat()
 

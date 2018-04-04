@@ -89,7 +89,7 @@ app.jinja_env.globals.update(
 # After-init imports
 
 
-import routes
 import models
+import routes
 import commands
 import hooks

@@ -300,7 +300,7 @@ class DataScraper:
         return ret
 
     @cache.memoize(timeout=app.config['PLAYERS_CACHE_TIMEOUT'])
-    def get_players(self, database, sort=constants.PlayersSort.SCORE, target=None, start=None, limit=app.config['PLAYERS_LIST_PAGE_SIZES'][0]):
+    def get_players(self, database, sort=constants.PlayersSort.SCORE, target=None, start=None, limit=app.config['PLAYERS_LIST_PAGE_SIZES'][0], basic=False):
         """Get and parse a list of RWR players."""
         params = {
             'db': database,
@@ -315,7 +315,7 @@ class DataScraper:
         players = []
 
         for node in html_content.xpath('//table/tr[position() > 1]'):
-            players.append(Player.load(database, node))
+            players.append(Player.load(database, node, basic=basic))
 
         if target and target not in [player.username for player in players]:
             return []
