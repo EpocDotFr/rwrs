@@ -299,7 +299,7 @@ class Variable(db.Model):
     def set_many_values(names_and_values):
         """Set the value of several Variables corresponding to the given names.
 
-        If a Variable doesn't exists, it is created. Ccmmiting DB operation is needed after calling this method."""
+        If a Variable doesn't exists, it is created. Commiting DB operation is needed after calling this method."""
         if not names_and_values:
             return
 
