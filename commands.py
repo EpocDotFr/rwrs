@@ -270,7 +270,7 @@ def save_players_stats(database):
     scraper = rwr.scraper.DataScraper()
 
     sort = rwr.constants.PlayersSort.SCORE
-    max_players = 1000
+    max_players = 5000
     chunks_size = 200
     rwr_account_type = RwrAccountType(database.upper())
 

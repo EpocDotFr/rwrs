@@ -347,7 +347,7 @@ class RwrAccountType(Enum):
 
 class RwrAccount(db.Model):
     __tablename__ = 'rwr_accounts'
-    __table_args__ = (db.Index('type_username_idx', 'type', 'username'), {'schema': 'players'})
+    __table_args__ = (db.Index('type_username_idx', 'type', 'username'), )
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 
@@ -356,7 +356,9 @@ class RwrAccount(db.Model):
     created_at = db.Column(ArrowType, default=arrow.utcnow().floor('minute'), nullable=False)
     updated_at = db.Column(ArrowType, default=arrow.utcnow().floor('minute'), nullable=False)
 
-    stats = db.relationship('RwrAccountStat')
+    @property
+    def stats(self):
+        pass # TODO Get associated RwrAccountStat models
 
     def __repr__(self):
         return 'RwrAccount:' + self.id
@@ -365,7 +367,7 @@ class RwrAccount(db.Model):
 class RwrAccountStat(db.Model):
     __tablename__ = 'rwr_account_stats'
     __bind_key__ = 'rwr_account_stats'
-    __table_args__ = {'schema': 'players'}
+    __table_args__ = (db.Index('rwr_account_id_idx', 'rwr_account_id'), )
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 
@@ -386,7 +388,11 @@ class RwrAccountStat(db.Model):
     throwables_thrown = db.Column(db.Integer, nullable=False)
     created_at = db.Column(ArrowType, default=arrow.utcnow().floor('minute'), nullable=False)
 
-    rwr_account_id = db.Column(db.Integer, db.ForeignKey('players.rwr_accounts.id'), nullable=False) # FIXME Doesn't work: sqlalchemy.exc.NoReferencedTableError
+    rwr_account_id = db.Column(db.Integer, nullable=False) # Weak foreign key to the rwr_accounts located in another DB
+
+    @property
+    def rwr_account(self):
+        pass # TODO Get associated RwrAccount model
 
     def __repr__(self):
         return 'RwrAccountStat:' + self.id
