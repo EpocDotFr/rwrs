@@ -29,7 +29,6 @@ class Player:
         shots_fired_cell = node[13]
         throwables_thrown_cell = node[14]
         xp_cell = node[15]
-        rank_image_cell = node[17]
 
         ret.position = int(position_cell.text)
         ret.username = username_cell.text
@@ -52,12 +51,14 @@ class Player:
         ret.database_name = utils.get_database_name(ret.database)
         ret.database_game_type = ret.get_game_type_from_database()
 
-        _, rank_id = utils.parse_rank_path(rank_image_cell[0].get('src'))
-
-        if rank_id:
-            ret.rank = ret.get_rank_object(int(rank_id), return_none=False)
-
         if not basic:
+            rank_image_cell = node[17]
+
+            _, rank_id = utils.parse_rank_path(rank_image_cell[0].get('src'))
+
+            if rank_id:
+                ret.rank = ret.get_rank_object(int(rank_id), return_none=False)
+
             ret.position_display = helpers.humanize_integer(ret.position)
 
             username_lower = ret.username.lower()
