@@ -259,39 +259,39 @@ def run_discord_bot():
 
 
 @app.cli.command()
-@click.option('--database', '-d', help='Stats database to pull data from', type=click.Choice(rwr.constants.VALID_DATABASES), default='invasion')
-def save_players_stats(database):
+@click.argument('database', type=click.Choice(rwr.constants.VALID_DATABASES), default='invasion')
+@click.option('--count', '-c', help='Number of players to get', default=5000)
+@click.option('--chunks', '-s', help='Chunks size', default=200)
+def save_players_stats(database, count, chunks):
     """Get and persist the players stats."""
     from models import RwrAccount, RwrAccountType, RwrAccountStat
     from rwrs import db
     import rwr.scraper
     import arrow
 
-    scraper = rwr.scraper.DataScraper()
-
-    sort = rwr.constants.PlayersSort.SCORE
-    max_players = 5000
-    chunks_size = 200
+    players_sort = rwr.constants.PlayersSort.SCORE
     rwr_account_type = RwrAccountType(database.upper())
 
+    scraper = rwr.scraper.DataScraper()
+
     click.echo('Saving the first {} {} players stats (ordered by {}, chunk size {})'.format(
-        max_players,
+        count,
         database,
-        sort,
-        chunks_size
+        players_sort,
+        chunks
     ))
 
-    for start in range(0, max_players, chunks_size):
+    for start in range(0, count, chunks):
         click.echo('  Chunk start: {}'.format(start))
 
-        players = scraper.get_players(database, sort=sort, start=start, limit=chunks_size, basic=True)
+        players = scraper.get_players(database, sort=players_sort, start=start, limit=chunks, basic=True)
 
         if not players:
-            click.echo('No more players to handle')
+            click.secho('No more players to handle', fg='green')
 
             break
 
-        click.echo('  Checking for existing RWR accounts')
+        click.echo('  Getting existing RWR accounts')
 
         all_player_names = [player.username for player in players]
 
@@ -300,22 +300,33 @@ def save_players_stats(database):
             RwrAccount.username.in_(all_player_names)
         ).all()
 
-        existing_rwr_accounts_by_username = {rwr_account.username: rwr_account for rwr_account in existing_rwr_accounts}
+        rwr_accounts_by_username = {rwr_account.username: rwr_account for rwr_account in existing_rwr_accounts}
+
+        click.echo('  Creating unexisting RWR accounts')
 
         for player in players:
-            click.echo('  ' + player.username)
+            click.echo('    ' + player.username)
 
-            if player.username not in existing_rwr_accounts_by_username:
+            if player.username not in rwr_accounts_by_username:
                 rwr_account = RwrAccount()
 
                 rwr_account.username = player.username
                 rwr_account.type = rwr_account_type
+
+                rwr_accounts_by_username[player.username] = rwr_account
             else:
-                rwr_account = existing_rwr_accounts_by_username[player.username]
+                rwr_account = rwr_accounts_by_username[player.username]
 
                 rwr_account.updated_at = arrow.utcnow().floor('minute')
 
             db.session.add(rwr_account)
+
+        db.session.commit()
+
+        click.echo('  Saving stats')
+
+        for player in players:
+            click.echo('    ' + player.username)
 
             rwr_account_stat = RwrAccountStat()
 
@@ -334,11 +345,9 @@ def save_players_stats(database):
             rwr_account_stat.distance_moved = player.distance_moved
             rwr_account_stat.shots_fired = player.shots_fired
             rwr_account_stat.throwables_thrown = player.throwables_thrown
-            rwr_account_stat.rwr_account = rwr_account
+            rwr_account_stat.rwr_account_id = rwr_accounts_by_username[player.username].id
 
             db.session.add(rwr_account_stat)
-
-        click.echo('Persisting to database')
 
         db.session.commit()
 

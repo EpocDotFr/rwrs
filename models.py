@@ -1,3 +1,4 @@
+from sqlalchemy.util import memoized_property
 from sqlalchemy_utils import ArrowType
 from rwrs import db, cache, app
 from sqlalchemy import func
@@ -356,9 +357,9 @@ class RwrAccount(db.Model):
     created_at = db.Column(ArrowType, default=arrow.utcnow().floor('minute'), nullable=False)
     updated_at = db.Column(ArrowType, default=arrow.utcnow().floor('minute'), nullable=False)
 
-    @property
+    @memoized_property
     def stats(self):
-        pass # TODO Get associated RwrAccountStat models
+        return RwrAccountStat.query.filter(RwrAccountStat.rwr_account_id == self.id).all()
 
     def __repr__(self):
         return 'RwrAccount:' + self.id
@@ -390,9 +391,9 @@ class RwrAccountStat(db.Model):
 
     rwr_account_id = db.Column(db.Integer, nullable=False) # Weak foreign key to the rwr_accounts located in another DB
 
-    @property
+    @memoized_property
     def rwr_account(self):
-        pass # TODO Get associated RwrAccount model
+        return RwrAccount.query.get(self.rwr_account_id)
 
     def __repr__(self):
         return 'RwrAccountStat:' + self.id
