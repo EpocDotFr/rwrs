@@ -302,6 +302,17 @@ class DataScraper:
     @cache.memoize(timeout=app.config['PLAYERS_CACHE_TIMEOUT'])
     def get_players(self, database, sort=constants.PlayersSort.SCORE, target=None, start=None, limit=app.config['PLAYERS_LIST_PAGE_SIZES'][0], basic=False):
         """Get and parse a list of RWR players."""
+        if limit > 100:
+            raise ValueError('limit cannot be greater than 100')
+        elif limit <= 0:
+            raise ValueError('limit cannot be equal or lower than 0')
+
+        if start < 0:
+            raise ValueError('start cannot be lower than 0')
+
+        if database not in constants.VALID_DATABASES:
+            raise ValueError('database is invalid')
+
         params = {
             'db': database,
             'sort': sort,
@@ -325,6 +336,9 @@ class DataScraper:
     @cache.memoize(timeout=app.config['PLAYERS_CACHE_TIMEOUT'])
     def search_player_by_username(self, database, username):
         """Search for a RWR player (exact match)."""
+        if database not in constants.VALID_DATABASES:
+            raise ValueError('database is invalid')
+
         username = username.upper()
 
         params = {

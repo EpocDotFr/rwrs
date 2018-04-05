@@ -261,8 +261,7 @@ def run_discord_bot():
 @app.cli.command()
 @click.argument('database', type=click.Choice(rwr.constants.VALID_DATABASES), default='invasion')
 @click.option('--count', '-c', help='Number of players to get', default=5000)
-@click.option('--chunks', '-s', help='Chunks size', default=200)
-def save_players_stats(database, count, chunks):
+def save_players_stats(database, count):
     """Get and persist the players stats."""
     from models import RwrAccount, RwrAccountType, RwrAccountStat
     from rwrs import db
@@ -271,6 +270,7 @@ def save_players_stats(database, count, chunks):
 
     players_sort = rwr.constants.PlayersSort.SCORE
     rwr_account_type = RwrAccountType(database.upper())
+    chunks = 100
 
     scraper = rwr.scraper.DataScraper()
 
