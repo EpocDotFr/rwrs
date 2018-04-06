@@ -65,6 +65,7 @@ More informations on the three above can be found [here](http://flask.pocoo.org/
   - `STEAM_API_KEY` A [Steam API](https://steamcommunity.com/dev) key
   - `PACIFIC_PLAYERS_RANKS_COUNTRY` Ranks image / name to show for the Pacific players stats (`us`, `jp`)
   - `DISCORD_BOT_TOKEN` Authentication token used by the RWRS Discord bot
+  - `DISCORD_BOT_CHANNEL_ID` The Discord channel ID the bot is allowed to talk in
 
 I'll let you search yourself about how to configure a web server along uWSGI.
 
