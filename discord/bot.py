@@ -17,10 +17,10 @@ import helpers
 monkey.patch_all()
 
 
-class RwrsBotCore(Plugin):
+class RwrsBotDiscoPlugin(Plugin):
     """The RWRS Disco Bot plugin."""
     def load(self, ctx):
-        super(RwrsBotCore, self).load(ctx)
+        super(RwrsBotDiscoPlugin, self).load(ctx)
 
         self.rwr_scraper = rwr.scraper.DataScraper()
         self.steam_api_client = steam_api.Client(app.config['STEAM_API_KEY'])
@@ -307,7 +307,7 @@ class RwrsBot:
         self.client = Client(self.client_config)
 
         self.bot = Bot(self.client)
-        self.bot.add_plugin(RwrsBotCore)
+        self.bot.add_plugin(RwrsBotDiscoPlugin)
 
     def run(self):
         """Actually run the RWRS Discord bot."""
