@@ -66,6 +66,7 @@ More informations on the three above can be found [here](http://flask.pocoo.org/
   - `PACIFIC_PLAYERS_RANKS_COUNTRY` Ranks image / name to show for the Pacific players stats (`us`, `jp`)
   - `DISCORD_BOT_TOKEN` Authentication token used by the RWRS Discord bot
   - `DISCORD_BOT_CHANNEL_ID` The Discord channel ID the bot is allowed to talk in
+  - `PLAYERS_COUNT_TO_SAVE_STATS` How many players should RWRS track the stats for (top players storted by score only)
 
 I'll let you search yourself about how to configure a web server along uWSGI.
 
