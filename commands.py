@@ -18,6 +18,8 @@ def cc():
 def get_root_rwr_servers_status():
     """Check the status of the RWR root servers."""
     from models import RwrRootServer, RwrRootServerStatus, Variable
+    from disco.api.client import APIClient as DiscordAPIClient
+    from flask import url_for
     from rwrs import db
     import rwr.constants
     import helpers
@@ -26,6 +28,10 @@ def get_root_rwr_servers_status():
     click.echo('Pinging servers')
 
     hosts_to_ping = [server['host'] for group in rwr.constants.ROOT_RWR_SERVERS for server in group['servers']]
+    rwr_root_servers = RwrRootServer.query.all()
+    rwr_root_servers_by_host = {rwr_root_server.host: rwr_root_server for rwr_root_server in rwr_root_servers}
+    servers_down_count_then = sum([1 for rwr_root_server in rwr_root_servers if rwr_root_server.status == RwrRootServerStatus.DOWN])
+    servers_down_count_now = 0
 
     for host in hosts_to_ping:
         click.echo(host, nl=False)
@@ -37,13 +43,15 @@ def get_root_rwr_servers_status():
         else:
             click.secho(' Down', fg='red')
 
-        rwr_root_server = RwrRootServer.query.filter(RwrRootServer.host == host).first()
+            servers_down_count_now += 1
 
-        if not rwr_root_server:
+        if host not in rwr_root_servers_by_host:
             rwr_root_server = RwrRootServer()
             rwr_root_server.host = host
+        else:
+            rwr_root_server = rwr_root_servers_by_host[host]
 
-        rwr_root_server.status = RwrRootServerStatus.UP if is_server_up else RwrRootServer.DOWN
+        rwr_root_server.status = RwrRootServerStatus.UP if is_server_up else RwrRootServerStatus.DOWN
 
         db.session.add(rwr_root_server)
 
@@ -52,6 +60,20 @@ def get_root_rwr_servers_status():
     click.echo('Persisting to database')
 
     db.session.commit()
+
+    message = None
+
+    if servers_down_count_then == 0 and servers_down_count_now > 0:
+        with app.app_context():
+            message = ':warning: I found out that online multiplayer is having issue. Are the devs aware? If not, poke **pasik** or **JackMayol**. Some details here: {}'.format(url_for('online_multiplayer_status', _external=True))
+    elif servers_down_count_then > 0 and servers_down_count_now == 0:
+        message = ':white_check_mark: Well, looks like everything is back up and running!'
+
+    if message:
+        click.echo('Sending Discord bot message')
+
+        discord_api_client = DiscordAPIClient(app.config['DISCORD_BOT_TOKEN'])
+        discord_api_client.channels_messages_create(app.config['DISCORD_BOT_CHANNEL_ID'], message)
 
     click.secho('Done', fg='green')
 
