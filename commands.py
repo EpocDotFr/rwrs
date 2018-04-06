@@ -28,7 +28,7 @@ def get_root_rwr_servers_status():
     click.echo('Pinging servers')
 
     hosts_to_ping = [server['host'] for group in rwr.constants.ROOT_RWR_SERVERS for server in group['servers']]
-    rwr_root_servers = RwrRootServer.query.all()
+    rwr_root_servers = RwrRootServer.query.filter(RwrRootServer.host.in_(hosts_to_ping)).all()
     rwr_root_servers_by_host = {rwr_root_server.host: rwr_root_server for rwr_root_server in rwr_root_servers}
     servers_down_count_then = sum([1 for rwr_root_server in rwr_root_servers if rwr_root_server.status == RwrRootServerStatus.DOWN])
     servers_down_count_now = 0
@@ -65,9 +65,9 @@ def get_root_rwr_servers_status():
 
     if servers_down_count_then == 0 and servers_down_count_now > 0:
         with app.app_context():
-            message = ':warning: I found out that online multiplayer is having issue. Are the devs aware? If not, poke **pasik** or **JackMayol**. Some details here: {}'.format(url_for('online_multiplayer_status', _external=True))
+            message = ':warning: Online multiplayer is having issues right now. Are the devs aware? If not, poke **pasik** or **JackMayol**. Some details here: {}'.format(url_for('online_multiplayer_status', _external=True))
     elif servers_down_count_then > 0 and servers_down_count_now == 0:
-        message = ':white_check_mark: Well, looks like everything is back up and running!'
+        message = ':white_check_mark: Outage update: online multiplayer is back up and running!'
 
     if message:
         click.echo('Sending Discord bot message')
