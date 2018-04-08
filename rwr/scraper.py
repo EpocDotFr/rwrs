@@ -341,11 +341,13 @@ class DataScraper:
 
         return Player.load(database, node[0], alternative=True)
 
-    def get_current_server_of_player(self, username):
+    def get_current_server_of_player(self, target_username):
         """Return the server where the specified player is playing on, if any (partial match)."""
         servers = self.get_servers()
 
-        username = username.lower()
+        target_username = target_username.lower()
+        real_username = target_username
+        found_server = None
 
         for server in servers:
             if not server.players.list:
@@ -354,10 +356,11 @@ class DataScraper:
             players_list = [player.lower() for player in server.players.list]
 
             for player in players_list:
-                if username in player:
-                    return server
+                if target_username in player:
+                    real_username = player
+                    found_server = server
 
-        return None
+        return real_username.upper(), found_server
 
     def __repr__(self):
         return 'DataScraper'

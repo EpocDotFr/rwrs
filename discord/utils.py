@@ -134,7 +134,7 @@ def create_player_message_embed(player):
     return embed
 
 
-def create_server_message_embed(server):
+def create_server_message_embed(server, username_to_highlight=None):
     """Create a RWRS server rich Discord message."""
     embed = create_base_message_embed()
 
@@ -142,9 +142,14 @@ def create_server_message_embed(server):
     embed.description = server.steam_join_link.replace(' ', '%20')
 
     if server.players.list:
+        if not username_to_highlight:
+            players_list = server.players.list
+        else:
+            players_list = ['**{}**'.format(username) if username == username_to_highlight else username for username in server.players.list]
+
         embed.add_field(
             name='Players list',
-            value=', '.join(server.players.list)
+            value=', '.join(players_list)
         )
 
     if server.map.has_preview:

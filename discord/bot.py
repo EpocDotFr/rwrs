@@ -51,7 +51,9 @@ class RwrsBotDiscoPlugin(Plugin):
     @Plugin.parser.add_argument('database', choices=rwr.constants.VALID_DATABASES, nargs='?', default='invasion')
     def on_stats_command(self, event, args):
         """Displays stats about the specified player."""
-        player = self.rwr_scraper.search_player_by_username(args.database, utils.prepare_username(args.username))
+        args.username = utils.prepare_username(args.username)
+
+        player = self.rwr_scraper.search_player_by_username(args.database, args.username)
 
         if not player:
             event.msg.reply('Sorry dude, this player don\'t exist :confused:')
@@ -64,24 +66,26 @@ class RwrsBotDiscoPlugin(Plugin):
 
         event.msg.reply('Here\'s stats for **{}** on **{}** ranked servers:'.format(player.username_display, player.database_name), embed=utils.create_player_message_embed(player))
 
-    @Plugin.command('whereis', '<username:str>', aliases=['where is', 'where'])
-    def on_whereis_command(self, event, username):
+    @Plugin.command('whereis', aliases=['where is', 'where'], parser=True)
+    @Plugin.parser.add_argument('username')
+    def on_whereis_command(self, event, args):
         """Displays information about the server the specified player is currently playing on."""
-        username = username.upper()
+        args.username = utils.prepare_username(args.username)
 
-        server = self.rwr_scraper.get_current_server_of_player(username)
+        real_username, server = self.rwr_scraper.get_current_server_of_player(args.username)
 
         if not server:
             event.msg.reply('Nah, this player isn\'t currently playing online :disappointed:')
 
             return
 
-        event.msg.reply('I found **{}** playing on **{}**:'.format(username, server.name), embed=utils.create_server_message_embed(server))
+        event.msg.reply('I found **{}** playing on **{}**:'.format(real_username, server.name), embed=utils.create_server_message_embed(server, username_to_highlight=real_username))
 
-    @Plugin.command('server', '<name:str>')
-    def on_server_command(self, event, name):
+    @Plugin.command('server', parser=True)
+    @Plugin.parser.add_argument('name')
+    def on_server_command(self, event, args):
         """Displays information about the specified server."""
-        server = self.rwr_scraper.get_server_by_name(name)
+        server = self.rwr_scraper.get_server_by_name(args.name)
 
         if not server:
             event.msg.reply('Sorry mate, I didn\'t find this server :disappointed:')
