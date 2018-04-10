@@ -93,7 +93,7 @@ def players_list(database):
         database,
         sort=args['sort'],
         target=args['target'] if args.get('target') else None,
-        start=args['start'] if args.get('start') else None,
+        start=int(args['start']) if args.get('start') else 0,
         limit=args['limit']
     )
 
