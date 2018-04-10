@@ -1,5 +1,9 @@
 # Running With Rifles Stats (RWRS)
 
+<p align="center">
+  <img src="static/images/logo_dark.png">
+</p>
+
 Players statistics, servers list and more for the [Running With Rifles](http://www.runningwithrifles.com/wp/) (RWR) game
 and its Pacific DLC. Available at [rwrstats.com](https://rwrstats.com/).
 
