@@ -205,6 +205,9 @@ class RwrRootServer(db.Model):
 
         return (is_everything_ok, servers_statuses)
 
+    def __repr__(self):
+        return 'RwrRootServer:' + self.id
+
 
 class VariableType(Enum):
     INTEGER = 'INTEGER'
@@ -296,7 +299,7 @@ class Variable(db.Model):
     def set_many_values(names_and_values):
         """Set the value of several Variables corresponding to the given names.
 
-        If a Variable doesn't exists, it is created. Ccommiting DB operation is needed after calling this method."""
+        If a Variable doesn't exists, it is created. Commiting DB operation is needed after calling this method."""
         if not names_and_values:
             return
 
@@ -315,7 +318,7 @@ class Variable(db.Model):
 
     @staticmethod
     def get_peaks_for_display():
-        """Return the list of peak players and servers counts."""
+        """Return the list of peak players and servers counts for display."""
         var_names = [
             'total_players_peak_count', 'total_players_peak_date',
             'online_players_peak_count', 'online_players_peak_date',
@@ -332,3 +335,6 @@ class Variable(db.Model):
                     peaks[name] = peaks[name].format('MMM D, YYYY')
 
         return peaks
+
+    def __repr__(self):
+        return 'Variable:' + self.id
