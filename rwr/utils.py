@@ -4,7 +4,6 @@ import re
 
 _time_regex = re.compile(r'(?:(?P<h>\d+)h(?:\s+)?)?(?:(?P<m>\d+)m(?:in)?(?:\s+)?)?(?:(?P<s>\d+)s)?')
 _map_path_regex = re.compile(r'/(?P<server_type>.[^/]+)/maps/(?P<map_id>.+)$')
-_rank_path_regex = re.compile(r'(?:/(?P<server_type>.[^/]+)/)?textures/hud_rank(?P<rank_id>\d+)(?:.*).png$')
 
 
 def get_mode_name(mode, short=True):
@@ -54,19 +53,3 @@ def parse_map_path(map_path):
         map_id = parsed['map_id']
 
     return server_type, map_id
-
-
-def parse_rank_path(rank_path):
-    """Parse a map path to extract the game type it belong to as well as the map identifier."""
-    server_type = None
-    rank_id = None
-
-    parsed = _rank_path_regex.search(rank_path)
-
-    if parsed:
-        parsed = parsed.groupdict()
-
-        server_type = parsed['server_type']
-        rank_id = parsed['rank_id']
-
-    return server_type, rank_id
