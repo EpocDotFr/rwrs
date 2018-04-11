@@ -77,7 +77,7 @@ def players_list_without_db():
 def players_list(database):
     args = request.args.to_dict()
 
-    args['sort'] = args.get('sort', rwr.constants.PlayersSort.SCORE)
+    args['sort'] = args.get('sort', rwr.constants.PlayersSort.XP)
 
     if not args.get('limit') or int(args.get('limit')) > app.config['PLAYERS_LIST_PAGE_SIZES'][-1]:
         args['limit'] = app.config['PLAYERS_LIST_PAGE_SIZES'][0]
