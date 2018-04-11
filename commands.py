@@ -439,18 +439,18 @@ def import_rwrtrack_data(directory):
                     rwr_account_stat = RwrAccountStat()
 
                     rwr_account_stat.leaderboard_position = leaderboard_position
-                    rwr_account_stat.xp = player[1]
-                    rwr_account_stat.kills = player[3]
-                    rwr_account_stat.deaths = player[4]
-                    rwr_account_stat.time_played = player[2]
-                    rwr_account_stat.longest_kill_streak = player[5]
-                    rwr_account_stat.targets_destroyed = player[6]
-                    rwr_account_stat.vehicles_destroyed = player[7]
-                    rwr_account_stat.soldiers_healed = player[8]
-                    rwr_account_stat.teamkills = player[9]
-                    rwr_account_stat.distance_moved = player[10]
-                    rwr_account_stat.shots_fired = player[10]
-                    rwr_account_stat.throwables_thrown = player[12]
+                    rwr_account_stat.xp = int(player[1])
+                    rwr_account_stat.kills = int(player[3])
+                    rwr_account_stat.deaths = int(player[4])
+                    rwr_account_stat.time_played = int(player[2]) * 60
+                    rwr_account_stat.longest_kill_streak = int(player[5])
+                    rwr_account_stat.targets_destroyed = int(player[6])
+                    rwr_account_stat.vehicles_destroyed = int(player[7])
+                    rwr_account_stat.soldiers_healed = int(player[8])
+                    rwr_account_stat.teamkills = int(player[9])
+                    rwr_account_stat.distance_moved = int(player[10]) / 1000
+                    rwr_account_stat.shots_fired = int(player[10])
+                    rwr_account_stat.throwables_thrown = int(player[12])
                     rwr_account_stat.rwr_account_id = rwr_accounts_by_username[username].id
 
                     db.session.add(rwr_account_stat)
