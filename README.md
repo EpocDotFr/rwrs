@@ -161,6 +161,16 @@ Will ping RWR root servers and store their status (up or down).
   1. `set FLASK_APP=rwrs.py`
   2. `flask run_discord_bot`
 
+### Retrieve and save the players stats in DB
+
+  1. `set FLASK_APP=rwrs.py`
+  2. `flask save_players_stats`
+
+### Import rwrtrack data
+
+  1. `set FLASK_APP=rwrs.py`
+  2. `flask import_rwrtrack_data`
+
 ## How it works
 
 This project is mainly powered by [Flask](http://flask.pocoo.org/) (Python) for the backend.

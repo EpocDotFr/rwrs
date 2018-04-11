@@ -289,8 +289,8 @@ def save_players_stats():
     import arrow
 
     players_sort = rwr.constants.PlayersSort.XP
-    chunks = 100
     players_count = app.config['MAX_NUM_OF_PLAYERS_TO_TRACK_STATS_FOR']
+    chunks = 100
 
     scraper = rwr.scraper.DataScraper()
 
@@ -328,8 +328,6 @@ def save_players_stats():
             click.echo('  Creating unexisting RWR accounts')
 
             for player in players:
-                click.echo('    ' + player.username)
-
                 if player.username not in rwr_accounts_by_username:
                     rwr_account = RwrAccount()
 
@@ -349,16 +347,12 @@ def save_players_stats():
             click.echo('  Saving stats')
 
             for player in players:
-                click.echo('    ' + player.username)
-
                 rwr_account_stat = RwrAccountStat()
 
                 rwr_account_stat.leaderboard_position = player.position
                 rwr_account_stat.xp = player.xp
-                rwr_account_stat.score = player.score
                 rwr_account_stat.kills = player.kills
                 rwr_account_stat.deaths = player.deaths
-                rwr_account_stat.kd_ratio = player.kd_ratio
                 rwr_account_stat.time_played = player.time_played
                 rwr_account_stat.longest_kill_streak = player.longest_kill_streak
                 rwr_account_stat.targets_destroyed = player.targets_destroyed
@@ -373,5 +367,96 @@ def save_players_stats():
                 db.session.add(rwr_account_stat)
 
             db.session.commit()
+
+    click.secho('Done', fg='green')
+
+
+@app.cli.command()
+@click.option('--directory', '-d', help='Directory containing the rwrtrack CSV files')
+def import_rwrtrack_data(directory):
+    """Import data from rwrtrack."""
+    from models import RwrAccount, RwrAccountType, RwrAccountStat
+    from glob import glob
+    from rwrs import db
+    import helpers
+    import arrow
+    import csv
+    import os
+
+    rwr_account_type = RwrAccountType.INVASION
+    csv_filenames = glob(os.path.join(directory, '*.csv'))
+    chunks = 100
+
+    click.echo('{} files to import'.format(len(csv_filenames)))
+
+    for csv_filename in csv_filenames:
+        click.echo('Opening ' + csv_filename)
+
+        with open(csv_filename, 'r', encoding='utf-8', newline='') as f:
+            next(f, None) # Ignore first line as it's the CSV header
+
+            csv_data = csv.reader(f, quoting=csv.QUOTE_NONNUMERIC)
+            leaderboard_position = 1
+
+            for players in helpers.chunks(list(csv_data), chunks):
+                click.echo('  Getting existing RWR accounts')
+
+                all_player_names = [player[0] for player in players]
+
+                existing_rwr_accounts = RwrAccount.query.filter(
+                    RwrAccount.type == rwr_account_type,
+                    RwrAccount.username.in_(all_player_names)
+                ).all()
+
+                rwr_accounts_by_username = {rwr_account.username: rwr_account for rwr_account in existing_rwr_accounts}
+
+                click.echo('  Creating unexisting RWR accounts')
+
+                for player in players:
+                    username = player[0]
+
+                    if username not in rwr_accounts_by_username:
+                        rwr_account = RwrAccount()
+
+                        rwr_account.username = username
+                        rwr_account.type = rwr_account_type
+
+                        rwr_accounts_by_username[username] = rwr_account
+                    else:
+                        rwr_account = rwr_accounts_by_username[username]
+
+                        rwr_account.updated_at = arrow.utcnow().floor('minute')
+
+                    db.session.add(rwr_account)
+
+                db.session.commit()
+
+                click.echo('  Saving stats')
+
+                for player in players:
+                    username = player[0]
+
+                    rwr_account_stat = RwrAccountStat()
+
+                    rwr_account_stat.leaderboard_position = leaderboard_position
+                    rwr_account_stat.xp = player[1]
+                    rwr_account_stat.kills = player[3]
+                    rwr_account_stat.deaths = player[4]
+                    rwr_account_stat.time_played = player[2]
+                    rwr_account_stat.longest_kill_streak = player[5]
+                    rwr_account_stat.targets_destroyed = player[6]
+                    rwr_account_stat.vehicles_destroyed = player[7]
+                    rwr_account_stat.soldiers_healed = player[8]
+                    rwr_account_stat.teamkills = player[9]
+                    rwr_account_stat.distance_moved = player[10]
+                    rwr_account_stat.shots_fired = player[10]
+                    rwr_account_stat.throwables_thrown = player[12]
+                    rwr_account_stat.rwr_account_id = rwr_accounts_by_username[username].id
+
+                    db.session.add(rwr_account_stat)
+
+                    leaderboard_position += 1
+
+                db.session.commit()
 
     click.secho('Done', fg='green')

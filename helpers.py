@@ -133,3 +133,9 @@ def ping(host, network_timeout=3):
         return True
     except (subprocess.CalledProcessError, subprocess.TimeoutExpired):
         return False
+
+
+def chunks(l, n):
+    """Yield successive n-sized chunks from l."""
+    for i in range(0, len(l), n):
+        yield l[i:i + n]

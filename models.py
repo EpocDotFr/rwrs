@@ -395,5 +395,13 @@ class RwrAccountStat(db.Model):
     def rwr_account(self):
         return RwrAccount.query.get(self.rwr_account_id)
 
+    @memoized_property
+    def score(self):
+        return self.kills - self.deaths
+
+    @memoized_property
+    def kd_ratio(self):
+        return self.kills / self.deaths
+
     def __repr__(self):
         return 'RwrAccountStat:' + self.id
