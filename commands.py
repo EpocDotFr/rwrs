@@ -289,7 +289,7 @@ def save_players_stats(database):
     import rwr.scraper
     import arrow
 
-    players_sort = rwr.constants.PlayersSort.SCORE
+    players_sort = rwr.constants.PlayersSort.XP
     rwr_account_type = RwrAccountType(database.upper())
     chunks = 100
     players_count = app.config['PLAYERS_COUNT_TO_SAVE_STATS']
