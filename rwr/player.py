@@ -52,12 +52,7 @@ class Player:
         ret.database_game_type = ret.get_game_type_from_database()
 
         if not basic:
-            rank_image_cell = node[17]
-
-            _, rank_id = utils.parse_rank_path(rank_image_cell[0].get('src'))
-
-            if rank_id:
-                ret.rank = ret.get_rank_object(int(rank_id), return_none=False)
+            ret.rank = ret.get_current_rank()
 
             ret.position_display = helpers.humanize_integer(ret.position)
 
@@ -119,7 +114,7 @@ class Player:
                 return
 
     def get_next_rank(self):
-        """Get the next rank of the player (if applicable)."""
+        """Return the next rank of the player (if applicable)."""
         if self.rank.id is None:
             return None
 
@@ -129,6 +124,18 @@ class Player:
         next_rank_id = self.rank.id + 1
 
         return self.get_rank_object(next_rank_id)
+
+    def get_current_rank(self):
+        """Return the current rank of the player."""
+        ranks = constants.RANKS[constants.PLAYERS_LIST_DATABASES[self.database]['ranks_country']]
+
+        for rank_id, rank in ranks.items():
+            if rank['xp'] > self.xp:
+                break
+
+            current_rank_id = rank_id
+
+        return self.get_rank_object(int(current_rank_id))
 
     def get_xp_to_next_rank(self):
         """Return the amount of XP the player needs to be promoted to the next rank."""
@@ -144,18 +151,18 @@ class Player:
 
         return round((self.xp * 100) / self.next_rank.xp, 2)
 
-    def get_rank_object(self, rank_id, return_none=False):
+    def get_rank_object(self, rank_id):
         """Return a new PlayerRank object given a rank ID."""
         ret = PlayerRank()
 
-        applicable_ranks = constants.RANKS[constants.PLAYERS_LIST_DATABASES[self.database]['ranks_country']]
+        ranks = constants.RANKS[constants.PLAYERS_LIST_DATABASES[self.database]['ranks_country']]
 
-        if str(rank_id) not in applicable_ranks:
-            return None if return_none else ret
+        if str(rank_id) not in ranks:
+            return ret
 
         ret.id = rank_id
-        ret.name = applicable_ranks[str(rank_id)]['name']
-        ret.xp = applicable_ranks[str(rank_id)]['xp']
+        ret.name = ranks[str(rank_id)]['name']
+        ret.xp = ranks[str(rank_id)]['xp']
 
         if current_app:
             ret.set_images_and_icons(self.database)
