@@ -1,5 +1,4 @@
 from rwrs import app
-import rwr.constants
 import click
 
 
@@ -22,6 +21,7 @@ def get_root_rwr_servers_status():
     from disco.api.client import APIClient as DiscordAPIClient
     from flask import url_for
     from rwrs import db
+    import rwr.constants
     import helpers
     import arrow
 
@@ -281,8 +281,7 @@ def run_discord_bot():
 
 
 @app.cli.command()
-@click.argument('database', type=click.Choice(rwr.constants.VALID_DATABASES))
-def save_players_stats(database):
+def save_players_stats():
     """Get and persist the players stats."""
     from models import RwrAccount, RwrAccountType, RwrAccountStat
     from rwrs import db
@@ -290,87 +289,89 @@ def save_players_stats(database):
     import arrow
 
     players_sort = rwr.constants.PlayersSort.XP
-    rwr_account_type = RwrAccountType(database.upper())
     chunks = 100
-    players_count = app.config['PLAYERS_COUNT_TO_SAVE_STATS']
+    players_count = app.config['MAX_NUM_OF_PLAYERS_TO_TRACK_STATS_FOR']
 
     scraper = rwr.scraper.DataScraper()
 
-    click.echo('Saving the first {} {} players stats (ordered by {}, chunk size {})'.format(
-        players_count,
-        database,
-        players_sort,
-        chunks
-    ))
+    for database in rwr.constants.VALID_DATABASES:
+        rwr_account_type = RwrAccountType(database.upper())
 
-    for start in range(0, players_count, chunks):
-        click.echo('  Chunk start: {}'.format(start))
+        click.echo('Saving the first {} {} players stats (ordered by {}, chunk size {})'.format(
+            players_count,
+            database,
+            players_sort,
+            chunks
+        ))
 
-        players = scraper.get_players(database, sort=players_sort, start=start, limit=chunks, basic=True)
+        for start in range(0, players_count, chunks):
+            click.echo('  Chunk start: {}'.format(start))
 
-        if not players:
-            click.secho('No more players to handle', fg='green')
+            players = scraper.get_players(database, sort=players_sort, start=start, limit=chunks, basic=True)
 
-            break
+            if not players:
+                click.secho('No more players to handle', fg='green')
 
-        click.echo('  Getting existing RWR accounts')
+                break
 
-        all_player_names = [player.username for player in players]
+            click.echo('  Getting existing RWR accounts')
 
-        existing_rwr_accounts = RwrAccount.query.filter(
-            RwrAccount.type == rwr_account_type,
-            RwrAccount.username.in_(all_player_names)
-        ).all()
+            all_player_names = [player.username for player in players]
 
-        rwr_accounts_by_username = {rwr_account.username: rwr_account for rwr_account in existing_rwr_accounts}
+            existing_rwr_accounts = RwrAccount.query.filter(
+                RwrAccount.type == rwr_account_type,
+                RwrAccount.username.in_(all_player_names)
+            ).all()
 
-        click.echo('  Creating unexisting RWR accounts')
+            rwr_accounts_by_username = {rwr_account.username: rwr_account for rwr_account in existing_rwr_accounts}
 
-        for player in players:
-            click.echo('    ' + player.username)
+            click.echo('  Creating unexisting RWR accounts')
 
-            if player.username not in rwr_accounts_by_username:
-                rwr_account = RwrAccount()
+            for player in players:
+                click.echo('    ' + player.username)
 
-                rwr_account.username = player.username
-                rwr_account.type = rwr_account_type
+                if player.username not in rwr_accounts_by_username:
+                    rwr_account = RwrAccount()
 
-                rwr_accounts_by_username[player.username] = rwr_account
-            else:
-                rwr_account = rwr_accounts_by_username[player.username]
+                    rwr_account.username = player.username
+                    rwr_account.type = rwr_account_type
 
-                rwr_account.updated_at = arrow.utcnow().floor('minute')
+                    rwr_accounts_by_username[player.username] = rwr_account
+                else:
+                    rwr_account = rwr_accounts_by_username[player.username]
 
-            db.session.add(rwr_account)
+                    rwr_account.updated_at = arrow.utcnow().floor('minute')
 
-        db.session.commit()
+                db.session.add(rwr_account)
 
-        click.echo('  Saving stats')
+            db.session.commit()
 
-        for player in players:
-            click.echo('    ' + player.username)
+            click.echo('  Saving stats')
 
-            rwr_account_stat = RwrAccountStat()
+            for player in players:
+                click.echo('    ' + player.username)
 
-            rwr_account_stat.leaderboard_position = player.position
-            rwr_account_stat.xp = player.xp
-            rwr_account_stat.score = player.score
-            rwr_account_stat.kills = player.kills
-            rwr_account_stat.deaths = player.deaths
-            rwr_account_stat.kd_ratio = player.kd_ratio
-            rwr_account_stat.time_played = player.time_played
-            rwr_account_stat.longest_kill_streak = player.longest_kill_streak
-            rwr_account_stat.targets_destroyed = player.targets_destroyed
-            rwr_account_stat.vehicles_destroyed = player.vehicles_destroyed
-            rwr_account_stat.soldiers_healed = player.soldiers_healed
-            rwr_account_stat.teamkills = player.teamkills
-            rwr_account_stat.distance_moved = player.distance_moved
-            rwr_account_stat.shots_fired = player.shots_fired
-            rwr_account_stat.throwables_thrown = player.throwables_thrown
-            rwr_account_stat.rwr_account_id = rwr_accounts_by_username[player.username].id
+                rwr_account_stat = RwrAccountStat()
 
-            db.session.add(rwr_account_stat)
+                rwr_account_stat.leaderboard_position = player.position
+                rwr_account_stat.xp = player.xp
+                rwr_account_stat.score = player.score
+                rwr_account_stat.kills = player.kills
+                rwr_account_stat.deaths = player.deaths
+                rwr_account_stat.kd_ratio = player.kd_ratio
+                rwr_account_stat.time_played = player.time_played
+                rwr_account_stat.longest_kill_streak = player.longest_kill_streak
+                rwr_account_stat.targets_destroyed = player.targets_destroyed
+                rwr_account_stat.vehicles_destroyed = player.vehicles_destroyed
+                rwr_account_stat.soldiers_healed = player.soldiers_healed
+                rwr_account_stat.teamkills = player.teamkills
+                rwr_account_stat.distance_moved = player.distance_moved
+                rwr_account_stat.shots_fired = player.shots_fired
+                rwr_account_stat.throwables_thrown = player.throwables_thrown
+                rwr_account_stat.rwr_account_id = rwr_accounts_by_username[player.username].id
 
-        db.session.commit()
+                db.session.add(rwr_account_stat)
+
+            db.session.commit()
 
     click.secho('Done', fg='green')

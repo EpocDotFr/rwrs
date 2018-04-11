@@ -68,7 +68,7 @@ More informations on the three above can be found [here](http://flask.pocoo.org/
   - `PACIFIC_PLAYERS_RANKS_COUNTRY` Ranks image / name to show for the Pacific players stats (`us`, `jp`)
   - `DISCORD_BOT_TOKEN` Authentication token used by the RWRS Discord bot
   - `DISCORD_BOT_CHANNEL_ID` The Discord channel ID the bot is allowed to talk in
-  - `PLAYERS_COUNT_TO_SAVE_STATS` How many players should RWRS track the stats for (top players storted by score only)
+  - `MAX_NUM_OF_PLAYERS_TO_TRACK_STATS_FOR` How many players should RWRS track the stats for (top players storted by XP)
 
 I'll let you search yourself about how to configure a web server along uWSGI.
 
@@ -178,7 +178,7 @@ As the provided servers location is most of the time either missing or invalid, 
   - Font by [Typesgal](https://www.dafont.com/fr/top-secret-kb.font) (freeware)
   - Flag icons by [Flag Sprites](https://www.flag-sprites.com/en/) and [GoSquared](https://www.gosquared.com/resources/flag-icons/) (freeware)
   - Maps previews comes from the [official RWR wiki](https://runningwithrifles.gamepedia.com/Running_with_Rifles_Wiki)
-  - Old player stats were imported from the [rwrtrack](https://github.com/david-wm-sanders/rwrtrack) project by David "MR. BANG" Sanders ([actual data repo](https://github.com/david-wm-sanders/rwrtrack-data))
+  - Old players stats were imported from the [rwrtrack](https://github.com/david-wm-sanders/rwrtrack) project by David "MR. BANG" Sanders ([actual data repo](https://github.com/david-wm-sanders/rwrtrack-data))
   - This project uses GeoLite2 data created by MaxMind, available from [www.maxmind.com](https://www.maxmind.com/)
   - All Running With Rifles assets © 2015 - 2018 Osumia Games
   - This project is not affiliated with Osumia Games
