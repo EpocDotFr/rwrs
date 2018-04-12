@@ -1,5 +1,8 @@
+from models import RwrAccount, RwrAccountType, RwrAccountStat
+from sqlalchemy.util import memoized_property
 from flask import url_for, current_app
 from . import constants, utils
+from sqlalchemy import func
 from rwrs import app
 import helpers
 import math
@@ -221,6 +224,13 @@ class Player:
             _compute_unlockable(unlocks, ret, 'throwables')
 
         return ret
+
+    @memoized_property
+    def rwr_account(self):
+        return RwrAccount.query.filter(
+            RwrAccount.type == RwrAccountType(self.database.upper()),
+            RwrAccount.username == self.username
+        ).first()
 
     def __repr__(self):
         return 'Player:' + self.username

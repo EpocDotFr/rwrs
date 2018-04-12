@@ -314,8 +314,6 @@ def save_players_stats():
 
                 break
 
-            click.echo('  Getting existing RWR accounts')
-
             all_player_names = [player.username for player in players]
 
             existing_rwr_accounts = RwrAccount.query.filter(
@@ -324,8 +322,6 @@ def save_players_stats():
             ).all()
 
             rwr_accounts_by_username = {rwr_account.username: rwr_account for rwr_account in existing_rwr_accounts}
-
-            click.echo('  Creating unexisting RWR accounts')
 
             for player in players:
                 if player.username not in rwr_accounts_by_username:
@@ -343,8 +339,6 @@ def save_players_stats():
                 db.session.add(rwr_account)
 
             db.session.commit()
-
-            click.echo('  Saving stats')
 
             for player in players:
                 rwr_account_stat = RwrAccountStat()
@@ -397,11 +391,12 @@ def import_rwrtrack_data(directory):
 
             csv_data = csv.reader(f, quoting=csv.QUOTE_NONNUMERIC)
             leaderboard_position = 1
+            start = 0
 
             for players in helpers.chunks(list(csv_data), chunks):
-                click.echo('  Getting existing RWR accounts')
+                click.echo('  Chunk start: {}'.format(start))
 
-                all_player_names = [player[0] for player in players]
+                all_player_names = [player[0] for player in players] # FIXME Username isn't properly encoded, try to decode it to unicode
 
                 existing_rwr_accounts = RwrAccount.query.filter(
                     RwrAccount.type == rwr_account_type,
@@ -410,10 +405,8 @@ def import_rwrtrack_data(directory):
 
                 rwr_accounts_by_username = {rwr_account.username: rwr_account for rwr_account in existing_rwr_accounts}
 
-                click.echo('  Creating unexisting RWR accounts')
-
                 for player in players:
-                    username = player[0]
+                    username = player[0] # FIXME Username isn't properly encoded, try to decode it to unicode
 
                     if username not in rwr_accounts_by_username:
                         rwr_account = RwrAccount()
@@ -431,10 +424,8 @@ def import_rwrtrack_data(directory):
 
                 db.session.commit()
 
-                click.echo('  Saving stats')
-
                 for player in players:
-                    username = player[0]
+                    username = player[0] # FIXME Username isn't properly encoded, try to decode it to unicode
 
                     rwr_account_stat = RwrAccountStat()
 
@@ -458,5 +449,7 @@ def import_rwrtrack_data(directory):
                     leaderboard_position += 1
 
                 db.session.commit()
+
+                start += chunks
 
     click.secho('Done', fg='green')

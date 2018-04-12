@@ -7,13 +7,6 @@ import rwr.constants
 import helpers
 import arrow
 
-__all__ = [
-    'ServerPlayerCount',
-    'SteamPlayerCount',
-    'RwrRootServerStatus',
-    'RwrRootServer'
-]
-
 
 class Measurable:
     id = db.Column(db.Integer, primary_key=True, autoincrement=True) # TODO To remove because useless and non-efficient
@@ -361,6 +354,10 @@ class RwrAccount(db.Model):
     def stats(self):
         return RwrAccountStat.query.filter(RwrAccountStat.rwr_account_id == self.id).all()
 
+    @memoized_property
+    def has_stats(self):
+        return RwrAccountStat.query.with_entities(func.count('*')).filter(RwrAccountStat.rwr_account_id == self.id).scalar() > 0
+
     def __repr__(self):
         return 'RwrAccount:' + self.id
 
@@ -374,10 +371,8 @@ class RwrAccountStat(db.Model):
 
     leaderboard_position = db.Column(db.Integer, nullable=False)
     xp = db.Column(db.Integer, nullable=False)
-    score = db.Column(db.Integer, nullable=False)
     kills = db.Column(db.Integer, nullable=False)
     deaths = db.Column(db.Integer, nullable=False)
-    kd_ratio = db.Column(db.Float, nullable=False)
     time_played = db.Column(db.Integer, nullable=False)
     longest_kill_streak = db.Column(db.Integer, nullable=False)
     targets_destroyed = db.Column(db.Integer, nullable=False)
