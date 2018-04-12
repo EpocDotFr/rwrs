@@ -386,6 +386,8 @@ def import_rwrtrack_data(directory):
     for csv_filename in csv_filenames:
         click.echo('Opening ' + csv_filename)
 
+        created_at = arrow.get(os.path.splitext(os.path.basename(csv_filename))[0]).floor('day')
+
         with open(csv_filename, 'r', encoding='utf-8', newline='') as f:
             next(f, None) # Ignore first line as it's the CSV header
 
@@ -442,6 +444,7 @@ def import_rwrtrack_data(directory):
                     rwr_account_stat.distance_moved = int(player[10]) / 1000
                     rwr_account_stat.shots_fired = int(player[10])
                     rwr_account_stat.throwables_thrown = int(player[12])
+                    rwr_account_stat.created_at = created_at
                     rwr_account_stat.rwr_account_id = rwr_accounts_by_username[username].id
 
                     db.session.add(rwr_account_stat)

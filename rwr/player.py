@@ -1,8 +1,7 @@
-from models import RwrAccount, RwrAccountType, RwrAccountStat
+from models import RwrAccount, RwrAccountType
 from sqlalchemy.util import memoized_property
 from flask import url_for, current_app
 from . import constants, utils
-from sqlalchemy import func
 from rwrs import app
 import helpers
 import math

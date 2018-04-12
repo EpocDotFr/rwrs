@@ -122,7 +122,7 @@ def player_details_without_db(username):
 
 
 @app.route('/players/<any({}):database>/<username>'.format(VALID_DATABASES_STRING_LIST))
-@app.route('/players/<any({}):database>/<username>/<any(unlockables):tab>'.format(VALID_DATABASES_STRING_LIST))
+@app.route('/players/<any({}):database>/<username>/<any(unlockables,"stats-history"):tab>'.format(VALID_DATABASES_STRING_LIST))
 def player_details(database, username, tab=None):
     scraper = rwr.scraper.DataScraper()
 
@@ -137,9 +137,12 @@ def player_details(database, username, tab=None):
 
     player.set_playing_on_server(servers)
 
+    display_stats_history_tab = player.rwr_account and player.rwr_account.has_stats
+
     return render_template(
         'player_details.html',
-        player=player
+        player=player,
+        display_stats_history_tab=display_stats_history_tab
     )
 
 

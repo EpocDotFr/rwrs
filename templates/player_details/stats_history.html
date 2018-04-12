@@ -1,0 +1,50 @@
+<table class="{{ 'striped' if player.rwr_account.stats }} mbn">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Position</th>
+            <th>XP</th>
+            <th>Kills</th>
+            <th>Deaths</th>
+            <th>K/D ratio</th>
+            <th>Score</th>
+            <th>Time played</th>
+            <th>Longest kill streak</th>
+            <th>Targets destroyed</th>
+            <th>Distance moved</th>
+            <th>Vehicles destroyed</th>
+            <th>Soldiers healed</th>
+            <th>Teamkills</th>
+            <th>Shots fired</th>
+            <th>Throwables thrown</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for stat in player.rwr_account.stats %}
+            <tr>
+                <td>{{ stat.created_at.format('MMM D, YYYY') }}</td>
+                <td>{{ stat.leaderboard_position_display }}</td>
+                <td>{{ stat.xp_display }}</td>
+                <td>{{ stat.kills_display }}</td>
+                <td>{{ stat.deaths_display }}</td>
+                <td class="{{ 'txtred' if stat.kd_ratio < 1 else 'txtgreen' }}">{{ stat.kd_ratio }}</td>
+                <td class="{{ 'txtred' if stat.score < 0 else 'txtgreen' }}">{{ stat.score_display }}</td>
+                <td>{{ stat.time_played_display }}</td>
+                <td>{{ stat.longest_kill_streak_display }}</td>
+                <td>{{ stat.targets_destroyed_display }}</td>
+                <td>{{ stat.distance_moved }}</td>
+                <td>{{ stat.vehicles_destroyed_display }}</td>
+                <td>{{ stat.soldiers_healed_display }}</td>
+                <td>{{ stat.teamkills_display }}</td>
+                <td>{{ stat.shots_fired_display }}</td>
+                <td>{{ stat.throwables_thrown_display }}</td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="16">
+                    <div class="alert info pas txtcenter">There isn't any stats to display.</div>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>

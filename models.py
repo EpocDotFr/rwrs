@@ -396,7 +396,59 @@ class RwrAccountStat(db.Model):
 
     @memoized_property
     def kd_ratio(self):
-        return self.kills / self.deaths
+        return round(self.kills / self.deaths, 2)
+
+    @memoized_property
+    def leaderboard_position_display(self):
+        return helpers.humanize_integer(self.leaderboard_position)
+
+    @memoized_property
+    def xp_display(self):
+        return helpers.humanize_integer(self.xp)
+
+    @memoized_property
+    def kills_display(self):
+        return helpers.humanize_integer(self.kills)
+
+    @memoized_property
+    def deaths_display(self):
+        return helpers.humanize_integer(self.deaths)
+
+    @memoized_property
+    def time_played_display(self):
+        return helpers.humanize_seconds_to_hours(self.time_played)
+
+    @memoized_property
+    def score_display(self):
+        return helpers.humanize_integer(self.score)
+
+    @memoized_property
+    def longest_kill_streak_display(self):
+        return helpers.humanize_integer(self.longest_kill_streak)
+
+    @memoized_property
+    def targets_destroyed_display(self):
+        return helpers.humanize_integer(self.targets_destroyed)
+
+    @memoized_property
+    def vehicles_destroyed_display(self):
+        return helpers.humanize_integer(self.vehicles_destroyed)
+
+    @memoized_property
+    def soldiers_healed_display(self):
+        return helpers.humanize_integer(self.soldiers_healed)
+
+    @memoized_property
+    def teamkills_display(self):
+        return helpers.humanize_integer(self.teamkills)
+
+    @memoized_property
+    def shots_fired_display(self):
+        return helpers.humanize_integer(self.shots_fired)
+
+    @memoized_property
+    def throwables_thrown_display(self):
+        return helpers.humanize_integer(self.throwables_thrown)
 
     def __repr__(self):
         return 'RwrAccountStat:' + self.id
