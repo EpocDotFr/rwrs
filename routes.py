@@ -138,7 +138,7 @@ def player_details(database, username, tab=None):
     player.set_playing_on_server(servers)
 
     return render_template(
-        'player_details/main.html',
+        'player_details.html',
         player=player
     )
 
