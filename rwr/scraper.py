@@ -58,9 +58,9 @@ class DataScraper:
         if not servers:
             return
 
-        geolite2_reader = geolite2.reader()
-
         for server in servers:
+            geolite2_reader = geolite2.reader() # TODO That's ugly but I've no choice as the maxminddb Python lib is shitty
+
             location = geolite2_reader.get(server.ip)
 
             if location:
@@ -76,7 +76,7 @@ class DataScraper:
                     server.location.country_name
                 )
 
-        geolite2_reader.close()
+            geolite2_reader.close()
 
     def get_server_by_ip_and_port(self, ip, port):
         """Search for a RWR public server based on its IP and port."""
