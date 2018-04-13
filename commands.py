@@ -290,6 +290,7 @@ def save_players_stats():
 
     players_sort = rwr.constants.PlayersSort.XP
     players_count = app.config['MAX_NUM_OF_PLAYERS_TO_TRACK_STATS_FOR']
+    now = arrow.utcnow().floor('day')
     chunks = 100
 
     scraper = rwr.scraper.DataScraper()
@@ -323,6 +324,12 @@ def save_players_stats():
 
             rwr_accounts_by_username = {rwr_account.username: rwr_account for rwr_account in existing_rwr_accounts}
 
+            # Remove players already having an RWR account and that are already up-to-date in the DB to prevent saving duplicate stats
+            for player in players:
+                if player.username in rwr_accounts_by_username and rwr_accounts_by_username[player.username].updated_at.floor('day') >= now:
+                    players.remove(player)
+
+            # Create RWR accounts if they do not exists / touch the updated_at timestamp if they exists
             for player in players:
                 if player.username not in rwr_accounts_by_username:
                     rwr_account = RwrAccount()
@@ -340,6 +347,7 @@ def save_players_stats():
 
             db.session.commit()
 
+            # Save current stats of the RWR accounts
             for player in players:
                 rwr_account_stat = RwrAccountStat()
 
@@ -379,6 +387,7 @@ def import_rwrtrack_data(directory):
 
     rwr_account_type = RwrAccountType.INVASION
     csv_filenames = glob(os.path.join(directory, '*.csv'))
+    now = arrow.utcnow().floor('day')
     chunks = 100
 
     click.echo('{} files to import'.format(len(csv_filenames)))
@@ -407,6 +416,12 @@ def import_rwrtrack_data(directory):
 
                 rwr_accounts_by_username = {rwr_account.username: rwr_account for rwr_account in existing_rwr_accounts}
 
+                # Remove players already having an RWR account and that are already up-to-date in the DB to prevent saving duplicate stats
+                for player in players:
+                    if player.username in rwr_accounts_by_username and rwr_accounts_by_username[player.username].updated_at.floor('day') >= now:
+                        players.remove(player)
+
+                # Create RWR accounts if they do not exists / touch the updated_at timestamp if they exists
                 for player in players:
                     username = player[0] # FIXME Username isn't properly encoded, try to decode it to unicode
 
@@ -426,6 +441,7 @@ def import_rwrtrack_data(directory):
 
                 db.session.commit()
 
+                # Save current stats of the RWR accounts
                 for player in players:
                     username = player[0] # FIXME Username isn't properly encoded, try to decode it to unicode
 

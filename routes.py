@@ -133,9 +133,12 @@ def player_details(database, username, tab=None):
 
         return redirect(url_for('players_list', database=database))
 
-    servers = scraper.get_servers()
+    if tab is None: # Stats tab
+        servers = scraper.get_servers()
 
-    player.set_playing_on_server(servers)
+        player.set_playing_on_server(servers)
+    elif tab == 'stats-history':
+        g.LAYOUT = 'large'
 
     display_stats_history_tab = player.rwr_account and player.rwr_account.has_stats
 

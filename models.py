@@ -352,7 +352,7 @@ class RwrAccount(db.Model):
 
     @memoized_property
     def stats(self):
-        return RwrAccountStat.query.filter(RwrAccountStat.rwr_account_id == self.id).all()
+        return RwrAccountStat.query.filter(RwrAccountStat.rwr_account_id == self.id).order_by(RwrAccountStat.created_at.desc()).all()
 
     @memoized_property
     def has_stats(self):

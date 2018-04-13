@@ -17,12 +17,12 @@ Valid common parameters values are:
     - `database`: optional. Defaults to `invasion`
 
 - `top`: displays the top 24 players. Parameters:
-    - `sort`: optional. Defaults to `score`
+    - `sort`: optional. Defaults to `xp`
     - `database`: optional. Defaults to `invasion`
 
 - `pos`: highlights the specified player in the leaderboard. Parameters:
     - `username`: required. Full username is required
-    - `sort`: optional. Defaults to `score`
+    - `sort`: optional. Defaults to `xp`
     - `database`: optional. Defaults to `invasion`
 
 - `compare`: compare stats of two players. Parameters:

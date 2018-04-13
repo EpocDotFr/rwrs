@@ -183,7 +183,7 @@ class RwrsBotDiscoPlugin(Plugin):
         event.msg.reply('\n'.join(response))
 
     @Plugin.command('top', aliases=['leaderboard'], parser=True)
-    @Plugin.parser.add_argument('sort', choices=constants.VALID_PLAYER_SORTS.keys(), nargs='?', default='score')
+    @Plugin.parser.add_argument('sort', choices=constants.VALID_PLAYER_SORTS.keys(), nargs='?', default='xp')
     @Plugin.parser.add_argument('database', choices=rwr.constants.VALID_DATABASES, nargs='?', default='invasion')
     def on_top_command(self, event, args):
         """Displays the top 15 players."""
@@ -210,7 +210,7 @@ class RwrsBotDiscoPlugin(Plugin):
 
     @Plugin.command('pos', aliases=['position', 'ranking'], parser=True)
     @Plugin.parser.add_argument('username')
-    @Plugin.parser.add_argument('sort', choices=constants.VALID_PLAYER_SORTS.keys(), nargs='?', default='score')
+    @Plugin.parser.add_argument('sort', choices=constants.VALID_PLAYER_SORTS.keys(), nargs='?', default='xp')
     @Plugin.parser.add_argument('database', choices=rwr.constants.VALID_DATABASES, nargs='?', default='invasion')
     def on_pos_command(self, event, args):
         """Highlights the specified player in the leaderboard."""
