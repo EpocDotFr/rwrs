@@ -6,6 +6,10 @@ from . import constants
 import requests
 
 scraper_requests_session = requests.Session()
+scraper_requests_adaptater = requests.adapters.HTTPAdapter(max_retries=1)
+
+scraper_requests_session.mount('http://', scraper_requests_adaptater)
+scraper_requests_session.mount('https://', scraper_requests_adaptater)
 
 
 class DataScraper:

@@ -1,8 +1,6 @@
 from rwrs import app, cache
 import requests
 
-steam_api_requests_session = requests.Session()
-
 
 class Client:
     endpoint_pattern = 'https://api.steampowered.com/{interface}/{method}/v{method_version}/'
@@ -31,7 +29,7 @@ class Client:
         if params:
             params_to_send.update(params)
 
-        response = steam_api_requests_session.request(http_method, url, params=params_to_send, headers=headers)
+        response = requests.request(http_method, url, params=params_to_send, headers=headers)
 
         response.raise_for_status()
 
