@@ -58,25 +58,24 @@ class DataScraper:
         if not servers:
             return
 
-        for server in servers:
-            geolite2_reader = geolite2.reader() # TODO That's ugly but I've no choice as the maxminddb Python lib is shitty
+        with geolite2 as gl2:
+            geolite2_reader = gl2.reader()
 
-            location = geolite2_reader.get(server.ip)
+            for server in servers:
+                location = geolite2_reader.get(server.ip)
 
-            if location:
-                if 'city' in location:
-                    server.location.city_name = location['city']['names']['en']
+                if location:
+                    if 'city' in location:
+                        server.location.city_name = location['city']['names']['en']
 
-                server.location.country_code = location['country']['iso_code'].lower()
-                server.location.country_name = location['country']['names']['en']
-                server.location.continent_code = location['continent']['code'].lower()
-                server.location.continent_name = location['continent']['names']['en']
-                server.location.text = '{}{}'.format(
-                    server.location.city_name + ', ' if server.location.city_name else '',
-                    server.location.country_name
-                )
-
-            geolite2_reader.close()
+                    server.location.country_code = location['country']['iso_code'].lower()
+                    server.location.country_name = location['country']['names']['en']
+                    server.location.continent_code = location['continent']['code'].lower()
+                    server.location.continent_name = location['continent']['names']['en']
+                    server.location.text = '{}{}'.format(
+                        server.location.city_name + ', ' if server.location.city_name else '',
+                        server.location.country_name
+                    )
 
     def get_server_by_ip_and_port(self, ip, port):
         """Search for a RWR public server based on its IP and port."""
