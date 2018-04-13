@@ -1,4 +1,4 @@
-<table class="{{ 'striped' if player.rwr_account.stats }} mbn">
+<table class="{{ 'striped' if stats.items }} mbn">
     <thead>
         <tr>
             <th class="w150p">Date</th>
@@ -20,7 +20,7 @@
         </tr>
     </thead>
     <tbody>
-        {% for stat in player.rwr_account.stats %}
+        {% for stat in stats.items %}
             <tr>
                 <td>{{ stat.created_at.format('MMM D, YYYY') }}</td>
                 <td>{{ stat.leaderboard_position_display }}</td>
@@ -48,3 +48,19 @@
         {% endfor %}
     </tbody>
 </table>
+
+{% if stats.has_prev or stats.has_next %}
+    <div class="grid mts w1140p center">
+        {% if stats.has_prev %}
+            <div>
+                <a href="{{ url_for('player_details', database=request.view_args.get('database'), username=player.username, tab='stats-history', page=stats.prev_num) }}" class="btn"><i class="fa fa-angle-double-left"></i> Previous</a>
+            </div>
+        {% endif %}
+
+        {% if stats.has_next %}
+            <div class="txtright">
+                <a href="{{ url_for('player_details', database=request.view_args.get('database'), username=player.username, tab='stats-history', page=stats.next_num) }}" class="btn">Next <i class="fa fa-angle-double-right"></i></a>
+            </div>
+        {% endif %}
+    </div>
+{% endif %}

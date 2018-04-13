@@ -352,10 +352,12 @@ class RwrAccount(db.Model):
 
     @memoized_property
     def stats(self):
-        return RwrAccountStat.query.filter(RwrAccountStat.rwr_account_id == self.id).order_by(RwrAccountStat.created_at.desc()).all()
+        """Return a query which has to be executed to get all stats linked to this RwrAccount."""
+        return RwrAccountStat.query.filter(RwrAccountStat.rwr_account_id == self.id).order_by(RwrAccountStat.created_at.desc())
 
     @memoized_property
     def has_stats(self):
+        """Determine is this RwrAccount object has stats."""
         return RwrAccountStat.query.with_entities(func.count('*')).filter(RwrAccountStat.rwr_account_id == self.id).scalar() > 0
 
     def __repr__(self):
@@ -388,6 +390,7 @@ class RwrAccountStat(db.Model):
 
     @memoized_property
     def rwr_account(self):
+        """Return the RwrAccount object linked to this RwrAccountStat."""
         return RwrAccount.query.get(self.rwr_account_id)
 
     @memoized_property

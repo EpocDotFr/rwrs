@@ -133,6 +133,8 @@ def player_details(database, username, tab=None):
 
         return redirect(url_for('players_list', database=database))
 
+    stats = None
+
     if tab is None: # Stats tab
         servers = scraper.get_servers()
 
@@ -140,12 +142,19 @@ def player_details(database, username, tab=None):
     elif tab == 'stats-history':
         g.LAYOUT = 'large'
 
+        stats = player.rwr_account.stats.paginate(
+            page=request.args.get('page', 1, type=int),
+            per_page=15,
+            error_out=False
+        )
+
     display_stats_history_tab = player.rwr_account and player.rwr_account.has_stats
 
     return render_template(
         'player_details.html',
         player=player,
-        display_stats_history_tab=display_stats_history_tab
+        display_stats_history_tab=display_stats_history_tab,
+        stats=stats
     )
 
 
