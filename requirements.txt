@@ -7,7 +7,7 @@ Flask-Assets
 jsmin
 cssutils
 requests
-maxminddb-geolite2
+geoip2
 lxml
 arrow
 SQLAlchemy

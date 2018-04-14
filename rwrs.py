@@ -33,6 +33,7 @@ app.config['MAPS_PREVIEW_IMAGES_DIR'] = 'static/images/maps/preview'
 app.config['MAPS_DATA_FILE'] = 'storage/data/maps.json'
 app.config['UNLOCKABLES_IMAGES_DIR'] = 'static/images/unlockables'
 app.config['UNLOCKABLES_DATA_FILE'] = 'storage/data/unlockables.json'
+app.config['GEOIP_DATABASE_FILE'] = 'storage/data/GeoLite2-City.mmdb'
 app.config['MY_USERNAME'] = 'epocdotfr'
 app.config['CONTRIBUTORS'] = ['street veteran', 'mastock', 'dio', 'jatimatik', 'mellcor', 'teratai', 'harrified', 'mr. bang']
 app.config['DEVS'] = ['jackmayol', 'pasik', 'pasik2', 'tremozl', 'the soldier'] # ahnold

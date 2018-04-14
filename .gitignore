@@ -2,6 +2,7 @@ config.py
 storage/logs/*.log
 storage/logs/*.log.*
 storage/data/*.sqlite
+storage/data/*.mmdb
 storage/cache
 storage/webassets-cache/*
 !storage/webassets-cache/.gitkeep

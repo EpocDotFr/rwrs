@@ -1,9 +1,9 @@
-from geolite2 import geolite2
 from lxml import html, etree
 from rwrs import app, cache
 from .server import Server
 from .player import Player
 from . import constants
+import geoip2.database
 import requests
 
 scraper_requests_session = requests.Session()
@@ -58,24 +58,29 @@ class DataScraper:
         if not servers:
             return
 
-        with geolite2 as gl2:
-            geolite2_reader = gl2.reader()
+        geoip_db_reader = geoip2.database.Reader(app.config['GEOIP_DATABASE_FILE'])
 
-            for server in servers:
-                location = geolite2_reader.get(server.ip)
+        for server in servers:
+            location = geoip_db_reader.city(server.ip)
 
-                if location:
-                    if 'city' in location:
-                        server.location.city_name = location['city']['names']['en']
+            if location:
+                if location.city.geoname_id:
+                    server.location.city_name = location.city.names['en']
 
-                    server.location.country_code = location['country']['iso_code'].lower()
-                    server.location.country_name = location['country']['names']['en']
-                    server.location.continent_code = location['continent']['code'].lower()
-                    server.location.continent_name = location['continent']['names']['en']
-                    server.location.text = '{}{}'.format(
-                        server.location.city_name + ', ' if server.location.city_name else '',
-                        server.location.country_name
-                    )
+                if location.country.geoname_id:
+                    server.location.country_code = location.country.iso_code.lower()
+                    server.location.country_name = location.country.names['en']
+
+                if location.continent.geoname_id:
+                    server.location.continent_code = location.continent.code.lower()
+                    server.location.continent_name = location.continent.names['en']
+
+                server.location.text = '{}{}'.format(
+                    server.location.city_name + ', ' if server.location.city_name else '',
+                    server.location.country_name
+                )
+
+        geoip_db_reader.close()
 
     def get_server_by_ip_and_port(self, ip, port):
         """Search for a RWR public server based on its IP and port."""
