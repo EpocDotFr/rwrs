@@ -1,3 +1,4 @@
+from geolite2 import geolite2
 from lxml import html, etree
 from rwrs import app, cache
 from .server import Server
@@ -6,6 +7,10 @@ from . import constants
 import requests
 
 scraper_requests_session = requests.Session()
+scraper_requests_adaptater = requests.adapters.HTTPAdapter(max_retries=1)
+
+scraper_requests_session.mount('http://', scraper_requests_adaptater)
+scraper_requests_session.mount('https://', scraper_requests_adaptater)
 
 
 class DataScraper:
@@ -44,7 +49,33 @@ class DataScraper:
         for xml_node in xml_servers.xpath('/result/server'):
             servers.append(Server.load(xml_node, html_servers))
 
+        self.set_servers_location(servers)
+
         return servers
+
+    def set_servers_location(self, servers):
+        """Set the location of a list of servers."""
+        if not servers:
+            return
+
+        with geolite2 as gl2:
+            geolite2_reader = gl2.reader()
+
+            for server in servers:
+                location = geolite2_reader.get(server.ip)
+
+                if location:
+                    if 'city' in location:
+                        server.location.city_name = location['city']['names']['en']
+
+                    server.location.country_code = location['country']['iso_code'].lower()
+                    server.location.country_name = location['country']['names']['en']
+                    server.location.continent_code = location['continent']['code'].lower()
+                    server.location.continent_name = location['continent']['names']['en']
+                    server.location.text = '{}{}'.format(
+                        server.location.city_name + ', ' if server.location.city_name else '',
+                        server.location.country_name
+                    )
 
     def get_server_by_ip_and_port(self, ip, port):
         """Search for a RWR public server based on its IP and port."""

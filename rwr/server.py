@@ -1,6 +1,5 @@
 from flask import url_for, current_app
 from . import constants, utils
-from geolite2 import geolite2
 from slugify import slugify
 from rwrs import app
 
@@ -80,22 +79,6 @@ class Server:
         ret.database_name = utils.get_database_name(ret.database)
 
         ret.location = ServerLocation()
-
-        with geolite2 as gl2:
-            location = gl2.reader().get(ret.ip)
-
-            if location:
-                if 'city' in location:
-                    ret.location.city_name = location['city']['names']['en']
-
-                ret.location.country_code = location['country']['iso_code'].lower()
-                ret.location.country_name = location['country']['names']['en']
-                ret.location.continent_code = location['continent']['code'].lower()
-                ret.location.continent_name = location['continent']['names']['en']
-                ret.location.text = '{}{}'.format(
-                    ret.location.city_name + ', ' if ret.location.city_name else '',
-                    ret.location.country_name
-                )
 
         ret.steam_join_link = 'steam://rungameid/{gameid}//server_address={ip} server_port={port}'.format(
             gameid=app.config['RWR_STEAM_APP_ID'],
