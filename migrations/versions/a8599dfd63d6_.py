@@ -32,7 +32,7 @@ def upgrade_():
     op.create_table('rwr_root_servers',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('host', sa.String(length=255), nullable=False),
-    sa.Column('status', sa.Enum('UNKNOWN', 'UP', 'DOWN', name='rwrrootserverstatus'), nullable=True),
+    sa.Column('status', sa.Enum('UNKNOWN', 'UP', 'DOWN', name='rwrrootserverstatus'), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index('host_idx', 'rwr_root_servers', ['host'], unique=False)
