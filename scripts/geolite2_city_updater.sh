@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env sh
 # ----------------------------------- #
 # RWRS GeoLite2 City database updater #
 # ----------------------------------- #
