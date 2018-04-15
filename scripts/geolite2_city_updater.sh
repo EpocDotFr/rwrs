@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
-# ----------------------------------- #
-# RWRS GeoLite2 City database updater #
-# ----------------------------------- #
+#
+# RWRS GeoLite2 City database updater
+#
 # This script updates the MaxMind GeoLite2 City database used by the geoip2 Python package, itself used by RWRS to
 # determine the physical location of the RWR servers. The said database is stored in storage/data/GeoLite2-City.mmdb
 # Refs:
