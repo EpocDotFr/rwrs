@@ -18,22 +18,6 @@ import os
 monkey.patch_all()
 
 
-def check_under_maintenance(func):
-    """Decorator checking if RWRS is under maintenance, preventing any commands to be invoked if that's the case."""
-    def deco(*args, **kwargs):
-        if os.path.exists('maintenance'):
-            event = args[1]
-
-            if event:
-                event.msg.reply(':wrench: RWRS is under ongoing maintenance! Please try again later.')
-
-            return
-
-        return func(*args, **kwargs)
-
-    return deco
-
-
 class RwrsBotDiscoPlugin(Plugin):
     """The RWRS Disco Bot plugin."""
     def load(self, ctx):
@@ -41,6 +25,16 @@ class RwrsBotDiscoPlugin(Plugin):
 
         self.rwr_scraper = rwr.scraper.DataScraper()
         self.steam_api_client = steam_api.Client(app.config['STEAM_API_KEY'])
+
+    @Plugin.pre_command()
+    def check_under_maintenance(self, func, event, args, kwargs):
+        """Check if RWRS is under maintenance, preventing any commands to be invoked if that's the case."""
+        if os.path.exists('maintenance'):
+            event.msg.reply(':wrench: RWRS is under ongoing maintenance! Please try again later.')
+
+            return None
+
+        return event
 
     @Plugin.listen('Ready')
     def on_ready_event(self, event):
@@ -66,7 +60,6 @@ class RwrsBotDiscoPlugin(Plugin):
     @Plugin.command('stats', aliases=['statistics'], parser=True)
     @Plugin.parser.add_argument('username')
     @Plugin.parser.add_argument('database', choices=rwr.constants.VALID_DATABASES, nargs='?', default='invasion')
-    @check_under_maintenance
     def on_stats_command(self, event, args):
         """Displays stats about the specified player."""
         args.username = utils.prepare_username(args.username)
@@ -86,7 +79,6 @@ class RwrsBotDiscoPlugin(Plugin):
 
     @Plugin.command('whereis', aliases=['where is', 'where'], parser=True)
     @Plugin.parser.add_argument('username')
-    @check_under_maintenance
     def on_whereis_command(self, event, args):
         """Displays information about the server the specified player is currently playing on."""
         args.username = utils.prepare_username(args.username)
@@ -102,7 +94,6 @@ class RwrsBotDiscoPlugin(Plugin):
 
     @Plugin.command('server', parser=True)
     @Plugin.parser.add_argument('name')
-    @check_under_maintenance
     def on_server_command(self, event, args):
         """Displays information about the specified server."""
         server = self.rwr_scraper.get_server_by_name(args.name)
@@ -115,7 +106,6 @@ class RwrsBotDiscoPlugin(Plugin):
         event.msg.reply('Here\'s information about **{}**:'.format(server.name), embed=utils.create_server_message_embed(server))
 
     @Plugin.command('now', aliases=['currently'])
-    @check_under_maintenance
     def on_now_command(self, event):
         """Displays numbers about the current players and servers."""
         answer = [
@@ -161,7 +151,6 @@ class RwrsBotDiscoPlugin(Plugin):
     @Plugin.command('servers', parser=True)
     @Plugin.parser.add_argument('type', choices=constants.VALID_SERVER_TYPES.keys(), nargs='?', default=None)
     @Plugin.parser.add_argument('--ranked', action='store_const', const='yes')
-    @check_under_maintenance
     def on_servers_command(self, event, args):
         """Displays the first 10 currently active servers with room."""
         servers = self.rwr_scraper.filter_servers(
@@ -207,7 +196,6 @@ class RwrsBotDiscoPlugin(Plugin):
     @Plugin.command('top', aliases=['leaderboard'], parser=True)
     @Plugin.parser.add_argument('sort', choices=constants.VALID_PLAYER_SORTS.keys(), nargs='?', default='xp')
     @Plugin.parser.add_argument('database', choices=rwr.constants.VALID_DATABASES, nargs='?', default='invasion')
-    @check_under_maintenance
     def on_top_command(self, event, args):
         """Displays the top 15 players."""
         embed = utils.create_base_message_embed()
@@ -235,7 +223,6 @@ class RwrsBotDiscoPlugin(Plugin):
     @Plugin.parser.add_argument('username')
     @Plugin.parser.add_argument('sort', choices=constants.VALID_PLAYER_SORTS.keys(), nargs='?', default='xp')
     @Plugin.parser.add_argument('database', choices=rwr.constants.VALID_DATABASES, nargs='?', default='invasion')
-    @check_under_maintenance
     def on_pos_command(self, event, args):
         """Highlights the specified player in the leaderboard."""
         args.username = utils.prepare_username(args.username)
@@ -276,7 +263,6 @@ class RwrsBotDiscoPlugin(Plugin):
     @Plugin.parser.add_argument('source_username')
     @Plugin.parser.add_argument('target_username')
     @Plugin.parser.add_argument('database', choices=rwr.constants.VALID_DATABASES, nargs='?', default='invasion')
-    @check_under_maintenance
     def on_compare_command(self, event, args):
         args.source_username = utils.prepare_username(args.source_username)
         args.target_username = utils.prepare_username(args.target_username)
