@@ -18,9 +18,9 @@ rm "$DATA_DIR/GeoLite2-City.tar.gz"
 echo "Removing old version"
 rm -f "$DATA_DIR/"*".mmdb"
 # Move the one we downloaded into the right directory
-echo "Moving new version"
+echo "Applying new version"
 mv "$DATA_DIR/GeoLite2-City_"*"/GeoLite2-City.mmdb" $DATA_DIR
 # Remove the directory that came from the DB archive decompression
-echo "Cleaning folders"
+echo "Cleaning temporary directories"
 rm -r "$DATA_DIR/GeoLite2-City_"*
 chown www-data:www-data "$DATA_DIR/"*".mmdb"
