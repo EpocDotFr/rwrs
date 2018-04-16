@@ -30,6 +30,10 @@ echo "## Migrating DB"
 
 venv/bin/flask db upgrade
 
+echo "## Clearing cache"
+
+venv/bin/flask cc
+
 echo "## Restarting services"
 
 chown -R www-data:www-data ./
