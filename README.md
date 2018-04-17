@@ -161,6 +161,14 @@ Will ping RWR root servers and store their status (up or down).
   1. `set FLASK_APP=rwrs.py`
   2. `flask run_discord_bot`
 
+### Update the MaxMind GeoLite2 City database
+
+`sh scripts/geolite2_city_updater.sh`
+
+### Update RWRS
+
+`sh scripts/rwrs_updater.sh [DOMAIN, default=rwrstats.com]`
+
 ### Retrieve and save the players stats in DB
 
   1. `set FLASK_APP=rwrs.py`
