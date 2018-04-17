@@ -26,7 +26,7 @@
 {% set meta_image = player.rank.image_absolute %}
 
 {% block content %}
-    <div class="mtm">
+    <div class="mtm w1140p center">
         <form method="get" action="{{ url_for('players_compare', database=request.view_args.get('database'), username=player.username) }}" class="inbl fl">
             <input type="text" name="username_to_compare_with" placeholder="Type a player name" required> <button type="submit"><i class="fa fa-files-o"></i> Compare players</button>
         </form>
@@ -43,7 +43,7 @@
     <nav class="tabs mtm mbm pls prs pts">
         <ul class="unstyled">
             <li class="inbl prs {{ 'active' if not request.view_args.get('tab') }}"><a href="{{ url_for('player_details', database=request.view_args.get('database'), username=player.username) }}" class="inbl pas"><i class="fa fa-calculator"></i> Stats</a></li>
-            {% if display_stats_history_tab %}<li class="inbl prs {{ 'active' if request.view_args.get('tab') == 'stats-history' }}"><a href="{{ url_for('player_details', database=request.view_args.get('database'), username=player.username, tab='stats-history') }}" class="inbl pas"><i class="fa fa-calendar"></i> Stats history</a></li>{% endif %}
+            {% if player.has_stats %}<li class="inbl prs {{ 'active' if request.view_args.get('tab') == 'stats-history' }}"><a href="{{ url_for('player_details', database=request.view_args.get('database'), username=player.username, tab='stats-history') }}" class="inbl pas"><i class="fa fa-calendar"></i> Stats history</a></li>{% endif %}
             <li class="inbl prs {{ 'active' if request.view_args.get('tab') == 'unlockables' }}"><a href="{{ url_for('player_details', database=request.view_args.get('database'), username=player.username, tab='unlockables') }}" class="inbl pas"><i class="fa fa-unlock"></i> Unlockables</a></li>
         </ul>
     </nav>
@@ -55,12 +55,6 @@
     {% elif request.view_args.get('tab') == 'unlockables' %}
         {% include 'player_details/unlockables.html' %}
     {% endif %}
-
-    <p class="txtcenter mbs">
-        <a href="{{ url_for('players_list', database=request.view_args.get('database')) }}" class="btn"><i class="fa fa-chevron-left"></i> Back to the {{ player.database_name }} players list</a>
-    </p>
-
-    {{ macros.stats_notice() }}
 
     <script>
         friendsFeature.all_players_with_servers_details = {{ g.all_players_with_servers_details|tojson }};

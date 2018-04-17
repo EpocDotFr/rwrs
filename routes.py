@@ -135,11 +135,11 @@ def player_details(database, username, tab=None):
 
     stats = None
 
-    if tab is None: # Stats tab
+    if tab is None: # Stats tab (default)
         servers = scraper.get_servers()
 
         player.set_playing_on_server(servers)
-    elif tab == 'stats-history':
+    elif tab == 'stats-history' and player.has_stats:
         g.LAYOUT = 'large'
 
         stats = player.rwr_account.stats.paginate(
@@ -148,12 +148,9 @@ def player_details(database, username, tab=None):
             error_out=False
         )
 
-    display_stats_history_tab = player.rwr_account and player.rwr_account.has_stats
-
     return render_template(
         'player_details.html',
         player=player,
-        display_stats_history_tab=display_stats_history_tab,
         stats=stats
     )
 

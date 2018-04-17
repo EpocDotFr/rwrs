@@ -32,7 +32,7 @@
                 <td>{{ stat.time_played_display }}</td>
                 <td>{{ stat.longest_kill_streak_display }}</td>
                 <td>{{ stat.targets_destroyed_display }}</td>
-                <td>{{ stat.distance_moved }}</td>
+                <td>{{ stat.distance_moved }}km</td>
                 <td>{{ stat.vehicles_destroyed_display }}</td>
                 <td>{{ stat.soldiers_healed_display }}</td>
                 <td>{{ stat.teamkills_display }}</td>
@@ -49,18 +49,22 @@
     </tbody>
 </table>
 
-{% if stats.has_prev or stats.has_next %}
-    <div class="grid mts w1140p center">
+<div class="grid mts w1140p center">
+    <div>
         {% if stats.has_prev %}
-            <div>
-                <a href="{{ url_for('player_details', database=request.view_args.get('database'), username=player.username, tab='stats-history', page=stats.prev_num) }}" class="btn"><i class="fa fa-angle-double-left"></i> Previous</a>
-            </div>
-        {% endif %}
-
-        {% if stats.has_next %}
-            <div class="txtright">
-                <a href="{{ url_for('player_details', database=request.view_args.get('database'), username=player.username, tab='stats-history', page=stats.next_num) }}" class="btn">Next <i class="fa fa-angle-double-right"></i></a>
-            </div>
+            <a href="{{ url_for('player_details', database=request.view_args.get('database'), username=player.username, tab='stats-history', page=stats.prev_num) }}" class="btn"><i class="fa fa-angle-double-left"></i> Previous</a>
         {% endif %}
     </div>
-{% endif %}
+    <div>
+        <p class="txtcenter mbs">
+            <a href="{{ url_for('players_list', database=request.view_args.get('database')) }}" class="btn"><i class="fa fa-chevron-left"></i> Back to the {{ player.database_name }} players list</a>
+        </p>
+    </div>
+    <div class="txtright">
+        {% if stats.has_next %}
+            <a href="{{ url_for('player_details', database=request.view_args.get('database'), username=player.username, tab='stats-history', page=stats.next_num) }}" class="btn">Next <i class="fa fa-angle-double-right"></i></a>
+        {% endif %}
+    </div>
+</div>
+
+{{ macros.stats_notice() }}

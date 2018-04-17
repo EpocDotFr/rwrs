@@ -281,12 +281,18 @@ def run_discord_bot():
 
 
 @app.cli.command()
-def save_players_stats():
+@click.option('--reset', is_flag=True, help='Reset all RWR accounts and stats')
+def save_players_stats(reset):
     """Get and persist the players stats."""
     from models import RwrAccount, RwrAccountType, RwrAccountStat
     from rwrs import db
     import rwr.scraper
     import arrow
+
+    if reset and click.confirm('Are you sure to reset all RWR accounts and stats?'):
+        RwrAccountStat.query.delete()
+        RwrAccount.query.delete()
+        db.session.commit()
 
     players_sort = rwr.constants.PlayersSort.XP
     players_count = app.config['MAX_NUM_OF_PLAYERS_TO_TRACK_STATS_FOR']
@@ -375,7 +381,8 @@ def save_players_stats():
 
 @app.cli.command()
 @click.option('--directory', '-d', help='Directory containing the rwrtrack CSV files')
-def import_rwrtrack_data(directory):
+@click.option('--reset', is_flag=True, help='Reset all RWR accounts and stats')
+def import_rwrtrack_data(directory, reset):
     """Import data from rwrtrack."""
     from models import RwrAccount, RwrAccountType, RwrAccountStat
     from glob import glob
@@ -385,7 +392,11 @@ def import_rwrtrack_data(directory):
     import csv
     import os
 
-    rwr_account_type = RwrAccountType.INVASION
+    if reset and click.confirm('Are you sure to reset all RWR accounts and stats?'):
+        RwrAccountStat.query.delete()
+        RwrAccount.query.delete()
+        db.session.commit()
+
     csv_filenames = glob(os.path.join(directory, '*.csv'))
     now = arrow.utcnow().floor('day')
     chunks = 100
@@ -410,7 +421,7 @@ def import_rwrtrack_data(directory):
                 all_player_names = [player[0] for player in players] # FIXME Username isn't properly encoded, try to decode it to unicode
 
                 existing_rwr_accounts = RwrAccount.query.filter(
-                    RwrAccount.type == rwr_account_type,
+                    RwrAccount.type == RwrAccountType.INVASION,
                     RwrAccount.username.in_(all_player_names)
                 ).all()
 
@@ -418,7 +429,9 @@ def import_rwrtrack_data(directory):
 
                 # Remove players already having an RWR account and that are already up-to-date in the DB to prevent saving duplicate stats
                 for player in players:
-                    if player.username in rwr_accounts_by_username and rwr_accounts_by_username[player.username].updated_at.floor('day') >= now:
+                    username = player[0] # FIXME Username isn't properly encoded, try to decode it to unicode
+
+                    if username in rwr_accounts_by_username and rwr_accounts_by_username[username].updated_at.floor('day') >= now:
                         players.remove(player)
 
                 # Create RWR accounts if they do not exists / touch the updated_at timestamp if they exists
@@ -429,7 +442,7 @@ def import_rwrtrack_data(directory):
                         rwr_account = RwrAccount()
 
                         rwr_account.username = username
-                        rwr_account.type = rwr_account_type
+                        rwr_account.type = RwrAccountType.INVASION
 
                         rwr_accounts_by_username[username] = rwr_account
                     else:
@@ -457,7 +470,7 @@ def import_rwrtrack_data(directory):
                     rwr_account_stat.vehicles_destroyed = int(player[7])
                     rwr_account_stat.soldiers_healed = int(player[8])
                     rwr_account_stat.teamkills = int(player[9])
-                    rwr_account_stat.distance_moved = int(player[10]) / 1000
+                    rwr_account_stat.distance_moved = round(int(player[10]) / 1000, 1)
                     rwr_account_stat.shots_fired = int(player[10])
                     rwr_account_stat.throwables_thrown = int(player[12])
                     rwr_account_stat.created_at = created_at

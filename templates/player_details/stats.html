@@ -90,3 +90,9 @@
         <td colspan="6"></td>
     </tr>
 </table>
+
+<p class="txtcenter mbs">
+    <a href="{{ url_for('players_list', database=request.view_args.get('database')) }}" class="btn"><i class="fa fa-chevron-left"></i> Back to the {{ player.database_name }} players list</a>
+</p>
+
+{{ macros.stats_notice() }}

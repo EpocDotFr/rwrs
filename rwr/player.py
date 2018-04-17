@@ -226,10 +226,16 @@ class Player:
 
     @memoized_property
     def rwr_account(self):
+        """Return the RwrAccount associated to this Player."""
         return RwrAccount.query.filter(
             RwrAccount.type == RwrAccountType(self.database.upper()),
             RwrAccount.username == self.username
         ).first()
+
+    @memoized_property
+    def has_stats(self):
+        """Determine if this Player has a RwrAccount and at least one persisted RwrAccountStat."""
+        return self.rwr_account and self.rwr_account.has_stats
 
     def __repr__(self):
         return 'Player:' + self.username
