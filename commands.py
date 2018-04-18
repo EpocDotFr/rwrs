@@ -287,9 +287,9 @@ def generate_maps_tiles():
     import rwr.constants
     import os
 
-    tile_size = app.config['MAP_GALLERY_TILE_SIZE']
-    min_zoom = app.config['MAP_GALLERY_MIN_ZOOM']
-    max_zoom = app.config['MAP_GALLERY_MAX_ZOOM']
+    tile_size = app.config['MAPS_GALLERY_TILE_SIZE']
+    min_zoom = app.config['MAPS_GALLERY_MIN_ZOOM']
+    max_zoom = app.config['MAPS_GALLERY_MAX_ZOOM']
 
     for server_type, maps in rwr.constants.MAPS.items():
         for map_id, map in maps.items():

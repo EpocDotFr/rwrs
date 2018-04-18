@@ -253,3 +253,13 @@ def server_details(ip, port, slug):
         server_players_data=server_players_data,
         server=server
     )
+
+
+@app.route('/maps-gallery')
+def maps_list():
+    return render_template('maps/list.html')
+
+
+@app.route('/maps-gallery/<server_type>/<map_id>')
+def map_details(server_type, map_id):
+    return render_template('maps/details.html')
