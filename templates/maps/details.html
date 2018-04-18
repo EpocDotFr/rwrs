@@ -1,0 +1,53 @@
+{% import 'macros.html' as macros %}
+
+{% extends 'layout.html' %}
+
+{% block page_title %}<h1><i class="fa fa-map"></i> Maps gallery › TODO</h1>{% endblock %}
+
+{% block meta_title %}Maps gallery › TODO{% endblock %}
+
+{% block meta_description %}Information about the Running With Rifles (RWR) map name TODO.{% endblock %}
+
+{% block jsfiles %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/leaflet{{ '-src' if config['DEBUG'] }}.js"></script>
+{% endblock %}
+
+{% block cssfiles %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/leaflet.css">
+{% endblock %}
+
+{% set canonical_url = url_for('map_details', server_type='TODO', map_id='TODO', _external=True) %}
+
+{% set meta_image = 'TODO Like on the server details page' %}
+
+{% block content %}
+    <div id="map"></div>
+
+    <script>
+        var tilesUri = 'tiles/{z}/{x}/{y}.png';
+        var defaultZoom = 1;
+
+        var map = L.map('map', {
+            crs: L.CRS.Simple,
+            attributionControl: false,
+            minZoom: 0,
+            maxZoom: 3,
+            zoom: defaultZoom,
+            //center: bounds.getCenter()
+        });
+
+        var bounds = new L.LatLngBounds(
+            map.unproject([0, 2048], map.getMaxZoom()),
+            map.unproject([2048, 0], map.getMaxZoom())
+        );
+
+        map.setMaxBounds(bounds);
+        map.setView(bounds.getCenter(), defaultZoom);
+
+        var layer = L.tileLayer(tilesUri, {
+            minZoom: 0,
+            maxZoom: 3,
+            tileSize: 256
+        }).addTo(map);
+    </script>
+{% endblock %}
