@@ -28,6 +28,7 @@ app.config['CACHE_DIR'] = 'storage/cache'
 app.config['RANKS_IMAGES_DIR'] = 'static/images/ranks'
 app.config['RANKS_DATA_FILE'] = 'storage/data/ranks.json'
 app.config['MINIMAPS_IMAGES_DIR'] = 'static/images/maps/minimap'
+app.config['MAPS_TILES_DIR'] = 'static/images/maps/tiles'
 app.config['MAPS_PREVIEW_IMAGES_DIR'] = 'static/images/maps/preview'
 app.config['MAPS_DATA_FILE'] = 'storage/data/maps.json'
 app.config['UNLOCKABLES_IMAGES_DIR'] = 'static/images/unlockables'
@@ -40,6 +41,9 @@ app.config['PLAYERS_LIST_PAGE_SIZES'] = [15, 30, 50, 100]
 app.config['RWR_STEAM_APP_ID'] = 270150
 app.config['MY_DISCORD_ID'] = 66543750725246976
 app.config['ROOT_RWR_SERVERS_CHECK_INTERVAL'] = 5
+app.config['MAP_GALLERY_TILE_SIZE'] = 256
+app.config['MAP_GALLERY_MIN_ZOOM'] = 0
+app.config['MAP_GALLERY_MAX_ZOOM'] = 3
 
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
