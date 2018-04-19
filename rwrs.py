@@ -42,7 +42,7 @@ app.config['RWR_STEAM_APP_ID'] = 270150
 app.config['MY_DISCORD_ID'] = 66543750725246976
 app.config['ROOT_RWR_SERVERS_CHECK_INTERVAL'] = 5
 app.config['MAPS_GALLERY_TILE_SIZE'] = 256
-app.config['MAPS_GALLERY_MIN_ZOOM'] = 0
+app.config['MAPS_GALLERY_MIN_ZOOM'] = 1
 app.config['MAPS_GALLERY_MAX_ZOOM'] = 3
 
 db = SQLAlchemy(app)

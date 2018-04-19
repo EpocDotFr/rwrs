@@ -31,14 +31,17 @@
 
         // TODO Everything after this line is temporary
 
-        var tilesUri = 'tiles/{z}/{x}/{y}.png';
+        var tilesUri = '/images/maps/tiles/{{ map.server_type }}/{{ map.id }}/{z}/{x}/{y}.png';
         var defaultZoom = 1;
+        var minZoom = {{ config['MAPS_GALLERY_MIN_ZOOM'] }};
+        var maxZoom = {{ config['MAPS_GALLERY_MAX_ZOOM'] }};
+        var tileSize = {{ config['MAPS_GALLERY_TILE_SIZE'] }};
 
         var map = L.map('map', {
             crs: L.CRS.Simple,
             attributionControl: false,
-            minZoom: 0,
-            maxZoom: 3,
+            minZoom: minZoom,
+            maxZoom: maxZoom,
             zoom: defaultZoom,
             //center: bounds.getCenter()
         });
@@ -52,9 +55,10 @@
         map.setView(bounds.getCenter(), defaultZoom);
 
         var layer = L.tileLayer(tilesUri, {
-            minZoom: 0,
-            maxZoom: 3,
-            tileSize: 256
+            minZoom: minZoom,
+            maxZoom: maxZoom,
+            tileSize: tileSize,
+            bounds: bounds
         }).addTo(map);
     </script>
 {% endblock %}
