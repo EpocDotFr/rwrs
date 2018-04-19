@@ -60,6 +60,7 @@
                     <li class="inbl"><a href="{{ url_for('players_list', database='pacific') }}" class="btn {{ 'active' if request.path.startswith('/players') and request.view_args.get('database') == 'pacific' }}"><i class="fa fa-user"></i> Players: Pacific</a></li>
                     <li class="inbl"><a href="{{ url_for('servers_list') }}" class="btn {{ 'active' if request.path.startswith('/servers') }}"><i class="fa fa-server"></i> Servers</a></li>
                     <li class="inbl manage-friends-link is-hidden"><a href="{{ url_for('my_friends') }}" class="btn {{ 'active' if request.path.startswith('/my-friends') }}"><i class="fa fa-users"></i> My friends</a></li>
+                    <li class="inbl"><a href="{{ url_for('maps_list') }}" class="btn {{ 'active' if request.path.startswith('/maps-gallery') }}"><i class="fa fa-map"></i> Maps gallery</a></li>
                 </ul>
             </nav>
         {% endif %}

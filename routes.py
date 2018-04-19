@@ -222,21 +222,8 @@ def servers_list():
 
 
 @app.route('/servers/<ip>:<int:port>')
-def server_details_without_slug(ip, port):
-    scraper = rwr.scraper.DataScraper()
-
-    server = scraper.get_server_by_ip_and_port(ip, port)
-
-    if not server:
-        flash('Sorry, this server wasn\'t found.', 'error')
-
-        return redirect(url_for('servers_list'))
-
-    return redirect(server.link, code=301)
-
-
 @app.route('/servers/<ip>:<int:port>/<slug>')
-def server_details(ip, port, slug):
+def server_details(ip, port, slug=None):
     scraper = rwr.scraper.DataScraper()
 
     server = scraper.get_server_by_ip_and_port(ip, port)
@@ -245,6 +232,9 @@ def server_details(ip, port, slug):
         flash('Sorry, this server wasn\'t found.', 'error')
 
         return redirect(url_for('servers_list'))
+
+    if not slug:
+        return redirect(server.link, code=301)
 
     server_players_data = ServerPlayerCount.server_players_data(ip, port) if server.is_dedicated else None
 
@@ -257,30 +247,22 @@ def server_details(ip, port, slug):
 
 @app.route('/maps-gallery')
 def maps_list():
-    maps = rwr.utils.get_maps(has_minimap=True)
-
     return render_template(
         'maps/list.html',
-        maps=maps
+        maps=rwr.constants.MAPS
     )
 
 
 @app.route('/maps-gallery/<server_type>/<map_id>')
-def map_details_without_slug(server_type, map_id):
+@app.route('/maps-gallery/<server_type>/<map_id>/<slug>')
+def map_details(server_type, map_id, slug=None):
     map = rwr.utils.get_map(server_type, map_id)
 
     if not map or not map['has_minimap']:
         abort(404)
 
-    return redirect(url_for('map_details', server_type=server_type, map_id=map_id, slug=map['slug']), code=301)
-
-
-@app.route('/maps-gallery/<server_type>/<map_id>-<slug>')
-def map_details(server_type, map_id, slug):
-    map = rwr.utils.get_map(server_type, map_id)
-
-    if not map or not map['has_minimap']:
-        abort(404)
+    if not slug:
+        return redirect(url_for('map_details', server_type=server_type, map_id=map_id, slug=map['slug']), code=301)
 
     return render_template(
         'maps/details.html',

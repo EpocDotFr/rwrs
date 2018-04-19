@@ -2,13 +2,15 @@
 
 {% extends 'layout.html' %}
 
-{% block page_title %}<h1><i class="fa fa-map"></i> Maps gallery › {{ map.name }}</h1>{% endblock %}
+{% block page_title %}<h1><i class="fa fa-map"></i> Maps gallery › {{ server_type_name(map.server_type) }} › {{ map.name }}</h1>{% endblock %}
 
-{% block meta_title %}Maps gallery › {{ map.name }}{% endblock %}
+{% block meta_title %}Maps gallery › {{ server_type_name(map.server_type) }} › {{ map.name }}{% endblock %}
 
 {% block meta_description %}Information about the Running With Rifles (RWR) map named {{ map.name }} ({{ server_type_name(map.server_type) }}).{% endblock %}
 
 {% block jsfiles %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/zepto/1.2.0/zepto.min.js"></script>
+    {% assets 'js_friends' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/leaflet{{ '-src' if config['DEBUG'] }}.js"></script>
 {% endblock %}
 
@@ -18,12 +20,17 @@
 
 {% set canonical_url = url_for('map_details', server_type=map.server_type, map_id=map.id, slug=map.slug, _external=True) %}
 
-{% set meta_image = 'TODO Same as the server details page' %}
+{% set meta_image = url_for('static', filename='images/maps/preview/{}/{}.png'.format(map.server_type, map.id), _external=True) if map.has_preview else url_for('static', filename='images/maps/minimap/{}/{}_thumb.png'.format(map.server_type, map.id), _external=True) %}
 
 {% block content %}
-    <div id="map" class="map-viewer"></div>
+    <div id="map" class="mts map-viewer"></div>
 
     <script>
+        friendsFeature.all_players_with_servers_details = {{ g.all_players_with_servers_details|tojson }};
+        friendsFeature.init();
+
+        // TODO Everything after this line is temporary
+
         var tilesUri = 'tiles/{z}/{x}/{y}.png';
         var defaultZoom = 1;
 

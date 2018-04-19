@@ -8,10 +8,28 @@
 
 {% block meta_description %}See information about Running With Rifles (RWR) maps.{% endblock %}
 
+{% block jsfiles %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/zepto/1.2.0/zepto.min.js"></script>
+    {% assets 'js_friends' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
+{% endblock %}
+
 {% set canonical_url = url_for('maps_list', _external=True) %}
 
 {% block content %}
-    {% for map in maps %}
+    {% for server_type, server_type_maps in maps.items() %}
+        <h2>{{ server_type_name(server_type) }}</h2>
 
+        <div class="grid-3 has-gutter">
+            {% for map_id, map in server_type_maps.items() if map.has_minimap %}
+                <div class="mts pas">
+                    <a href="{{ url_for('map_details', server_type=server_type, map_id=map_id, slug=map['slug']) }}">{{ map.name }}</a>
+                </div>
+            {% endfor %}
+        </div>
     {% endfor %}
+
+    <script>
+        friendsFeature.all_players_with_servers_details = {{ g.all_players_with_servers_details|tojson }};
+        friendsFeature.init();
+    </script>
 {% endblock %}

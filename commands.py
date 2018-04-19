@@ -291,7 +291,7 @@ def generate_maps_tiles():
     min_zoom = app.config['MAPS_GALLERY_MIN_ZOOM']
     max_zoom = app.config['MAPS_GALLERY_MAX_ZOOM']
 
-    maps = rwr.utils.get_maps(has_minimap=True)
+    maps = rwr.utils.get_maps_list(has_minimap=True)
 
     for map in maps:
         minimap_path = os.path.join(app.config['MINIMAPS_IMAGES_DIR'], map['server_type'], map['id'] + '.png')
