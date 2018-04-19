@@ -432,6 +432,8 @@ label {
 .map-viewer {
     width: 100%;
     min-height: 700px;
+    background-color: #4d4d4d;
+    border: .2rem solid #333;
 }
 
 /************************************************************************
