@@ -11,6 +11,7 @@ mapFeature = {
         this.map = L.map('map', {
             crs: L.CRS.Simple,
             attributionControl: false,
+            zoomControl: false,
             minZoom: this.minZoom,
             maxZoom: this.maxZoom,
             zoom: this.defaultZoom
@@ -30,6 +31,14 @@ mapFeature = {
             tileSize: this.tileSize,
             bounds: this.bounds,
             errorTileUrl: this.tileNotFoundUrl
+        }).addTo(this.map);
+
+        L.control.scale({
+            position: 'bottomleft'
+        }).addTo(this.map);
+
+        L.control.zoom({
+            position: 'bottomright'
         }).addTo(this.map);
     }
 }
