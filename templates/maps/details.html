@@ -10,7 +10,7 @@
 
 {% block jsfiles %}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/zepto/1.2.0/zepto.min.js"></script>
-    {% assets 'js_friends' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
+    {% assets 'js_friends_map' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/leaflet{{ '-src' if config['DEBUG'] }}.js"></script>
 {% endblock %}
 
@@ -29,36 +29,11 @@
         friendsFeature.all_players_with_servers_details = {{ g.all_players_with_servers_details|tojson }};
         friendsFeature.init();
 
-        // TODO Everything after this line is temporary
-
-        var tilesUri = '/images/maps/tiles/{{ map.server_type }}/{{ map.id }}/{z}/{x}/{y}.png';
-        var defaultZoom = 1;
-        var minZoom = {{ config['MAPS_GALLERY_MIN_ZOOM'] }};
-        var maxZoom = {{ config['MAPS_GALLERY_MAX_ZOOM'] }};
-        var tileSize = {{ config['MAPS_GALLERY_TILE_SIZE'] }};
-
-        var map = L.map('map', {
-            crs: L.CRS.Simple,
-            attributionControl: false,
-            minZoom: minZoom,
-            maxZoom: maxZoom,
-            zoom: defaultZoom,
-            //center: bounds.getCenter()
-        });
-
-        var bounds = new L.LatLngBounds(
-            map.unproject([0, 2048], map.getMaxZoom()),
-            map.unproject([2048, 0], map.getMaxZoom())
-        );
-
-        map.setMaxBounds(bounds);
-        map.setView(bounds.getCenter(), defaultZoom);
-
-        var layer = L.tileLayer(tilesUri, {
-            minZoom: minZoom,
-            maxZoom: maxZoom,
-            tileSize: tileSize,
-            bounds: bounds
-        }).addTo(map);
+        mapFeature.tilesUrl = '{{ url_for('static', filename='images/maps/tiles/' + map.server_type + '/' + map.id + '/{z}/{x}/{y}.png').replace('%7B', '{').replace('%7D', '}') }}';
+        mapFeature.tileNotFoundUrl = '{{ url_for('static', filename='images/maps/tiles/not_found.png') }}';
+        mapFeature.minZoom = {{ config['MAPS_GALLERY_MIN_ZOOM'] }};
+        mapFeature.maxZoom = {{ config['MAPS_GALLERY_MAX_ZOOM'] }};
+        mapFeature.tileSize = {{ config['MAPS_GALLERY_TILE_SIZE'] }};
+        mapFeature.initOnMapDetails();
     </script>
 {% endblock %}
