@@ -2,11 +2,11 @@
 
 {% extends 'layout.html' %}
 
-{% block page_title %}<h1><i class="fa fa-map"></i> Maps gallery › TODO</h1>{% endblock %}
+{% block page_title %}<h1><i class="fa fa-map"></i> Maps gallery › {{ map.name }}</h1>{% endblock %}
 
-{% block meta_title %}Maps gallery › TODO{% endblock %}
+{% block meta_title %}Maps gallery › {{ map.name }}{% endblock %}
 
-{% block meta_description %}Information about the Running With Rifles (RWR) map name TODO.{% endblock %}
+{% block meta_description %}Information about the Running With Rifles (RWR) map named {{ map.name }} ({{ server_type_name(map.server_type) }}).{% endblock %}
 
 {% block jsfiles %}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/leaflet{{ '-src' if config['DEBUG'] }}.js"></script>
@@ -16,12 +16,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/leaflet.css">
 {% endblock %}
 
-{% set canonical_url = url_for('map_details', server_type='TODO', map_id='TODO', _external=True) %}
+{% set canonical_url = url_for('map_details', server_type=map.server_type, map_id=map.id, slug=map.slug, _external=True) %}
 
-{% set meta_image = 'TODO Like on the server details page' %}
+{% set meta_image = 'TODO Same as the server details page' %}
 
 {% block content %}
-    <div id="map"></div>
+    <div id="map" class="map-viewer"></div>
 
     <script>
         var tilesUri = 'tiles/{z}/{x}/{y}.png';

@@ -1,4 +1,5 @@
 from collections import OrderedDict
+from slugify import slugify
 from lxml import etree
 from glob import glob
 from rwrs import app
@@ -106,8 +107,11 @@ class MapsDataExtractor(BaseExtractor):
             if server_type not in data:
                 data[server_type] = OrderedDict()
 
+            map_name = map_infos['name'].replace('Pacific: ', '').title()
+
             data[server_type][map_id] = OrderedDict([
-                ('name', map_infos['name'].replace('Pacific: ', '').title()),
+                ('name', map_name),
+                ('slug', slugify(map_name)),
                 ('has_minimap', os.path.isfile(os.path.join(app.config['MINIMAPS_IMAGES_DIR'], server_type, map_id + '.png'))),
                 ('has_preview', os.path.isfile(os.path.join(app.config['MAPS_PREVIEW_IMAGES_DIR'], server_type, map_id + '.png')))
             ])

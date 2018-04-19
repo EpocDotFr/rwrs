@@ -257,9 +257,32 @@ def server_details(ip, port, slug):
 
 @app.route('/maps-gallery')
 def maps_list():
-    return render_template('maps/list.html')
+    maps = rwr.utils.get_maps(has_minimap=True)
+
+    return render_template(
+        'maps/list.html',
+        maps=maps
+    )
 
 
 @app.route('/maps-gallery/<server_type>/<map_id>')
-def map_details(server_type, map_id):
-    return render_template('maps/details.html')
+def map_details_without_slug(server_type, map_id):
+    map = rwr.utils.get_map(server_type, map_id)
+
+    if not map or not map['has_minimap']:
+        abort(404)
+
+    return redirect(url_for('map_details', server_type=server_type, map_id=map_id, slug=map['slug']), code=301)
+
+
+@app.route('/maps-gallery/<server_type>/<map_id>-<slug>')
+def map_details(server_type, map_id, slug):
+    map = rwr.utils.get_map(server_type, map_id)
+
+    if not map or not map['has_minimap']:
+        abort(404)
+
+    return render_template(
+        'maps/details.html',
+        map=map
+    )

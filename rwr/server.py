@@ -41,11 +41,12 @@ class Server:
         ret.map = ServerMap()
         ret.map.id = map_id
 
-        if ret.type in constants.MAPS and ret.map.id in constants.MAPS[ret.type]:
-            target_map = constants.MAPS[ret.type][ret.map.id]
+        target_map = utils.get_map(ret.type, ret.map.id)
 
+        if target_map:
             ret.map.name = target_map['name']
             ret.map.has_preview = target_map['has_preview']
+            ret.map.slug = target_map['slug']
 
             if ret.map.has_preview:
                 if current_app:
