@@ -118,7 +118,13 @@
                     <th class="txtcenter">Current map</th>
                 </tr>
                 <tr>
-                    <td class="txtcenter">{{ server.map.name_display }}</td>
+                    <td class="txtcenter">
+                        {% if server.map.has_minimap %}
+                            <a href="{{ url_for('map_details', server_type=server.type, map_id=server.map.id, slug=server.map.slug) }}">{{ server.map.name_display }}</a>
+                        {% else %}
+                            {{ server.map.name_display }}
+                        {% endif %}
+                    </td>
                 </tr>
                 {% if server.map.has_preview %}
                     <tr>

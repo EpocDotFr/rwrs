@@ -88,16 +88,16 @@ class MapsDataExtractor(BaseExtractor):
 
             map_xml = etree.parse(map_path)
 
-            map_infos = map_xml.findtext('//svg:rect[@inkscape:label=\'#general\']/svg:desc', namespaces={'svg': 'http://www.w3.org/2000/svg', 'inkscape': 'http://www.inkscape.org/namespaces/inkscape'})
+            map_info_attributes = map_xml.findtext('//svg:rect[@inkscape:label=\'#general\']/svg:desc', namespaces={'svg': 'http://www.w3.org/2000/svg', 'inkscape': 'http://www.inkscape.org/namespaces/inkscape'})
 
-            if not map_infos:
+            if not map_info_attributes:
                 click.secho('No general map info found', fg='yellow')
 
                 continue
 
-            map_infos = self._parse_map_data(map_infos)
+            map_info_attributes = self._parse_attributes(map_info_attributes)
 
-            if 'name' not in map_infos:
+            if 'name' not in map_info_attributes:
                 click.secho('Map name not found', fg='yellow')
 
                 continue
@@ -107,7 +107,7 @@ class MapsDataExtractor(BaseExtractor):
             if server_type not in data:
                 data[server_type] = OrderedDict()
 
-            map_name = map_infos['name'].replace('Pacific: ', '').title()
+            map_name = map_info_attributes['name'].replace('Pacific: ', '').title()
 
             data[server_type][map_id] = OrderedDict([
                 ('name', map_name),
@@ -116,11 +116,16 @@ class MapsDataExtractor(BaseExtractor):
                 ('has_preview', os.path.isfile(os.path.join(app.config['MAPS_PREVIEW_IMAGES_DIR'], server_type, map_id + '.png')))
             ])
 
+            self._get_players_spawns(data)
+
         helpers.save_json(app.config['MAPS_DATA_FILE'], data)
 
-    def _parse_map_data(self, map_infos):
+    def _parse_attributes(self, attributes):
         """Parse a map's semicolon-separated data and return its dict representation as key-value pairs."""
-        return {entry[0]: entry[1] for entry in [[kv.strip() for kv in param.strip().split('=', maxsplit=1)] for param in filter(None, map_infos.strip().split(';'))]}
+        return {entry[0]: entry[1] for entry in [[kv.strip() for kv in param.strip().split('=', maxsplit=1)] for param in filter(None, attributes.strip().split(';'))]}
+
+    def _get_players_spawns(self, data):
+        pass
 
 
 class RanksExtractor(BaseExtractor):

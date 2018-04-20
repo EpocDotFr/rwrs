@@ -3,13 +3,21 @@
  */
 mapFeature = {
     defaultZoom: 1,
-    overlays: {},
+
+    playerSpawnMarker: L.Icon.extend({
+        options: {
+            iconUrl: '/images/map_viewer/player_spawn.png',
+            iconSize: [10, 10],
+            iconAnchor: [5, 5],
+            popupAnchor: [5, 5]
+        }
+    }),
 
     /**
      * Initialize the feature on the Map details page.
      */
     initOnMapDetails: function() {
-        this.map = L.map('map', {
+        this.map = new L.map('map', {
             crs: L.CRS.Simple,
             attributionControl: false,
             zoomControl: false,
@@ -23,7 +31,7 @@ mapFeature = {
             this.map.unproject([2048, 0], this.map.getMaxZoom())
         );
 
-        this.mapLayer = L.tileLayer(this.tilesUrl, {
+        this.mapLayer = new L.tileLayer(this.tilesUrl, {
             minZoom: this.minZoom,
             maxZoom: this.maxZoom,
             tileSize: this.tileSize,
@@ -32,22 +40,24 @@ mapFeature = {
         }).addTo(this.map);
 
         // FIXME Scale is wrong
-        this.scaleControl = L.control.scale({
+        this.scaleControl = new L.control.scale({
             position: 'bottomleft'
         }).addTo(this.map);
 
-        this.zoomControl = L.control.zoom({
+        this.zoomControl = new L.control.zoom({
             position: 'bottomright'
         }).addTo(this.map);
 
+        var overlays = {};
+
         // TODO Temporary according to this screenshot https://d1u5p3l4wpay3k.cloudfront.net/runningwithrifles_gamepedia/b/bd/Mapview.jpg?version=41b530749819057bafe70109299d99d6
-        this.overlays['<i class="fa fa-map"></i> Test'] = L.layerGroup([
-            L.marker(this.map.unproject([1024, 1024], this.map.getMaxZoom())).bindPopup('Test')
+        overlays['<i class="fa fa-map"></i> Test'] = new L.layerGroup([
+            new L.marker(this.map.unproject([1024, 1024], this.map.getMaxZoom()), {icon: new this.playerSpawnMarker}).bindPopup('Test')
         ]);
 
-        this.layersControl = L.control.layers(
+        this.layersControl = new L.control.layers(
             null,
-            this.overlays,
+            overlays,
             {
                 position: 'topright'
             }
@@ -56,4 +66,4 @@ mapFeature = {
         this.map.setMaxBounds(this.bounds);
         this.map.setView(this.bounds.getCenter());
     }
-}
+};
