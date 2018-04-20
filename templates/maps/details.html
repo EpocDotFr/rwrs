@@ -34,6 +34,7 @@
         mapFeature.minZoom = {{ config['MAPS_GALLERY_MIN_ZOOM'] }};
         mapFeature.maxZoom = {{ config['MAPS_GALLERY_MAX_ZOOM'] }};
         mapFeature.tileSize = {{ config['MAPS_GALLERY_TILE_SIZE'] }};
+        mapFeature.objects = {{ map.objects|tojson }};
         mapFeature.initOnMapDetails();
     </script>
 {% endblock %}

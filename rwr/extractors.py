@@ -115,10 +115,11 @@ class MapsDataExtractor(BaseExtractor):
                 ('name', map_name),
                 ('slug', slugify(map_name)),
                 ('has_minimap', os.path.isfile(os.path.join(app.config['MINIMAPS_IMAGES_DIR'], server_type, map_id + '.png'))),
-                ('has_preview', os.path.isfile(os.path.join(app.config['MAPS_PREVIEW_IMAGES_DIR'], server_type, map_id + '.png')))
+                ('has_preview', os.path.isfile(os.path.join(app.config['MAPS_PREVIEW_IMAGES_DIR'], server_type, map_id + '.png'))),
+                ('objects', OrderedDict())
             ])
 
-            self._extract_players_spawns(data[server_type][map_id])
+            self._extract_players_spawns(data[server_type][map_id]['objects'])
 
         helpers.save_json(app.config['MAPS_DATA_FILE'], data)
 
@@ -126,9 +127,17 @@ class MapsDataExtractor(BaseExtractor):
         """Parse a map's semicolon-separated data and return its dict representation as key-value pairs."""
         return {entry[0]: entry[1] for entry in [[kv.strip() for kv in param.strip().split('=', maxsplit=1)] for param in filter(None, attributes.strip().split(';'))]}
 
-    def _extract_players_spawns(self, map_data):
+    def _extract_players_spawns(self, map_objects):
         """Extract all players spawns."""
-        print(self.map_xml.findall('//svg:g[@inkscape:label=\'spawnpoints\']/rect', namespaces=self.namespaces))
+        players_spawns = []
+
+        for rect in self.map_xml.findall('//svg:g[@inkscape:label=\'spawnpoints\']/svg:rect', namespaces=self.namespaces):
+            players_spawns.append(OrderedDict([
+                ('x', float(rect.get('x'))),
+                ('y', float(rect.get('y')))
+            ]))
+
+        map_objects['players_spawns'] = players_spawns
 
 
 class RanksExtractor(BaseExtractor):

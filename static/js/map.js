@@ -3,13 +3,14 @@
  */
 mapFeature = {
     defaultZoom: 1,
+    overlays: {},
 
     playerSpawnMarker: L.Icon.extend({
         options: {
             iconUrl: '/images/map_viewer/player_spawn.png',
             iconSize: [10, 10],
-            iconAnchor: [5, 5],
-            popupAnchor: [0, 0]
+            iconAnchor: [0, 0],
+            popupAnchor: [5, 5]
         }
     }),
 
@@ -48,16 +49,11 @@ mapFeature = {
             position: 'bottomright'
         }).addTo(this.map);
 
-        var overlays = {};
-
-        // TODO Temporary according to this screenshot https://d1u5p3l4wpay3k.cloudfront.net/runningwithrifles_gamepedia/b/bd/Mapview.jpg?version=41b530749819057bafe70109299d99d6
-        overlays['<i class="fa fa-map"></i> Test'] = new L.layerGroup([
-            new L.marker(this.map.unproject([1024, 1024], this.map.getMaxZoom()), {icon: new this.playerSpawnMarker}).bindPopup('Test')
-        ]);
+        this.loadPlayersSpawns();
 
         this.layersControl = new L.control.layers(
             null,
-            overlays,
+            this.overlays,
             {
                 position: 'topright'
             }
@@ -65,5 +61,24 @@ mapFeature = {
 
         this.map.setMaxBounds(this.bounds);
         this.map.setView(this.bounds.getCenter());
+    },
+    loadPlayersSpawns: function() {
+        var players_spawns = new L.layerGroup();
+
+        var self = this;
+
+        $.each(this.objects.players_spawns, function(index, player_spawn) {
+            players_spawns.addLayer(new L.marker(
+                self.map.unproject(
+                    [player_spawn.x, player_spawn.y],
+                    self.map.getMaxZoom()
+                ),
+                {
+                    icon: new self.playerSpawnMarker
+                }
+            ));
+        });
+
+        self.overlays['Players spawns'] = players_spawns;
     }
 };
