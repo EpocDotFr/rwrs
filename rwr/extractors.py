@@ -68,6 +68,8 @@ class MinimapsImageExtractor(BaseExtractor):
 
 
 class MapsDataExtractor(BaseExtractor):
+    namespaces = {'svg': 'http://www.w3.org/2000/svg', 'inkscape': 'http://www.inkscape.org/namespaces/inkscape'}
+
     """Extract maps data from RWR."""
     def extract(self):
         """Actually run the extract process."""
@@ -86,9 +88,9 @@ class MapsDataExtractor(BaseExtractor):
 
                 continue
 
-            map_xml = etree.parse(map_path)
+            self.map_xml = etree.parse(map_path)
 
-            map_info_attributes = map_xml.findtext('//svg:rect[@inkscape:label=\'#general\']/svg:desc', namespaces={'svg': 'http://www.w3.org/2000/svg', 'inkscape': 'http://www.inkscape.org/namespaces/inkscape'})
+            map_info_attributes = self.map_xml.findtext('//svg:rect[@inkscape:label=\'#general\']/svg:desc', namespaces=self.namespaces)
 
             if not map_info_attributes:
                 click.secho('No general map info found', fg='yellow')
@@ -116,7 +118,7 @@ class MapsDataExtractor(BaseExtractor):
                 ('has_preview', os.path.isfile(os.path.join(app.config['MAPS_PREVIEW_IMAGES_DIR'], server_type, map_id + '.png')))
             ])
 
-            self._get_players_spawns(data)
+            self._extract_players_spawns(data[server_type][map_id])
 
         helpers.save_json(app.config['MAPS_DATA_FILE'], data)
 
@@ -124,8 +126,9 @@ class MapsDataExtractor(BaseExtractor):
         """Parse a map's semicolon-separated data and return its dict representation as key-value pairs."""
         return {entry[0]: entry[1] for entry in [[kv.strip() for kv in param.strip().split('=', maxsplit=1)] for param in filter(None, attributes.strip().split(';'))]}
 
-    def _get_players_spawns(self, data):
-        pass
+    def _extract_players_spawns(self, map_data):
+        """Extract all players spawns."""
+        print(self.map_xml.findall('//svg:g[@inkscape:label=\'spawnpoints\']/rect', namespaces=self.namespaces))
 
 
 class RanksExtractor(BaseExtractor):
