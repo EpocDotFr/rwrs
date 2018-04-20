@@ -9,7 +9,7 @@ mapFeature = {
             iconUrl: '/images/map_viewer/player_spawn.png',
             iconSize: [10, 10],
             iconAnchor: [5, 5],
-            popupAnchor: [5, 5]
+            popupAnchor: [0, 0]
         }
     }),
 
