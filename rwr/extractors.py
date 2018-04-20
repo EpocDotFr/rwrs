@@ -346,6 +346,8 @@ class UnlockablesExtractor(BaseExtractor):
 
                 continue
 
+            # TODO Filter only weapons
+
             weapon_name = specification_node.get('name').title()
             capacity_nodes = weapon_xml_root.xpath('capacity[@value!="0"][@source="rank"]')
 
@@ -369,7 +371,7 @@ class UnlockablesExtractor(BaseExtractor):
 
                     data[weapon_xp]['weapons'].append(weapon)
 
-            # TODO
+            # TODO Weapon image
 
     def _extract_equipment(self, data, game_type):
         """Extract equipment data and images from RWR."""
