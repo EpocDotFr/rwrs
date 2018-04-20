@@ -19,10 +19,20 @@
     {% for server_type, server_type_maps in maps.items() %}
         <h2>{{ server_type_name(server_type) }}</h2>
 
-        <div class="grid-3 has-gutter">
+        <div class="grid-3 has-gutter maps-list">
             {% for map_id, map in server_type_maps.items() if map.has_minimap %}
-                <div class="pas txtcenter">
-                    <a href="{{ url_for('map_details', server_type=server_type, map_id=map_id, slug=map['slug']) }}">{{ map.name }}</a>
+                <div class="pas txtcenter mbs">
+                    {% if map.has_preview %}
+                        <div class="mbs">
+                            <a href="{{ url_for('map_details', server_type=server_type, map_id=map_id, slug=map['slug']) }}">
+                                <img src="{{ url_for('static', filename='images/maps/preview/{}/{}.png'.format(server_type, map_id)) }}" title="{{ map.name }} preview">
+                            </a>
+                        </div>
+                    {% endif %}
+
+                    <div>
+                        <a href="{{ url_for('map_details', server_type=server_type, map_id=map_id, slug=map['slug']) }}">{{ map.name }}</a>
+                    </div>
                 </div>
             {% endfor %}
         </div>

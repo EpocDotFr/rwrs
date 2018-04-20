@@ -123,14 +123,14 @@
                 {% if server.map.has_preview %}
                     <tr>
                         <td class="txtcenter">
-                            <img src="{{ server.map.preview }}">
+                            <img src="{{ server.map.preview }}" title="{{ server.map.name_display }} preview">
                         </td>
                     </tr>
                 {% endif %}
                 {% if server.map.has_minimap %}
                     <tr>
                         <td class="txtcenter">
-                            <a href="{{ url_for('map_details', server_type=server.type, map_id=server.map.id, slug=server.map.slug) }}" title="View map details"><img src="{{ server.map.minimap_thumb }}"></a>
+                            <a href="{{ url_for('map_details', server_type=server.type, map_id=server.map.id, slug=server.map.slug) }}" title="View {{ server.map.name_display }} details"><img src="{{ server.map.minimap_thumb }}"></a>
                         </td>
                     </tr>
                 {% endif %}

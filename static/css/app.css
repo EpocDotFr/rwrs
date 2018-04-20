@@ -427,11 +427,16 @@ label {
 }
 
 /************************************************************************
- * Map viewer */
+ * Map viewer / maps feature */
 
 .map-viewer {
     width: 100%;
     min-height: 700px;
+    background-color: #4d4d4d;
+    border: .2rem solid #333;
+}
+
+.maps-list > div {
     background-color: #4d4d4d;
     border: .2rem solid #333;
 }
