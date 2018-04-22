@@ -35,16 +35,16 @@ class MinimapsImageExtractor(BaseExtractor):
     minimap_image_size = (320, 320)
 
     def extract(self):
-        """Actually run the extract process."""
+        """Actually run the extraction process."""
         from PIL import Image
 
-        minimaps_paths = []
+        maps_paths = []
 
-        minimaps_paths.extend(glob(os.path.join(self.packages_dir, '*', 'maps', '*', 'map.png'))) # Maps in RWR game directory
-        minimaps_paths.extend(glob(os.path.join(self.workshop_dir, '*', 'media', 'packages', '*', 'maps', '*', 'map.png'))) # Maps in RWR workshop directory
+        maps_paths.extend(glob(os.path.join(self.packages_dir, '*', 'maps', '*', 'map.png'))) # Maps in RWR game directory
+        maps_paths.extend(glob(os.path.join(self.workshop_dir, '*', 'media', 'packages', '*', 'maps', '*', 'map.png'))) # Maps in RWR workshop directory
 
-        for minimap_path in minimaps_paths:
-            server_type, map_id = utils.parse_map_path(minimap_path.replace('\\', '/').replace('/map.png', ''))
+        for map_path in maps_paths:
+            server_type, map_id = utils.parse_map_path(map_path.replace('\\', '/').replace('/map.png', ''))
 
             if not map_id or map_id in INVALID_MAPS or server_type in INVALID_GAME_TYPES:
                 click.secho('Invalid map ID ({}) or server type ({})'.format(map_id, server_type), fg='yellow')
@@ -58,9 +58,67 @@ class MinimapsImageExtractor(BaseExtractor):
             if not os.path.isdir(output_dir):
                 os.makedirs(output_dir)
 
-            minimap = Image.open(minimap_path)
-            minimap.thumbnail(self.minimap_image_size, Image.LANCZOS)
-            minimap.save(os.path.join(output_dir, map_id + '.png'), optimize=True)
+            map = Image.open(map_path)
+            map.thumbnail(self.minimap_image_size, Image.LANCZOS)
+            map.save(os.path.join(output_dir, map_id + '.png'), optimize=True)
+
+
+class MapsTilesGenerator(BaseExtractor):
+    """Generate tiles from RWR maps."""
+    def extract(self):
+        """Actually run the generation process."""
+        from PIL import Image
+
+        tile_size = app.config['MAPS_GALLERY_TILE_SIZE']
+        min_zoom = app.config['MAPS_GALLERY_MIN_ZOOM']
+        max_zoom = app.config['MAPS_GALLERY_MAX_ZOOM']
+
+        maps_paths = []
+
+        maps_paths.extend(glob(os.path.join(self.packages_dir, '*', 'maps', '*', 'map.png'))) # Maps in RWR game directory
+        maps_paths.extend(glob(os.path.join(self.workshop_dir, '*', 'media', 'packages', '*', 'maps', '*', 'map.png'))) # Maps in RWR workshop directory
+
+        for map_path in maps_paths:
+            server_type, map_id = utils.parse_map_path(map_path.replace('\\', '/').replace('/map.png', ''))
+
+            if not map_id or map_id in INVALID_MAPS or server_type in INVALID_GAME_TYPES:
+                click.secho('Invalid map ID ({}) or server type ({})'.format(map_id, server_type), fg='yellow')
+
+                continue
+
+            click.echo(server_type + ':' + map_id)
+
+            original_minimap_image = Image.open(map_path)
+
+            for zoom_level in range(min_zoom, max_zoom + 1):
+                num_tiles = 2 ** zoom_level
+                map_size = num_tiles * tile_size
+
+                click.echo('Zoom level {zoom_level} (edges: {num_tiles} tiles, {pixels} pixels)'.format(
+                    zoom_level=zoom_level,
+                    num_tiles=num_tiles,
+                    pixels=map_size
+                ))
+
+                working_map_image = original_minimap_image.resize((map_size, map_size), Image.LANCZOS)
+
+                for x in range(0, num_tiles):
+                    for y in range(0, num_tiles):
+                        tile_image = working_map_image.crop((
+                            x * tile_size,
+                            y * tile_size,
+                            (x * tile_size) + tile_size,
+                            (y * tile_size) + tile_size
+                        ))
+
+                        tile_path = os.path.join(app.config['MAPS_TILES_DIR'], server_type, map_id, str(zoom_level), str(x), '{}.png'.format(y))
+
+                        tile_dir = os.path.dirname(tile_path)
+
+                        if not os.path.isdir(tile_dir):
+                            os.makedirs(tile_dir)
+
+                        tile_image.save(tile_path, optimize=True)
 
 
 class MapsDataExtractor(BaseExtractor):
@@ -68,7 +126,7 @@ class MapsDataExtractor(BaseExtractor):
 
     """Extract maps data from RWR."""
     def extract(self):
-        """Actually run the extract process."""
+        """Actually run the extraction process."""
         maps_paths = []
 
         maps_paths.extend(glob(os.path.join(self.packages_dir, '*', 'maps', '*', 'objects.svg'))) # Maps in RWR game directory
@@ -150,7 +208,7 @@ class RanksExtractor(BaseExtractor):
     ]
 
     def extract(self):
-        """Actually run the extract process."""
+        """Actually run the extraction process."""
         # Only handle official ranks
         ranks_files_paths = [
             { # In Vanilla, ranks from all factions are the same, inspired from the US Army
@@ -230,7 +288,7 @@ class UnlockablesExtractor(BaseExtractor):
     throwable_size = (48, 48)
 
     def extract(self):
-        """Actually run the extract process."""
+        """Actually run the extraction process."""
         data = OrderedDict()
 
         for game_type in VALID_GAME_TYPES:

@@ -281,53 +281,20 @@ def run_discord_bot():
 
 
 @app.cli.command()
-def generate_maps_tiles():
+@click.option('--steamdir', '-g', help='Steam root directory')
+def generate_maps_tiles(steamdir):
     """Generate the maps tiles for the gallery."""
-    from PIL import Image
-    import rwr.utils
-    import os
+    import rwr.extractors
 
-    tile_size = app.config['MAPS_GALLERY_TILE_SIZE']
-    min_zoom = app.config['MAPS_GALLERY_MIN_ZOOM']
-    max_zoom = app.config['MAPS_GALLERY_MAX_ZOOM']
+    context = click.get_current_context()
 
-    maps = rwr.utils.get_maps_list(has_minimap=True)
+    if not steamdir:
+        click.echo(generate_maps_tiles.get_help(context))
+        context.exit()
 
-    for map in maps:
-        minimap_path = os.path.join(app.config['MINIMAPS_IMAGES_DIR'], map['server_type'], map['id'] + '.png')
+    click.echo('Generation started')
 
-        click.echo(minimap_path)
-
-        original_minimap_image = Image.open(minimap_path)
-
-        for zoom_level in range(min_zoom, max_zoom + 1):
-            num_tiles = 2 ** zoom_level
-            map_size = num_tiles * tile_size
-
-            click.echo('Zoom level {zoom_level} (edges: {num_tiles} tiles, {pixels} pixels)'.format(
-                zoom_level=zoom_level,
-                num_tiles=num_tiles,
-                pixels=map_size
-            ))
-
-            working_map_image = original_minimap_image.resize((map_size, map_size), Image.LANCZOS)
-
-            for x in range(0, num_tiles):
-                for y in range(0, num_tiles):
-                    tile_image = working_map_image.crop((
-                        x * tile_size,
-                        y * tile_size,
-                        (x * tile_size) + tile_size,
-                        (y * tile_size) + tile_size
-                    ))
-
-                    tile_path = os.path.join(app.config['MAPS_TILES_DIR'], map['server_type'], map['id'], str(zoom_level), str(x), '{}.png'.format(y))
-
-                    tile_dir = os.path.dirname(tile_path)
-
-                    if not os.path.isdir(tile_dir):
-                        os.makedirs(tile_dir)
-
-                    tile_image.save(tile_path, optimize=True)
+    generator = rwr.extractors.MapsTilesGenerator(steamdir)
+    generator.extract()
 
     click.secho('Done', fg='green')

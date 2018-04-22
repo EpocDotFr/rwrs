@@ -55,27 +55,6 @@ def parse_map_path(map_path):
     return server_type, map_id
 
 
-def get_maps_list(**filters):
-    """Return a flattened list of maps, optionally filtered, with extra attributes."""
-    def _filter_map(map, filters):
-        if filters.get('has_minimap') is not None and filters.get('has_minimap') != map['has_minimap']:
-            return False
-
-        return True
-
-    ret = []
-
-    for server_type, maps in constants.MAPS.items():
-        for map_id, map in maps.items():
-            if _filter_map(map, filters):
-                map['id'] = map_id
-                map['server_type'] = server_type
-
-                ret.append(map)
-
-    return ret
-
-
 def get_map(server_type, map_id):
     """Get a single map, with extra attributes."""
     if server_type not in constants.MAPS or map_id not in constants.MAPS[server_type]:
