@@ -165,21 +165,16 @@ class ServerMap:
         self.preview_absolute = url_for('static', filename=preview_url, _external=True)
 
     def set_minimap_images_urls(self, game_type):
-        """Set the relative and absolute URLs to the minimap images of this map."""
+        """Set the relative and absolute URLs to the minimap image of this map."""
         params = {
             'game_type': game_type,
             'map_id': self.id
         }
 
-        minimap_url = 'images/maps/minimap/{game_type}/{map_id}_thumb.png'.format(**params)
+        minimap_url = 'images/maps/minimap/{game_type}/{map_id}.png'.format(**params)
 
         self.minimap = url_for('static', filename=minimap_url)
         self.minimap_absolute = url_for('static', filename=minimap_url, _external=True)
-
-        minimap_thumb_url = 'images/maps/minimap/{game_type}/{map_id}_thumb.png'.format(**params)
-
-        self.minimap_thumb = url_for('static', filename=minimap_thumb_url)
-        self.minimap_thumb_absolute = url_for('static', filename=minimap_thumb_url, _external=True)
 
 
 class ServerPlayers:

@@ -58,13 +58,9 @@ class MinimapsImageExtractor(BaseExtractor):
             if not os.path.isdir(output_dir):
                 os.makedirs(output_dir)
 
-            # Copy the original minimap first
             minimap = Image.open(minimap_path)
-            minimap.save(os.path.join(output_dir, map_id + '.png'), optimize=True)
-
-            # Create the thumbnail
             minimap.thumbnail(self.minimap_image_size, Image.LANCZOS)
-            minimap.save(os.path.join(output_dir, map_id + '_thumb.png'), optimize=True)
+            minimap.save(os.path.join(output_dir, map_id + '.png'), optimize=True)
 
 
 class MapsDataExtractor(BaseExtractor):
