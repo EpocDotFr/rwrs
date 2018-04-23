@@ -19,7 +19,7 @@ and its Pacific DLC. Available at [rwrstats.com](https://rwrstats.com/).
     - Real maps name
     - Official invasion (ranked) servers are highlighted
     - Game mode (coop, PvPvE, etc) and type (vanilla RWR, Pacific DLC, etc)
-    - Public server details (players list with link to their profile, current map preview and minimap, etc)
+    - Public server details (players list with link to their profile, current map preview and mapview, etc)
     - Filtering capabilities
   - Online servers count (+ the active ones)
   - Total players count (+ online ones + number of playing friends)
@@ -114,14 +114,14 @@ The Flask command `flask extract_maps_data` is used to extract and save all maps
 
 This command requires the game to be installed.
 
-### Extracting minimaps
+### Extracting mapviews
 
-The Flask command `flask extract_minimaps` is used to extract minimaps (the ones displayed when pressing on
-<kbd>TAB</kbd>). They are saved at `static/images/maps/minimap/{game type}/{map ID}.png`.
+The Flask command `flask extract_mapviews` is used to extract mapviews (the ones displayed when pressing on
+<kbd>TAB</kbd>). They are saved at `static/images/maps/mapviews/{game type}/{map ID}.png`.
 
   1. `pip install -r requirements-dev.txt`
   2. `set FLASK_APP=rwrs.py`
-  3. `flask extract_minimaps --steamdir="{path to the Steam root directory}"`
+  3. `flask extract_mapviews --steamdir="{path to the Steam root directory}"`
 
 This command requires the game to be installed.
 

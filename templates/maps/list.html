@@ -20,7 +20,7 @@
         <h2>{{ server_type_name(server_type) }}</h2>
 
         <div class="grid-3 has-gutter maps-list">
-            {% for map_id, map in server_type_maps.items() if map.has_minimap %}
+            {% for map_id, map in server_type_maps.items() if map.has_mapview %}
                 <div class="pas txtcenter mbs">
                     {% if map.has_preview %}
                         <div class="mbs">

@@ -258,7 +258,7 @@ def maps_list():
 def map_details(server_type, map_id, slug=None):
     map = rwr.utils.get_map(server_type, map_id)
 
-    if not map or not map['has_minimap']:
+    if not map or not map['has_mapview']:
         abort(404)
 
     if not slug:

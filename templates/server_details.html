@@ -24,7 +24,7 @@
 
 {% set canonical_url = url_for('server_details', ip=server.ip, port=server.port, slug=server.name_slug, _external=True) %}
 
-{% set meta_image = server.map.preview_absolute if server.map.has_preview else server.map.minimap_absolute if server.map.has_minimap %}
+{% set meta_image = server.map.preview_absolute if server.map.has_preview else server.map.mapview_absolute if server.map.has_mapview %}
 
 {% block content %}
     <p class="txtcenter mbs">
@@ -119,7 +119,7 @@
                 </tr>
                 <tr>
                     <td class="txtcenter">
-                        {% if server.map.has_minimap %}
+                        {% if server.map.has_mapview %}
                             <a href="{{ url_for('map_details', server_type=server.type, map_id=server.map.id, slug=server.map.slug) }}">{{ server.map.name_display }}</a>
                         {% else %}
                             {{ server.map.name_display }}
@@ -133,10 +133,10 @@
                         </td>
                     </tr>
                 {% endif %}
-                {% if server.map.has_minimap %}
+                {% if server.map.has_mapview %}
                     <tr>
                         <td class="txtcenter">
-                            <a href="{{ url_for('map_details', server_type=server.type, map_id=server.map.id, slug=server.map.slug) }}" title="View {{ server.map.name_display }} details"><img src="{{ server.map.minimap }}"></a>
+                            <a href="{{ url_for('map_details', server_type=server.type, map_id=server.map.id, slug=server.map.slug) }}" title="View {{ server.map.name_display }} details"><img src="{{ server.map.mapview }}"></a>
                         </td>
                     </tr>
                 {% endif %}

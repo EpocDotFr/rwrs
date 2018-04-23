@@ -55,14 +55,14 @@ class Server:
                     with app.app_context():
                         ret.map.set_preview_image_urls(ret.type)
 
-            ret.map.has_minimap = target_map['has_minimap']
+            ret.map.has_mapview = target_map['has_mapview']
 
-            if ret.map.has_minimap:
+            if ret.map.has_mapview:
                 if current_app:
-                    ret.map.set_minimap_images_urls(ret.type)
+                    ret.map.set_mapview_image_urls(ret.type)
                 else:
                     with app.app_context():
-                        ret.map.set_minimap_images_urls(ret.type)
+                        ret.map.set_mapview_image_urls(ret.type)
 
         ret.map.name_display = ret.map.name if ret.map.name else ret.map.id
 
@@ -146,7 +146,7 @@ class Server:
 
 class ServerMap:
     name = None
-    has_minimap = False
+    has_mapview = False
     has_preview = False
 
     def __repr__(self):
@@ -164,17 +164,17 @@ class ServerMap:
         self.preview = url_for('static', filename=preview_url)
         self.preview_absolute = url_for('static', filename=preview_url, _external=True)
 
-    def set_minimap_images_urls(self, game_type):
-        """Set the relative and absolute URLs to the minimap image of this map."""
+    def set_mapview_image_urls(self, game_type):
+        """Set the relative and absolute URLs to the mapview image of this map."""
         params = {
             'game_type': game_type,
             'map_id': self.id
         }
 
-        minimap_url = 'images/maps/minimap/{game_type}/{map_id}.png'.format(**params)
+        mapview_url = 'images/maps/mapviews/{game_type}/{map_id}.png'.format(**params)
 
-        self.minimap = url_for('static', filename=minimap_url)
-        self.minimap_absolute = url_for('static', filename=minimap_url, _external=True)
+        self.mapview = url_for('static', filename=mapview_url)
+        self.mapview_absolute = url_for('static', filename=mapview_url, _external=True)
 
 
 class ServerPlayers:

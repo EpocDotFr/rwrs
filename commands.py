@@ -248,19 +248,19 @@ def extract_maps_data(steamdir):
 
 @app.cli.command()
 @click.option('--steamdir', '-g', help='Steam root directory')
-def extract_minimaps(steamdir):
-    """Extract minimaps from RWR."""
+def extract_mapviews(steamdir):
+    """Extract mapviews from RWR."""
     import rwr.extractors
 
     context = click.get_current_context()
 
     if not steamdir:
-        click.echo(extract_minimaps.get_help(context))
+        click.echo(extract_mapviews.get_help(context))
         context.exit()
 
     click.echo('Extraction started')
 
-    extractor = rwr.extractors.MinimapsImageExtractor(steamdir)
+    extractor = rwr.extractors.MapviewsImageExtractor(steamdir)
     extractor.extract()
 
     click.secho('Done', fg='green')
@@ -282,19 +282,19 @@ def run_discord_bot():
 
 @app.cli.command()
 @click.option('--steamdir', '-g', help='Steam root directory')
-def generate_maps_tiles(steamdir):
-    """Generate the maps tiles for the gallery."""
+def generate_mapviews_tiles(steamdir):
+    """Generate the mapviews tiles for the gallery."""
     import rwr.extractors
 
     context = click.get_current_context()
 
     if not steamdir:
-        click.echo(generate_maps_tiles.get_help(context))
+        click.echo(generate_mapviews_tiles.get_help(context))
         context.exit()
 
     click.echo('Generation started')
 
-    generator = rwr.extractors.MapsTilesGenerator(steamdir)
+    generator = rwr.extractors.MapviewsTilesGenerator(steamdir)
     generator.extract()
 
     click.secho('Done', fg='green')
