@@ -20,7 +20,7 @@
 
 {% set canonical_url = url_for('map_details', server_type=map.server_type, map_id=map.id, slug=map.slug, _external=True) %}
 
-{% set meta_image = url_for('static', filename='images/maps/preview/{}/{}.png'.format(map.server_type, map.id), _external=True) if map.has_preview else url_for('static', filename='images/maps/mapviews/{}/{}.png'.format(map.server_type, map.id), _external=True) if map.has_mapview %}
+{% set meta_image = url_for('static', filename='images/maps/previews/{}/{}.png'.format(map.server_type, map.id), _external=True) if map.has_preview else url_for('static', filename='images/maps/mapviews/{}/{}.png'.format(map.server_type, map.id), _external=True) if map.has_mapview %}
 
 {% block content %}
     <div id="map" class="mts map-viewer"></div>

@@ -25,7 +25,7 @@
                     {% if map.has_preview %}
                         <div class="mbs">
                             <a href="{{ url_for('map_details', server_type=server_type, map_id=map_id, slug=map['slug']) }}">
-                                <img src="{{ url_for('static', filename='images/maps/preview/{}/{}.png'.format(server_type, map_id)) }}" title="{{ map.name }} preview">
+                                <img src="{{ url_for('static', filename='images/maps/previews/{}/{}.png'.format(server_type, map_id)) }}" title="{{ map.name }} preview">
                             </a>
                         </div>
                     {% endif %}

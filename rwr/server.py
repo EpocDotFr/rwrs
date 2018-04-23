@@ -159,7 +159,7 @@ class ServerMap:
             'map_id': self.id
         }
 
-        preview_url = 'images/maps/preview/{game_type}/{map_id}.png'.format(**params)
+        preview_url = 'images/maps/previews/{game_type}/{map_id}.png'.format(**params)
 
         self.preview = url_for('static', filename=preview_url)
         self.preview_absolute = url_for('static', filename=preview_url, _external=True)

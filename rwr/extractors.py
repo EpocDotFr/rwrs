@@ -169,7 +169,7 @@ class MapsDataExtractor(BaseExtractor):
                 ('name', map_name),
                 ('slug', slugify(map_name)),
                 ('has_mapview', os.path.isfile(os.path.join(app.config['MAPVIEWS_IMAGES_DIR'], server_type, map_id + '.png'))),
-                ('has_preview', os.path.isfile(os.path.join(app.config['MAPS_PREVIEW_IMAGES_DIR'], server_type, map_id + '.png'))),
+                ('has_preview', os.path.isfile(os.path.join(app.config['MAPS_PREVIEWS_IMAGES_DIR'], server_type, map_id + '.png'))),
                 ('objects', OrderedDict())
             ])
 
