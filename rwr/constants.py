@@ -317,7 +317,8 @@ SERVER_TYPES = OrderedDict([
     ('Running_with_the_Dead', 'Running with the Dead'),
     ('overlord_defense', 'Overlord Defense'),
     ('lab_defense', 'Lab Defense'),
-    ('lab_def_koth', 'Lab Defense KOTH')
+    ('lab_def_koth', 'Lab Defense KOTH'),
+    ('viper', 'Viper')
 ])
 
 PLAYERS_LIST_DATABASES = {

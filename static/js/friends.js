@@ -467,4 +467,4 @@ friendsFeature = {
 
         return true;
     }
-}
+};
