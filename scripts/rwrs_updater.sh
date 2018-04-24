@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 #
-# RWRS Updater
+# RWRS updater
 #
 # Well, this script updates everything in RWRS, i.e source code, database schema, dependencies, etc.
 

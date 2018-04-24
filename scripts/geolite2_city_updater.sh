@@ -12,12 +12,13 @@ set -e # Makes any subsequent failing commands to exit the script immediately
 
 DATA_DIR="storage/data"
 REMOTE_DB_FILE="http://geolite.maxmind.com/download/geoip/database/GeoLite2-City.tar.gz"
+OUTPUT_FILE="$DATA_DIR/GeoLite2-City.tar.gz"
 
 echo "## Downloading and decompressing archive"
 
-wget -nv -P $DATA_DIR $REMOTE_DB_FILE
-tar -xzf "$DATA_DIR/GeoLite2-City.tar.gz" -C $DATA_DIR
-rm "$DATA_DIR/GeoLite2-City.tar.gz"
+curl -o $OUTPUT_FILE -sS $REMOTE_DB_FILE
+tar -xzf $OUTPUT_FILE -C $DATA_DIR
+rm $OUTPUT_FILE
 
 echo "## Removing old version"
 
