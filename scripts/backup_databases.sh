@@ -2,7 +2,9 @@
 #
 # RWRS databases backup script
 #
-# This script backups all the RWRS SQLite databases. The following environment variables are required:
+# This script backups all the RWRS SQLite databases, compress them all in one tar.gz file and send it to Dropbox.
+# The following environment variables are required:
+#  - DROPBOX_ACCESS_TOKEN
 
 set -e # Makes any subsequent failing commands to exit the script immediately
 
