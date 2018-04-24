@@ -14,7 +14,7 @@ NOW=$(date +"%Y-%m-%d_%H-%M")
 BACKUP_FILE="$DATA_DIR/backup_$NOW.tar.gz"
 DATABASES_STRING=""
 DROPBOX_FILEPATH="/rwrs/backups/${BACKUP_FILE##*/}"
-DROPBOX_ACCESS_TOKEN=$(printenv DROPBOX_ACCESS_TOKEN)
+DROPBOX_ACCESS_TOKEN=${DROPBOX_ACCESS_TOKEN}
 
 echo "## Backing up databases"
 
