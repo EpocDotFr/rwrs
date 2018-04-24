@@ -187,7 +187,7 @@ More information in the script comments.
 ### Import rwrtrack data
 
   1. `set FLASK_APP=rwrs.py`
-  2. `flask import_rwrtrack_data`
+  2. `flask import_rwrtrack_data --directory="{path to the rwrtrack data directory}" [--reset]`
 
 ## How it works
 
@@ -206,7 +206,7 @@ As the provided servers location is most of the time either missing or invalid, 
   - Font by [Typesgal](https://www.dafont.com/fr/top-secret-kb.font) (freeware)
   - Flag icons by [Flag Sprites](https://www.flag-sprites.com/en/) and [GoSquared](https://www.gosquared.com/resources/flag-icons/) (freeware)
   - Maps previews comes from the [official RWR wiki](https://runningwithrifles.gamepedia.com/Running_with_Rifles_Wiki)
-  - Old players stats were imported from the [rwrtrack](https://github.com/david-wm-sanders/rwrtrack) project by David "MR. BANG" Sanders ([actual data repo](https://github.com/david-wm-sanders/rwrtrack-data))
+  - Old players stats are provided by the [rwrtrack](https://github.com/david-wm-sanders/rwrtrack) project by David "MR. BANG" Sanders ([actual data repo](https://github.com/david-wm-sanders/rwrtrack-data)) (MIT License)
   - This project uses GeoLite2 data created by MaxMind, available from [www.maxmind.com](https://www.maxmind.com/)
   - All Running With Rifles assets © 2015 - 2018 Osumia Games
   - This project is not affiliated with Osumia Games
