@@ -162,11 +162,21 @@ Will ping RWR root servers and store their status (up or down).
 
 ### Update the MaxMind GeoLite2 City database
 
+More information in the script comments.
+
 `sh scripts/geolite2_city_updater.sh`
 
 ### Update RWRS
 
+More information in the script comments.
+
 `sh scripts/rwrs_updater.sh [DOMAIN, default=rwrstats.com]`
+
+### Backup SQLite databases
+
+More information in the script comments.
+
+`sh scripts/backup_databases.sh`
 
 ## How it works
 
