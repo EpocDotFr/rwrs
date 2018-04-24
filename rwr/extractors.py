@@ -34,7 +34,7 @@ class MinimapsImageExtractor(BaseExtractor):
     minimap_image_size = (320, 320)
 
     def extract(self):
-        """Actually run the extract process."""
+        """Actually run the extraction process."""
         from PIL import Image
 
         minimaps_paths = []
@@ -62,14 +62,14 @@ class MinimapsImageExtractor(BaseExtractor):
             minimap.save(os.path.join(output_dir, map_id + '.png'), optimize=True)
 
             # Create the thumbnail
-            minimap.thumbnail(self.minimap_image_size, Image.ANTIALIAS)
+            minimap.thumbnail(self.minimap_image_size, Image.LANCZOS)
             minimap.save(os.path.join(output_dir, map_id + '_thumb.png'), optimize=True)
 
 
 class MapsDataExtractor(BaseExtractor):
     """Extract maps data from RWR."""
     def extract(self):
-        """Actually run the extract process."""
+        """Actually run the extraction process."""
         maps_paths = []
 
         maps_paths.extend(glob(os.path.join(self.packages_dir, '*', 'maps', '*', 'objects.svg'))) # Maps in RWR game directory
@@ -133,7 +133,7 @@ class RanksExtractor(BaseExtractor):
     ]
 
     def extract(self):
-        """Actually run the extract process."""
+        """Actually run the extraction process."""
         # Only handle official ranks
         ranks_files_paths = [
             { # In Vanilla, ranks from all factions are the same, inspired from the US Army
@@ -189,7 +189,7 @@ class RanksExtractor(BaseExtractor):
             click.echo(image_size['size'])
 
             desired_size_image = rank_image.copy()
-            desired_size_image.thumbnail(image_size['size'], Image.ANTIALIAS)
+            desired_size_image.thumbnail(image_size['size'], Image.LANCZOS)
 
             paste_pos = (
                 math.floor(image_size['size'][0] / 2) - math.floor(desired_size_image.width / 2),
@@ -198,7 +198,13 @@ class RanksExtractor(BaseExtractor):
 
             new_rank_image = Image.new('RGBA', image_size['size'])
             new_rank_image.paste(desired_size_image, paste_pos)
-            new_rank_image.save(os.path.join(app.config['RANKS_IMAGES_DIR'], country, image_size['name'](rank_id) + '.png'), optimize=True)
+
+            new_rank_image_dir = os.path.join(app.config['RANKS_IMAGES_DIR'], country)
+
+            if not os.path.isdir(new_rank_image_dir):
+                os.makedirs(new_rank_image_dir)
+
+            new_rank_image.save(os.path.join(new_rank_image_dir, image_size['name'](rank_id) + '.png'), optimize=True)
 
 
 class UnlockablesExtractor(BaseExtractor):
@@ -207,7 +213,7 @@ class UnlockablesExtractor(BaseExtractor):
     throwable_size = (48, 48)
 
     def extract(self):
-        """Actually run the extract process."""
+        """Actually run the extraction process."""
         data = OrderedDict()
 
         for game_type in VALID_GAME_TYPES:
@@ -295,7 +301,7 @@ class UnlockablesExtractor(BaseExtractor):
             # Only get the actual content of the image
             call_image = call_image.crop(call_image.convert('RGBa').getbbox())
 
-            call_image.thumbnail(self.radio_call_size, Image.ANTIALIAS)
+            call_image.thumbnail(self.radio_call_size, Image.LANCZOS)
 
             paste_pos = (
                 math.floor(self.radio_call_size[0] / 2) - math.floor(call_image.width / 2),
@@ -450,7 +456,7 @@ class UnlockablesExtractor(BaseExtractor):
             # Only get the actual content of the image
             throwable_image = throwable_image.crop(throwable_image.convert('RGBa').getbbox())
 
-            throwable_image.thumbnail(self.throwable_size, Image.ANTIALIAS)
+            throwable_image.thumbnail(self.throwable_size, Image.LANCZOS)
 
             paste_pos = (
                 math.floor(self.throwable_size[0] / 2) - math.floor(throwable_image.width / 2),
