@@ -171,11 +171,21 @@ They are saved at `static/images/maps/tiles/{game type}/{map ID}/{z}/{x}/{y}.png
 
 ### Updating the MaxMind GeoLite2 City database
 
+More information in the script comments.
+
 `sh scripts/geolite2_city_updater.sh`
 
 ### Updating RWRS
 
+More information in the script comments.
+
 `sh scripts/rwrs_updater.sh [DOMAIN, default=rwrstats.com]`
+
+### Backup SQLite databases
+
+More information in the script comments.
+
+`sh scripts/backup_databases.sh`
 
 ## How it works
 
