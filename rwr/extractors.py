@@ -94,7 +94,7 @@ class MapviewsTilesGenerator(BaseExtractor):
                 num_tiles = 2 ** zoom_level
                 map_size = num_tiles * tile_size
 
-                click.echo('Zoom level {zoom_level} (edges: {num_tiles} tiles, {pixels} pixels)'.format(
+                click.echo('  Zoom level {zoom_level} (edges: {num_tiles} tiles, {pixels} pixels)'.format(
                     zoom_level=zoom_level,
                     num_tiles=num_tiles,
                     pixels=map_size
@@ -174,6 +174,8 @@ class MapsDataExtractor(BaseExtractor):
             ])
 
             self._extract_players_spawns(data[server_type][map_id]['objects'])
+            self._extract_stashes(data[server_type][map_id]['objects'])
+            self._extract_armories(data[server_type][map_id]['objects'])
 
         helpers.save_json(app.config['MAPS_DATA_FILE'], data)
 
@@ -192,6 +194,18 @@ class MapsDataExtractor(BaseExtractor):
             ]))
 
         map_objects['players_spawns'] = players_spawns
+
+    def _extract_stashes(self, map_objects):
+        """Extract all stashes."""
+        stashes = []
+
+        map_objects['stashes'] = stashes
+
+    def _extract_armories(self, map_objects):
+        """Extract all armories."""
+        armories = []
+
+        map_objects['armories'] = armories
 
 
 class RanksExtractor(BaseExtractor):
