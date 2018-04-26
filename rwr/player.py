@@ -118,7 +118,12 @@ class Player:
         if self.rank.id is None:
             return None
 
-        if self.rank.id == 16: # Highest rank already reached
+        rank_ids = [int(rank_id) for rank_id in constants.RANKS[constants.PLAYERS_LIST_DATABASES[self.database]['ranks_country']].keys()]
+        highest_rank_id = max(rank_ids)
+
+        print(constants.RANKS[constants.PLAYERS_LIST_DATABASES[self.database]['ranks_country']].keys())
+
+        if self.rank.id == highest_rank_id: # Highest rank already reached
             return False
 
         next_rank_id = self.rank.id + 1
