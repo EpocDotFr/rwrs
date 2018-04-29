@@ -16,7 +16,7 @@ def cc():
 
 @app.cli.command()
 def get_root_rwr_servers_status():
-    """Check the status of the RWR root servers."""
+    """Check the status of the root RWR servers."""
     from models import RwrRootServer, RwrRootServerStatus, Variable
     from disco.api.client import APIClient as DiscordAPIClient
     from flask import url_for
@@ -65,7 +65,7 @@ def get_root_rwr_servers_status():
 
     if servers_down_count_then == 0 and servers_down_count_now > 0:
         with app.app_context():
-            message = ':warning: Online multiplayer is having issues right now. Are the devs aware? If not, poke **pasik** or **JackMayol**. Some details here: {}'.format(url_for('online_multiplayer_status', _external=True))
+            message = ':warning: Online multiplayer is having issues right now. Some details here: {}'.format(url_for('online_multiplayer_status', _external=True))
     elif servers_down_count_then > 0 and servers_down_count_now == 0:
         message = ':white_check_mark: Outage update: online multiplayer is back up and running!'
 
@@ -278,3 +278,13 @@ def run_discord_bot():
     click.echo('Running bot')
 
     rwrs_discord_bot.run()
+
+
+@app.cli.command()
+@click.argument('message')
+def bot_message(message):
+    """Makes the Discord bot to say something."""
+    from disco.api.client import APIClient as DiscordAPIClient
+
+    discord_api_client = DiscordAPIClient(app.config['DISCORD_BOT_TOKEN'])
+    discord_api_client.channels_messages_create(app.config['DISCORD_BOT_CHANNEL_ID'], message)
