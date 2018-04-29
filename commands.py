@@ -27,13 +27,12 @@ def get_root_rwr_servers_status():
 
     click.echo('Pinging servers')
 
-    hosts_to_ping = [server['host'] for group in rwr.constants.ROOT_RWR_SERVERS for server in group['servers']]
-    rwr_root_servers = RwrRootServer.query.filter(RwrRootServer.host.in_(hosts_to_ping)).all()
+    rwr_root_servers = RwrRootServer.query.filter(RwrRootServer.host.in_(rwr.constants.ROOT_RWR_HOSTS)).all()
     rwr_root_servers_by_host = {rwr_root_server.host: rwr_root_server for rwr_root_server in rwr_root_servers}
     servers_down_count_then = sum([1 for rwr_root_server in rwr_root_servers if rwr_root_server.status == RwrRootServerStatus.DOWN])
     servers_down_count_now = 0
 
-    for host in hosts_to_ping:
+    for host in rwr.constants.ROOT_RWR_HOSTS:
         click.echo(host, nl=False)
 
         is_server_up = helpers.ping(host)
