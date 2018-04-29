@@ -355,6 +355,8 @@ ROOT_RWR_SERVERS = [
     }
 ]
 
+ROOT_RWR_HOSTS = [server['host'] for group in ROOT_RWR_SERVERS for server in group['servers']]
+
 
 class PlayersSort:
     USERNAME = 'username'

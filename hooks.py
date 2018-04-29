@@ -1,5 +1,6 @@
 from flask import g, abort, render_template, make_response
 from werkzeug.exceptions import HTTPException
+from models import RwrRootServer
 from rwrs import app, auth
 import rwr.scraper
 import steam_api
@@ -45,6 +46,11 @@ def get_counts():
     g.online_players = online_players
     g.active_servers = active_servers
     g.total_servers = total_servers
+
+
+@app.before_request
+def get_rwr_root_server_global_status():
+    g.is_online_multiplayer_ok = RwrRootServer.are_rwr_root_servers_ok()
 
 
 @app.before_request

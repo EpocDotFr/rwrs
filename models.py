@@ -154,7 +154,16 @@ class RwrRootServer(db.Model):
             return 'red'
 
     @staticmethod
+    def are_rwr_root_servers_ok():
+        """Return True if all root RWR servers are OK, False otherwise."""
+        hosts_count = len(rwr.constants.ROOT_RWR_HOSTS)
+        up_hosts_count = RwrRootServer.query.with_entities(func.count('*')).filter(RwrRootServer.status == RwrRootServerStatus.UP, RwrRootServer.host.in_(rwr.constants.ROOT_RWR_HOSTS)).scalar()
+
+        return hosts_count == up_hosts_count
+
+    @staticmethod
     def get_data_for_display():
+        """Return data to be displayed on the status page."""
         servers_statuses = rwr.constants.ROOT_RWR_SERVERS
 
         root_servers = RwrRootServer.query.all()
