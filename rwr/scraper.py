@@ -4,6 +4,7 @@ from .server import Server
 from .player import Player
 from . import constants
 import geoip2.database
+import geoip2.errors
 import requests
 
 scraper_requests_session = requests.Session()
@@ -61,19 +62,22 @@ class DataScraper:
         geoip_db_reader = geoip2.database.Reader(app.config['GEOIP_DATABASE_FILE'])
 
         for server in servers:
-            location = geoip_db_reader.city(server.ip)
+            try:
+                location = geoip_db_reader.city(server.ip)
+            except (ValueError, geoip2.errors.AddressNotFoundError):
+                continue
 
             if location:
-                if location.city.geoname_id:
-                    server.location.city_name = location.city.names['en']
+                if location.continent.geoname_id:
+                    server.location.continent_code = location.continent.code.lower()
+                    server.location.continent_name = location.continent.names['en']
 
                 if location.country.geoname_id:
                     server.location.country_code = location.country.iso_code.lower()
                     server.location.country_name = location.country.names['en']
 
-                if location.continent.geoname_id:
-                    server.location.continent_code = location.continent.code.lower()
-                    server.location.continent_name = location.continent.names['en']
+                if location.city.geoname_id:
+                    server.location.city_name = location.city.names['en']
 
                 server.location.text = '{}{}'.format(
                     server.location.city_name + ', ' if server.location.city_name else '',
