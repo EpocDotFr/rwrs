@@ -16,7 +16,6 @@ import math
 app = Flask(__name__, static_url_path='')
 app.config.from_pyfile('config.py')
 
-app.config['LOGGER_HANDLER_POLICY'] = 'production'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///storage/data/db.sqlite'
 app.config['SQLALCHEMY_BINDS'] = {
     'servers_player_count': 'sqlite:///storage/data/servers_player_count.sqlite',
