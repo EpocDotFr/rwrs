@@ -21,13 +21,15 @@ and its Pacific DLC. Available at [rwrstats.com](https://rwrstats.com/).
     - Game mode (coop, PvPvE, etc) and type (vanilla RWR, Pacific DLC, etc)
     - Public server details (players list with link to their profile, current map preview and minimap, etc)
     - Filtering capabilities
+    - Mapview
   - Online servers count (+ the active ones)
   - Total players count (+ online ones + number of playing friends)
   - Charts (for the past week)
     - Number of online players
     - Number of online servers (+ the active ones)
     - Number of players on a server
-  - Root RWR servers status (online multiplayer)
+    - Peaks
+  - Online multiplayer status
   - Discord bot able to give several kind of information. Available on the [RWR Discord Server](https://discord.gg/010ixMlfmhK5BhYOv). [Commands documentation](doc/discord_bot.md)
 
 ## Prerequisites
@@ -35,7 +37,7 @@ and its Pacific DLC. Available at [rwrstats.com](https://rwrstats.com/).
   - Should work on any Python 3.x version. Feel free to test with another Python version and give me feedback
   - A modern web browser (which optionally support localStorage)
   - (Optional, but recommended) A [uWSGI](https://uwsgi-docs.readthedocs.io/en/latest/)-capable web server
-  - (Optional) Running With Rifles, if you need to extract images
+  - (Optional) Running With Rifles, if you need to extract data by using the commands below
 
 ## Installation
 
