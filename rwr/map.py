@@ -94,6 +94,7 @@ class Parser:
 
             self.data['capture_zones'][game_type][group_id].append({
                 'name': base_attributes['name'] if 'name' in base_attributes else None,
+                'faction_index': int(base_attributes['faction_index']) if 'faction_index' in base_attributes else None,
                 'capturable': base_attributes['capturable'] == '1' if 'capturable' in base_attributes else True,
                 'bounds': [
                     [lat1, lng1],
@@ -116,7 +117,7 @@ class Parser:
             if layer_group_name == 'spawnpoints':
                 self._parse_layer_group_spawnpoints(layer_group, group_id, game_type)
             elif layer_group_name == 'vehicles':
-                pass
+                self._parse_layer_group_vehicles(layer_group, group_id, game_type)
 
     def _parse_layer_group_spawnpoints(self, layer_group, group_id, game_type):
         """Parse the spawnpoints of a layer group."""
@@ -130,10 +131,36 @@ class Parser:
             lat = float(element.get('x'))
             lng = float(element.get('y'))
 
-            self.data['spawn_points']['soldiers'][game_type][group_id].append([
-                lat,
-                lng
-            ])
+            self.data['spawn_points']['soldiers'][game_type][group_id].append([lat, lng])
+
+    def _parse_layer_group_vehicles(self, layer_group, group_id, game_type):
+        """Parse the spawnpoints of a layer group."""
+        if game_type not in self.data['spawn_points']['vehicles']:
+            self.data['spawn_points']['vehicles'][game_type] = {}
+
+        if group_id not in self.data['spawn_points']['vehicles'][game_type]:
+            self.data['spawn_points']['vehicles'][game_type][group_id] = []
+
+        for element in layer_group.iterchildren(Parser.nse('svg', 'rect')):
+            element_attributes = element.findtext('svg:desc', namespaces=self.namespaces)
+
+            if not element_attributes:
+                continue
+
+            element_attributes = Parser.parse_attrs(element_attributes)
+
+            if 'key' in element_attributes:
+                vehicle_type = os.path.splitext(element_attributes['key'])[0]
+            elif 'tag' in element_attributes:
+                vehicle_type = element_attributes['tag']
+
+            lat = float(element.get('x'))
+            lng = float(element.get('y'))
+
+            self.data['spawn_points']['vehicles'][game_type][group_id].append({
+                'pos': [lat, lng],
+                'type': vehicle_type
+            })
 
     @staticmethod
     def nse(namespace, tag_name):
@@ -148,5 +175,7 @@ class Parser:
 
 from pprint import pprint
 
-p = Parser('C:/Program Files (x86)/Steam/steamapps/common/RunningWithRifles/media/packages/vanilla/maps/map10/objects.svg')
-pprint(p.parse())
+map_parser = Parser('C:/Program Files (x86)/Steam/steamapps/common/RunningWithRifles/media/packages/vanilla/maps/map10/objects.svg')
+data = map_parser.parse()
+
+pprint(data)
