@@ -1,5 +1,4 @@
 SECRET_KEY = 'secretkeyhere'
-ENV = 'production'
 SERVER_NAME = 'localhost:8080'
 BETA = False
 GAUGES_SITE_ID = None
