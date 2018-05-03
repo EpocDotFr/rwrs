@@ -21,13 +21,15 @@ and its Pacific DLC. Available at [rwrstats.com](https://rwrstats.com/).
     - Game mode (coop, PvPvE, etc) and type (vanilla RWR, Pacific DLC, etc)
     - Public server details (players list with link to their profile, current map preview and mapview, etc)
     - Filtering capabilities
+    - Mapview
   - Online servers count (+ the active ones)
   - Total players count (+ online ones + number of playing friends)
   - Charts (for the past week)
     - Number of online players
     - Number of online servers (+ the active ones)
     - Number of players on a server
-  - Root RWR servers status (online multiplayer)
+    - Peaks
+  - Online multiplayer status
   - Discord bot able to give several kind of information. Available on the [RWR Discord Server](https://discord.gg/010ixMlfmhK5BhYOv). [Commands documentation](doc/discord_bot.md)
   - Maps gallery with details (spawn points, stashes, special crates, vehicles, etc)
 
@@ -36,7 +38,7 @@ and its Pacific DLC. Available at [rwrstats.com](https://rwrstats.com/).
   - Should work on any Python 3.x version. Feel free to test with another Python version and give me feedback
   - A modern web browser (which optionally support localStorage)
   - (Optional, but recommended) A [uWSGI](https://uwsgi-docs.readthedocs.io/en/latest/)-capable web server
-  - (Optional) Running With Rifles, if you need to extract images
+  - (Optional) Running With Rifles, if you need to extract data by using the commands below
 
 ## Installation
 
@@ -52,7 +54,6 @@ Copy the `config.example.py` file to `config.py` and fill in the configuration p
 Available configuration parameters are:
 
   - `SECRET_KEY` Set this to a complex random value
-  - `ENV` Either `production` or `development` (debug mode enabled in this last)
   - `SERVER_NAME` The IP or hostname where RWRS will be available
 
 More informations on the three above can be found [here](http://flask.pocoo.org/docs/0.12/config/#builtin-configuration-values).
