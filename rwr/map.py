@@ -35,13 +35,11 @@ class Parser:
             if not group_name: # We don't know what's this group: ignore it
                 continue
 
-            print(group_name)
-
             if group_name == 'materials':
                 self._parse_materials_group(group, group_name)
-            elif group_name.startswith('bases'):
+            elif group_name.startswith('bases') and '.' in group_name: # TODO Temporary
                 self._parse_bases_group(group, group_name)
-            elif group_name.startswith('layer') and '.' in group_name:
+            elif group_name.startswith('layer') and '.' in group_name: # TODO Temporary
                 self._parse_layer_group(group, group_name)
 
         return self.data
@@ -106,20 +104,18 @@ class Parser:
         """Parse a layer group."""
         group_id, game_type = group_name.split('.', maxsplit=1)
 
-        for layer_group in group.iterchildren(Parser.nse('svg', 'g')):
-            layer_group_name = layer_group.get(Parser.nse('inkscape', 'label'))
+        for layer in group.iterchildren(Parser.nse('svg', 'g')):
+            layer_name = layer.get(Parser.nse('inkscape', 'label'))
 
-            print('  ' + layer_group_name)
-
-            if not layer_group_name: # We don't know what's this layer group: ignore it
+            if not layer_name: # We don't know what's this layer group: ignore it
                 continue
 
-            if layer_group_name == 'spawnpoints':
-                self._parse_layer_group_spawnpoints(layer_group, group_id, game_type)
-            elif layer_group_name == 'vehicles':
-                self._parse_layer_group_vehicles(layer_group, group_id, game_type)
+            if layer_name == 'spawnpoints':
+                self._parse_layer_group_spawnpoints(layer, group_id, game_type)
+            elif layer_name == 'vehicles':
+                self._parse_layer_group_vehicles(layer, group_id, game_type)
 
-    def _parse_layer_group_spawnpoints(self, layer_group, group_id, game_type):
+    def _parse_layer_group_spawnpoints(self, layer, group_id, game_type):
         """Parse the spawnpoints of a layer group."""
         if game_type not in self.data['spawn_points']['soldiers']:
             self.data['spawn_points']['soldiers'][game_type] = {}
@@ -127,13 +123,13 @@ class Parser:
         if group_id not in self.data['spawn_points']['soldiers'][game_type]:
             self.data['spawn_points']['soldiers'][game_type][group_id] = []
 
-        for element in layer_group.iterchildren(Parser.nse('svg', 'rect')):
+        for element in layer.iterchildren(Parser.nse('svg', 'rect')):
             lat = float(element.get('x'))
             lng = float(element.get('y'))
 
             self.data['spawn_points']['soldiers'][game_type][group_id].append([lat, lng])
 
-    def _parse_layer_group_vehicles(self, layer_group, group_id, game_type):
+    def _parse_layer_group_vehicles(self, layer, group_id, game_type):
         """Parse the spawnpoints of a layer group."""
         if game_type not in self.data['spawn_points']['vehicles']:
             self.data['spawn_points']['vehicles'][game_type] = {}
@@ -141,7 +137,7 @@ class Parser:
         if group_id not in self.data['spawn_points']['vehicles'][game_type]:
             self.data['spawn_points']['vehicles'][game_type][group_id] = []
 
-        for element in layer_group.iterchildren(Parser.nse('svg', 'rect')):
+        for element in layer.iterchildren(Parser.nse('svg', 'rect')):
             element_attributes = element.findtext('svg:desc', namespaces=self.namespaces)
 
             if not element_attributes:
@@ -173,9 +169,24 @@ class Parser:
         return {entry[0]: entry[1] for entry in [[kv.strip() for kv in param.strip().split('=', maxsplit=1)] for param in filter(None, attributes.strip().split(';'))]}
 
 
+# ----------------------------------------------------------------------
+
 from pprint import pprint
+from glob import glob
 
-map_parser = Parser('C:/Program Files (x86)/Steam/steamapps/common/RunningWithRifles/media/packages/vanilla/maps/map10/objects.svg')
-data = map_parser.parse()
+maps_paths = []
 
-pprint(data)
+maps_paths.extend(glob('C:/Program Files (x86)/Steam/steamapps/common/RunningWithRifles/media/packages/*/maps/*/objects.svg'))
+maps_paths.extend(glob('C:/Program Files (x86)/Steam/steamapps/workshop/content/270150/*/media/packages/*/maps/*/objects.svg'))
+
+for maps_path in maps_paths:
+    print(maps_path)
+
+    map_parser = Parser(maps_path)
+
+    data = map_parser.parse()
+
+# map_parser = Parser('C:/Program Files (x86)/Steam/steamapps/common/RunningWithRifles/media/packages/vanilla/maps/map10/objects.svg')
+# data = map_parser.parse()
+
+# pprint(data)
