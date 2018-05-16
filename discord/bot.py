@@ -5,9 +5,9 @@ from models import RwrRootServer, Variable
 from disco.bot import Bot, Plugin
 from . import constants, utils
 from tabulate import tabulate
+from rwrs import app, cache
 from flask import url_for
 from gevent import monkey
-from rwrs import app
 import rwr.scraper
 import rwr.utils
 import steam_api
@@ -39,7 +39,26 @@ class RwrsBotDiscoPlugin(Plugin):
     @Plugin.listen('Ready')
     def on_ready_event(self, event):
         """Performs things when the bot is ready."""
-        self.bot.client.update_presence(Status.ONLINE, Game(type=GameType.DEFAULT, name='rwrstats.com | @rwrs help'))
+        self.client.update_presence(Status.ONLINE, Game(type=GameType.DEFAULT, name='rwrstats.com | @rwrs help'))
+
+    @Plugin.command('cc')
+    def on_cc_command(self, event):
+        """Admin command: clear the cache."""
+        if event.msg.author.id not in app.config['DISCORD_BOT_ADMINS']:
+            return
+
+        cache.clear()
+
+        event.msg.reply('Cache cleared.')
+
+    @Plugin.command('say', parser=True)
+    @Plugin.parser.add_argument('message')
+    def on_say_command(self, event, args):
+        """Admin command: makes the bot to say something."""
+        if event.msg.author.id not in app.config['DISCORD_BOT_ADMINS']:
+            return
+
+        self.client.api.channels_messages_create(app.config['DISCORD_BOT_CHANNEL_ID'], args.message)
 
     @Plugin.command('help')
     def on_help_command(self, event):
