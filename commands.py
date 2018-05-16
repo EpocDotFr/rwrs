@@ -280,16 +280,6 @@ def run_discord_bot():
 
 
 @app.cli.command()
-@click.argument('message')
-def bot_message(message):
-    """Makes the Discord bot to say something."""
-    from disco.api.client import APIClient as DiscordAPIClient
-
-    discord_api_client = DiscordAPIClient(app.config['DISCORD_BOT_TOKEN'])
-    discord_api_client.channels_messages_create(app.config['DISCORD_BOT_CHANNEL_ID'], message)
-
-
-@app.cli.command()
 @click.option('--steamdir', '-g', help='Steam root directory')
 def generate_mapviews_tiles(steamdir):
     """Generate the mapviews tiles for the gallery."""

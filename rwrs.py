@@ -38,7 +38,6 @@ app.config['CONTRIBUTORS'] = ['street veteran', 'mastock', 'dio', 'jatimatik', '
 app.config['DEVS'] = ['jackmayol', 'pasik', 'pasik2', 'tremozl', 'the soldier'] # ahnold
 app.config['PLAYERS_LIST_PAGE_SIZES'] = [15, 30, 50, 100]
 app.config['RWR_STEAM_APP_ID'] = 270150
-app.config['MY_DISCORD_ID'] = 66543750725246976
 app.config['ROOT_RWR_SERVERS_CHECK_INTERVAL'] = 5
 app.config['MAPS_GALLERY_TILE_SIZE'] = 256
 app.config['MAPS_GALLERY_MIN_ZOOM'] = 1
