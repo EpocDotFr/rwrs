@@ -54,11 +54,29 @@ class RwrsBotDiscoPlugin(Plugin):
     @Plugin.command('say', parser=True)
     @Plugin.parser.add_argument('message')
     def on_say_command(self, event, args):
-        """Admin command: makes the bot to say something."""
+        """Admin command: make the bot to say something."""
         if event.msg.author.id not in app.config['DISCORD_BOT_ADMINS']:
             return
 
         self.client.api.channels_messages_create(app.config['DISCORD_BOT_CHANNEL_ID'], args.message)
+
+    @Plugin.command('motd', parser=True)
+    @Plugin.parser.add_argument('action', choices=['set', 'remove'])
+    @Plugin.parser.add_argument('message', nargs='?')
+    def on_motd_command(self, event, args):
+        """Admin command: set or remove the MOTD displayed on the top of all pages."""
+        if event.msg.author.id not in app.config['DISCORD_BOT_ADMINS']:
+            return
+
+        if args.action == 'set':
+            if not args.message:
+                event.msg.reply('Argument required: message')
+
+                return
+
+            Variable.set_value('motd', args.message)
+        elif args.action == 'remove':
+            Variable.delete('motd')
 
     @Plugin.command('help')
     def on_help_command(self, event):
