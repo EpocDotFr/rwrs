@@ -1,7 +1,7 @@
 import rwr.constants
 import helpers
 
-with open('doc/discord_bot.md', 'r', encoding='utf-8') as f:
+with open('docs/discord_bot/public_commands.md', 'r', encoding='utf-8') as f:
     HELP_CONTENT = f.read()
 
 VALID_PLAYER_SORTS = {
