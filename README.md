@@ -67,8 +67,10 @@ More informations on the three above can be found [here](http://flask.pocoo.org/
   - `BETA_USERS` The credentials required to access the app when beta mode is enabled. You can specify multiple ones. **It is highly recommended to serve RWRS through HTTPS** because it uses [HTTP basic auth](https://en.wikipedia.org/wiki/Basic_access_authentication)
   - `STEAM_API_KEY` A [Steam API](https://steamcommunity.com/dev) key
   - `PACIFIC_PLAYERS_RANKS_COUNTRY` Ranks image / name to show for the Pacific players stats (`us`, `jp`)
+  - `MY_DISCORD_ID` My Discord user ID (snowflake)
   - `DISCORD_BOT_TOKEN` Authentication token used by the RWRS Discord bot
   - `DISCORD_BOT_CHANNEL_ID` The Discord channel ID the bot is allowed to talk in
+  - `DISCORD_BOT_ADMINS` A list of Discord user IDs (snowflakes) allowed to use hidden bot commands
 
 I'll let you search yourself about how to configure a web server along uWSGI.
 
