@@ -6,17 +6,9 @@ body {
     background-color: #292929;
 }
 
-.currently-bar,
 .page {
     background-color: #3f3f3f;
     border-bottom: 0.1rem solid #514f4f;
-}
-
-.currently-bar a,
-.currently-bar a:visited,
-.currently-bar a:hover,
-.currently-bar a:focus {
-    color: inherit;
 }
 
 .page {
@@ -394,17 +386,27 @@ label {
 /************************************************************************
  * Top bar */
 
-.beta-bar {
+.top-bar a,
+.top-bar a:visited,
+.top-bar a:hover,
+.top-bar a:focus {
+    color: inherit;
+}
+
+.top-bar.beta-bar {
     background-color: #e9b700;
     color: #000;
     border-bottom: 0.1rem solid #ffcd15;
 }
 
-.beta-bar a,
-.beta-bar a:visited,
-.beta-bar a:hover,
-.beta-bar a:focus {
-    color: inherit;
+.top-bar.events-bar {
+    background-color: #30537b;
+    border-bottom: 0.1rem solid #296b95;
+}
+
+.top-bar.currently-bar {
+    background-color: #3f3f3f;
+    border-bottom: 0.1rem solid #514f4f;
 }
 
 /************************************************************************
