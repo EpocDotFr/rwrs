@@ -41,6 +41,14 @@
         </div>
     {% endif %}
 
+    {% if g.motd %}
+        <div class="top-bar motd-bar pts pbs">
+            <div class="w1140p center txtcenter small">
+                <i class="fa fa-bell fa-lg"></i> {{ g.motd|safe }}
+            </div>
+        </div>
+    {% endif %}
+
     {% if not g.UNDER_MAINTENANCE %}
         <div class="top-bar currently-bar pts pbs">
             <div class="w1140p center txtcenter small">
