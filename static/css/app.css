@@ -378,9 +378,9 @@ label {
 }
 
 .alert.info {
-    background-color: #30537b;
+    background-color: #3b618d;
     color: #FFF;
-    border-color: #296b95;
+    border-color: #3985b6;
 }
 
 /************************************************************************
@@ -403,6 +403,11 @@ label {
 .top-bar.currently-bar {
     background-color: #3f3f3f;
     border-bottom: 0.1rem solid #514f4f;
+}
+
+.top-bar.events-bar {
+    background-color: #3b618d;
+    border-bottom: 0.1rem solid #3985b6;
 }
 
 /************************************************************************
