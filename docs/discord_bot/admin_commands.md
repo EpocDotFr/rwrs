@@ -10,3 +10,6 @@
     - `message`: required. The message the bot will send.
 
 - `cc`: clears the RWRS cache.
+
+- `maintenance`: enables or disables the maintenance mode for the whole system. Parameters:
+    - `action`: required. One of `enable` or `disable`
