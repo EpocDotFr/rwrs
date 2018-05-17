@@ -11,6 +11,9 @@
 
 - `cc`: clears the RWRS cache.
 
+- `maintenance`: enables or disables the maintenance mode for the whole system. Parameters:
+    - `action`: required. One of `enable` or `disable`
+
 - `motd`: set or remove the MOTD, displayed on the top of all pages. Parameters:
     - `action`: required. One of `set` or `remove`
     - `message`: required if `action` is `set`. The message to display. HTML is allowed
