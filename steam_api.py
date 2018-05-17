@@ -3,18 +3,18 @@ import requests
 
 
 class Client:
-    endpoint_pattern = 'https://api.steampowered.com/{interface}/{method}/v{method_version}/'
+    steamworks_api_endpoint = 'https://api.steampowered.com/{interface}/{method}/v{method_version}/'
 
     def __init__(self, api_key, output_format='json'):
         self.api_key = api_key
         self.output_format = output_format
 
-    def _call(self, steam_interface, steam_method, steam_method_version=1, http_method='GET', params=None):
-        """Perform an HTTP request to the Steam API endpoint."""
-        url = self.endpoint_pattern.format(
-            interface=steam_interface,
-            method=steam_method,
-            method_version=steam_method_version
+    def _call_steamworks_api(self, interface, method, method_version=1, params=None):
+        """Perform an HTTP request to the Steamworks API endpoint."""
+        url = self.steamworks_api_endpoint.format(
+            interface=interface,
+            method=method,
+            method_version=method_version
         )
 
         headers = {
@@ -29,7 +29,7 @@ class Client:
         if params:
             params_to_send.update(params)
 
-        response = requests.request(http_method, url, params=params_to_send, headers=headers)
+        response = requests.get(url, params=params_to_send, headers=headers)
 
         response.raise_for_status()
 
@@ -52,6 +52,6 @@ class Client:
             'appid': appid
         }
 
-        data = self._call('ISteamUserStats', 'GetNumberOfCurrentPlayers', params=params)
+        data = self._call_steamworks_api('ISteamUserStats', 'GetNumberOfCurrentPlayers', params=params)
 
         return data['player_count']
