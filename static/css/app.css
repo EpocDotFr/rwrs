@@ -393,7 +393,8 @@ label {
     color: inherit;
 }
 
-.top-bar.beta-bar {
+.top-bar.beta-bar,
+.top-bar.motd-bar {
     background-color: #e9b700;
     color: #000;
     border-bottom: 0.1rem solid #ffcd15;

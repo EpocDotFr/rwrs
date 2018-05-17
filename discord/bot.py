@@ -3,9 +3,9 @@ from disco.client import Client, ClientConfig
 from disco.util.logging import setup_logging
 from models import RwrRootServer, Variable
 from disco.bot import Bot, Plugin
+from rwrs import app, cache, db
 from . import constants, utils
 from tabulate import tabulate
-from rwrs import app, cache
 from flask import url_for
 from gevent import monkey
 import rwr.scraper
@@ -99,6 +99,8 @@ class RwrsBotDiscoPlugin(Plugin):
             Variable.set_value('motd', args.message)
         elif args.action == 'remove':
             Variable.delete('motd')
+
+        db.session.commit()
 
     @Plugin.command('help')
     def on_help_command(self, event):
