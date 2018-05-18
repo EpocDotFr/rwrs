@@ -393,21 +393,28 @@ label {
     color: inherit;
 }
 
-.top-bar.beta-bar,
-.top-bar.motd-bar {
+.top-bar.yellow {
     background-color: #e9b700;
     color: #000;
     border-bottom: 0.1rem solid #ffcd15;
 }
 
-.top-bar.currently-bar {
+.top-bar.blue {
+    background-color: #3b618d;
+    color: #FFF;
+    border-bottom: 0.1rem solid #3985b6;
+}
+
+.top-bar.grey {
     background-color: #3f3f3f;
+    color: #FFF;
     border-bottom: 0.1rem solid #514f4f;
 }
 
-.top-bar.events-bar {
-    background-color: #3b618d;
-    border-bottom: 0.1rem solid #3985b6;
+.top-bar.green {
+    background-color: #7da109;
+    color: #FFF;
+    border-bottom: 0.1rem solid #9cc321;
 }
 
 /************************************************************************
