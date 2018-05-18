@@ -3,6 +3,7 @@ from werkzeug.exceptions import HTTPException
 from models import RwrRootServer
 from rwrs import app, auth
 import rwr.scraper
+import arrow
 import steam
 import os
 
@@ -63,8 +64,8 @@ def get_motd():
 
 
 @app.before_request
-def get_rwr_events(): # TODO Implement
-    g.RWR_EVENTS = []
+def get_rwr_events():
+    g.RWR_EVENTS = steam.get_game_events(app.config['RWR_STEAM_APP_ID'])
 
 
 @app.before_request

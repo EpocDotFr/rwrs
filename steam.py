@@ -1,5 +1,6 @@
 from rwrs import app, cache
 import requests
+import arrow
 
 
 class SteamworksApiClient:
@@ -55,3 +56,24 @@ class SteamworksApiClient:
         data = self._call_steamworks_api('ISteamUserStats', 'GetNumberOfCurrentPlayers', params=params)
 
         return data['player_count']
+
+
+def get_game_events(game_id): # TODO Cache
+    """Get the list of upcoming events for the specified Steam game."""
+    return [ # TODO Implement
+        {
+            'name': 'Event name 1',
+            'start': arrow.utcnow().floor('minute').shift(hours=+1),
+            'url': 'https://steamcommunity.com/games/XXXX/events/XXXX'
+        },
+        {
+            'name': 'Event name 2',
+            'start': arrow.utcnow().floor('minute').shift(days=+1),
+            'url': 'https://steamcommunity.com/games/XXXX/events/XXXX'
+        },
+        {
+            'name': 'Event name 3',
+            'start': arrow.utcnow().floor('minute').shift(days=+2),
+            'url': 'https://steamcommunity.com/games/XXXX/events/XXXX'
+        }
+    ]

@@ -52,7 +52,11 @@
     {% if g.RWR_EVENTS %}
         <div class="top-bar blue pts pbs">
             <div class="w1140p center txtcenter small">
-                <i class="fa fa-calendar fa-lg"></i> <strong>Upcoming RWR events</strong>: <a href="#">Event title</a> (May 5 9:00 AM) • <a href="#">Event title</a> (May 18 9:00 AM)
+                <i class="fa fa-calendar fa-lg"></i> <strong>Upcoming RWR event{{ 's' if g.RWR_EVENTS|length > 1 }}</strong>:
+
+                {% for rwr_event in g.RWR_EVENTS -%}
+                    <a href="{{ rwr_event.url }}">{{ rwr_event.name }}</a> ({{ rwr_event.start.format('MMMM D h:mm A') }}){{ ' • ' if not loop.last }}
+                {%- endfor -%}
             </div>
         </div>
     {% endif %}
