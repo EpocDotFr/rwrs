@@ -34,15 +34,15 @@
 </head>
 <body itemscope itemtype="http://schema.org/WebSite">
     {% if config['BETA'] %}
-        <div class="top-bar beta-bar pts pbs">
+        <div class="top-bar yellow pts pbs">
             <div class="w1140p center txtcenter small">
-                <i class="fa fa-wrench"></i> You are using the beta version of RWRS. Please report issues by PM to <strong>@Epoc#4256</strong> on Discord. Version: <a href="https://github.com/EpocDotFr/rwrs/commit/{{ g.BETA_COMMIT }}">{{ g.BETA_COMMIT[:7] }}</a>@<a href="https://github.com/EpocDotFr/rwrs/tree/{{ g.BETA_BRANCH }}">{{ g.BETA_BRANCH }}</a>
+                <i class="fa fa-wrench fa-lg"></i> You are using the beta version of RWRS. Please report issues by PM to <strong>@Epoc#4256</strong> on Discord. Version: <a href="https://github.com/EpocDotFr/rwrs/commit/{{ g.BETA_COMMIT }}">{{ g.BETA_COMMIT[:7] }}</a>@<a href="https://github.com/EpocDotFr/rwrs/tree/{{ g.BETA_BRANCH }}">{{ g.BETA_BRANCH }}</a>
             </div>
         </div>
     {% endif %}
 
     {% if g.motd %}
-        <div class="top-bar motd-bar pts pbs">
+        <div class="top-bar green pts pbs">
             <div class="w1140p center txtcenter small">
                 <i class="fa fa-bell fa-lg"></i> {{ g.motd|safe }}
             </div>
@@ -50,7 +50,7 @@
     {% endif %}
 
     {% if not g.UNDER_MAINTENANCE %}
-        <div class="top-bar currently-bar pts pbs">
+        <div class="top-bar grey pts pbs">
             <div class="w1140p center txtcenter small">
                 Currently <strong>{{ g.total_players }}</strong> player{{ 's' if g.total_players > 1 }} in total (<strong>{{ g.online_players }}</strong> {{ 'are' if g.online_players > 1 else 'is' }} playing multiplayer online<span class="total-playing-friends is-hidden">, including <strong class="txtblue">?</strong> <span class="friend-label"></span></span>) and <strong>{{ g.total_servers }}</strong> online multiplayer server{{ 's' if g.total_servers > 1 }} (<strong>{{ g.active_servers }}</strong> {{ 'are' if g.active_servers > 1 else 'is' }} active) • <a href="{{ url_for('online_multiplayer_status') }}">Online multiplayer status</a> {% if not g.is_online_multiplayer_ok %}<i class="fa fa-warning txtred" title="Online multiplayer is having issue"></i>{% endif %}
             </div>
