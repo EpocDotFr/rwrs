@@ -49,11 +49,13 @@
         </div>
     {% endif %}
 
-    <div class="top-bar blue pts pbs">
-        <div class="w1140p center txtcenter small">
-            <i class="fa fa-calendar fa-lg"></i> <strong>Upcoming RWR events</strong>: <a href="#">Event title</a> (in 2 hours) • <a href="#">Event title</a> (in 2 days)
+    {% if g.RWR_EVENTS %}
+        <div class="top-bar blue pts pbs">
+            <div class="w1140p center txtcenter small">
+                <i class="fa fa-calendar fa-lg"></i> <strong>Upcoming RWR events</strong>: <a href="#">Event title</a> (May 5 9:00 AM) • <a href="#">Event title</a> (May 18 9:00 AM)
+            </div>
         </div>
-    </div>
+    {% endif %}
 
     {% if not g.UNDER_MAINTENANCE %}
         <div class="top-bar grey pts pbs">

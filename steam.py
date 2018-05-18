@@ -2,7 +2,7 @@ from rwrs import app, cache
 import requests
 
 
-class Client:
+class SteamworksApiClient:
     steamworks_api_endpoint = 'https://api.steampowered.com/{interface}/{method}/v{method_version}/'
 
     def __init__(self, api_key, output_format='json'):
