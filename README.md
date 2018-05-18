@@ -173,7 +173,7 @@ More information in the script comments.
 
 More information in the script comments.
 
-`sh scripts/rwrs_updater.sh [DOMAIN, default=rwrstats.com]`
+`sh scripts/rwrs_updater.sh [TYPE, default=fast, fast|full] [DOMAIN, default=rwrstats.com]`
 
 ### Backup SQLite databases
 
