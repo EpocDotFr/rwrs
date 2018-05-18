@@ -151,31 +151,31 @@ Will save the current number of Steam players which have RWR running, and the cu
   1. `set FLASK_APP=rwrs.py`
   2. `flask db upgrade`
 
-### Save RWR root servers status
+### Saving RWR root servers status
 
 Will ping RWR root servers and store their status (up or down).
 
   1. `set FLASK_APP=rwrs.py`
   2. `flask get_root_rwr_servers_status`
 
-### Run the RWRS Discord bot
+### Running the RWRS Discord bot
 
   1. `set FLASK_APP=rwrs.py`
   2. `flask run_discord_bot`
 
-### Update the MaxMind GeoLite2 City database
+### Updating the MaxMind GeoLite2 City database
 
 More information in the script comments.
 
 `sh scripts/geolite2_city_updater.sh`
 
-### Update RWRS
+### Updating RWRS
 
 More information in the script comments.
 
 `sh scripts/rwrs_updater.sh [TYPE, default=fast, fast|full] [DOMAIN, default=rwrstats.com]`
 
-### Backup SQLite databases
+### Backuping SQLite databases
 
 More information in the script comments.
 
