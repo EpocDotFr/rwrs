@@ -3,7 +3,6 @@ from werkzeug.exceptions import HTTPException
 from models import RwrRootServer
 from rwrs import app, auth
 import rwr.scraper
-import arrow
 import steam
 import os
 
