@@ -184,7 +184,7 @@ More information in the script comments.
 
 `sh scripts/rwrs_updater.sh [TYPE, default=fast, fast|full] [DOMAIN, default=rwrstats.com]`
 
-### Backup SQLite databases
+### Backuping SQLite databases
 
 More information in the script comments.
 
