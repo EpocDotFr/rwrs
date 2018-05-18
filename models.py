@@ -349,7 +349,7 @@ class Variable(db.Model):
             if name not in peaks:
                 peaks[name] = '?'
             elif name.endswith('_date'):
-                    peaks[name] = peaks[name].format('MMM D, YYYY')
+                    peaks[name] = peaks[name].format('MMMM D, YYYY')
 
         return peaks
 
