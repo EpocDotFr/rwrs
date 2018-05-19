@@ -119,11 +119,7 @@
                 </tr>
                 <tr>
                     <td class="txtcenter">
-                        {% if server.map.has_mapview %}
-                            <a href="{{ url_for('map_details', server_type=server.type, map_id=server.map.id, slug=server.map.slug) }}">{{ server.map.name_display }}</a>
-                        {% else %}
-                            {{ server.map.name_display }}
-                        {% endif %}
+                        <a href="{{ url_for('map_details', server_type=server.type, map_id=server.map.id, slug=server.map.slug) }}">{{ server.map.name_display }}</a>
                     </td>
                 </tr>
                 {% if server.map.has_preview %}

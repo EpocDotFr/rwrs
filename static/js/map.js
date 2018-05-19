@@ -67,7 +67,7 @@ mapFeature = {
 
         var self = this;
 
-        $.each(this.objects.players_spawns, function(index, player_spawn) {
+        $.each(this.objects.spawn_points.soldiers, function(index, player_spawn) { // FIXME There's layers and groups
             players_spawns.addLayer(new L.marker(
                 self.map.unproject(
                     [player_spawn.x, player_spawn.y],

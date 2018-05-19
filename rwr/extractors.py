@@ -1,9 +1,9 @@
 from collections import OrderedDict
 from slugify import slugify
+from . import utils, map
 from lxml import etree
 from glob import glob
 from rwrs import app
-from . import utils
 import helpers
 import click
 import math
@@ -58,9 +58,9 @@ class MapviewsImageExtractor(BaseExtractor):
             if not os.path.isdir(output_dir):
                 os.makedirs(output_dir)
 
-            map = Image.open(map_path)
-            map.thumbnail(self.mapview_size, Image.LANCZOS)
-            map.save(os.path.join(output_dir, map_id + '.png'), optimize=True)
+            map_image = Image.open(map_path)
+            map_image.thumbnail(self.mapview_size, Image.LANCZOS)
+            map_image.save(os.path.join(output_dir, map_id + '.png'), optimize=True)
 
 
 class MapviewsTilesGenerator(BaseExtractor):
@@ -132,7 +132,7 @@ class MapsDataExtractor(BaseExtractor):
         maps_paths.extend(glob(os.path.join(self.packages_dir, '*', 'maps', '*', 'objects.svg'))) # Maps in RWR game directory
         maps_paths.extend(glob(os.path.join(self.workshop_dir, '*', 'media', 'packages', '*', 'maps', '*', 'objects.svg'))) # Maps in RWR workshop directory
 
-        data = OrderedDict()
+        all_maps_data = OrderedDict()
 
         for map_path in maps_paths:
             server_type, map_id = utils.parse_map_path(map_path.replace('\\', '/').replace('/objects.svg', ''))
@@ -142,70 +142,36 @@ class MapsDataExtractor(BaseExtractor):
 
                 continue
 
-            self.map_xml = etree.parse(map_path)
-
-            map_info_attributes = self.map_xml.findtext('//svg:rect[@inkscape:label=\'#general\']/svg:desc', namespaces=self.namespaces)
-
-            if not map_info_attributes:
-                click.secho('No general map info found', fg='yellow')
-
-                continue
-
-            map_info_attributes = self._parse_attributes(map_info_attributes)
-
-            if 'name' not in map_info_attributes:
-                click.secho('Map name not found', fg='yellow')
-
-                continue
-
             click.echo(server_type + ':' + map_id)
 
-            if server_type not in data:
-                data[server_type] = OrderedDict()
+            map_objects_parser = map.MapObjectsParser(map_path)
+            map_data = map_objects_parser.parse()
 
-            map_name = map_info_attributes['name'].replace('Pacific: ', '').title()
+            if not map_data['name']:
+                click.secho('  Map name not found', fg='yellow')
 
-            data[server_type][map_id] = OrderedDict([
+                continue
+
+            if server_type not in all_maps_data:
+                all_maps_data[server_type] = OrderedDict()
+
+            map_name = map_data['name'].replace('Pacific: ', '').title()
+
+            all_maps_data[server_type][map_id] = OrderedDict([
                 ('name', map_name),
                 ('slug', slugify(map_name)),
                 ('has_mapview', os.path.isfile(os.path.join(app.config['MAPVIEWS_IMAGES_DIR'], server_type, map_id + '.png'))),
-                ('has_preview', os.path.isfile(os.path.join(app.config['MAPS_PREVIEWS_IMAGES_DIR'], server_type, map_id + '.png'))),
-                ('objects', OrderedDict())
+                ('has_preview', os.path.isfile(os.path.join(app.config['MAPS_PREVIEWS_IMAGES_DIR'], server_type, map_id + '.png')))
             ])
 
-            self._extract_players_spawns(data[server_type][map_id]['objects'])
-            self._extract_stashes(data[server_type][map_id]['objects'])
-            self._extract_armories(data[server_type][map_id]['objects'])
+            mapviewer_data_dir = os.path.join(app.config['MAPVIEWER_DATA_DIR'], server_type)
 
-        helpers.save_json(app.config['MAPS_DATA_FILE'], data)
+            if not os.path.isdir(mapviewer_data_dir):
+                os.makedirs(mapviewer_data_dir)
 
-    def _parse_attributes(self, attributes):
-        """Parse a map's semicolon-separated data and return its dict representation as key-value pairs."""
-        return {entry[0]: entry[1] for entry in [[kv.strip() for kv in param.strip().split('=', maxsplit=1)] for param in filter(None, attributes.strip().split(';'))]}
+            helpers.save_json(os.path.join(mapviewer_data_dir, map_id + '.json'), map_data['objects'])
 
-    def _extract_players_spawns(self, map_objects):
-        """Extract all players spawns."""
-        players_spawns = []
-
-        for rect in self.map_xml.findall('//svg:g[@inkscape:label=\'spawnpoints\']/svg:rect', namespaces=self.namespaces):
-            players_spawns.append(OrderedDict([
-                ('x', float(rect.get('x'))),
-                ('y', float(rect.get('y')))
-            ]))
-
-        map_objects['players_spawns'] = players_spawns
-
-    def _extract_stashes(self, map_objects):
-        """Extract all stashes."""
-        stashes = []
-
-        map_objects['stashes'] = stashes
-
-    def _extract_armories(self, map_objects):
-        """Extract all armories."""
-        armories = []
-
-        map_objects['armories'] = armories
+        helpers.save_json(app.config['MAPS_DATA_FILE'], all_maps_data)
 
 
 class RanksExtractor(BaseExtractor):

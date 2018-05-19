@@ -256,9 +256,9 @@ def maps_list():
 @app.route('/maps-gallery/<server_type>/<map_id>')
 @app.route('/maps-gallery/<server_type>/<map_id>/<slug>')
 def map_details(server_type, map_id, slug=None):
-    map = rwr.utils.get_map(server_type, map_id)
+    map = rwr.utils.get_map(server_type, map_id, with_objects=True)
 
-    if not map or not map['has_mapview']:
+    if not map:
         abort(404)
 
     if not slug:
