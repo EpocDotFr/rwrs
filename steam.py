@@ -73,11 +73,14 @@ def get_group_events(group_or_game_id, is_official=False, year=None, month=None)
 
     now = arrow.utcnow()
 
+    year = year if year is not None else now.format('YYYY')
+    month = month if month is not None else now.format('M')
+
     params = {
         'xml': 1,
         'action': 'eventFeed',
-        'year': year if year is not None else now.format('YYYY'),
-        'month': month if month is not None else now.format('M'),
+        'year': year,
+        'month': month,
         '_': now.timestamp
     }
 
