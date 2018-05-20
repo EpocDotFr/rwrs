@@ -118,7 +118,12 @@ class Player:
         if self.rank.id is None:
             return None
 
-        highest_rank_id = max([int(rank_id) for rank_id in constants.RANKS[constants.PLAYERS_LIST_DATABASES[self.database]['ranks_country']].keys()])
+        rank_ids = [int(rank_id) for rank_id in constants.RANKS[constants.PLAYERS_LIST_DATABASES[self.database]['ranks_country']].keys()]
+
+        if self.database == 'pacific': # The President rank isn't available in Pacific
+            rank_ids = rank_ids[:-1]
+
+        highest_rank_id = max(rank_ids)
 
         if self.rank.id == highest_rank_id: # Highest rank already reached
             return False
