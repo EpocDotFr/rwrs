@@ -64,7 +64,7 @@ def get_motd():
 
 @app.before_request
 def get_rwr_events():
-    g.RWR_EVENTS = steam.get_group_events(app.config['RWR_STEAM_APP_ID'], is_official=True, year=2017, month=12)
+    g.RWR_EVENTS = steam.get_group_events(app.config['RWR_STEAM_APP_ID'], is_official=True)
 
 
 @app.before_request
