@@ -1,3 +1,4 @@
+from lxml import html, etree
 from rwrs import app, cache
 import requests
 import arrow
@@ -58,22 +59,50 @@ class SteamworksApiClient:
         return data['player_count']
 
 
-def get_game_events(game_id): # TODO Cache
+def get_group_events(group_or_game_id, is_official=False, year=2018, month=5): # TODO Cache
     """Get the list of upcoming events for the specified Steam game."""
-    return [ # TODO Implement
-        {
-            'name': 'Event name 1',
-            'start': arrow.utcnow().floor('minute').shift(hours=+1),
-            'url': 'https://steamcommunity.com/games/XXXX/events/XXXX'
-        },
-        {
-            'name': 'Event name 2',
-            'start': arrow.utcnow().floor('minute').shift(days=+1),
-            'url': 'https://steamcommunity.com/games/XXXX/events/XXXX'
-        },
-        {
-            'name': 'Event name 3',
-            'start': arrow.utcnow().floor('minute').shift(days=+2),
-            'url': 'https://steamcommunity.com/games/XXXX/events/XXXX'
-        }
-    ]
+    url = 'https://steamcommunity.com/{what}/{group_or_game_id}/events'.format(
+        what='games' if is_official else 'gid',
+        group_or_game_id=group_or_game_id
+    )
+
+    headers = {
+        'User-Agent': 'rwrstats.com'
+    }
+
+    params = {
+        'xml': 1,
+        'action': 'eventFeed',
+        'year': year,
+        'month': month,
+        '_': arrow.utcnow().timestamp
+    }
+
+    response = requests.get(url, params=params, headers=headers)
+
+    response.raise_for_status()
+
+    response_tree = etree.fromstring(response.content)
+
+    if response_tree.findtext('results') != 'OK':
+        raise Exception('Response is erronous')
+
+    ret = []
+
+    for event in response_tree.xpath('(/response/expiredEvent | /response/event)/text()'):
+        event_tree = html.fromstring(event)
+
+        event_name = event_tree.findtext('./div[@class="eventBlockTitle"]/a[@class="headlineLink"]')
+        event_url = event_tree.find('./div[@class="eventBlockTitle"]/a[@class="headlineLink"]').get('href')
+
+        event_start_day = event_tree.findtext('./div[@class="eventDateBlock"]/span[1]').split(' ', maxsplit=1)[1]
+        event_start_time = event_tree.findtext('./div[@class="eventDateBlock"]/span[2]')
+        event_start = arrow.get('{} {} {} {}'.format(year, month, event_start_day, event_start_time), 'YYYY M D hh:mma')
+
+        ret.append({
+            'name': event_name,
+            'start': event_start,
+            'url': event_url
+        })
+
+    return ret
