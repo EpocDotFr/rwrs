@@ -18,16 +18,16 @@ echo "## Enabling maintenance mode"
 
 touch maintenance
 
+echo "## Pulling latest code version"
+
+git pull
+
 if [ $TYPE = "full" ]; then
     echo "## Updating dependencies"
 
     pip install --upgrade --no-cache -r requirements.txt
     pip install --upgrade --no-cache uwsgi
 fi
-
-echo "## Pulling latest code version"
-
-git pull
 
 if [ $TYPE = "full" ]; then
     echo "## Migrating DB"
