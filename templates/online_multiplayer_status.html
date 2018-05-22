@@ -17,7 +17,7 @@
     {% if is_everything_ok %}
         <p class="alert success pas mtm mbm"><i class="fa fa-check"></i> Everything is working fine. Go play with others!</p>
     {% else %}
-        <p class="alert error pas mtm mbm"><i class="fa fa-warning"></i> Looks like online multiplayer is encountering issues. For updates on the situation, head over the <a href="https://twitter.com/osumiagames">RWR Twitter account</a> or the <a href="https://discord.gg/010ixMlfmhK5BhYOv">RWR Discord server</a>.</p>
+        <p class="alert error pas mtm mbm"><i class="fa fa-warning"></i> Looks like online multiplayer is encountering issues. For updates on the situation, head over the <a href="https://twitter.com/osumiagames">RWR Twitter account</a> or the <a href="https://discord.gg/runningwithrifles">RWR Discord server</a>.</p>
     {% endif %}
 
     <p class="small txtcenter txtgrey mbm mtn">Statuses are checked every {{ config['ROOT_RWR_SERVERS_CHECK_INTERVAL'] }} minutes.{% if next_root_rwr_servers_check %} Next check {{ next_root_rwr_servers_check.humanize() }}.{% endif %}</p>
