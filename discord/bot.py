@@ -108,6 +108,27 @@ class RwrsBotDiscoPlugin(Plugin):
 
                 event.msg.reply('MOTD removed.')
 
+    @Plugin.command('events')
+    def on_events_command(self, event):
+        """Displays upcoming RWR events."""
+        rwr_events = steam.get_group_events(app.config['RWR_STEAM_APP_ID'], is_official=True)
+
+        if not rwr_events:
+            event.msg.reply('Sorry, no upcoming RWR events at this moment :cry:')
+
+            return
+
+        response = []
+
+        for rwr_event in rwr_events:
+            response.append('**{name}** ({start})\n{url}\n'.format(
+                name=rwr_event['name'],
+                start=rwr_event['start'].format('MMMM D @ h:mm A'),
+                url=rwr_event['url']
+            ))
+
+        event.msg.reply('\n'.join(response))
+
     @Plugin.command('help', parser=True)
     @Plugin.parser.add_argument('type', choices=['public', 'admin'], nargs='?', default='public')
     def on_help_command(self, event, args):
@@ -255,14 +276,14 @@ class RwrsBotDiscoPlugin(Plugin):
         ]
 
         for server in servers:
-            response.append('{}`{}/{}` **{}** ({} • {})\n{}\n'.format(
-                ':flag_' + server.location.country_code + ': ' if server.location.country_code else '',
-                server.players.current,
-                server.players.max,
-                server.name_display,
-                server.type_name,
-                server.map.name_display,
-                server.steam_join_link.replace(' ', '%20')
+            response.append('{flag}`{current_players}/{max_players}` **{name}** ({type} • {map})\n{url}\n'.format(
+                flag=':flag_' + server.location.country_code + ': ' if server.location.country_code else '',
+                current_players=server.players.current,
+                max_players=server.players.max,
+                name=server.name_display,
+                type=server.type_name,
+                map=server.map.name_display,
+                url=server.steam_join_link.replace(' ', '%20')
             ))
 
         event.msg.reply('\n'.join(response))

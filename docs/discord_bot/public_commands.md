@@ -1,10 +1,10 @@
 **ℹ️ Read first**
 
-- The parameters order is important
+- Parameters order is important
 - Parameters containing spaces **must be surrounded by `"` or  `'`**
 - Usernames starting with a `-` **must be directly prepended with a `\`**
 
-Valid common parameters values are:
+Valid common parameters values:
 
 - `sort`: `score`, `xp`, `kills`, `deaths`, `ratio`, `streak`, `tk`, `heals`, `shots`, `distance`, `throws`, `vehicles`, `targets`, `time`
 
@@ -30,7 +30,7 @@ Valid common parameters values are:
     - `target_username`: required. Full username is required
     - `database`: optional. Defaults to `invasion`
 
-- `whereis`: displays information about the server the specified player is currently playing on. Parameters:
+- `whereis`: displays information about the server the specified player is playing on. Parameters:
     - `username`: required. Full username isn't required
 
 - `server`: displays information about the specified server. Parameters:
@@ -38,9 +38,11 @@ Valid common parameters values are:
 
 - `servers`: displays the first 10 currently active servers with room.
     - Parameters:
-        - `type`: optional. Filter servers by game type. One of `vanilla`, `pacific` or `rwd`. Defaults to none
+        - `type`: optional. One of `vanilla`, `pacific` or `rwd`. Defaults to none
     - Options (order doesn't matter):
         - `--ranked`: only return ranked (official) servers
+
+- `events`: displays upcoming RWR events.
 
 - `now`: displays numbers about the current players and servers.
 
