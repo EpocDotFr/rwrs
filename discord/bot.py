@@ -123,7 +123,7 @@ class RwrsBotDiscoPlugin(Plugin):
         for rwr_event in rwr_events:
             response.append('**{name}** ({start})\n{url}\n'.format(
                 name=rwr_event['name'],
-                start=rwr_event['start'].format('MMMM D @ h:mm A'),
+                start=rwr_event['start'].to('gmt').format('dddd, MMMM D @ h:mm A'),
                 url=rwr_event['url']
             ))
 
