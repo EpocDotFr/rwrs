@@ -101,8 +101,8 @@ def get_group_events(group_or_game_id, is_official=False, year=None, month=None)
         event_start_day = event_tree.findtext('./div[@class="eventDateBlock"]/span[1]').split(' ', maxsplit=1)[1]
         event_start_time = event_tree.findtext('./div[@class="eventDateBlock"]/span[2]')
 
-        # When not logged-in into Steam, all dates are in the US/Pacific timezone
-        event_start = arrow.get('{} {} {} {} US/Pacific'.format(year, month, event_start_day, event_start_time), 'YYYY M D hh:mma ZZZ').to('utc')
+        # FIXME
+        event_start = arrow.get('{} {} {} {}'.format(year, month, event_start_day, event_start_time), 'YYYY M D hh:mma')
 
         if event_start.floor('day') < now.floor('day'):
             continue
