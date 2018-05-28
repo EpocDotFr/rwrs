@@ -27,9 +27,7 @@ if [ $TYPE = "full" ]; then
 
     pip install --upgrade --no-cache -r requirements.txt
     pip install --upgrade --no-cache uwsgi
-fi
 
-if [ $TYPE = "full" ]; then
     echo "## Migrating DB"
 
     venv/bin/flask db upgrade
