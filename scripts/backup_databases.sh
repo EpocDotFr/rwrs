@@ -1,19 +1,19 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 #
 # RWRS databases backup script
 #
 # This script backups all the RWRS SQLite databases, compress them all in one tar.gz file and send it to Dropbox.
-# The following environment variables are required:
+# Backups older than 1 week are overwritten. The following environment variables are required:
 #  - DROPBOX_ACCESS_TOKEN
 
 set -e # Makes any subsequent failing commands to exit the script immediately
 
 DATA_DIR="storage/data"
 declare -a DATABASES=("$DATA_DIR/"*".sqlite")
-NOW=$(date +"%Y-%m-%d_%H-%M")
-BACKUP_FILE="$DATA_DIR/backup_$NOW.tar.gz"
+DOW=$(date +%u)
+BACKUP_FILE="$DATA_DIR/backup_$DOW.tar.gz"
 DATABASES_STRING=""
-DROPBOX_FILEPATH="/rwrs/backups/${BACKUP_FILE##*/}"
+DROPBOX_FILEPATH="/backups/rwrs/${BACKUP_FILE##*/}"
 DROPBOX_ACCESS_TOKEN=${DROPBOX_ACCESS_TOKEN}
 
 echo "## Backing up databases"

@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 #
 # RWRS updater
 #
@@ -6,9 +6,10 @@
 
 set -e # Makes any subsequent failing commands to exit the script immediately
 
-DOMAIN=${1:-rwrstats.com}
+TYPE=${1:-fast}
+DOMAIN=${2:-rwrstats.com}
 
-echo "## Initializing"
+echo "## Initializing ($TYPE update)"
 
 . venv/bin/activate
 export FLASK_APP=rwrs.py
@@ -17,22 +18,24 @@ echo "## Enabling maintenance mode"
 
 touch maintenance
 
-echo "## Updating dependencies"
-
-pip install --upgrade --no-cache -r requirements.txt
-pip install --upgrade --no-cache uwsgi
-
 echo "## Pulling latest code version"
 
 git pull
 
-echo "## Migrating DB"
+if [ $TYPE = "full" ]; then
+    echo "## Updating dependencies"
 
-venv/bin/flask db upgrade
+    pip install --upgrade --no-cache -r requirements.txt
+    pip install --upgrade --no-cache uwsgi
 
-echo "## Clearing cache"
+    echo "## Migrating DB"
 
-venv/bin/flask cc
+    venv/bin/flask db upgrade
+
+    echo "## Clearing cache"
+
+    venv/bin/flask cc
+fi
 
 echo "## Restarting services"
 

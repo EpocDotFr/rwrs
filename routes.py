@@ -234,21 +234,8 @@ def servers_list():
 
 
 @app.route('/servers/<ip>:<int:port>')
-def server_details_without_slug(ip, port):
-    scraper = rwr.scraper.DataScraper()
-
-    server = scraper.get_server_by_ip_and_port(ip, port)
-
-    if not server:
-        flash('Sorry, this server wasn\'t found.', 'error')
-
-        return redirect(url_for('servers_list'))
-
-    return redirect(server.link, code=301)
-
-
 @app.route('/servers/<ip>:<int:port>/<slug>')
-def server_details(ip, port, slug):
+def server_details(ip, port, slug=None):
     scraper = rwr.scraper.DataScraper()
 
     server = scraper.get_server_by_ip_and_port(ip, port)
@@ -257,6 +244,9 @@ def server_details(ip, port, slug):
         flash('Sorry, this server wasn\'t found.', 'error')
 
         return redirect(url_for('servers_list'))
+
+    if not slug:
+        return redirect(server.link, code=301)
 
     server_players_data = ServerPlayerCount.server_players_data(ip, port) if server.is_dedicated else None
 

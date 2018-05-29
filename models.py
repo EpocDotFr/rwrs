@@ -320,6 +320,14 @@ class Variable(db.Model):
             db.session.add(var)
 
     @staticmethod
+    def delete(name):
+        """Delete the given variable, if it exists."""
+        var = Variable.query.filter(Variable.name == name).first()
+
+        if var:
+            db.session.remove(var)
+
+    @staticmethod
     def get_peaks_for_display():
         """Return the list of peak players and servers counts for display."""
         var_names = [
@@ -335,7 +343,7 @@ class Variable(db.Model):
             if name not in peaks:
                 peaks[name] = '?'
             elif name.endswith('_date'):
-                    peaks[name] = peaks[name].format('MMM D, YYYY')
+                    peaks[name] = peaks[name].format('MMMM D, YYYY')
 
         return peaks
 

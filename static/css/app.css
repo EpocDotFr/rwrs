@@ -6,17 +6,9 @@ body {
     background-color: #292929;
 }
 
-.currently-bar,
 .page {
     background-color: #3f3f3f;
     border-bottom: 0.1rem solid #514f4f;
-}
-
-.currently-bar a,
-.currently-bar a:visited,
-.currently-bar a:hover,
-.currently-bar a:focus {
-    color: inherit;
 }
 
 .page {
@@ -386,25 +378,43 @@ label {
 }
 
 .alert.info {
-    background-color: #30537b;
+    background-color: #3b618d;
     color: #FFF;
-    border-color: #296b95;
+    border-color: #3985b6;
 }
 
 /************************************************************************
  * Top bar */
 
-.beta-bar {
+.top-bar a,
+.top-bar a:visited,
+.top-bar a:hover,
+.top-bar a:focus {
+    color: inherit;
+}
+
+.top-bar.yellow {
     background-color: #e9b700;
     color: #000;
     border-bottom: 0.1rem solid #ffcd15;
 }
 
-.beta-bar a,
-.beta-bar a:visited,
-.beta-bar a:hover,
-.beta-bar a:focus {
-    color: inherit;
+.top-bar.blue {
+    background-color: #3b618d;
+    color: #FFF;
+    border-bottom: 0.1rem solid #3985b6;
+}
+
+.top-bar.grey {
+    background-color: #3f3f3f;
+    color: #FFF;
+    border-bottom: 0.1rem solid #514f4f;
+}
+
+.top-bar.green {
+    background-color: #7da109;
+    color: #FFF;
+    border-bottom: 0.1rem solid #9cc321;
 }
 
 /************************************************************************

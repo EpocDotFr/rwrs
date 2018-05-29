@@ -54,6 +54,15 @@ def get_rwr_root_server_global_status():
 
 
 @app.before_request
+def get_motd():
+    g.MOTD = None
+
+    if os.path.exists('motd'):
+        with open('motd', 'r', encoding='utf-8') as f:
+            g.MOTD = f.read()
+
+
+@app.before_request
 def check_beta_access():
     if app.config['BETA']:
         @auth.login_required

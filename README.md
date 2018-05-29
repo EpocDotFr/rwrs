@@ -30,7 +30,7 @@ and its Pacific DLC. Available at [rwrstats.com](https://rwrstats.com/).
     - Number of players on a server
     - Peaks
   - Online multiplayer status
-  - Discord bot able to give several kind of information. Available on the [RWR Discord Server](https://discord.gg/010ixMlfmhK5BhYOv). [Public](docs/discord_bot/public_commands.md) and [admin](docs/discord_bot/admin_commands.md) commands documentation
+  - Discord bot able to give several kind of information. Available on the [RWR Discord Server](https://discord.gg/runningwithrifles). [Public](docs/discord_bot/public_commands.md) and [admin](docs/discord_bot/admin_commands.md) commands documentation
 
 ## Prerequisites
 
@@ -67,8 +67,10 @@ More informations on the three above can be found [here](http://flask.pocoo.org/
   - `BETA_USERS` The credentials required to access the app when beta mode is enabled. You can specify multiple ones. **It is highly recommended to serve RWRS through HTTPS** because it uses [HTTP basic auth](https://en.wikipedia.org/wiki/Basic_access_authentication)
   - `STEAM_API_KEY` A [Steam API](https://steamcommunity.com/dev) key
   - `PACIFIC_PLAYERS_RANKS_COUNTRY` Ranks image / name to show for the Pacific players stats (`us`, `jp`)
+  - `MY_DISCORD_ID` My Discord user ID (snowflake)
   - `DISCORD_BOT_TOKEN` Authentication token used by the RWRS Discord bot
   - `DISCORD_BOT_CHANNEL_ID` The Discord channel ID the bot is allowed to talk in
+  - `DISCORD_BOT_ADMINS` A list of Discord user IDs (snowflakes) allowed to use hidden bot commands
   - `MAX_NUM_OF_PLAYERS_TO_TRACK_STATS_FOR` How many players should RWRS track the stats for (top players storted by XP)
 
 I'll let you search yourself about how to configure a web server along uWSGI.
@@ -150,31 +152,31 @@ Will save the current number of Steam players which have RWR running, and the cu
   1. `set FLASK_APP=rwrs.py`
   2. `flask db upgrade`
 
-### Save RWR root servers status
+### Saving RWR root servers status
 
 Will ping RWR root servers and store their status (up or down).
 
   1. `set FLASK_APP=rwrs.py`
   2. `flask get_root_rwr_servers_status`
 
-### Run the RWRS Discord bot
+### Running the RWRS Discord bot
 
   1. `set FLASK_APP=rwrs.py`
   2. `flask run_discord_bot`
 
-### Update the MaxMind GeoLite2 City database
+### Updating the MaxMind GeoLite2 City database
 
 More information in the script comments.
 
 `sh scripts/geolite2_city_updater.sh`
 
-### Update RWRS
+### Updating RWRS
 
 More information in the script comments.
 
-`sh scripts/rwrs_updater.sh [DOMAIN, default=rwrstats.com]`
+`sh scripts/rwrs_updater.sh [TYPE, default=fast, fast|full] [DOMAIN, default=rwrstats.com]`
 
-### Backup SQLite databases
+### Backuping SQLite databases
 
 More information in the script comments.
 

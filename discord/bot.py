@@ -29,7 +29,7 @@ class RwrsBotDiscoPlugin(Plugin):
     @Plugin.pre_command()
     def check_under_maintenance(self, func, event, args, kwargs):
         """Check if RWRS is under maintenance, preventing any commands to be invoked if that's the case."""
-        if os.path.exists('maintenance'):
+        if os.path.exists('maintenance') and event.msg.author.id not in app.config['DISCORD_BOT_ADMINS']:
             event.msg.reply(':wrench: RWRS is under ongoing maintenance! Please try again later.')
 
             return None
@@ -54,11 +54,59 @@ class RwrsBotDiscoPlugin(Plugin):
     @Plugin.command('say', parser=True)
     @Plugin.parser.add_argument('message')
     def on_say_command(self, event, args):
-        """Admin command: makes the bot to say something."""
+        """Admin command: make the bot to say something."""
         if event.msg.author.id not in app.config['DISCORD_BOT_ADMINS']:
             return
 
         self.client.api.channels_messages_create(app.config['DISCORD_BOT_CHANNEL_ID'], args.message)
+
+    @Plugin.command('maintenance', parser=True)
+    @Plugin.parser.add_argument('action', choices=['enable', 'disable'])
+    def on_maintenance_command(self, event, args):
+        """Admin command: enables or disables the maintenance mode for the whole system."""
+        if event.msg.author.id not in app.config['DISCORD_BOT_ADMINS']:
+            return
+
+        if args.action == 'enable':
+            if os.path.exists('maintenance'):
+                event.msg.reply('Maintenance mode already enabled.')
+            else:
+                open('maintenance', 'a').close()
+
+                event.msg.reply('Maintenance mode enabled.')
+        elif args.action == 'disable':
+            if not os.path.exists('maintenance'):
+                event.msg.reply('Maintenance mode already disabled.')
+            else:
+                os.remove('maintenance')
+
+            event.msg.reply('Maintenance mode disabled.')
+
+    @Plugin.command('motd', parser=True)
+    @Plugin.parser.add_argument('action', choices=['set', 'remove'])
+    @Plugin.parser.add_argument('message', nargs='?')
+    def on_motd_command(self, event, args):
+        """Admin command: set or remove the MOTD displayed on the top of all pages."""
+        if event.msg.author.id not in app.config['DISCORD_BOT_ADMINS']:
+            return
+
+        if args.action == 'set':
+            if not args.message:
+                event.msg.reply('Argument required: message')
+
+                return
+
+            with open('motd', 'w', encoding='utf-8') as f:
+                f.write(args.message)
+
+            event.msg.reply('MOTD updated.')
+        elif args.action == 'remove':
+            if not os.path.exists('motd'):
+                event.msg.reply('MOTD already removed.')
+            else:
+                os.remove('motd')
+
+                event.msg.reply('MOTD removed.')
 
     @Plugin.command('help')
     def on_help_command(self, event):
