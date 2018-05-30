@@ -352,7 +352,7 @@ def save_players_stats(reset):
 
             db.session.commit()
 
-            # Save current stats of the RWR accounts
+            # Save current stats of the RWR accounts (if their respective stats changed)
             for player in players:
                 rwr_account_stat = RwrAccountStat()
 
@@ -371,7 +371,8 @@ def save_players_stats(reset):
                 rwr_account_stat.throwables_thrown = player.throwables_thrown
                 rwr_account_stat.rwr_account_id = rwr_accounts_by_username[player.username].id
 
-                db.session.add(rwr_account_stat)
+                if rwr_account_stat.can_be_saved:
+                    db.session.add(rwr_account_stat)
 
             db.session.commit()
 
@@ -453,7 +454,7 @@ def import_rwrtrack_data(directory, reset):
 
                 db.session.commit()
 
-                # Save current stats of the RWR accounts
+                # Save current stats of the RWR accounts (if their respective stats changed)
                 for player in players:
                     username = player[0] # FIXME Username isn't properly encoded, try to decode it to unicode
 
@@ -475,7 +476,8 @@ def import_rwrtrack_data(directory, reset):
                     rwr_account_stat.created_at = created_at
                     rwr_account_stat.rwr_account_id = rwr_accounts_by_username[username].id
 
-                    db.session.add(rwr_account_stat)
+                    if rwr_account_stat.can_be_saved:
+                        db.session.add(rwr_account_stat)
 
                     leaderboard_position += 1
 

@@ -158,7 +158,10 @@ class RwrRootServer(db.Model):
     def are_rwr_root_servers_ok():
         """Return True if all root RWR servers are OK, False otherwise."""
         hosts_count = len(rwr.constants.ROOT_RWR_HOSTS)
-        up_hosts_count = RwrRootServer.query.with_entities(func.count('*')).filter(RwrRootServer.status == RwrRootServerStatus.UP, RwrRootServer.host.in_(rwr.constants.ROOT_RWR_HOSTS)).scalar()
+        up_hosts_count = RwrRootServer.query.with_entities(func.count('*')).filter(
+            RwrRootServer.status == RwrRootServerStatus.UP,
+            RwrRootServer.host.in_(rwr.constants.ROOT_RWR_HOSTS)
+        ).scalar()
 
         return hosts_count == up_hosts_count
 
@@ -385,7 +388,11 @@ class RwrAccount(db.Model):
 class RwrAccountStat(db.Model):
     __tablename__ = 'rwr_account_stats'
     __bind_key__ = 'rwr_account_stats'
-    __table_args__ = (db.Index('rwr_account_id_idx', 'rwr_account_id'), )
+    __table_args__ = (
+        db.Index('rwr_account_id_idx', 'rwr_account_id'),
+        db.Index('created_at_idx', 'created_at'),
+        db.Index('hash_idx', 'hash')
+    )
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 
@@ -409,6 +416,8 @@ class RwrAccountStat(db.Model):
     def compute_hash(self):
         """Compute the hash corresponding to the data of this RwrAccountStat."""
         data = [
+            self.score,
+            self.kd_ratio,
             self.leaderboard_position,
             self.xp,
             self.kills,
@@ -427,7 +436,17 @@ class RwrAccountStat(db.Model):
         data = [str(d) for d in data]
         data = ''.join(data).encode()
 
-        return hashlib.md5(data).hexdigest()
+        self.hash = hashlib.md5(data).hexdigest()
+
+    @memoized_property
+    def can_be_saved(self):
+        """Check if this RwrAccountStat instance hasn't already a similar one in the DB."""
+        self.compute_hash()
+
+        return RwrAccountStat.query.with_entities(func.count('*')).filter(
+            RwrAccountStat.rwr_account_id == self.rwr_account_id,
+            RwrAccountStat.hash == self.hash
+        ).scalar() > 0
 
     @memoized_property
     def rwr_account(self):
