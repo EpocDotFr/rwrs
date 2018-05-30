@@ -340,7 +340,7 @@ class DataScraper:
         return ret
 
     @cache.memoize(timeout=app.config['PLAYERS_CACHE_TIMEOUT'])
-    def get_players(self, database, sort=constants.PlayersSort.XP, target=None, start=0, limit=app.config['PLAYERS_LIST_PAGE_SIZES'][0], basic=False):
+    def get_players(self, database, sort=constants.PlayersSort.SCORE, target=None, start=0, limit=app.config['PLAYERS_LIST_PAGE_SIZES'][0], basic=False):
         """Get and parse a list of RWR players."""
         if limit > 100:
             raise ValueError('limit cannot be greater than 100')
