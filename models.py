@@ -5,6 +5,7 @@ from sqlalchemy import func
 from enum import Enum
 import rwr.constants
 import helpers
+import hashlib
 import arrow
 
 
@@ -401,9 +402,32 @@ class RwrAccountStat(db.Model):
     distance_moved = db.Column(db.Float, nullable=False)
     shots_fired = db.Column(db.Integer, nullable=False)
     throwables_thrown = db.Column(db.Integer, nullable=False)
-    created_at = db.Column(ArrowType, default=arrow.utcnow().floor('minute'), nullable=False)
+    created_at = db.Column(ArrowType, default=arrow.utcnow().floor('day'), nullable=False)
 
     rwr_account_id = db.Column(db.Integer, nullable=False) # Weak foreign key to the rwr_accounts located in another DB
+
+    def compute_hash(self):
+        """Compute the hash corresponding to the data of this RwrAccountStat."""
+        data = [
+            self.leaderboard_position,
+            self.xp,
+            self.kills,
+            self.deaths,
+            self.time_played,
+            self.longest_kill_streak,
+            self.targets_destroyed,
+            self.vehicles_destroyed,
+            self.soldiers_healed,
+            self.teamkills,
+            self.distance_moved,
+            self.shots_fired,
+            self.throwables_thrown
+        ]
+
+        data = [str(d) for d in data]
+        data = ''.join(data).encode()
+
+        return hashlib.md5(data).hexdigest()
 
     @memoized_property
     def rwr_account(self):
