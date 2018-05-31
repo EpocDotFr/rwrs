@@ -31,7 +31,7 @@ class RwrsBotDiscoPlugin(Plugin):
     @Plugin.pre_command()
     def check_guild(self, func, event, args, kwargs):
         """Check if the incoming message comes from the right Discord guild (server)."""
-        if event.msg.guild().id != app.config['DISCORD_BOT_GUILD_ID']:
+        if event.msg.guild and event.msg.guild.id != app.config['DISCORD_BOT_GUILD_ID']:
             return None
 
         return event
