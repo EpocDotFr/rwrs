@@ -236,10 +236,7 @@ class Player:
     @memoized_property
     def rwr_account(self):
         """Return the RwrAccount associated to this Player."""
-        return RwrAccount.query.filter(
-            RwrAccount.type == RwrAccountType(self.database.upper()),
-            RwrAccount.username == self.username
-        ).first()
+        return RwrAccount.get_by_type_and_username(self.database, self.username)
 
     @memoized_property
     def has_stats(self):

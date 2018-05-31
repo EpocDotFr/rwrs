@@ -1,7 +1,7 @@
+from models import RwrRootServer, Variable, RwrAccount
 from disco.types.user import GameType, Game, Status
 from disco.client import Client, ClientConfig
 from disco.util.logging import setup_logging
-from models import RwrRootServer, Variable
 from disco.bot import Bot, Plugin
 from . import constants, utils
 from tabulate import tabulate
@@ -126,23 +126,36 @@ class RwrsBotDiscoPlugin(Plugin):
 
     @Plugin.command('stats', aliases=['statistics'], parser=True)
     @Plugin.parser.add_argument('username')
+    @Plugin.parser.add_argument('date', nargs='?')
     @Plugin.parser.add_argument('database', choices=rwr.constants.VALID_DATABASES, nargs='?', default='invasion')
     def on_stats_command(self, event, args):
         """Displays stats about the specified player."""
         args.username = utils.prepare_username(args.username)
 
-        player = self.rwr_scraper.search_player_by_username(args.database, args.username)
+        if args.date: # Stats history lookup mode
+            rwr_account = RwrAccount.get_by_type_and_username(args.database, args.username)
 
-        if not player:
-            event.msg.reply('Sorry dude, this player don\'t exist :confused:')
+            if not rwr_account: # Check if the player has an RwrAccount
+                event.msg.reply('Sorry my friend, stats history isn\'t recorded for this player :confused:')
 
-            return
+                return
+
+            # TODO Get stats for the given date. If none: error message
+            # rwr_account_stat = RwrAccountStat.get_stats(rwr_account.id, date) # Date should be an arrow instance
+            # player = rwr.player.Player.craft(rwr_account, rwr_account_stat) # Also set the rwr_account attribute of Player in create()
+        else: # Live data mode
+            player = self.rwr_scraper.search_player_by_username(args.database, args.username)
+
+            if not player:
+                event.msg.reply('Sorry dude, this player don\'t exist :confused:')
+
+                return
 
         servers = self.rwr_scraper.get_servers()
 
         player.set_playing_on_server(servers)
 
-        event.msg.reply('Here\'s stats for **{}** on **{}** ranked servers:'.format(player.username_display, player.database_name), embed=utils.create_player_message_embed(player))
+        event.msg.reply('Here\'s stats for **{}** on **{}** ranked servers:'.format(player.username_display, player.database_name), embed=utils.create_player_message_embed(player)) # TODO Add date if given
 
     @Plugin.command('whereis', aliases=['where is', 'where'], parser=True)
     @Plugin.parser.add_argument('username')

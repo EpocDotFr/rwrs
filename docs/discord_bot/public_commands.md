@@ -10,10 +10,13 @@ Valid common parameters values:
 
 - `database`: `invasion`, `pacific`
 
+- `date`: TODO
+
 **📄 Commands list**
 
 - `stats`: displays stats about the specified player. Parameters:
     - `username`: required. Full username is required
+    - `date`: optional.
     - `database`: optional. Defaults to `invasion`
 
 - `top`: displays the top 24 players. Parameters:

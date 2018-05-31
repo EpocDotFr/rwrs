@@ -381,6 +381,14 @@ class RwrAccount(db.Model):
         """Determine is this RwrAccount object have at least one RwrAccountStat."""
         return RwrAccountStat.query.with_entities(func.count('*')).filter(RwrAccountStat.rwr_account_id == self.id).scalar() > 0
 
+    @staticmethod
+    def get_by_type_and_username(type, username):
+        """Return an RwrAccount given its type and username."""
+        return RwrAccount.query.filter(
+            RwrAccount.type == RwrAccountType(type.upper()),
+            RwrAccount.username == username
+        ).first()
+
     def __repr__(self):
         return 'RwrAccount:' + self.id
 
