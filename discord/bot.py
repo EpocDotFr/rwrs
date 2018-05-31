@@ -1,10 +1,11 @@
-from models import RwrRootServer, Variable, RwrAccount
+from models import RwrRootServer, Variable, RwrAccount, RwrAccountStat
 from disco.types.user import GameType, Game, Status
 from disco.client import Client, ClientConfig
 from disco.util.logging import setup_logging
 from disco.bot import Bot, Plugin
 from . import constants, utils
 from tabulate import tabulate
+from rwr.player import Player
 from rwrs import app, cache
 from flask import url_for
 from gevent import monkey
@@ -13,6 +14,7 @@ import rwr.utils
 import steam_api
 import logging
 import helpers
+import arrow
 import os
 
 monkey.patch_all()
@@ -135,14 +137,19 @@ class RwrsBotDiscoPlugin(Plugin):
         if args.date: # Stats history lookup mode
             rwr_account = RwrAccount.get_by_type_and_username(args.database, args.username)
 
-            if not rwr_account: # Check if the player has an RwrAccount
+            if not rwr_account:
                 event.msg.reply('Sorry my friend, stats history isn\'t recorded for this player :confused:')
 
                 return
 
-            # TODO Get stats for the given date. If none: error message
-            # rwr_account_stat = RwrAccountStat.get_stats(rwr_account.id, date) # Date should be an arrow instance
-            # player = rwr.player.Player.craft(rwr_account, rwr_account_stat) # Also set the rwr_account attribute of Player in create()
+            rwr_account_stat = RwrAccountStat.get_stats(rwr_account.id, arrow.get(args.date).floor('day')) # TODO Improve date argument
+
+            if not rwr_account_stat:
+                event.msg.reply('No stats were found for the given date :confused:')
+
+                return
+
+            player = Player.craft(rwr_account, rwr_account_stat)
         else: # Live data mode
             player = self.rwr_scraper.search_player_by_username(args.database, args.username)
 

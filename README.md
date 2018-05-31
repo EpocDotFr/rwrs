@@ -14,6 +14,7 @@ and its Pacific DLC. Available at [rwrstats.com](https://rwrstats.com/).
     - Compare two players stats
     - Friends list (easily know on which server your friends are playing on. There's no need to create a user account or whatever)
     - Players list (leaderboard)
+    - Stats history
   - Public servers
     - Real servers location
     - Real maps name

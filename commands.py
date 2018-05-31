@@ -389,7 +389,7 @@ def save_players_stats(reset):
                     if already_existing_rwr_account_stats.hash == rwr_account_stat.hash:
                         all_rwr_accounts_stat.remove(rwr_account_stat)
 
-            # Finally save stats for eligible  players
+            # Finally save stats for all eligible players
             db.session.add_all(all_rwr_accounts_stat)
             db.session.commit()
 
@@ -513,7 +513,7 @@ def import_rwrtrack_data(directory, reset):
                         if already_existing_rwr_account_stats.hash == rwr_account_stat.hash:
                             all_rwr_accounts_stat.remove(rwr_account_stat)
 
-                # Finally save stats for eligible  players
+                # Finally save stats for all eligible players
                 db.session.add_all(all_rwr_accounts_stat)
                 db.session.commit()
 

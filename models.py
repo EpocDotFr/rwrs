@@ -446,6 +446,13 @@ class RwrAccountStat(db.Model):
 
         self.hash = hashlib.md5(data).hexdigest()
 
+    def get_stats(self, rwr_account_id, date):
+        """Return the RwrAccountStat for the given rwr_account_id and date."""
+        return RwrAccountStat.query.filter(
+            RwrAccountStat.rwr_account_id == rwr_account_id,
+            RwrAccountStat.created_at == date # TODO Handle when there isn't stats for this day (take the previous ones)
+        ).first()
+
     @memoized_property
     def rwr_account(self):
         """Return the RwrAccount object linked to this RwrAccountStat."""
