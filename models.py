@@ -409,6 +409,7 @@ class RwrAccountStat(db.Model):
     distance_moved = db.Column(db.Float, nullable=False)
     shots_fired = db.Column(db.Integer, nullable=False)
     throwables_thrown = db.Column(db.Integer, nullable=False)
+    hash = db.Column(db.String(32), nullable=False)
     created_at = db.Column(ArrowType, default=arrow.utcnow().floor('day'), nullable=False)
 
     rwr_account_id = db.Column(db.Integer, nullable=False) # Weak foreign key to the rwr_accounts located in another DB

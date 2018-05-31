@@ -78,11 +78,14 @@ def upgrade_rwr_account_stats():
     sa.Column('distance_moved', sa.Float(), nullable=False),
     sa.Column('shots_fired', sa.Integer(), nullable=False),
     sa.Column('throwables_thrown', sa.Integer(), nullable=False),
+    sa.Column('hash', sa.String(length=32), nullable=False),
     sa.Column('created_at', sqlalchemy_utils.types.arrow.ArrowType(), nullable=False),
     sa.Column('rwr_account_id', sa.Integer(), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index('rwr_account_id_idx', 'rwr_account_stats', ['rwr_account_id'], unique=False)
+    op.create_index('created_at_idx', 'rwr_account_stats', ['created_at'], unique=False)
+    op.create_index('hash_idx', 'rwr_account_stats', ['hash'], unique=False)
     # ### end Alembic commands ###
 
 
