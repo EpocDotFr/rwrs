@@ -27,6 +27,14 @@ class RwrsBotDiscoPlugin(Plugin):
         self.steam_api_client = steam_api.Client(app.config['STEAM_API_KEY'])
 
     @Plugin.pre_command()
+    def check_guild(self, func, event, args, kwargs):
+        """Check if the incoming message comes from the right Discord guild (server)."""
+        if event.msg.guild().id != app.config['DISCORD_BOT_GUILD_ID']:
+            return None
+
+        return event
+
+    @Plugin.pre_command()
     def check_under_maintenance(self, func, event, args, kwargs):
         """Check if RWRS is under maintenance, preventing any commands to be invoked if that's the case."""
         if os.path.exists('maintenance') and event.msg.author.id not in app.config['DISCORD_BOT_ADMINS']:
