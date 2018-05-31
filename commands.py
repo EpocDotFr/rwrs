@@ -352,7 +352,9 @@ def save_players_stats(reset):
 
             db.session.commit()
 
-            # Save current stats of the RWR accounts (if their respective stats changed)
+            # Create all the RwrAccountStat objects for each players
+            all_rwr_accounts_stat = []
+
             for player in players:
                 rwr_account_stat = RwrAccountStat()
 
@@ -371,9 +373,24 @@ def save_players_stats(reset):
                 rwr_account_stat.throwables_thrown = player.throwables_thrown
                 rwr_account_stat.rwr_account_id = rwr_accounts_by_username[player.username].id
 
-                if rwr_account_stat.can_be_saved:
-                    db.session.add(rwr_account_stat)
+                rwr_account_stat.compute_hash()
 
+                all_rwr_accounts_stat.append(rwr_account_stat)
+
+            # Remove all RwrAccountStat objects already existing in the DB (to prevent duplicates when stats didn't changed)
+            all_rwr_accounts_stat_hashes = [rwr_account_stat.hash for rwr_account_stat in all_rwr_accounts_stat]
+
+            already_existing_rwr_accounts_stats = RwrAccountStat.query.filter(
+                RwrAccountStat.hash.in_(all_rwr_accounts_stat_hashes)
+            ).all()
+
+            for already_existing_rwr_account_stats in already_existing_rwr_accounts_stats:
+                for rwr_account_stat in all_rwr_accounts_stat:
+                    if already_existing_rwr_account_stats.hash == rwr_account_stat.hash:
+                        all_rwr_accounts_stat.remove(rwr_account_stat)
+
+            # Finally save stats for eligible  players
+            db.session.add_all(all_rwr_accounts_stat)
             db.session.commit()
 
     click.secho('Done', fg='green')
@@ -454,7 +471,9 @@ def import_rwrtrack_data(directory, reset):
 
                 db.session.commit()
 
-                # Save current stats of the RWR accounts (if their respective stats changed)
+                # Create all the RwrAccountStat objects for each players
+                all_rwr_accounts_stat = []
+
                 for player in players:
                     username = player[0] # FIXME Username isn't properly encoded, try to decode it to unicode
 
@@ -476,11 +495,26 @@ def import_rwrtrack_data(directory, reset):
                     rwr_account_stat.created_at = created_at
                     rwr_account_stat.rwr_account_id = rwr_accounts_by_username[username].id
 
-                    if rwr_account_stat.can_be_saved:
-                        db.session.add(rwr_account_stat)
+                    rwr_account_stat.compute_hash()
+
+                    all_rwr_accounts_stat.append(rwr_account_stat)
 
                     leaderboard_position += 1
 
+                # Remove all RwrAccountStat objects already existing in the DB (to prevent duplicates when stats didn't changed)
+                all_rwr_accounts_stat_hashes = [rwr_account_stat.hash for rwr_account_stat in all_rwr_accounts_stat]
+
+                already_existing_rwr_accounts_stats = RwrAccountStat.query.filter(
+                    RwrAccountStat.hash.in_(all_rwr_accounts_stat_hashes)
+                ).all()
+
+                for already_existing_rwr_account_stats in already_existing_rwr_accounts_stats:
+                    for rwr_account_stat in all_rwr_accounts_stat:
+                        if already_existing_rwr_account_stats.hash == rwr_account_stat.hash:
+                            all_rwr_accounts_stat.remove(rwr_account_stat)
+
+                # Finally save stats for eligible  players
+                db.session.add_all(all_rwr_accounts_stat)
                 db.session.commit()
 
                 start += chunks

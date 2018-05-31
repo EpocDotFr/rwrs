@@ -417,8 +417,6 @@ class RwrAccountStat(db.Model):
     def compute_hash(self):
         """Compute the hash corresponding to the data of this RwrAccountStat."""
         data = [
-            self.score,
-            self.kd_ratio,
             self.leaderboard_position,
             self.xp,
             self.kills,
@@ -431,23 +429,14 @@ class RwrAccountStat(db.Model):
             self.teamkills,
             self.distance_moved,
             self.shots_fired,
-            self.throwables_thrown
+            self.throwables_thrown,
+            self.rwr_account_id
         ]
 
         data = [str(d) for d in data]
         data = ''.join(data).encode()
 
         self.hash = hashlib.md5(data).hexdigest()
-
-    @memoized_property
-    def can_be_saved(self):
-        """Check if this RwrAccountStat instance hasn't already a similar one in the DB."""
-        self.compute_hash()
-
-        return RwrAccountStat.query.with_entities(func.count('*')).filter(
-            RwrAccountStat.rwr_account_id == self.rwr_account_id,
-            RwrAccountStat.hash == self.hash
-        ).scalar() > 0
 
     @memoized_property
     def rwr_account(self):
