@@ -72,6 +72,7 @@ More informations on the three above can be found [here](http://flask.pocoo.org/
   - `DISCORD_BOT_TOKEN` Authentication token used by the RWRS Discord bot
   - `DISCORD_BOT_CHANNEL_ID` The Discord channel ID the bot is allowed to talk in
   - `DISCORD_BOT_ADMINS` A list of Discord user IDs (snowflakes) allowed to use hidden bot commands
+  - `DISCORD_BOT_GUILD_ID` A Discord guild (server) ID the bot will be allowed to listen for commands from
   - `MAX_NUM_OF_PLAYERS_TO_TRACK_STATS_FOR` How many players should RWRS track the stats for (top players storted by XP)
 
 I'll let you search yourself about how to configure a web server along uWSGI.
