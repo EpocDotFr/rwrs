@@ -136,7 +136,7 @@ class RwrsBotDiscoPlugin(Plugin):
 
     @Plugin.command('stats', aliases=['statistics'], parser=True)
     @Plugin.parser.add_argument('username')
-    @Plugin.parser.add_argument('date', nargs='?')
+    @Plugin.parser.add_argument('date', nargs='?', default=None)
     @Plugin.parser.add_argument('database', choices=rwr.constants.VALID_DATABASES, nargs='?', default='invasion')
     def on_stats_command(self, event, args):
         """Displays stats about the specified player."""
