@@ -22,7 +22,7 @@
     <tbody>
         {% for stat in stats.items %}
             <tr>
-                <td>{{ stat.created_at.format('MMM D, YYYY') }}</td>
+                <td>{{ stat.created_at.format('MMMM D, YYYY') }}</td>
                 <td>{{ stat.leaderboard_position_display }}</td>
                 <td>{{ stat.xp_display }}</td>
                 <td>{{ stat.kills_display }}</td>

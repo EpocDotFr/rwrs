@@ -140,20 +140,26 @@ class RwrsBotDiscoPlugin(Plugin):
     @Plugin.command('stats', aliases=['statistics'], parser=True)
     @Plugin.parser.add_argument('username')
     @Plugin.parser.add_argument('database', choices=rwr.constants.VALID_DATABASES, nargs='?', default='invasion')
-    @Plugin.parser.add_argument('date', nargs='?', default=None)
+    @Plugin.parser.add_argument('date', nargs='?')
     def on_stats_command(self, event, args):
         """Displays stats about the specified player."""
         args.username = utils.prepare_username(args.username)
 
         if args.date: # Stats history lookup mode
-            rwr_account = RwrAccount.get_by_type_and_username(args.database, args.username)
-
-            if not rwr_account:
-                event.msg.reply('Sorry my friend, stats history isn\'t recorded for this player :confused:')
+            try:
+                args.date = arrow.get(args.date) # TODO Improve date argument to be more intuitive to type by the user
+            except Exception as e:
+                event.msg.reply('Invalid date provided')
 
                 return
 
-            rwr_account_stat = RwrAccountStat.get_stats(rwr_account.id, arrow.get(args.date).floor('day')) # TODO Improve date argument
+            rwr_account = RwrAccount.get_by_type_and_username(args.database, args.username)
+
+            if not rwr_account:
+                event.msg.reply('Sorry my friend, stats history isn\'t recorded for this player :confused: He must be part of the {} most experienced players.'.format(app.config['MAX_NUM_OF_PLAYERS_TO_TRACK_STATS_FOR']))
+
+                return
+            rwr_account_stat = RwrAccountStat.get_by_account_id_and_date(rwr_account.id, args.date)
 
             if not rwr_account_stat:
                 event.msg.reply('No stats were found for the given date :confused:')
@@ -173,7 +179,11 @@ class RwrsBotDiscoPlugin(Plugin):
 
         player.set_playing_on_server(servers)
 
-        event.msg.reply('Here\'s stats for **{}** on **{}** ranked servers:'.format(player.username_display, player.database_name), embed=utils.create_player_message_embed(player)) # TODO Add date if given
+        event.msg.reply('Here\'s stats for **{}** on **{}** ranked servers{}:'.format(
+            player.username_display,
+            player.database_name,
+            ' for **' + args.date.format('MMMM D, YYYY') + '**' if args.date else ''
+        ), embed=utils.create_player_message_embed(player))
 
     @Plugin.command('whereis', aliases=['where is', 'where'], parser=True)
     @Plugin.parser.add_argument('username')
@@ -306,7 +316,7 @@ class RwrsBotDiscoPlugin(Plugin):
 
         for player in players:
             embed.add_field(
-                name='#{} {}'.format(player.position_display, player.username_display),
+                name='#{} {}'.format(player.leaderboard_position_display, player.username_display),
                 value=constants.VALID_PLAYER_SORTS[args.sort]['getter'](player),
                 inline=True
             )
@@ -346,7 +356,7 @@ class RwrsBotDiscoPlugin(Plugin):
                 username = player.username_display
 
             embed.add_field(
-                name='{}#{} {}'.format('➡️ ' if player.username == args.username else '', player.position, player.username_display),
+                name='{}#{} {}'.format('➡️ ' if player.username == args.username else '', player.leaderboard_position, player.username_display),
                 value=constants.VALID_PLAYER_SORTS[args.sort]['getter'](player),
                 inline=True
             )

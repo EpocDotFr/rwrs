@@ -16,7 +16,7 @@ class Player:
         """Load a player data from an HTML <tr> node."""
         ret = cls()
 
-        position_cell = node[0]
+        leaderboard_position_cell = node[0]
         username_cell = node[1]
         kills_cell = node[2]
         deaths_cell = node[3]
@@ -37,7 +37,7 @@ class Player:
         ret.database_name = utils.get_database_name(ret.database)
         ret.database_game_type = ret.get_game_type_from_database()
 
-        ret.position = int(position_cell.text)
+        ret.leaderboard_position = int(leaderboard_position_cell.text)
         ret.username = username_cell.text
         ret.kills = int(kills_cell.text)
         ret.deaths = int(deaths_cell.text)
@@ -72,7 +72,7 @@ class Player:
 
         ret.username = rwr_account.username
 
-        ret.position = rwr_account_stat.leaderboard_position
+        ret.leaderboard_position = rwr_account_stat.leaderboard_position
         ret.kills = rwr_account_stat.kills
         ret.deaths = rwr_account_stat.deaths
         ret.score = rwr_account_stat.score
@@ -95,7 +95,7 @@ class Player:
     def set_advanced_data(self):
         self.rank = self.get_current_rank()
 
-        self.position_display = helpers.humanize_integer(self.position)
+        self.leaderboard_position_display = helpers.humanize_integer(self.leaderboard_position)
 
         username_lower = self.username.lower()
 

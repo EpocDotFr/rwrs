@@ -76,7 +76,7 @@
         <tbody>
             {% for player in players %}
                 <tr{% if args.get('target') == player.username %} class="notice"{% endif %} data-username="{{ player.username }}">
-                    <td>{{ player.position_display }}</td>
+                    <td>{{ player.leaderboard_position_display }}</td>
                     <td class="nowrap">{{ macros.player_name(player, link=True, show_rank=True, show_online=True) }}</td>
                     <td>{{ player.xp_display }}</td>
                     <td>{{ player.kills_display }}</td>

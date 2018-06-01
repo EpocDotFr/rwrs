@@ -446,11 +446,12 @@ class RwrAccountStat(db.Model):
 
         self.hash = hashlib.md5(data).hexdigest()
 
-    def get_stats(self, rwr_account_id, date):
-        """Return the RwrAccountStat for the given rwr_account_id and date."""
+    @staticmethod
+    def get_by_account_id_and_date(rwr_account_id, date):
+        """Return the RwrAccountStat for the given rwr_account_id and date (arrow instance)."""
         return RwrAccountStat.query.filter(
             RwrAccountStat.rwr_account_id == rwr_account_id,
-            RwrAccountStat.created_at == date # TODO Handle when there isn't stats for this day (take the previous ones)
+            RwrAccountStat.created_at == date.floor('day') # TODO Handle when there isn't stats for this day (take the previous ones)
         ).first()
 
     @memoized_property
