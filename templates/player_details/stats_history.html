@@ -1,3 +1,7 @@
+{% if player.leaderboard_position > config['MAX_NUM_OF_PLAYERS_TO_TRACK_STATS_FOR'] -%}
+    <p class="alert info pas">Statistics history for this player is no more being tracked as he/she's no more part of the {{ config['MAX_NUM_OF_PLAYERS_TO_TRACK_STATS_FOR'] }} most experienced players of the {{ player.database_name }} leaderboard.</p>
+{% endif -%}
+
 <table class="{{ 'striped' if stats.items }} mbn">
     <thead>
         <tr>

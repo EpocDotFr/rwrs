@@ -374,7 +374,7 @@ class DataScraper:
         return players
 
     @cache.memoize(timeout=app.config['PLAYERS_CACHE_TIMEOUT'])
-    def search_player_by_username(self, database, username):
+    def search_player_by_username(self, database, username, check_exist_only=False):
         """Search for a RWR player (exact match)."""
         if database not in constants.VALID_DATABASES:
             raise ValueError('database is invalid')
@@ -390,10 +390,13 @@ class DataScraper:
 
         node = html_content.xpath('(//table/tr[position() = 2])[1]')
 
-        if not node:
-            return None
+        if check_exist_only:
+            return False if not node else True
+        else:
+            if not node:
+                return None
 
-        return Player.load(database, node[0], alternative=True)
+            return Player.load(database, node[0], alternative=True)
 
     def get_current_server_of_player(self, target_username):
         """Return the server where the specified player is playing on, if any (partial match)."""

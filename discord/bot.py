@@ -153,16 +153,24 @@ class RwrsBotDiscoPlugin(Plugin):
 
                 return
 
+            player_exist = self.rwr_scraper.search_player_by_username(args.database, args.username, check_exist_only=True)
+
+            if not player_exist:
+                event.msg.reply('Sorry dude, this player don\'t exist :confused:')
+
+                return
+
             rwr_account = RwrAccount.get_by_type_and_username(args.database, args.username)
 
             if not rwr_account:
-                event.msg.reply('Sorry my friend, stats history isn\'t recorded for this player :confused: He must be part of the {} most experienced players.'.format(app.config['MAX_NUM_OF_PLAYERS_TO_TRACK_STATS_FOR']))
+                event.msg.reply('Sorry my friend, stats history isn\'t recorded for this player :confused: He/she must be part of the {} most experienced players.'.format(app.config['MAX_NUM_OF_PLAYERS_TO_TRACK_STATS_FOR']))
 
                 return
+
             rwr_account_stat = RwrAccountStat.get_by_account_id_and_date(rwr_account.id, args.date)
 
             if not rwr_account_stat:
-                event.msg.reply('No stats were found for the given date :confused:')
+                event.msg.reply('No stats were found for the given date :confused: Are you sure he/she is part of the {} most experienced players?'.format(app.config['MAX_NUM_OF_PLAYERS_TO_TRACK_STATS_FOR']))
 
                 return
 
