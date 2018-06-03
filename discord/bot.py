@@ -146,9 +146,9 @@ class RwrsBotDiscoPlugin(Plugin):
         args.username = utils.prepare_username(args.username)
 
         if args.date: # Stats history lookup mode
-            try:
-                args.date = arrow.get(args.date) # TODO Improve date argument to be more intuitive to type by the user
-            except Exception as e:
+            args.date = utils.parse_date(args.date)
+
+            if not args.date:
                 event.msg.reply('Invalid date provided')
 
                 return
