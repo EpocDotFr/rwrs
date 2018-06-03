@@ -329,11 +329,6 @@ def save_players_stats(reset):
 
             rwr_accounts_by_username = {rwr_account.username: rwr_account for rwr_account in existing_rwr_accounts}
 
-            # Remove players already having an RWR account and that are already up-to-date in the DB to prevent saving duplicate stats
-            for player in players:
-                if player.username in rwr_accounts_by_username and rwr_accounts_by_username[player.username].updated_at.floor('day') >= now:
-                    players.remove(player)
-
             # Create RWR accounts if they do not exists / touch the updated_at timestamp if they exists
             for player in players:
                 if player.username not in rwr_accounts_by_username:
@@ -444,13 +439,6 @@ def import_rwrtrack_data(directory, reset):
                 ).all()
 
                 rwr_accounts_by_username = {rwr_account.username: rwr_account for rwr_account in existing_rwr_accounts}
-
-                # Remove players already having an RWR account and that are already up-to-date in the DB to prevent saving duplicate stats
-                for player in players:
-                    username = player[0].encode('iso-8859-1').decode('utf-8')
-
-                    if username in rwr_accounts_by_username and rwr_accounts_by_username[username].updated_at.floor('day') >= now:
-                        players.remove(player)
 
                 # Create RWR accounts if they do not exists / touch the updated_at timestamp if they exists
                 for player in players:
