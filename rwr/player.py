@@ -64,7 +64,7 @@ class Player:
 
             ret.username_display = '{}{}'.format(
                 ret.username,
-                ' 👋' if ret.is_me else ' ✌️' if ret.is_contributor else ' 🛠' if ret.is_rwr_dev else ''
+                ' :wave:' if ret.is_me else ' :v:️' if ret.is_contributor else ' :tools:' if ret.is_rwr_dev else ''
             )
 
             ret.kills_display = helpers.humanize_integer(ret.kills)
