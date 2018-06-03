@@ -438,6 +438,7 @@ class RwrAccountStat(db.Model):
             self.distance_moved,
             self.shots_fired,
             self.throwables_thrown,
+            self.created_at,
             self.rwr_account_id
         ]
 
