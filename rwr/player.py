@@ -105,7 +105,7 @@ class Player:
 
         self.username_display = '{}{}'.format(
             self.username,
-            ' 👋' if self.is_me else ' ✌️' if self.is_contributor else ' 🛠' if self.is_rwr_dev else ''
+            ' :wave:' if self.is_me else ' :v:️' if self.is_contributor else ' :tools:' if self.is_rwr_dev else ''
         )
 
         self.kills_display = helpers.humanize_integer(self.kills)
