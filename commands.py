@@ -435,7 +435,7 @@ def import_rwrtrack_data(directory, reset):
             for players in helpers.chunks(list(csv_data), chunks):
                 click.echo('  Chunk start: {}'.format(start))
 
-                all_player_names = [player[0] for player in players] # FIXME Username isn't properly encoded, try to decode it to unicode
+                all_player_names = [player[0].encode('iso-8859-1').decode('utf-8') for player in players]
 
                 existing_rwr_accounts = RwrAccount.query.filter(
                     RwrAccount.type == RwrAccountType.INVASION,
@@ -446,14 +446,14 @@ def import_rwrtrack_data(directory, reset):
 
                 # Remove players already having an RWR account and that are already up-to-date in the DB to prevent saving duplicate stats
                 for player in players:
-                    username = player[0] # FIXME Username isn't properly encoded, try to decode it to unicode
+                    username = player[0].encode('iso-8859-1').decode('utf-8')
 
                     if username in rwr_accounts_by_username and rwr_accounts_by_username[username].updated_at.floor('day') >= now:
                         players.remove(player)
 
                 # Create RWR accounts if they do not exists / touch the updated_at timestamp if they exists
                 for player in players:
-                    username = player[0] # FIXME Username isn't properly encoded, try to decode it to unicode
+                    username = player[0].encode('iso-8859-1').decode('utf-8')
 
                     if username not in rwr_accounts_by_username:
                         rwr_account = RwrAccount()
@@ -475,7 +475,7 @@ def import_rwrtrack_data(directory, reset):
                 all_rwr_accounts_stat = []
 
                 for player in players:
-                    username = player[0] # FIXME Username isn't properly encoded, try to decode it to unicode
+                    username = player[0].encode('iso-8859-1').decode('utf-8')
 
                     rwr_account_stat = RwrAccountStat()
 
