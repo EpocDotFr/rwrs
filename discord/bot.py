@@ -14,7 +14,6 @@ import rwr.utils
 import steam_api
 import logging
 import helpers
-import arrow
 import os
 
 monkey.patch_all()
