@@ -448,11 +448,11 @@ class RwrAccountStat(db.Model):
 
     @staticmethod
     def get_by_account_id_and_date(rwr_account_id, date):
-        """Return the RwrAccountStat for the given rwr_account_id and date (arrow instance)."""
+        """Return the most recent RwrAccountStat for the given rwr_account_id and date (arrow instance)."""
         return RwrAccountStat.query.filter(
             RwrAccountStat.rwr_account_id == rwr_account_id,
-            RwrAccountStat.created_at == date.floor('day') # TODO Handle when there isn't stats for this day (take the previous ones)
-        ).first()
+            RwrAccountStat.created_at <= date.floor('day')
+        ).order_by(RwrAccountStat.created_at.desc()).first()
 
     @memoized_property
     def rwr_account(self):
