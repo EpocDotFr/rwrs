@@ -89,7 +89,7 @@ class ServerPlayerCount(db.Model, Measurable):
         return Measurable.transform_data(ServerPlayerCount.query.get_server_count(active_only))
 
     def __repr__(self):
-        return 'ServerPlayerCount:' + self.id
+        return 'ServerPlayerCount:{}'.format(self.id)
 
 
 class SteamPlayerCount(db.Model, Measurable):
@@ -116,7 +116,7 @@ class SteamPlayerCount(db.Model, Measurable):
         return Measurable.transform_data(SteamPlayerCount.query.get_player_count())
 
     def __repr__(self):
-        return 'SteamPlayerCount:' + self.id
+        return 'SteamPlayerCount:{}'.format(self.id)
 
 
 class RwrRootServerStatus(Enum):
@@ -213,7 +213,7 @@ class RwrRootServer(db.Model):
         return (is_everything_ok, servers_statuses)
 
     def __repr__(self):
-        return 'RwrRootServer:' + self.id
+        return 'RwrRootServer:{}'.format(self.id)
 
 
 class VariableType(Enum):
@@ -352,7 +352,7 @@ class Variable(db.Model):
         return peaks
 
     def __repr__(self):
-        return 'Variable:' + self.id
+        return 'Variable:{}'.format(self.id)
 
 
 class RwrAccountType(Enum):
@@ -390,7 +390,7 @@ class RwrAccount(db.Model):
         ).first()
 
     def __repr__(self):
-        return 'RwrAccount:' + self.id
+        return 'RwrAccount:{}'.format(self.id)
 
 
 class RwrAccountStat(db.Model):
@@ -520,4 +520,4 @@ class RwrAccountStat(db.Model):
         return helpers.humanize_integer(self.throwables_thrown)
 
     def __repr__(self):
-        return 'RwrAccountStat:' + self.id
+        return 'RwrAccountStat:{}'.format(self.id)
