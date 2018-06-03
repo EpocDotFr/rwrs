@@ -28,8 +28,6 @@ class DataScraper:
 
         response = scraper_requests_session.get(url, params=params, headers=headers, timeout=5)
 
-        response.encoding = 'unicode'
-
         response.raise_for_status()
 
         if parser == 'html':

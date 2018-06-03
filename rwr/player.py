@@ -31,7 +31,7 @@ class Player:
         xp_cell = node[15]
 
         ret.position = int(position_cell.text)
-        ret.username = username_cell.text
+        ret.username = username_cell.text.encode('iso-8859-1').decode('utf-8')
         ret.kills = int(kills_cell.text)
         ret.deaths = int(deaths_cell.text)
         ret.score = int(score_cell.text)
