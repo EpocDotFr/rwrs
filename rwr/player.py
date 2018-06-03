@@ -38,7 +38,7 @@ class Player:
         ret.database_game_type = ret.get_game_type_from_database()
 
         ret.leaderboard_position = int(leaderboard_position_cell.text)
-        ret.username = username_cell.text
+        ret.username = username_cell.text.encode('iso-8859-1').decode('utf-8')
         ret.kills = int(kills_cell.text)
         ret.deaths = int(deaths_cell.text)
         ret.score = int(score_cell.text)
@@ -70,7 +70,7 @@ class Player:
         ret.database_name = utils.get_database_name(ret.database)
         ret.database_game_type = ret.get_game_type_from_database()
 
-        ret.username = rwr_account.username
+        ret.username = rwr_account.username.encode('iso-8859-1').decode('utf-8')
 
         ret.leaderboard_position = rwr_account_stat.leaderboard_position
         ret.kills = rwr_account_stat.kills
