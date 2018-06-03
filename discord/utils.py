@@ -263,11 +263,21 @@ def parse_date(date):
 
     allowed_formats = [
         'MMM D YYYY',
+        'MMM DD YYYY',
         'MMM D, YYYY',
+        'MMM DD, YYYY',
         'MMM D',
+        'MMM DD',
         'MMMM D YYYY',
+        'MMMM DD YYYY',
         'MMMM D, YYYY',
-        'MMMM D'
+        'MMMM DD, YYYY',
+        'MMMM D',
+        'MMMM DD',
+        'DD/MM/YYYY',
+        'D/M/YYYY',
+        'YYYY-M-D',
+        'YYYY-MM-DD'
     ]
 
     try:
