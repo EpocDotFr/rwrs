@@ -295,7 +295,6 @@ def save_players_stats(reset):
 
     players_sort = rwr.constants.PlayersSort.XP
     players_count = app.config['MAX_NUM_OF_PLAYERS_TO_TRACK_STATS_FOR']
-    now = arrow.utcnow().floor('day')
     chunks = 100
 
     scraper = rwr.scraper.DataScraper()
@@ -411,7 +410,6 @@ def import_rwrtrack_data(directory, reset):
         db.session.commit()
 
     csv_filenames = glob(os.path.join(directory, '*.csv'))
-    now = arrow.utcnow().floor('day')
     chunks = 100
 
     click.echo('{} files to import'.format(len(csv_filenames)))
