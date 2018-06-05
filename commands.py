@@ -477,7 +477,7 @@ def import_rwrtrack_data(directory, reset):
                     rwr_account_stat.soldiers_healed = int(player[8])
                     rwr_account_stat.teamkills = int(player[9])
                     rwr_account_stat.distance_moved = round(int(player[10]) / 1000, 1)
-                    rwr_account_stat.shots_fired = int(player[10])
+                    rwr_account_stat.shots_fired = int(player[11])
                     rwr_account_stat.throwables_thrown = int(player[12])
                     rwr_account_stat.created_at = created_at
                     rwr_account_stat.rwr_account_id = rwr_accounts_by_username[username].id
