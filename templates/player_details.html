@@ -26,7 +26,7 @@
 {% set meta_image = player.rank.image_absolute %}
 
 {% block content %}
-    <div class="mtm w1140p center">
+    <div class="mts w1140p center">
         <form method="get" action="{{ url_for('players_compare', database=request.view_args.get('database'), username=player.username) }}" class="inbl fl">
             <input type="text" name="username_to_compare_with" placeholder="Type a player name" required> <button type="submit"><i class="fa fa-files-o"></i> Compare players</button>
         </form>
