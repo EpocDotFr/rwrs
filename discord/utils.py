@@ -5,7 +5,7 @@ import arrow
 import re
 
 
-_time_ago_regex = re.compile(r'(?P<days_ago>\d+) day(?:s?) ago|(?P<weeks_ago>\d+) week(?:s?) ago|(?P<months_ago>\d+) month(?:s?) ago|(?P<years_ago>\d+) years ago')
+_time_ago_regex = re.compile(r'(?P<days_ago>\d+) day(?:s?) ago|(?P<weeks_ago>\d+) week(?:s?) ago|(?P<months_ago>\d+) month(?:s?) ago|(?P<years_ago>\d+) year(?:s?) ago')
 
 
 def create_player_message_embed(player):
@@ -244,21 +244,21 @@ def parse_date(date):
     if date == 'yesterday':
         return now.shift(days=-1)
 
-    time_ago_match = _time_ago_regex.search(date)
+    time_ago_match = _time_ago_regex.match(date)
 
     if time_ago_match:
         time_ago = time_ago_match.groupdict()
 
-        if 'days_ago' in time_ago:
+        if time_ago['days_ago']:
             return now.shift(days=-int(time_ago['days_ago']))
 
-        if 'weeks_ago' in time_ago:
+        if time_ago['weeks_ago']:
             return now.shift(weeks=-int(time_ago['weeks_ago']))
 
-        if 'months_ago' in time_ago:
+        if time_ago['months_ago']:
             return now.shift(months=-int(time_ago['months_ago']))
 
-        if 'years_ago' in time_ago:
+        if time_ago['years_ago']:
             return now.shift(years=-int(time_ago['years_ago']))
 
     allowed_formats = [
@@ -280,14 +280,4 @@ def parse_date(date):
         'YYYY-MM-DD'
     ]
 
-    try:
-        ret = arrow.get(date, allowed_formats)
-
-        if ret.year == 1:
-            ret = ret.replace(year=now.year)
-
-        return ret
-    except Exception as e:
-        pass
-
-    return False
+    return arrow.get(date, allowed_formats).replace(year=now.year)
