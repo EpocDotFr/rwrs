@@ -33,7 +33,7 @@ echo "## Sending compressed backup"
 
 curl -X POST https://content.dropboxapi.com/2/files/upload \
     --header "Authorization: Bearer $DROPBOX_ACCESS_TOKEN" \
-    --header "Dropbox-API-Arg: {\"path\": \"$DROPBOX_FILEPATH\"}" \
+    --header "Dropbox-API-Arg: {\"path\": \"$DROPBOX_FILEPATH\", \"mode\": \"overwrite\"}" \
     --header "Content-Type: application/octet-stream" \
     --data-binary @$BACKUP_FILE \
     --output /dev/null
