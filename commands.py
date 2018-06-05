@@ -380,9 +380,7 @@ def save_players_stats(reset):
 
             already_existing_rwr_accounts_stat_hashes = [row[0] for row in already_existing_rwr_accounts_stat_hashes]
 
-            for rwr_account_stat in all_rwr_accounts_stat:
-                if rwr_account_stat.hash in already_existing_rwr_accounts_stat_hashes:
-                    all_rwr_accounts_stat.remove(rwr_account_stat)
+            all_rwr_accounts_stat = [rwr_account_stat for rwr_account_stat in all_rwr_accounts_stat if rwr_account_stat.hash not in already_existing_rwr_accounts_stat_hashes]
 
             # Finally save stats for all eligible players
             db.session.add_all(all_rwr_accounts_stat)
@@ -497,9 +495,7 @@ def import_rwrtrack_data(directory, reset):
 
                 already_existing_rwr_accounts_stat_hashes = [row[0] for row in already_existing_rwr_accounts_stat_hashes]
 
-                for rwr_account_stat in all_rwr_accounts_stat:
-                    if rwr_account_stat.hash in already_existing_rwr_accounts_stat_hashes:
-                        all_rwr_accounts_stat.remove(rwr_account_stat)
+                all_rwr_accounts_stat = [rwr_account_stat for rwr_account_stat in all_rwr_accounts_stat if rwr_account_stat.hash not in already_existing_rwr_accounts_stat_hashes]
 
                 # Finally save stats for all eligible players
                 db.session.add_all(all_rwr_accounts_stat)
