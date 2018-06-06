@@ -237,6 +237,43 @@ def prepare_username(username):
     return username.replace('\-', '-', 1)
 
 
+def create_general_help_message(is_user_admin=False):
+    """Create the general help message with the available commands list."""
+    with open('docs/discord_bot/general.md', 'r', encoding='utf-8') as f:
+        message = f.read()
+
+    commands_list = []
+
+    for name, info in constants.AVAILABLE_COMMANDS.items():
+        if not is_user_admin and info['admin_only']:
+            continue
+
+        commands_list.append('- `{}`: {}'.format(name, info['description']))
+
+    message = message.format(
+        commands_list='\n'.join(commands_list)
+    )
+
+    return message
+
+
+def create_command_help_message(name, info):
+    """Create a command help message."""
+    with open('docs/discord_bot/{}.md'.format(name), 'r', encoding='utf-8') as f:
+        message = f.read()
+
+    short_description = info['description']
+
+    if info['admin_only']:
+        short_description += ' (**admin only**)'
+
+    message = message.format(
+        short_description=short_description
+    )
+
+    return message
+
+
 def parse_date(date):
     """Parse a user-friendly date and return an arrow instance."""
     now = arrow.utcnow().floor('day')
