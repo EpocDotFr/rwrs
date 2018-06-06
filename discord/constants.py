@@ -1,9 +1,6 @@
 import rwr.constants
 import helpers
 
-with open('docs/discord_bot/public_commands.md', 'r', encoding='utf-8') as f:
-    HELP_CONTENT = f.read()
-
 VALID_PLAYER_SORTS = {
     'score': {'name': 'score', 'value': rwr.constants.PlayersSort.SCORE, 'getter': lambda player: player.score_display},
     'xp': {'name': 'experience', 'value': rwr.constants.PlayersSort.XP, 'getter': lambda player: player.xp_display},

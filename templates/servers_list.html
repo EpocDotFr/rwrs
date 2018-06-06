@@ -16,7 +16,7 @@
 {% set canonical_url = url_for('servers_list', _external=True) %}
 
 {% block content %}
-    <form action="{{ url_for('servers_list') }}" method="GET" class="mbs {{ 'w1140p center' if request.args.get('view') == 'extended' else '' }}">
+    <form action="{{ url_for('servers_list') }}" method="GET" class="mbs {{ 'w1140p center' if request.args.get('view') == 'extended' }}">
         <fieldset class="man">
             <legend><i class="fa fa-filter"></i> Filters</legend>
 
@@ -67,10 +67,10 @@
                     <td>{{ server.mode_name }}</td>
                     {% if request.args.get('view') == 'extended' %}
                         <td>{{ server.version }}</td>
-                        <td>{{ server.comment if server.comment else '' }}</td>
+                        <td>{{ server.comment if server.comment }}</td>
                         <td>
                             {% for player in server.players.list %}
-                                {{ macros.player_name(player, raw=True, link=True, database=server.database) }}{{ ', ' if not loop.last else '' }}
+                                {{ macros.player_name(player, raw=True, link=True, database=server.database) }}{{ ', ' if not loop.last }}
                             {% endfor %}
                         </td>
                     {% endif %}

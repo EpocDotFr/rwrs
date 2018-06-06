@@ -119,10 +119,17 @@ class RwrsBotDiscoPlugin(Plugin):
 
                 event.msg.reply('MOTD removed.')
 
-    @Plugin.command('help')
-    def on_help_command(self, event):
+    @Plugin.command('help', parser=True)
+    @Plugin.parser.add_argument('type', choices=['public', 'admin'], nargs='?', default='public')
+    def on_help_command(self, event, args):
         """Get help about the bot."""
-        event.msg.reply(constants.HELP_CONTENT)
+        if args.type == 'admin' and event.msg.author.id not in app.config['DISCORD_BOT_ADMINS']:
+            return
+
+        with open('docs/discord_bot/{}_commands.md'.format(args.type), 'r', encoding='utf-8') as f:
+            help_content = f.read()
+
+        event.msg.reply(help_content)
 
     @Plugin.command('info')
     def on_info_command(self, event):
