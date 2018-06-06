@@ -30,7 +30,7 @@ and its Pacific DLC. Available at [rwrstats.com](https://rwrstats.com/).
     - Number of players on a server
     - Peaks
   - Online multiplayer status
-  - Discord bot able to give several kind of information. Available on the [RWR Discord Server](https://discord.gg/runningwithrifles). [Public](docs/discord_bot/public_commands.md) and [admin](docs/discord_bot/admin_commands.md) commands documentation
+  - Discord bot able to give several kind of information. Available on the [RWR Discord Server](https://discord.gg/runningwithrifles)
 
 ## Prerequisites
 
