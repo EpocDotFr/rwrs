@@ -31,7 +31,7 @@ class Player:
         xp_cell = node[15]
 
         ret.position = int(position_cell.text)
-        ret.username = username_cell.text
+        ret.username = username_cell.text.encode('iso-8859-1').decode('utf-8')
         ret.kills = int(kills_cell.text)
         ret.deaths = int(deaths_cell.text)
         ret.score = int(score_cell.text)
@@ -64,7 +64,7 @@ class Player:
 
             ret.username_display = '{}{}'.format(
                 ret.username,
-                ' 👋' if ret.is_me else ' ✌️' if ret.is_contributor else ' 🛠' if ret.is_rwr_dev else ''
+                ' :wave:' if ret.is_me else ' :v:️' if ret.is_contributor else ' :tools:' if ret.is_rwr_dev else ''
             )
 
             ret.kills_display = helpers.humanize_integer(ret.kills)

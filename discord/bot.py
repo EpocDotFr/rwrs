@@ -27,6 +27,17 @@ class RwrsBotDiscoPlugin(Plugin):
         self.steamworks_api_client = steam.SteamworksApiClient(app.config['STEAM_API_KEY'])
 
     @Plugin.pre_command()
+    def check_guild(self, func, event, args, kwargs):
+        """Check if the incoming message comes from the right Discord guild (server)."""
+        if (app.config['BETA'] or app.config['ENV'] == 'development') and not event.msg.guild: # PM on development / beta env: cancel
+            return None
+
+        if event.msg.guild and event.msg.guild.id != app.config['DISCORD_BOT_GUILD_ID']: # Message not sent from the right guild
+            return None
+
+        return event
+
+    @Plugin.pre_command()
     def check_under_maintenance(self, func, event, args, kwargs):
         """Check if RWRS is under maintenance, preventing any commands to be invoked if that's the case."""
         if os.path.exists('maintenance') and event.msg.author.id not in app.config['DISCORD_BOT_ADMINS']:
@@ -155,6 +166,7 @@ class RwrsBotDiscoPlugin(Plugin):
     @Plugin.command('stats', aliases=['statistics'], parser=True)
     @Plugin.parser.add_argument('username')
     @Plugin.parser.add_argument('database', choices=rwr.constants.VALID_DATABASES, nargs='?', default='invasion')
+    @Plugin.parser.add_argument('date', nargs='?')
     def on_stats_command(self, event, args):
         """Displays stats about the specified player."""
         args.username = utils.prepare_username(args.username)
