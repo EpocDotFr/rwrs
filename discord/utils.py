@@ -234,7 +234,7 @@ def prepare_username(username):
 
 def create_general_help_message(is_user_admin=False):
     """Create the general help message with the available commands list."""
-    with open('docs/discord_bot/help.md', 'r', encoding='utf-8') as f:
+    with open('docs/discord_bot/general.md', 'r', encoding='utf-8') as f:
         message = f.read()
 
     message += '\n\n**:page_facing_up: Commands list**\n\n'
