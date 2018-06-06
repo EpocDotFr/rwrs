@@ -50,10 +50,8 @@ class RwrsBotDiscoPlugin(Plugin):
     @Plugin.pre_command()
     def check_can_invoke_command(self, func, event, args, kwargs):
         """Check if the specified command is available and can be invoked by the user."""
-        if event.name not in constants.AVAILABLE_COMMANDS_NAMES:
-            return None
-
-        if constants.AVAILABLE_COMMANDS[event.name]['admin_only'] and event.msg.author.id not in app.config['DISCORD_BOT_ADMINS']:
+        # If the user is not admin and if the command isn't in the public commands list
+        if event.msg.author.id not in app.config['DISCORD_BOT_ADMINS'] and event.name not in constants.AVAILABLE_PUBLIC_COMMANDS_NAMES:
             return None
 
         return event
@@ -119,16 +117,22 @@ class RwrsBotDiscoPlugin(Plugin):
                 event.msg.reply('MOTD removed.')
 
     @Plugin.command('help', parser=True)
-    @Plugin.parser.add_argument('type', choices=['public', 'admin'], nargs='?', default='public')
+    @Plugin.parser.add_argument('command', nargs='?')
     def on_help_command(self, event, args):
-        """Get help about the bot."""
-        if args.type == 'admin' and event.msg.author.id not in app.config['DISCORD_BOT_ADMINS']:
-            return
+        """Get help."""
+        if not args.command: # Display general help
+            message = utils.create_general_help_message(
+                is_user_admin=event.msg.author.id in app.config['DISCORD_BOT_ADMINS']
+            )
+        else: # Display command-specific help
+            available_commands = constants.AVAILABLE_PUBLIC_COMMANDS_NAMES if event.msg.author.id not in app.config['DISCORD_BOT_ADMINS'] else constants.AVAILABLE_COMMANDS_NAMES
 
-        with open('docs/discord_bot/{}_commands.md'.format(args.type), 'r', encoding='utf-8') as f:
-            help_content = f.read()
+            if args.command not in available_commands:
+                message = 'Invalid command name. Must be one of ' + ', '.join(available_commands)
+            else:
+                message = utils.create_command_help_message(args.command)
 
-        event.msg.reply(help_content)
+        event.msg.reply(message)
 
     @Plugin.command('info')
     def on_info_command(self, event):

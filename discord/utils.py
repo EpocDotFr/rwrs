@@ -230,3 +230,26 @@ def prepare_username(username):
         return username
 
     return username.replace('\-', '-', 1)
+
+
+def create_general_help_message(is_user_admin=False):
+    """Create the general help message with the available commands list."""
+    with open('docs/discord_bot/help.md', 'r', encoding='utf-8') as f:
+        message = f.read()
+
+    message += '\n\n**:page_facing_up: Commands list**\n\n'
+
+    commands_help = []
+
+    for name, info in constants.AVAILABLE_COMMANDS.items():
+        if not is_user_admin and info['admin_only']:
+            continue
+
+        commands_help.append('- `{}`: {}'.format(name, info['description']))
+
+    return message + '\n'.join(commands_help)
+
+
+def create_command_help_message(command):
+    """Create a command-specific help message."""
+    return '' # TODO

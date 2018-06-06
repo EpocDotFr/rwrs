@@ -30,20 +30,21 @@ PLAYERS_LIMIT = 24
 SERVERS_LIMIT = 10
 
 AVAILABLE_COMMANDS = OrderedDict([
-    ('stats', {'description': '', 'admin_only': False}),
-    ('top', {'description': '', 'admin_only': False}),
-    ('pos', {'description': '', 'admin_only': False}),
-    ('compare', {'description': '', 'admin_only': False}),
-    ('whereis', {'description': '', 'admin_only': False}),
-    ('server', {'description': '', 'admin_only': False}),
-    ('servers', {'description': '', 'admin_only': False}),
-    ('now', {'description': '', 'admin_only': False}),
-    ('status', {'description': '', 'admin_only': False}),
-    ('info', {'description': '', 'admin_only': False}),
-    ('say', {'description': '', 'admin_only': True}),
-    ('cc', {'description': '', 'admin_only': True}),
-    ('maintenance', {'description': '', 'admin_only': True}),
-    ('motd', {'description': '', 'admin_only': True})
+    ('stats', {'description': 'Displays stats about a given player', 'admin_only': False}),
+    ('top', {'description': 'Displays the top 24 players', 'admin_only': False}),
+    ('pos', {'description': 'Highlights the given player in the leaderboard', 'admin_only': False}),
+    ('compare', {'description': 'Compare stats of two players', 'admin_only': False}),
+    ('whereis', {'description': 'Displays information about the server the given player is playing on', 'admin_only': False}),
+    ('server', {'description': 'Displays information about the given server', 'admin_only': False}),
+    ('servers', {'description': 'Displays the first 10 currently active servers with room', 'admin_only': False}),
+    ('now', {'description': 'Displays numbers about the current players and servers', 'admin_only': False}),
+    ('status', {'description': 'Displays the current status of the online multiplayer', 'admin_only': False}),
+    ('info', {'description': 'Displays information about the bot', 'admin_only': False}),
+    ('say', {'description': 'Makes the bot to say something', 'admin_only': True}),
+    ('cc', {'description': 'Clears the RWRS cache', 'admin_only': True}),
+    ('maintenance', {'description': 'Enables or disables the maintenance mode for the whole system', 'admin_only': True}),
+    ('motd', {'description': 'Sets or removes the MOTD, displayed on the top of all pages', 'admin_only': True})
 ])
 
 AVAILABLE_COMMANDS_NAMES = AVAILABLE_COMMANDS.keys()
+AVAILABLE_PUBLIC_COMMANDS_NAMES = [name for name, info in AVAILABLE_COMMANDS.items() if not info['admin_only']]
