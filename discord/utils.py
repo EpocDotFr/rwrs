@@ -247,9 +247,7 @@ def create_general_help_message(is_user_admin=False):
 
         commands_help.append('- `{}`: {}'.format(name, info['description']))
 
-    return message + '\n'.join(commands_help)
+    message += '\n'.join(commands_help)
+    message += '\n\nType `@rwrs help <command name>` for help regarding a specific command.'
 
-
-def create_command_help_message(command):
-    """Create a command-specific help message."""
-    return '' # TODO
+    return message

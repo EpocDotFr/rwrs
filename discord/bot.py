@@ -130,7 +130,8 @@ class RwrsBotDiscoPlugin(Plugin):
             if args.command not in available_commands:
                 message = 'Invalid command name. Must be one of ' + ', '.join(available_commands)
             else:
-                message = utils.create_command_help_message(args.command)
+                with open('docs/discord_bot/{}.md'.format(args.command), 'r', encoding='utf-8') as f:
+                    message = f.read()
 
         event.msg.reply(message)
 
