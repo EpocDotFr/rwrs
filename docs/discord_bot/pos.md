@@ -1,6 +1,8 @@
-:information_source:️ `@rwrs username <sort> <database>`
+:information_source:️ `@rwrs pos username <sort> <database>`
 
-Highlights the given player in the leaderboard, optionnally sorted by a specific data type (experience, kills, etc). Ability to choose for which official (ranked) server type to get the data from using the `database` parameter.
+_{short_description}_
+
+Optionnally sorted by a specific data type (experience, kills, etc). You can choose for which official (ranked) server type to get the data from using the `database` parameter.
 
 **Parameters:**
 

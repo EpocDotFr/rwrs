@@ -237,17 +237,28 @@ def create_general_help_message(is_user_admin=False):
     with open('docs/discord_bot/general.md', 'r', encoding='utf-8') as f:
         message = f.read()
 
-    message += '\n\n**:page_facing_up: Commands list**\n\n'
-
-    commands_help = []
+    commands_list = []
 
     for name, info in constants.AVAILABLE_COMMANDS.items():
         if not is_user_admin and info['admin_only']:
             continue
 
-        commands_help.append('- `{}`: {}'.format(name, info['description']))
+        commands_list.append('- `{}`: {}'.format(name, info['description']))
 
-    message += '\n'.join(commands_help)
-    message += '\n\nType `@rwrs help {command name}` for help regarding a specific command.'
+    message = message.format(
+        commands_list='\n'.join(commands_list)
+    )
+
+    return message
+
+
+def create_command_help_message(name, info):
+    """Create a command help message."""
+    with open('docs/discord_bot/{}.md'.format(name), 'r', encoding='utf-8') as f:
+        message = f.read()
+
+    message = message.format(
+        short_description=info['description']
+    )
 
     return message

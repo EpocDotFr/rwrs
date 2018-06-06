@@ -8,3 +8,9 @@ Valid common parameters values:
 
 - `sort`: `score`, `xp`, `kills`, `deaths`, `ratio`, `streak`, `tk`, `heals`, `shots`, `distance`, `throws`, `vehicles`, `targets`, `time`
 - `database`: `invasion`, `pacific`
+
+**:page_facing_up: Commands list**
+
+{commands_list}
+
+Type `@rwrs help {command name}` for help regarding a specific command.
