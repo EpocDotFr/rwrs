@@ -47,6 +47,17 @@ class RwrsBotDiscoPlugin(Plugin):
 
         return event
 
+    @Plugin.pre_command()
+    def check_can_invoke_command(self, func, event, args, kwargs):
+        """Check if the specified command is available and can be invoked by the user."""
+        if event.name not in constants.AVAILABLE_COMMANDS_NAMES:
+            return None
+
+        if constants.AVAILABLE_COMMANDS[event.name]['admin_only'] and event.msg.author.id not in app.config['DISCORD_BOT_ADMINS']:
+            return None
+
+        return event
+
     @Plugin.listen('Ready')
     def on_ready_event(self, event):
         """Performs things when the bot is ready."""
@@ -55,9 +66,6 @@ class RwrsBotDiscoPlugin(Plugin):
     @Plugin.command('cc')
     def on_cc_command(self, event):
         """Admin command: clear the cache."""
-        if event.msg.author.id not in app.config['DISCORD_BOT_ADMINS']:
-            return
-
         cache.clear()
 
         event.msg.reply('Cache cleared.')
@@ -66,18 +74,12 @@ class RwrsBotDiscoPlugin(Plugin):
     @Plugin.parser.add_argument('message')
     def on_say_command(self, event, args):
         """Admin command: make the bot to say something."""
-        if event.msg.author.id not in app.config['DISCORD_BOT_ADMINS']:
-            return
-
         self.client.api.channels_messages_create(app.config['DISCORD_BOT_CHANNEL_ID'], args.message)
 
     @Plugin.command('maintenance', parser=True)
     @Plugin.parser.add_argument('action', choices=['enable', 'disable'])
     def on_maintenance_command(self, event, args):
         """Admin command: enables or disables the maintenance mode for the whole system."""
-        if event.msg.author.id not in app.config['DISCORD_BOT_ADMINS']:
-            return
-
         if args.action == 'enable':
             if os.path.exists('maintenance'):
                 event.msg.reply('Maintenance mode already enabled.')
@@ -98,9 +100,6 @@ class RwrsBotDiscoPlugin(Plugin):
     @Plugin.parser.add_argument('message', nargs='?')
     def on_motd_command(self, event, args):
         """Admin command: set or remove the MOTD displayed on the top of all pages."""
-        if event.msg.author.id not in app.config['DISCORD_BOT_ADMINS']:
-            return
-
         if args.action == 'set':
             if not args.message:
                 event.msg.reply('Argument required: message')
@@ -142,7 +141,7 @@ class RwrsBotDiscoPlugin(Plugin):
 
         event.msg.reply('\n'.join(info))
 
-    @Plugin.command('stats', aliases=['statistics'], parser=True)
+    @Plugin.command('stats', parser=True)
     @Plugin.parser.add_argument('username')
     @Plugin.parser.add_argument('database', choices=rwr.constants.VALID_DATABASES, nargs='?', default='invasion')
     @Plugin.parser.add_argument('date', nargs='?')
@@ -163,7 +162,7 @@ class RwrsBotDiscoPlugin(Plugin):
 
         event.msg.reply('Here\'s stats for **{}** on **{}** ranked servers:'.format(player.username_display, player.database_name), embed=utils.create_player_message_embed(player))
 
-    @Plugin.command('whereis', aliases=['where is', 'where'], parser=True)
+    @Plugin.command('whereis', parser=True)
     @Plugin.parser.add_argument('username')
     def on_whereis_command(self, event, args):
         """Displays information about the server the specified player is currently playing on."""
@@ -191,7 +190,7 @@ class RwrsBotDiscoPlugin(Plugin):
 
         event.msg.reply('Here\'s information about **{}**:'.format(server.name), embed=utils.create_server_message_embed(server))
 
-    @Plugin.command('now', aliases=['currently'])
+    @Plugin.command('now')
     def on_now_command(self, event):
         """Displays numbers about the current players and servers."""
         answer = [
@@ -279,7 +278,7 @@ class RwrsBotDiscoPlugin(Plugin):
 
         event.msg.reply('\n'.join(response))
 
-    @Plugin.command('top', aliases=['leaderboard'], parser=True)
+    @Plugin.command('top', parser=True)
     @Plugin.parser.add_argument('sort', choices=constants.VALID_PLAYER_SORTS.keys(), nargs='?', default='score')
     @Plugin.parser.add_argument('database', choices=rwr.constants.VALID_DATABASES, nargs='?', default='invasion')
     def on_top_command(self, event, args):
@@ -305,7 +304,7 @@ class RwrsBotDiscoPlugin(Plugin):
             constants.VALID_PLAYER_SORTS[args.sort]['name']
         ), embed=embed)
 
-    @Plugin.command('pos', aliases=['position', 'ranking'], parser=True)
+    @Plugin.command('pos', parser=True)
     @Plugin.parser.add_argument('username')
     @Plugin.parser.add_argument('sort', choices=constants.VALID_PLAYER_SORTS.keys(), nargs='?', default='score')
     @Plugin.parser.add_argument('database', choices=rwr.constants.VALID_DATABASES, nargs='?', default='invasion')

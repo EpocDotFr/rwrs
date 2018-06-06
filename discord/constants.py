@@ -1,3 +1,4 @@
+from collections import OrderedDict
 import rwr.constants
 import helpers
 
@@ -27,3 +28,22 @@ VALID_SERVER_TYPES = {
 EMBED_COLOR = 10800919 # The well-known primary RWRS color #A4CF17, in the decimal format
 PLAYERS_LIMIT = 24
 SERVERS_LIMIT = 10
+
+AVAILABLE_COMMANDS = OrderedDict([
+    ('stats', {'description': '', 'admin_only': False}),
+    ('top', {'description': '', 'admin_only': False}),
+    ('pos', {'description': '', 'admin_only': False}),
+    ('compare', {'description': '', 'admin_only': False}),
+    ('whereis', {'description': '', 'admin_only': False}),
+    ('server', {'description': '', 'admin_only': False}),
+    ('servers', {'description': '', 'admin_only': False}),
+    ('now', {'description': '', 'admin_only': False}),
+    ('status', {'description': '', 'admin_only': False}),
+    ('info', {'description': '', 'admin_only': False}),
+    ('say', {'description': '', 'admin_only': True}),
+    ('cc', {'description': '', 'admin_only': True}),
+    ('maintenance', {'description': '', 'admin_only': True}),
+    ('motd', {'description': '', 'admin_only': True})
+])
+
+AVAILABLE_COMMANDS_NAMES = AVAILABLE_COMMANDS.keys()
