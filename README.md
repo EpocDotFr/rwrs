@@ -187,7 +187,7 @@ More information in the script comments.
 ### Retrieve and save the players stats in DB
 
   1. `set FLASK_APP=rwrs.py`
-  2. `flask save_players_stats`
+  2. `flask save_players_stats [--reset]`
 
 ### Import rwrtrack data
 
