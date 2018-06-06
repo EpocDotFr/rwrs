@@ -1,6 +1,6 @@
 **:information_source:️ Read carefully**
 
-- Parameters order is important
+- Parameters order is **important** except for the ones starting with `--`
 - Parameters containing spaces **must be surrounded by `"` or  `'`**
 - Usernames starting with a `-` **must be directly prepended with a `\`**
 

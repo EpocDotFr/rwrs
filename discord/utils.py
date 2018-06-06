@@ -257,8 +257,13 @@ def create_command_help_message(name, info):
     with open('docs/discord_bot/{}.md'.format(name), 'r', encoding='utf-8') as f:
         message = f.read()
 
+    short_description = info['description']
+
+    if info['admin_only']:
+        short_description += ' (**admin only**)'
+
     message = message.format(
-        short_description=info['description']
+        short_description=short_description
     )
 
     return message

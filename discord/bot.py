@@ -51,7 +51,7 @@ class RwrsBotDiscoPlugin(Plugin):
     def check_can_invoke_command(self, func, event, args, kwargs):
         """Check if the specified command is available and can be invoked by the user."""
         # If the user is not admin and if the command isn't in the public commands list
-        if event.msg.author.id not in app.config['DISCORD_BOT_ADMINS'] and event.name not in constants.AVAILABLE_PUBLIC_COMMANDS_NAMES:
+        if event.name != 'help' and event.msg.author.id not in app.config['DISCORD_BOT_ADMINS'] and event.name not in constants.AVAILABLE_PUBLIC_COMMANDS_NAMES:
             return None
 
         return event

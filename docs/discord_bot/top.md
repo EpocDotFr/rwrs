@@ -2,7 +2,7 @@
 
 _{short_description}_
 
-Optionnally sorted by a specific data type (experience, kills, etc). You can choose for which official (ranked) server type to get the data from using the `database` parameter.
+Use the `sort` to sort the list by a specific data type (experience, kills, etc). You can choose for which official (ranked) server type to get the data from using the `database` parameter. Remember stats are updated daily.
 
 **Parameters:**
 
