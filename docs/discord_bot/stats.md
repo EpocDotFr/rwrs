@@ -10,12 +10,12 @@ You can choose for which official (ranked) server type to get the data from usin
 - `database`: optional. One of `invasion` or `pacific`. Defaults to `invasion`
 - `date`: optional. Defaults to none (gets current stats). Allowed values / formats:
     - `yesterday`
-    - `1 day ago` / `{number} days ago`
-    - `1 week ago` / `{number} weeks ago`
-    - `1 month ago` / `{number} months ago`
-    - `1 year ago` / `{number} years ago`
-    - `{month name} {day number}`
-    - `{month name} {day number} {year}`
-    - `{month name} {day number}, {year}`
-    - `{year}-{month number}-{day number}`
-    - `{day number}/{month number}/{year}`
+    - `1 day ago` / `{{number}} days ago`
+    - `1 week ago` / `{{number}} weeks ago`
+    - `1 month ago` / `{{number}} months ago`
+    - `1 year ago` / `{{number}} years ago`
+    - `{{month name}} {{day number}}`
+    - `{{month name}} {{day number}} {{year}}`
+    - `{{month name}} {{day number}}, {{year}}`
+    - `{{year}}-{{month number}}-{{day number}}`
+    - `{{day number}}/{{month number}}/{{year}}`
