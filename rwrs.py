@@ -36,7 +36,7 @@ app.config['GEOIP_DATABASE_FILE'] = 'storage/data/GeoLite2-City.mmdb'
 app.config['MY_USERNAME'] = 'epocdotfr'
 app.config['CONTRIBUTORS'] = ['street veteran', 'mastock', 'dio', 'jatimatik', 'mellcor', 'teratai', 'harrified', 'mr. bang', 'dogtato']
 app.config['DEVS'] = ['jackmayol', 'pasik', 'pasik2', 'tremozl', 'the soldier'] # ahnold
-app.config['PLAYERS_LIST_PAGE_SIZES'] = [15, 30, 50, 100]
+app.config['LIST_PAGE_SIZES'] = [15, 30, 50, 100]
 app.config['RWR_STEAM_APP_ID'] = 270150
 app.config['ROOT_RWR_SERVERS_CHECK_INTERVAL'] = 5
 

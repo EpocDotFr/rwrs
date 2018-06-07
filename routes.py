@@ -79,8 +79,8 @@ def players_list(database):
 
     args['sort'] = args.get('sort', rwr.constants.PlayersSort.SCORE)
 
-    if not args.get('limit') or int(args.get('limit')) > app.config['PLAYERS_LIST_PAGE_SIZES'][-1]:
-        args['limit'] = app.config['PLAYERS_LIST_PAGE_SIZES'][0]
+    if not args.get('limit') or int(args.get('limit')) > app.config['LIST_PAGE_SIZES'][-1]:
+        args['limit'] = app.config['LIST_PAGE_SIZES'][0]
     else:
         args['limit'] = int(args.get('limit'))
 
@@ -142,9 +142,14 @@ def player_details(database, username, tab=None):
     elif tab == 'stats-history' and player.has_stats:
         g.LAYOUT = 'large'
 
+        per_page = request.args.get('limit', type=int)
+
+        if not per_page or per_page > app.config['LIST_PAGE_SIZES'][-1]:
+            per_page = app.config['LIST_PAGE_SIZES'][0]
+
         stats = player.rwr_account.stats.paginate(
             page=request.args.get('page', 1, type=int),
-            per_page=15,
+            per_page=per_page,
             error_out=False
         )
 

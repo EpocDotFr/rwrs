@@ -33,7 +33,7 @@
                 <label>
                     Page size:
                     <select name="limit" class="w100p">
-                        {% for page_size in config['PLAYERS_LIST_PAGE_SIZES'] -%}
+                        {% for page_size in config['LIST_PAGE_SIZES'] -%}
                             <option value="{{ page_size }}" {% if args.get('limit') == page_size %}selected{% endif %}>{{ page_size }}</option>
                         {%- endfor %}
                     </select>
