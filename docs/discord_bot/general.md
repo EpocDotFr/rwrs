@@ -10,4 +10,4 @@
 
 {commands_list}
 
-Type `@rwrs help COMMAND_NAME` for help regarding a specific command.
+Type `@rwrs help {{command name}}` for help regarding a specific command.
