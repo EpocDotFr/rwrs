@@ -6,5 +6,5 @@ _{short_description}_
 
 **Parameters:**
 
-- `sort`: optional. Defaults to `score`
-- `database`: optional. Defaults to `invasion`
+- `sort`: optional. One of `score`, `xp`, `kills`, `deaths`, `ratio`, `streak`, `tk`, `heals`, `shots`, `distance`, `throws`, `vehicles`, `targets`, `time`. Defaults to `score`
+- `database`: optional. One of `invasion` or `pacific`. Defaults to `invasion`

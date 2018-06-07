@@ -7,4 +7,4 @@ You can choose for which official (ranked) server type to get the data from usin
 **Parameters:**
 
 - `username`: required. Full username is required
-- `database`: optional. Defaults to `invasion`
+- `database`: optional. One of `invasion` or `pacific`. Defaults to `invasion`
