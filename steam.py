@@ -59,6 +59,7 @@ class SteamworksApiClient:
         return data['player_count']
 
 
+@cache.memoize(timeout=app.config['RWR_EVENTS_CACHE_TIMEOUT'])
 def get_group_events(group_or_game_id, is_official=False, year=None, month=None):
     """Get the list of upcoming events for the specified Steam game."""
     url = 'https://steamcommunity.com/{what}/{group_or_game_id}/events'.format(
