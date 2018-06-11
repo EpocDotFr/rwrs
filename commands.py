@@ -369,18 +369,13 @@ def save_players_stats(reset):
 
                 rwr_account_stat.compute_hash()
 
-                all_rwr_accounts_stat.append(rwr_account_stat)
+                # Check if this RwrAccountStat object wasn't already saved with the same data previously
+                already_existing_rwr_account_stat = RwrAccountStat.query.filter(
+                    RwrAccountStat.rwr_account_id == rwr_account_stat.rwr_account_id
+                ).order_by(RwrAccountStat.created_at.desc()).first()
 
-            # Remove all RwrAccountStat objects already existing in the DB (to prevent duplicates when stats didn't changed)
-            all_rwr_accounts_stat_hashes = [rwr_account_stat.hash for rwr_account_stat in all_rwr_accounts_stat]
-
-            already_existing_rwr_accounts_stat_hashes = RwrAccountStat.query.with_entities(RwrAccountStat.hash).filter(
-                RwrAccountStat.hash.in_(all_rwr_accounts_stat_hashes)
-            ).all()
-
-            already_existing_rwr_accounts_stat_hashes = [row[0] for row in already_existing_rwr_accounts_stat_hashes]
-
-            all_rwr_accounts_stat = [rwr_account_stat for rwr_account_stat in all_rwr_accounts_stat if rwr_account_stat.hash not in already_existing_rwr_accounts_stat_hashes]
+                if not already_existing_rwr_account_stat or already_existing_rwr_account_stat.hash != rwr_account_stat.hash:
+                    all_rwr_accounts_stat.append(rwr_account_stat)
 
             # Finally save stats for all eligible players
             db.session.add_all(all_rwr_accounts_stat)
@@ -482,20 +477,15 @@ def import_rwrtrack_data(directory, reset):
 
                     rwr_account_stat.compute_hash()
 
-                    all_rwr_accounts_stat.append(rwr_account_stat)
+                    # Check if this RwrAccountStat object wasn't already saved with the same data previously
+                    already_existing_rwr_account_stat = RwrAccountStat.query.filter(
+                        RwrAccountStat.hash == rwr_account_stat.hash
+                    ).order_by(RwrAccountStat.created_at.desc()).first()
+
+                    if not already_existing_rwr_account_stat:
+                        all_rwr_accounts_stat.append(rwr_account_stat)
 
                     leaderboard_position += 1
-
-                # Remove all RwrAccountStat objects already existing in the DB (to prevent duplicates when stats didn't changed)
-                all_rwr_accounts_stat_hashes = [rwr_account_stat.hash for rwr_account_stat in all_rwr_accounts_stat]
-
-                already_existing_rwr_accounts_stat_hashes = RwrAccountStat.query.with_entities(RwrAccountStat.hash).filter(
-                    RwrAccountStat.hash.in_(all_rwr_accounts_stat_hashes)
-                ).all()
-
-                already_existing_rwr_accounts_stat_hashes = [row[0] for row in already_existing_rwr_accounts_stat_hashes]
-
-                all_rwr_accounts_stat = [rwr_account_stat for rwr_account_stat in all_rwr_accounts_stat if rwr_account_stat.hash not in already_existing_rwr_accounts_stat_hashes]
 
                 # Finally save stats for all eligible players
                 db.session.add_all(all_rwr_accounts_stat)
