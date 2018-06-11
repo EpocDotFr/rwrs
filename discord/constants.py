@@ -39,6 +39,7 @@ AVAILABLE_COMMANDS = OrderedDict([
     ('servers', {'description': 'Displays the first 10 currently active servers with room', 'admin_only': False}),
     ('now', {'description': 'Displays numbers about the current players and servers', 'admin_only': False}),
     ('status', {'description': 'Displays the current status of the online multiplayer', 'admin_only': False}),
+    ('events', {'description': 'Displays upcoming RWR events', 'admin_only': False}),
     ('info', {'description': 'Displays information about the bot', 'admin_only': False}),
     ('say', {'description': 'Makes the bot to say something', 'admin_only': True}),
     ('cc', {'description': 'Clears the RWRS cache', 'admin_only': True}),
