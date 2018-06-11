@@ -10,9 +10,9 @@ from flask import url_for
 from gevent import monkey
 import rwr.scraper
 import rwr.utils
-import steam_api
 import logging
 import helpers
+import steam
 import os
 
 monkey.patch_all()
@@ -24,7 +24,7 @@ class RwrsBotDiscoPlugin(Plugin):
         super(RwrsBotDiscoPlugin, self).load(ctx)
 
         self.rwr_scraper = rwr.scraper.DataScraper()
-        self.steam_api_client = steam_api.Client(app.config['STEAM_API_KEY'])
+        self.steamworks_api_client = steam.SteamworksApiClient(app.config['STEAM_API_KEY'])
 
     @Plugin.pre_command()
     def check_guild(self, func, event, args, kwargs):
@@ -209,7 +209,7 @@ class RwrsBotDiscoPlugin(Plugin):
             '  - Active servers peak: **{active_servers_peak_count}** ({active_servers_peak_date})'
         ]
 
-        total_players = self.steam_api_client.get_current_players_count_for_app(app.config['RWR_STEAM_APP_ID'])
+        total_players = self.steamworks_api_client.get_current_players_count_for_app(app.config['RWR_STEAM_APP_ID'])
         online_players, active_servers, total_servers = self.rwr_scraper.get_counters()
 
         peaks = Variable.get_peaks_for_display()
@@ -270,14 +270,14 @@ class RwrsBotDiscoPlugin(Plugin):
         ]
 
         for server in servers:
-            response.append('{}`{}/{}` **{}** ({} • {})\n{}\n'.format(
-                ':flag_' + server.location.country_code + ': ' if server.location.country_code else '',
-                server.players.current,
-                server.players.max,
-                server.name_display,
-                server.type_name,
-                server.map.name_display,
-                server.steam_join_link.replace(' ', '%20')
+            response.append('{flag}`{current_players}/{max_players}` **{name}** ({type} • {map})\n{url}\n'.format(
+                flag=':flag_' + server.location.country_code + ': ' if server.location.country_code else '',
+                current_players=server.players.current,
+                max_players=server.players.max,
+                name=server.name_display,
+                type=server.type_name,
+                map=server.map.name_display,
+                url=server.steam_join_link.replace(' ', '%20')
             ))
 
         event.msg.reply('\n'.join(response))
