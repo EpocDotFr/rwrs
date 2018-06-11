@@ -338,7 +338,7 @@ class DataScraper:
         return ret
 
     @cache.memoize(timeout=app.config['PLAYERS_CACHE_TIMEOUT'])
-    def get_players(self, database, sort=constants.PlayersSort.SCORE, target=None, start=0, limit=app.config['PLAYERS_LIST_PAGE_SIZES'][0], basic=False):
+    def get_players(self, database, sort=constants.PlayersSort.SCORE, target=None, start=0, limit=app.config['LIST_PAGE_SIZES'][0], basic=False):
         """Get and parse a list of RWR players."""
         if limit > 100:
             raise ValueError('limit cannot be greater than 100')
@@ -372,7 +372,7 @@ class DataScraper:
         return players
 
     @cache.memoize(timeout=app.config['PLAYERS_CACHE_TIMEOUT'])
-    def search_player_by_username(self, database, username):
+    def search_player_by_username(self, database, username, check_exist_only=False):
         """Search for a RWR player (exact match)."""
         if database not in constants.VALID_DATABASES:
             raise ValueError('database is invalid')
@@ -388,10 +388,13 @@ class DataScraper:
 
         node = html_content.xpath('(//table/tr[position() = 2])[1]')
 
-        if not node:
-            return None
+        if check_exist_only:
+            return False if not node else True
+        else:
+            if not node:
+                return None
 
-        return Player.load(database, node[0], alternative=True)
+            return Player.load(database, node[0], alternative=True)
 
     def get_current_server_of_player(self, target_username):
         """Return the server where the specified player is playing on, if any (partial match)."""

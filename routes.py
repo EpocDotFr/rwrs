@@ -79,8 +79,8 @@ def players_list(database):
 
     args['sort'] = args.get('sort', rwr.constants.PlayersSort.SCORE)
 
-    if not args.get('limit') or int(args.get('limit')) > app.config['PLAYERS_LIST_PAGE_SIZES'][-1]:
-        args['limit'] = app.config['PLAYERS_LIST_PAGE_SIZES'][0]
+    if not args.get('limit') or int(args.get('limit')) > app.config['LIST_PAGE_SIZES'][-1]:
+        args['limit'] = app.config['LIST_PAGE_SIZES'][0]
     else:
         args['limit'] = int(args.get('limit'))
 
@@ -122,7 +122,7 @@ def player_details_without_db(username):
 
 
 @app.route('/players/<any({}):database>/<username>'.format(VALID_DATABASES_STRING_LIST))
-@app.route('/players/<any({}):database>/<username>/<any(unlockables):tab>'.format(VALID_DATABASES_STRING_LIST))
+@app.route('/players/<any({}):database>/<username>/<any(unlockables,"stats-history"):tab>'.format(VALID_DATABASES_STRING_LIST))
 def player_details(database, username, tab=None):
     scraper = rwr.scraper.DataScraper()
 
@@ -133,13 +133,30 @@ def player_details(database, username, tab=None):
 
         return redirect(url_for('players_list', database=database))
 
-    servers = scraper.get_servers()
+    stats = None
 
-    player.set_playing_on_server(servers)
+    if tab is None: # Stats tab (default)
+        servers = scraper.get_servers()
+
+        player.set_playing_on_server(servers)
+    elif tab == 'stats-history' and player.has_stats:
+        g.LAYOUT = 'large'
+
+        per_page = request.args.get('limit', type=int)
+
+        if not per_page or per_page > app.config['LIST_PAGE_SIZES'][-1]:
+            per_page = app.config['LIST_PAGE_SIZES'][0]
+
+        stats = player.rwr_account.stats.paginate(
+            page=request.args.get('page', 1, type=int),
+            per_page=per_page,
+            error_out=False
+        )
 
     return render_template(
-        'player_details/main.html',
-        player=player
+        'player_details.html',
+        player=player,
+        stats=stats
     )
 
 

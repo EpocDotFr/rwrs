@@ -1,6 +1,11 @@
 from disco.types.message import MessageEmbed
 from . import constants
 import helpers
+import arrow
+import re
+
+
+_time_ago_regex = re.compile(r'(?P<days_ago>\d+) day(?:s?) ago|(?P<weeks_ago>\d+) week(?:s?) ago|(?P<months_ago>\d+) month(?:s?) ago|(?P<years_ago>\d+) year(?:s?) ago')
 
 
 def create_player_message_embed(player):
@@ -267,3 +272,49 @@ def create_command_help_message(name, info):
     )
 
     return message
+
+
+def parse_date(date):
+    """Parse a user-friendly date and return an arrow instance."""
+    now = arrow.utcnow().floor('day')
+
+    if date == 'yesterday':
+        return now.shift(days=-1)
+
+    time_ago_match = _time_ago_regex.match(date)
+
+    if time_ago_match:
+        time_ago = time_ago_match.groupdict()
+
+        if time_ago['days_ago']:
+            return now.shift(days=-int(time_ago['days_ago']))
+
+        if time_ago['weeks_ago']:
+            return now.shift(weeks=-int(time_ago['weeks_ago']))
+
+        if time_ago['months_ago']:
+            return now.shift(months=-int(time_ago['months_ago']))
+
+        if time_ago['years_ago']:
+            return now.shift(years=-int(time_ago['years_ago']))
+
+    allowed_formats = [
+        'MMM D YYYY',
+        'MMM DD YYYY',
+        'MMM D, YYYY',
+        'MMM DD, YYYY',
+        'MMM D',
+        'MMM DD',
+        'MMMM D YYYY',
+        'MMMM DD YYYY',
+        'MMMM D, YYYY',
+        'MMMM DD, YYYY',
+        'MMMM D',
+        'MMMM DD',
+        'DD/MM/YYYY',
+        'D/M/YYYY',
+        'YYYY-M-D',
+        'YYYY-MM-DD'
+    ]
+
+    return arrow.get(date, allowed_formats).replace(year=now.year)

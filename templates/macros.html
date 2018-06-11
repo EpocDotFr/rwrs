@@ -157,10 +157,10 @@
 {%- endmacro %}
 
 {% macro stats_notice() -%}
-    <div class="small txtcenter">Players stats are updated daily and only concerns ranked servers which are tagged with a <i class="fa fa-star txtyellow"></i></div>
+    <div class="small txtcenter">Players stats are updated daily and only concerns ranked servers which are tagged with a <i class="fa fa-star txtyellow"></i><br>Stats history is only recorded for the {{ config['MAX_NUM_OF_PLAYERS_TO_TRACK_STATS_FOR'] }} most experienced players</div>
 {%- endmacro %}
 
-{% macro players_list_header_link(label, sort, args, type='numeric', direction='desc') -%}
+{% macro players_list_header_link(label, sort, args, sublabel=None, type='numeric', direction='desc') -%}
     {% set same_sort = args.get('sort') == sort %}
 
     {%- if not same_sort -%}
@@ -171,6 +171,10 @@
         </a>
     {%- endif %}
 
+    {%- if sublabel -%}
+        <br><small>{{ sublabel }}</small>
+    {%- endif %}
+
     {% if same_sort -%}
         <i class="fa fa-sort-{{ type }}-{{ direction }}"></i>
     {%- endif -%}
@@ -178,7 +182,7 @@
 
 {% macro players_list_previous_button(players, args) -%}
     {%- if players and not args.get('target') -%}
-        {% set start = players[0].position - (int(args.get('limit')) + 1) %}
+        {% set start = players[0].leaderboard_position - (int(args.get('limit')) + 1) %}
 
         {%- if start >= 0 -%}
             <a href="{{ url_for('players_list', database=request.view_args.get('database'), sort=args.get('sort'), target=args.get('target'), start=start, limit=args.get('limit')) }}" class="btn"><i class="fa fa-angle-double-left"></i> Previous</a>
@@ -188,7 +192,7 @@
 
 {% macro players_list_next_button(players, args) -%}
     {%- if players and not args.get('target') -%}
-        {% set start = players[-1].position %}
+        {% set start = players[-1].leaderboard_position %}
 
         <a href="{{ url_for('players_list', database=request.view_args.get('database'), sort=args.get('sort'), target=args.get('target'), start=start, limit=args.get('limit')) }}" class="btn">Next <i class="fa fa-angle-double-right"></i></a>
     {%- endif -%}
