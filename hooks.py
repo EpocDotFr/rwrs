@@ -3,7 +3,7 @@ from werkzeug.exceptions import HTTPException
 from models import RwrRootServer
 from rwrs import app, auth
 import rwr.scraper
-import steam_api
+import steam
 import os
 
 
@@ -36,13 +36,13 @@ def check_under_maintenance():
 @app.before_request
 def get_counts():
     scraper = rwr.scraper.DataScraper()
-    steam_api_client = steam_api.Client(app.config['STEAM_API_KEY'])
+    steamworks_api_client = steam.SteamworksApiClient(app.config['STEAM_API_KEY'])
 
     g.all_players_with_servers_details = scraper.get_all_players_with_servers_details()
 
     online_players, active_servers, total_servers = scraper.get_counters()
 
-    g.total_players = steam_api_client.get_current_players_count_for_app(app.config['RWR_STEAM_APP_ID'])
+    g.total_players = steamworks_api_client.get_current_players_count_for_app(app.config['RWR_STEAM_APP_ID'])
     g.online_players = online_players
     g.active_servers = active_servers
     g.total_servers = total_servers
