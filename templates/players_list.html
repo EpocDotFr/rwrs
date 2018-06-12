@@ -33,7 +33,7 @@
                 <label>
                     Page size:
                     <select name="limit" class="w100p">
-                        {% for page_size in config['PLAYERS_LIST_PAGE_SIZES'] -%}
+                        {% for page_size in config['LIST_PAGE_SIZES'] -%}
                             <option value="{{ page_size }}" {% if args.get('limit') == page_size %}selected{% endif %}>{{ page_size }}</option>
                         {%- endfor %}
                     </select>
@@ -64,7 +64,7 @@
                 <th>{{ macros.players_list_header_link('Time played', PlayersSort.TIME_PLAYED, args) }}</th>
                 <th>{{ macros.players_list_header_link('Longest kill streak', PlayersSort.LONGEST_KILL_STREAK, args) }}</th>
                 <th>{{ macros.players_list_header_link('Targets destroyed', PlayersSort.TARGETS_DESTROYED, args) }}</th>
-                <th>{{ macros.players_list_header_link('Distance moved', PlayersSort.DISTANCE_MOVED, args) }}</th>
+                <th>{{ macros.players_list_header_link('Distance moved', PlayersSort.DISTANCE_MOVED, args, sublabel='(km)') }}</th>
                 <th>{{ macros.players_list_header_link('Vehicles destroyed', PlayersSort.VEHICLES_DESTROYED, args) }}</th>
                 <th>{{ macros.players_list_header_link('Soldiers healed', PlayersSort.SOLDIERS_HEALED, args) }}</th>
                 <th>{{ macros.players_list_header_link('Teamkills', PlayersSort.TEAMKILLS, args) }}</th>
@@ -76,17 +76,17 @@
         <tbody>
             {% for player in players %}
                 <tr{% if args.get('target') == player.username %} class="notice"{% endif %} data-username="{{ player.username }}">
-                    <td>{{ player.position_display }}</td>
+                    <td>{{ player.leaderboard_position_display }}</td>
                     <td class="nowrap">{{ macros.player_name(player, link=True, show_rank=True, show_online=True) }}</td>
                     <td>{{ player.xp_display }}</td>
                     <td>{{ player.kills_display }}</td>
                     <td>{{ player.deaths_display }}</td>
-                    <td><span class="{{ 'txtred' if player.kd_ratio < 1 else 'txtgreen' }}">{{ player.kd_ratio }}</span></td>
-                    <td><span class="{{ 'txtred' if player.score < 0 else 'txtgreen' }}">{{ player.score_display }}</span></td>
-                    <td>{{ player.time_played|humanize_seconds_to_hours }}{% if player.display_time_played_in_days %} <small>({{ player.time_played|humanize_seconds_to_days }})</small>{% endif %}</td>
+                    <td class="{{ 'txtred' if player.kd_ratio < 1 else 'txtgreen' }}">{{ player.kd_ratio }}</td>
+                    <td class="{{ 'txtred' if player.score < 0 else 'txtgreen' }}">{{ player.score_display }}</td>
+                    <td>{{ player.time_played|humanize_seconds_to_hours }}{% if player.display_time_played_in_days %}<br><small>({{ player.time_played|humanize_seconds_to_days }})</small>{% endif %}</td>
                     <td>{{ player.longest_kill_streak_display }}</td>
                     <td>{{ player.targets_destroyed_display }}</td>
-                    <td>{{ player.distance_moved }}km</td>
+                    <td>{{ player.distance_moved }}</td>
                     <td>{{ player.vehicles_destroyed_display }}</td>
                     <td>{{ player.soldiers_healed_display }}</td>
                     <td>{{ player.teamkills_display }}</td>

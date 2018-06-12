@@ -1,17 +1,12 @@
+from sqlalchemy.util import memoized_property
 from sqlalchemy_utils import ArrowType
 from rwrs import db, cache, app
 from sqlalchemy import func
 from enum import Enum
 import rwr.constants
 import helpers
+import hashlib
 import arrow
-
-__all__ = [
-    'ServerPlayerCount',
-    'SteamPlayerCount',
-    'RwrRootServerStatus',
-    'RwrRootServer'
-]
 
 
 class Measurable:
@@ -94,7 +89,7 @@ class ServerPlayerCount(db.Model, Measurable):
         return Measurable.transform_data(ServerPlayerCount.query.get_server_count(active_only))
 
     def __repr__(self):
-        return 'ServerPlayerCount:' + self.id
+        return 'ServerPlayerCount:{}'.format(self.id)
 
 
 class SteamPlayerCount(db.Model, Measurable):
@@ -121,7 +116,7 @@ class SteamPlayerCount(db.Model, Measurable):
         return Measurable.transform_data(SteamPlayerCount.query.get_player_count())
 
     def __repr__(self):
-        return 'SteamPlayerCount:' + self.id
+        return 'SteamPlayerCount:{}'.format(self.id)
 
 
 class RwrRootServerStatus(Enum):
@@ -163,7 +158,10 @@ class RwrRootServer(db.Model):
     def are_rwr_root_servers_ok():
         """Return True if all root RWR servers are OK, False otherwise."""
         hosts_count = len(rwr.constants.ROOT_RWR_HOSTS)
-        up_hosts_count = RwrRootServer.query.with_entities(func.count('*')).filter(RwrRootServer.status == RwrRootServerStatus.UP, RwrRootServer.host.in_(rwr.constants.ROOT_RWR_HOSTS)).scalar()
+        up_hosts_count = RwrRootServer.query.with_entities(func.count('*')).filter(
+            RwrRootServer.status == RwrRootServerStatus.UP,
+            RwrRootServer.host.in_(rwr.constants.ROOT_RWR_HOSTS)
+        ).scalar()
 
         return hosts_count == up_hosts_count
 
@@ -215,7 +213,7 @@ class RwrRootServer(db.Model):
         return (is_everything_ok, servers_statuses)
 
     def __repr__(self):
-        return 'RwrRootServer:' + self.id
+        return 'RwrRootServer:{}'.format(self.id)
 
 
 class VariableType(Enum):
@@ -354,4 +352,172 @@ class Variable(db.Model):
         return peaks
 
     def __repr__(self):
-        return 'Variable:' + self.id
+        return 'Variable:{}'.format(self.id)
+
+
+class RwrAccountType(Enum):
+    INVASION = 'INVASION'
+    PACIFIC = 'PACIFIC'
+
+
+class RwrAccount(db.Model):
+    __tablename__ = 'rwr_accounts'
+    __table_args__ = (db.Index('type_username_idx', 'type', 'username'), )
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+
+    type = db.Column(db.Enum(RwrAccountType), nullable=False)
+    username = db.Column(db.String(16), nullable=False)
+    created_at = db.Column(ArrowType, default=arrow.utcnow().floor('minute'), nullable=False)
+    updated_at = db.Column(ArrowType, default=arrow.utcnow().floor('minute'), nullable=False)
+
+    @memoized_property
+    def stats(self):
+        """Return a query which have to be executed to get all RwrAccountStat linked to this RwrAccount."""
+        return RwrAccountStat.query.filter(RwrAccountStat.rwr_account_id == self.id).order_by(RwrAccountStat.created_at.desc())
+
+    @memoized_property
+    def has_stats(self):
+        """Determine is this RwrAccount object have at least one RwrAccountStat."""
+        return RwrAccountStat.query.with_entities(func.count('*')).filter(RwrAccountStat.rwr_account_id == self.id).scalar() > 0
+
+    @staticmethod
+    def get_by_type_and_username(type, username):
+        """Return an RwrAccount given its type and username."""
+        return RwrAccount.query.filter(
+            RwrAccount.type == RwrAccountType(type.upper()),
+            RwrAccount.username == username
+        ).first()
+
+    def __repr__(self):
+        return 'RwrAccount:{}'.format(self.id)
+
+
+class RwrAccountStat(db.Model):
+    __tablename__ = 'rwr_account_stats'
+    __bind_key__ = 'rwr_account_stats'
+    __table_args__ = (
+        db.Index('rwr_account_id_idx', 'rwr_account_id'),
+        db.Index('created_at_idx', 'created_at'),
+        db.Index('hash_idx', 'hash')
+    )
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+
+    leaderboard_position = db.Column(db.Integer, nullable=False)
+    xp = db.Column(db.Integer, nullable=False)
+    kills = db.Column(db.Integer, nullable=False)
+    deaths = db.Column(db.Integer, nullable=False)
+    time_played = db.Column(db.Integer, nullable=False)
+    longest_kill_streak = db.Column(db.Integer, nullable=False)
+    targets_destroyed = db.Column(db.Integer, nullable=False)
+    vehicles_destroyed = db.Column(db.Integer, nullable=False)
+    soldiers_healed = db.Column(db.Integer, nullable=False)
+    teamkills = db.Column(db.Integer, nullable=False)
+    distance_moved = db.Column(db.Float, nullable=False)
+    shots_fired = db.Column(db.Integer, nullable=False)
+    throwables_thrown = db.Column(db.Integer, nullable=False)
+    hash = db.Column(db.String(32), nullable=False)
+    created_at = db.Column(ArrowType, default=arrow.utcnow().floor('day'), nullable=False)
+
+    rwr_account_id = db.Column(db.Integer, nullable=False) # Weak foreign key to the rwr_accounts located in another DB
+
+    def compute_hash(self):
+        """Compute the hash corresponding to the data of this RwrAccountStat."""
+        data = [
+            self.leaderboard_position,
+            self.xp,
+            self.kills,
+            self.deaths,
+            self.time_played,
+            self.longest_kill_streak,
+            self.targets_destroyed,
+            self.vehicles_destroyed,
+            self.soldiers_healed,
+            self.teamkills,
+            self.distance_moved,
+            self.shots_fired,
+            self.throwables_thrown,
+            self.rwr_account_id
+        ]
+
+        data = [str(d) for d in data]
+        data = ''.join(data).encode()
+
+        self.hash = hashlib.md5(data).hexdigest()
+
+    @staticmethod
+    def get_by_account_id_and_date(rwr_account_id, date):
+        """Return the most recent RwrAccountStat for the given rwr_account_id and date (arrow instance)."""
+        return RwrAccountStat.query.filter(
+            RwrAccountStat.rwr_account_id == rwr_account_id,
+            RwrAccountStat.created_at <= date.floor('day')
+        ).order_by(RwrAccountStat.created_at.desc()).first()
+
+    @memoized_property
+    def rwr_account(self):
+        """Return the RwrAccount object linked to this RwrAccountStat."""
+        return RwrAccount.query.get(self.rwr_account_id)
+
+    @memoized_property
+    def score(self):
+        return self.kills - self.deaths
+
+    @memoized_property
+    def kd_ratio(self):
+        return round(self.kills / self.deaths, 2)
+
+    @memoized_property
+    def leaderboard_position_display(self):
+        return helpers.humanize_integer(self.leaderboard_position)
+
+    @memoized_property
+    def xp_display(self):
+        return helpers.humanize_integer(self.xp)
+
+    @memoized_property
+    def kills_display(self):
+        return helpers.humanize_integer(self.kills)
+
+    @memoized_property
+    def deaths_display(self):
+        return helpers.humanize_integer(self.deaths)
+
+    @memoized_property
+    def time_played_display(self):
+        return helpers.humanize_seconds_to_hours(self.time_played)
+
+    @memoized_property
+    def score_display(self):
+        return helpers.humanize_integer(self.score)
+
+    @memoized_property
+    def longest_kill_streak_display(self):
+        return helpers.humanize_integer(self.longest_kill_streak)
+
+    @memoized_property
+    def targets_destroyed_display(self):
+        return helpers.humanize_integer(self.targets_destroyed)
+
+    @memoized_property
+    def vehicles_destroyed_display(self):
+        return helpers.humanize_integer(self.vehicles_destroyed)
+
+    @memoized_property
+    def soldiers_healed_display(self):
+        return helpers.humanize_integer(self.soldiers_healed)
+
+    @memoized_property
+    def teamkills_display(self):
+        return helpers.humanize_integer(self.teamkills)
+
+    @memoized_property
+    def shots_fired_display(self):
+        return helpers.humanize_integer(self.shots_fired)
+
+    @memoized_property
+    def throwables_thrown_display(self):
+        return helpers.humanize_integer(self.throwables_thrown)
+
+    def __repr__(self):
+        return 'RwrAccountStat:{}'.format(self.id)

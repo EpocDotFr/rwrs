@@ -14,6 +14,7 @@ and its Pacific DLC. Available at [rwrstats.com](https://rwrstats.com/).
     - Compare two players stats
     - Friends list (easily know on which server your friends are playing on. There's no need to create a user account or whatever)
     - Players list (leaderboard)
+    - Stats history
   - Public servers
     - Real servers location
     - Real maps name
@@ -72,6 +73,7 @@ More informations on the three above can be found [here](http://flask.pocoo.org/
   - `DISCORD_BOT_CHANNEL_ID` The Discord channel ID the bot is allowed to talk in
   - `DISCORD_BOT_ADMINS` A list of Discord user IDs (snowflakes) allowed to use hidden bot commands
   - `DISCORD_BOT_GUILD_ID` A Discord guild (server) ID the bot will be allowed to listen for commands from
+  - `MAX_NUM_OF_PLAYERS_TO_TRACK_STATS_FOR` How many players should RWRS track the stats for (top players storted by XP)
 
 I'll let you search yourself about how to configure a web server along uWSGI.
 
@@ -182,6 +184,16 @@ More information in the script comments.
 
 `sh scripts/backup_databases.sh`
 
+### Retrieve and save the players stats in DB
+
+  1. `set FLASK_APP=rwrs.py`
+  2. `flask save_players_stats [--reset]`
+
+### Import rwrtrack data
+
+  1. `set FLASK_APP=rwrs.py`
+  2. `flask import_rwrtrack_data --directory="{path to the rwrtrack data directory}" [--reset]`
+
 ## How it works
 
 This project is mainly powered by [Flask](http://flask.pocoo.org/) (Python) for the backend.
@@ -199,6 +211,7 @@ As the provided servers location is most of the time either missing or invalid, 
   - Font by [Typesgal](https://www.dafont.com/fr/top-secret-kb.font) (freeware)
   - Flag icons by [Flag Sprites](https://www.flag-sprites.com/en/) and [GoSquared](https://www.gosquared.com/resources/flag-icons/) (freeware)
   - Maps previews comes from the [official RWR wiki](https://runningwithrifles.gamepedia.com/Running_with_Rifles_Wiki)
+  - Old players stats are provided by the [rwrtrack](https://github.com/david-wm-sanders/rwrtrack) project by David "MR. BANG" Sanders ([actual data repo](https://github.com/david-wm-sanders/rwrtrack-data)) (MIT License)
   - This project uses GeoLite2 data created by MaxMind, available from [www.maxmind.com](https://www.maxmind.com/)
   - All Running With Rifles assets © 2015 - 2018 Osumia Games
   - This project is not affiliated with Osumia Games

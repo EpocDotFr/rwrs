@@ -1,10 +1,11 @@
+from models import RwrRootServer, Variable, RwrAccount, RwrAccountStat
 from disco.types.user import GameType, Game, Status
 from disco.client import Client, ClientConfig
 from disco.util.logging import setup_logging
-from models import RwrRootServer, Variable
 from disco.bot import Bot, Plugin
 from . import constants, utils
 from tabulate import tabulate
+from rwr.player import Player
 from rwrs import app, cache
 from flask import url_for
 from gevent import monkey
@@ -174,18 +175,59 @@ class RwrsBotDiscoPlugin(Plugin):
         """Displays stats about the specified player."""
         args.username = utils.prepare_username(args.username)
 
-        player = self.rwr_scraper.search_player_by_username(args.database, args.username)
+        if args.date: # Stats history lookup mode
+            try:
+                args.date = utils.parse_date(args.date)
+            except Exception as e:
+                event.msg.reply('Invalid date provided')
 
-        if not player:
-            event.msg.reply('Sorry dude, this player don\'t exist :confused:')
+                return
 
-            return
+            player_exist = self.rwr_scraper.search_player_by_username(args.database, args.username, check_exist_only=True)
+
+            if not player_exist:
+                event.msg.reply('Sorry dude, this player don\'t exist :confused:')
+
+                return
+
+            rwr_account = RwrAccount.get_by_type_and_username(args.database, args.username)
+
+            if not rwr_account:
+                event.msg.reply('Sorry my friend, stats history isn\'t recorded for this player :confused: He/she must be part of the {} {} most experienced players.'.format(
+                    rwr.utils.get_database_name(args.database),
+                    app.config['MAX_NUM_OF_PLAYERS_TO_TRACK_STATS_FOR'])
+                )
+
+                return
+
+            rwr_account_stat = RwrAccountStat.get_by_account_id_and_date(rwr_account.id, args.date)
+
+            if not rwr_account_stat:
+                event.msg.reply('No stats were found for the given date :confused: Are you sure he/she is part of the {} {} most experienced players?'.format(
+                    rwr.utils.get_database_name(args.database),
+                    app.config['MAX_NUM_OF_PLAYERS_TO_TRACK_STATS_FOR'])
+                )
+
+                return
+
+            player = Player.craft(rwr_account, rwr_account_stat)
+        else: # Live data mode
+            player = self.rwr_scraper.search_player_by_username(args.database, args.username)
+
+            if not player:
+                event.msg.reply('Sorry dude, this player don\'t exist :confused:')
+
+                return
 
         servers = self.rwr_scraper.get_servers()
 
         player.set_playing_on_server(servers)
 
-        event.msg.reply('Here\'s stats for **{}** on **{}** ranked servers:'.format(player.username_display, player.database_name), embed=utils.create_player_message_embed(player))
+        event.msg.reply('Here\'s stats for **{}** on **{}** ranked servers{}:'.format(
+            player.username_display,
+            player.database_name,
+            ' for **' + args.date.format('MMMM D, YYYY') + '**' if args.date else ''
+        ), embed=utils.create_player_message_embed(player))
 
     @Plugin.command('whereis', parser=True)
     @Plugin.parser.add_argument('username')
@@ -318,7 +360,7 @@ class RwrsBotDiscoPlugin(Plugin):
 
         for player in players:
             embed.add_field(
-                name='#{} {}'.format(player.position_display, player.username_display),
+                name='#{} {}'.format(player.leaderboard_position_display, player.username_display),
                 value=constants.VALID_PLAYER_SORTS[args.sort]['getter'](player),
                 inline=True
             )
@@ -358,7 +400,7 @@ class RwrsBotDiscoPlugin(Plugin):
                 username = player.username_display
 
             embed.add_field(
-                name='{}#{} {}'.format('➡️ ' if player.username == args.username else '', player.position, player.username_display),
+                name='{}#{} {}'.format('➡️ ' if player.username == args.username else '', player.leaderboard_position, player.username_display),
                 value=constants.VALID_PLAYER_SORTS[args.sort]['getter'](player),
                 inline=True
             )

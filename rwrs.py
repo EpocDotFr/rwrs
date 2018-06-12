@@ -19,7 +19,8 @@ app.config.from_pyfile('config.py')
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///storage/data/db.sqlite'
 app.config['SQLALCHEMY_BINDS'] = {
     'servers_player_count': 'sqlite:///storage/data/servers_player_count.sqlite',
-    'steam_players_count': 'sqlite:///storage/data/steam_players_count.sqlite'
+    'steam_players_count': 'sqlite:///storage/data/steam_players_count.sqlite',
+    'rwr_account_stats': 'sqlite:///storage/data/rwr_account_stats.sqlite'
 }
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['CACHE_TYPE'] = 'filesystem'
@@ -33,9 +34,9 @@ app.config['UNLOCKABLES_IMAGES_DIR'] = 'static/images/unlockables'
 app.config['UNLOCKABLES_DATA_FILE'] = 'storage/data/unlockables.json'
 app.config['GEOIP_DATABASE_FILE'] = 'storage/data/GeoLite2-City.mmdb'
 app.config['MY_USERNAME'] = 'epocdotfr'
-app.config['CONTRIBUTORS'] = ['street veteran', 'mastock', 'dio', 'jatimatik', 'mellcor', 'teratai', 'harrified']
+app.config['CONTRIBUTORS'] = ['street veteran', 'mastock', 'dio', 'jatimatik', 'mellcor', 'teratai', 'harrified', 'mr. bang', 'dogtato']
 app.config['DEVS'] = ['jackmayol', 'pasik', 'pasik2', 'tremozl', 'the soldier'] # ahnold
-app.config['PLAYERS_LIST_PAGE_SIZES'] = [15, 30, 50, 100]
+app.config['LIST_PAGE_SIZES'] = [15, 30, 50, 100]
 app.config['RWR_STEAM_APP_ID'] = 270150
 app.config['ROOT_RWR_SERVERS_CHECK_INTERVAL'] = 5
 
