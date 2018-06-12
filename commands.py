@@ -284,7 +284,7 @@ def run_discord_bot():
 def save_players_stats(reset):
     """Get and persist the players stats."""
     from models import RwrAccount, RwrAccountType, RwrAccountStat
-    from rwrs import db
+    from rwrs import db, cache
     import rwr.scraper
     import arrow
 
@@ -296,6 +296,8 @@ def save_players_stats(reset):
     players_sort = rwr.constants.PlayersSort.XP
     players_count = app.config['MAX_NUM_OF_PLAYERS_TO_TRACK_STATS_FOR']
     chunks = 100
+
+    cache.delete_memoized(rwr.scraper.DataScraper.get_players)
 
     scraper = rwr.scraper.DataScraper()
 
@@ -369,7 +371,7 @@ def save_players_stats(reset):
 
                 rwr_account_stat.compute_hash()
 
-                # Check if this RwrAccountStat object wasn't already saved with the same data previously
+                # Get the latest RwrAccountStat object saved for this RwrAccount and check if its data is not the same
                 already_existing_rwr_account_stat = RwrAccountStat.query.filter(
                     RwrAccountStat.rwr_account_id == rwr_account_stat.rwr_account_id
                 ).order_by(RwrAccountStat.created_at.desc()).first()
@@ -477,7 +479,7 @@ def import_rwrtrack_data(directory, reset):
 
                     rwr_account_stat.compute_hash()
 
-                    # Check if this RwrAccountStat object wasn't already saved with the same data previously
+                    # Get the latest RwrAccountStat object saved for this RwrAccount and check if its data is not the same
                     already_existing_rwr_account_stat = RwrAccountStat.query.filter(
                         RwrAccountStat.hash == rwr_account_stat.hash
                     ).order_by(RwrAccountStat.created_at.desc()).first()
