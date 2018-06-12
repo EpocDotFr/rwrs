@@ -83,7 +83,7 @@ def get_players_count():
     from models import ServerPlayerCount, SteamPlayerCount, Variable
     from rwrs import cache, db
     import rwr.scraper
-    import steam_api
+    import steam
     import arrow
 
     scraper = rwr.scraper.DataScraper()
@@ -93,15 +93,15 @@ def get_players_count():
     cache.delete_memoized(rwr.scraper.DataScraper.get_servers)
     cache.delete_memoized(ServerPlayerCount.server_players_data)
     cache.delete_memoized(ServerPlayerCount.servers_data)
-    cache.delete_memoized(steam_api.Client.get_current_players_count_for_app)
+    cache.delete_memoized(steam.SteamworksApiClient.get_current_players_count_for_app)
     cache.delete_memoized(SteamPlayerCount.players_data)
 
     click.echo('Getting current players on Steam')
 
-    steam_api_client = steam_api.Client(app.config['STEAM_API_KEY'])
+    steamworks_api_client = steam.SteamworksApiClient(app.config['STEAM_API_KEY'])
 
     steam_player_count = SteamPlayerCount()
-    steam_player_count.count = steam_api_client.get_current_players_count_for_app(app.config['RWR_STEAM_APP_ID'])
+    steam_player_count.count = steamworks_api_client.get_current_players_count_for_app(app.config['RWR_STEAM_APP_ID'])
 
     current_total_players_count = steam_player_count.count
 
@@ -277,6 +277,225 @@ def run_discord_bot():
     click.echo('Running bot')
 
     rwrs_discord_bot.run()
+
+
+@app.cli.command()
+@click.option('--reset', is_flag=True, help='Reset all RWR accounts and stats')
+def save_players_stats(reset):
+    """Get and persist the players stats."""
+    from models import RwrAccount, RwrAccountType, RwrAccountStat
+    from rwrs import db, cache
+    import rwr.scraper
+    import arrow
+
+    if reset and click.confirm('Are you sure to reset all RWR accounts and stats?'):
+        RwrAccountStat.query.delete()
+        RwrAccount.query.delete()
+        db.session.commit()
+
+    players_sort = rwr.constants.PlayersSort.XP
+    players_count = app.config['MAX_NUM_OF_PLAYERS_TO_TRACK_STATS_FOR']
+    chunks = 100
+
+    cache.delete_memoized(rwr.scraper.DataScraper.get_players)
+
+    scraper = rwr.scraper.DataScraper()
+
+    for database in rwr.constants.VALID_DATABASES:
+        rwr_account_type = RwrAccountType(database.upper())
+
+        click.echo('Saving the first {} {} players stats (ordered by {}, chunk size {})'.format(
+            players_count,
+            database,
+            players_sort,
+            chunks
+        ))
+
+        for start in range(0, players_count, chunks):
+            click.echo('  Chunk start: {}'.format(start))
+
+            players = scraper.get_players(database, sort=players_sort, start=start, limit=chunks, basic=True)
+
+            if not players:
+                click.secho('No more players to handle', fg='green')
+
+                break
+
+            all_player_names = [player.username for player in players]
+
+            existing_rwr_accounts = RwrAccount.query.filter(
+                RwrAccount.type == rwr_account_type,
+                RwrAccount.username.in_(all_player_names)
+            ).all()
+
+            rwr_accounts_by_username = {rwr_account.username: rwr_account for rwr_account in existing_rwr_accounts}
+
+            # Create RWR accounts if they do not exists / touch the updated_at timestamp if they exists
+            for player in players:
+                if player.username not in rwr_accounts_by_username:
+                    rwr_account = RwrAccount()
+
+                    rwr_account.username = player.username
+                    rwr_account.type = rwr_account_type
+
+                    rwr_accounts_by_username[player.username] = rwr_account
+                else:
+                    rwr_account = rwr_accounts_by_username[player.username]
+
+                    rwr_account.updated_at = arrow.utcnow().floor('minute')
+
+                db.session.add(rwr_account)
+
+            db.session.commit()
+
+            # Create all the RwrAccountStat objects for each players
+            all_rwr_accounts_stat = []
+
+            for player in players:
+                rwr_account_stat = RwrAccountStat()
+
+                rwr_account_stat.leaderboard_position = player.leaderboard_position
+                rwr_account_stat.xp = player.xp
+                rwr_account_stat.kills = player.kills
+                rwr_account_stat.deaths = player.deaths
+                rwr_account_stat.time_played = player.time_played
+                rwr_account_stat.longest_kill_streak = player.longest_kill_streak
+                rwr_account_stat.targets_destroyed = player.targets_destroyed
+                rwr_account_stat.vehicles_destroyed = player.vehicles_destroyed
+                rwr_account_stat.soldiers_healed = player.soldiers_healed
+                rwr_account_stat.teamkills = player.teamkills
+                rwr_account_stat.distance_moved = player.distance_moved
+                rwr_account_stat.shots_fired = player.shots_fired
+                rwr_account_stat.throwables_thrown = player.throwables_thrown
+                rwr_account_stat.rwr_account_id = rwr_accounts_by_username[player.username].id
+
+                rwr_account_stat.compute_hash()
+
+                # Get the latest RwrAccountStat object saved for this RwrAccount and check if its data is not the same
+                already_existing_rwr_account_stat = RwrAccountStat.query.filter(
+                    RwrAccountStat.rwr_account_id == rwr_account_stat.rwr_account_id
+                ).order_by(RwrAccountStat.created_at.desc()).first()
+
+                if not already_existing_rwr_account_stat or already_existing_rwr_account_stat.hash != rwr_account_stat.hash:
+                    all_rwr_accounts_stat.append(rwr_account_stat)
+
+            # Finally save stats for all eligible players
+            db.session.add_all(all_rwr_accounts_stat)
+            db.session.commit()
+
+    click.secho('Done', fg='green')
+
+
+@app.cli.command()
+@click.option('--directory', '-d', help='Directory containing the rwrtrack CSV files')
+@click.option('--reset', is_flag=True, help='Reset all RWR accounts and stats')
+def import_rwrtrack_data(directory, reset):
+    """Import data from rwrtrack."""
+    from models import RwrAccount, RwrAccountType, RwrAccountStat
+    from glob import glob
+    from rwrs import db
+    import helpers
+    import arrow
+    import csv
+    import os
+
+    if reset and click.confirm('Are you sure to reset all RWR accounts and stats?'):
+        RwrAccountStat.query.delete()
+        RwrAccount.query.delete()
+        db.session.commit()
+
+    csv_filenames = glob(os.path.join(directory, '*.csv'))
+    chunks = 100
+
+    click.echo('{} files to import'.format(len(csv_filenames)))
+
+    for csv_filename in csv_filenames:
+        click.echo('Opening ' + csv_filename)
+
+        created_at = arrow.get(os.path.splitext(os.path.basename(csv_filename))[0]).floor('day')
+
+        with open(csv_filename, 'r', encoding='utf-8', newline='') as f:
+            next(f, None) # Ignore first line as it's the CSV header
+
+            csv_data = csv.reader(f, quoting=csv.QUOTE_NONNUMERIC)
+            leaderboard_position = 1
+            start = 0
+
+            for players in helpers.chunks(list(csv_data), chunks):
+                click.echo('  Chunk start: {}'.format(start))
+
+                all_player_names = [player[0].encode('iso-8859-1').decode('utf-8') for player in players]
+
+                existing_rwr_accounts = RwrAccount.query.filter(
+                    RwrAccount.type == RwrAccountType.INVASION,
+                    RwrAccount.username.in_(all_player_names)
+                ).all()
+
+                rwr_accounts_by_username = {rwr_account.username: rwr_account for rwr_account in existing_rwr_accounts}
+
+                # Create RWR accounts if they do not exists / touch the updated_at timestamp if they exists
+                for player in players:
+                    username = player[0].encode('iso-8859-1').decode('utf-8')
+
+                    if username not in rwr_accounts_by_username:
+                        rwr_account = RwrAccount()
+
+                        rwr_account.username = username
+                        rwr_account.type = RwrAccountType.INVASION
+
+                        rwr_accounts_by_username[username] = rwr_account
+                    else:
+                        rwr_account = rwr_accounts_by_username[username]
+
+                        rwr_account.updated_at = arrow.utcnow().floor('minute')
+
+                    db.session.add(rwr_account)
+
+                db.session.commit()
+
+                # Create all the RwrAccountStat objects for each players
+                all_rwr_accounts_stat = []
+
+                for player in players:
+                    username = player[0].encode('iso-8859-1').decode('utf-8')
+
+                    rwr_account_stat = RwrAccountStat()
+
+                    rwr_account_stat.leaderboard_position = leaderboard_position
+                    rwr_account_stat.xp = int(player[1])
+                    rwr_account_stat.kills = int(player[3])
+                    rwr_account_stat.deaths = int(player[4])
+                    rwr_account_stat.time_played = int(player[2]) * 60
+                    rwr_account_stat.longest_kill_streak = int(player[5])
+                    rwr_account_stat.targets_destroyed = int(player[6])
+                    rwr_account_stat.vehicles_destroyed = int(player[7])
+                    rwr_account_stat.soldiers_healed = int(player[8])
+                    rwr_account_stat.teamkills = int(player[9])
+                    rwr_account_stat.distance_moved = round(int(player[10]) / 1000, 1)
+                    rwr_account_stat.shots_fired = int(player[11])
+                    rwr_account_stat.throwables_thrown = int(player[12])
+                    rwr_account_stat.created_at = created_at
+                    rwr_account_stat.rwr_account_id = rwr_accounts_by_username[username].id
+
+                    rwr_account_stat.compute_hash()
+
+                    # Get the latest RwrAccountStat object saved for this RwrAccount and check if its data is not the same
+                    already_existing_rwr_account_stat = RwrAccountStat.query.filter(
+                        RwrAccountStat.hash == rwr_account_stat.hash
+                    ).order_by(RwrAccountStat.created_at.desc()).first()
+
+                    if not already_existing_rwr_account_stat:
+                        all_rwr_accounts_stat.append(rwr_account_stat)
+
+                    leaderboard_position += 1
+
+                # Finally save stats for all eligible players
+                db.session.add_all(all_rwr_accounts_stat)
+                db.session.commit()
+
+                start += chunks
+
+    click.secho('Done', fg='green')
 
 
 @app.cli.command()

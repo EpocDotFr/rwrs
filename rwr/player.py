@@ -1,5 +1,7 @@
+from sqlalchemy.util import memoized_property
 from flask import url_for, current_app
 from . import constants, utils
+from models import RwrAccount
 from rwrs import app
 import helpers
 import math
@@ -7,13 +9,14 @@ import math
 
 class Player:
     playing_on_server = None
+    _rwr_account = None
 
     @classmethod
     def load(cls, database, node, alternative=False, basic=False):
         """Load a player data from an HTML <tr> node."""
         ret = cls()
 
-        position_cell = node[0]
+        leaderboard_position_cell = node[0]
         username_cell = node[1]
         kills_cell = node[2]
         deaths_cell = node[3]
@@ -30,8 +33,12 @@ class Player:
         throwables_thrown_cell = node[14]
         xp_cell = node[15]
 
-        ret.position = int(position_cell.text)
-        ret.username = username_cell.text
+        ret.database = database
+        ret.database_name = utils.get_database_name(ret.database)
+        ret.database_game_type = ret.get_game_type_from_database()
+
+        ret.leaderboard_position = int(leaderboard_position_cell.text)
+        ret.username = username_cell.text.encode('iso-8859-1').decode('utf-8')
         ret.kills = int(kills_cell.text)
         ret.deaths = int(deaths_cell.text)
         ret.score = int(score_cell.text)
@@ -47,50 +54,82 @@ class Player:
         ret.throwables_thrown = int(throwables_thrown_cell.text)
         ret.xp = int(xp_cell.text)
 
-        ret.database = database
+        if not basic:
+            ret.set_advanced_data()
+
+        return ret
+
+    @classmethod
+    def craft(cls, rwr_account, rwr_account_stat):
+        """Create player data from RwrAccount and RwrAccountStat instances."""
+        ret = cls()
+
+        ret.rwr_account = rwr_account
+
+        ret.database = rwr_account.type.value.lower()
         ret.database_name = utils.get_database_name(ret.database)
         ret.database_game_type = ret.get_game_type_from_database()
 
-        if not basic:
-            ret.rank = ret.get_current_rank()
+        ret.username = rwr_account.username.encode('iso-8859-1').decode('utf-8')
 
-            ret.position_display = helpers.humanize_integer(ret.position)
+        ret.leaderboard_position = rwr_account_stat.leaderboard_position
+        ret.kills = rwr_account_stat.kills
+        ret.deaths = rwr_account_stat.deaths
+        ret.score = rwr_account_stat.score
+        ret.kd_ratio = rwr_account_stat.kd_ratio
+        ret.time_played = rwr_account_stat.time_played
+        ret.longest_kill_streak = rwr_account_stat.longest_kill_streak
+        ret.targets_destroyed = rwr_account_stat.targets_destroyed
+        ret.vehicles_destroyed = rwr_account_stat.vehicles_destroyed
+        ret.soldiers_healed = rwr_account_stat.soldiers_healed
+        ret.teamkills = rwr_account_stat.teamkills
+        ret.distance_moved = rwr_account_stat.distance_moved
+        ret.shots_fired = rwr_account_stat.shots_fired
+        ret.throwables_thrown = rwr_account_stat.throwables_thrown
+        ret.xp = rwr_account_stat.xp
 
-            username_lower = ret.username.lower()
-
-            ret.is_me = username_lower == app.config['MY_USERNAME']
-            ret.is_contributor = username_lower in app.config['CONTRIBUTORS']
-            ret.is_rwr_dev = username_lower in app.config['DEVS']
-
-            ret.username_display = '{}{}'.format(
-                ret.username,
-                ' 👋' if ret.is_me else ' ✌️' if ret.is_contributor else ' 🛠' if ret.is_rwr_dev else ''
-            )
-
-            ret.kills_display = helpers.humanize_integer(ret.kills)
-            ret.deaths_display = helpers.humanize_integer(ret.deaths)
-            ret.score_display = helpers.humanize_integer(ret.score)
-            ret.longest_kill_streak_display = helpers.humanize_integer(ret.longest_kill_streak)
-            ret.targets_destroyed_display = helpers.humanize_integer(ret.targets_destroyed)
-            ret.vehicles_destroyed_display = helpers.humanize_integer(ret.vehicles_destroyed)
-            ret.soldiers_healed_display = helpers.humanize_integer(ret.soldiers_healed)
-            ret.teamkills_display = helpers.humanize_integer(ret.teamkills)
-            ret.shots_fired_display = helpers.humanize_integer(ret.shots_fired)
-            ret.throwables_thrown_display = helpers.humanize_integer(ret.throwables_thrown)
-            ret.xp_display = helpers.humanize_integer(ret.xp)
-            ret.display_time_played_in_days = ret.time_played > 60 * 60 * 24
-            ret.next_rank = ret.get_next_rank()
-            ret.xp_to_next_rank = ret.get_xp_to_next_rank()
-            ret.xp_percent_completion_to_next_rank = ret.get_xp_percent_completion_to_next_rank()
-            ret.unlocks = ret.get_unlocks()
-
-            if current_app:
-                ret.set_links()
-            else:
-                with app.app_context():
-                    ret.set_links()
+        ret.set_advanced_data()
 
         return ret
+
+    def set_advanced_data(self):
+        self.rank = self.get_current_rank()
+
+        self.leaderboard_position_display = helpers.humanize_integer(self.leaderboard_position)
+
+        username_lower = self.username.lower()
+
+        self.is_me = username_lower == app.config['MY_USERNAME']
+        self.is_contributor = username_lower in app.config['CONTRIBUTORS']
+        self.is_rwr_dev = username_lower in app.config['DEVS']
+
+        self.username_display = '{}{}'.format(
+            self.username,
+            ' :wave:' if self.is_me else ' :v:️' if self.is_contributor else ' :tools:' if self.is_rwr_dev else ''
+        )
+
+        self.kills_display = helpers.humanize_integer(self.kills)
+        self.deaths_display = helpers.humanize_integer(self.deaths)
+        self.score_display = helpers.humanize_integer(self.score)
+        self.longest_kill_streak_display = helpers.humanize_integer(self.longest_kill_streak)
+        self.targets_destroyed_display = helpers.humanize_integer(self.targets_destroyed)
+        self.vehicles_destroyed_display = helpers.humanize_integer(self.vehicles_destroyed)
+        self.soldiers_healed_display = helpers.humanize_integer(self.soldiers_healed)
+        self.teamkills_display = helpers.humanize_integer(self.teamkills)
+        self.shots_fired_display = helpers.humanize_integer(self.shots_fired)
+        self.throwables_thrown_display = helpers.humanize_integer(self.throwables_thrown)
+        self.xp_display = helpers.humanize_integer(self.xp)
+        self.display_time_played_in_days = self.time_played > 60 * 60 * 24
+        self.next_rank = self.get_next_rank()
+        self.xp_to_next_rank = self.get_xp_to_next_rank()
+        self.xp_percent_completion_to_next_rank = self.get_xp_percent_completion_to_next_rank()
+        self.unlocks = self.get_unlocks()
+
+        if current_app:
+            self.set_links()
+        else:
+            with app.app_context():
+                self.set_links()
 
     def set_links(self):
         """Set the relative and absolute URLs of this player's details page."""
@@ -230,6 +269,21 @@ class Player:
             _compute_unlockable(unlocks, ret, 'throwables')
 
         return ret
+
+    @property
+    def rwr_account(self):
+        """Return the RwrAccount associated to this Player."""
+        return RwrAccount.get_by_type_and_username(self.database, self.username) if not self._rwr_account else self._rwr_account
+
+    @rwr_account.setter
+    def rwr_account(self, rwr_account):
+        """Set the RwrAccount associated to this Player."""
+        self._rwr_account = rwr_account
+
+    @memoized_property
+    def has_stats(self):
+        """Determine if this Player has a RwrAccount and at least one persisted RwrAccountStat."""
+        return self.rwr_account and self.rwr_account.has_stats
 
     def __repr__(self):
         return 'Player:' + self.username

@@ -1,0 +1,101 @@
+<div class="grid mbs w1140p center">
+    <div class="one-fifth txtleft">
+        {% if stats.has_prev %}
+            <a href="{{ url_for('player_details', database=request.view_args.get('database'), username=player.username, tab='stats-history', page=stats.prev_num, limit=request.args.get('limit')) }}" class="btn"><i class="fa fa-angle-double-left"></i> Previous</a>
+        {% endif %}
+    </div>
+    <div class="three-fifth">
+        <form method="get" class="txtcenter inlb" action="{{ url_for('player_details', database=request.view_args.get('database'), username=player.username, tab='stats-history') }}">
+            <label>
+                Page size:
+                <select name="limit" class="w100p">
+                    {% for page_size in config['LIST_PAGE_SIZES'] -%}
+                        <option value="{{ page_size }}" {% if request.args.get('limit', type=int) == page_size %}selected{% endif %}>{{ page_size }}</option>
+                    {%- endfor %}
+                </select>
+            </label>
+
+            <button type="submit"><i class="fa fa-check"></i> Apply</button>
+        </form>
+    </div>
+    <div class="one-fifth txtright">
+        {% if stats.has_next %}
+            <a href="{{ url_for('player_details', database=request.view_args.get('database'), username=player.username, tab='stats-history', page=stats.next_num, limit=request.args.get('limit')) }}" class="btn">Next <i class="fa fa-angle-double-right"></i></a>
+        {% endif %}
+    </div>
+</div>
+
+<table class="{{ 'striped' if stats.items }} mbn">
+    <thead>
+        <tr>
+            <th class="w150p">Date</th>
+            <th>Position<br><small>(by XP)</small></th>
+            <th>XP</th>
+            <th>Kills</th>
+            <th>Deaths</th>
+            <th>K/D ratio</th>
+            <th>Score</th>
+            <th>Time played</th>
+            <th>Longest kill streak</th>
+            <th>Targets destroyed</th>
+            <th>Distance moved<br><small>(km)</small></th>
+            <th>Vehicles destroyed</th>
+            <th>Soldiers healed</th>
+            <th>Teamkills</th>
+            <th>Shots fired</th>
+            <th>Throwables thrown</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for stat in stats.items %}
+            <tr>
+                <td>{{ stat.created_at.format('MMMM D, YYYY') }}</td>
+                <td>{{ stat.leaderboard_position_display }}</td>
+                <td>{{ stat.xp_display }}</td>
+                <td>{{ stat.kills_display }}</td>
+                <td>{{ stat.deaths_display }}</td>
+                <td class="{{ 'txtred' if stat.kd_ratio < 1 else 'txtgreen' }}">{{ stat.kd_ratio }}</td>
+                <td class="{{ 'txtred' if stat.score < 0 else 'txtgreen' }}">{{ stat.score_display }}</td>
+                <td>{{ stat.time_played_display }}</td>
+                <td>{{ stat.longest_kill_streak_display }}</td>
+                <td>{{ stat.targets_destroyed_display }}</td>
+                <td>{{ stat.distance_moved }}</td>
+                <td>{{ stat.vehicles_destroyed_display }}</td>
+                <td>{{ stat.soldiers_healed_display }}</td>
+                <td>{{ stat.teamkills_display }}</td>
+                <td>{{ stat.shots_fired_display }}</td>
+                <td>{{ stat.throwables_thrown_display }}</td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="16">
+                    <div class="alert info pas txtcenter">There isn't any stats to display.</div>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<div class="grid w1140p center mts">
+    <div class="one-fifth txtleft">
+        {% if stats.has_prev %}
+            <a href="{{ url_for('player_details', database=request.view_args.get('database'), username=player.username, tab='stats-history', page=stats.prev_num, limit=request.args.get('limit')) }}" class="btn"><i class="fa fa-angle-double-left"></i> Previous</a>
+        {% endif %}
+    </div>
+    <div class="three-fifth">
+        <p class="txtcenter mbs">
+            Page {{ stats.page }} of {{ stats.pages }}
+        </p>
+    </div>
+    <div class="one-fifth txtright">
+        {% if stats.has_next %}
+            <a href="{{ url_for('player_details', database=request.view_args.get('database'), username=player.username, tab='stats-history', page=stats.next_num, limit=request.args.get('limit')) }}" class="btn">Next <i class="fa fa-angle-double-right"></i></a>
+        {% endif %}
+    </div>
+</div>
+
+<p class="txtcenter mbs">
+    <a href="{{ url_for('players_list', database=request.view_args.get('database')) }}" class="btn"><i class="fa fa-chevron-left"></i> Back to the {{ player.database_name }} players list</a>
+</p>
+
+{{ macros.stats_notice() }}

@@ -1,18 +1,19 @@
+from models import RwrRootServer, Variable, RwrAccount, RwrAccountStat
 from disco.types.user import GameType, Game, Status
 from disco.client import Client, ClientConfig
 from disco.util.logging import setup_logging
-from models import RwrRootServer, Variable
 from disco.bot import Bot, Plugin
 from . import constants, utils
 from tabulate import tabulate
+from rwr.player import Player
 from rwrs import app, cache
 from flask import url_for
 from gevent import monkey
 import rwr.scraper
 import rwr.utils
-import steam_api
 import logging
 import helpers
+import steam
 import os
 
 monkey.patch_all()
@@ -24,7 +25,18 @@ class RwrsBotDiscoPlugin(Plugin):
         super(RwrsBotDiscoPlugin, self).load(ctx)
 
         self.rwr_scraper = rwr.scraper.DataScraper()
-        self.steam_api_client = steam_api.Client(app.config['STEAM_API_KEY'])
+        self.steamworks_api_client = steam.SteamworksApiClient(app.config['STEAM_API_KEY'])
+
+    @Plugin.pre_command()
+    def check_guild(self, func, event, args, kwargs):
+        """Check if the incoming message comes from the right Discord guild (server)."""
+        if (app.config['BETA'] or app.config['ENV'] == 'development') and not event.msg.guild: # PM on development / beta env: cancel
+            return None
+
+        if event.msg.guild and event.msg.guild.id != app.config['DISCORD_BOT_GUILD_ID']: # Message not sent from the right guild
+            return None
+
+        return event
 
     @Plugin.pre_command()
     def check_under_maintenance(self, func, event, args, kwargs):
@@ -32,6 +44,15 @@ class RwrsBotDiscoPlugin(Plugin):
         if os.path.exists('maintenance') and event.msg.author.id not in app.config['DISCORD_BOT_ADMINS']:
             event.msg.reply(':wrench: RWRS is under ongoing maintenance! Please try again later.')
 
+            return None
+
+        return event
+
+    @Plugin.pre_command()
+    def check_can_invoke_command(self, func, event, args, kwargs):
+        """Check if the specified command is available and can be invoked by the user."""
+        # If the user is not admin and if the command isn't in the public commands list
+        if event.name != 'help' and event.msg.author.id not in app.config['DISCORD_BOT_ADMINS'] and event.name not in constants.AVAILABLE_PUBLIC_COMMANDS_NAMES:
             return None
 
         return event
@@ -44,9 +65,6 @@ class RwrsBotDiscoPlugin(Plugin):
     @Plugin.command('cc')
     def on_cc_command(self, event):
         """Admin command: clear the cache."""
-        if event.msg.author.id not in app.config['DISCORD_BOT_ADMINS']:
-            return
-
         cache.clear()
 
         event.msg.reply('Cache cleared.')
@@ -55,18 +73,12 @@ class RwrsBotDiscoPlugin(Plugin):
     @Plugin.parser.add_argument('message')
     def on_say_command(self, event, args):
         """Admin command: make the bot to say something."""
-        if event.msg.author.id not in app.config['DISCORD_BOT_ADMINS']:
-            return
-
         self.client.api.channels_messages_create(app.config['DISCORD_BOT_CHANNEL_ID'], args.message)
 
     @Plugin.command('maintenance', parser=True)
     @Plugin.parser.add_argument('action', choices=['enable', 'disable'])
     def on_maintenance_command(self, event, args):
         """Admin command: enables or disables the maintenance mode for the whole system."""
-        if event.msg.author.id not in app.config['DISCORD_BOT_ADMINS']:
-            return
-
         if args.action == 'enable':
             if os.path.exists('maintenance'):
                 event.msg.reply('Maintenance mode already enabled.')
@@ -87,9 +99,6 @@ class RwrsBotDiscoPlugin(Plugin):
     @Plugin.parser.add_argument('message', nargs='?')
     def on_motd_command(self, event, args):
         """Admin command: set or remove the MOTD displayed on the top of all pages."""
-        if event.msg.author.id not in app.config['DISCORD_BOT_ADMINS']:
-            return
-
         if args.action == 'set':
             if not args.message:
                 event.msg.reply('Argument required: message')
@@ -108,10 +117,23 @@ class RwrsBotDiscoPlugin(Plugin):
 
                 event.msg.reply('MOTD removed.')
 
-    @Plugin.command('help')
-    def on_help_command(self, event):
-        """Get help about the bot."""
-        event.msg.reply(constants.HELP_CONTENT)
+    @Plugin.command('help', parser=True)
+    @Plugin.parser.add_argument('command', nargs='?')
+    def on_help_command(self, event, args):
+        """Get help."""
+        if not args.command: # Display general help
+            message = utils.create_general_help_message(
+                is_user_admin=event.msg.author.id in app.config['DISCORD_BOT_ADMINS']
+            )
+        else: # Display command-specific help
+            available_commands = constants.AVAILABLE_PUBLIC_COMMANDS_NAMES if event.msg.author.id not in app.config['DISCORD_BOT_ADMINS'] else constants.AVAILABLE_COMMANDS_NAMES
+
+            if args.command not in available_commands:
+                message = 'Invalid command name. Must be one of ' + ', '.join(available_commands)
+            else:
+                message = utils.create_command_help_message(args.command, constants.AVAILABLE_COMMANDS[args.command])
+
+        event.msg.reply(message)
 
     @Plugin.command('info')
     def on_info_command(self, event):
@@ -124,27 +146,69 @@ class RwrsBotDiscoPlugin(Plugin):
 
         event.msg.reply('\n'.join(info))
 
-    @Plugin.command('stats', aliases=['statistics'], parser=True)
+    @Plugin.command('stats', parser=True)
     @Plugin.parser.add_argument('username')
     @Plugin.parser.add_argument('database', choices=rwr.constants.VALID_DATABASES, nargs='?', default='invasion')
+    @Plugin.parser.add_argument('date', nargs='?')
     def on_stats_command(self, event, args):
         """Displays stats about the specified player."""
         args.username = utils.prepare_username(args.username)
 
-        player = self.rwr_scraper.search_player_by_username(args.database, args.username)
+        if args.date: # Stats history lookup mode
+            try:
+                args.date = utils.parse_date(args.date)
+            except Exception as e:
+                event.msg.reply('Invalid date provided')
 
-        if not player:
-            event.msg.reply('Sorry dude, this player don\'t exist :confused:')
+                return
 
-            return
+            player_exist = self.rwr_scraper.search_player_by_username(args.database, args.username, check_exist_only=True)
+
+            if not player_exist:
+                event.msg.reply('Sorry dude, this player don\'t exist :confused:')
+
+                return
+
+            rwr_account = RwrAccount.get_by_type_and_username(args.database, args.username)
+
+            if not rwr_account:
+                event.msg.reply('Sorry my friend, stats history isn\'t recorded for this player :confused: He/she must be part of the {} {} most experienced players.'.format(
+                    rwr.utils.get_database_name(args.database),
+                    app.config['MAX_NUM_OF_PLAYERS_TO_TRACK_STATS_FOR'])
+                )
+
+                return
+
+            rwr_account_stat = RwrAccountStat.get_by_account_id_and_date(rwr_account.id, args.date)
+
+            if not rwr_account_stat:
+                event.msg.reply('No stats were found for the given date :confused: Are you sure he/she is part of the {} {} most experienced players?'.format(
+                    rwr.utils.get_database_name(args.database),
+                    app.config['MAX_NUM_OF_PLAYERS_TO_TRACK_STATS_FOR'])
+                )
+
+                return
+
+            player = Player.craft(rwr_account, rwr_account_stat)
+        else: # Live data mode
+            player = self.rwr_scraper.search_player_by_username(args.database, args.username)
+
+            if not player:
+                event.msg.reply('Sorry dude, this player don\'t exist :confused:')
+
+                return
 
         servers = self.rwr_scraper.get_servers()
 
         player.set_playing_on_server(servers)
 
-        event.msg.reply('Here\'s stats for **{}** on **{}** ranked servers:'.format(player.username_display, player.database_name), embed=utils.create_player_message_embed(player))
+        event.msg.reply('Here\'s stats for **{}** on **{}** ranked servers{}:'.format(
+            player.username_display,
+            player.database_name,
+            ' for **' + args.date.format('MMMM D, YYYY') + '**' if args.date else ''
+        ), embed=utils.create_player_message_embed(player))
 
-    @Plugin.command('whereis', aliases=['where is', 'where'], parser=True)
+    @Plugin.command('whereis', parser=True)
     @Plugin.parser.add_argument('username')
     def on_whereis_command(self, event, args):
         """Displays information about the server the specified player is currently playing on."""
@@ -172,7 +236,7 @@ class RwrsBotDiscoPlugin(Plugin):
 
         event.msg.reply('Here\'s information about **{}**:'.format(server.name), embed=utils.create_server_message_embed(server))
 
-    @Plugin.command('now', aliases=['currently'])
+    @Plugin.command('now')
     def on_now_command(self, event):
         """Displays numbers about the current players and servers."""
         answer = [
@@ -187,7 +251,7 @@ class RwrsBotDiscoPlugin(Plugin):
             '  - Active servers peak: **{active_servers_peak_count}** ({active_servers_peak_date})'
         ]
 
-        total_players = self.steam_api_client.get_current_players_count_for_app(app.config['RWR_STEAM_APP_ID'])
+        total_players = self.steamworks_api_client.get_current_players_count_for_app(app.config['RWR_STEAM_APP_ID'])
         online_players, active_servers, total_servers = self.rwr_scraper.get_counters()
 
         peaks = Variable.get_peaks_for_display()
@@ -248,19 +312,19 @@ class RwrsBotDiscoPlugin(Plugin):
         ]
 
         for server in servers:
-            response.append('{}`{}/{}` **{}** ({} • {})\n{}\n'.format(
-                ':flag_' + server.location.country_code + ': ' if server.location.country_code else '',
-                server.players.current,
-                server.players.max,
-                server.name_display,
-                server.type_name,
-                server.map.name_display,
-                server.steam_join_link.replace(' ', '%20')
+            response.append('{flag}`{current_players}/{max_players}` **{name}** ({type} • {map})\n{url}\n'.format(
+                flag=':flag_' + server.location.country_code + ': ' if server.location.country_code else '',
+                current_players=server.players.current,
+                max_players=server.players.max,
+                name=server.name_display,
+                type=server.type_name,
+                map=server.map.name_display,
+                url=server.steam_join_link.replace(' ', '%20')
             ))
 
         event.msg.reply('\n'.join(response))
 
-    @Plugin.command('top', aliases=['leaderboard'], parser=True)
+    @Plugin.command('top', parser=True)
     @Plugin.parser.add_argument('sort', choices=constants.VALID_PLAYER_SORTS.keys(), nargs='?', default='score')
     @Plugin.parser.add_argument('database', choices=rwr.constants.VALID_DATABASES, nargs='?', default='invasion')
     def on_top_command(self, event, args):
@@ -275,7 +339,7 @@ class RwrsBotDiscoPlugin(Plugin):
 
         for player in players:
             embed.add_field(
-                name='#{} {}'.format(player.position_display, player.username_display),
+                name='#{} {}'.format(player.leaderboard_position_display, player.username_display),
                 value=constants.VALID_PLAYER_SORTS[args.sort]['getter'](player),
                 inline=True
             )
@@ -286,7 +350,7 @@ class RwrsBotDiscoPlugin(Plugin):
             constants.VALID_PLAYER_SORTS[args.sort]['name']
         ), embed=embed)
 
-    @Plugin.command('pos', aliases=['position', 'ranking'], parser=True)
+    @Plugin.command('pos', parser=True)
     @Plugin.parser.add_argument('username')
     @Plugin.parser.add_argument('sort', choices=constants.VALID_PLAYER_SORTS.keys(), nargs='?', default='score')
     @Plugin.parser.add_argument('database', choices=rwr.constants.VALID_DATABASES, nargs='?', default='invasion')
@@ -315,7 +379,7 @@ class RwrsBotDiscoPlugin(Plugin):
                 username = player.username_display
 
             embed.add_field(
-                name='{}#{} {}'.format('➡️ ' if player.username == args.username else '', player.position, player.username_display),
+                name='{}#{} {}'.format('➡️ ' if player.username == args.username else '', player.leaderboard_position, player.username_display),
                 value=constants.VALID_PLAYER_SORTS[args.sort]['getter'](player),
                 inline=True
             )
