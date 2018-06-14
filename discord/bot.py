@@ -208,6 +208,14 @@ class RwrsBotDiscoPlugin(Plugin):
             ' for **' + args.date.format('MMMM D, YYYY') + '**' if args.date else ''
         ), embed=utils.create_player_message_embed(player))
 
+    @Plugin.command('evolution', parser=True)
+    @Plugin.parser.add_argument('username')
+    @Plugin.parser.add_argument('type', choices=['ratio', 'score', 'position'])
+    @Plugin.parser.add_argument('database', choices=rwr.constants.VALID_DATABASES, nargs='?', default='invasion')
+    def on_evolution_command(self, event, args):
+        """Displays a chart representing the evolution of the specified data type."""
+        pass # TODO
+
     @Plugin.command('whereis', parser=True)
     @Plugin.parser.add_argument('username')
     def on_whereis_command(self, event, args):

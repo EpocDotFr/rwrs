@@ -2,15 +2,17 @@
 
 {% extends 'layout.html' %}
 
-{% block page_title %}<h1><i class="fa fa-user"></i> Players › {{ player.database_name }} › {{ macros.player_name(player) }}{% if request.view_args.get('tab') == 'unlockables' %} › Unlockables{% elif request.view_args.get('tab') == 'stats-history' %} › Statistics history{% endif %}</h1>{% endblock %}
+{% block page_title %}<h1><i class="fa fa-user"></i> Players › {{ player.database_name }} › {{ macros.player_name(player) }}{% if request.view_args.get('tab') == 'unlockables' %} › Unlockables{% elif request.view_args.get('tab') == 'stats-history' %} › Statistics history{% elif request.view_args.get('tab') == 'evolution' %} › Evolution{% endif %}</h1>{% endblock %}
 
-{% block meta_title %}Players › {{ player.database_name }} › {{ player.username }}{% if request.view_args.get('tab') == 'unlockables' %} › Unlockables{% elif request.view_args.get('tab') == 'stats-history' %} › Statistics history{% endif %}{% endblock %}
+{% block meta_title %}Players › {{ player.database_name }} › {{ player.username }}{% if request.view_args.get('tab') == 'unlockables' %} › Unlockables{% elif request.view_args.get('tab') == 'stats-history' %} › Statistics history{% elif request.view_args.get('tab') == 'evolution' %} › Evolution{% endif %}{% endblock %}
 
 {% block meta_description -%}
     {% if request.view_args.get('tab') == 'unlockables' -%}
         Items unlocked by {{ player.username }} on Running With Rifles (RWR) {{ player.database_name }} ranked servers.
     {%- elif request.view_args.get('tab') == 'stats-history' -%}
         Statistics history of {{ player.username }} on Running With Rifles (RWR) {{ player.database_name }} ranked servers.
+    {%- elif request.view_args.get('tab') == 'evolution' -%}
+        Charts about the stats evolution of {{ player.username }} on Running With Rifles (RWR) {{ player.database_name }} ranked servers.
     {%- else -%}
         Player statistics of {{ player.username }} on Running With Rifles (RWR) {{ player.database_name }} ranked servers.
     {%- endif %}
@@ -44,6 +46,7 @@
         <ul class="unstyled">
             <li class="inbl prs {{ 'active' if not request.view_args.get('tab') }}"><a href="{{ url_for('player_details', database=request.view_args.get('database'), username=player.username) }}" class="inbl pas"><i class="fa fa-calculator"></i> Stats</a></li>
             {% if player.has_stats %}<li class="inbl prs {{ 'active' if request.view_args.get('tab') == 'stats-history' }}"><a href="{{ url_for('player_details', database=request.view_args.get('database'), username=player.username, tab='stats-history') }}" class="inbl pas"><i class="fa fa-calendar"></i> Stats history</a></li>{% endif %}
+            <li class="inbl prs {{ 'active' if request.view_args.get('tab') == 'evolution' }}"><a href="{{ url_for('player_details', database=request.view_args.get('database'), username=player.username, tab='evolution') }}" class="inbl pas"><i class="fa fa-line-chart"></i> Evolution</a></li>
             <li class="inbl prs {{ 'active' if request.view_args.get('tab') == 'unlockables' }}"><a href="{{ url_for('player_details', database=request.view_args.get('database'), username=player.username, tab='unlockables') }}" class="inbl pas"><i class="fa fa-unlock"></i> Unlockables</a></li>
         </ul>
     </nav>
@@ -54,6 +57,8 @@
         {% include 'player_details/stats_history.html' %}
     {% elif request.view_args.get('tab') == 'unlockables' %}
         {% include 'player_details/unlockables.html' %}
+    {% elif request.view_args.get('tab') == 'evolution' %}
+        {% include 'player_details/evolution.html' %}
     {% endif %}
 
     <script>
