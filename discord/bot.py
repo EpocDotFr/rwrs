@@ -210,11 +210,15 @@ class RwrsBotDiscoPlugin(Plugin):
 
     @Plugin.command('evolution', parser=True)
     @Plugin.parser.add_argument('username')
-    @Plugin.parser.add_argument('type', choices=['ratio', 'score', 'position'])
+    @Plugin.parser.add_argument('type', choices=constants.VALID_EVOLUTION_TYPES.keys())
     @Plugin.parser.add_argument('database', choices=rwr.constants.VALID_DATABASES, nargs='?', default='invasion')
     def on_evolution_command(self, event, args):
         """Displays a chart representing the evolution of the specified data type."""
-        pass # TODO
+        event.msg.reply('Here\'s the **{}** evolution of **{}** on **{}** ranked servers:'.format(
+            constants.VALID_EVOLUTION_TYPES[args.type],
+            args.username, # TODO
+            args.database # TODO
+        ))
 
     @Plugin.command('whereis', parser=True)
     @Plugin.parser.add_argument('username')

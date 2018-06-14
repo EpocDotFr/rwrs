@@ -139,21 +139,22 @@ def player_details(database, username, tab=None):
         servers = scraper.get_servers()
 
         player.set_playing_on_server(servers)
-    elif tab == 'evolution':
-        pass # TODO
-    elif tab == 'stats-history' and player.has_stats:
-        g.LAYOUT = 'large'
+    elif tab in ['stats-history', 'evolution'] and player.has_stats:
+        if tab == 'stats-history':
+            g.LAYOUT = 'large'
 
-        per_page = request.args.get('limit', type=int)
+            per_page = request.args.get('limit', type=int)
 
-        if not per_page or per_page > app.config['LIST_PAGE_SIZES'][-1]:
-            per_page = app.config['LIST_PAGE_SIZES'][0]
+            if not per_page or per_page > app.config['LIST_PAGE_SIZES'][-1]:
+                per_page = app.config['LIST_PAGE_SIZES'][0]
 
-        stats = player.rwr_account.stats.paginate(
-            page=request.args.get('page', 1, type=int),
-            per_page=per_page,
-            error_out=False
-        )
+            stats = player.rwr_account.stats.paginate(
+                page=request.args.get('page', 1, type=int),
+                per_page=per_page,
+                error_out=False
+            )
+        elif tab == 'evolution':
+            pass # TODO
 
     return render_template(
         'player_details.html',

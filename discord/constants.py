@@ -19,6 +19,12 @@ VALID_PLAYER_SORTS = {
     'targets': {'name': 'targets destroyed', 'value': rwr.constants.PlayersSort.TARGETS_DESTROYED, 'getter': lambda player: player.targets_destroyed_display},
 }
 
+VALID_EVOLUTION_TYPES = {
+    'ratio': 'K/D ratio',
+    'score': 'score',
+    'position': 'position (by XP)'
+}
+
 VALID_SERVER_TYPES = {
     'vanilla': 'vanilla',
     'pacific': 'pacific',
