@@ -1,13 +1,32 @@
-<div class="grid has-gutter-xl">
+<p class="small txtcenter">Showing data for the past year</p>
+
+<div class="grid has-gutter mbs">
     <div>
-        K/D ratio
+        <fieldset class="man pan">
+            <legend class="mls">K/D ratio <small>(higher is better)</small></legend>
+            <div id="ratio-chart" class="chart"></div>
+        </fieldset>
     </div>
     <div>
-        Score
+        <fieldset class="man pan">
+            <legend class="mls">Score <small>(higher is better)</small></legend>
+            <div id="score-chart" class="chart"></div>
+        </fieldset>
     </div>
     <div>
-        Position <small>(by XP)</small>
+        <fieldset class="man pan">
+            <legend class="mls">Leaderboard position <small>(by XP, lower is better)</small></legend>
+            <div id="position-chart" class="chart"></div>
+        </fieldset>
     </div>
 </div>
 
 {{ macros.stats_notice() }}
+
+<script>
+    friendsFeature.all_players_with_servers_details = {{ g.all_players_with_servers_details|tojson }};
+    friendsFeature.initOnPlayerDetails();
+
+    chartsFeature.player_evolution_data = {{ player_evolution_data|tojson }};
+    chartsFeature.initOnPlayerEvolution();
+</script>

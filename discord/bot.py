@@ -179,7 +179,7 @@ class RwrsBotDiscoPlugin(Plugin):
 
                 return
 
-            rwr_account_stat = RwrAccountStat.get_by_account_id_and_date(rwr_account.id, args.date)
+            rwr_account_stat = RwrAccountStat.get_stats_for_date(rwr_account.id, args.date)
 
             if not rwr_account_stat:
                 event.msg.reply('No stats were found for the given date :confused: Are you sure he/she is part of the {} {} most experienced players?'.format(

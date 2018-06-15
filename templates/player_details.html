@@ -19,8 +19,24 @@
 {%- endblock %}
 
 {% block jsfiles %}
+    {% if request.view_args.get('tab') == 'evolution' -%}
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.11.0/d3.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/metrics-graphics/2.13.0/metricsgraphics.min.js"></script>
+    {%- endif -%}
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/zepto/1.2.0/zepto.min.js"></script>
-    {% assets 'js_friends' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
+
+    {%- if request.view_args.get('tab') == 'evolution' -%}
+        {% assets 'js_friends_charts' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
+    {%- else -%}
+        {% assets 'js_friends' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
+    {%- endif %}
+{% endblock %}
+
+{% block cssfiles %}
+    {% if request.view_args.get('tab') == 'evolution' -%}
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/metrics-graphics/2.13.0/metricsgraphics.min.css">
+    {%- endif %}
 {% endblock %}
 
 {% set canonical_url = url_for('player_details', database=request.view_args.get('database'), username=player.username, tab=request.view_args.get('tab'), _external=True) %}
@@ -60,9 +76,4 @@
     {% elif request.view_args.get('tab') == 'evolution' %}
         {% include 'player_details/evolution.html' %}
     {% endif %}
-
-    <script>
-        friendsFeature.all_players_with_servers_details = {{ g.all_players_with_servers_details|tojson }};
-        friendsFeature.initOnPlayerDetails();
-    </script>
 {% endblock %}

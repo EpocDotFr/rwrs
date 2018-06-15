@@ -1,5 +1,5 @@
+from models import SteamPlayerCount, ServerPlayerCount, RwrRootServer, Variable, RwrAccountStat
 from flask import render_template, abort, request, redirect, url_for, flash, g
-from models import SteamPlayerCount, ServerPlayerCount, RwrRootServer, Variable
 from rwrs import app
 import rwr.constants
 import rwr.scraper
@@ -134,6 +134,7 @@ def player_details(database, username, tab=None):
         return redirect(url_for('players_list', database=database))
 
     stats = None
+    player_evolution_data = None
 
     if tab is None: # Stats tab (default)
         servers = scraper.get_servers()
@@ -154,12 +155,13 @@ def player_details(database, username, tab=None):
                 error_out=False
             )
         elif tab == 'evolution':
-            pass # TODO
+            player_evolution_data = RwrAccountStat.get_stats_by_column(player.rwr_account.id)
 
     return render_template(
         'player_details.html',
         player=player,
-        stats=stats
+        stats=stats,
+        player_evolution_data=player_evolution_data
     )
 
 
