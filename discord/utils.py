@@ -1,5 +1,7 @@
 from disco.types.message import MessageEmbed
+from matplotlib.dates import date2num
 from . import constants
+import matplotlib.pyplot as plt
 import helpers
 import arrow
 import re
@@ -318,3 +320,23 @@ def parse_date(date):
     ]
 
     return arrow.get(date, allowed_formats).replace(year=now.year)
+
+
+def create_evolution_chart(evolution_image, player_evolution_data):
+    """Create a chart image representing the evolution of a given player stat."""
+    # TODO Add chart title
+    # TODO Add axix labels
+    fig, ax = plt.subplots()
+
+    ax.plot_date(
+        [date2num(data['t'].datetime) for data in player_evolution_data],
+        [data['v'] for data in player_evolution_data],
+        'g-'
+    )
+
+    ax.autoscale_view()
+    ax.grid(True)
+
+    fig.autofmt_xdate()
+
+    plt.savefig(evolution_image, format='png') # FIXME

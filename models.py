@@ -454,7 +454,7 @@ class RwrAccountStat(db.Model):
     @staticmethod
     def transform_data(rows, column, format='YYYY-MM-DD'):
         """Given a list of RwrAccountStat, convert to a list of date => number."""
-        return [{'t': row.created_at.format('YYYY-MM-DD'), 'v': getattr(row, column)} for row in rows]
+        return [{'t': row.created_at.format(format) if format else row.created_at, 'v': getattr(row, column)} for row in rows]
 
     @staticmethod
     def get_stats_for_date(rwr_account_id, date):
@@ -480,7 +480,7 @@ class RwrAccountStat(db.Model):
                 'position': RwrAccountStat.transform_data(rwr_account_stats, 'leaderboard_position')
             }
         else:
-            return RwrAccountStat.transform_data(rwr_account_stats, column)
+            return RwrAccountStat.transform_data(rwr_account_stats, column, format=None)
 
     @memoized_property
     def rwr_account(self):
