@@ -40,6 +40,7 @@ AVAILABLE_COMMANDS = OrderedDict([
     ('top', {'description': 'Displays the top 24 players', 'admin_only': False}),
     ('pos', {'description': 'Highlights the given player in the leaderboard', 'admin_only': False}),
     ('compare', {'description': 'Compare stats of two players', 'admin_only': False}),
+    ('evolution', {'description': 'Displays the evolution of the specified stat data', 'admin_only': False}),
     ('whereis', {'description': 'Displays information about the server the given player is playing on', 'admin_only': False}),
     ('server', {'description': 'Displays information about the given server', 'admin_only': False}),
     ('servers', {'description': 'Displays the first 10 currently active servers with room', 'admin_only': False}),

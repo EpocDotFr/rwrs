@@ -64,7 +64,7 @@ class RwrsBotDiscoPlugin(Plugin):
 
     @Plugin.command('cc')
     def on_cc_command(self, event):
-        """Admin command: clear the cache."""
+        """Admin command: clears the RWRS cache."""
         cache.clear()
 
         event.msg.reply('Cache cleared.')
@@ -72,13 +72,13 @@ class RwrsBotDiscoPlugin(Plugin):
     @Plugin.command('say', parser=True)
     @Plugin.parser.add_argument('message')
     def on_say_command(self, event, args):
-        """Admin command: make the bot to say something."""
+        """Admin command: makes the bot to say something."""
         self.client.api.channels_messages_create(app.config['DISCORD_BOT_CHANNEL_ID'], args.message)
 
     @Plugin.command('maintenance', parser=True)
     @Plugin.parser.add_argument('action', choices=['enable', 'disable'])
     def on_maintenance_command(self, event, args):
-        """Admin command: enables or disables the maintenance mode for the whole system."""
+        """Admin command: enables or disables the maintenance mode."""
         if args.action == 'enable':
             if os.path.exists('maintenance'):
                 event.msg.reply('Maintenance mode already enabled.')
@@ -98,7 +98,7 @@ class RwrsBotDiscoPlugin(Plugin):
     @Plugin.parser.add_argument('action', choices=['set', 'remove'])
     @Plugin.parser.add_argument('message', nargs='?')
     def on_motd_command(self, event, args):
-        """Admin command: set or remove the MOTD displayed on the top of all pages."""
+        """Admin command: sets or removes the MOTD."""
         if args.action == 'set':
             if not args.message:
                 event.msg.reply('Argument required: message')
@@ -137,7 +137,7 @@ class RwrsBotDiscoPlugin(Plugin):
 
     @Plugin.command('info')
     def on_info_command(self, event):
-        """Get information about the bot."""
+        """Displays information about the bot."""
         info = [
             ':information_source: Hi! I was created by <@{}> - the guy behind https://rwrstats.com - around the beginning of March 2018.'.format(app.config['MY_DISCORD_ID']),
             'Like the rwrstats.com website, my brain is powered by the Python programming language.',
@@ -151,7 +151,7 @@ class RwrsBotDiscoPlugin(Plugin):
     @Plugin.parser.add_argument('database', choices=rwr.constants.VALID_DATABASES, nargs='?', default='invasion')
     @Plugin.parser.add_argument('date', nargs='?')
     def on_stats_command(self, event, args):
-        """Displays stats about the specified player."""
+        """Displays stats about a given player."""
         args.username = utils.prepare_username(args.username)
 
         if args.date: # Stats history lookup mode
@@ -213,17 +213,13 @@ class RwrsBotDiscoPlugin(Plugin):
     @Plugin.parser.add_argument('type', choices=constants.VALID_EVOLUTION_TYPES.keys())
     @Plugin.parser.add_argument('database', choices=rwr.constants.VALID_DATABASES, nargs='?', default='invasion')
     def on_evolution_command(self, event, args):
-        """Displays a chart representing the evolution of the specified data type."""
-        event.msg.reply('Here\'s the **{}** evolution of **{}** on **{}** ranked servers:'.format(
-            constants.VALID_EVOLUTION_TYPES[args.type],
-            args.username, # TODO
-            args.database # TODO
-        ))
+        """Displays the evolution of the specified stat data."""
+        pass # TODO
 
     @Plugin.command('whereis', parser=True)
     @Plugin.parser.add_argument('username')
     def on_whereis_command(self, event, args):
-        """Displays information about the server the specified player is currently playing on."""
+        """Displays information about the server the given player is playing on."""
         args.username = utils.prepare_username(args.username)
 
         real_username, server = self.rwr_scraper.get_current_server_of_player(args.username)
@@ -238,7 +234,7 @@ class RwrsBotDiscoPlugin(Plugin):
     @Plugin.command('server', parser=True)
     @Plugin.parser.add_argument('name')
     def on_server_command(self, event, args):
-        """Displays information about the specified server."""
+        """Displays information about the given server."""
         server = self.rwr_scraper.get_server_by_name(args.name)
 
         if not server:
@@ -340,7 +336,7 @@ class RwrsBotDiscoPlugin(Plugin):
     @Plugin.parser.add_argument('sort', choices=constants.VALID_PLAYER_SORTS.keys(), nargs='?', default='score')
     @Plugin.parser.add_argument('database', choices=rwr.constants.VALID_DATABASES, nargs='?', default='invasion')
     def on_top_command(self, event, args):
-        """Displays the top 15 players."""
+        """Displays the top 24 players."""
         embed = utils.create_base_message_embed()
 
         players = self.rwr_scraper.get_players(
@@ -367,7 +363,7 @@ class RwrsBotDiscoPlugin(Plugin):
     @Plugin.parser.add_argument('sort', choices=constants.VALID_PLAYER_SORTS.keys(), nargs='?', default='score')
     @Plugin.parser.add_argument('database', choices=rwr.constants.VALID_DATABASES, nargs='?', default='invasion')
     def on_pos_command(self, event, args):
-        """Highlights the specified player in the leaderboard."""
+        """Highlights the given player in the leaderboard."""
         args.username = utils.prepare_username(args.username)
 
         players = self.rwr_scraper.get_players(
@@ -407,6 +403,7 @@ class RwrsBotDiscoPlugin(Plugin):
     @Plugin.parser.add_argument('target_username')
     @Plugin.parser.add_argument('database', choices=rwr.constants.VALID_DATABASES, nargs='?', default='invasion')
     def on_compare_command(self, event, args):
+        """Compare stats of two players."""
         args.source_username = utils.prepare_username(args.source_username)
         args.target_username = utils.prepare_username(args.target_username)
 
