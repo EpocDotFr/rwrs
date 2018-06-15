@@ -3,6 +3,7 @@ from disco.types.user import GameType, Game, Status
 from disco.client import Client, ClientConfig
 from disco.util.logging import setup_logging
 from disco.bot import Bot, Plugin
+import matplotlib.pyplot as plt
 from . import constants, utils
 from tabulate import tabulate
 from rwr.player import Player
@@ -214,7 +215,32 @@ class RwrsBotDiscoPlugin(Plugin):
     @Plugin.parser.add_argument('database', choices=rwr.constants.VALID_DATABASES, nargs='?', default='invasion')
     def on_evolution_command(self, event, args):
         """Displays the evolution of the specified stat data."""
-        pass # TODO
+        args.username = utils.prepare_username(args.username)
+
+        player = self.rwr_scraper.search_player_by_username(args.database, args.username)
+
+        if not player:
+            event.msg.reply('Sorry dude, this player don\'t exist :confused:')
+
+            return
+
+        rwr_account = RwrAccount.get_by_type_and_username(args.database, args.username)
+
+        if not rwr_account:
+            event.msg.reply('Sorry my friend, evolution is not available for this player :confused: He/she must be part of the {} {} most experienced players.'.format(
+                rwr.utils.get_database_name(args.database),
+                app.config['MAX_NUM_OF_PLAYERS_TO_TRACK_STATS_FOR'])
+            )
+
+            return
+
+        player_evolution_data = RwrAccountStat.get_stats_by_column(player.rwr_account.id, args.type) # TODO
+
+        event.msg.reply('Here\'s the **{}** evolution chart for **{}** on **{}** ranked servers:'.format(
+            constants.VALID_EVOLUTION_TYPES[args.type],
+            player.username_display,
+            player.database_name
+        )) # , attachments=['evolution.png', open('file.ping', 'r')]
 
     @Plugin.command('whereis', parser=True)
     @Plugin.parser.add_argument('username')
