@@ -338,5 +338,4 @@ def create_evolution_chart(evolution_image, player_evolution_data):
     ax.grid(True)
 
     fig.autofmt_xdate()
-
-    plt.savefig(evolution_image, format='png') # FIXME
+    fig.savefig(evolution_image, format='png') # FIXME
