@@ -325,8 +325,6 @@ def parse_date(date):
 
 def create_evolution_chart(evolution_image, player_evolution_data, title):
     """Create a chart image representing the evolution of a given player stat."""
-    # TODO Add chart title
-    # TODO Add axix labels
     fig, ax = plt.subplots()
 
     ax.xaxis.set_major_locator(mdates.MonthLocator())
@@ -344,4 +342,7 @@ def create_evolution_chart(evolution_image, player_evolution_data, title):
     ax.grid(True)
 
     fig.autofmt_xdate()
+    fig.tight_layout()
     fig.savefig(evolution_image, format='png')
+
+    evolution_image.seek(0)

@@ -245,9 +245,7 @@ class RwrsBotDiscoPlugin(Plugin):
                 )
             )
 
-            open('test.png', 'wb').write(evolution_image.getvalue())
-
-            event.msg.reply('Here\'s ya go:', attachments=[('evolution.png', evolution_image)]) # FIXME
+            event.msg.reply('Here\'s ya go:', attachments=[('evolution.png', evolution_image, 'image/png')]) # FIXME
 
     @Plugin.command('whereis', parser=True)
     @Plugin.parser.add_argument('username')
