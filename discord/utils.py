@@ -1,11 +1,15 @@
 from disco.types.message import MessageEmbed
-from matplotlib.dates import date2num
 from . import constants
-import matplotlib.dates as mdates
-import matplotlib.pyplot as plt
 import helpers
 import arrow
 import re
+import matplotlib
+
+matplotlib.use('Agg')
+
+from matplotlib.dates import date2num
+import matplotlib.dates as mdates
+import matplotlib.pyplot as plt
 
 
 _time_ago_regex = re.compile(r'(?P<days_ago>\d+) day(?:s?) ago|(?P<weeks_ago>\d+) week(?:s?) ago|(?P<months_ago>\d+) month(?:s?) ago|(?P<years_ago>\d+) year(?:s?) ago')
