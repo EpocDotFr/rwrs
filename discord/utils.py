@@ -1,6 +1,7 @@
 from disco.types.message import MessageEmbed
 from matplotlib.dates import date2num
 from . import constants
+import matplotlib.dates as mdates
 import matplotlib.pyplot as plt
 import helpers
 import arrow
@@ -322,11 +323,16 @@ def parse_date(date):
     return arrow.get(date, allowed_formats).replace(year=now.year)
 
 
-def create_evolution_chart(evolution_image, player_evolution_data):
+def create_evolution_chart(evolution_image, player_evolution_data, title):
     """Create a chart image representing the evolution of a given player stat."""
     # TODO Add chart title
     # TODO Add axix labels
     fig, ax = plt.subplots()
+
+    ax.xaxis.set_major_locator(mdates.MonthLocator())
+    ax.xaxis.set_major_formatter(mdates.DateFormatter('%b %Y'))
+
+    plt.title(title)
 
     ax.plot_date(
         [date2num(data['t'].datetime) for data in player_evolution_data],
@@ -338,4 +344,4 @@ def create_evolution_chart(evolution_image, player_evolution_data):
     ax.grid(True)
 
     fig.autofmt_xdate()
-    fig.savefig(evolution_image, format='png') # FIXME
+    fig.savefig(evolution_image, format='png')

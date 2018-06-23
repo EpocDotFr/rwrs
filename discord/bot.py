@@ -235,13 +235,19 @@ class RwrsBotDiscoPlugin(Plugin):
         player_evolution_data = RwrAccountStat.get_stats_by_column(player.rwr_account.id, args.type)
 
         with BytesIO() as evolution_image:
-            utils.create_evolution_chart(evolution_image, player_evolution_data)
+            utils.create_evolution_chart(
+                evolution_image,
+                player_evolution_data,
+                'Past year {} evolution for {}\non {} ranked servers'.format(
+                    constants.VALID_EVOLUTION_TYPES[args.type],
+                    player.username,
+                    player.database_name
+                )
+            )
 
-            event.msg.reply('Here\'s the past year **{}** evolution chart for **{}** on **{}** ranked servers:'.format(
-                constants.VALID_EVOLUTION_TYPES[args.type],
-                player.username_display,
-                player.database_name
-            ), attachments=[('evolution.png', evolution_image)])
+            open('test.png', 'wb').write(evolution_image.getvalue())
+
+            event.msg.reply('Here\'s ya go:', attachments=[('evolution.png', evolution_image)]) # FIXME
 
     @Plugin.command('whereis', parser=True)
     @Plugin.parser.add_argument('username')
