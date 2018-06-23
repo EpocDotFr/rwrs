@@ -245,7 +245,7 @@ class RwrsBotDiscoPlugin(Plugin):
                 )
             )
 
-            event.msg.reply('Here\'s ya go:', attachments=[('evolution.png', evolution_image, 'image/png')]) # FIXME
+            event.msg.reply('Here ya go:', attachments=[('evolution.png', evolution_image, 'image/png')]) # FIXME
 
     @Plugin.command('whereis', parser=True)
     @Plugin.parser.add_argument('username')
