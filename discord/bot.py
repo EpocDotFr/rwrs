@@ -211,7 +211,7 @@ class RwrsBotDiscoPlugin(Plugin):
 
     @Plugin.command('evolution', parser=True)
     @Plugin.parser.add_argument('username')
-    @Plugin.parser.add_argument('type', choices=constants.VALID_EVOLUTION_TYPES.keys())
+    @Plugin.parser.add_argument('type', choices=constants.VALID_EVOLUTION_TYPE_NAMES)
     @Plugin.parser.add_argument('database', choices=rwr.constants.VALID_DATABASES, nargs='?', default='invasion')
     def on_evolution_command(self, event, args):
         """Displays the evolution of the specified stat."""
@@ -232,14 +232,14 @@ class RwrsBotDiscoPlugin(Plugin):
 
             return
 
-        player_evolution_data = RwrAccountStat.get_stats_by_column(player.rwr_account.id, args.type)
+        player_evolution_data = RwrAccountStat.get_stats_by_column(player.rwr_account.id, constants.VALID_EVOLUTION_TYPES[args.type]['column'])
 
         with BytesIO() as evolution_image:
             utils.create_evolution_chart(
                 evolution_image,
                 player_evolution_data,
                 'Past year {} evolution for {}\non {} ranked servers'.format(
-                    constants.VALID_EVOLUTION_TYPES[args.type],
+                    constants.VALID_EVOLUTION_TYPES[args.type]['name'],
                     player.username,
                     player.database_name
                 )

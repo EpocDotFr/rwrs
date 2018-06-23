@@ -20,10 +20,12 @@ VALID_PLAYER_SORTS = {
 }
 
 VALID_EVOLUTION_TYPES = {
-    'ratio': 'K/D ratio',
-    'score': 'score',
-    'position': 'position (by XP)'
+    'ratio': {'name': 'K/D ratio', 'column': 'kd_ratio'},
+    'score': {'name': 'score', 'column': 'score'},
+    'position': {'name': 'position (by XP)', 'column': 'leaderboard_position'},
 }
+
+VALID_EVOLUTION_TYPE_NAMES = VALID_EVOLUTION_TYPES.keys()
 
 VALID_SERVER_TYPES = {
     'vanilla': 'vanilla',
