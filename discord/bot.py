@@ -9,7 +9,6 @@ from rwr.player import Player
 from rwrs import app, cache
 from flask import url_for
 from gevent import monkey
-from io import BytesIO
 import rwr.scraper
 import rwr.utils
 import logging
@@ -232,20 +231,20 @@ class RwrsBotDiscoPlugin(Plugin):
 
             return
 
-        player_evolution_data = RwrAccountStat.get_stats_by_column(player.rwr_account.id, constants.VALID_EVOLUTION_TYPES[args.type]['column'])
-
-        with BytesIO() as evolution_image:
-            utils.create_evolution_chart(
-                evolution_image,
-                player_evolution_data,
-                'Past year {} evolution for {}\non {} ranked servers'.format(
-                    constants.VALID_EVOLUTION_TYPES[args.type]['name'],
-                    player.username,
-                    player.database_name
-                )
+        evolution_chart = utils.create_evolution_chart(
+            player.rwr_account.id,
+            constants.VALID_EVOLUTION_TYPES[args.type]['column'],
+            'Past year {} evolution for {}\n({} ranked servers, {} is better)'.format(
+                constants.VALID_EVOLUTION_TYPES[args.type]['name'],
+                player.username,
+                player.database_name,
+                'lower' if args.type == 'position' else 'higher'
             )
+        )
 
-            event.msg.reply('Here ya go:', attachments=[('evolution.png', evolution_image, 'image/png')]) # FIXME
+        event.msg.reply('Here ya go:', attachments=[('evolution.png', evolution_chart, 'image/png')])
+
+        evolution_chart.close()
 
     @Plugin.command('whereis', parser=True)
     @Plugin.parser.add_argument('username')

@@ -155,7 +155,7 @@ def player_details(database, username, tab=None):
                 error_out=False
             )
         elif tab == 'evolution':
-            player_evolution_data = RwrAccountStat.get_stats_by_column(player.rwr_account.id)
+            player_evolution_data = RwrAccountStat.get_stats_for_column(player.rwr_account.id)
 
     return render_template(
         'player_details.html',

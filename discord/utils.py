@@ -1,5 +1,8 @@
 from disco.types.message import MessageEmbed
+from models import RwrAccountStat
+from rwrs import cache, app
 from . import constants
+from io import BytesIO
 import helpers
 import arrow
 import re
@@ -327,8 +330,10 @@ def parse_date(date):
     return arrow.get(date, allowed_formats).replace(year=now.year)
 
 
-def create_evolution_chart(evolution_image, player_evolution_data, title):
-    """Create a chart image representing the evolution of a given player stat."""
+def create_evolution_chart(rwr_account_id, column, title):
+    """Create an image containing a chart representing the evolution of a given player stat."""
+    player_evolution_data = RwrAccountStat.get_stats_for_column(rwr_account_id, column)
+
     fig, ax = plt.subplots()
 
     ax.xaxis.set_major_locator(mdates.MonthLocator())
@@ -347,6 +352,13 @@ def create_evolution_chart(evolution_image, player_evolution_data, title):
 
     fig.autofmt_xdate()
     fig.tight_layout()
-    fig.savefig(evolution_image, format='png')
 
-    evolution_image.seek(0)
+    evolution_chart = BytesIO()
+
+    fig.savefig(evolution_chart, format='png')
+
+    evolution_chart.seek(0)
+
+    # TODO Cache image with app.config['PLAYERS_CACHE_TIMEOUT']
+
+    return evolution_chart
