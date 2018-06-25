@@ -87,9 +87,7 @@ def players_list(database):
     if args.get('target'):
         args['target'] = args.get('target').upper()
 
-    scraper = rwr.scraper.DataScraper()
-
-    players = scraper.get_players(
+    players = rwr.scraper.get_players(
         database,
         sort=args['sort'],
         target=args['target'] if args.get('target') else None,
@@ -102,7 +100,7 @@ def players_list(database):
 
         return redirect(url_for('players_list', database=database))
 
-    servers = scraper.get_servers()
+    servers = rwr.scraper.get_servers()
 
     for player in players:
         player.set_playing_on_server(servers)
@@ -124,9 +122,7 @@ def player_details_without_db(username):
 @app.route('/players/<any({}):database>/<username>'.format(VALID_DATABASES_STRING_LIST))
 @app.route('/players/<any({}):database>/<username>/<any(unlockables,"stats-history"):tab>'.format(VALID_DATABASES_STRING_LIST))
 def player_details(database, username, tab=None):
-    scraper = rwr.scraper.DataScraper()
-
-    player = scraper.search_player_by_username(database, username)
+    player = rwr.scraper.search_player_by_username(database, username)
 
     if not player:
         flash(ERROR_PLAYER_NOT_FOUND.format(username=username, database=rwr.utils.get_database_name(database)), 'error')
@@ -136,7 +132,7 @@ def player_details(database, username, tab=None):
     stats = None
 
     if tab is None: # Stats tab (default)
-        servers = scraper.get_servers()
+        servers = rwr.scraper.get_servers()
 
         player.set_playing_on_server(servers)
     elif tab == 'stats-history' and player.has_stats:
@@ -181,23 +177,21 @@ def players_compare(database, username, username_to_compare_with=None):
     if not username_to_compare_with:
         abort(404)
 
-    scraper = rwr.scraper.DataScraper()
-
-    player = scraper.search_player_by_username(database, username)
+    player = rwr.scraper.search_player_by_username(database, username)
 
     if not player:
         flash(ERROR_PLAYER_NOT_FOUND.format(username=username, database=rwr.utils.get_database_name(database)), 'error')
 
         return redirect(url_for('players_list', database=database))
 
-    player_to_compare_with = scraper.search_player_by_username(database, username_to_compare_with)
+    player_to_compare_with = rwr.scraper.search_player_by_username(database, username_to_compare_with)
 
     if not player_to_compare_with:
         flash(ERROR_PLAYER_NOT_FOUND.format(username=username_to_compare_with, database=rwr.utils.get_database_name(database)), 'error')
 
         return redirect(url_for('player_details', database=database, username=username))
 
-    servers = scraper.get_servers()
+    servers = rwr.scraper.get_servers()
 
     player.set_playing_on_server(servers)
     player_to_compare_with.set_playing_on_server(servers)
@@ -211,19 +205,17 @@ def players_compare(database, username, username_to_compare_with=None):
 
 @app.route('/servers')
 def servers_list():
-    scraper = rwr.scraper.DataScraper()
-
     filters = request.args.to_dict()
 
     if filters:
-        servers = scraper.filter_servers(**filters)
+        servers = rwr.scraper.filter_servers(**filters)
     else:
-        servers = scraper.get_servers()
+        servers = rwr.scraper.get_servers()
 
-    locations = scraper.get_all_servers_locations()
-    types = scraper.get_all_servers_types()
-    modes = scraper.get_all_servers_modes()
-    maps = scraper.get_all_servers_maps()
+    locations = rwr.scraper.get_all_servers_locations()
+    types = rwr.scraper.get_all_servers_types()
+    modes = rwr.scraper.get_all_servers_modes()
+    maps = rwr.scraper.get_all_servers_maps()
 
     if request.args.get('view') == 'extended':
         g.LAYOUT = 'large'
@@ -241,9 +233,7 @@ def servers_list():
 @app.route('/servers/<ip>:<int:port>')
 @app.route('/servers/<ip>:<int:port>/<slug>')
 def server_details(ip, port, slug=None):
-    scraper = rwr.scraper.DataScraper()
-
-    server = scraper.get_server_by_ip_and_port(ip, port)
+    server = rwr.scraper.get_server_by_ip_and_port(ip, port)
 
     if not server:
         flash('Sorry, this server wasn\'t found.', 'error')

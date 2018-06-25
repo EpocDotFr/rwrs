@@ -86,11 +86,9 @@ def get_players_count():
     import steam
     import arrow
 
-    scraper = rwr.scraper.DataScraper()
-
     click.echo('Clearing cache')
 
-    cache.delete_memoized(rwr.scraper.DataScraper.get_servers)
+    cache.delete_memoized(rwr.scraper.get_servers)
     cache.delete_memoized(ServerPlayerCount.server_players_data)
     cache.delete_memoized(ServerPlayerCount.servers_data)
     cache.delete_memoized(steam.SteamworksApiClient.get_current_players_count_for_app)
@@ -109,7 +107,7 @@ def get_players_count():
 
     click.echo('Getting current players on servers')
 
-    servers = scraper.get_servers()
+    servers = rwr.scraper.get_servers()
 
     current_online_players_count = 0
     current_online_servers_count = 0
@@ -297,9 +295,7 @@ def save_players_stats(reset):
     players_count = app.config['MAX_NUM_OF_PLAYERS_TO_TRACK_STATS_FOR']
     chunks = 100
 
-    cache.delete_memoized(rwr.scraper.DataScraper.get_players)
-
-    scraper = rwr.scraper.DataScraper()
+    cache.delete_memoized(rwr.scraper.get_players)
 
     for database in rwr.constants.VALID_DATABASES:
         rwr_account_type = RwrAccountType(database.upper())
@@ -314,7 +310,7 @@ def save_players_stats(reset):
         for start in range(0, players_count, chunks):
             click.echo('  Chunk start: {}'.format(start))
 
-            players = scraper.get_players(database, sort=players_sort, start=start, limit=chunks, basic=True)
+            players = rwr.scraper.get_players(database, sort=players_sort, start=start, limit=chunks, basic=True)
 
             if not players:
                 click.secho('No more players to handle', fg='green')
