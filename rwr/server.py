@@ -1,3 +1,4 @@
+from sqlalchemy.util import memoized_property
 from flask import url_for, current_app
 from . import constants, utils
 from slugify import slugify
@@ -75,8 +76,6 @@ class Server:
 
         ret.realm = realm_node.text
         ret.is_ranked = ret.realm in [database['realm'] for _, database in constants.PLAYERS_LIST_DATABASES.items()]
-        ret.database = ret.get_database()
-        ret.database_name = utils.get_database_name(ret.database)
 
         ret.location = ServerLocation()
 
@@ -122,14 +121,19 @@ class Server:
         self.link = url_for('server_details', ip=self.ip, port=self.port, slug=self.name_slug)
         self.link_absolute = url_for('server_details', ip=self.ip, port=self.port, slug=self.name_slug, _external=True)
 
-    def get_database(self):
-        """Return the players list database name of this server."""
+    @memoized_property
+    def database(self):
+        """The players list database name of this server."""
         if self.is_ranked:
             for database_name, database in constants.PLAYERS_LIST_DATABASES.items():
                 if database['realm'] == self.realm:
                     return database_name
 
         return None
+
+    @memoized_property
+    def database_name(self):
+        return utils.get_database_name(self.database)
 
     def __repr__(self):
         return 'Server:' + self.ip_and_port

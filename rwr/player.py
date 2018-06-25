@@ -34,8 +34,6 @@ class Player:
         xp_cell = node[15]
 
         ret.database = database
-        ret.database_name = utils.get_database_name(ret.database)
-        ret.database_game_type = ret.get_game_type_from_database()
 
         ret.leaderboard_position = int(leaderboard_position_cell.text)
         ret.username = username_cell.text.encode('iso-8859-1').decode('utf-8')
@@ -67,8 +65,6 @@ class Player:
         ret.rwr_account = rwr_account
 
         ret.database = rwr_account.type.value.lower()
-        ret.database_name = utils.get_database_name(ret.database)
-        ret.database_game_type = ret.get_game_type_from_database()
 
         ret.username = rwr_account.username.encode('iso-8859-1').decode('utf-8')
 
@@ -93,8 +89,6 @@ class Player:
         return ret
 
     def set_advanced_data(self):
-        self.rank = self.get_current_rank()
-
         self.leaderboard_position_display = helpers.humanize_integer(self.leaderboard_position)
 
         username_lower = self.username.lower()
@@ -119,11 +113,6 @@ class Player:
         self.shots_fired_display = helpers.humanize_integer(self.shots_fired)
         self.throwables_thrown_display = helpers.humanize_integer(self.throwables_thrown)
         self.xp_display = helpers.humanize_integer(self.xp)
-        self.display_time_played_in_days = self.time_played > 60 * 60 * 24
-        self.next_rank = self.get_next_rank()
-        self.xp_to_next_rank = self.get_xp_to_next_rank()
-        self.xp_percent_completion_to_next_rank = self.get_xp_percent_completion_to_next_rank()
-        self.unlocks = self.get_unlocks()
 
         if current_app:
             self.set_links()
@@ -152,8 +141,24 @@ class Player:
 
                 return
 
-    def get_next_rank(self):
-        """Return the next rank of the player (if applicable)."""
+    @memoized_property
+    def display_time_played_in_days(self):
+        return self.time_played > 60 * 60 * 24
+
+    @memoized_property
+    def database_name(self):
+        return utils.get_database_name(self.database)
+
+    @memoized_property
+    def database_game_type(self):
+        if self.database == 'invasion':
+            return 'vanilla'
+        else:
+            return self.database
+
+    @memoized_property
+    def next_rank(self):
+        """Next player rank (if applicable)."""
         if self.rank.id is None:
             return None
 
@@ -173,8 +178,9 @@ class Player:
 
         return self.get_rank_object(next_rank_id)
 
-    def get_current_rank(self):
-        """Return the current rank of the player."""
+    @memoized_property
+    def rank(self):
+        """Current player rank."""
         ranks = constants.RANKS[constants.PLAYERS_LIST_DATABASES[self.database]['ranks_country']]
 
         for rank_id, rank in ranks.items():
@@ -185,15 +191,17 @@ class Player:
 
         return self.get_rank_object(int(current_rank_id))
 
-    def get_xp_to_next_rank(self):
-        """Return the amount of XP the player needs to be promoted to the next rank."""
+    @memoized_property
+    def xp_to_next_rank(self):
+        """Amount of XP the player needs to be promoted to the next rank."""
         if not self.next_rank:
             return None
 
         return self.next_rank.xp - self.xp
 
-    def get_xp_percent_completion_to_next_rank(self):
-        """Return the percentage of XP the player obtained for the next rank."""
+    @memoized_property
+    def xp_percent_completion_to_next_rank(self):
+        """Percentage of XP the player obtained for the next rank."""
         if not self.next_rank:
             return None
 
@@ -220,15 +228,9 @@ class Player:
 
         return ret
 
-    def get_game_type_from_database(self):
-        """Return the game type from this player's database name."""
-        if self.database == 'invasion':
-            return 'vanilla'
-        else:
-            return self.database
-
-    def get_unlocks(self):
-        """Compute what the player unlocked (or not)."""
+    @memoized_property
+    def unlocks(self):
+        """What the player unlocked (or not)."""
         def _init_unlockable(ret, type):
             ret[type] = {
                 'list': [],
