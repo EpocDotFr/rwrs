@@ -332,33 +332,40 @@ def parse_date(date):
 
 def create_evolution_chart(rwr_account_id, column, title):
     """Create an image containing a chart representing the evolution of a given player stat."""
-    player_evolution_data = RwrAccountStat.get_stats_for_column(rwr_account_id, column)
-
-    fig, ax = plt.subplots()
-
-    ax.xaxis.set_major_locator(mdates.MonthLocator())
-    ax.xaxis.set_major_formatter(mdates.DateFormatter('%b %Y'))
-
-    plt.title(title)
-
-    ax.plot_date(
-        [date2num(data['t'].datetime) for data in player_evolution_data],
-        [data['v'] for data in player_evolution_data],
-        'g-'
-    )
-
-    ax.autoscale_view()
-    ax.grid(True)
-
-    fig.autofmt_xdate()
-    fig.tight_layout()
-
+    cache_key = 'evolution_chart.{}.{}'.format(rwr_account_id, column)
     evolution_chart = BytesIO()
+    evolution_chart_cached = cache.get(cache_key)
 
-    fig.savefig(evolution_chart, format='png')
+    if evolution_chart_cached is not None:
+        evolution_chart.write(evolution_chart_cached)
+    else:
+        player_evolution_data = RwrAccountStat.get_stats_for_column(rwr_account_id, column)
+
+        fig, ax = plt.subplots()
+
+        ax.xaxis.set_major_locator(mdates.MonthLocator())
+        ax.xaxis.set_major_formatter(mdates.DateFormatter('%b %Y'))
+
+        plt.title(title)
+
+        ax.plot_date(
+            [date2num(data['t'].datetime) for data in player_evolution_data],
+            [data['v'] for data in player_evolution_data],
+            'g-'
+        )
+
+        ax.autoscale_view()
+        ax.grid(True)
+
+        fig.autofmt_xdate()
+        fig.tight_layout()
+
+        fig.savefig(evolution_chart, format='png')
+
+        evolution_chart.seek(0)
+
+        cache.set(cache_key, evolution_chart.getvalue(), timeout=app.config['PLAYERS_CACHE_TIMEOUT'])
 
     evolution_chart.seek(0)
-
-    # TODO Cache image with app.config['PLAYERS_CACHE_TIMEOUT']
 
     return evolution_chart
