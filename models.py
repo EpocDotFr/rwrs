@@ -9,6 +9,16 @@ import hashlib
 import arrow
 
 
+def one_week_ago():
+    """Return an Arrow object 1 week in the past."""
+    return arrow.utcnow().floor('minute').shift(weeks=-1)
+
+
+def one_year_ago():
+    """Return an Arrow object 1 year in the past."""
+    return arrow.utcnow().floor('day').shift(years=-1)
+
+
 class Measurable:
     id = db.Column(db.Integer, primary_key=True, autoincrement=True) # TODO To remove because useless and non-efficient
 
@@ -16,14 +26,9 @@ class Measurable:
     count = db.Column(db.Integer, nullable=False)
 
     @staticmethod
-    def transform_data(rows):
-        """Given a list of date => integer, convert the date to a string format."""
-        return [{'t': row[0].format('YYYY-MM-DDTHH:mm:ss'), 'c': row[1]} for row in rows]
-
-    @staticmethod
-    def past():
-        """Return an Arrow object one week in the past."""
-        return arrow.utcnow().floor('minute').shift(weeks=-1)
+    def transform_data(rows, format='YYYY-MM-DDTHH:mm:ss'):
+        """Given a list of date => number, convert the date to a string format."""
+        return [{'t': row[0].format(format), 'v': row[1]} for row in rows]
 
 
 class ServerPlayerCount(db.Model, Measurable):
@@ -32,11 +37,11 @@ class ServerPlayerCount(db.Model, Measurable):
             """Return the base query used to get the count."""
             q = self.with_entities(ServerPlayerCount.measured_at.label('t'), count)
 
-            return q.filter(ServerPlayerCount.measured_at >= Measurable.past()).group_by('t')
+            return q.filter(ServerPlayerCount.measured_at >= one_week_ago()).group_by('t')
 
         def get_player_count(self, ip=None, port=None):
             """Return the online players count, optionally filtered by a server's IP and port."""
-            q = self._get_base_count_query(func.sum(ServerPlayerCount.count).label('c'))
+            q = self._get_base_count_query(func.sum(ServerPlayerCount.count).label('v'))
 
             if ip and port:
                 q = q.filter(ServerPlayerCount._ip == ip, ServerPlayerCount.port == port)
@@ -45,7 +50,7 @@ class ServerPlayerCount(db.Model, Measurable):
 
         def get_server_count(self, active_only=False):
             """Return the online servers count, optionally filtered by the active ones only."""
-            q = self._get_base_count_query(func.count('*').label('c'))
+            q = self._get_base_count_query(func.count('*').label('v'))
 
             if active_only:
                 q = q.filter(ServerPlayerCount.count > 0)
@@ -54,7 +59,7 @@ class ServerPlayerCount(db.Model, Measurable):
 
         def get_old_entries(self):
             """Return entries older than 1 weeks (exclusive)."""
-            return self.filter(ServerPlayerCount.measured_at < Measurable.past()).all()
+            return self.filter(ServerPlayerCount.measured_at < one_week_ago()).all()
 
     __tablename__ = 'servers_player_count'
     __bind_key__ = 'servers_player_count'
@@ -96,14 +101,14 @@ class SteamPlayerCount(db.Model, Measurable):
     class SteamPlayerCountQuery(db.Query):
         def get_player_count(self):
             """Return the Steam players count."""
-            q = self.with_entities(SteamPlayerCount.measured_at.label('t'), SteamPlayerCount.count.label('c'))
-            q = q.filter(SteamPlayerCount.measured_at >= Measurable.past()).group_by('t')
+            q = self.with_entities(SteamPlayerCount.measured_at.label('t'), SteamPlayerCount.count.label('v'))
+            q = q.filter(SteamPlayerCount.measured_at >= one_week_ago()).group_by('t')
 
             return q.all()
 
         def get_old_entries(self):
             """Return entries older than 1 weeks (exclusive)."""
-            return self.filter(SteamPlayerCount.measured_at < Measurable.past()).all()
+            return self.filter(SteamPlayerCount.measured_at < one_week_ago()).all()
 
     __tablename__ = 'steam_players_count'
     __bind_key__ = 'steam_players_count'
@@ -447,12 +452,35 @@ class RwrAccountStat(db.Model):
         self.hash = hashlib.md5(data).hexdigest()
 
     @staticmethod
-    def get_by_account_id_and_date(rwr_account_id, date):
+    def transform_data(rows, column, format='YYYY-MM-DD'):
+        """Given a list of RwrAccountStat, convert to a list of date => number."""
+        return [{'t': row.created_at.format(format) if format else row.created_at, 'v': getattr(row, column)} for row in rows]
+
+    @staticmethod
+    def get_stats_for_date(rwr_account_id, date):
         """Return the most recent RwrAccountStat for the given rwr_account_id and date (arrow instance)."""
         return RwrAccountStat.query.filter(
             RwrAccountStat.rwr_account_id == rwr_account_id,
             RwrAccountStat.created_at <= date.floor('day')
         ).order_by(RwrAccountStat.created_at.desc()).first()
+
+    @staticmethod
+    @cache.memoize(timeout=app.config['GRAPHS_DATA_CACHE_TIMEOUT'])
+    def get_stats_for_column(rwr_account_id, column=None):
+        """Return the player's score, K/D ratio and/or leaderboard position evolution data for the past year."""
+        rwr_account_stats = RwrAccountStat.query.filter(
+            RwrAccountStat.rwr_account_id == rwr_account_id,
+            RwrAccountStat.created_at >= one_year_ago()
+        ).order_by(RwrAccountStat.created_at.desc()).all()
+
+        if not column:
+            return {
+                'ratio': RwrAccountStat.transform_data(rwr_account_stats, 'kd_ratio'),
+                'score': RwrAccountStat.transform_data(rwr_account_stats, 'score'),
+                'position': RwrAccountStat.transform_data(rwr_account_stats, 'leaderboard_position')
+            }
+        else:
+            return RwrAccountStat.transform_data(rwr_account_stats, column, format=None)
 
     @memoized_property
     def rwr_account(self):

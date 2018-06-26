@@ -19,6 +19,14 @@ VALID_PLAYER_SORTS = {
     'targets': {'name': 'targets destroyed', 'value': rwr.constants.PlayersSort.TARGETS_DESTROYED, 'getter': lambda player: player.targets_destroyed_display},
 }
 
+VALID_EVOLUTION_TYPES = {
+    'ratio': {'name': 'K/D ratio', 'column': 'kd_ratio'},
+    'score': {'name': 'score', 'column': 'score'},
+    'position': {'name': 'position (by XP)', 'column': 'leaderboard_position'},
+}
+
+VALID_EVOLUTION_TYPE_NAMES = VALID_EVOLUTION_TYPES.keys()
+
 VALID_SERVER_TYPES = {
     'vanilla': 'vanilla',
     'pacific': 'pacific',
@@ -34,6 +42,7 @@ AVAILABLE_COMMANDS = OrderedDict([
     ('top', {'description': 'Displays the top 24 players', 'admin_only': False}),
     ('pos', {'description': 'Highlights the given player in the leaderboard', 'admin_only': False}),
     ('compare', {'description': 'Compare stats of two players', 'admin_only': False}),
+    ('evolution', {'description': 'Displays the evolution of the specified stat', 'admin_only': False}),
     ('whereis', {'description': 'Displays information about the server the given player is playing on', 'admin_only': False}),
     ('server', {'description': 'Displays information about the given server', 'admin_only': False}),
     ('servers', {'description': 'Displays the first 10 currently active servers with room', 'admin_only': False}),

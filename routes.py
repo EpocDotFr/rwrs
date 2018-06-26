@@ -1,5 +1,5 @@
+from models import SteamPlayerCount, ServerPlayerCount, RwrRootServer, Variable, RwrAccountStat
 from flask import render_template, abort, request, redirect, url_for, flash, g
-from models import SteamPlayerCount, ServerPlayerCount, RwrRootServer, Variable
 from rwrs import app
 import rwr.constants
 import rwr.scraper
@@ -120,7 +120,7 @@ def player_details_without_db(username):
 
 
 @app.route('/players/<any({}):database>/<username>'.format(VALID_DATABASES_STRING_LIST))
-@app.route('/players/<any({}):database>/<username>/<any(unlockables,"stats-history"):tab>'.format(VALID_DATABASES_STRING_LIST))
+@app.route('/players/<any({}):database>/<username>/<any(unlockables,evolution,"stats-history"):tab>'.format(VALID_DATABASES_STRING_LIST))
 def player_details(database, username, tab=None):
     player = rwr.scraper.search_player_by_username(database, username)
 
@@ -130,29 +130,34 @@ def player_details(database, username, tab=None):
         return redirect(url_for('players_list', database=database))
 
     stats = None
+    player_evolution_data = None
 
     if tab is None: # Stats tab (default)
         servers = rwr.scraper.get_servers()
 
         player.set_playing_on_server(servers)
-    elif tab == 'stats-history' and player.has_stats:
-        g.LAYOUT = 'large'
+    elif tab in ['stats-history', 'evolution'] and player.has_stats:
+        if tab == 'stats-history':
+            g.LAYOUT = 'large'
 
-        per_page = request.args.get('limit', type=int)
+            per_page = request.args.get('limit', type=int)
 
-        if not per_page or per_page > app.config['LIST_PAGE_SIZES'][-1]:
-            per_page = app.config['LIST_PAGE_SIZES'][0]
+            if not per_page or per_page > app.config['LIST_PAGE_SIZES'][-1]:
+                per_page = app.config['LIST_PAGE_SIZES'][0]
 
-        stats = player.rwr_account.stats.paginate(
-            page=request.args.get('page', 1, type=int),
-            per_page=per_page,
-            error_out=False
-        )
+            stats = player.rwr_account.stats.paginate(
+                page=request.args.get('page', 1, type=int),
+                per_page=per_page,
+                error_out=False
+            )
+        elif tab == 'evolution':
+            player_evolution_data = RwrAccountStat.get_stats_for_column(player.rwr_account.id)
 
     return render_template(
         'player_details.html',
         player=player,
-        stats=stats
+        stats=stats,
+        player_evolution_data=player_evolution_data
     )
 
 
