@@ -346,7 +346,7 @@ def create_evolution_chart(rwr_account_id, column, title):
         ax.xaxis.set_major_locator(mdates.YearLocator())
         ax.xaxis.set_major_formatter(mdates.DateFormatter('\n%Y'))
         ax.xaxis.set_minor_locator(mdates.MonthLocator())
-        ax.xaxis.set_minor_formatter(mdates.DateFormatter('%B'))
+        ax.xaxis.set_minor_formatter(mdates.DateFormatter('%b'))
 
         ax.set_title(title)
 
