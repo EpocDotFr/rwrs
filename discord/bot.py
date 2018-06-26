@@ -215,7 +215,7 @@ class RwrsBotDiscoPlugin(Plugin):
         """Displays the evolution of the specified stat."""
         args.username = utils.prepare_username(args.username)
 
-        player = self.rwr_scraper.search_player_by_username(args.database, args.username)
+        player = rwr.scraper.search_player_by_username(args.database, args.username)
 
         if not player:
             event.msg.reply('Sorry dude, this player don\'t exist :confused:')
