@@ -38,6 +38,7 @@ chartsFeature = {
             target: '#ratio-chart',
             color: '#A4CF17',
             x_mouseover: '%b %e, %Y ',
+            min_y_from_data: true,
             data: this.player_evolution_data.ratio
         });
 
@@ -48,6 +49,7 @@ chartsFeature = {
             target: '#score-chart',
             color: '#A4CF17',
             x_mouseover: '%b %e, %Y ',
+            min_y_from_data: true,
             data: this.player_evolution_data.score
         });
 
@@ -58,6 +60,7 @@ chartsFeature = {
             target: '#position-chart',
             color: '#A4CF17',
             x_mouseover: '%b %e, %Y ',
+            min_y_from_data: true,
             data: this.player_evolution_data.position
         });
     },
