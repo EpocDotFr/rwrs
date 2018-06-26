@@ -12,50 +12,51 @@ class Player:
     _rwr_account = None
 
     @classmethod
-    def load(cls, database, node, alternative=False, basic=False):
+    def load(cls, database, node, alternative=False):
         """Load a player data from an HTML <tr> node."""
         ret = cls()
 
-        leaderboard_position_cell = node[0]
-        username_cell = node[1]
-        kills_cell = node[2]
-        deaths_cell = node[3]
-        score_cell = node[4]
-        kd_ratio_cell = node[5]
-        time_played_cell = node[6]
-        longest_kill_streak_cell = node[8 if alternative else 7]
-        targets_destroyed_cell = node[9 if alternative else 8]
-        vehicles_destroyed_cell = node[10 if alternative else 9]
-        soldiers_healed_cell = node[11 if alternative else 10]
-        teamkills_cell = node[7 if alternative else 11]
-        distance_moved_cell = node[12]
-        shots_fired_cell = node[13]
-        throwables_thrown_cell = node[14]
-        xp_cell = node[15]
+        leaderboard_position_node = node[0]
+        username_node = node[1]
+        kills_node = node[2]
+        deaths_node = node[3]
+        score_node = node[4]
+        kd_ratio_node = node[5]
+        time_played_node = node[6]
+        longest_kill_streak_node = node[8 if alternative else 7]
+        targets_destroyed_node = node[9 if alternative else 8]
+        vehicles_destroyed_node = node[10 if alternative else 9]
+        soldiers_healed_node = node[11 if alternative else 10]
+        teamkills_node = node[7 if alternative else 11]
+        distance_moved_node = node[12]
+        shots_fired_node = node[13]
+        throwables_thrown_node = node[14]
+        xp_node = node[15]
 
         ret.database = database
-        ret.database_name = utils.get_database_name(ret.database)
-        ret.database_game_type = ret.get_game_type_from_database()
 
-        ret.leaderboard_position = int(leaderboard_position_cell.text)
-        ret.username = username_cell.text.encode('iso-8859-1').decode('utf-8')
-        ret.kills = int(kills_cell.text)
-        ret.deaths = int(deaths_cell.text)
-        ret.score = int(score_cell.text)
-        ret.kd_ratio = float(kd_ratio_cell.text)
-        ret.time_played = utils.parse_time(time_played_cell.text)
-        ret.longest_kill_streak = int(longest_kill_streak_cell.text)
-        ret.targets_destroyed = int(targets_destroyed_cell.text)
-        ret.vehicles_destroyed = int(vehicles_destroyed_cell.text)
-        ret.soldiers_healed = int(soldiers_healed_cell.text)
-        ret.teamkills = int(teamkills_cell.text)
-        ret.distance_moved = float(distance_moved_cell.text.replace('km', ''))
-        ret.shots_fired = int(shots_fired_cell.text)
-        ret.throwables_thrown = int(throwables_thrown_cell.text)
-        ret.xp = int(xp_cell.text)
+        ret.leaderboard_position = int(leaderboard_position_node.text)
+        ret.username = username_node.text.encode('iso-8859-1').decode('utf-8')
+        ret.kills = int(kills_node.text)
+        ret.deaths = int(deaths_node.text)
+        ret.score = int(score_node.text)
+        ret.kd_ratio = float(kd_ratio_node.text)
+        ret.time_played = utils.parse_time(time_played_node.text)
+        ret.longest_kill_streak = int(longest_kill_streak_node.text)
+        ret.targets_destroyed = int(targets_destroyed_node.text)
+        ret.vehicles_destroyed = int(vehicles_destroyed_node.text)
+        ret.soldiers_healed = int(soldiers_healed_node.text)
+        ret.teamkills = int(teamkills_node.text)
+        ret.distance_moved = float(distance_moved_node.text.replace('km', ''))
+        ret.shots_fired = int(shots_fired_node.text)
+        ret.throwables_thrown = int(throwables_thrown_node.text)
+        ret.xp = int(xp_node.text)
 
-        if not basic:
-            ret.set_advanced_data()
+        if current_app:
+            ret.set_links()
+        else:
+            with app.app_context():
+                ret.set_links()
 
         return ret
 
@@ -67,8 +68,6 @@ class Player:
         ret.rwr_account = rwr_account
 
         ret.database = rwr_account.type.value.lower()
-        ret.database_name = utils.get_database_name(ret.database)
-        ret.database_game_type = ret.get_game_type_from_database()
 
         ret.username = rwr_account.username.encode('iso-8859-1').decode('utf-8')
 
@@ -88,48 +87,80 @@ class Player:
         ret.throwables_thrown = rwr_account_stat.throwables_thrown
         ret.xp = rwr_account_stat.xp
 
-        ret.set_advanced_data()
+        if current_app:
+            ret.set_links()
+        else:
+            with app.app_context():
+                ret.set_links()
 
         return ret
 
-    def set_advanced_data(self):
-        self.rank = self.get_current_rank()
+    @memoized_property
+    def leaderboard_position_display(self):
+        return helpers.humanize_integer(self.leaderboard_position)
 
-        self.leaderboard_position_display = helpers.humanize_integer(self.leaderboard_position)
+    @memoized_property
+    def is_me(self):
+        return self.username.lower() == app.config['MY_USERNAME']
 
-        username_lower = self.username.lower()
+    @memoized_property
+    def is_contributor(self):
+        return self.username.lower() in app.config['CONTRIBUTORS']
 
-        self.is_me = username_lower == app.config['MY_USERNAME']
-        self.is_contributor = username_lower in app.config['CONTRIBUTORS']
-        self.is_rwr_dev = username_lower in app.config['DEVS']
+    @memoized_property
+    def is_rwr_dev(self):
+        return self.username.lower() in app.config['DEVS']
 
-        self.username_display = '{}{}'.format(
+    @memoized_property
+    def username_display(self):
+        return '{}{}'.format(
             self.username,
             ' :wave:' if self.is_me else ' :v:️' if self.is_contributor else ' :tools:' if self.is_rwr_dev else ''
         )
 
-        self.kills_display = helpers.humanize_integer(self.kills)
-        self.deaths_display = helpers.humanize_integer(self.deaths)
-        self.score_display = helpers.humanize_integer(self.score)
-        self.longest_kill_streak_display = helpers.humanize_integer(self.longest_kill_streak)
-        self.targets_destroyed_display = helpers.humanize_integer(self.targets_destroyed)
-        self.vehicles_destroyed_display = helpers.humanize_integer(self.vehicles_destroyed)
-        self.soldiers_healed_display = helpers.humanize_integer(self.soldiers_healed)
-        self.teamkills_display = helpers.humanize_integer(self.teamkills)
-        self.shots_fired_display = helpers.humanize_integer(self.shots_fired)
-        self.throwables_thrown_display = helpers.humanize_integer(self.throwables_thrown)
-        self.xp_display = helpers.humanize_integer(self.xp)
-        self.display_time_played_in_days = self.time_played > 60 * 60 * 24
-        self.next_rank = self.get_next_rank()
-        self.xp_to_next_rank = self.get_xp_to_next_rank()
-        self.xp_percent_completion_to_next_rank = self.get_xp_percent_completion_to_next_rank()
-        self.unlocks = self.get_unlocks()
+    @memoized_property
+    def kills_display(self):
+        return helpers.humanize_integer(self.kills)
 
-        if current_app:
-            self.set_links()
-        else:
-            with app.app_context():
-                self.set_links()
+    @memoized_property
+    def deaths_display(self):
+        return helpers.humanize_integer(self.deaths)
+
+    @memoized_property
+    def score_display(self):
+        return helpers.humanize_integer(self.score)
+
+    @memoized_property
+    def longest_kill_streak_display(self):
+        return helpers.humanize_integer(self.longest_kill_streak)
+
+    @memoized_property
+    def targets_destroyed_display(self):
+        return helpers.humanize_integer(self.targets_destroyed)
+
+    @memoized_property
+    def vehicles_destroyed_display(self):
+        return helpers.humanize_integer(self.vehicles_destroyed)
+
+    @memoized_property
+    def soldiers_healed_display(self):
+        return helpers.humanize_integer(self.soldiers_healed)
+
+    @memoized_property
+    def teamkills_display(self):
+        return helpers.humanize_integer(self.teamkills)
+
+    @memoized_property
+    def shots_fired_display(self):
+        return helpers.humanize_integer(self.shots_fired)
+
+    @memoized_property
+    def throwables_thrown_display(self):
+        return helpers.humanize_integer(self.throwables_thrown)
+
+    @memoized_property
+    def xp_display(self):
+        return helpers.humanize_integer(self.xp)
 
     def set_links(self):
         """Set the relative and absolute URLs of this player's details page."""
@@ -152,8 +183,24 @@ class Player:
 
                 return
 
-    def get_next_rank(self):
-        """Return the next rank of the player (if applicable)."""
+    @memoized_property
+    def display_time_played_in_days(self):
+        return self.time_played > 60 * 60 * 24
+
+    @memoized_property
+    def database_name(self):
+        return utils.get_database_name(self.database)
+
+    @memoized_property
+    def database_game_type(self):
+        if self.database == 'invasion':
+            return 'vanilla'
+        else:
+            return self.database
+
+    @memoized_property
+    def next_rank(self):
+        """Next player rank (if applicable)."""
         if self.rank.id is None:
             return None
 
@@ -171,10 +218,11 @@ class Player:
 
         next_rank_id = self.rank.id + 1
 
-        return self.get_rank_object(next_rank_id)
+        return self._get_rank_object(next_rank_id)
 
-    def get_current_rank(self):
-        """Return the current rank of the player."""
+    @memoized_property
+    def rank(self):
+        """Current player rank."""
         ranks = constants.RANKS[constants.PLAYERS_LIST_DATABASES[self.database]['ranks_country']]
 
         for rank_id, rank in ranks.items():
@@ -183,23 +231,25 @@ class Player:
 
             current_rank_id = rank_id
 
-        return self.get_rank_object(int(current_rank_id))
+        return self._get_rank_object(int(current_rank_id))
 
-    def get_xp_to_next_rank(self):
-        """Return the amount of XP the player needs to be promoted to the next rank."""
+    @memoized_property
+    def xp_to_next_rank(self):
+        """Amount of XP the player needs to be promoted to the next rank."""
         if not self.next_rank:
             return None
 
         return self.next_rank.xp - self.xp
 
-    def get_xp_percent_completion_to_next_rank(self):
-        """Return the percentage of XP the player obtained for the next rank."""
+    @memoized_property
+    def xp_percent_completion_to_next_rank(self):
+        """Percentage of XP the player obtained for the next rank."""
         if not self.next_rank:
             return None
 
         return round((self.xp * 100) / self.next_rank.xp, 2)
 
-    def get_rank_object(self, rank_id):
+    def _get_rank_object(self, rank_id):
         """Return a new PlayerRank object given a rank ID."""
         ret = PlayerRank()
 
@@ -220,15 +270,9 @@ class Player:
 
         return ret
 
-    def get_game_type_from_database(self):
-        """Return the game type from this player's database name."""
-        if self.database == 'invasion':
-            return 'vanilla'
-        else:
-            return self.database
-
-    def get_unlocks(self):
-        """Compute what the player unlocked (or not)."""
+    @memoized_property
+    def unlocks(self):
+        """What the player unlocked (or not)."""
         def _init_unlockable(ret, type):
             ret[type] = {
                 'list': [],

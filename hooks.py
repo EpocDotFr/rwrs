@@ -35,12 +35,11 @@ def check_under_maintenance():
 
 @app.before_request
 def get_counts():
-    scraper = rwr.scraper.DataScraper()
     steamworks_api_client = steam.SteamworksApiClient(app.config['STEAM_API_KEY'])
 
-    g.all_players_with_servers_details = scraper.get_all_players_with_servers_details()
+    g.all_players_with_servers_details = rwr.scraper.get_all_players_with_servers_details()
 
-    online_players, active_servers, total_servers = scraper.get_counters()
+    online_players, active_servers, total_servers = rwr.scraper.get_counters()
 
     g.total_players = steamworks_api_client.get_current_players_count_for_app(app.config['RWR_STEAM_APP_ID'])
     g.online_players = online_players

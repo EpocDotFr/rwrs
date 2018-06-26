@@ -1,3 +1,4 @@
+from sqlalchemy.util import memoized_property
 from flask import url_for, current_app
 from . import constants, utils
 from slugify import slugify
@@ -27,16 +28,12 @@ class Server:
         realm_node = xml_node.find('realm')
 
         ret.name = name_node.text.strip() if name_node.text else 'N/A'
-        ret.name_slug = slugify(ret.name)
-
         ret.ip = address_node.text
         ret.port = int(port_node.text)
-        ret.ip_and_port = '{ip}:{port}'.format(ip=ret.ip, port=ret.port)
 
         server_type, map_id = utils.parse_map_path(map_id_node.text.replace('//', '/'))
 
         ret.type = server_type
-        ret.type_name = utils.get_type_name(ret.type)
 
         ret.map = ServerMap()
         ret.map.id = map_id
@@ -68,23 +65,10 @@ class Server:
         ret.is_dedicated = True if dedicated_node.text == '1' else False
         ret.comment = comment_node.text.strip() if comment_node.text else None
         ret.website = url_node.text.strip() if url_node.text else None
-
         ret.mode = mode_node.text
-        ret.mode_name = utils.get_mode_name(ret.mode)
-        ret.mode_name_long = utils.get_mode_name(ret.mode, False)
-
         ret.realm = realm_node.text
-        ret.is_ranked = ret.realm in [database['realm'] for _, database in constants.PLAYERS_LIST_DATABASES.items()]
-        ret.database = ret.get_database()
-        ret.database_name = utils.get_database_name(ret.database)
 
         ret.location = ServerLocation()
-
-        ret.steam_join_link = 'steam://rungameid/{gameid}//server_address={ip} server_port={port}'.format(
-            gameid=app.config['RWR_STEAM_APP_ID'],
-            ip=ret.ip,
-            port=ret.port
-        )
 
         html_server_node = html_servers.xpath('(//table/tr[(td[3] = \'{ip}\') and (td[4] = \'{port}\')])[1]'.format(ip=ret.ip, port=ret.port))
 
@@ -97,18 +81,6 @@ class Server:
                 ret.players.list = [player_name.strip() for player_name in players_node.text.split(',')]
                 ret.players.list.sort()
 
-        ret.name_display = '{}{}'.format(
-            '⭐️ ' if ret.is_ranked else '',
-            ret.name
-        )
-
-        ret.summary = '{}/{} • {} • {}'.format(
-            ret.players.current,
-            ret.players.max,
-            ret.type_name,
-            ret.map.name_display
-        )
-
         if current_app:
             ret.set_links()
         else:
@@ -117,19 +89,72 @@ class Server:
 
         return ret
 
+    @memoized_property
+    def name_slug(self):
+        return slugify(self.name)
+
+    @memoized_property
+    def name_display(self):
+        return '{}{}'.format(
+            '⭐️ ' if self.is_ranked else '',
+            self.name
+        )
+
+    @memoized_property
+    def summary(self):
+        return '{}/{} • {} • {}'.format(
+            self.players.current,
+            self.players.max,
+            self.type_name,
+            self.map.name_display
+        )
+
+    @memoized_property
+    def ip_and_port(self):
+        return '{ip}:{port}'.format(ip=self.ip, port=self.port)
+
+    @memoized_property
+    def type_name(self):
+        return utils.get_type_name(self.type)
+
+    @memoized_property
+    def mode_name(self):
+        return utils.get_mode_name(self.mode)
+
+    @memoized_property
+    def mode_name_long(self):
+        return utils.get_mode_name(self.mode, False)
+
+    @memoized_property
+    def is_ranked(self):
+        return self.realm in [database['realm'] for _, database in constants.PLAYERS_LIST_DATABASES.items()]
+
+    @memoized_property
+    def steam_join_link(self):
+        return 'steam://rungameid/{gameid}//server_address={ip} server_port={port}'.format(
+            gameid=app.config['RWR_STEAM_APP_ID'],
+            ip=self.ip,
+            port=self.port
+        )
+
     def set_links(self):
         """Set the relative and absolute URLs of this server's details page."""
         self.link = url_for('server_details', ip=self.ip, port=self.port, slug=self.name_slug)
         self.link_absolute = url_for('server_details', ip=self.ip, port=self.port, slug=self.name_slug, _external=True)
 
-    def get_database(self):
-        """Return the players list database name of this server."""
+    @memoized_property
+    def database(self):
+        """The players list database name of this server."""
         if self.is_ranked:
             for database_name, database in constants.PLAYERS_LIST_DATABASES.items():
                 if database['realm'] == self.realm:
                     return database_name
 
         return None
+
+    @memoized_property
+    def database_name(self):
+        return utils.get_database_name(self.database)
 
     def __repr__(self):
         return 'Server:' + self.ip_and_port
