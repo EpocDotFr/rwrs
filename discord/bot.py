@@ -24,7 +24,6 @@ class RwrsBotDiscoPlugin(Plugin):
     def load(self, ctx):
         super(RwrsBotDiscoPlugin, self).load(ctx)
 
-        self.rwr_scraper = rwr.scraper.DataScraper()
         self.steamworks_api_client = steam.SteamworksApiClient(app.config['STEAM_API_KEY'])
 
     @Plugin.pre_command()
@@ -162,7 +161,7 @@ class RwrsBotDiscoPlugin(Plugin):
 
                 return
 
-            player_exist = self.rwr_scraper.search_player_by_username(args.database, args.username, check_exist_only=True)
+            player_exist = rwr.scraper.search_player_by_username(args.database, args.username, check_exist_only=True)
 
             if not player_exist:
                 event.msg.reply('Sorry dude, this player don\'t exist :confused:')
@@ -191,14 +190,14 @@ class RwrsBotDiscoPlugin(Plugin):
 
             player = Player.craft(rwr_account, rwr_account_stat)
         else: # Live data mode
-            player = self.rwr_scraper.search_player_by_username(args.database, args.username)
+            player = rwr.scraper.search_player_by_username(args.database, args.username)
 
             if not player:
                 event.msg.reply('Sorry dude, this player don\'t exist :confused:')
 
                 return
 
-        servers = self.rwr_scraper.get_servers()
+        servers = rwr.scraper.get_servers()
 
         player.set_playing_on_server(servers)
 
@@ -214,7 +213,7 @@ class RwrsBotDiscoPlugin(Plugin):
         """Displays information about the server the specified player is currently playing on."""
         args.username = utils.prepare_username(args.username)
 
-        real_username, server = self.rwr_scraper.get_current_server_of_player(args.username)
+        real_username, server = rwr.scraper.get_current_server_of_player(args.username)
 
         if not server:
             event.msg.reply('Nah, this player isn\'t currently playing online :disappointed:')
@@ -227,7 +226,7 @@ class RwrsBotDiscoPlugin(Plugin):
     @Plugin.parser.add_argument('name')
     def on_server_command(self, event, args):
         """Displays information about the specified server."""
-        server = self.rwr_scraper.get_server_by_name(args.name)
+        server = rwr.scraper.get_server_by_name(args.name)
 
         if not server:
             event.msg.reply('Sorry mate, I didn\'t find this server :disappointed:')
@@ -252,7 +251,7 @@ class RwrsBotDiscoPlugin(Plugin):
         ]
 
         total_players = self.steamworks_api_client.get_current_players_count_for_app(app.config['RWR_STEAM_APP_ID'])
-        online_players, active_servers, total_servers = self.rwr_scraper.get_counters()
+        online_players, active_servers, total_servers = rwr.scraper.get_counters()
 
         peaks = Variable.get_peaks_for_display()
 
@@ -284,7 +283,7 @@ class RwrsBotDiscoPlugin(Plugin):
     @Plugin.parser.add_argument('--ranked', action='store_const', const='yes')
     def on_servers_command(self, event, args):
         """Displays the first 10 currently active servers with room."""
-        servers = self.rwr_scraper.filter_servers(
+        servers = rwr.scraper.filter_servers(
             limit=constants.SERVERS_LIMIT,
             not_empty='yes',
             not_full='yes',
@@ -331,7 +330,7 @@ class RwrsBotDiscoPlugin(Plugin):
         """Displays the top 15 players."""
         embed = utils.create_base_message_embed()
 
-        players = self.rwr_scraper.get_players(
+        players = rwr.scraper.get_players(
             args.database,
             limit=constants.PLAYERS_LIMIT,
             sort=constants.VALID_PLAYER_SORTS[args.sort]['value']
@@ -358,7 +357,7 @@ class RwrsBotDiscoPlugin(Plugin):
         """Highlights the specified player in the leaderboard."""
         args.username = utils.prepare_username(args.username)
 
-        players = self.rwr_scraper.get_players(
+        players = rwr.scraper.get_players(
             args.database,
             limit=constants.PLAYERS_LIMIT,
             target=args.username,
@@ -398,14 +397,14 @@ class RwrsBotDiscoPlugin(Plugin):
         args.source_username = utils.prepare_username(args.source_username)
         args.target_username = utils.prepare_username(args.target_username)
 
-        source_player = self.rwr_scraper.search_player_by_username(args.database, args.source_username)
+        source_player = rwr.scraper.search_player_by_username(args.database, args.source_username)
 
         if not source_player:
             event.msg.reply('I\'m sorry, I cannot find **{}** :confused:'.format(args.source_username))
 
             return
 
-        target_player = self.rwr_scraper.search_player_by_username(args.database, args.target_username)
+        target_player = rwr.scraper.search_player_by_username(args.database, args.target_username)
 
         if not target_player:
             event.msg.reply('Nah, I cannot find **{}** :confused:'.format(args.target_username))
