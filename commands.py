@@ -310,7 +310,7 @@ def save_players_stats(reset):
         for start in range(0, players_count, chunks):
             click.echo('  Chunk start: {}'.format(start))
 
-            players = rwr.scraper.get_players(database, sort=players_sort, start=start, limit=chunks, basic=True)
+            players = rwr.scraper.get_players(database, sort=players_sort, start=start, limit=chunks)
 
             if not players:
                 click.secho('No more players to handle', fg='green')

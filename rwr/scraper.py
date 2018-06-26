@@ -350,7 +350,7 @@ def get_all_players_with_servers_details():
 
 
 @cache.memoize(timeout=app.config['PLAYERS_CACHE_TIMEOUT'])
-def get_players(database, sort=constants.PlayersSort.SCORE, target=None, start=0, limit=app.config['LIST_PAGE_SIZES'][0], basic=False):
+def get_players(database, sort=constants.PlayersSort.SCORE, target=None, start=0, limit=app.config['LIST_PAGE_SIZES'][0]):
     """Get and parse a list of RWR players."""
     if limit > 100:
         raise ValueError('limit cannot be greater than 100')
@@ -376,7 +376,7 @@ def get_players(database, sort=constants.PlayersSort.SCORE, target=None, start=0
     players = []
 
     for node in html_content.xpath('//table/tr[position() > 1]'):
-        players.append(Player.load(database, node, basic=basic))
+        players.append(Player.load(database, node))
 
     if target and target not in [player.username for player in players]:
         return []
