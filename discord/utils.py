@@ -343,10 +343,12 @@ def create_evolution_chart(rwr_account_id, column, title):
 
         fig, ax = plt.subplots()
 
-        ax.xaxis.set_major_locator(mdates.MonthLocator())
-        ax.xaxis.set_major_formatter(mdates.DateFormatter('%b %Y'))
+        ax.xaxis.set_major_locator(mdates.YearLocator())
+        ax.xaxis.set_major_formatter(mdates.DateFormatter('\n%Y'))
+        ax.xaxis.set_minor_locator(mdates.MonthLocator())
+        ax.xaxis.set_minor_formatter(mdates.DateFormatter('%B'))
 
-        plt.title(title)
+        ax.set_title(title)
 
         ax.plot_date(
             [date2num(data['t'].datetime) for data in player_evolution_data],
@@ -355,9 +357,9 @@ def create_evolution_chart(rwr_account_id, column, title):
         )
 
         ax.autoscale_view()
-        ax.grid(True)
 
-        fig.autofmt_xdate()
+        ax.grid(True, which='both')
+
         fig.tight_layout()
 
         fig.savefig(evolution_chart, format='png')
