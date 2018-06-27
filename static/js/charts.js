@@ -5,7 +5,7 @@ chartsFeature = {
     defaultChartOptions: {
         show_tooltips: false,
         x_accessor: 't',
-        y_accessor: 'c',
+        y_accessor: 'v',
         x_mouseover: '%b %e, %Y %H:%M%p ',
         area: false,
         min_y: 0,
@@ -19,11 +19,49 @@ chartsFeature = {
         right: 25,
         buffer: 0
     },
-    convertDates: function(data) {
-        var to_date_object = d3.utcParse('%Y-%m-%dT%H:%M:%S');
+    convertDates: function(data, format) {
+        var format = typeof format !== 'undefined' ? format : '%Y-%m-%dT%H:%M:%S';
+        var to_date_object = d3.utcParse(format);
 
         $.each(data, function(key, value) {
             value.t = to_date_object(value.t);
+        });
+    },
+    /**
+     * Initialize the charts on the Player's Evolution page.
+     */
+    initOnPlayerEvolution: function() {
+        // K/D ratio
+        this.convertDates(this.player_evolution_data.ratio, '%Y-%m-%d');
+
+        this.createChart({
+            target: '#ratio-chart',
+            color: '#A4CF17',
+            x_mouseover: '%b %e, %Y ',
+            min_y_from_data: true,
+            data: this.player_evolution_data.ratio
+        });
+
+        // Score
+        this.convertDates(this.player_evolution_data.score, '%Y-%m-%d');
+
+        this.createChart({
+            target: '#score-chart',
+            color: '#A4CF17',
+            x_mouseover: '%b %e, %Y ',
+            min_y_from_data: true,
+            data: this.player_evolution_data.score
+        });
+
+        // Leaderboard position (by XP)
+        this.convertDates(this.player_evolution_data.position, '%Y-%m-%d');
+
+        this.createChart({
+            target: '#position-chart',
+            color: '#A4CF17',
+            x_mouseover: '%b %e, %Y ',
+            min_y_from_data: true,
+            data: this.player_evolution_data.position
         });
     },
     /**

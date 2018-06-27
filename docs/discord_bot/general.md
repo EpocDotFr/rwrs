@@ -5,6 +5,7 @@
 - Parameters order is **important** except for the ones starting with `--`
 - Parameters containing spaces **must be surrounded by `"` or  `'`**
 - Usernames starting with a `-` **must be directly prepended with a `\`**
+- `_` are **NOT** considered as spaces by the bot
 
 **:page_facing_up: Commands list**
 

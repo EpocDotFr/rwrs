@@ -1,8 +1,19 @@
 from disco.types.message import MessageEmbed
+from models import RwrAccountStat
+from rwrs import cache, app
 from . import constants
+from io import BytesIO
 import helpers
 import arrow
 import re
+import matplotlib
+
+matplotlib.use('Agg')
+
+from matplotlib.dates import date2num
+import matplotlib.ticker as ticker
+import matplotlib.dates as mdates
+import matplotlib.pyplot as plt
 
 
 _time_ago_regex = re.compile(r'(?P<days_ago>\d+) day(?:s?) ago|(?P<weeks_ago>\d+) week(?:s?) ago|(?P<months_ago>\d+) month(?:s?) ago|(?P<years_ago>\d+) year(?:s?) ago')
@@ -318,3 +329,64 @@ def parse_date(date):
     ]
 
     return arrow.get(date, allowed_formats).replace(year=now.year)
+
+
+def create_evolution_chart(rwr_account_id, column, title):
+    """Create an image containing a chart representing the evolution of a given player stat."""
+    cache_key = 'evolution_chart.{}.{}'.format(rwr_account_id, column)
+    evolution_chart = BytesIO()
+    evolution_chart_cached = cache.get(cache_key)
+
+    if evolution_chart_cached is not None:
+        evolution_chart.write(evolution_chart_cached)
+    else:
+        player_evolution_data = RwrAccountStat.get_stats_for_column(rwr_account_id, column)
+
+        fig, ax = plt.subplots()
+
+        ax.xaxis.set_major_locator(mdates.YearLocator())
+        ax.xaxis.set_major_formatter(mdates.DateFormatter('\n%Y'))
+        ax.xaxis.set_minor_locator(mdates.MonthLocator())
+        ax.xaxis.set_minor_formatter(mdates.DateFormatter('%b'))
+
+        if column == 'score':
+            ax.yaxis.set_major_formatter(ticker.FuncFormatter(lambda x, pos: simplified_integer(x)))
+
+        ax.set_title(title)
+
+        ax.plot_date(
+            [date2num(data['t'].datetime) for data in player_evolution_data],
+            [data['v'] for data in player_evolution_data],
+            'g-'
+        )
+
+        ax.autoscale_view()
+
+        ax.grid(True, which='both')
+
+        fig.tight_layout()
+
+        fig.savefig(evolution_chart, format='png')
+
+        evolution_chart.seek(0)
+
+        cache.set(cache_key, evolution_chart.getvalue(), timeout=app.config['PLAYERS_CACHE_TIMEOUT'])
+
+    evolution_chart.seek(0)
+
+    return evolution_chart
+
+
+def simplified_integer(integer):
+    """Return a simplified human-readable integer."""
+    if not integer:
+        return '0'
+
+    integer = float('{:.3g}'.format(integer))
+    magnitude = 0
+
+    while abs(integer) >= 1000:
+        magnitude += 1
+        integer /= 1000.0
+
+    return '{}{}'.format('{:f}'.format(integer).rstrip('0').rstrip('.'), ['', 'K', 'M', 'B', 'T'][magnitude])
