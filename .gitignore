@@ -1,6 +1,4 @@
 config.py
-storage/logs/*.log
-storage/logs/*.log.*
 storage/data/*.sqlite
 storage/data/*.sqlite.bak
 storage/data/backup_*.tar.gz
