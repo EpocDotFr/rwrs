@@ -61,6 +61,7 @@ More informations on the three above can be found [here](http://flask.pocoo.org/
 
   - `BETA` Whether or not to enable the beta mode
   - `GAUGES_SITE_ID` A [Gauges](https://gaug.es/) site ID used to track visits on RWRS (optional)
+  - `BUGSNAG_API_KEY` A [Bugsnag](https://www.bugsnag.com/) API key so that unhandled exceptions are automatically sent to Bugsnag in production env (optional)
   - `CACHE_THRESHOLD` The maximum number of items the cache will store before it starts deleting some (see [here](https://pythonhosted.org/Flask-Cache/#configuring-flask-cache) for more configuration parameters related to Flask-Cache)
   - `SERVERS_CACHE_TIMEOUT` Cache duration of the servers list (in seconds)
   - `PLAYERS_CACHE_TIMEOUT` Cache duration of the players list as well as data for a single player (in seconds)

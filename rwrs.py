@@ -1,11 +1,11 @@
-from logging.handlers import RotatingFileHandler
 from flask_assets import Environment, Bundle
+from bugsnag.flask import handle_exceptions
 from flask_httpauth import HTTPBasicAuth
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_caching import Cache
 from flask import Flask
-import logging
+import bugsnag
 import math
 
 
@@ -45,6 +45,13 @@ app.config['MAPS_GALLERY_TILE_SIZE'] = 256
 app.config['MAPS_GALLERY_MIN_ZOOM'] = 1
 app.config['MAPS_GALLERY_MAX_ZOOM'] = 3
 
+if app.config['ENV'] == 'production' and app.config['BUGSNAG_API_KEY']:
+    bugsnag.configure(
+        api_key=app.config['BUGSNAG_API_KEY']
+    )
+
+    handle_exceptions(app)
+
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 cache = Cache(app)
@@ -58,12 +65,6 @@ assets.register('js_friends_status', Bundle('js/common.js', 'js/friends.js', 'js
 assets.register('js_friends_map', Bundle('js/common.js', 'js/friends.js', 'js/map.js', filters='jsmin', output='js/friends_map.min.js'))
 assets.register('js_friends', Bundle('js/common.js', 'js/friends.js', filters='jsmin', output='js/friends.min.js'))
 assets.register('css_app', Bundle('css/flags.css', 'css/app.css', filters='cssutils', output='css/app.min.css'))
-
-handler = RotatingFileHandler('storage/logs/errors.log', maxBytes=10000000, backupCount=2)
-handler.setLevel(logging.WARNING)
-formatter = logging.Formatter(fmt='%(asctime)s - %(levelname)s - %(message)s', datefmt='%d/%m/%Y %H:%M:%S')
-handler.setFormatter(formatter)
-app.logger.addHandler(handler)
 
 import helpers
 import rwr.constants
