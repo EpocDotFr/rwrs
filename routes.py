@@ -175,12 +175,19 @@ def players_compare_without_db(username, username_to_compare_with=None):
 
 @app.route('/players/<any({}):database>/<username>/compare'.format(VALID_DATABASES_STRING_LIST))
 @app.route('/players/<any({}):database>/<username>/compare/<username_to_compare_with>'.format(VALID_DATABASES_STRING_LIST))
-def players_compare(database, username, username_to_compare_with=None):
+@app.route('/players/<any({}):database>/<username>/compare/<username_to_compare_with>/<date>'.format(VALID_DATABASES_STRING_LIST))
+def players_compare(database, username, username_to_compare_with=None, date=None):
     if not username_to_compare_with and request.args.get('username_to_compare_with'):
         username_to_compare_with = request.args.get('username_to_compare_with').strip()
 
         # Redirect to a SEO-friendly URL if the username_to_compare_with query parameter is detected
         return redirect(url_for('players_compare', database=database, username=username, username_to_compare_with=username_to_compare_with), code=301)
+
+    if not date and request.args.get('date'):
+        date = request.args.get('date')
+
+        # Redirect to a SEO-friendly URL if the date query parameter is detected
+        return redirect(url_for('players_compare', database=database, username=username, username_to_compare_with=username_to_compare_with, date=date), code=301)
 
     if not username_to_compare_with:
         abort(404)
