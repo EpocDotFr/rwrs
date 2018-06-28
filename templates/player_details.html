@@ -61,8 +61,10 @@
     <nav class="tabs mtm mbm pls prs pts">
         <ul class="unstyled">
             <li class="inbl prs {{ 'active' if not request.view_args.get('tab') }}"><a href="{{ url_for('player_details', database=request.view_args.get('database'), username=player.username) }}" class="inbl pas"><i class="fa fa-calculator"></i> Stats</a></li>
-            {% if player.has_stats %}<li class="inbl prs {{ 'active' if request.view_args.get('tab') == 'stats-history' }}"><a href="{{ url_for('player_details', database=request.view_args.get('database'), username=player.username, tab='stats-history') }}" class="inbl pas"><i class="fa fa-calendar"></i> Stats history</a></li>{% endif %}
-            <li class="inbl prs {{ 'active' if request.view_args.get('tab') == 'evolution' }}"><a href="{{ url_for('player_details', database=request.view_args.get('database'), username=player.username, tab='evolution') }}" class="inbl pas"><i class="fa fa-line-chart"></i> Evolution</a></li>
+            {% if player.has_stats %}
+                <li class="inbl prs {{ 'active' if request.view_args.get('tab') == 'stats-history' }}"><a href="{{ url_for('player_details', database=request.view_args.get('database'), username=player.username, tab='stats-history') }}" class="inbl pas"><i class="fa fa-calendar"></i> Stats history</a></li>
+                <li class="inbl prs {{ 'active' if request.view_args.get('tab') == 'evolution' }}"><a href="{{ url_for('player_details', database=request.view_args.get('database'), username=player.username, tab='evolution') }}" class="inbl pas"><i class="fa fa-line-chart"></i> Evolution</a></li>
+            {% endif %}
             <li class="inbl prs {{ 'active' if request.view_args.get('tab') == 'unlockables' }}"><a href="{{ url_for('player_details', database=request.view_args.get('database'), username=player.username, tab='unlockables') }}" class="inbl pas"><i class="fa fa-unlock"></i> Unlockables</a></li>
         </ul>
     </nav>
