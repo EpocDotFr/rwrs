@@ -136,7 +136,10 @@ def player_details(database, username, tab=None):
         servers = rwr.scraper.get_servers()
 
         player.set_playing_on_server(servers)
-    elif tab in ['stats-history', 'evolution'] and player.has_stats:
+    elif tab in ['stats-history', 'evolution']:
+        if not player.has_stats:
+            return redirect(url_for('player_details', database=database, username=username), code=302)
+
         if tab == 'stats-history':
             g.LAYOUT = 'large'
 
