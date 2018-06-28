@@ -431,6 +431,7 @@ class RwrsBotDiscoPlugin(Plugin):
     @Plugin.parser.add_argument('source_username')
     @Plugin.parser.add_argument('target_username')
     @Plugin.parser.add_argument('database', choices=rwr.constants.VALID_DATABASES, nargs='?', default='invasion')
+    @Plugin.parser.add_argument('date', nargs='?')
     def on_compare_command(self, event, args):
         """Compare stats of two players."""
         args.source_username = utils.prepare_username(args.source_username)
