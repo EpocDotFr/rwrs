@@ -436,6 +436,23 @@ label {
     fill: #fff;
 }
 
+.mg-missing-text {
+    fill: #fff;
+    font-size: 1.5rem;
+}
+
+.mg-missing-pane .mg-main-line {
+    stroke: #A4CF17;
+}
+
+.mg-missing-pane .mg-main-area {
+    fill: #A4CF17;
+}
+
+.mg-missing-pane .mg-missing-background {
+    display: none;
+}
+
 /************************************************************************
  * Footer */
 
