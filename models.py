@@ -493,7 +493,7 @@ class RwrAccountStat(db.Model):
 
     @memoized_property
     def kd_ratio(self):
-        return round(self.kills / self.deaths, 2)
+        return round(self.kills / self.deaths, 2) if self.deaths > 0 else 0.00
 
     @memoized_property
     def leaderboard_position_display(self):
