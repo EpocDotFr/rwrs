@@ -4,6 +4,7 @@ from rwrs import app
 import rwr.constants
 import rwr.scraper
 import rwr.utils
+import arrow
 
 
 ERROR_PLAYER_NOT_FOUND = 'Sorry, the player "{username}" wasn\'t found in the {database} players list. Maybe this player hasn\'t already played on a ranked server yet. If this player started to play today on a ranked server, please wait until tomorrow as stats are refreshed daily.'
@@ -219,7 +220,8 @@ def players_compare(database, username, username_to_compare_with=None, date=None
     return render_template(
         'players_compare.html',
         player=player,
-        player_to_compare_with=player_to_compare_with
+        player_to_compare_with=player_to_compare_with,
+        date=arrow.get(date) if date else None
     )
 
 
