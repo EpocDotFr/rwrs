@@ -467,6 +467,7 @@ label {
 
 .pika-button {
     color: #292929;
+    border-radius: 0;
 }
 
 .pika-button:hover {
@@ -476,6 +477,14 @@ label {
 
 .is-disabled .pika-button {
     color: #4d4d4d;
+}
+
+.has-event .pika-button, .is-selected .pika-button {
+    background-color: #44b2f8;
+}
+
+.has-event .pika-button, .is-selected .pika-button {
+    border-radius: 0;
 }
 
 /************************************************************************
