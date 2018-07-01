@@ -7,18 +7,31 @@
 {% block meta_title %}Players › {{ player.database_name }} › {{ player.username }} vs {{ player_to_compare_with.username }}{% endblock %}
 
 {% block meta_description -%}
-    Statistics comparison of {{ player.username }} and {{ player_to_compare_with.username }} on Running With Rifles (RWR) {{ player.database_name }} ranked servers.
+    Statistics comparison of {{ player.username }} and {{ player_to_compare_with.username }}{% if date %} for {{ date.format('MMMM D, YYYY') }}{% endif %} on Running With Rifles (RWR) {{ player.database_name }} ranked servers.
 {%- endblock %}
 
 {% block jsfiles %}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/zepto/1.2.0/zepto.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.6.1/pikaday.min.js"></script>
     {% assets 'js_friends' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
 {% endblock %}
 
-{% set canonical_url = url_for('players_compare', database=request.view_args.get('database'), username=player.username, username_to_compare_with=player_to_compare_with.username, _external=True) %}
+{% block cssfiles %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.6.1/css/pikaday.min.css">
+{% endblock %}
+
+{% set canonical_url = url_for('players_compare', database=request.view_args.get('database'), username=player.username, username_to_compare_with=player_to_compare_with.username, date=date.format('YYYY-MM-DD') if date, _external=True) %}
 
 {% block content %}
-    <table class="mtm mbn striped">
+    {% if player.has_stats and player_to_compare_with.has_stats %}
+        <form method="get" action="{{ url_for('players_compare', database=request.view_args.get('database'), username=player.username, username_to_compare_with=player_to_compare_with.username) }}" class="txtcenter mts">
+            <input type="text" id="players_compare_date" placeholder="Click to choose a date" readonly required> <button type="submit"><i class="fa fa-calendar"></i> Compare for this date</button>{% if date %} <a href="{{ url_for('players_compare', database=request.view_args.get('database'), username=player.username, username_to_compare_with=player_to_compare_with.username) }}" class="btn">Back to present data</a>{% endif %}
+            <input type="hidden" name="date" value="{{ date.format('YYYY-MM-DD') if date }}" id="players_compare_date_value" required>
+        </form>
+    {% endif %}
+
+    <table class="mts mbn striped">
         <thead>
             <tr>
                 <th class="w200p"></th>
@@ -152,5 +165,23 @@
     <script>
         friendsFeature.all_players_with_servers_details = {{ g.all_players_with_servers_details|tojson }};
         friendsFeature.initOnPlayersComparison();
+
+        // Date picker
+        var players_compare_date_input = $('#players_compare_date');
+        var players_compare_date_value_input = $('#players_compare_date_value');
+
+        var players_compare_datepicker = new Pikaday({
+            field: players_compare_date_input.get(0),
+            format: 'MMMM D, YYYY',
+            minDate: moment('2017-09-30').toDate(), // Date when rwrtrack started recording stats
+            maxDate: moment().subtract(1, 'day').toDate(),
+            onSelect: function() {
+                players_compare_date_value_input.val(this.getMoment().format('YYYY-MM-DD'));
+            }
+        });
+
+        if (players_compare_date_value_input.val()) {
+            players_compare_datepicker.setMoment(moment(players_compare_date_value_input.val()));
+        }
     </script>
 {% endblock %}

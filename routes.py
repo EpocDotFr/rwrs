@@ -1,12 +1,17 @@
-from models import SteamPlayerCount, ServerPlayerCount, RwrRootServer, Variable, RwrAccountStat
+from models import SteamPlayerCount, ServerPlayerCount, RwrRootServer, Variable, RwrAccountStat, RwrAccount
 from flask import render_template, abort, request, redirect, url_for, flash, g
+from rwr.player import Player
 from rwrs import app
 import rwr.constants
 import rwr.scraper
 import rwr.utils
+import arrow
 
 
 ERROR_PLAYER_NOT_FOUND = 'Sorry, the player "{username}" wasn\'t found in the {database} players list. Maybe this player hasn\'t already played on a ranked server yet. If this player started to play today on a ranked server, please wait until tomorrow as stats are refreshed daily.'
+ERROR_NO_RWR_ACCOUNT = 'Sorry, stats history isn\'t recorded for {username}. He/she must be part of the {database} {max_players} most experienced players.'
+ERROR_NO_RWR_ACCOUNT_STATS = 'No stats were found for the given date for {username}. Are you sure he/she is/was part of the {database} {max_players} most experienced players?'
+
 VALID_DATABASES_STRING_LIST = ','.join(rwr.constants.VALID_DATABASES)
 
 
@@ -175,29 +180,91 @@ def players_compare_without_db(username, username_to_compare_with=None):
 
 @app.route('/players/<any({}):database>/<username>/compare'.format(VALID_DATABASES_STRING_LIST))
 @app.route('/players/<any({}):database>/<username>/compare/<username_to_compare_with>'.format(VALID_DATABASES_STRING_LIST))
-def players_compare(database, username, username_to_compare_with=None):
-    if not username_to_compare_with and request.args.get('username_to_compare_with'):
-        username_to_compare_with = request.args.get('username_to_compare_with').strip()
+@app.route('/players/<any({}):database>/<username>/compare/<username_to_compare_with>/<date>'.format(VALID_DATABASES_STRING_LIST))
+def players_compare(database, username, username_to_compare_with=None, date=None):
+    # Redirect to a SEO-friendly URL if the username_to_compare_with or date query parameters are detected
+    if (not username_to_compare_with and request.args.get('username_to_compare_with')) or (not date and request.args.get('date')):
+        if not username_to_compare_with:
+            username_to_compare_with = request.args.get('username_to_compare_with').strip()
 
-        # Redirect to a SEO-friendly URL if the username_to_compare_with query parameter is detected
-        return redirect(url_for('players_compare', database=database, username=username, username_to_compare_with=username_to_compare_with), code=301)
+        if not date:
+            date = request.args.get('date')
+
+        redirect_params = {
+            'database': database,
+            'username': username,
+            'username_to_compare_with': username_to_compare_with,
+            'date': date,
+        }
+
+        return redirect(url_for('players_compare', **redirect_params), code=301)
 
     if not username_to_compare_with:
         abort(404)
 
-    player = rwr.scraper.search_player_by_username(database, username)
+    database_name = rwr.utils.get_database_name(database)
+    date = arrow.get(date) if date else None
 
-    if not player:
-        flash(ERROR_PLAYER_NOT_FOUND.format(username=username, database=rwr.utils.get_database_name(database)), 'error')
+    if date: # Stats history lookup mode
+        player_exist = rwr.scraper.search_player_by_username(database, username, check_exist_only=True)
 
-        return redirect(url_for('players_list', database=database))
+        if not player_exist:
+            flash(ERROR_PLAYER_NOT_FOUND.format(username=username, database=database_name), 'error')
 
-    player_to_compare_with = rwr.scraper.search_player_by_username(database, username_to_compare_with)
+            return redirect(url_for('players_list', database=database))
 
-    if not player_to_compare_with:
-        flash(ERROR_PLAYER_NOT_FOUND.format(username=username_to_compare_with, database=rwr.utils.get_database_name(database)), 'error')
+        rwr_account = RwrAccount.get_by_type_and_username(database, username)
 
-        return redirect(url_for('player_details', database=database, username=username))
+        if not rwr_account:
+            flash(ERROR_NO_RWR_ACCOUNT.format(username=username, database=database_name, max_players=app.config['MAX_NUM_OF_PLAYERS_TO_TRACK_STATS_FOR']), 'error')
+
+            return redirect(url_for('player_details', database=database, username=username))
+
+        rwr_account_stat = RwrAccountStat.get_stats_for_date(rwr_account.id, date)
+
+        if not rwr_account_stat:
+            flash(ERROR_NO_RWR_ACCOUNT_STATS.format(username=username_to_compare_with, database=database_name, max_players=app.config['MAX_NUM_OF_PLAYERS_TO_TRACK_STATS_FOR']), 'error')
+
+            return redirect(url_for('player_details', database=database, username=username))
+
+        player = Player.craft(rwr_account, rwr_account_stat)
+
+        player_to_compare_with_exist = rwr.scraper.search_player_by_username(database, username_to_compare_with, check_exist_only=True)
+
+        if not player_to_compare_with_exist:
+            flash(ERROR_PLAYER_NOT_FOUND.format(username=username_to_compare_with, database=database_name), 'error')
+
+            return redirect(url_for('player_details', database=database, username=username))
+
+        player_to_compare_with_rwr_account = RwrAccount.get_by_type_and_username(database, username_to_compare_with)
+
+        if not player_to_compare_with_rwr_account:
+            flash(ERROR_NO_RWR_ACCOUNT.format(username=username_to_compare_with, database=database_name, max_players=app.config['MAX_NUM_OF_PLAYERS_TO_TRACK_STATS_FOR']), 'error')
+
+            return redirect(url_for('players_compare', database=database, username=username, username_to_compare_with=username_to_compare_with))
+
+        player_to_compare_with_rwr_account_stat = RwrAccountStat.get_stats_for_date(player_to_compare_with_rwr_account.id, date)
+
+        if not player_to_compare_with_rwr_account_stat:
+            flash(ERROR_NO_RWR_ACCOUNT_STATS.format(username=username_to_compare_with, database=database_name, max_players=app.config['MAX_NUM_OF_PLAYERS_TO_TRACK_STATS_FOR']), 'error')
+
+            return redirect(url_for('players_compare', database=database, username=username, username_to_compare_with=username_to_compare_with))
+
+        player_to_compare_with = Player.craft(player_to_compare_with_rwr_account, player_to_compare_with_rwr_account_stat)
+    else: # Live data mode
+        player = rwr.scraper.search_player_by_username(database, username)
+
+        if not player:
+            flash(ERROR_PLAYER_NOT_FOUND.format(username=username, database=database_name), 'error')
+
+            return redirect(url_for('players_list', database=database))
+
+        player_to_compare_with = rwr.scraper.search_player_by_username(database, username_to_compare_with)
+
+        if not player_to_compare_with:
+            flash(ERROR_PLAYER_NOT_FOUND.format(username=username_to_compare_with, database=database_name), 'error')
+
+            return redirect(url_for('player_details', database=database, username=username))
 
     servers = rwr.scraper.get_servers()
 
@@ -207,7 +274,8 @@ def players_compare(database, username, username_to_compare_with=None):
     return render_template(
         'players_compare.html',
         player=player,
-        player_to_compare_with=player_to_compare_with
+        player_to_compare_with=player_to_compare_with,
+        date=date
     )
 
 
