@@ -8,7 +8,6 @@ chartsFeature = {
         y_accessor: 'v',
         x_mouseover: '%b %e, %Y %H:%M%p ',
         area: false,
-        min_y: 0,
         y_extended_ticks: true,
         x_extended_ticks: true,
         utc_time: true,
@@ -107,6 +106,7 @@ chartsFeature = {
             this.createChart({
                 target: '#server-players-chart',
                 color: '#A4CF17',
+                min_y: 0,
                 data: this.server_players_data
             });
         }
@@ -132,6 +132,7 @@ chartsFeature = {
                 legend: ['Total players', 'Online players'],
                 legend_target: '#players-legend',
                 aggregate_rollover: true,
+                min_y: 0,
                 data: this.players_data
             });
         }
@@ -153,6 +154,7 @@ chartsFeature = {
                 legend: ['Online servers', 'Active servers'],
                 legend_target: '#servers-chart-legend',
                 aggregate_rollover: true,
+                min_y: 0,
                 data: this.servers_data
             });
         }
