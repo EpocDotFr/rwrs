@@ -326,3 +326,8 @@ def server_details(ip, port, slug=None):
         server_players_data=server_players_data,
         server=server
     )
+
+
+@app.route('/images/servers/<ip>-<int:port>.png')
+def server_image(ip, port):
+    return 'TODO'
