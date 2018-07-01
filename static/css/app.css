@@ -454,6 +454,31 @@ label {
 }
 
 /************************************************************************
+ * Date picker */
+
+.pika-next, .pika-prev {
+    border-width: 0.1rem;
+    border-style: solid;
+}
+
+.pika-table th {
+    color: #fff;
+}
+
+.pika-button {
+    color: #292929;
+}
+
+.pika-button:hover {
+    background-color: #7da109;
+    border-radius: 0;
+}
+
+.is-disabled .pika-button {
+    color: #4d4d4d;
+}
+
+/************************************************************************
  * Footer */
 
 footer {
