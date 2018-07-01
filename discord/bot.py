@@ -156,7 +156,7 @@ class RwrsBotDiscoPlugin(Plugin):
         if args.date: # Stats history lookup mode
             try:
                 args.date = utils.parse_date(args.date)
-            except Exception as e:
+            except Exception:
                 event.msg.reply('Invalid date provided')
 
                 return
@@ -437,19 +437,89 @@ class RwrsBotDiscoPlugin(Plugin):
         args.source_username = utils.prepare_username(args.source_username)
         args.target_username = utils.prepare_username(args.target_username)
 
-        source_player = rwr.scraper.search_player_by_username(args.database, args.source_username)
+        if args.date: # Stats history lookup mode
+            try:
+                args.date = utils.parse_date(args.date)
+            except Exception:
+                event.msg.reply('Invalid date provided')
 
-        if not source_player:
-            event.msg.reply('I\'m sorry, I cannot find **{}** :confused:'.format(args.source_username))
+                return
 
-            return
+            source_player_exist = rwr.scraper.search_player_by_username(args.database, args.source_username, check_exist_only=True)
 
-        target_player = rwr.scraper.search_player_by_username(args.database, args.target_username)
+            if not source_player_exist:
+                event.msg.reply('I\'m sorry, I cannot find **{}** :confused:'.format(args.source_username))
 
-        if not target_player:
-            event.msg.reply('Nah, I cannot find **{}** :confused:'.format(args.target_username))
+                return
 
-            return
+            source_rwr_account = RwrAccount.get_by_type_and_username(args.database, args.source_username)
+
+            if not source_rwr_account:
+                event.msg.reply('Sorry my friend, stats history isn\'t recorded for {} :confused: He/she must be part of the {} {} most experienced players.'.format(
+                    args.source_username,
+                    rwr.utils.get_database_name(args.database),
+                    app.config['MAX_NUM_OF_PLAYERS_TO_TRACK_STATS_FOR'])
+                )
+
+                return
+
+            source_rwr_account_stat = RwrAccountStat.get_stats_for_date(source_rwr_account.id, args.date)
+
+            if not source_rwr_account_stat:
+                event.msg.reply('No stats were found for the given date for {} :confused: Are you sure he/she is/was part of the {} {} most experienced players?'.format(
+                    args.source_username,
+                    rwr.utils.get_database_name(args.database),
+                    app.config['MAX_NUM_OF_PLAYERS_TO_TRACK_STATS_FOR'])
+                )
+
+                return
+
+            source_player = Player.craft(source_rwr_account, source_rwr_account_stat)
+
+            target_player_exist = rwr.scraper.search_player_by_username(args.database, args.target_username, check_exist_only=True)
+
+            if not target_player_exist:
+                event.msg.reply('I\'m sorry, I cannot find **{}** :confused:'.format(args.target_username))
+
+                return
+
+            target_rwr_account = RwrAccount.get_by_type_and_username(args.database, args.target_username)
+
+            if not target_rwr_account:
+                event.msg.reply('Sorry my friend, stats history isn\'t recorded for {} :confused: He/she must be part of the {} {} most experienced players.'.format(
+                    args.target_username,
+                    rwr.utils.get_database_name(args.database),
+                    app.config['MAX_NUM_OF_PLAYERS_TO_TRACK_STATS_FOR'])
+                )
+
+                return
+
+            target_rwr_account_stat = RwrAccountStat.get_stats_for_date(target_rwr_account.id, args.date)
+
+            if not target_rwr_account_stat:
+                event.msg.reply('No stats were found for the given date for {} :confused: Are you sure he/she is/was part of the {} {} most experienced players?'.format(
+                    args.target_username,
+                    rwr.utils.get_database_name(args.database),
+                    app.config['MAX_NUM_OF_PLAYERS_TO_TRACK_STATS_FOR'])
+                )
+
+                return
+
+            target_player = Player.craft(target_rwr_account, target_rwr_account_stat)
+        else: # Live data mode
+            source_player = rwr.scraper.search_player_by_username(args.database, args.source_username)
+
+            if not source_player:
+                event.msg.reply('I\'m sorry, I cannot find **{}** :confused:'.format(args.source_username))
+
+                return
+
+            target_player = rwr.scraper.search_player_by_username(args.database, args.target_username)
+
+            if not target_player:
+                event.msg.reply('Nah, I cannot find **{}** :confused:'.format(args.target_username))
+
+                return
 
         table_data = [
             ['Rank', source_player.rank.name, utils.compare_values(source_player, target_player, lambda player: player.rank.id), target_player.rank.name],
@@ -473,10 +543,12 @@ class RwrsBotDiscoPlugin(Plugin):
 
         table = tabulate(table_data, headers=table_headers, tablefmt='presto')
 
-        event.msg.reply('Who has the biggest between **{}** and **{}** on the **{}** leaderboard?\n```\n{}\n```'.format(
+        event.msg.reply('Who {} the biggest between **{}** and **{}** on the **{}** leaderboard{}?\n```\n{}\n```'.format(
+            'had' if args.date else 'has',
             source_player.username_display,
             target_player.username_display,
             rwr.utils.get_database_name(args.database),
+            ' for **' + args.date.format('MMMM D, YYYY') + '**' if args.date else '',
             table
         ))
 
