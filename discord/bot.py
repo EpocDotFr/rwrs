@@ -466,7 +466,7 @@ class RwrsBotDiscoPlugin(Plugin):
             source_rwr_account_stat = RwrAccountStat.get_stats_for_date(source_rwr_account.id, args.date)
 
             if not source_rwr_account_stat:
-                event.msg.reply('No stats were found for the given date for {} :confused: Are you sure he/she is part of the {} {} most experienced players?'.format(
+                event.msg.reply('No stats were found for the given date for {} :confused: Are you sure he/she is/was part of the {} {} most experienced players?'.format(
                     args.source_username,
                     rwr.utils.get_database_name(args.database),
                     app.config['MAX_NUM_OF_PLAYERS_TO_TRACK_STATS_FOR'])
@@ -497,7 +497,7 @@ class RwrsBotDiscoPlugin(Plugin):
             target_rwr_account_stat = RwrAccountStat.get_stats_for_date(target_rwr_account.id, args.date)
 
             if not target_rwr_account_stat:
-                event.msg.reply('No stats were found for the given date for {} :confused: Are you sure he/she is part of the {} {} most experienced players?'.format(
+                event.msg.reply('No stats were found for the given date for {} :confused: Are you sure he/she is/was part of the {} {} most experienced players?'.format(
                     args.target_username,
                     rwr.utils.get_database_name(args.database),
                     app.config['MAX_NUM_OF_PLAYERS_TO_TRACK_STATS_FOR'])

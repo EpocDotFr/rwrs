@@ -173,6 +173,8 @@
         var players_compare_datepicker = new Pikaday({
             field: players_compare_date_input.get(0),
             format: 'MMMM D, YYYY',
+            minDate: moment('2017-09-30').toDate(), // Date when rwrtrack started recording stats
+            maxDate: moment().subtract(1, 'day').toDate(),
             onSelect: function() {
                 players_compare_date_value_input.val(this.getMoment().format('YYYY-MM-DD'));
             }
