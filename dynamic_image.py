@@ -1,5 +1,5 @@
 from PIL import Image, ImageDraw, ImageFont
-from flask import send_file
+from flask import make_response
 from io import BytesIO
 import arrow
 
@@ -41,7 +41,11 @@ class DynamicImage:
 
     def send(self):
         """Send the final rendered dynamic image to the client."""
-        return send_file(self.final_image, mimetype='image/png', add_etags=False, cache_timeout=0, last_modified=arrow.now().datetime)
+        response = make_response(self.final_image.getvalue())
+
+        response.headers.set('Content-Type', 'image/png')
+
+        return response
 
     def do_create(self):
         """Actually create the dynamic image."""
