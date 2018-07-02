@@ -44,6 +44,7 @@ class DynamicImage:
         response = make_response(self.final_image.getvalue())
 
         response.headers.set('Content-Type', 'image/png')
+        response.last_modified = arrow.now().datetime
 
         return response
 
