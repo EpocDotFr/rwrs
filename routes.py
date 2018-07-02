@@ -329,6 +329,30 @@ def server_details(ip, port, slug=None):
     )
 
 
+@app.route('/servers/<ip>:<int:port>/banner')
+@app.route('/servers/<ip>:<int:port>/<slug>/banner')
+def server_banner(ip, port, slug=None):
+    server = rwr.scraper.get_server_by_ip_and_port(ip, port)
+
+    if not server:
+        flash('Sorry, this server wasn\'t found.', 'error')
+
+        return redirect(url_for('servers_list'))
+
+    if not slug:
+        return redirect(url_for('server_banner', ip=server.ip, port=server.port, slug=server.name_slug), code=301)
+
+    if not server.is_dedicated:
+        flash('Server banner is only available for dedicated servers.', 'error')
+
+        return redirect(server.link, code=302)
+
+    return render_template(
+        'server_banner.html',
+        server=server
+    )
+
+
 @app.route('/images/servers/<ip>-<int:port>.png')
 def dynamic_server_image(ip, port):
     server = rwr.scraper.get_server_by_ip_and_port(ip, port)

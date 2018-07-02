@@ -22,7 +22,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/metrics-graphics/2.15.6/metricsgraphics.min.css">
 {% endblock %}
 
-{% set canonical_url = url_for('server_details', ip=server.ip, port=server.port, slug=server.name_slug, _external=True) %}
+{% set canonical_url = server.link_absolute %}
 
 {% set meta_image = server.map.preview_absolute if server.map.has_preview %}
 
@@ -32,6 +32,10 @@
 
         {% if server.website %}
             <a href="{{ server.website }}" class="btn"><i class="fa fa-external-link"></i> Server's website</a>
+        {% endif %}
+
+        {% if server.is_dedicated %}
+            <a href="{{ url_for('server_banner', ip=server.ip, port=server.port, slug=server.name_slug) }}" class="btn"><i class="fa fa-picture-o"></i> Server banner</a>
         {% endif %}
     </p>
 
