@@ -6,10 +6,10 @@ import arrow
 
 font_path = 'static/fonts/komikax.ttf'
 
-big_font = ImageFont.truetype(font_path, 16)
+big_font = ImageFont.truetype(font_path, 15)
 normal_font = ImageFont.truetype(font_path, 12)
 
-grey = (90, 90, 90)
+dark_grey = (51, 51, 51)
 white = (255, 255, 255)
 green = (164, 207, 23)
 light_red = (244, 110, 110)
@@ -17,9 +17,8 @@ light_red = (244, 110, 110)
 
 class DynamicImage:
     """A dynamic image."""
-    def __init__(self, background_path):
-        # self.image = Image.open(background_path).convert('RGBA') # TODO Use the dynamic image background instead of initializing a blank image
-        self.image = Image.new('RGBA', (500, 100), (63, 63, 63))
+    def init(self, background_path):
+        self.image = Image.open(background_path).convert('RGBA')
         self.image_draw = ImageDraw.Draw(self.image)
 
     @classmethod
@@ -56,45 +55,57 @@ class DynamicImage:
         """Paste an image onto the final one."""
         self.image.paste(image, pos, image)
 
-    def _draw_text(self, pos, text, font=normal_font, color=white):
+    def _draw_text(self, pos, text, font=normal_font, color=white, shadow=dark_grey):
         """Draw a text on the final image."""
+        if shadow:
+            pos_shadow = (pos[0] + 2, pos[1] + 2)
+
+            self.image_draw.text(pos_shadow, text, font=font, fill=shadow)
+
         self.image_draw.text(pos, text, font=font, fill=color)
 
 
 class DynamicServerImage(DynamicImage):
     """A server dynamic image."""
-    def __init__(self, ip, port, server):
-        super(DynamicServerImage, self).__init__('static/images/server_image_background.png')
+    server_image_background_path = 'static/images/server_image_background.png'
+    server_image_error_background_path = 'static/images/server_image_error_background.png'
 
+    def __init__(self, ip, port, server):
         self.ip = ip
         self.port = port
         self.server = server
 
     def do_create(self):
         if not self.server:
-            self.do_create_error('There isn\'t any Running With Rifles server at {}:{}.'.format(self.ip, self.port))
+            self.init(self.server_image_error_background_path)
+
+            self.do_create_error('No Running With Rifles server found at {}:{}.'.format(self.ip, self.port))
         elif not self.server.is_dedicated:
+            self.init(self.server_image_error_background_path)
+
             self.do_create_error('Server banner is only available for dedicated servers.')
         else:
+            self.init(self.server_image_background_path)
+
             self._do_create_header()
             self._do_create_body()
 
     def do_create_error(self, message):
         # Error title
-        self._draw_text((6, 3), 'Error', font=big_font, color=light_red)
+        self._draw_text((10, 2), 'Error', font=big_font, color=light_red)
 
         # Error message
-        self._draw_text((6, 35), message)
+        self._draw_text((10, 50), message)
 
     def _do_create_header(self):
         """Create the top of the dynamic server image."""
-        x = 6
+        x = 7
 
         # Country flag
         if self.server.location.country_code:
             flag_image = Image.open('static/images/flags/{}.png'.format(self.server.location.country_code)).convert('RGBA')
 
-            self._paste(flag_image, (x, 6))
+            self._paste(flag_image, (x, 4))
 
             x += 29
 
@@ -102,26 +113,23 @@ class DynamicServerImage(DynamicImage):
         if self.server.is_ranked:
             yellow_star_image = Image.open('static/images/yellow_star.png').convert('RGBA')
 
-            self._paste(yellow_star_image, (x, 10))
+            self._paste(yellow_star_image, (x, 8))
 
             x += 23
 
         # Server name
-        self._draw_text((x, 3), self.server.name, font=big_font)
+        self._draw_text((x, 2), self.server.name, font=big_font)
 
     def _do_create_body(self):
         """Create the body (main area) of the dynamic server image."""
-        # IP address
-        self._draw_text((6, 80), self.server.ip_and_port, color=grey)
-
         # Players
-        self._draw_text((6, 50), '{}/{}'.format(self.server.players.current, self.server.players.max))
+        self._draw_text((8, 44), '{}/{}'.format(self.server.players.current, self.server.players.max))
 
         # Map
-        self._draw_text((70, 50), self.server.map.name_display)
-
-        # Server type
-        self._draw_text((240, 50), self.server.type_name)
+        self._draw_text((233, 44), self.server.map.name_display)
 
         # Server mode
-        self._draw_text((350, 50), self.server.mode_name_long)
+        self._draw_text((8, 73), self.server.mode_name_long)
+
+        # Server type
+        self._draw_text((233, 73), self.server.type_name)
