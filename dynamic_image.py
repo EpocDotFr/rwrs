@@ -103,7 +103,7 @@ class DynamicServerImage(DynamicImage):
 
         # Country flag
         if self.server.location.country_code:
-            flag_image = Image.open('static/images/flags/{}.png'.format(self.server.location.country_code)).convert('RGBA')
+            flag_image = Image.open('static/images/flags/{}.png'.format(self.server.location.country_code.upper())).convert('RGBA')
 
             self._paste(flag_image, (x, 4))
 
