@@ -22,7 +22,7 @@
 {% set meta_image = server.map.preview_absolute if server.map.has_preview %}
 
 {% block content %}
-    <p>Make this RWR server visible by putting this banner on your website / blog / forum. It features live information about the server. You'll find below code to be used to include the banner where you want.</p>
+    <p>Make this RWR server visible by putting this banner on your website / blog / forum. It features live information about the server.</p>
 
     <p class="txtcenter mbs">
         <img src="{{ url_for('dynamic_server_image', ip=server.ip, port=server.port) }}">
