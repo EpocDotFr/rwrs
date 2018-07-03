@@ -72,8 +72,8 @@ class DynamicImage:
 
 class DynamicServerImage(DynamicImage):
     """A server dynamic image."""
-    server_image_background_path = 'static/images/server_image_background.png'
-    server_image_error_background_path = 'static/images/server_image_error_background.png'
+    background_path = 'static/images/server_image_background.png'
+    error_background_path = 'static/images/server_image_error_background.png'
 
     def __init__(self, ip, port, server):
         self.ip = ip
@@ -82,15 +82,15 @@ class DynamicServerImage(DynamicImage):
 
     def do_create(self):
         if not self.server:
-            self.init(self.server_image_error_background_path)
+            self.init(self.error_background_path)
 
             self.do_create_error('No Running With Rifles server found at {}:{}.'.format(self.ip, self.port))
         elif not self.server.is_dedicated:
-            self.init(self.server_image_error_background_path)
+            self.init(self.error_background_path)
 
             self.do_create_error('Server banner is only available for dedicated servers.')
         else:
-            self.init(self.server_image_background_path)
+            self.init(self.background_path)
 
             self._do_create_header()
             self._do_create_body()
