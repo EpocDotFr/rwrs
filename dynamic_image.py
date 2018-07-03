@@ -156,8 +156,6 @@ class DynamicPlayerImage(DynamicImage):
 
     def do_create(self):
         if not self.player:
-            self.init(self.error_background_path)
-
             self.do_create_error('Player {} not found.'.format(self.username))
         else:
             self.init(self.background_path)
@@ -165,6 +163,8 @@ class DynamicPlayerImage(DynamicImage):
             # TODO
 
     def do_create_error(self, message):
+        self.init(self.error_background_path)
+
         # Error title
         self._draw_text((10, 2), 'Error', font=big_font, color=light_red)
 
