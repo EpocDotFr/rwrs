@@ -183,9 +183,9 @@ class DynamicPlayerImage(DynamicImage):
     def _do_create_body(self):
         """Create the body (main area) of the dynamic player image."""
         # Rank image
-        rank_image = Image.open('static' + self.player.rank.image).convert('RGBA')
+        rank_image = Image.open('static/images/ranks/us/8.png').convert('RGBA')
 
-        self._paste(rank_image, (3, 33))
+        self._paste(rank_image, (3, 32))
 
         # XP
         self._draw_text((82, 45), helpers.simplified_integer(self.player.xp))
