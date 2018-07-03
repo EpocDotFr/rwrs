@@ -13,7 +13,6 @@ normal_font = ImageFont.truetype(font_path, 12)
 dark_grey = (51, 51, 51)
 white = (255, 255, 255)
 green = (164, 207, 23)
-light_red = (244, 110, 110)
 
 
 class DynamicImage:
@@ -59,11 +58,11 @@ class DynamicImage:
 
     @property
     def background_path(self):
-        return 'static/images/{}_image_background.png'.format(self.name)
+        return 'static/images/dynamic_images/{}_image_background.png'.format(self.name)
 
     @property
     def error_background_path(self):
-        return 'static/images/{}_image_error_background.png'.format(self.name)
+        return 'static/images/dynamic_images/{}_image_error_background.png'.format(self.name)
 
     def _paste(self, image, pos):
         """Paste an image onto the final one."""
@@ -101,11 +100,6 @@ class DynamicServerImage(DynamicImage):
 
     def do_create_error(self, message):
         self.init(self.error_background_path)
-
-        # Error title
-        self._draw_text((10, 2), 'Error', font=big_font, color=light_red)
-
-        # Error message
         self._draw_text((10, 50), message)
 
     def _do_create_header(self):
@@ -122,7 +116,7 @@ class DynamicServerImage(DynamicImage):
 
         # Ranked server indicator
         if self.server.is_ranked:
-            yellow_star_image = Image.open('static/images/yellow_star.png').convert('RGBA')
+            yellow_star_image = Image.open('static/images/dynamic_images/yellow_star.png').convert('RGBA')
 
             self._paste(yellow_star_image, (x, 8))
 
@@ -137,13 +131,13 @@ class DynamicServerImage(DynamicImage):
         self._draw_text((8, 44), '{}/{}'.format(self.server.players.current, self.server.players.max))
 
         # Map
-        self._draw_text((233, 44), self.server.map.name_display)
+        self._draw_text((194, 44), self.server.map.name_display)
 
         # Server mode
         self._draw_text((8, 73), self.server.mode_name_long)
 
         # Server type
-        self._draw_text((233, 73), self.server.type_name)
+        self._draw_text((194, 73), self.server.type_name)
 
 
 class DynamicPlayerImage(DynamicImage):
@@ -165,9 +159,4 @@ class DynamicPlayerImage(DynamicImage):
 
     def do_create_error(self, message):
         self.init(self.error_background_path)
-
-        # Error title
-        self._draw_text((10, 2), 'Error', font=big_font, color=light_red)
-
-        # Error message
         self._draw_text((10, 50), message)
