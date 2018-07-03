@@ -1,6 +1,6 @@
 from models import SteamPlayerCount, ServerPlayerCount, RwrRootServer, Variable, RwrAccountStat, RwrAccount
 from flask import render_template, abort, request, redirect, url_for, flash, g
-from dynamic_image import DynamicServerImage
+from dynamic_image import DynamicServerImage, DynamicPlayerImage
 from rwr.player import Player
 from rwrs import app
 import rwr.constants
@@ -168,6 +168,13 @@ def player_details(database, username, tab=None):
         stats=stats,
         player_evolution_data=player_evolution_data
     )
+
+
+@app.route('/images/players/<username>-<any({}):database>.png'.format(VALID_DATABASES_STRING_LIST))
+def dynamic_player_image(username, database):
+    player = rwr.scraper.search_player_by_username(database, username)
+
+    return DynamicPlayerImage.create(database, username, player)
 
 
 @app.route('/players/<username>/compare')

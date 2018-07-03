@@ -1,6 +1,7 @@
 from PIL import Image, ImageDraw, ImageFont
 from flask import make_response
 from io import BytesIO
+import rwr.utils
 import arrow
 
 
@@ -149,13 +150,14 @@ class DynamicPlayerImage(DynamicImage):
     """A player dynamic image."""
     name = 'player'
 
-    def __init__(self, username, player):
+    def __init__(self, database, username, player):
+        self.database = database
         self.username = username
         self.player = player
 
     def do_create(self):
         if not self.player:
-            self.do_create_error('Player {} not found.'.format(self.username))
+            self.do_create_error('Player "{}" wasn\'t found in the {} players list.'.format(self.username, rwr.utils.get_database_name(self.database)))
         else:
             self.init(self.background_path)
 
