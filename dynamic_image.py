@@ -56,6 +56,14 @@ class DynamicImage:
         """Create an image with an error message."""
         raise NotImplemented('Must be implemented')
 
+    @property
+    def background_path(self):
+        return 'static/images/{}_image_background.png'.format(self.name)
+
+    @property
+    def error_background_path(self):
+        return 'static/images/{}_image_error_background.png'.format(self.name)
+
     def _paste(self, image, pos):
         """Paste an image onto the final one."""
         self.image.paste(image, pos, image)
@@ -72,8 +80,7 @@ class DynamicImage:
 
 class DynamicServerImage(DynamicImage):
     """A server dynamic image."""
-    background_path = 'static/images/server_image_background.png'
-    error_background_path = 'static/images/server_image_error_background.png'
+    name = 'server'
 
     def __init__(self, ip, port, server):
         self.ip = ip
@@ -82,12 +89,8 @@ class DynamicServerImage(DynamicImage):
 
     def do_create(self):
         if not self.server:
-            self.init(self.error_background_path)
-
             self.do_create_error('No Running With Rifles server found at {}:{}.'.format(self.ip, self.port))
         elif not self.server.is_dedicated:
-            self.init(self.error_background_path)
-
             self.do_create_error('Server banner is only available for dedicated servers.')
         else:
             self.init(self.background_path)
@@ -96,6 +99,8 @@ class DynamicServerImage(DynamicImage):
             self._do_create_body()
 
     def do_create_error(self, message):
+        self.init(self.error_background_path)
+
         # Error title
         self._draw_text((10, 2), 'Error', font=big_font, color=light_red)
 
