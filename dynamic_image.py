@@ -2,6 +2,7 @@ from PIL import Image, ImageDraw, ImageFont
 from flask import make_response
 from io import BytesIO
 import rwr.utils
+import helpers
 import arrow
 
 
@@ -9,6 +10,7 @@ font_path = 'static/fonts/komikax.ttf'
 
 big_font = ImageFont.truetype(font_path, 15)
 normal_font = ImageFont.truetype(font_path, 12)
+small_font = ImageFont.truetype(font_path, 10)
 
 dark_grey = (51, 51, 51)
 white = (255, 255, 255)
@@ -161,8 +163,44 @@ class DynamicPlayerImage(DynamicImage):
         else:
             self.init(self.background_path)
 
-            # TODO
+            self._do_create_header()
+            self._do_create_body()
 
     def do_create_error(self, message):
         self.init(self.error_background_path)
         self._draw_text((10, 50), message)
+
+    def _do_create_header(self):
+        """Create the top of the dynamic player image."""
+        # Username
+        self._draw_text((9, 2), self.player.username, font=big_font)
+
+        # Rank name
+        rank_name_w, rank_name_h = self.image_draw.textsize(self.player.rank.name, font=small_font)
+
+        self._draw_text((self.image.width - rank_name_w - 7, 7), self.player.rank.name, font=small_font)
+
+    def _do_create_body(self):
+        """Create the body (main area) of the dynamic player image."""
+        # Rank image
+        rank_image = Image.open('static' + self.player.rank.image).convert('RGBA')
+
+        self._paste(rank_image, (3, 33))
+
+        # XP
+        self._draw_text((82, 45), helpers.simplified_integer(self.player.xp))
+
+        # Score
+        self._draw_text((82, 76), helpers.simplified_integer(self.player.score))
+
+        # Kills
+        self._draw_text((148, 45), helpers.simplified_integer(self.player.kills))
+
+        # Deaths
+        self._draw_text((148, 76), helpers.simplified_integer(self.player.deaths))
+
+        # K/D ratio
+        self._draw_text((219, 44), str(self.player.kd_ratio))
+
+        # Time played
+        self._draw_text((219, 76), helpers.humanize_seconds_to_hours(self.player.time_played))

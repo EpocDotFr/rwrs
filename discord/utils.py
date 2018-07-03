@@ -344,7 +344,7 @@ def create_evolution_chart(rwr_account_id, column, title):
     ax.xaxis.set_minor_formatter(mdates.DateFormatter('%b'))
 
     if column == 'score':
-        ax.yaxis.set_major_formatter(ticker.FuncFormatter(lambda x, pos: simplified_integer(x)))
+        ax.yaxis.set_major_formatter(ticker.FuncFormatter(lambda x, pos: helpers.simplified_integer(x)))
 
     ax.set_title(title)
 
@@ -365,18 +365,3 @@ def create_evolution_chart(rwr_account_id, column, title):
     evolution_chart.seek(0)
 
     return evolution_chart
-
-
-def simplified_integer(integer):
-    """Return a simplified human-readable integer."""
-    if not integer:
-        return '0'
-
-    integer = float('{:.3g}'.format(integer))
-    magnitude = 0
-
-    while abs(integer) >= 1000:
-        magnitude += 1
-        integer /= 1000.0
-
-    return '{}{}'.format('{:f}'.format(integer).rstrip('0').rstrip('.'), ['', 'K', 'M', 'B', 'T'][magnitude])
