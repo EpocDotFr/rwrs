@@ -130,10 +130,10 @@ class DynamicServerImage(DynamicImage):
         self._draw_text((8, 44), '{}/{}'.format(self.server.players.current, self.server.players.max))
 
         # Map
-        self._draw_text((233, 44), self.server.map.name_display)
+        self._draw_text((194, 44), self.server.map.name_display)
 
         # Server mode
         self._draw_text((8, 73), self.server.mode_name_long)
 
         # Server type
-        self._draw_text((233, 73), self.server.type_name)
+        self._draw_text((194, 73), self.server.type_name)
