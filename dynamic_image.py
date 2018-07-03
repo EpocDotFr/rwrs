@@ -127,17 +127,23 @@ class DynamicServerImage(DynamicImage):
 
     def _do_create_body(self):
         """Create the body (main area) of the dynamic server image."""
-        # Players
-        self._draw_text((8, 44), '{}/{}'.format(self.server.players.current, self.server.players.max))
+        # IP
+        self._draw_text((7, 44), self.server.ip)
 
-        # Map
-        self._draw_text((194, 44), self.server.map.name_display)
+        # Port
+        self._draw_text((7, 73), str(self.server.port))
+
+        # Players
+        self._draw_text((121, 44), '{}/{}'.format(self.server.players.current, self.server.players.max))
 
         # Server mode
-        self._draw_text((8, 73), self.server.mode_name_long)
+        self._draw_text((121, 73), self.server.mode_name_long)
+
+        # Map
+        self._draw_text((234, 44), self.server.map.name_display)
 
         # Server type
-        self._draw_text((194, 73), self.server.type_name)
+        self._draw_text((234, 73), self.server.type_name)
 
 
 class DynamicPlayerImage(DynamicImage):
