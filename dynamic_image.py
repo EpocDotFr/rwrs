@@ -147,8 +147,7 @@ class DynamicServerImage(DynamicImage):
 
 class DynamicPlayerImage(DynamicImage):
     """A player dynamic image."""
-    background_path = 'static/images/player_image_background.png'
-    error_background_path = 'static/images/player_image_error_background.png'
+    name = 'player'
 
     def __init__(self, username, player):
         self.username = username
