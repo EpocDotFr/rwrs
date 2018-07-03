@@ -138,3 +138,30 @@ class DynamicServerImage(DynamicImage):
 
         # Server type
         self._draw_text((233, 73), self.server.type_name)
+
+
+class DynamicPlayerImage(DynamicImage):
+    """A player dynamic image."""
+    background_path = 'static/images/player_image_background.png'
+    error_background_path = 'static/images/player_image_error_background.png'
+
+    def __init__(self, username, player):
+        self.username = username
+        self.player = player
+
+    def do_create(self):
+        if not self.player:
+            self.init(self.error_background_path)
+
+            self.do_create_error('Player {} not found.'.format(self.username))
+        else:
+            self.init(self.background_path)
+
+            # TODO
+
+    def do_create_error(self, message):
+        # Error title
+        self._draw_text((10, 2), 'Error', font=big_font, color=light_red)
+
+        # Error message
+        self._draw_text((10, 50), message)
