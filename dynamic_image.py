@@ -9,9 +9,7 @@ font_path = 'static/fonts/komikax.ttf'
 big_font = ImageFont.truetype(font_path, 15)
 normal_font = ImageFont.truetype(font_path, 12)
 
-dark_grey = (51, 51, 51)
 white = (255, 255, 255)
-green = (164, 207, 23)
 
 
 class DynamicImage:
