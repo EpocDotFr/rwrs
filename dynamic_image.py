@@ -173,12 +173,12 @@ class DynamicPlayerImage(DynamicImage):
     def _do_create_header(self):
         """Create the top of the dynamic player image."""
         # Username
-        self._draw_text((9, 2), self.player.username, font=big_font)
+        self._draw_text((9, 3), self.player.username, font=big_font)
 
         # Rank name
         rank_name_w, rank_name_h = self.image_draw.textsize(self.player.rank.name, font=small_font)
 
-        self._draw_text((self.image.width - rank_name_w - 7, 7), self.player.rank.name, font=small_font)
+        self._draw_text((self.image.width - rank_name_w - 7, 8), self.player.rank.name, font=small_font)
 
     def _do_create_body(self):
         """Create the body (main area) of the dynamic player image."""
