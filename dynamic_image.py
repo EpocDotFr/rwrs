@@ -170,6 +170,23 @@ class DynamicPlayerImage(DynamicImage):
         # Username
         self._draw_text((9, 3), self.player.username, font=big_font)
 
+        # Player icon
+        if self.player.is_me or self.player.is_contributor or self.player.is_rwr_dev:
+            username_w, username_h = self.image_draw.textsize(self.player.username, font=big_font)
+
+            if self.player.is_me:
+                epoc_image = Image.open('static/images/epoc.png').convert('RGBA')
+
+                self._paste(epoc_image, (username_w + 8, 5))
+            elif self.player.is_contributor:
+                contributor_image = Image.open('static/images/dynamic_images/contributor.png').convert('RGBA')
+
+                self._paste(contributor_image, (username_w + 11, 8))
+            elif self.player.is_rwr_dev:
+                rwr_icon_image = Image.open('static/images/rwr_icon.png').convert('RGBA')
+
+                self._paste(rwr_icon_image, (username_w + 11, 5))
+
         # Rank name
         rank_name_w, rank_name_h = self.image_draw.textsize(self.player.rank.name, font=small_font)
 
