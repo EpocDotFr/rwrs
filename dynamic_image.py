@@ -12,9 +12,7 @@ big_font = ImageFont.truetype(font_path, 15)
 normal_font = ImageFont.truetype(font_path, 12)
 small_font = ImageFont.truetype(font_path, 10)
 
-dark_grey = (51, 51, 51)
 white = (255, 255, 255)
-green = (164, 207, 23)
 
 
 class DynamicImage:
