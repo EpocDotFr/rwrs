@@ -154,7 +154,7 @@ class DynamicPlayerImage(DynamicImage):
 
     def do_create(self):
         if not self.player:
-            self.do_create_error('Player "{}" wasn\'t found in the {} players list.'.format(self.username, rwr.utils.get_database_name(self.database)))
+            self.do_create_error('Player "{}" wasn\'t found in\nthe {} players list.'.format(self.username, rwr.utils.get_database_name(self.database)))
         else:
             self.init(self.background_path)
 
@@ -163,7 +163,7 @@ class DynamicPlayerImage(DynamicImage):
 
     def do_create_error(self, message):
         self.init(self.error_background_path)
-        self._draw_text((10, 50), message)
+        self._draw_text((10, 45), message)
 
     def _do_create_header(self):
         """Create the top of the dynamic player image."""
