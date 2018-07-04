@@ -185,7 +185,14 @@ class DynamicPlayerImage(DynamicImage):
 
                 self._paste(rwr_icon_image, (username_w + 11, 5))
 
+        # Database name
+        # TODO Actually implement
+        #database_name_w, database_name_h = self.image_draw.textsize(self.player.database_name, font=small_font)
+
+        #self._draw_text((self.image.width - database_name_w - 7, 8), self.player.database_name, font=small_font)
+
         # Rank name
+        # TODO Update position
         rank_name_w, rank_name_h = self.image_draw.textsize(self.player.rank.name, font=small_font)
 
         self._draw_text((self.image.width - rank_name_w - 7, 8), self.player.rank.name, font=small_font)
