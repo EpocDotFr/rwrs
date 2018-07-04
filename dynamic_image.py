@@ -166,7 +166,7 @@ class DynamicPlayerImage(DynamicImage):
     def _do_create_header(self):
         """Create the top of the dynamic player image."""
         # Username
-        self._draw_text((9, 3), self.player.username, font=big_font)
+        self._draw_text((9, 0), self.player.username, font=big_font)
 
         # Player icon
         if self.player.is_me or self.player.is_contributor or self.player.is_rwr_dev:
@@ -175,49 +175,47 @@ class DynamicPlayerImage(DynamicImage):
             if self.player.is_me:
                 epoc_image = Image.open('static/images/epoc.png').convert('RGBA')
 
-                self._paste(epoc_image, (username_w + 8, 5))
+                self._paste(epoc_image, (username_w + 8, 2))
             elif self.player.is_contributor:
                 contributor_image = Image.open('static/images/dynamic_images/contributor.png').convert('RGBA')
 
-                self._paste(contributor_image, (username_w + 11, 8))
+                self._paste(contributor_image, (username_w + 12, 5))
             elif self.player.is_rwr_dev:
                 rwr_icon_image = Image.open('static/images/rwr_icon.png').convert('RGBA')
 
-                self._paste(rwr_icon_image, (username_w + 11, 5))
-
-        # Database name
-        # TODO Actually implement
-        #database_name_w, database_name_h = self.image_draw.textsize(self.player.database_name, font=small_font)
-
-        #self._draw_text((self.image.width - database_name_w - 7, 8), self.player.database_name, font=small_font)
+                self._paste(rwr_icon_image, (username_w + 13, 2))
 
         # Rank name
-        # TODO Update position
-        rank_name_w, rank_name_h = self.image_draw.textsize(self.player.rank.name, font=small_font)
+        self._draw_text((9, 22), self.player.rank.name, font=small_font)
 
-        self._draw_text((self.image.width - rank_name_w - 7, 8), self.player.rank.name, font=small_font)
+        # Database name
+        database_name = '{} profile'.format(self.player.database_name)
+
+        database_name_w, database_name_h = self.image_draw.textsize(database_name, font=normal_font)
+
+        self._draw_text((self.image.width - database_name_w - 7, 12), database_name, font=normal_font)
 
     def _do_create_body(self):
         """Create the body (main area) of the dynamic player image."""
         # Rank image
         rank_image = Image.open('static' + self.player.rank.image).convert('RGBA')
 
-        self._paste(rank_image, (3, 32))
+        self._paste(rank_image, (3, 42))
 
         # XP
-        self._draw_text((82, 45), helpers.simplified_integer(self.player.xp))
+        self._draw_text((82, 55), helpers.simplified_integer(self.player.xp))
 
         # Score
-        self._draw_text((82, 76), helpers.simplified_integer(self.player.score))
+        self._draw_text((82, 86), helpers.simplified_integer(self.player.score))
 
         # Kills
-        self._draw_text((148, 45), helpers.simplified_integer(self.player.kills))
+        self._draw_text((148, 55), helpers.simplified_integer(self.player.kills))
 
         # Deaths
-        self._draw_text((148, 76), helpers.simplified_integer(self.player.deaths))
+        self._draw_text((148, 86), helpers.simplified_integer(self.player.deaths))
 
         # K/D ratio
-        self._draw_text((219, 44), str(self.player.kd_ratio))
+        self._draw_text((219, 54), str(self.player.kd_ratio))
 
         # Time played
-        self._draw_text((219, 76), helpers.humanize_seconds_to_hours(self.player.time_played))
+        self._draw_text((219, 86), helpers.humanize_seconds_to_hours(self.player.time_played))
