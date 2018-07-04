@@ -67,13 +67,8 @@ class DynamicImage:
         """Paste an image onto the final one."""
         self.image.paste(image, pos, image)
 
-    def _draw_text(self, pos, text, font=normal_font, color=white, shadow=dark_grey):
+    def _draw_text(self, pos, text, font=normal_font, color=white):
         """Draw a text on the final image."""
-        if shadow:
-            pos_shadow = (pos[0] + 2, pos[1] + 2)
-
-            self.image_draw.text(pos_shadow, text, font=font, fill=shadow)
-
         self.image_draw.text(pos, text, font=font, fill=color)
 
 
