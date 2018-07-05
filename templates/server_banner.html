@@ -1,0 +1,54 @@
+{% import 'macros.html' as macros %}
+
+{% extends 'layout.html' %}
+
+{% block page_title %}<h1><i class="fa fa-server"></i> Servers › {{ macros.server_name(server, link=False) }} › Banner</h1>{% endblock %}
+
+{% block meta_title %}Servers › {{ macros.server_name(server, link=False, raw=True) }} › Banner{% endblock %}
+
+{% block meta_description %}Get a banner to include in your website / blog / forum for the{{ ' ranked ' + server.database_name if server.is_ranked else ' dedicated' if server.is_dedicated }} Running With Rifles (RWR) server named {{ macros.server_name(server, link=False, no_icon=True) }}{% if server.location.country_code %} hosted in {{ server.location.text }}{% endif %}.{% endblock %}
+
+{% block jsfiles %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/zepto/1.2.0/zepto.min.js"></script>
+    {% assets 'js_friends' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
+{% endblock %}
+
+{% block cssfiles %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/metrics-graphics/2.15.6/metricsgraphics.min.css">
+{% endblock %}
+
+{% set canonical_url = url_for('server_banner', ip=server.ip, port=server.port, slug=server.name_slug, _external=True) %}
+
+{% set meta_image = server.map.preview_absolute if server.map.has_preview %}
+
+{% block content %}
+    <p>Make this RWR server visible by putting this banner on your website / blog / forum. It features live information about the server, and is refreshed every 5 minutes.</p>
+
+    <p class="txtcenter">
+        <img src="{{ url_for('dynamic_server_image', ip=server.ip, port=server.port) }}">
+    </p>
+
+    <div class="grid has-gutter mts">
+        <div>
+            <fieldset class="man pan">
+                <legend class="mls">HTML code <small>(websites / blogs)</small></legend>
+                <textarea readonly spellcheck="false" class="copypaste" rows="3" onClick="this.setSelectionRange(0, this.value.length)">&lt;a href=&quot;{{ server.link_absolute }}&quot; target=&quot;_blank&quot;&gt;&lt;img src=&quot;{{ url_for('dynamic_server_image', ip=server.ip, port=server.port, _external=True) }}&quot; border=&quot;0&quot;/&gt;&lt;/a&gt;</textarea>
+            </fieldset>
+        </div>
+        <div>
+            <fieldset class="man pan">
+                <legend class="mls">BBCode <small>(forums / Steam)</small></legend>
+                <textarea readonly spellcheck="false" class="copypaste" rows="3" onClick="this.setSelectionRange(0, this.value.length)">[url={{ server.link_absolute }}][img]{{ url_for('dynamic_server_image', ip=server.ip, port=server.port, _external=True) }}[/img][/url]</textarea>
+            </fieldset>
+        </div>
+    </div>
+
+    <p class="txtcenter">
+        <a href="{{ server.link }}" class="btn"><i class="fa fa-chevron-left"></i> Back to the server details</a>
+    </p>
+
+    <script>
+        friendsFeature.all_players_with_servers_details = {{ g.all_players_with_servers_details|tojson }};
+        friendsFeature.init();
+    </script>
+{% endblock %}

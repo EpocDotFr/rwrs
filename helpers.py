@@ -139,3 +139,18 @@ def chunks(l, n):
     """Yield successive n-sized chunks from l."""
     for i in range(0, len(l), n):
         yield l[i:i + n]
+
+
+def simplified_integer(integer):
+    """Return a simplified human-readable integer."""
+    if not integer:
+        return '0'
+
+    integer = float('{:.3g}'.format(integer))
+    magnitude = 0
+
+    while abs(integer) >= 1000:
+        magnitude += 1
+        integer /= 1000.0
+
+    return '{}{}'.format('{:f}'.format(integer).rstrip('0').rstrip('.'), ['', 'K', 'M', 'B', 'T'][magnitude])

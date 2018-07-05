@@ -15,6 +15,7 @@ and its Pacific DLC. Available at [rwrstats.com](https://rwrstats.com/).
     - Friends list (easily know on which server your friends are playing on. There's no need to create a user account or whatever)
     - Players list (leaderboard)
     - Stats history
+    - Signatures
   - Public servers
     - Real servers location
     - Real maps name
@@ -23,6 +24,7 @@ and its Pacific DLC. Available at [rwrstats.com](https://rwrstats.com/).
     - Public server details (players list with link to their profile, current map preview and minimap, etc)
     - Filtering capabilities
     - Mapview
+    - Banners
   - Online servers count (+ the active ones)
   - Total players count (+ online ones + number of playing friends)
   - Charts (for the past week)
@@ -212,6 +214,7 @@ As the provided servers location is most of the time either missing or invalid, 
   - Font by [Typesgal](https://www.dafont.com/fr/top-secret-kb.font) (freeware)
   - Flag icons by [Flag Sprites](https://www.flag-sprites.com/en/) and [GoSquared](https://www.gosquared.com/resources/flag-icons/) (freeware)
   - Maps previews comes from the [official RWR wiki](https://runningwithrifles.gamepedia.com/Running_with_Rifles_Wiki)
+  - Servers banner and players signature font by [Vigilante Typeface Corporation](https://www.dafont.com/komika-axis.font) (freeware)
   - Old players stats are provided by the [rwrtrack](https://github.com/david-wm-sanders/rwrtrack) project by David "MR. BANG" Sanders ([actual data repo](https://github.com/david-wm-sanders/rwrtrack-data)) (MIT License)
   - This project uses GeoLite2 data created by MaxMind, available from [www.maxmind.com](https://www.maxmind.com/)
   - All Running With Rifles assets © 2015 - 2018 Osumia Games
