@@ -17,3 +17,4 @@ disco-py[performance]
 tabulate
 matplotlib
 bugsnag[flask]
+Pillow
