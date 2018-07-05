@@ -144,7 +144,7 @@ class MapsDataExtractor(BaseExtractor):
 
             click.echo(server_type + ':' + map_id)
 
-            map_data = map.MapObjects.parse(map_path)
+            map_data = map.MapParser.parse(map_path)
 
             if not map_data['name']:
                 click.secho('  Map name not found', fg='yellow')
