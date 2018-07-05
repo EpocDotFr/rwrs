@@ -1,6 +1,8 @@
 from PIL import Image, ImageDraw, ImageFont
 from flask import make_response
 from io import BytesIO
+import rwr.utils
+import helpers
 import arrow
 
 
@@ -8,6 +10,7 @@ font_path = 'static/fonts/komikax.ttf'
 
 big_font = ImageFont.truetype(font_path, 15)
 normal_font = ImageFont.truetype(font_path, 12)
+small_font = ImageFont.truetype(font_path, 10)
 
 white = (255, 255, 255)
 
@@ -136,3 +139,83 @@ class DynamicServerImage(DynamicImage):
 
         # Server type
         self._draw_text((234, 73), self.server.type_name)
+
+
+class DynamicPlayerImage(DynamicImage):
+    """A player dynamic image."""
+    name = 'player'
+
+    def __init__(self, database, username, player):
+        self.database = database
+        self.username = username
+        self.player = player
+
+    def do_create(self):
+        if not self.player:
+            self.do_create_error('Player "{}" wasn\'t found in\nthe {} players list.'.format(self.username, rwr.utils.get_database_name(self.database)))
+        else:
+            self.init(self.background_path)
+
+            self._do_create_header()
+            self._do_create_body()
+
+    def do_create_error(self, message):
+        self.init(self.error_background_path)
+        self._draw_text((10, 45), message)
+
+    def _do_create_header(self):
+        """Create the top of the dynamic player image."""
+        # Username
+        self._draw_text((9, 0), self.player.username, font=big_font)
+
+        # Player icon
+        if self.player.is_me or self.player.is_contributor or self.player.is_rwr_dev:
+            username_w, username_h = self.image_draw.textsize(self.player.username, font=big_font)
+
+            if self.player.is_me:
+                epoc_image = Image.open('static/images/epoc.png').convert('RGBA')
+
+                self._paste(epoc_image, (username_w + 8, 2))
+            elif self.player.is_contributor:
+                contributor_image = Image.open('static/images/dynamic_images/contributor.png').convert('RGBA')
+
+                self._paste(contributor_image, (username_w + 12, 5))
+            elif self.player.is_rwr_dev:
+                rwr_icon_image = Image.open('static/images/rwr_icon.png').convert('RGBA')
+
+                self._paste(rwr_icon_image, (username_w + 13, 2))
+
+        # Rank name
+        self._draw_text((9, 22), self.player.rank.name, font=small_font)
+
+        # Database name
+        database_name = '{} profile'.format(self.player.database_name)
+
+        database_name_w, database_name_h = self.image_draw.textsize(database_name, font=normal_font)
+
+        self._draw_text((self.image.width - database_name_w - 7, 12), database_name, font=normal_font)
+
+    def _do_create_body(self):
+        """Create the body (main area) of the dynamic player image."""
+        # Rank image
+        rank_image = Image.open('static' + self.player.rank.image).convert('RGBA')
+
+        self._paste(rank_image, (3, 42))
+
+        # XP
+        self._draw_text((82, 55), helpers.simplified_integer(self.player.xp))
+
+        # Score
+        self._draw_text((82, 86), helpers.simplified_integer(self.player.score))
+
+        # Kills
+        self._draw_text((148, 55), helpers.simplified_integer(self.player.kills))
+
+        # Deaths
+        self._draw_text((148, 86), helpers.simplified_integer(self.player.deaths))
+
+        # K/D ratio
+        self._draw_text((219, 54), str(self.player.kd_ratio))
+
+        # Time played
+        self._draw_text((219, 86), helpers.humanize_seconds_to_hours(self.player.time_played))
