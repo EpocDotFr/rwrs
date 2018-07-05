@@ -1,5 +1,6 @@
 from models import SteamPlayerCount, ServerPlayerCount, RwrRootServer, Variable, RwrAccountStat, RwrAccount
 from flask import render_template, abort, request, redirect, url_for, flash, g
+from dynamic_image import DynamicServerImage, DynamicPlayerImage
 from rwr.player import Player
 from rwrs import app
 import rwr.constants
@@ -125,7 +126,7 @@ def player_details_without_db(username):
 
 
 @app.route('/players/<any({}):database>/<username>'.format(VALID_DATABASES_STRING_LIST))
-@app.route('/players/<any({}):database>/<username>/<any(unlockables,evolution,"stats-history"):tab>'.format(VALID_DATABASES_STRING_LIST))
+@app.route('/players/<any({}):database>/<username>/<any(unlockables,evolution,"stats-history",signature):tab>'.format(VALID_DATABASES_STRING_LIST))
 def player_details(database, username, tab=None):
     player = rwr.scraper.search_player_by_username(database, username)
 
@@ -167,6 +168,13 @@ def player_details(database, username, tab=None):
         stats=stats,
         player_evolution_data=player_evolution_data
     )
+
+
+@app.route('/images/players/<username>-<any({}):database>.png'.format(VALID_DATABASES_STRING_LIST))
+def dynamic_player_image(username, database):
+    player = rwr.scraper.search_player_by_username(database, username)
+
+    return DynamicPlayerImage.create(database, username, player)
 
 
 @app.route('/players/<username>/compare')
@@ -326,3 +334,34 @@ def server_details(ip, port, slug=None):
         server_players_data=server_players_data,
         server=server
     )
+
+
+@app.route('/servers/<ip>:<int:port>/banner')
+@app.route('/servers/<ip>:<int:port>/<slug>/banner')
+def server_banner(ip, port, slug=None):
+    server = rwr.scraper.get_server_by_ip_and_port(ip, port)
+
+    if not server:
+        flash('Sorry, this server wasn\'t found.', 'error')
+
+        return redirect(url_for('servers_list'))
+
+    if not slug:
+        return redirect(url_for('server_banner', ip=server.ip, port=server.port, slug=server.name_slug), code=301)
+
+    if not server.is_dedicated:
+        flash('Server banner is only available for dedicated servers.', 'error')
+
+        return redirect(server.link, code=302)
+
+    return render_template(
+        'server_banner.html',
+        server=server
+    )
+
+
+@app.route('/images/servers/<ip>-<int:port>.png')
+def dynamic_server_image(ip, port):
+    server = rwr.scraper.get_server_by_ip_and_port(ip, port)
+
+    return DynamicServerImage.create(ip, port, server)

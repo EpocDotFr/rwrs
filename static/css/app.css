@@ -282,6 +282,15 @@ textarea {
     border: 0.1rem solid #333;
 }
 
+textarea.copypaste {
+    width: 100%;
+    background-color: transparent;
+    color: #fff;
+    border: none;
+    font-family: Consolas, Courier, monospace;
+    font-size: 1.2rem;
+}
+
 /************************************************************************
  * Tables */
 
