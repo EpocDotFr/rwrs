@@ -30,6 +30,8 @@ def create_player_message_embed(player):
         embed.description = ':v: This player contributed in a way or another to RWRS. Thanks to her/him!'
     elif player.is_rwr_dev:
         embed.description = ':hammer_and_wrench: Say hi to one of the Running With Rifles developers!'
+    elif player.is_ranked_servers_admin:
+        embed.description = ':scales: This player is admin on ranked (official) RWR servers.'
 
     embed.set_thumbnail(
         url=player.rank.image_absolute
