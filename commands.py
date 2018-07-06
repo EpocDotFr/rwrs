@@ -492,3 +492,32 @@ def import_rwrtrack_data(directory, reset):
                 start += chunks
 
     click.secho('Done', fg='green')
+
+
+@app.cli.command()
+def save_ranked_servers_admins():
+    """Retrieve and save the ranked servers admins."""
+    from lxml import etree
+    import requests
+    import helpers
+
+    click.echo('Retrieving admins list')
+
+    try:
+        response = requests.get('http://rwr.runningwithrifles.com/shared/admins.xml')
+
+        response.raise_for_status()
+
+        admins_xml = etree.fromstring(response.text)
+    except Exception as e:
+        click.secho(str(e), fg='red')
+
+        return
+
+    admins = [item.get('value') for item in admins_xml.iterchildren('item')]
+
+    click.echo('Saving to {}'.format(app.config['RANKED_SERVERS_ADMINS_FILE']))
+
+    helpers.save_json(app.config['RANKED_SERVERS_ADMINS_FILE'], admins)
+
+    click.secho('Done', fg='green')
