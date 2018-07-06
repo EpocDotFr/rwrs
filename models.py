@@ -447,7 +447,7 @@ class RwrAccountStat(db.Model):
         ]
 
         data = [str(d) for d in data]
-        data = ''.join(data).encode()
+        data = ':'.join(data).encode()
 
         self.hash = hashlib.md5(data).hexdigest()
 
