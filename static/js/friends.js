@@ -69,6 +69,7 @@ friendsFeature = {
                 my_username: friendsFeature.my_username,
                 contributors: friendsFeature.contributors,
                 devs: friendsFeature.devs,
+                rankedServersAdmins: friendsFeature.ranked_servers_admins,
                 friend_to_add: '',
                 playing_only: false
             },
