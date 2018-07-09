@@ -52,7 +52,7 @@
                         <img src="{{ url_for('static', filename='images/epoc.png') }}" title="Hey, I'm the creator of this website! Glad to see you're using it." class="help me" v-if="friend.username.toLowerCase() == my_username">
                         <i class="fa fa-hand-peace-o help" title="This player contributed in a way or another to RWRS. Thanks to her/him!" v-else-if="inArray(friend.username.toLowerCase(), contributors)"></i>
                         <img src="{{ url_for('static', filename='images/rwr_icon.png') }}" title="Say hi to one of the Running With Rifles developers!" class="help" v-else-if="inArray(friend.username.toLowerCase(), devs)">
-                        <i class="fa fa-balance-scale help" title="This player is admin on ranked (official) RWR servers" v-else-if="inArray(friend.username.toLowerCase(), rankedServersAdmins)"></i>
+                        <i class="fa fa-balance-scale help" title="This player is admin on ranked (official) RWR servers" v-if="inArray(friend.username.toLowerCase(), rankedServersAdmins)"></i>
                     </td>
                     <td>
                         <template v-if="friend.playing_on_server">

@@ -170,24 +170,39 @@ class DynamicPlayerImage(DynamicImage):
 
         # Player icon
         if self.player.is_me or self.player.is_contributor or self.player.is_rwr_dev or self.player.is_ranked_servers_admin:
-            username_w, username_h = self.image_draw.textsize(self.player.username, font=big_font)
+            x, _ = self.image_draw.textsize(self.player.username, font=big_font)
 
             if self.player.is_me:
                 epoc_image = Image.open('static/images/epoc.png').convert('RGBA')
 
-                self._paste(epoc_image, (username_w + 8, 2))
+                x += 8
+
+                self._paste(epoc_image, (x, 2))
+
+                x += epoc_image.width
             elif self.player.is_contributor:
                 contributor_image = Image.open('static/images/dynamic_images/contributor.png').convert('RGBA')
 
-                self._paste(contributor_image, (username_w + 12, 5))
+                x += 12
+
+                self._paste(contributor_image, (x, 5))
+
+                x += contributor_image.width
             elif self.player.is_rwr_dev:
                 rwr_icon_image = Image.open('static/images/rwr_icon.png').convert('RGBA')
 
-                self._paste(rwr_icon_image, (username_w + 13, 2))
-            elif self.player.is_ranked_servers_admin:
+                x += 13
+
+                self._paste(rwr_icon_image, (x, 2))
+
+                x += rwr_icon_image.width
+
+            if self.player.is_ranked_servers_admin:
                 admin_image = Image.open('static/images/dynamic_images/admin.png').convert('RGBA')
 
-                self._paste(admin_image, (username_w + 13, 5))
+                x += 5 if self.player.is_rwr_dev or self.player.is_contributor else 12
+
+                self._paste(admin_image, (x, 5))
 
         # Rank name
         self._draw_text((9, 22), self.player.rank.name, font=small_font)
@@ -195,7 +210,7 @@ class DynamicPlayerImage(DynamicImage):
         # Database name
         database_name = '{} profile'.format(self.player.database_name)
 
-        database_name_w, database_name_h = self.image_draw.textsize(database_name, font=normal_font)
+        database_name_w, _ = self.image_draw.textsize(database_name, font=normal_font)
 
         self._draw_text((self.image.width - database_name_w - 7, 12), database_name, font=normal_font)
 

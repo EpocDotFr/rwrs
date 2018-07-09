@@ -117,9 +117,10 @@ class Player:
 
     @memoized_property
     def username_display(self):
-        return '{}{}'.format(
+        return '{}{}{}'.format(
             self.username,
-            ' :wave:' if self.is_me else ' :v:️' if self.is_contributor else ' :tools:' if self.is_rwr_dev else ' :scales:' if self.is_ranked_servers_admin else ''
+            ' :wave:' if self.is_me else ' :v:️' if self.is_contributor else ' :tools:' if self.is_rwr_dev else '',
+            ' :scales:' if self.is_ranked_servers_admin else ''
         )
 
     @memoized_property
