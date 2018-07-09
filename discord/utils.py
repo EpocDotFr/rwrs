@@ -24,15 +24,20 @@ def create_player_message_embed(player):
 
     embed.url = player.link_absolute
 
+    description = []
+
     if player.is_me:
-        embed.description = ':wave: Hey, I\'m the creator of RWRS and this bot! Glad to see you\'re using it.'
+        description.append(':wave: Hey, I\'m the creator of RWRS and this bot! Glad to see you\'re using it.')
     elif player.is_contributor:
-        embed.description = ':v: This player contributed in a way or another to RWRS. Thanks to her/him!'
+        description.append(':v: This player contributed in a way or another to RWRS. Thanks to her/him!')
     elif player.is_rwr_dev:
-        embed.description = ':hammer_and_wrench: Say hi to one of the Running With Rifles developers!'
+        description.append(':hammer_and_wrench: Say hi to one of the Running With Rifles developers!')
 
     if player.is_ranked_servers_admin:
-        embed.description += '\n\n:scales: Ranked (official) servers admin'
+        description.append(':scales: Ranked (official) servers admin')
+
+    if description:
+        embed.description = '\n'.join(description)
 
     embed.set_thumbnail(
         url=player.rank.image_absolute
