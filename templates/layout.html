@@ -53,7 +53,7 @@
     {% if not g.UNDER_MAINTENANCE %}
         <div class="top-bar grey pts pbs">
             <div class="w1140p center txtcenter small">
-                <abbr title="Number of people playing RWR multiplayer online" class="help">{{ g.online_players }}</abbr><span class="total-playing-friends is-hidden"> (<abbr title="You have friends playing RWR multiplayer online" class="help txtblue">?</abbr>)</span>/<abbr title="Total number of people playing RWR" class="help">{{ g.total_players }}</abbr> players • <abbr title="Number of active (non-empty) public RWR servers" class="help">{{ g.active_servers }}</abbr>/<abbr title="Total number of public RWR servers" class="help">{{ g.total_servers }}</abbr> servers • <a href="{{ url_for('online_multiplayer_status') }}">Online multiplayer status</a> {% if not g.is_online_multiplayer_ok %}<i class="fa fa-warning txtred" title="Online multiplayer is having issue"></i>{% endif %}
+                <abbr title="Number of people playing RWR multiplayer online" class="help">{{ g.online_players }}</abbr><span class="total-playing-friends is-hidden"> (<abbr title="Number of friends playing RWR multiplayer online" class="help txtblue">?</abbr>)</span>/<abbr title="Total number of people playing RWR" class="help">{{ g.total_players }}</abbr> players • <abbr title="Number of active (non-empty) public RWR servers" class="help">{{ g.active_servers }}</abbr>/<abbr title="Total number of public RWR servers" class="help">{{ g.total_servers }}</abbr> servers • <a href="{{ url_for('online_multiplayer_status') }}">Online multiplayer status</a> {% if not g.is_online_multiplayer_ok %}<i class="fa fa-warning txtred" title="Online multiplayer is having issue"></i>{% endif %}
             </div>
         </div>
     {% endif %}
