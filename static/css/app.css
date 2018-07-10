@@ -395,6 +395,10 @@ label {
 /************************************************************************
  * Top bar */
 
+.top-bar abbr {
+    font-weight: bold;
+}
+
 .top-bar a,
 .top-bar a:visited,
 .top-bar a:hover,
