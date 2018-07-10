@@ -101,7 +101,7 @@ class DynamicServerImage(DynamicImage):
                 self._do_create_body()
         except:
             self.status = 500
-            self.do_create_error('Server error: please try again later.')
+            self.do_create_error('Internal server error: please try again later.')
 
     def do_create_error(self, message):
         self.init(self.error_background_path)
@@ -155,19 +155,25 @@ class DynamicPlayerImage(DynamicImage):
     """A player dynamic image."""
     name = 'player'
 
-    def __init__(self, database, username, player):
+    def __init__(self, database, username):
         self.database = database
         self.username = username
-        self.player = player
 
     def do_create(self):
-        if not self.player:
-            self.do_create_error('Player "{}" wasn\'t found in\nthe {} players list.'.format(self.username, rwr.utils.get_database_name(self.database)))
-        else:
-            self.init(self.background_path)
+        try:
+            self.player = rwr.scraper.search_player_by_username(self.database, self.username)
 
-            self._do_create_header()
-            self._do_create_body()
+            if not self.player:
+                self.status = 404
+                self.do_create_error('Player "{}" wasn\'t found in\nthe {} players list.'.format(self.username, rwr.utils.get_database_name(self.database)))
+            else:
+                self.init(self.background_path)
+
+                self._do_create_header()
+                self._do_create_body()
+        except:
+            self.status = 500
+            self.do_create_error('Internal server error: please try again later.')
 
     def do_create_error(self, message):
         self.init(self.error_background_path)

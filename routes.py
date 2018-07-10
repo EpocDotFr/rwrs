@@ -172,9 +172,7 @@ def player_details(database, username, tab=None):
 
 @app.route('/images/players/<username>-<any({}):database>.png'.format(VALID_DATABASES_STRING_LIST))
 def dynamic_player_image(username, database):
-    player = rwr.scraper.search_player_by_username(database, username)
-
-    return DynamicPlayerImage.create(database, username, player)
+    return DynamicPlayerImage.create(database, username)
 
 
 @app.route('/players/<username>/compare')
