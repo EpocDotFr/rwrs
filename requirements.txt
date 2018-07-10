@@ -1,7 +1,6 @@
 flask
 Flask-Caching
 Flask-SQLAlchemy
-flask_httpauth
 Flask-Migrate
 Flask-Assets
 jsmin

@@ -1,6 +1,5 @@
 from flask_assets import Environment, Bundle
 from bugsnag.flask import handle_exceptions
-from flask_httpauth import HTTPBasicAuth
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_caching import Cache
@@ -56,7 +55,6 @@ if app.config['ENV'] == 'production' and app.config['BUGSNAG_API_KEY']:
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 cache = Cache(app)
-auth = HTTPBasicAuth()
 assets = Environment(app)
 
 assets.cache = 'storage/webassets-cache/'
