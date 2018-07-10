@@ -26,7 +26,7 @@
 {% block content %}
     {% if player.has_stats and player_to_compare_with.has_stats %}
         <form method="get" action="{{ url_for('players_compare', database=request.view_args.get('database'), username=player.username, username_to_compare_with=player_to_compare_with.username) }}" class="txtcenter mts">
-            <input type="text" id="players_compare_date" placeholder="Click to choose a date" readonly required> <button type="submit"><i class="fas fa-calendar"></i> Compare for this date</button>{% if date %} <a href="{{ url_for('players_compare', database=request.view_args.get('database'), username=player.username, username_to_compare_with=player_to_compare_with.username) }}" class="btn">Back to present data</a>{% endif %}
+            <input type="text" id="players_compare_date" placeholder="Click to choose a date" readonly required> <button type="submit"><i class="fas fa-calendar-alt"></i> Compare for this date</button>{% if date %} <a href="{{ url_for('players_compare', database=request.view_args.get('database'), username=player.username, username_to_compare_with=player_to_compare_with.username) }}" class="btn">Back to present data</a>{% endif %}
             <input type="hidden" name="date" value="{{ date.format('YYYY-MM-DD') if date }}" id="players_compare_date_value" required>
         </form>
     {% endif %}
