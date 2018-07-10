@@ -1,7 +1,7 @@
 from flask import g, abort, render_template, make_response
 from werkzeug.exceptions import HTTPException
 from models import RwrRootServer
-from rwrs import app, auth
+from rwrs import app
 import rwr.scraper
 import steam
 import os
@@ -64,29 +64,6 @@ def get_motd():
 @app.before_request
 def get_rwr_events():
     g.RWR_EVENTS = steam.get_group_events(app.config['RWR_STEAM_APP_ID'], is_official=True)
-
-
-@app.before_request
-def check_beta_access():
-    if app.config['BETA']:
-        @auth.login_required
-        def _check_login():
-            return None
-
-        return _check_login()
-
-
-@auth.get_password
-def get_password(username):
-    if username in app.config['BETA_USERS']:
-        return app.config['BETA_USERS'].get(username)
-
-    return None
-
-
-@auth.error_handler
-def auth_error():
-    return http_error_handler(403, without_code=True)
 
 
 @app.errorhandler(401)
