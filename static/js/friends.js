@@ -45,8 +45,7 @@ friendsFeature = {
             return;
         }
 
-        $total_playing_players.children('strong').text(playing_friends);
-        $total_playing_players.children('.friend-label').text(playing_friends > 1 ? 'friends' : 'friend');
+        $total_playing_players.children('abbr').text(playing_friends);
         $total_playing_players.removeClass('is-hidden');
     },
     /**
