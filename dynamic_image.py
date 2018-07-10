@@ -1,6 +1,7 @@
 from PIL import Image, ImageDraw, ImageFont
 from flask import make_response
 from io import BytesIO
+import rwr.scraper
 import rwr.utils
 import helpers
 import arrow
@@ -16,6 +17,8 @@ white = (255, 255, 255)
 
 
 class DynamicImage:
+    status = 200
+
     """A dynamic image."""
     def init(self, background_path):
         self.image = Image.open(background_path).convert('RGBA')
@@ -41,7 +44,7 @@ class DynamicImage:
 
     def send(self):
         """Send the final rendered dynamic image to the client."""
-        response = make_response(self.final_image.getvalue())
+        response = make_response((self.final_image.getvalue(), self.status))
 
         response.headers.set('Content-Type', 'image/png')
         response.last_modified = arrow.now().datetime
@@ -77,21 +80,28 @@ class DynamicServerImage(DynamicImage):
     """A server dynamic image."""
     name = 'server'
 
-    def __init__(self, ip, port, server):
+    def __init__(self, ip, port):
         self.ip = ip
         self.port = port
-        self.server = server
 
     def do_create(self):
-        if not self.server:
-            self.do_create_error('No Running With Rifles server found at {}:{}.'.format(self.ip, self.port))
-        elif not self.server.is_dedicated:
-            self.do_create_error('Server banner is only available for dedicated servers.')
-        else:
-            self.init(self.background_path)
+        try:
+            self.server = rwr.scraper.get_server_by_ip_and_port(self.ip, self.port)
 
-            self._do_create_header()
-            self._do_create_body()
+            if not self.server:
+                self.status = 404
+                self.do_create_error('No Running With Rifles server found at {}:{}.'.format(self.ip, self.port))
+            elif not self.server.is_dedicated:
+                self.status = 403
+                self.do_create_error('Server banner is only available for dedicated servers.')
+            else:
+                self.init(self.background_path)
+
+                self._do_create_header()
+                self._do_create_body()
+        except:
+            self.status = 500
+            self.do_create_error('Internal server error: please try again later.')
 
     def do_create_error(self, message):
         self.init(self.error_background_path)
@@ -145,19 +155,25 @@ class DynamicPlayerImage(DynamicImage):
     """A player dynamic image."""
     name = 'player'
 
-    def __init__(self, database, username, player):
+    def __init__(self, database, username):
         self.database = database
         self.username = username
-        self.player = player
 
     def do_create(self):
-        if not self.player:
-            self.do_create_error('Player "{}" wasn\'t found in\nthe {} players list.'.format(self.username, rwr.utils.get_database_name(self.database)))
-        else:
-            self.init(self.background_path)
+        try:
+            self.player = rwr.scraper.search_player_by_username(self.database, self.username)
 
-            self._do_create_header()
-            self._do_create_body()
+            if not self.player:
+                self.status = 404
+                self.do_create_error('Player "{}" wasn\'t found in\nthe {} players list.'.format(self.username, rwr.utils.get_database_name(self.database)))
+            else:
+                self.init(self.background_path)
+
+                self._do_create_header()
+                self._do_create_body()
+        except:
+            self.status = 500
+            self.do_create_error('Internal server error: please try again later.')
 
     def do_create_error(self, message):
         self.init(self.error_background_path)
@@ -169,21 +185,40 @@ class DynamicPlayerImage(DynamicImage):
         self._draw_text((9, 0), self.player.username, font=big_font)
 
         # Player icon
-        if self.player.is_me or self.player.is_contributor or self.player.is_rwr_dev:
-            username_w, username_h = self.image_draw.textsize(self.player.username, font=big_font)
+        if self.player.is_me or self.player.is_contributor or self.player.is_rwr_dev or self.player.is_ranked_servers_admin:
+            x, _ = self.image_draw.textsize(self.player.username, font=big_font)
 
             if self.player.is_me:
                 epoc_image = Image.open('static/images/epoc.png').convert('RGBA')
 
-                self._paste(epoc_image, (username_w + 8, 2))
+                x += 8
+
+                self._paste(epoc_image, (x, 2))
+
+                x += epoc_image.width
             elif self.player.is_contributor:
                 contributor_image = Image.open('static/images/dynamic_images/contributor.png').convert('RGBA')
 
-                self._paste(contributor_image, (username_w + 12, 5))
+                x += 12
+
+                self._paste(contributor_image, (x, 5))
+
+                x += contributor_image.width
             elif self.player.is_rwr_dev:
                 rwr_icon_image = Image.open('static/images/rwr_icon.png').convert('RGBA')
 
-                self._paste(rwr_icon_image, (username_w + 13, 2))
+                x += 13
+
+                self._paste(rwr_icon_image, (x, 2))
+
+                x += rwr_icon_image.width
+
+            if self.player.is_ranked_servers_admin:
+                admin_image = Image.open('static/images/dynamic_images/admin.png').convert('RGBA')
+
+                x += 5 if self.player.is_rwr_dev or self.player.is_contributor else 12
+
+                self._paste(admin_image, (x, 5))
 
         # Rank name
         self._draw_text((9, 22), self.player.rank.name, font=small_font)
@@ -191,7 +226,7 @@ class DynamicPlayerImage(DynamicImage):
         # Database name
         database_name = '{} profile'.format(self.player.database_name)
 
-        database_name_w, database_name_h = self.image_draw.textsize(database_name, font=normal_font)
+        database_name_w, _ = self.image_draw.textsize(database_name, font=normal_font)
 
         self._draw_text((self.image.width - database_name_w - 7, 12), database_name, font=normal_font)
 

@@ -172,9 +172,7 @@ def player_details(database, username, tab=None):
 
 @app.route('/images/players/<username>-<any({}):database>.png'.format(VALID_DATABASES_STRING_LIST))
 def dynamic_player_image(username, database):
-    player = rwr.scraper.search_player_by_username(database, username)
-
-    return DynamicPlayerImage.create(database, username, player)
+    return DynamicPlayerImage.create(database, username)
 
 
 @app.route('/players/<username>/compare')
@@ -362,9 +360,7 @@ def server_banner(ip, port, slug=None):
 
 @app.route('/images/servers/<ip>-<int:port>.png')
 def dynamic_server_image(ip, port):
-    server = rwr.scraper.get_server_by_ip_and_port(ip, port)
-
-    return DynamicServerImage.create(ip, port, server)
+    return DynamicServerImage.create(ip, port)
 
 
 @app.route('/maps-gallery')

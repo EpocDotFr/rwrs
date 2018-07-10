@@ -35,6 +35,7 @@ app.config['MAPVIEWER_DATA_DIR'] = 'storage/data/mapviewer'
 app.config['UNLOCKABLES_IMAGES_DIR'] = 'static/images/unlockables'
 app.config['UNLOCKABLES_DATA_FILE'] = 'storage/data/unlockables.json'
 app.config['GEOIP_DATABASE_FILE'] = 'storage/data/GeoLite2-City.mmdb'
+app.config['RANKED_SERVERS_ADMINS_FILE'] = 'storage/data/ranked_servers_admins.json'
 app.config['MY_USERNAME'] = 'epocdotfr'
 app.config['CONTRIBUTORS'] = ['street veteran', 'mastock', 'dio', 'jatimatik', 'mellcor', 'teratai', 'harrified', 'mr. bang', 'dogtato']
 app.config['DEVS'] = ['jackmayol', 'pasik', 'pasik2', 'tremozl', 'the soldier'] # ahnold
@@ -69,6 +70,8 @@ assets.register('css_app', Bundle('css/flags.css', 'css/app.css', filters='cssut
 import helpers
 import rwr.constants
 import rwr.utils
+
+app.config['RANKED_SERVERS_ADMINS'] = helpers.load_json(app.config['RANKED_SERVERS_ADMINS_FILE'])
 
 app.jinja_env.filters.update(
     humanize_seconds_to_days=helpers.humanize_seconds_to_days,
