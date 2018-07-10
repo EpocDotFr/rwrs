@@ -2,7 +2,7 @@
 
 {% extends 'layout.html' %}
 
-{% block page_title %}<h1><i class="fa fa-user"></i> Players › {{ macros.database_name() }}{% if args.get('target') %} (highlighting {{ macros.player_name(args.get('target'), raw=True) }}){% endif %}</h1>{% endblock %}
+{% block page_title %}<h1><i class="fas fa-user"></i> Players › {{ macros.database_name() }}{% if args.get('target') %} (highlighting {{ macros.player_name(args.get('target'), raw=True) }}){% endif %}</h1>{% endblock %}
 
 {% block meta_title %}Players › {{ macros.database_name() }}{% if args.get('target') %} (highlighting {{ args.get('target') }}){% endif %}{% endblock %}
 
@@ -39,7 +39,7 @@
                     </select>
                 </label>
 
-                <button type="submit"><i class="fa fa-check"></i> Apply</button>
+                <button type="submit"><i class="fas fa-check"></i> Apply</button>
 
                 {% if args.get('sort') %}
                     <input type="hidden" name="sort" value="{{ args.get('sort') }}">
@@ -93,8 +93,8 @@
                     <td>{{ player.shots_fired_display }}</td>
                     <td>{{ player.throwables_thrown_display }}</td>
                     <td>
-                        <a href="#" title="Add {{ player.username }} to friends list" class="btn add-friend is-hidden"><i class="fa fa-user-plus"></i></a>
-                        <a href="#" title="Remove {{ player.username }} from friends list" class="btn remove-friend is-hidden"><i class="fa fa-user-times"></i></a>
+                        <a href="#" title="Add {{ player.username }} to friends list" class="btn add-friend is-hidden"><i class="fas fa-user-plus"></i></a>
+                        <a href="#" title="Remove {{ player.username }} from friends list" class="btn remove-friend is-hidden"><i class="fas fa-user-times"></i></a>
                     </td>
                 </tr>
             {% else %}

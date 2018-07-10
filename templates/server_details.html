@@ -2,7 +2,7 @@
 
 {% extends 'layout.html' %}
 
-{% block page_title %}<h1><i class="fa fa-server"></i> Servers › {{ macros.server_name(server, link=False) }}</h1>{% endblock %}
+{% block page_title %}<h1><i class="fas fa-server"></i> Servers › {{ macros.server_name(server, link=False) }}</h1>{% endblock %}
 
 {% block meta_title %}Servers › {{ macros.server_name(server, link=False, raw=True) }}{% endblock %}
 
@@ -31,11 +31,11 @@
         {{ macros.server_join_button(server) }}
 
         {% if server.website %}
-            <a href="{{ server.website }}" class="btn"><i class="fa fa-external-link"></i> Server's website</a>
+            <a href="{{ server.website }}" class="btn"><i class="fas fa-external-link"></i> Server's website</a>
         {% endif %}
 
         {% if server.is_dedicated %}
-            <a href="{{ url_for('server_banner', ip=server.ip, port=server.port, slug=server.name_slug) }}" class="btn"><i class="fa fa-picture-o"></i> Server banner</a>
+            <a href="{{ url_for('server_banner', ip=server.ip, port=server.port, slug=server.name_slug) }}" class="btn"><i class="fas fa-image"></i> Server banner</a>
         {% endif %}
     </p>
 
@@ -90,12 +90,12 @@
                             <td>
                                 <div class="actions fr">
                                     {% if server.is_ranked %}
-                                        <a href="{{ url_for('players_list', database=server.database, target=player) }}" title="Highlight in {{ server.database_name }} leaderboard"><i class="fa fa-list-ol"></i></a>
+                                        <a href="{{ url_for('players_list', database=server.database, target=player) }}" title="Highlight in {{ server.database_name }} leaderboard"><i class="fas fa-list-ol"></i></a>
                                     {% endif %}
 
                                     <span class="friends-feature is-hidden">
-                                        <a href="#" title="Add {{ player }} to friends list" class="add-friend is-hidden"><i class="fa fa-user-plus"></i></a>
-                                        <a href="#" title="Remove {{ player }} from friends list" class="remove-friend is-hidden"><i class="fa fa-user-times"></i></a>
+                                        <a href="#" title="Add {{ player }} to friends list" class="add-friend is-hidden"><i class="fas fa-user-plus"></i></a>
+                                        <a href="#" title="Remove {{ player }} from friends list" class="remove-friend is-hidden"><i class="fas fa-user-times"></i></a>
                                     </span>
                                 </div>
 
@@ -113,7 +113,7 @@
             </table>
 
             <p class="txtcenter">
-                <a href="{{ url_for('servers_list') }}" class="btn"><i class="fa fa-chevron-left"></i> Back to the servers list</a>
+                <a href="{{ url_for('servers_list') }}" class="btn"><i class="fas fa-chevron-left"></i> Back to the servers list</a>
             </p>
         </div>
         <div class="one-third pls">

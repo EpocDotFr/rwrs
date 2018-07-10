@@ -8,7 +8,7 @@
         {{ rank_image(player.rank, icon=True) }}
     {%- endif -%}
 
-    {% if show_online and not raw and player.playing_on_server %} <i class="fa fa-circle help txtgreen" title="Playing on {{ player.playing_on_server.name_display }} ({{ player.playing_on_server.summary }})"></i>
+    {% if show_online and not raw and player.playing_on_server %} <i class="fas fa-circle help txtgreen" title="Playing on {{ player.playing_on_server.name_display }} ({{ player.playing_on_server.summary }})"></i>
     {%- endif -%}
 
     {%- if make_link %} <a href="{{ url_for('player_details', database=database, username=username) }}">
@@ -19,10 +19,10 @@
     {%- endif -%}
 
     {% if username_lower == config['MY_USERNAME'] %} <img src="{{ url_for('static', filename='images/epoc.png') }}" title="Hey, I'm the creator of this website! Glad to see you're using it." class="help me">
-    {%- elif username_lower in config['CONTRIBUTORS'] %} <i class="fa fa-hand-peace-o help" title="This player contributed in a way or another to RWRS. Thanks to her/him!"></i>
+    {%- elif username_lower in config['CONTRIBUTORS'] %} <i class="fas fa-hand-peace help" title="This player contributed in a way or another to RWRS. Thanks to her/him!"></i>
     {%- elif username_lower in config['DEVS'] %} <img src="{{ url_for('static', filename='images/rwr_icon.png') }}" title="Say hi to one of the Running With Rifles developers!" class="help">
     {%- endif -%}
-    {%- if username_lower in config['RANKED_SERVERS_ADMINS'] %} <i class="fa fa-balance-scale help" title="Ranked (official) servers admin"></i>
+    {%- if username_lower in config['RANKED_SERVERS_ADMINS'] %} <i class="fas fa-balance-scale help" title="Ranked (official) servers admin"></i>
     {%- endif %}
 {%- endmacro %}
 
@@ -34,7 +34,7 @@
     {% if server.name -%}
         {% if server.is_ranked and not no_icon -%}
             {% if raw %}⭐️ {% else -%}
-                <i class="fa fa-star txtyellow help" title="Ranked {{ server.database_name }} server"></i> {% endif %}
+                <i class="fas fa-star txtyellow help" title="Ranked {{ server.database_name }} server"></i> {% endif %}
         {%- endif %}
         {%- if link and server.website -%}
             <a href="{{ server.website }}">
@@ -62,9 +62,9 @@
 
 {% macro server_join_button(server) -%}
     {% if server.players.free > 0 -%}
-        <a href="{{ server.steam_join_link }}" class="btn"><i class="fa fa-steam"></i> Join</a>
+        <a href="{{ server.steam_join_link }}" class="btn"><i class="fab fa-steam-symbol"></i> Join</a>
     {%- else -%}
-        <a href="#" class="btn disabled" onclick="return false;" title="Server is full"><i class="fa fa-steam"></i> Join</a>
+        <a href="#" class="btn disabled" onclick="return false;" title="Server is full"><i class="fab fa-steam-symbol"></i> Join</a>
     {%- endif %}
 {%- endmacro %}
 
@@ -104,7 +104,7 @@
             {% set title = 'No difference between ' + first.username + ' and ' + second.username %}
         {% endif %}
 
-        <i class="fa fa-{{ icon_class }} {{ color_class }} help" title="{{ title }}"></i>
+        <i class="fas fa-{{ icon_class }} {{ color_class }} help" title="{{ title }}"></i>
     {%- endif %}
 {%- endmacro %}
 
@@ -124,7 +124,7 @@
             {% set title = first.username + ' and ' + second.username + ' have the same rank' %}
         {% endif %}
 
-        <i class="fa fa-{{ icon_class }} {{ color_class }} help" title="{{ title }}"></i>
+        <i class="fas fa-{{ icon_class }} {{ color_class }} help" title="{{ title }}"></i>
     {%- endif %}
 {%- endmacro %}
 
@@ -159,7 +159,7 @@
 {%- endmacro %}
 
 {% macro stats_notice() -%}
-    <div class="small txtcenter">Players stats are updated daily and only concerns ranked servers which are tagged with a <i class="fa fa-star txtyellow"></i><br>Stats history is only recorded for the {{ config['MAX_NUM_OF_PLAYERS_TO_TRACK_STATS_FOR'] }} most experienced players</div>
+    <div class="small txtcenter">Players stats are updated daily and only concerns ranked servers which are tagged with a <i class="fas fa-star txtyellow"></i><br>Stats history is only recorded for the {{ config['MAX_NUM_OF_PLAYERS_TO_TRACK_STATS_FOR'] }} most experienced players</div>
 {%- endmacro %}
 
 {% macro players_list_header_link(label, sort, args, sublabel=None, type='numeric', direction='desc') -%}
@@ -178,7 +178,7 @@
     {%- endif %}
 
     {% if same_sort -%}
-        <i class="fa fa-sort-{{ type }}-{{ direction }}"></i>
+        <i class="fas fa-sort-{{ type }}-{{ direction }}"></i>
     {%- endif -%}
 {%- endmacro %}
 
@@ -187,7 +187,7 @@
         {% set start = players[0].leaderboard_position - (int(args.get('limit')) + 1) %}
 
         {%- if start >= 0 -%}
-            <a href="{{ url_for('players_list', database=request.view_args.get('database'), sort=args.get('sort'), target=args.get('target'), start=start, limit=args.get('limit')) }}" class="btn"><i class="fa fa-angle-double-left"></i> Previous</a>
+            <a href="{{ url_for('players_list', database=request.view_args.get('database'), sort=args.get('sort'), target=args.get('target'), start=start, limit=args.get('limit')) }}" class="btn"><i class="fas fa-angle-double-left"></i> Previous</a>
         {%- endif -%}
     {%- endif -%}
 {%- endmacro %}
@@ -196,7 +196,7 @@
     {%- if players and not args.get('target') -%}
         {% set start = players[-1].leaderboard_position %}
 
-        <a href="{{ url_for('players_list', database=request.view_args.get('database'), sort=args.get('sort'), target=args.get('target'), start=start, limit=args.get('limit')) }}" class="btn">Next <i class="fa fa-angle-double-right"></i></a>
+        <a href="{{ url_for('players_list', database=request.view_args.get('database'), sort=args.get('sort'), target=args.get('target'), start=start, limit=args.get('limit')) }}" class="btn">Next <i class="fas fa-angle-double-right"></i></a>
     {%- endif -%}
 {%- endmacro %}
 

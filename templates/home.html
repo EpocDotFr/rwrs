@@ -20,7 +20,7 @@
 {% block content %}
     <div class="grid has-gutter-xl">
         <div>
-            <h2 class="h1-like txtcenter"><i class="fa fa-user"></i> Looking for a player?</h2>
+            <h2 class="h1-like txtcenter"><i class="fas fa-user"></i> Looking for a player?</h2>
 
             <div class="pbm ptm txtcenter">
                 <form method="get" action="{{ url_for('players_list_without_db') }}" itemprop="potentialAction" itemscope itemtype="http://schema.org/SearchAction">
@@ -29,7 +29,7 @@
                     <input type="text" name="username" placeholder="Type a player name" itemprop="query-input" required>
                     <label><input type="radio" name="database" value="invasion" checked required> {{ macros.database_name('invasion') }}</label>
                     <label><input type="radio" name="database" value="pacific" required> {{ macros.database_name('pacific') }}</label>
-                    <button type="submit"><i class="fa fa-search"></i> Find</button>
+                    <button type="submit"><i class="fas fa-search"></i> Find</button>
                 </form>
             </div>
 
@@ -49,9 +49,9 @@
             </div>
         </div>
         <div>
-            <h2 class="h1-like txtcenter"><i class="fa fa-server"></i> Looking for a server?</h2>
+            <h2 class="h1-like txtcenter"><i class="fas fa-server"></i> Looking for a server?</h2>
 
-            <p class="mtn pbm ptm txtcenter"><a href="{{ url_for('servers_list') }}" class="btn"><i class="fa fa-chevron-right"></i> Go to the servers list</a></p>
+            <p class="mtn pbm ptm txtcenter"><a href="{{ url_for('servers_list') }}" class="btn"><i class="fas fa-chevron-right"></i> Go to the servers list</a></p>
 
             <fieldset class="man pan">
                 <legend class="mls">Online and active servers (past week)</legend>

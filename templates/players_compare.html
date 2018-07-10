@@ -2,7 +2,7 @@
 
 {% extends 'layout.html' %}
 
-{% block page_title %}<h1><i class="fa fa-user"></i> Players › {{ player.database_name }} › {{ player.username }} vs {{ player_to_compare_with.username }}</h1>{% endblock %}
+{% block page_title %}<h1><i class="fas fa-user"></i> Players › {{ player.database_name }} › {{ player.username }} vs {{ player_to_compare_with.username }}</h1>{% endblock %}
 
 {% block meta_title %}Players › {{ player.database_name }} › {{ player.username }} vs {{ player_to_compare_with.username }}{% endblock %}
 
@@ -26,7 +26,7 @@
 {% block content %}
     {% if player.has_stats and player_to_compare_with.has_stats %}
         <form method="get" action="{{ url_for('players_compare', database=request.view_args.get('database'), username=player.username, username_to_compare_with=player_to_compare_with.username) }}" class="txtcenter mts">
-            <input type="text" id="players_compare_date" placeholder="Click to choose a date" readonly required> <button type="submit"><i class="fa fa-calendar"></i> Compare for this date</button>{% if date %} <a href="{{ url_for('players_compare', database=request.view_args.get('database'), username=player.username, username_to_compare_with=player_to_compare_with.username) }}" class="btn">Back to present data</a>{% endif %}
+            <input type="text" id="players_compare_date" placeholder="Click to choose a date" readonly required> <button type="submit"><i class="fas fa-calendar"></i> Compare for this date</button>{% if date %} <a href="{{ url_for('players_compare', database=request.view_args.get('database'), username=player.username, username_to_compare_with=player_to_compare_with.username) }}" class="btn">Back to present data</a>{% endif %}
             <input type="hidden" name="date" value="{{ date.format('YYYY-MM-DD') if date }}" id="players_compare_date_value" required>
         </form>
     {% endif %}
@@ -36,14 +36,14 @@
             <tr>
                 <th class="w200p"></th>
                 <th class="txtcenter no-bold" colspan="2"><span class="fl">
-                    <a href="{{ url_for('players_list', database=request.view_args.get('database'), target=player.username) }}" class="btn" title="Highlight {{ player.username }} in {{ player.database_name }} leaderboard"><i class="fa fa-list-ol"></i></a>
-                    <a href="#" class="btn add-friend is-hidden" title="Add {{ player.username }} to friends list" data-username="{{ player.username }}"><i class="fa fa-user-plus"></i></a>
-                    <a href="#" class="btn remove-friend is-hidden" title="Remove {{ player.username }} from friends list" data-username="{{ player.username }}"><i class="fa fa-user-times"></i></a></span> {{ macros.player_name(player, link=True, show_online=True) }}
+                    <a href="{{ url_for('players_list', database=request.view_args.get('database'), target=player.username) }}" class="btn" title="Highlight {{ player.username }} in {{ player.database_name }} leaderboard"><i class="fas fa-list-ol"></i></a>
+                    <a href="#" class="btn add-friend is-hidden" title="Add {{ player.username }} to friends list" data-username="{{ player.username }}"><i class="fas fa-user-plus"></i></a>
+                    <a href="#" class="btn remove-friend is-hidden" title="Remove {{ player.username }} from friends list" data-username="{{ player.username }}"><i class="fas fa-user-times"></i></a></span> {{ macros.player_name(player, link=True, show_online=True) }}
                 </th>
                 <th class="txtcenter no-bold" colspan="2">{{ macros.player_name(player_to_compare_with, link=True, show_online=True) }} <span class="fr">
-                    <a href="{{ url_for('players_list', database=request.view_args.get('database'), target=player_to_compare_with.username) }}" class="btn" title="Highlight {{ player_to_compare_with.username }} in {{ player_to_compare_with.database_name }} leaderboard"><i class="fa fa-list-ol"></i></a>
-                    <a href="#" class="btn add-friend is-hidden" title="Add {{ player_to_compare_with.username }} to friends list" data-username="{{ player_to_compare_with.username }}"><i class="fa fa-user-plus"></i></a>
-                    <a href="#" class="btn remove-friend is-hidden" title="Remove {{ player_to_compare_with.username }} from friends list" data-username="{{ player_to_compare_with.username }}"><i class="fa fa-user-times"></i></a></span>
+                    <a href="{{ url_for('players_list', database=request.view_args.get('database'), target=player_to_compare_with.username) }}" class="btn" title="Highlight {{ player_to_compare_with.username }} in {{ player_to_compare_with.database_name }} leaderboard"><i class="fas fa-list-ol"></i></a>
+                    <a href="#" class="btn add-friend is-hidden" title="Add {{ player_to_compare_with.username }} to friends list" data-username="{{ player_to_compare_with.username }}"><i class="fas fa-user-plus"></i></a>
+                    <a href="#" class="btn remove-friend is-hidden" title="Remove {{ player_to_compare_with.username }} from friends list" data-username="{{ player_to_compare_with.username }}"><i class="fas fa-user-times"></i></a></span>
                 </th>
             </tr>
         </thead>
@@ -157,7 +157,7 @@
     </table>
 
     <p class="txtcenter mbs">
-        <a href="{{ url_for('players_list', database=request.view_args.get('database')) }}" class="btn"><i class="fa fa-chevron-left"></i> Back to the {{ player.database_name }} players list</a>
+        <a href="{{ url_for('players_list', database=request.view_args.get('database')) }}" class="btn"><i class="fas fa-chevron-left"></i> Back to the {{ player.database_name }} players list</a>
     </p>
 
     {{ macros.stats_notice() }}
