@@ -91,7 +91,7 @@ class RwrsBotDiscoPlugin(Plugin):
             else:
                 os.remove('maintenance')
 
-            event.msg.reply('Maintenance mode disabled.')
+                event.msg.reply('Maintenance mode disabled.')
 
     @Plugin.command('motd', parser=True)
     @Plugin.parser.add_argument('action', choices=['set', 'remove'])
