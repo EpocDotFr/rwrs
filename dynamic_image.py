@@ -1,6 +1,7 @@
 from PIL import Image, ImageDraw, ImageFont
 from flask import make_response
 from io import BytesIO
+import rwr.scraper
 import rwr.utils
 import helpers
 import arrow
@@ -16,6 +17,8 @@ white = (255, 255, 255)
 
 
 class DynamicImage:
+    status = 200
+
     """A dynamic image."""
     def init(self, background_path):
         self.image = Image.open(background_path).convert('RGBA')
@@ -41,7 +44,7 @@ class DynamicImage:
 
     def send(self):
         """Send the final rendered dynamic image to the client."""
-        response = make_response(self.final_image.getvalue())
+        response = make_response((self.final_image.getvalue(), self.status))
 
         response.headers.set('Content-Type', 'image/png')
         response.last_modified = arrow.now().datetime
@@ -77,21 +80,28 @@ class DynamicServerImage(DynamicImage):
     """A server dynamic image."""
     name = 'server'
 
-    def __init__(self, ip, port, server):
+    def __init__(self, ip, port):
         self.ip = ip
         self.port = port
-        self.server = server
 
     def do_create(self):
-        if not self.server:
-            self.do_create_error('No Running With Rifles server found at {}:{}.'.format(self.ip, self.port))
-        elif not self.server.is_dedicated:
-            self.do_create_error('Server banner is only available for dedicated servers.')
-        else:
-            self.init(self.background_path)
+        try:
+            self.server = rwr.scraper.get_server_by_ip_and_port(self.ip, self.port)
 
-            self._do_create_header()
-            self._do_create_body()
+            if not self.server:
+                self.status = 404
+                self.do_create_error('No Running With Rifles server found at {}:{}.'.format(self.ip, self.port))
+            elif not self.server.is_dedicated:
+                self.status = 403
+                self.do_create_error('Server banner is only available for dedicated servers.')
+            else:
+                self.init(self.background_path)
+
+                self._do_create_header()
+                self._do_create_body()
+        except:
+            self.status = 500
+            self.do_create_error('Server error: please try again later.')
 
     def do_create_error(self, message):
         self.init(self.error_background_path)

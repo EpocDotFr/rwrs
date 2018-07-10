@@ -362,6 +362,4 @@ def server_banner(ip, port, slug=None):
 
 @app.route('/images/servers/<ip>-<int:port>.png')
 def dynamic_server_image(ip, port):
-    server = rwr.scraper.get_server_by_ip_and_port(ip, port)
-
-    return DynamicServerImage.create(ip, port, server)
+    return DynamicServerImage.create(ip, port)
