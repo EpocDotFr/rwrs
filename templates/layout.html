@@ -10,6 +10,7 @@
     <meta name="description" content="{% block meta_description %}Players statistics, servers list and more for the Running With Rifles (RWR) game and its Pacific DLC.{% endblock %}">
 
     <meta property="og:type" content="website">
+    {% if canonical_url %}<meta property="og:url" content="{{ canonical_url }}">{% endif %}
     <meta property="og:site_name" content="Running With Rifles Stats (RWRS)">
     <meta property="og:title" content="{{ self.meta_title() }}">
     <meta property="og:description" content="{{ self.meta_description() }}">
