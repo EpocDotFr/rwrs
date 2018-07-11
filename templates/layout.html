@@ -68,6 +68,13 @@
                             <button type="submit"><i class="fas fa-search"></i></button>
                         </form>
                     </div>
+                    <div class="txtright">
+                        {%- if current_user.is_authenticated -%}
+                            <i class="fas fa-sign-out-alt"></i> <a href="{{ url_for('sign_out') }}">Sign out</a>
+                        {%- else -%}
+                            <i class="fas fa-sign-in-alt"></i> <a href="{{ url_for('sign_in') }}">Sign in</a>
+                        {%- endif -%}
+                    </div>
                 </div>
             </div>
         </div>

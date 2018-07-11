@@ -364,18 +364,18 @@ def dynamic_server_image(ip, port):
     return DynamicServerImage.create(ip, port)
 
 
-@app.route('/login')
-def login():
+@app.route('/sign-in')
+def sign_in():
     # TODO login_user
 
     return render_template(
-        'users/login.html'
+        'users/sign_in.html'
     )
 
 
-@app.route('/logout')
+@app.route('/sign-out')
 @login_required
-def logout():
+def sign_out():
     logout_user()
 
     return redirect(url_for('home'))
