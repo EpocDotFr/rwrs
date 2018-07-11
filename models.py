@@ -372,9 +372,6 @@ class User(db.Model):
 
     rwr_accounts = db.relationship('RwrAccount', backref='user', lazy=True)
 
-    def get_by_openid(self, openid):
-        return User.query.filter(User.openid == openid).first()
-
     def __repr__(self):
         return 'User:{}'.format(self.id)
 
