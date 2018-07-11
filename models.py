@@ -360,6 +360,22 @@ class Variable(db.Model):
         return 'Variable:{}'.format(self.id)
 
 
+class User(db.Model):
+    __tablename__ = 'users'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+
+    steam_id = db.Column(db.String(40), nullable=False, unique=True)
+    steam_username = db.Column(db.String(80), nullable=False)
+    created_at = db.Column(ArrowType, default=arrow.utcnow().floor('minute'), nullable=False)
+    updated_at = db.Column(ArrowType, default=arrow.utcnow().floor('minute'), nullable=False)
+
+    rwr_accounts = db.relationship('RwrAccount', backref='user', lazy=True)
+
+    def __repr__(self):
+        return 'User:{}'.format(self.id)
+
+
 class RwrAccountType(Enum):
     INVASION = 'INVASION'
     PACIFIC = 'PACIFIC'
@@ -375,6 +391,8 @@ class RwrAccount(db.Model):
     username = db.Column(db.String(16), nullable=False)
     created_at = db.Column(ArrowType, default=arrow.utcnow().floor('minute'), nullable=False)
     updated_at = db.Column(ArrowType, default=arrow.utcnow().floor('minute'), nullable=False)
+
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
     @memoized_property
     def stats(self):
