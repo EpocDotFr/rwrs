@@ -26,34 +26,40 @@
                 <legend class="mls">Total and online players (past week)</legend>
                 <p id="players-legend" class="small txtcenter"></p>
                 <div id="players-chart" class="chart"></div>
-            </fieldset>
 
-            <div class="grid small mts">
-                <div class="txtcenter">
-                    <span class="txtgraphgreen">Total players peak</span> <strong>{{ peaks.total_players_peak_count }}</strong> ({{ peaks.total_players_peak_date }})
+                <div class="grid small mbs">
+                    <div class="txtcenter">
+                        <span class="txtgraphgreen">Total players peak</span> <strong>{{ peaks.total_players_peak_count }}</strong> ({{ peaks.total_players_peak_date }})
+                    </div>
+                    <div class="txtcenter">
+                        <span class="txtgraphblue">Online players peak</span> <strong>{{ peaks.online_players_peak_count }}</strong> ({{ peaks.online_players_peak_date }})
+                    </div>
                 </div>
-                <div class="txtcenter">
-                    <span class="txtgraphblue">Online players peak</span> <strong>{{ peaks.online_players_peak_count }}</strong> ({{ peaks.online_players_peak_date }})
-                </div>
-            </div>
+            </fieldset>
         </div>
         <div>
             <fieldset class="man pan">
                 <legend class="mls">Online and active servers (past week)</legend>
                 <p id="servers-chart-legend" class="small txtcenter"></p>
                 <div id="servers-chart" class="chart"></div>
+
+                <div class="grid small mbs">
+                    <div class="txtcenter">
+                        <span class="txtgraphgreen">Online servers peak</span> <strong>{{ peaks.online_servers_peak_count }}</strong> ({{ peaks.online_servers_peak_date }})
+                    </div>
+                    <div class="txtcenter">
+                        <span class="txtgraphblue">Active servers peak</span> <strong>{{ peaks.active_servers_peak_count }}</strong> ({{ peaks.active_servers_peak_date }})
+                    </div>
+                </div>
             </fieldset>
-
-
-            <div class="grid small mts">
-                <div class="txtcenter">
-                    <span class="txtgraphgreen">Online servers peak</span> <strong>{{ peaks.online_servers_peak_count }}</strong> ({{ peaks.online_servers_peak_date }})
-                </div>
-                <div class="txtcenter">
-                    <span class="txtgraphblue">Active servers peak</span> <strong>{{ peaks.active_servers_peak_count }}</strong> ({{ peaks.active_servers_peak_date }})
-                </div>
-            </div>
         </div>
+    </div>
+
+    <div class="txtcenter mtm">
+        <figure class="inbl mtn">
+            <img src="{{ url_for('static', filename='images/frozen_canyon_by_thanshuhai.png') }}" class="bordered" title="Greenbelts having a tough day fighting Brownpant's Darkcat">
+            <figcaption class="small txtright">Fan art by <a href="https://www.deviantart.com/thanshuhai">thanshuhai</a></figcaption>
+        </figure>
     </div>
 
     <script>

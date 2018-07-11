@@ -56,6 +56,10 @@ h2, .h2-like {
     white-space: nowrap;
 }
 
+img.bordered {
+    border: .2rem solid #333;
+}
+
 /************************************************************************
  * Player stats page */
 
