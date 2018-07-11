@@ -1,6 +1,6 @@
 {% extends 'layout.html' %}
 
-{% block page_title %}<h1><i class="fa fa-heartbeat"></i> Online multiplayer status</h1>{% endblock %}
+{% block page_title %}<h1><i class="fas fa-heartbeat"></i> Online multiplayer status</h1>{% endblock %}
 
 {% block meta_title %}Online multiplayer status{% endblock %}
 
@@ -15,9 +15,9 @@
 
 {% block content %}
     {% if is_everything_ok %}
-        <p class="alert success pas mtm mbm"><i class="fa fa-check"></i> Everything is working fine. Go play with others!</p>
+        <p class="alert success pas mtm mbm"><i class="fas fa-check"></i> Everything is working fine. Go play with others!</p>
     {% else %}
-        <p class="alert error pas mtm mbm"><i class="fa fa-warning"></i> Looks like online multiplayer is encountering issues. For updates on the situation, head over the <a href="https://twitter.com/osumiagames">RWR Twitter account</a> or the <a href="https://discord.gg/runningwithrifles">RWR Discord server</a>.</p>
+        <p class="alert error pas mtm mbm"><i class="fas fa-exclamation-triangle "></i> Looks like online multiplayer is encountering issues. For updates on the situation, head over the <a href="https://twitter.com/osumiagames">RWR Twitter account</a> or the <a href="https://discord.gg/runningwithrifles">RWR Discord server</a>.</p>
     {% endif %}
 
     <p class="small txtcenter txtgrey mbm mtn">Statuses are checked every {{ config['ROOT_RWR_SERVERS_CHECK_INTERVAL'] }} minutes.{% if next_root_rwr_servers_check %} Next check {{ next_root_rwr_servers_check.humanize() }}.{% endif %}</p>
@@ -29,13 +29,13 @@
                     <table class="servers-list mbn">
                         <thead>
                             <tr>
-                                <th><i class="fa fa-{{ group.status_icon }}-circle fa-fw txt{{ group.status_color }} help" title="{{ group.status_text }}"></i> {{ group.label }} <span class="fr"><i class="fa fa-{{ 'minus' if not group.is_everything_ok else 'plus'}}-square toggle-icon" title="Show / hide details"></i></span></th>
+                                <th><i class="fas fa-{{ group.status_icon }}-circle fa-fw txt{{ group.status_color }} help" title="{{ group.status_text }}"></i> {{ group.label }} <span class="fr"><i class="fas fa-{{ 'minus' if not group.is_everything_ok else 'plus'}}-square toggle-icon" title="Show / hide details"></i></span></th>
                             </tr>
                         </thead>
                         <tbody class="{{ 'has-outages' if not group.is_everything_ok }}">
                             {% for server in group.servers %}
                                 <tr>
-                                    <td><i class="fa fa-{{ server.status_icon }}-circle fa-fw txt{{ server.status_color }} help" title="{{ server.status_text }}"></i> {{ server.location }}</td>
+                                    <td><i class="fas fa-{{ server.status_icon }}-circle fa-fw txt{{ server.status_color }} help" title="{{ server.status_text }}"></i> {{ server.location }}</td>
                                 </tr>
                             {% endfor %}
                         </tbody>
