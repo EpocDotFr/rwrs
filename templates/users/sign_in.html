@@ -5,10 +5,10 @@
 {% block meta_title %}Sign in{% endblock %}
 
 {% block content %}
-    <p class="txtcenter"><strong>Sign in into RWRS and access additional features.</strong></p>
+    <p class="txtcenter mtm mbm"><strong>Sign in into RWRS and access additional features.</strong></p>
     <p class="txtcenter">RWRS will not be aware of your password at all.<br>Cookies will be used to keep your session active.<br>Data needed for the proper RWRS functioning will be fetch from your Steam account.</p>
 
-    <p class="txtcenter mtm mbm"><a href="#"><img src="{{ url_for('static', filename='images/steam_openid.png') }}"></a></p>
+    <p class="txtcenter mtm"><a href="#"><img src="{{ url_for('static', filename='images/steam_openid.png') }}"></a></p>
 
     <script>
         friendsFeature.all_players_with_servers_details = {{ g.all_players_with_servers_details|tojson }};
