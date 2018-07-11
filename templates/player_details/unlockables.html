@@ -32,11 +32,11 @@
         </tr>
     </table>
 {% else %}
-    <p class="alert info pas"><i class="fa fa-wrench"></i> Sorry, this content isn't available for the moment as it is under full redesign.</p>
+    <p class="alert info pas"><i class="fas fa-wrench"></i> Sorry, this content isn't available for the moment as it is under full redesign.</p>
 {% endif %}
 
 <p class="txtcenter mbs">
-    <a href="{{ url_for('players_list', database=request.view_args.get('database')) }}" class="btn"><i class="fa fa-chevron-left"></i> Back to the {{ player.database_name }} players list</a>
+    <a href="{{ url_for('players_list', database=request.view_args.get('database')) }}" class="btn"><i class="fas fa-chevron-left"></i> Back to the {{ player.database_name }} players list</a>
 </p>
 
 {{ macros.stats_notice() }}

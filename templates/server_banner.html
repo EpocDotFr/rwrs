@@ -1,8 +1,6 @@
-{% import 'macros.html' as macros %}
-
 {% extends 'layout.html' %}
 
-{% block page_title %}<h1><i class="fa fa-server"></i> Servers › {{ macros.server_name(server, link=False) }} › Banner</h1>{% endblock %}
+{% block page_title %}<h1><i class="fas fa-server"></i> Servers › {{ macros.server_name(server, link=False) }} › Banner</h1>{% endblock %}
 
 {% block meta_title %}Servers › {{ macros.server_name(server, link=False, raw=True) }} › Banner{% endblock %}
 
@@ -44,7 +42,7 @@
     </div>
 
     <p class="txtcenter">
-        <a href="{{ server.link }}" class="btn"><i class="fa fa-chevron-left"></i> Back to the server details</a>
+        <a href="{{ server.link }}" class="btn"><i class="fas fa-chevron-left"></i> Back to the server details</a>
     </p>
 
     <script>

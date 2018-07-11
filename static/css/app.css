@@ -56,6 +56,10 @@ h2, .h2-like {
     white-space: nowrap;
 }
 
+img.bordered {
+    border: .2rem solid #333;
+}
+
 /************************************************************************
  * Player stats page */
 
@@ -424,6 +428,20 @@ label {
     background-color: #7da109;
     color: #FFF;
     border-bottom: 0.1rem solid #9cc321;
+}
+
+.top-bar.main .content {
+    width: 100%;
+    display: table;
+}
+
+.top-bar.main .content > * {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.top-bar.main abbr {
+    font-weight: bold;
 }
 
 /************************************************************************
