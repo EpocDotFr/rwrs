@@ -1,8 +1,6 @@
-{% import 'macros.html' as macros %}
-
 {% extends 'layout.html' %}
 
-{% block page_title %}<h1><i class="fa fa-users"></i> My friends</h1>{% endblock %}
+{% block page_title %}<h1><i class="fas fa-users"></i> My friends</h1>{% endblock %}
 
 {% block meta_title %}My friends{% endblock %}
 
@@ -16,11 +14,11 @@
 
 {% block content %}
     <div id="app" v-cloak>
-        <div class="mbs">
+        <div class="mbs mts">
             <fieldset class="man">
-                <legend><i class="fa fa-cogs"></i> Actions</legend>
+                <legend><i class="fas fa-cogs"></i> Actions</legend>
                 <form class="inbl fl" v-on:submit.prevent="submitAddFriendForm()">
-                    <input type="text" v-model.trim="friend_to_add" placeholder="Type a player name" required> <button type="submit"><i class="fa fa-user-plus"></i> Add new friend</button>
+                    <input type="text" v-model.trim="friend_to_add" placeholder="Type a player name" required> <button type="submit"><i class="fas fa-user-plus"></i> Add new friend</button>
                 </form>
 
                 <div class="inbl fr">
@@ -50,15 +48,15 @@
                         <a :href="'/players/' + friend.playing_on_server.database + '/' + friend.username" v-if="friend.playing_on_server && friend.playing_on_server.is_ranked">${ friend.username }</a>
                         <template v-if="!friend.playing_on_server || !friend.playing_on_server.is_ranked">${ friend.username }</template>
                         <img src="{{ url_for('static', filename='images/epoc.png') }}" title="Hey, I'm the creator of this website! Glad to see you're using it." class="help me" v-if="friend.username.toLowerCase() == my_username">
-                        <i class="fa fa-hand-peace-o help" title="This player contributed in a way or another to RWRS. Thanks to her/him!" v-else-if="inArray(friend.username.toLowerCase(), contributors)"></i>
+                        <i class="fas fa-hand-peace help" title="This player contributed in a way or another to RWRS. Thanks to her/him!" v-else-if="inArray(friend.username.toLowerCase(), contributors)"></i>
                         <img src="{{ url_for('static', filename='images/rwr_icon.png') }}" title="Say hi to one of the Running With Rifles developers!" class="help" v-else-if="inArray(friend.username.toLowerCase(), devs)">
-                        <i class="fa fa-balance-scale help" title="This player is admin on ranked (official) RWR servers" v-if="inArray(friend.username.toLowerCase(), rankedServersAdmins)"></i>
+                        <i class="fas fa-balance-scale help" title="This player is admin on ranked (official) RWR servers" v-if="inArray(friend.username.toLowerCase(), rankedServersAdmins)"></i>
                     </td>
                     <td>
                         <template v-if="friend.playing_on_server">
-                            <a :href="friend.playing_on_server.players.free > 0 ? friend.playing_on_server.steam_join_link : '#'" :class="['btn', friend.playing_on_server.players.free == 0 ? 'disabled' : '']" :title="friend.playing_on_server.players.free == 0 ? 'Server is full' : ''" v-if="friend.playing_on_server"><i class="fa fa-steam"></i> Join</a>
+                            <a :href="friend.playing_on_server.players.free > 0 ? friend.playing_on_server.steam_join_link : '#'" :class="['btn', friend.playing_on_server.players.free == 0 ? 'disabled' : '']" :title="friend.playing_on_server.players.free == 0 ? 'Server is full' : ''" v-if="friend.playing_on_server"><i class="fab fa-steam-symbol"></i> Join</a>
                             <i :class="['flag', 'flag-' + friend.playing_on_server.location.country_code]" :title="(friend.playing_on_server.location.city_name ? friend.playing_on_server.location.city_name + ', ' : '') + friend.playing_on_server.location.country_name" v-if="friend.playing_on_server.location.country_code"></i>
-                            <i class="fa fa-star txtyellow help" :title="'Ranked ' + friend.playing_on_server.database_name + ' server'" v-if="friend.playing_on_server.is_ranked"></i>
+                            <i class="fas fa-star txtyellow help" :title="'Ranked ' + friend.playing_on_server.database_name + ' server'" v-if="friend.playing_on_server.is_ranked"></i>
                             <a :href="friend.playing_on_server.link">${ friend.playing_on_server.name }</a>
                         </template>
                     </td>
@@ -90,8 +88,8 @@
                         </template>
                     </td>
                     <td class="txtcenter">
-                        <a :href="'/players/' + friend.playing_on_server.database + '?target=' + friend.username" class="btn" :title="'Highlight in ' + friend.playing_on_server.database_name + ' leaderboard'" v-if="friend.playing_on_server && friend.playing_on_server.is_ranked"><i class="fa fa-list-ol"></i></a>
-                        <a href="#" class="btn" @click.prevent="removeFriend(friend.username)" :title="'Remove ' + friend.username + ' from friends list'"><i class="fa fa-user-times"></i></a>
+                        <a :href="'/players/' + friend.playing_on_server.database + '?target=' + friend.username" class="btn" :title="'Highlight in ' + friend.playing_on_server.database_name + ' leaderboard'" v-if="friend.playing_on_server && friend.playing_on_server.is_ranked"><i class="fas fa-list-ol"></i></a>
+                        <a href="#" class="btn" @click.prevent="removeFriend(friend.username)" :title="'Remove ' + friend.username + ' from friends list'"><i class="fas fa-user-times"></i></a>
                     </td>
                 </tr>
                 <tr v-show="friendsEnriched.length == 0">

@@ -1,7 +1,7 @@
 <div class="grid mbs w1140p center">
     <div class="one-fifth txtleft">
         {% if stats.has_prev %}
-            <a href="{{ url_for('player_details', database=request.view_args.get('database'), username=player.username, tab='stats-history', page=stats.prev_num, limit=request.args.get('limit')) }}" class="btn"><i class="fa fa-angle-double-left"></i> Previous</a>
+            <a href="{{ url_for('player_details', database=request.view_args.get('database'), username=player.username, tab='stats-history', page=stats.prev_num, limit=request.args.get('limit')) }}" class="btn"><i class="fas fa-angle-double-left"></i> Previous</a>
         {% endif %}
     </div>
     <div class="three-fifth">
@@ -15,12 +15,12 @@
                 </select>
             </label>
 
-            <button type="submit"><i class="fa fa-check"></i> Apply</button>
+            <button type="submit"><i class="fas fa-check"></i> Apply</button>
         </form>
     </div>
     <div class="one-fifth txtright">
         {% if stats.has_next %}
-            <a href="{{ url_for('player_details', database=request.view_args.get('database'), username=player.username, tab='stats-history', page=stats.next_num, limit=request.args.get('limit')) }}" class="btn">Next <i class="fa fa-angle-double-right"></i></a>
+            <a href="{{ url_for('player_details', database=request.view_args.get('database'), username=player.username, tab='stats-history', page=stats.next_num, limit=request.args.get('limit')) }}" class="btn">Next <i class="fas fa-angle-double-right"></i></a>
         {% endif %}
     </div>
 </div>
@@ -79,7 +79,7 @@
 <div class="grid w1140p center mts">
     <div class="one-fifth txtleft">
         {% if stats.has_prev %}
-            <a href="{{ url_for('player_details', database=request.view_args.get('database'), username=player.username, tab='stats-history', page=stats.prev_num, limit=request.args.get('limit')) }}" class="btn"><i class="fa fa-angle-double-left"></i> Previous</a>
+            <a href="{{ url_for('player_details', database=request.view_args.get('database'), username=player.username, tab='stats-history', page=stats.prev_num, limit=request.args.get('limit')) }}" class="btn"><i class="fas fa-angle-double-left"></i> Previous</a>
         {% endif %}
     </div>
     <div class="three-fifth">
@@ -89,13 +89,13 @@
     </div>
     <div class="one-fifth txtright">
         {% if stats.has_next %}
-            <a href="{{ url_for('player_details', database=request.view_args.get('database'), username=player.username, tab='stats-history', page=stats.next_num, limit=request.args.get('limit')) }}" class="btn">Next <i class="fa fa-angle-double-right"></i></a>
+            <a href="{{ url_for('player_details', database=request.view_args.get('database'), username=player.username, tab='stats-history', page=stats.next_num, limit=request.args.get('limit')) }}" class="btn">Next <i class="fas fa-angle-double-right"></i></a>
         {% endif %}
     </div>
 </div>
 
 <p class="txtcenter mbs">
-    <a href="{{ url_for('players_list', database=request.view_args.get('database')) }}" class="btn"><i class="fa fa-chevron-left"></i> Back to the {{ player.database_name }} players list</a>
+    <a href="{{ url_for('players_list', database=request.view_args.get('database')) }}" class="btn"><i class="fas fa-chevron-left"></i> Back to the {{ player.database_name }} players list</a>
 </p>
 
 {{ macros.stats_notice() }}

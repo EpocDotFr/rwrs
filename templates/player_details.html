@@ -1,8 +1,6 @@
-{% import 'macros.html' as macros %}
-
 {% extends 'layout.html' %}
 
-{% block page_title %}<h1><i class="fa fa-user"></i> Players › {{ player.database_name }} › {{ macros.player_name(player) }}{% if request.view_args.get('tab') == 'unlockables' %} › Unlockables{% elif request.view_args.get('tab') == 'stats-history' %} › Statistics history{% elif request.view_args.get('tab') == 'evolution' %} › Evolution{% elif request.view_args.get('tab') == 'signature' %} › Signature{% endif %}</h1>{% endblock %}
+{% block page_title %}<h1><i class="fas fa-user"></i> Players › {{ player.database_name }} › {{ macros.player_name(player) }}{% if request.view_args.get('tab') == 'unlockables' %} › Unlockables{% elif request.view_args.get('tab') == 'stats-history' %} › Statistics history{% elif request.view_args.get('tab') == 'evolution' %} › Evolution{% elif request.view_args.get('tab') == 'signature' %} › Signature{% endif %}</h1>{% endblock %}
 
 {% block meta_title %}Players › {{ player.database_name }} › {{ player.username }}{% if request.view_args.get('tab') == 'unlockables' %} › Unlockables{% elif request.view_args.get('tab') == 'stats-history' %} › Statistics history{% elif request.view_args.get('tab') == 'evolution' %} › Evolution{% elif request.view_args.get('tab') == 'signature' %} › Signature{% endif %}{% endblock %}
 
@@ -48,13 +46,13 @@
 {% block content %}
     <div class="mts w1140p center">
         <form method="get" action="{{ url_for('players_compare', database=request.view_args.get('database'), username=player.username) }}" class="inbl fl">
-            <input type="text" name="username_to_compare_with" placeholder="Type a player name" required> <button type="submit"><i class="fa fa-files-o"></i> Compare players</button>
+            <input type="text" name="username_to_compare_with" placeholder="Type a player name" required> <button type="submit"><i class="fas fa-copy"></i> Compare players</button>
         </form>
 
         <div class="inbl fr">
-            <a href="{{ url_for('players_list', database=request.view_args.get('database'), target=player.username) }}" class="btn"><i class="fa fa-list-ol"></i> Highlight in {{ player.database_name }} leaderboard</a>
-            <a href="#" class="btn add-friend is-hidden" data-username="{{ player.username }}"><i class="fa fa-user-plus"></i> Add to friends list</a>
-            <a href="#" class="btn remove-friend is-hidden" data-username="{{ player.username }}"><i class="fa fa-user-times"></i> Remove from friends list</a>
+            <a href="{{ url_for('players_list', database=request.view_args.get('database'), target=player.username) }}" class="btn"><i class="fas fa-list-ol"></i> Highlight in {{ player.database_name }} leaderboard</a>
+            <a href="#" class="btn add-friend is-hidden" data-username="{{ player.username }}"><i class="fas fa-user-plus"></i> Add to friends list</a>
+            <a href="#" class="btn remove-friend is-hidden" data-username="{{ player.username }}"><i class="fas fa-user-times"></i> Remove from friends list</a>
         </div>
 
         <div class="clearfix"></div>
@@ -62,13 +60,13 @@
 
     <nav class="tabs mtm mbm pls prs pts">
         <ul class="unstyled">
-            <li class="inbl prs {{ 'active' if not request.view_args.get('tab') }}"><a href="{{ url_for('player_details', database=request.view_args.get('database'), username=player.username) }}" class="inbl pas"><i class="fa fa-calculator"></i> Stats</a></li>
+            <li class="inbl prs {{ 'active' if not request.view_args.get('tab') }}"><a href="{{ url_for('player_details', database=request.view_args.get('database'), username=player.username) }}" class="inbl pas"><i class="fas fa-calculator"></i> Stats</a></li>
             {% if player.has_stats %}
-                <li class="inbl prs {{ 'active' if request.view_args.get('tab') == 'stats-history' }}"><a href="{{ url_for('player_details', database=request.view_args.get('database'), username=player.username, tab='stats-history') }}" class="inbl pas"><i class="fa fa-calendar"></i> Stats history</a></li>
-                <li class="inbl prs {{ 'active' if request.view_args.get('tab') == 'evolution' }}"><a href="{{ url_for('player_details', database=request.view_args.get('database'), username=player.username, tab='evolution') }}" class="inbl pas"><i class="fa fa-line-chart"></i> Evolution</a></li>
+                <li class="inbl prs {{ 'active' if request.view_args.get('tab') == 'stats-history' }}"><a href="{{ url_for('player_details', database=request.view_args.get('database'), username=player.username, tab='stats-history') }}" class="inbl pas"><i class="fas fa-calendar-alt"></i> Stats history</a></li>
+                <li class="inbl prs {{ 'active' if request.view_args.get('tab') == 'evolution' }}"><a href="{{ url_for('player_details', database=request.view_args.get('database'), username=player.username, tab='evolution') }}" class="inbl pas"><i class="fas fa-chart-line"></i> Evolution</a></li>
             {% endif %}
-            <li class="inbl prs {{ 'active' if request.view_args.get('tab') == 'signature' }}"><a href="{{ url_for('player_details', database=request.view_args.get('database'), username=player.username, tab='signature') }}" class="inbl pas"><i class="fa fa-picture-o"></i> Signature</a></li>
-            <li class="inbl prs {{ 'active' if request.view_args.get('tab') == 'unlockables' }}"><a href="{{ url_for('player_details', database=request.view_args.get('database'), username=player.username, tab='unlockables') }}" class="inbl pas"><i class="fa fa-unlock"></i> Unlockables</a></li>
+            <li class="inbl prs {{ 'active' if request.view_args.get('tab') == 'signature' }}"><a href="{{ url_for('player_details', database=request.view_args.get('database'), username=player.username, tab='signature') }}" class="inbl pas"><i class="fas fa-image"></i> Signature</a></li>
+            <li class="inbl prs {{ 'active' if request.view_args.get('tab') == 'unlockables' }}"><a href="{{ url_for('player_details', database=request.view_args.get('database'), username=player.username, tab='unlockables') }}" class="inbl pas"><i class="fas fa-unlock-alt"></i> Unlockables</a></li>
         </ul>
     </nav>
 

@@ -15,7 +15,7 @@
                 <div class="mts">
                     {{ macros.server_join_button(player.playing_on_server) }}
 
-                    <a href="{{ player.playing_on_server.link }}" class="btn"><i class="fa fa-eye"></i> Details</a>
+                    <a href="{{ player.playing_on_server.link }}" class="btn"><i class="fas fa-eye"></i> Details</a>
                 </div>
             {% else %}
                 Nope.
@@ -92,7 +92,7 @@
 </table>
 
 <p class="txtcenter mbs">
-    <a href="{{ url_for('players_list', database=request.view_args.get('database')) }}" class="btn"><i class="fa fa-chevron-left"></i> Back to the {{ player.database_name }} players list</a>
+    <a href="{{ url_for('players_list', database=request.view_args.get('database')) }}" class="btn"><i class="fas fa-chevron-left"></i> Back to the {{ player.database_name }} players list</a>
 </p>
 
 {{ macros.stats_notice() }}

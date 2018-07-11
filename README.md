@@ -225,6 +225,7 @@ As the provided servers location is most of the time either missing or invalid, 
   - Servers banner and players signature font by [Vigilante Typeface Corporation](https://www.dafont.com/komika-axis.font) (freeware)
   - Old players stats are provided by the [rwrtrack](https://github.com/david-wm-sanders/rwrtrack) project by David "MR. BANG" Sanders ([actual data repo](https://github.com/david-wm-sanders/rwrtrack-data)) (MIT License)
   - This project uses GeoLite2 data created by MaxMind, available from [www.maxmind.com](https://www.maxmind.com/)
+  - Home page fan art by [thanshuhai](https://www.deviantart.com/thanshuhai) (public domain)
   - All Running With Rifles assets © 2015 - 2018 Osumia Games
   - This project is not affiliated with Osumia Games
 
