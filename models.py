@@ -372,6 +372,9 @@ class User(db.Model):
 
     rwr_accounts = db.relationship('RwrAccount', backref='user', lazy=True)
 
+    def get_by_openid(self, openid):
+        return User.query.filter(User.openid == openid).first()
+
     def __repr__(self):
         return 'User:{}'.format(self.id)
 
@@ -392,7 +395,7 @@ class RwrAccount(db.Model):
     created_at = db.Column(ArrowType, default=arrow.utcnow().floor('minute'), nullable=False)
     updated_at = db.Column(ArrowType, default=arrow.utcnow().floor('minute'), nullable=False)
 
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
     @memoized_property
     def stats(self):
