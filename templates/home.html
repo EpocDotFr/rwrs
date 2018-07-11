@@ -1,6 +1,6 @@
 {% extends 'layout.html' %}
 
-{% block page_title %}<h1><i class="fas fa-home"></i> Welcome to RWRS</h1>{% endblock %}
+{% block page_title %}<h1><i class="fas fa-home"></i> Home</h1>{% endblock %}
 
 {% block meta_title %}Home{% endblock %}
 
@@ -18,6 +18,8 @@
 {% set canonical_url = url_for('home', _external=True) %}
 
 {% block content %}
+    <p class="mtm mbm txtcenter">Welcome to RWRS (Running With Rifles Stats), your everyday RWR companion tool!</p>
+
     <div class="grid has-gutter-xl">
         <div>
             <fieldset class="man pan">
