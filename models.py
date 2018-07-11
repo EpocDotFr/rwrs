@@ -1,5 +1,6 @@
 from sqlalchemy.util import memoized_property
 from sqlalchemy_utils import ArrowType
+from flask_login import UserMixin
 from rwrs import db, cache, app
 from sqlalchemy import func
 from enum import Enum
@@ -360,7 +361,7 @@ class Variable(db.Model):
         return 'Variable:{}'.format(self.id)
 
 
-class User(db.Model):
+class User(db.Model, UserMixin):
     __tablename__ = 'users'
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -371,6 +372,14 @@ class User(db.Model):
     updated_at = db.Column(ArrowType, default=arrow.utcnow().floor('minute'), nullable=False)
 
     rwr_accounts = db.relationship('RwrAccount', backref='user', lazy=True)
+
+    @memoized_property
+    def is_authenticated(self):
+        return True # TODO
+
+    @memoized_property
+    def is_anonymous(self):
+        return False # TODO
 
     def __repr__(self):
         return 'User:{}'.format(self.id)

@@ -3,6 +3,7 @@ Flask-Caching
 Flask-SQLAlchemy
 Flask-Migrate
 Flask-Assets
+flask-login
 jsmin
 cssutils
 requests

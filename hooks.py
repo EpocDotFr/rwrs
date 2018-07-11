@@ -1,10 +1,15 @@
 from flask import g, abort, render_template, make_response
 from werkzeug.exceptions import HTTPException
-from models import RwrRootServer
-from rwrs import app
+from models import RwrRootServer, User
+from rwrs import app, login_manager
 import rwr.scraper
 import steam
 import os
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.get(user_id)
 
 
 @app.before_request

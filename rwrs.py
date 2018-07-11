@@ -1,6 +1,7 @@
 from flask_assets import Environment, Bundle
 from bugsnag.flask import handle_exceptions
 from flask_sqlalchemy import SQLAlchemy
+from flask_login import LoginManager
 from flask_migrate import Migrate
 from flask_caching import Cache
 from flask import Flask
@@ -51,6 +52,7 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 cache = Cache(app)
 assets = Environment(app)
+login_manager = LoginManager(app=app)
 
 assets.cache = 'storage/webassets-cache/'
 
@@ -58,6 +60,9 @@ assets.register('js_friends_charts', Bundle('js/common.js', 'js/friends.js', 'js
 assets.register('js_friends_status', Bundle('js/common.js', 'js/friends.js', 'js/status.js', filters='jsmin', output='js/friends_status.min.js'))
 assets.register('js_friends', Bundle('js/common.js', 'js/friends.js', filters='jsmin', output='js/friends.min.js'))
 assets.register('css_app', Bundle('css/flags.css', 'css/app.css', filters='cssutils', output='css/app.min.css'))
+
+login_manager.session_protection = 'strong'
+login_manager.login_message_category = 'info'
 
 import helpers
 import rwr.constants

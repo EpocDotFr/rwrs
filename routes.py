@@ -1,6 +1,7 @@
 from models import SteamPlayerCount, ServerPlayerCount, RwrRootServer, Variable, RwrAccountStat, RwrAccount
 from flask import render_template, abort, request, redirect, url_for, flash, g
 from dynamic_image import DynamicServerImage, DynamicPlayerImage
+from flask_login import login_required, login_user, logout_user
 from rwr.player import Player
 from rwrs import app
 import rwr.constants
@@ -361,3 +362,20 @@ def server_banner(ip, port, slug=None):
 @app.route('/images/servers/<ip>-<int:port>.png')
 def dynamic_server_image(ip, port):
     return DynamicServerImage.create(ip, port)
+
+
+@app.route('/login')
+def login():
+    # TODO login_user
+
+    return render_template(
+        'users/login.html'
+    )
+
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+
+    return redirect(url_for('home'))
