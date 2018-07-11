@@ -1,7 +1,8 @@
 from flask import g, abort, render_template, make_response
 from werkzeug.exceptions import HTTPException
+from rwrs import app, login_manager, oid
 from models import RwrRootServer, User
-from rwrs import app, login_manager
+from flask_login import login_user
 import rwr.scraper
 import steam
 import os
@@ -10,6 +11,12 @@ import os
 @login_manager.user_loader
 def load_user(user_id):
     return User.get(user_id)
+
+
+@oid.after_login
+def create_or_login(resp):
+    print(resp)
+    return
 
 
 @app.before_request

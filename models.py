@@ -373,14 +373,6 @@ class User(db.Model, UserMixin):
 
     rwr_accounts = db.relationship('RwrAccount', backref='user', lazy=True)
 
-    @memoized_property
-    def is_authenticated(self):
-        return True # TODO
-
-    @memoized_property
-    def is_anonymous(self):
-        return False # TODO
-
     def __repr__(self):
         return 'User:{}'.format(self.id)
 

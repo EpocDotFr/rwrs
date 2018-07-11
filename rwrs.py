@@ -3,6 +3,7 @@ from bugsnag.flask import handle_exceptions
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_migrate import Migrate
+from flask_openid import OpenID
 from flask_caching import Cache
 from flask import Flask
 import bugsnag
@@ -52,7 +53,8 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 cache = Cache(app)
 assets = Environment(app)
-login_manager = LoginManager(app=app)
+login_manager = LoginManager(app)
+oid = OpenID(app)
 
 assets.cache = 'storage/webassets-cache/'
 
