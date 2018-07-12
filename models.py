@@ -366,12 +366,22 @@ class User(db.Model, UserMixin):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 
-    steam_id = db.Column(db.String(40), nullable=False, unique=True)
+    steam_id = db.Column(db.Integer, nullable=False, unique=True)
     steam_username = db.Column(db.String(80), nullable=False)
     created_at = db.Column(ArrowType, default=arrow.utcnow().floor('minute'), nullable=False)
     updated_at = db.Column(ArrowType, default=arrow.utcnow().floor('minute'), nullable=False)
 
     rwr_accounts = db.relationship('RwrAccount', backref='user', lazy=True)
+
+    @staticmethod
+    def get_by_steam_id(steam_id, create_if_unexisting=False):
+        user = User.query.filter(User.steam_id == steam_id).first()
+
+        if not user and create_if_unexisting:
+            user = User()
+            user.steam_id = steam_id
+
+        return user
 
     def __repr__(self):
         return 'User:{}'.format(self.id)

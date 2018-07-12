@@ -1,22 +1,42 @@
-from flask import g, abort, render_template, make_response
+from flask import g, abort, render_template, make_response, redirect, flash, url_for
 from werkzeug.exceptions import HTTPException
-from rwrs import app, login_manager, oid
+from rwrs import app, login_manager, oid, db
 from models import RwrRootServer, User
 from flask_login import login_user
 import rwr.scraper
+import helpers
 import steam
 import os
 
 
 @login_manager.user_loader
 def load_user(user_id):
-    return User.get(user_id)
+    return User.query.get(user_id)
 
 
 @oid.after_login
 def create_or_login(resp):
-    print(resp)
-    return
+    steam_id = helpers.parse_steam_id_from_identity_url(resp.identity_url)
+
+    user = User.get_by_steam_id(steam_id, create_if_unexisting=True)
+
+    steamworks_api_client = steam.SteamworksApiClient(app.config['STEAM_API_KEY'])
+
+    steam_user_info = steamworks_api_client.get_user_summaries(steam_id)
+
+    if steam_user_info:
+        user.steam_username = steam_user_info['personaname']
+    else:
+        user.steam_username = '(Unknown username)' # FIXME Improve
+
+    db.session.add(user)
+    db.session.commit()
+
+    login_user(user, remember=True)
+
+    flash('Signed in successfully as {}.'.format(user.steam_username), 'success')
+
+    return redirect(url_for('home'))
 
 
 @app.before_request
