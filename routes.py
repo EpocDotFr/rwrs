@@ -4,6 +4,7 @@ from flask_login import login_required, current_user, logout_user
 from dynamic_image import DynamicServerImage, DynamicPlayerImage
 from rwr.player import Player
 from rwrs import app, oid
+from models import User
 import rwr.constants
 import flask_openid
 import rwr.scraper
@@ -376,7 +377,7 @@ def sign_in():
 
     return render_template(
         'users/sign_in.html',
-        error=oid.fetch_error()
+        oid_error_message=oid.fetch_error()
     )
 
 
@@ -388,3 +389,18 @@ def sign_out():
     flash('You are now signed out.', 'success')
 
     return redirect(url_for('home'))
+
+
+@app.route('/users/<int:user_id>')
+def user_profile(user_id):
+    user = User.query.get(user_id)
+
+    if not user:
+        flash('Sorry, this user wasn\'t found.', 'error')
+
+        return redirect(url_for('home'))
+
+    return render_template(
+        'users/profile.html',
+        user=user
+    )

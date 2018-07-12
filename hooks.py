@@ -22,12 +22,17 @@ def create_or_login(resp):
 
     steamworks_api_client = steam.SteamworksApiClient(app.config['STEAM_API_KEY'])
 
-    steam_user_info = steamworks_api_client.get_user_summaries(steam_id)
+    try:
+        steam_user_info = steamworks_api_client.get_user_summaries(steam_id)
 
-    if steam_user_info:
-        user.steam_username = steam_user_info['personaname']
-    else:
-        user.steam_username = '(Unknown username)' # FIXME Improve
+        if not steam_user_info:
+            raise Exception()
+    except:
+        flash('An error occured while fetching your Steam account information. Please try again.', 'error')
+
+        return redirect(url_for('sign_in'))
+
+    user.steam_username = steam_user_info['personaname']
 
     db.session.add(user)
     db.session.commit()
