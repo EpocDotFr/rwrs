@@ -5,6 +5,7 @@ from rwrs import db, cache, app
 from sqlalchemy import func
 from enum import Enum
 import rwr.constants
+import rwr.utils
 import helpers
 import hashlib
 import arrow
@@ -407,6 +408,10 @@ class RwrAccount(db.Model):
     updated_at = db.Column(ArrowType, default=arrow.utcnow().floor('minute'), nullable=False)
 
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+
+    @memoized_property
+    def type_display(self):
+        return rwr.utils.get_database_name(self.type.value.lower())
 
     @memoized_property
     def stats(self):

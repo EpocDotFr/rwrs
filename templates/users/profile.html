@@ -10,7 +10,54 @@
 {% endblock %}
 
 {% block content %}
-    <img src="{{ user.large_avatar_url }}" class="bordered">
+    <div class="fl mts mrm">
+        <img src="{{ user.large_avatar_url }}" class="bordered">
+    </div>
+
+    <div class="grid-2 mts">
+        <div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>RWR accounts</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Invasion - TEST</td>
+                    </tr>
+                    <tr>
+                        <td>Invasion - TEST</td>
+                    </tr>
+                    <tr>
+                        <td>Pacific - TEST</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="plm">
+            <table>
+                <thead>
+                    <tr>
+                        <th>RWR accounts</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Invasion - TEST</td>
+                    </tr>
+                    <tr>
+                        <td>Invasion - TEST</td>
+                    </tr>
+                    <tr>
+                        <td>Pacific - TEST</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="clearfix"></div>
 
     <script>
         friendsFeature.all_players_with_servers_details = {{ g.all_players_with_servers_details|tojson }};

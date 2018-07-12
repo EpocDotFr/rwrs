@@ -18,8 +18,6 @@ def load_user(user_id):
 def create_or_login(resp):
     steam_id = helpers.parse_steam_id_from_identity_url(resp.identity_url)
 
-    user = User.get_by_steam_id(steam_id, create_if_unexisting=True)
-
     steamworks_api_client = steam.SteamworksApiClient(app.config['STEAM_API_KEY'])
 
     try:
@@ -31,6 +29,8 @@ def create_or_login(resp):
         flash('An error occured while fetching your Steam account information. Please try again.', 'error')
 
         return redirect(url_for('sign_in'))
+
+    user = User.get_by_steam_id(steam_id, create_if_unexisting=True)
 
     user.steam_username = steam_user_info['personaname']
     user.small_avatar_url = steam_user_info['avatar']
