@@ -375,7 +375,8 @@ def sign_in():
         return oid.try_login(flask_openid.COMMON_PROVIDERS['steam'])
 
     return render_template(
-        'users/sign_in.html'
+        'users/sign_in.html',
+        error=oid.fetch_error()
     )
 
 

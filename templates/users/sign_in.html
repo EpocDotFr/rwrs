@@ -10,6 +10,10 @@
 {% endblock %}
 
 {% block content %}
+    {%- if error -%}
+        <p class="alert error pas mbs">{{ error }}</p>
+    {%- endif -%}
+
     <p class="txtcenter mtm mbm"><strong>Sign in into RWRS and access additional features.</strong></p>
     <p class="txtcenter">RWRS will not be aware of your password at all.<br>Cookies will be used to keep your session active.<br>Data needed for the proper RWRS functioning will be fetch from your Steam account.</p>
 
