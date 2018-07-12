@@ -33,6 +33,8 @@ def create_or_login(resp):
         return redirect(url_for('sign_in'))
 
     user.steam_username = steam_user_info['personaname']
+    user.small_avatar_url = steam_user_info['avatar']
+    user.large_avatar_url = steam_user_info['avatarfull']
 
     db.session.add(user)
     db.session.commit()

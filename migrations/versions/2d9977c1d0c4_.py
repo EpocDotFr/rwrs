@@ -34,6 +34,8 @@ def upgrade_():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('steam_id', sa.Integer(), nullable=False),
     sa.Column('steam_username', sa.String(length=80), nullable=False),
+    sa.Column('small_avatar_url', sa.String(length=255), nullable=True),
+    sa.Column('large_avatar_url', sa.String(length=255), nullable=True),
     sa.Column('created_at', sqlalchemy_utils.types.arrow.ArrowType(), nullable=False),
     sa.Column('updated_at', sqlalchemy_utils.types.arrow.ArrowType(), nullable=False),
     sa.PrimaryKeyConstraint('id'),

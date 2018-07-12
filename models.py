@@ -368,6 +368,8 @@ class User(db.Model, UserMixin):
 
     steam_id = db.Column(db.Integer, nullable=False, unique=True)
     steam_username = db.Column(db.String(80), nullable=False)
+    small_avatar_url = db.Column(db.String(255))
+    large_avatar_url = db.Column(db.String(255))
     created_at = db.Column(ArrowType, default=arrow.utcnow().floor('minute'), nullable=False)
     updated_at = db.Column(ArrowType, default=arrow.utcnow().floor('minute'), nullable=False)
 
@@ -375,6 +377,7 @@ class User(db.Model, UserMixin):
 
     @staticmethod
     def get_by_steam_id(steam_id, create_if_unexisting=False):
+        """Get a User according its Steam ID, optionally creating it if it doesn't exist."""
         user = User.query.filter(User.steam_id == steam_id).first()
 
         if not user and create_if_unexisting:

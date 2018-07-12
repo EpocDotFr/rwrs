@@ -10,6 +10,8 @@
 {% endblock %}
 
 {% block content %}
+    <img src="{{ user.large_avatar_url }}" class="bordered">
+
     <script>
         friendsFeature.all_players_with_servers_details = {{ g.all_players_with_servers_details|tojson }};
         friendsFeature.init();

@@ -70,7 +70,7 @@
                     </div>
                     <div class="txtright">
                         {%- if current_user.is_authenticated -%}
-                            Signed in as <a href="{{ url_for('user_profile', user_id=current_user.id) }}"><strong>{{ current_user.steam_username }}</strong></a> <a href="{{ url_for('sign_out') }}"><i class="fas fa-sign-out-alt"></i></a> <a href="{{ url_for('sign_out') }}">Sign out</a>
+                            <a href="{{ url_for('user_profile', user_id=current_user.id) }}"><img src="{{ current_user.small_avatar_url }}" height="28" width="28" class="bordered"></a> <a href="{{ url_for('user_profile', user_id=current_user.id) }}"><strong>{{ current_user.steam_username }}</strong></a> <a href="{{ url_for('sign_out') }}"><i class="fas fa-sign-out-alt"></i></a> <a href="{{ url_for('sign_out') }}">Sign out</a>
                         {%- else -%}
                             <a href="{{ url_for('sign_in') }}"><i class="fas fa-sign-in-alt"></i></a> <a href="{{ url_for('sign_in') }}">Sign in</a>
                         {%- endif -%}
