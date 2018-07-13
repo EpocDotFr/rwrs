@@ -370,7 +370,7 @@ def dynamic_server_image(ip, port):
 @oid.loginhandler
 def sign_in():
     if current_user.is_authenticated:
-        return redirect(url_for('home'))
+        return redirect(oid.get_next_url())
 
     if request.args.get('go_to_steam'):
         return oid.try_login(flask_openid.COMMON_PROVIDERS['steam'])

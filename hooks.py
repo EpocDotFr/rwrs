@@ -43,7 +43,7 @@ def create_or_login(resp):
 
     flash('Signed in successfully as {}.'.format(user.steam_username), 'success')
 
-    return redirect(url_for('home'))
+    return redirect(oid.get_next_url())
 
 
 @app.before_request
