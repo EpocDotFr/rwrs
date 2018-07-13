@@ -81,4 +81,8 @@
     {% elif request.view_args.get('tab') == 'signature' %}
         {% include 'player_details/signature.html' %}
     {% endif %}
+
+    {%- if player.user -%}
+        <div class="alert info pas mts"><i class="fas fa-certificate"></i> This RWR account is owned by <a href="{{ player.user.link }}"><strong>{{ player.user.steam_username }}</strong></a>.</div>
+    {%- endif -%}
 {% endblock %}

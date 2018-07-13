@@ -378,15 +378,32 @@ class User(db.Model, UserMixin):
     rwr_accounts = db.relationship('RwrAccount', backref='user', lazy=True)
 
     def get_rwr_accounts_by_type(self, type):
+        """Return the RwrAccounts linked to this user, filtered by account type."""
         return [rwr_account for rwr_account in self.rwr_accounts if rwr_account.type == type]
 
     @memoized_property
     def invasion_rwr_accounts(self):
+        """Return the Invasion RwrAccounts linked to this user."""
         return self.get_rwr_accounts_by_type(RwrAccountType.INVASION)
 
     @memoized_property
     def pacific_rwr_accounts(self):
+        """Return the Pacific RwrAccounts linked to this user."""
         return self.get_rwr_accounts_by_type(RwrAccountType.PACIFIC)
+
+    @memoized_property
+    def link(self):
+        """Return the link to this User profile page."""
+        def get_link(self):
+            return url_for('user_profile', user_id=self.id)
+
+        if current_app:
+            link = get_link(self)
+        else:
+            with app.app_context():
+                link = get_link(self)
+
+        return link
 
     @staticmethod
     def get_by_steam_id(steam_id, create_if_unexisting=False):
