@@ -1,4 +1,4 @@
-from flask import g, abort, render_template, make_response, redirect, flash, url_for
+from flask import g, abort, render_template, make_response, redirect, flash
 from werkzeug.exceptions import HTTPException
 from rwrs import app, login_manager, oid, db
 from models import RwrRootServer, User
@@ -28,7 +28,7 @@ def create_or_login(resp):
     except:
         flash('An error occured while fetching your Steam account information. Please try again.', 'error')
 
-        return redirect(url_for('sign_in'))
+        return redirect(oid.get_next_url())
 
     user = User.get_by_steam_id(steam_id, create_if_unexisting=True)
 
