@@ -440,6 +440,10 @@ label {
     vertical-align: middle;
 }
 
+.top-bar.main .inbl {
+    vertical-align: middle;
+}
+
 .top-bar.main abbr {
     font-weight: bold;
 }
