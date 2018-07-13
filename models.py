@@ -379,17 +379,7 @@ class User(db.Model, UserMixin):
 
     def get_rwr_accounts_by_type(self, type):
         """Return the RwrAccounts linked to this user, filtered by account type."""
-        return [rwr_account for rwr_account in self.rwr_accounts if rwr_account.type == type]
-
-    @memoized_property
-    def invasion_rwr_accounts(self):
-        """Return the Invasion RwrAccounts linked to this user."""
-        return self.get_rwr_accounts_by_type(RwrAccountType.INVASION)
-
-    @memoized_property
-    def pacific_rwr_accounts(self):
-        """Return the Pacific RwrAccounts linked to this user."""
-        return self.get_rwr_accounts_by_type(RwrAccountType.PACIFIC)
+        return [rwr_account for rwr_account in self.rwr_accounts if rwr_account.type == RwrAccountType(type.upper())]
 
     @memoized_property
     def link(self):

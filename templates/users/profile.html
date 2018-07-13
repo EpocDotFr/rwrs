@@ -18,46 +18,30 @@
         <div class="one-fifth">
             <img src="{{ user.large_avatar_url }}" class="bordered">
         </div>
-        <div class="two-fifth">
-            <table class="{{ 'striped' if user.invasion_rwr_accounts }}">
-                <thead>
-                    <tr>
-                        <th>RWR Invasion accounts</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {%- for invasion_rwr_account in user.invasion_rwr_accounts -%}
+
+        {%- for database, database_info in PLAYERS_LIST_DATABASES.items() -%}
+            {%- set rwr_accounts_by_type = user.get_rwr_accounts_by_type(database) -%}
+            <div class="two-fifth">
+                <table class="{{ 'striped' if rwr_accounts_by_type }}">
+                    <thead>
                         <tr>
-                            <td><a href="{{ invasion_rwr_account.link }}">{{ invasion_rwr_account.username }}</a></td>
+                            <th>RWR {{ database_info.name }} accounts</th>
                         </tr>
-                    {%- else -%}
-                        <tr>
-                            <td><div class="alert info pas txtcenter">Nothing to display.</div></td>
-                        </tr>
-                    {%- endfor -%}
-                </tbody>
-            </table>
-        </div>
-        <div class="two-fifth">
-            <table class="{{ 'striped' if user.pacific_rwr_accounts }}">
-                <thead>
-                    <tr>
-                        <th>RWR Pacific accounts</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {%- for pacific_rwr_account in user.pacific_rwr_accounts -%}
-                        <tr>
-                            <td><a href="{{ pacific_rwr_account.link }}">{{ pacific_rwr_account.username }}</a></td>
-                        </tr>
-                    {%- else -%}
-                        <tr>
-                            <td><div class="alert info pas txtcenter">Nothing to display.</div></td>
-                        </tr>
-                    {%- endfor -%}
-                </tbody>
-            </table>
-        </div>
+                    </thead>
+                    <tbody>
+                        {%- for rwr_account in rwr_accounts_by_type -%}
+                            <tr>
+                                <td><a href="{{ rwr_account.link }}">{{ rwr_account.username }}</a></td>
+                            </tr>
+                        {%- else -%}
+                            <tr>
+                                <td><div class="alert info pas txtcenter">Nothing to display.</div></td>
+                            </tr>
+                        {%- endfor -%}
+                    </tbody>
+                </table>
+            </div>
+        {%- endfor -%}
     </div>
 
     <script>
