@@ -4,60 +4,61 @@
 
 {% block meta_title %}Users › {{ user.steam_username }}{% endblock %}
 
+{% block meta_description %}{{ user.steam_username }} profile on RWRS.{% endblock %}
+
 {% block jsfiles %}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/zepto/1.2.0/zepto.min.js"></script>
     {% assets 'js_friends' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
 {% endblock %}
 
+{% set canonical_url = url_for('user_profile', user_id=user.id, _external=True) %}
+
 {% block content %}
-    <div class="fl mts mrm">
-        <img src="{{ user.large_avatar_url }}" class="bordered">
-    </div>
-
-    <div class="grid-2 mts">
-        <div>
-            <table>
+    <div class="grid mts has-gutter">
+        <div class="one-fifth">
+            <img src="{{ user.large_avatar_url }}" class="bordered">
+        </div>
+        <div class="two-fifth">
+            <table class="{{ 'striped' if user.invasion_rwr_accounts }}">
                 <thead>
                     <tr>
-                        <th>RWR accounts</th>
+                        <th>RWR Invasion accounts</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>Invasion - TEST</td>
-                    </tr>
-                    <tr>
-                        <td>Invasion - TEST</td>
-                    </tr>
-                    <tr>
-                        <td>Pacific - TEST</td>
-                    </tr>
+                    {%- for invasion_rwr_account in user.invasion_rwr_accounts -%}
+                        <tr>
+                            <td><a href="{{ invasion_rwr_account.link }}">{{ invasion_rwr_account.username }}</a></td>
+                        </tr>
+                    {%- else -%}
+                        <tr>
+                            <td><div class="alert info pas txtcenter">Nothing to display.</div></td>
+                        </tr>
+                    {%- endfor -%}
                 </tbody>
             </table>
         </div>
-        <div class="plm">
-            <table>
+        <div class="two-fifth">
+            <table class="{{ 'striped' if user.pacific_rwr_accounts }}">
                 <thead>
                     <tr>
-                        <th>RWR accounts</th>
+                        <th>RWR Pacific accounts</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>Invasion - TEST</td>
-                    </tr>
-                    <tr>
-                        <td>Invasion - TEST</td>
-                    </tr>
-                    <tr>
-                        <td>Pacific - TEST</td>
-                    </tr>
+                    {%- for pacific_rwr_account in user.pacific_rwr_accounts -%}
+                        <tr>
+                            <td><a href="{{ pacific_rwr_account.link }}">{{ pacific_rwr_account.username }}</a></td>
+                        </tr>
+                    {%- else -%}
+                        <tr>
+                            <td><div class="alert info pas txtcenter">Nothing to display.</div></td>
+                        </tr>
+                    {%- endfor -%}
                 </tbody>
             </table>
         </div>
     </div>
-
-    <div class="clearfix"></div>
 
     <script>
         friendsFeature.all_players_with_servers_details = {{ g.all_players_with_servers_details|tojson }};

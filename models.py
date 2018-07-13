@@ -1,5 +1,6 @@
 from sqlalchemy.util import memoized_property
 from sqlalchemy_utils import ArrowType
+from flask import url_for, current_app
 from flask_login import UserMixin
 from rwrs import db, cache, app
 from sqlalchemy import func
@@ -376,6 +377,17 @@ class User(db.Model, UserMixin):
 
     rwr_accounts = db.relationship('RwrAccount', backref='user', lazy=True)
 
+    def get_rwr_accounts_by_type(self, type):
+        return [rwr_account for rwr_account in self.rwr_accounts if rwr_account.type == type]
+
+    @memoized_property
+    def invasion_rwr_accounts(self):
+        return self.get_rwr_accounts_by_type(RwrAccountType.INVASION)
+
+    @memoized_property
+    def pacific_rwr_accounts(self):
+        return self.get_rwr_accounts_by_type(RwrAccountType.PACIFIC)
+
     @staticmethod
     def get_by_steam_id(steam_id, create_if_unexisting=False):
         """Get a User according its Steam ID, optionally creating it if it doesn't exist."""
@@ -410,7 +422,22 @@ class RwrAccount(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
     @memoized_property
+    def link(self):
+        """Return the link to this Player details page."""
+        def get_link(self):
+            return url_for('player_details', database=self.type.value.lower(), username=self.username)
+
+        if current_app:
+            link = get_link(self)
+        else:
+            with app.app_context():
+                link = get_link(self)
+
+        return link
+
+    @memoized_property
     def type_display(self):
+        """The database name."""
         return rwr.utils.get_database_name(self.type.value.lower())
 
     @memoized_property
