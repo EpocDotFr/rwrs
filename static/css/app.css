@@ -543,8 +543,11 @@ footer > * {
 }
 
 footer a,
-footer a:visited,
+footer a:visited {
+    color: inherit;
+}
+
 footer a:hover,
 footer a:focus {
-    color: inherit;
+    color: #dbd8d8;
 }
