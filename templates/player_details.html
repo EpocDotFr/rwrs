@@ -82,7 +82,13 @@
         {% include 'player_details/signature.html' %}
     {% endif %}
 
-    {%- if player.user -%}
-        <div class="alert info pas mts"><i class="fas fa-certificate"></i> This RWR account is owned by <a href="{{ player.user.link }}"><strong>{{ player.user.steam_username }}</strong></a>.</div>
-    {%- endif -%}
+    <div class="alert info pas mts"><i class="fas fa-certificate mrs"></i>
+        {%- if player.user -%}
+            This account is owned by <a href="{{ player.user.link }}">{{ player.user.steam_username }}</a>.
+        {%- elif not player.user and current_user.is_authenticated -%}
+            <a href="#">Claim this account now</a> to enable additional features.
+        {%- elif not player.user and not current_user.is_authenticated -%}
+            <a href="{{ url_for('sign_in') }}">Sign-in</a> to claim this account and access additional features.
+        {%- endif -%}
+    </div>
 {% endblock %}
