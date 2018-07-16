@@ -123,6 +123,20 @@ def players_list(database):
     )
 
 
+@app.route('/players/claim')
+@login_required
+def player_claim():
+    return render_template(
+        'players/claim.html'
+    )
+
+
+@app.route('/players/claim/finalize')
+@login_required
+def finalize_player_claim():
+    return 'TODO'
+
+
 @app.route('/players/<username>')
 def player_details_without_db(username):
     return redirect(url_for('player_details', database='invasion', username=username), code=301)

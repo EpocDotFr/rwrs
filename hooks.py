@@ -6,6 +6,7 @@ from flask_login import login_user
 import rwr.scraper
 import helpers
 import steam
+import arrow
 import os
 
 
@@ -36,6 +37,7 @@ def create_or_login(resp):
     user.small_avatar_url = steam_user_info['avatar']
     user.large_avatar_url = steam_user_info['avatarfull']
     user.country_code = steam_user_info['loccountrycode'].lower() if 'loccountrycode' in steam_user_info else None
+    user.last_login_at = arrow.utcnow().floor('minute')
 
     db.session.add(user)
     db.session.commit()

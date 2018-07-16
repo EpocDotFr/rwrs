@@ -39,6 +39,7 @@ def upgrade_():
     sa.Column('country_code', sa.String(length=2), nullable=True),
     sa.Column('created_at', sqlalchemy_utils.types.arrow.ArrowType(), nullable=False),
     sa.Column('updated_at', sqlalchemy_utils.types.arrow.ArrowType(), nullable=False),
+    sa.Column('last_login_at', sqlalchemy_utils.types.arrow.ArrowType(), nullable=False),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('steam_id')
     )

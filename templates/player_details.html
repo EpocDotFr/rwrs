@@ -86,9 +86,9 @@
         {%- if player.user -%}
             This account is owned by <a href="{{ player.user.link }}">{{ player.user.steam_username }}</a>.
         {%- elif not player.user and current_user.is_authenticated -%}
-            <a href="#">Claim this account now</a> to enable additional features.
+            <a href="{{ url_for('player_claim', database=player.database, username=player.username) }}">Claim this account now</a> to enable additional features.
         {%- elif not player.user and not current_user.is_authenticated -%}
-            <a href="{{ url_for('sign_in') }}">Sign-in</a> to claim this account and access additional features.
+            <a href="{{ url_for('sign_in', next=url_for('player_claim', database=player.database, username=player.username)) }}">Sign-in</a> to claim this account and access additional features.
         {%- endif -%}
     </div>
 {% endblock %}
