@@ -9,6 +9,7 @@ import rwr.constants
 import rwr.utils
 import helpers
 import hashlib
+import iso3166
 import arrow
 
 
@@ -372,7 +373,7 @@ class User(db.Model, UserMixin):
     steam_username = db.Column(db.String(80), nullable=False)
     small_avatar_url = db.Column(db.String(255))
     large_avatar_url = db.Column(db.String(255))
-    country = db.Column(db.String(2))
+    country_code = db.Column(db.String(2))
     created_at = db.Column(ArrowType, default=arrow.utcnow().floor('minute'), nullable=False)
     updated_at = db.Column(ArrowType, default=arrow.utcnow().floor('minute'), nullable=False)
 
@@ -381,6 +382,10 @@ class User(db.Model, UserMixin):
     def get_rwr_accounts_by_type(self, type):
         """Return the RwrAccounts linked to this user, filtered by account type."""
         return [rwr_account for rwr_account in self.rwr_accounts if rwr_account.type == RwrAccountType(type.upper())]
+
+    @memoized_property
+    def country_name(self):
+        return iso3166.countries_by_alpha2.get(self.country_code.upper()).name if self.country_code else ''
 
     @memoized_property
     def link(self):
