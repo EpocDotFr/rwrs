@@ -372,6 +372,7 @@ class User(db.Model, UserMixin):
     steam_username = db.Column(db.String(80), nullable=False)
     small_avatar_url = db.Column(db.String(255))
     large_avatar_url = db.Column(db.String(255))
+    country = db.Column(db.String(2))
     created_at = db.Column(ArrowType, default=arrow.utcnow().floor('minute'), nullable=False)
     updated_at = db.Column(ArrowType, default=arrow.utcnow().floor('minute'), nullable=False)
 
