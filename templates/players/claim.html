@@ -1,8 +1,8 @@
 {% extends 'layout.html' %}
 
-{% block page_title %}<h1><i class="fas fa-user"></i> Players › Claim</h1>{% endblock %}
+{% block page_title %}<h1><i class="fas fa-user"></i> Players › Claim account</h1>{% endblock %}
 
-{% block meta_title %}Players › Claim{% endblock %}
+{% block meta_title %}Players › Claim account{% endblock %}
 
 {% block jsfiles %}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/zepto/1.2.0/zepto.min.js"></script>
@@ -12,8 +12,8 @@
 {% block content %}
     <p class="txtcenter">This procedure to prevent anybody to claim any RWR account</p>
     <p class="txtcenter">You will do this only once per RWR account</p>
-    <p class="txtcenter">Be sure the account you're about to claim is currently <strong>not</strong> online on any ranked (official) RWR server</p>
-    <p class="txtcenter">Once the claim procedure has started, you'll have X minutes to join a ranked server to finally claim your RWR account on RWRS</p>
+    <p class="txtcenter">Be sure the account you're about to claim is currently <strong>not</strong> used on any ranked (official) RWR server</p>
+    <p class="txtcenter">Once the claim procedure has been initiated, you'll have <strong>X minutes</strong> to join a ranked <strong>(Pacifc|Invasion)</strong> server to finally claim your RWR account</p>
 
     <script>
         friendsFeature.all_players_with_servers_details = {{ g.all_players_with_servers_details|tojson }};

@@ -18,10 +18,21 @@
         <p class="alert error pas mbs">{{ oid_error_message }}</p>
     {%- endif -%}
 
-    <p class="txtcenter mtm mbm"><strong>Sign in into RWRS and access additional features.</strong></p>
-    <p class="txtcenter">RWRS will not be aware of your password at all.<br>Cookies will be used to keep your session active.<br>Data needed for the proper RWRS functioning will be fetch from your Steam account.</p>
-
-    <p class="txtcenter mtm"><a href="{{ url_for('sign_in', go_to_steam='yes') }}"><img src="{{ url_for('static', filename='images/steam_openid.png') }}"></a></p>
+    <div class="grid has-gutter mtl mbm">
+        <div>
+            <p class="txtcenter"><strong>Sign in to RWRS and access additional features</strong>:</p>
+            <ul>
+                <li>TODO</li>
+                <li>TODO</li>
+                <li>TODO</li>
+                <li>TODO</li>
+            </ul>
+        </div>
+        <div class="txtcenter">
+            <p class="mtm mbm"><a href="{{ url_for('sign_in', go_to_steam='yes') }}"><img src="{{ url_for('static', filename='images/steam_openid.png') }}"></a></p>
+            <p class="small txtgrey">RWRS will not be aware of your credentials.<br>Cookies will be used to keep your session active.<br>RWRS will fetch publicly available data from your Steam profile.</p>
+        </div>
+    </div>
 
     <script>
         friendsFeature.all_players_with_servers_details = {{ g.all_players_with_servers_details|tojson }};

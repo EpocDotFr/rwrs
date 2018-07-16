@@ -71,7 +71,7 @@
                         {%- if current_user.is_authenticated -%}
                             {% if current_user.small_avatar_url %}<a href="{{ url_for('user_profile', user_id=current_user.id) }}"><img src="{{ current_user.small_avatar_url }}" height="28" width="28" class="bordered"></a> {% endif %}<a href="{{ url_for('user_profile', user_id=current_user.id) }}" class="mrs"><strong>{{ current_user.steam_username }}</strong></a> <a href="#"><i class="fas fa-cog"></i></a> <a href="#" class="mrs">Settings</a> <a href="{{ url_for('sign_out') }}"><i class="fas fa-sign-out-alt"></i></a> <a href="{{ url_for('sign_out') }}">Sign out</a>
                         {%- else -%}
-                            <a href="{{ url_for('sign_in', next=request.full_path) }}"><i class="fas fa-sign-in-alt"></i></a> <a href="{{ url_for('sign_in', next=request.full_path) }}">Sign in</a>
+                            <a href="{{ url_for('sign_in') }}"><i class="fas fa-sign-in-alt"></i></a> <a href="{{ url_for('sign_in') }}">Sign in</a>
                         {%- endif -%}
                     </div>
                 </div>
