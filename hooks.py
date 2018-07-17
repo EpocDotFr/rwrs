@@ -1,4 +1,4 @@
-from flask import g, abort, render_template, make_response
+from flask import g, abort, render_template, make_response, request
 from werkzeug.exceptions import HTTPException
 from models import RwrRootServer
 from rwrs import app
@@ -9,6 +9,9 @@ import os
 
 @app.before_request
 def define_globals():
+    if request.endpoint in ('dynamic_player_image', 'dynamic_server_image'):
+        return
+
     g.INCLUDE_WEB_ANALYTICS = not app.config['DEBUG']
     g.UNDER_MAINTENANCE = False
     g.LAYOUT = 'normal'
@@ -16,25 +19,35 @@ def define_globals():
 
 @app.before_request
 def set_beta_data():
-    if app.config['BETA']:
-        from git import Repo
+    if request.endpoint in ('dynamic_player_image', 'dynamic_server_image'):
+        return
 
-        repo = Repo(app.root_path)
+    if not app.config['BETA']:
+        return
 
-        g.BETA_BRANCH = repo.active_branch.name
-        g.BETA_COMMIT = repo.head.commit.hexsha
+    from git import Repo
+
+    repo = Repo(app.root_path)
+
+    g.BETA_BRANCH = repo.active_branch.name
+    g.BETA_COMMIT = repo.head.commit.hexsha
 
 
 @app.before_request
 def check_under_maintenance():
-    if os.path.exists('maintenance'):
-        g.UNDER_MAINTENANCE = True
+    if not os.path.exists('maintenance'):
+        return
 
-        abort(503)
+    g.UNDER_MAINTENANCE = True
+
+    abort(503)
 
 
 @app.before_request
 def get_counts():
+    if request.endpoint in ('dynamic_player_image', 'dynamic_server_image'):
+        return
+
     steamworks_api_client = steam.SteamworksApiClient(app.config['STEAM_API_KEY'])
 
     g.all_players_with_servers_details = rwr.scraper.get_all_players_with_servers_details()
@@ -49,11 +62,17 @@ def get_counts():
 
 @app.before_request
 def get_rwr_root_server_global_status():
+    if request.endpoint in ('dynamic_player_image', 'dynamic_server_image'):
+        return
+
     g.is_online_multiplayer_ok = RwrRootServer.are_rwr_root_servers_ok()
 
 
 @app.before_request
 def get_motd():
+    if request.endpoint in ('dynamic_player_image', 'dynamic_server_image'):
+        return
+
     g.MOTD = None
 
     if os.path.exists('motd'):
