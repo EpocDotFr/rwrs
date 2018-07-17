@@ -303,7 +303,7 @@ def servers_list():
         g.LAYOUT = 'large'
 
     return render_template(
-        'servers_list.html',
+        'servers/list.html',
         servers=servers,
         locations=locations,
         types=types,
@@ -328,7 +328,7 @@ def server_details(ip, port, slug=None):
     server_players_data = ServerPlayerCount.server_players_data(ip, port) if server.is_dedicated else None
 
     return render_template(
-        'server_details.html',
+        'servers/details.html',
         server_players_data=server_players_data,
         server=server
     )
@@ -353,7 +353,7 @@ def server_banner(ip, port, slug=None):
         return redirect(server.link, code=302)
 
     return render_template(
-        'server_banner.html',
+        'servers/banner.html',
         server=server
     )
 
