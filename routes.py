@@ -10,6 +10,7 @@ import flask_openid
 import rwr.scraper
 import rwr.utils
 import arrow
+import forms
 
 
 ERROR_PLAYER_NOT_FOUND = 'Sorry, the player "{username}" wasn\'t found in the {database} players list. Maybe this player hasn\'t already played on a ranked server yet. If this player started to play today on a ranked server, please wait until tomorrow as stats are refreshed daily.'
@@ -123,11 +124,17 @@ def players_list(database):
     )
 
 
-@app.route('/players/claim')
+@app.route('/players/claim', methods=['GET', 'POST'])
 @login_required
 def player_claim():
+    form = forms.PlayerClaimForm(data={'type': request.args.get('type'), 'username': request.args.get('username')})
+
+    if form.validate_on_submit():
+        pass # TODO
+
     return render_template(
-        'players/claim.html'
+        'players/claim.html',
+        form=form
     )
 
 

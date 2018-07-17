@@ -15,6 +15,17 @@
     <p class="txtcenter">Be sure the account you're about to claim is currently <strong>not</strong> used on any ranked (official) RWR server</p>
     <p class="txtcenter">Once the claim procedure has been initiated, you'll have <strong>X minutes</strong> to join a ranked <strong>(Pacifc|Invasion)</strong> server to finally claim your RWR account</p>
 
+    <div class="txtcenter ptm pbm">
+        <form method="post" action="{{ url_for('player_claim') }}" class="inbl">
+            {{ form.csrf_token }}
+
+            {{ macros.inline_form_field(form.type, class="mrs") }}
+            {{ macros.inline_form_field(form.username, class="mrs") }}
+
+            <button type="submit"><i class="fa fa-play"></i> Go!</button>
+        </form>
+    </div>
+
     <script>
         friendsFeature.all_players_with_servers_details = {{ g.all_players_with_servers_details|tojson }};
         friendsFeature.init();

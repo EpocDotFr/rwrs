@@ -20,3 +20,4 @@ matplotlib
 bugsnag[flask]
 Pillow
 iso3166
+Flask-WTF
