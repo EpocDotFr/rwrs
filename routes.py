@@ -114,7 +114,7 @@ def players_list(database):
     g.LAYOUT = 'large'
 
     return render_template(
-        'players_list.html',
+        'players/list.html',
         players=players,
         args=args
     )
@@ -163,7 +163,7 @@ def player_details(database, username, tab=None):
             player_evolution_data = RwrAccountStat.get_stats_for_column(player.rwr_account.id)
 
     return render_template(
-        'player_details.html',
+        'players/details.html',
         player=player,
         stats=stats,
         player_evolution_data=player_evolution_data
@@ -278,7 +278,7 @@ def players_compare(database, username, username_to_compare_with=None, date=None
     player_to_compare_with.set_playing_on_server(servers)
 
     return render_template(
-        'players_compare.html',
+        'players/compare.html',
         player=player,
         player_to_compare_with=player_to_compare_with,
         date=date
