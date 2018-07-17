@@ -71,15 +71,15 @@
     </nav>
 
     {% if not request.view_args.get('tab') %}
-        {% include 'player_details/stats.html' %}
+        {% include 'players/details/stats.html' %}
     {% elif request.view_args.get('tab') == 'stats-history' %}
-        {% include 'player_details/stats_history.html' %}
+        {% include 'players/details/stats_history.html' %}
     {% elif request.view_args.get('tab') == 'unlockables' %}
-        {% include 'player_details/unlockables.html' %}
+        {% include 'players/details/unlockables.html' %}
     {% elif request.view_args.get('tab') == 'evolution' %}
-        {% include 'player_details/evolution.html' %}
+        {% include 'players/details/evolution.html' %}
     {% elif request.view_args.get('tab') == 'signature' %}
-        {% include 'player_details/signature.html' %}
+        {% include 'players/details/signature.html' %}
     {% endif %}
 
     <div class="alert info pas mts"><i class="fas fa-certificate mrs"></i>
