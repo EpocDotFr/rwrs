@@ -127,7 +127,13 @@ def players_list(database):
 @app.route('/players/claim', methods=['GET', 'POST'])
 @login_required
 def player_claim():
-    form = forms.PlayerClaimForm(data={'type': request.args.get('type'), 'username': request.args.get('username')})
+    # Player claim form may be pre-filled with values in query string parameters
+    form_default_values = {
+        'type': request.args.get('type'),
+        'username': request.args.get('username')
+    }
+
+    form = forms.PlayerClaimForm(data=form_default_values)
 
     if form.validate_on_submit():
         pass # TODO
