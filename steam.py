@@ -71,6 +71,9 @@ class SteamworksApiClient:
 
         return data['players'][0] if 'players' in data and len(data['players']) == 1 else None
 
+    def __repr__(self):
+        return 'SteamworksApiClient'
+
 
 def get_group_events(group_or_game_id, is_official=False, year=None, month=None):
     """Get the list of upcoming events for the specified Steam game."""
