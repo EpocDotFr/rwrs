@@ -34,6 +34,18 @@ def set_beta_data():
 
 
 @app.before_request
+def get_motd():
+    if request.endpoint in ('dynamic_player_image', 'dynamic_server_image'):
+        return
+
+    g.MOTD = None
+
+    if os.path.exists('motd'):
+        with open('motd', 'r', encoding='utf-8') as f:
+            g.MOTD = f.read()
+
+
+@app.before_request
 def check_under_maintenance():
     if not os.path.exists('maintenance'):
         return
@@ -66,18 +78,6 @@ def get_rwr_root_server_global_status():
         return
 
     g.is_online_multiplayer_ok = RwrRootServer.are_rwr_root_servers_ok()
-
-
-@app.before_request
-def get_motd():
-    if request.endpoint in ('dynamic_player_image', 'dynamic_server_image'):
-        return
-
-    g.MOTD = None
-
-    if os.path.exists('motd'):
-        with open('motd', 'r', encoding='utf-8') as f:
-            g.MOTD = f.read()
 
 
 @app.errorhandler(401)
