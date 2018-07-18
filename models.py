@@ -465,12 +465,21 @@ class RwrAccount(db.Model):
         return RwrAccountStat.query.with_entities(func.count('*')).filter(RwrAccountStat.rwr_account_id == self.id).scalar() > 0
 
     @staticmethod
-    def get_by_type_and_username(type, username):
-        """Return an RwrAccount given its type and username."""
-        return RwrAccount.query.filter(
-            RwrAccount.type == RwrAccountType(type.upper()),
+    def get_by_type_and_username(type, username, create_if_unexisting=False):
+        """Return an RwrAccount given its type and username, optionally creating it if it doesn't exist."""
+        type = RwrAccountType(type.upper())
+
+        rwr_account = RwrAccount.query.filter(
+            RwrAccount.type == type,
             RwrAccount.username == username
         ).first()
+
+        if not rwr_account and create_if_unexisting:
+            rwr_account = RwrAccount()
+            rwr_account.type = type
+            rwr_account.username = username
+
+        return rwr_account
 
     def __repr__(self):
         return 'RwrAccount:{}'.format(self.id)

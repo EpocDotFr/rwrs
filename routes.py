@@ -3,7 +3,7 @@ from flask import render_template, abort, request, redirect, url_for, flash, g
 from flask_login import login_required, current_user, logout_user
 from dynamic_image import DynamicServerImage, DynamicPlayerImage
 from rwr.player import Player
-from rwrs import app, oid
+from rwrs import app, oid, db
 from models import User
 import rwr.constants
 import flask_openid
@@ -136,7 +136,18 @@ def player_claim():
     form = forms.PlayerClaimForm(data=form_default_values)
 
     if form.validate_on_submit():
-        pass # TODO
+        rwr_account = RwrAccount.get_by_type_and_username(
+            form.type.data,
+            form.username.data.upper(),
+            create_if_unexisting=True
+        )
+
+        # TODO Set this rwr_account as currently being claimed along a timestamp
+
+        db.session.add(rwr_account)
+        db.session.commit()
+
+        redirect(url_for('player_claim_finalize', rwr_account_id=rwr_account.id))
 
     return render_template(
         'players/claim.html',
@@ -144,9 +155,9 @@ def player_claim():
     )
 
 
-@app.route('/players/claim/finalize')
+@app.route('/players/claim/<int:rwr_account_id>', methods=['GET', 'POST'])
 @login_required
-def finalize_player_claim():
+def player_claim_finalize(rwr_account_id):
     return 'TODO'
 
 
