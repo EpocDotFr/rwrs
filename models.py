@@ -375,7 +375,7 @@ class User(db.Model, UserMixin):
     large_avatar_url = db.Column(db.String(255))
     country_code = db.Column(db.String(2))
     created_at = db.Column(ArrowType, default=arrow.utcnow().floor('minute'), nullable=False)
-    updated_at = db.Column(ArrowType, default=arrow.utcnow().floor('minute'), nullable=False)
+    updated_at = db.Column(ArrowType, default=arrow.utcnow().floor('minute'), onupdate=arrow.utcnow().floor('minute'), nullable=False)
     last_login_at = db.Column(ArrowType, nullable=False)
 
     rwr_accounts = db.relationship('RwrAccount', backref='user', lazy=True)
