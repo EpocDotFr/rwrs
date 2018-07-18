@@ -212,24 +212,18 @@
 
 {% macro form_field(field) -%}
     <div class="grid has-gutter mbs">
-        <div class="one-third txtright">
+        <div class="txtright">
             {{ field.label(class='txtred' if field.errors) }}
         </div>
-        <div class="two-third">
-            {{ field(**kwargs) }}
-        </div>
-    </div>
-
-    {%- if field.errors -%}
-        <div class="grid has-gutter mbs">
-            <div class="one-third"></div>
-            <div class="two-third">
-                <ul class="txtred pln">
+        <div>
+            <div>{{ field(**kwargs) }}</div>
+            {%- if field.errors -%}
+                <ul class="txtred pls">
                     {%- for error in field.errors -%}
                         <li>{{ error }}</li>
                     {%- endfor -%}
                 </ul>
-            </div>
+            {%- endif %}
         </div>
-    {%- endif %}
+    </div>
 {%- endmacro %}

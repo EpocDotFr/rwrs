@@ -1,6 +1,6 @@
 {% extends 'layout.html' %}
 
-{% block page_title %}<h1><i class="fas fa-user"></i> Players › Claim account</h1>{% endblock %}
+{% block page_title %}<h1><i class="fas fa-user-check"></i> Players › Claim account</h1>{% endblock %}
 
 {% block meta_title %}Players › Claim account{% endblock %}
 
@@ -10,20 +10,25 @@
 {% endblock %}
 
 {% block content %}
-    <p class="txtcenter">This procedure to prevent anybody to claim any RWR account</p>
-    <p class="txtcenter">You will do this only once per RWR account</p>
-    <p class="txtcenter">Be sure the account you're about to claim is currently <strong>not</strong> used on any ranked (official) RWR server</p>
-    <p class="txtcenter">Once the claim procedure has been initiated, you'll have <strong>X minutes</strong> to join a ranked <strong>(Pacifc|Invasion)</strong> server to finally claim your RWR account</p>
+    <div class="grid has-gutter mtm mbm">
+        <div>
+            <p>This procedure to prevent anybody to claim any RWR account</p>
+            <p>You will do this only once per RWR account</p>
+            <p>Be sure the account you're about to claim is currently <strong>not</strong> used on any ranked (official) RWR server</p>
+            <p>Once the claim procedure has been initiated, you'll have <strong>X minutes</strong> to join a ranked <strong>(Pacifc|Invasion)</strong> server to finally claim your RWR account</p>
+        </div>
+        <div>
+            <form method="post" action="{{ url_for('player_claim') }}">
+                <fieldset class="man pam">
+                    {{ form.csrf_token }}
 
-    <div class="txtcenter ptm pbm">
-        <form method="post" action="{{ url_for('player_claim') }}" class="inbl">
-            {{ form.csrf_token }}
+                    {{ macros.form_field(form.type, class="w200p") }}
+                    {{ macros.form_field(form.username, class="w200p") }}
 
-            {{ macros.inline_form_field(form.type, class="mrs") }}
-            {{ macros.inline_form_field(form.username, class="mrs") }}
-
-            <button type="submit"><i class="fa fa-play"></i> Go!</button>
-        </form>
+                    <p class="txtcenter mtm"><button type="submit" class="big"><i class="fa fa-chevron-right"></i> Go!</button></p>
+                </fieldset>
+            </form>
+        </div>
     </div>
 
     <script>

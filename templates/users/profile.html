@@ -15,13 +15,15 @@
 
 {% block content %}
     <div class="grid mts has-gutter">
-        <div class="one-fifth">
-            <img src="{{ user.large_avatar_url }}" class="bordered">
-        </div>
+        {%- if user.large_avatar_url -%}
+            <div class="one-fifth">
+                <img src="{{ user.large_avatar_url }}" class="bordered">
+            </div>
+        {%- endif -%}
 
         {%- for database, database_info in PLAYERS_LIST_DATABASES.items() -%}
             {%- set rwr_accounts_by_type = user.get_rwr_accounts_by_type(database) -%}
-            <div class="two-fifth">
+            <div class="{{ 'two-fifth' if user.large_avatar_url else 'one-half' }}">
                 <table class="{{ 'striped' if rwr_accounts_by_type }}">
                     <thead>
                         <tr>

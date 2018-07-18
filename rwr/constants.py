@@ -321,10 +321,10 @@ SERVER_TYPES = OrderedDict([
     ('viper', 'Viper')
 ])
 
-PLAYERS_LIST_DATABASES = {
-    'invasion': {'name': 'Invasion', 'ranks_country': 'us', 'realm': 'official_invasion'},
-    'pacific': {'name': 'Pacific', 'ranks_country': app.config['PACIFIC_PLAYERS_RANKS_COUNTRY'], 'realm': 'official_pacific'}
-}
+PLAYERS_LIST_DATABASES = OrderedDict([
+    ('invasion', {'name': 'Invasion', 'ranks_country': 'us', 'realm': 'official_invasion'}),
+    ('pacific', {'name': 'Pacific', 'ranks_country': app.config['PACIFIC_PLAYERS_RANKS_COUNTRY'], 'realm': 'official_pacific'})
+])
 
 VALID_DATABASES = PLAYERS_LIST_DATABASES.keys()
 
