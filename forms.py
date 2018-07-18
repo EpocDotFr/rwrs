@@ -28,6 +28,6 @@ class PlayerClaimForm(FlaskForm):
         servers = rwr.scraper.filter_servers(database=database, username=username)
 
         if servers:
-            server = servers[0] # There can be only one
+            server = servers[0] # There can only be one
 
             raise ValidationError('You cannot claim this RWR account as it\'s currently connected on a ranked (official) server ({}).'.format(server.name))
