@@ -37,7 +37,7 @@ class PlayerClaimForm(FlaskForm):
                     db.session.commit()
                 else:
                     if rwr_account.claim_initiated_by_user_id == current_user.id:
-                        raise ValidationError('You are already claiming this account, <a href="{}">click here</a> to continue.'.format(url_for('player_finalize_claim', rwr_account_id=rwr_account.id)))
+                        raise ValidationError('You are already claiming this RWR account, <a href="{}">click here</a> to continue.'.format(url_for('player_finalize_claim', rwr_account_id=rwr_account.id)))
                     else:
                         raise ValidationError('This RWR account is already being claimed.')
 

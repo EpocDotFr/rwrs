@@ -191,7 +191,8 @@ def player_finalize_claim(rwr_account_id):
     return render_template(
         'players/finalize_claim.html',
         error_message=error_message,
-        rwr_account=rwr_account
+        rwr_account=rwr_account,
+        milliseconds_remaining=rwr_account.claim_possible_until.timestamp * 1000
     )
 
 

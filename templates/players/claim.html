@@ -1,8 +1,8 @@
 {% extends 'layout.html' %}
 
-{% block page_title %}<h1><i class="fas fa-user-check"></i> Players › Claim account</h1>{% endblock %}
+{% block page_title %}<h1><i class="fas fa-user-check"></i> Players › Claim RWR account</h1>{% endblock %}
 
-{% block meta_title %}Players › Claim account{% endblock %}
+{% block meta_title %}Players › Claim RWR account{% endblock %}
 
 {% block jsfiles %}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/zepto/1.2.0/zepto.min.js"></script>
@@ -12,13 +12,14 @@
 {% block content %}
     <div class="grid has-gutter mtm mbm">
         <div>
-            <p>This procedure to prevent anybody to claim any RWR account</p>
-            <p>You will do this only once per RWR account</p>
-            <p>Be sure the account you're about to claim is currently <strong>not</strong> used on any ranked (official) RWR server</p>
-            <p>Once the claim procedure has been initiated, you'll have <strong>{{ config['PLAYER_CLAIM_DELAY'] }} minutes</strong> to join a ranked <strong>(Pacifc|Invasion)</strong> server to finally claim your RWR account</p>
+            <p>Claiming RWR accounts on RWRS (or in other words: linking your RWR accounts to your Steam account) is <strong>required</strong> to enable additional features such as the Market.</p>
+            <p>The claim procedure is only two steps long (including this one) and prevents anybody to usurp any RWR account.</p>
+            <p>You'll need to go through the claim procedure only once per RWR accounts you want to claim.</p>
+            <p>Before starting the procedure, <strong>be sure the account you're about to claim is currently <u>not</u> connected on any ranked (official) RWR server</strong>.</p>
+            <p>Once the claim procedure has been initiated, you'll have <strong>{{ config['PLAYER_CLAIM_DELAY'] }} minutes</strong> to join a ranked (official) server to finally claim the desired RWR account.</p>
         </div>
         <div>
-            <form method="post" action="{{ url_for('player_claim') }}">
+            <form method="post" action="{{ url_for('player_claim') }}" class="ptl">
                 <fieldset class="man pam">
                     {{ form.csrf_token }}
 
