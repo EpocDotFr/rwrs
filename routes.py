@@ -186,9 +186,9 @@ def player_finalize_claim(rwr_account_id):
 
             flash('Awesome, you successfully claimed this RWR account!', 'success')
 
-            return redirect(url_for('player_details', database=database, username=username))
+            return redirect(rwr_account.link)
         else:
-            error_message = '{} wasn\'t found connected on any ranked (official) {} server. Please wait a few seconds and try again.'.format(username, rwr_account.type_display)
+            error_message = '<strong>{}</strong> wasn\'t found connected on any ranked (official) <strong>{}</strong> server. Please wait a few seconds and try again.'.format(username, rwr_account.type_display)
 
     return render_template(
         'players/finalize_claim.html',

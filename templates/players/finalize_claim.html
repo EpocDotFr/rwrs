@@ -11,7 +11,7 @@
 
 {% block content %}
     {%- if error_message -%}
-        <p class="alert error pas mbs">{{ error_message }}</p>
+        <p class="alert error pas mbs">{{ error_message|safe }}</p>
     {%- endif -%}
 
     <p>Please now join any ranked (official) <strong>{{ rwr_account.type_display }}</strong> server within the next <strong>X (seconds|minutes)</strong> with the <strong>{{ rwr_account.username }}</strong> RWR account</p>
