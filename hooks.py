@@ -44,7 +44,7 @@ def create_or_login(resp):
 
     login_user(user, remember=True)
 
-    flash('Signed in successfully as {}.'.format(user.steam_username), 'success')
+    flash('Welcome, {}!'.format(user.steam_username), 'success')
 
     return redirect(oid.get_next_url())
 

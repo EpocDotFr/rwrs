@@ -489,8 +489,15 @@ class RwrAccount(db.Model):
         self.claim_initiated_by_user_id = user_id
         self.claim_possible_until = arrow.utcnow().floor('second').shift(minutes=+app.config['PLAYER_CLAIM_DELAY'])
 
-    def abort_claim(self):
-        """Cancel the claim procedure for this RwrAccount."""
+    def reset_claim(self):
+        """Reset the claim procedure for this RwrAccount."""
+        self.claim_initiated_by_user_id = None
+        self.claim_possible_until = None
+
+    def claim(self, user_id):
+        """Make a User claim this RwrAccount."""
+        self.user_id = user_id
+        self.claimed_at = arrow.utcnow().floor('minute')
         self.claim_initiated_by_user_id = None
         self.claim_possible_until = None
 

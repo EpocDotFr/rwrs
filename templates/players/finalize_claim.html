@@ -10,8 +10,16 @@
 {% endblock %}
 
 {% block content %}
-    <p>Please now join any ranked (official) <strong>(Pacifc|Invasion)</strong> server within the next <strong>X (seconds|minutes)</strong> with the <strong>{username}</strong> RWR account</p>
+    {%- if error_message -%}
+        <p class="alert error pas mbs">{{ error_message }}</p>
+    {%- endif -%}
+
+    <p>Please now join any ranked (official) <strong>{{ rwr_account.type_display }}</strong> server within the next <strong>X (seconds|minutes)</strong> with the <strong>{{ rwr_account.username }}</strong> RWR account</p>
     <p>When ready, click on the button below to finalize the procedure</p>
+
+    <form method="post" action="{{ url_for('player_finalize_claim', rwr_account_id=rwr_account.id) }}">
+        <p class="txtcenter mtm"><button type="submit" class="big"><i class="fa fa-check"></i> Finalize</button></p>
+    </form>
 
     <script>
         friendsFeature.all_players_with_servers_details = {{ g.all_players_with_servers_details|tojson }};

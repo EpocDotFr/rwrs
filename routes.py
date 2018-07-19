@@ -159,22 +159,41 @@ def player_claim():
 @login_required
 def player_finalize_claim(rwr_account_id):
     rwr_account = RwrAccount.query.get(rwr_account_id)
+    error_message = None
 
     if not rwr_account or rwr_account.claim_initiated_by_user_id != current_user.id:
         abort(404)
 
-    if arrow.utcnow() >= rwr_account.claim_possible_until:
-        flash('Aborting: you didn\'t finalized the claim procedure in time. Please try again.', 'error')
+    database = rwr_account.type.value.lower()
+    username = rwr_account.username
 
-        rwr_account.abort_claim()
+    if arrow.utcnow() >= rwr_account.claim_possible_until:
+        rwr_account.reset_claim()
 
         db.session.add(rwr_account)
         db.session.commit()
 
-        return redirect(url_for('player_claim', type=rwr_account.type.value.lower(), username=rwr_account.username))
+        flash('Aborting, sorry: you didn\'t finalized the claim procedure in time. Please try again.', 'error')
+
+        return redirect(url_for('player_claim', type=database, username=username))
+
+    if request.method == 'POST':
+        if rwr.scraper.filter_servers(database=database, username=username):
+            rwr_account.claim(current_user.id)
+
+            db.session.add(rwr_account)
+            db.session.commit()
+
+            flash('Awesome, you successfully claimed this RWR account!', 'success')
+
+            return redirect(url_for('player_details', database=database, username=username))
+        else:
+            error_message = '{} wasn\'t found connected on any ranked (official) {} server. Please wait a few seconds and try again.'.format(username, rwr_account.type_display)
 
     return render_template(
-        'players/finalize_claim.html'
+        'players/finalize_claim.html',
+        error_message=error_message,
+        rwr_account=rwr_account
     )
 
 
@@ -441,7 +460,7 @@ def sign_in():
 def sign_out():
     logout_user()
 
-    flash('You are now signed out.', 'success')
+    flash('You are now signed out, see ya!', 'success')
 
     return redirect(url_for('home'))
 

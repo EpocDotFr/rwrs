@@ -15,7 +15,7 @@
             <p>This procedure to prevent anybody to claim any RWR account</p>
             <p>You will do this only once per RWR account</p>
             <p>Be sure the account you're about to claim is currently <strong>not</strong> used on any ranked (official) RWR server</p>
-            <p>Once the claim procedure has been initiated, you'll have <strong>X minutes</strong> to join a ranked <strong>(Pacifc|Invasion)</strong> server to finally claim your RWR account</p>
+            <p>Once the claim procedure has been initiated, you'll have <strong>{{ config['PLAYER_CLAIM_DELAY'] }} minutes</strong> to join a ranked <strong>(Pacifc|Invasion)</strong> server to finally claim your RWR account</p>
         </div>
         <div>
             <form method="post" action="{{ url_for('player_claim') }}">
