@@ -498,8 +498,17 @@ class RwrAccount(db.Model):
         """Make a User claim this RwrAccount."""
         self.user_id = user_id
         self.claimed_at = arrow.utcnow().floor('minute')
-        self.claim_initiated_by_user_id = None
-        self.claim_possible_until = None
+
+        self.reset_claim()
+
+    def has_expired(self):
+        """Determine if this RwrAccount claim period has expired."""
+        if arrow.utcnow() >= self.claim_possible_until:
+            self.reset_claim()
+
+            return True
+
+        return False
 
     def __repr__(self):
         return 'RwrAccount:{}'.format(self.id)

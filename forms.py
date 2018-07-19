@@ -4,6 +4,7 @@ from flask_login import current_user
 from flask_wtf import FlaskForm
 from models import RwrAccount
 from flask import url_for
+from rwrs import db
 import wtforms.validators as validators
 import rwr.constants
 import rwr.scraper
@@ -31,10 +32,14 @@ class PlayerClaimForm(FlaskForm):
                 ))
 
             if rwr_account.claim_initiated_by_user_id:
-                if rwr_account.claim_initiated_by_user_id == current_user.id:
-                    raise ValidationError('You are already claiming this account, <a href="{}">click here</a> to continue.'.format(url_for('player_finalize_claim', rwr_account_id=rwr_account.id)))
+                if rwr_account.has_expired():
+                    db.session.add(rwr_account)
+                    db.session.commit()
                 else:
-                    raise ValidationError('This RWR account is already being claimed.')
+                    if rwr_account.claim_initiated_by_user_id == current_user.id:
+                        raise ValidationError('You are already claiming this account, <a href="{}">click here</a> to continue.'.format(url_for('player_finalize_claim', rwr_account_id=rwr_account.id)))
+                    else:
+                        raise ValidationError('This RWR account is already being claimed.')
 
         servers = rwr.scraper.filter_servers(database=database, username=username)
 

@@ -220,7 +220,7 @@
             {%- if field.errors -%}
                 <ul class="txtred pls">
                     {%- for error in field.errors -%}
-                        <li>{{ error }}</li>
+                        <li>{{ error|safe }}</li>
                     {%- endfor -%}
                 </ul>
             {%- endif %}

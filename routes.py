@@ -167,13 +167,11 @@ def player_finalize_claim(rwr_account_id):
     database = rwr_account.type.value.lower()
     username = rwr_account.username
 
-    if arrow.utcnow() >= rwr_account.claim_possible_until:
-        rwr_account.reset_claim()
-
+    if rwr_account.has_expired():
         db.session.add(rwr_account)
         db.session.commit()
 
-        flash('Aborting, sorry: you didn\'t finalized the claim procedure in time. Please try again.', 'error')
+        flash('Sorry, you didn\'t finalized the claim procedure in time. Please try again.', 'error')
 
         return redirect(url_for('player_claim', type=database, username=username))
 
