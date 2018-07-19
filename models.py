@@ -378,7 +378,7 @@ class User(db.Model, UserMixin):
     updated_at = db.Column(ArrowType, default=arrow.utcnow().floor('minute'), onupdate=arrow.utcnow().floor('minute'), nullable=False)
     last_login_at = db.Column(ArrowType, nullable=False)
 
-    rwr_accounts = db.relationship('RwrAccount', backref='user', lazy=True)
+    rwr_accounts = db.relationship('RwrAccount', backref='user', lazy=True, foreign_keys='RwrAccount.user_id')
 
     def get_rwr_accounts_by_type(self, type):
         """Return the RwrAccounts linked to this user, filtered by account type."""
@@ -432,8 +432,11 @@ class RwrAccount(db.Model):
     username = db.Column(db.String(16), nullable=False)
     created_at = db.Column(ArrowType, default=arrow.utcnow().floor('minute'), nullable=False)
     updated_at = db.Column(ArrowType, default=arrow.utcnow().floor('minute'), onupdate=arrow.utcnow().floor('minute'), nullable=False)
+    claim_possible_until = db.Column(ArrowType)
+    claimed_at = db.Column(ArrowType)
 
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    claim_initiated_by_user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
     @memoized_property
     def link(self):
@@ -480,6 +483,16 @@ class RwrAccount(db.Model):
             rwr_account.username = username
 
         return rwr_account
+
+    def init_claim(self, user_id):
+        """Initialize the claim procedure for this RwrAccount."""
+        self.claim_initiated_by_user_id = user_id
+        self.claim_possible_until = arrow.utcnow().floor('second').shift(minutes=+app.config['PLAYER_CLAIM_DELAY'])
+
+    def abort_claim(self):
+        """Cancel the claim procedure for this RwrAccount."""
+        self.claim_initiated_by_user_id = None
+        self.claim_possible_until = None
 
     def __repr__(self):
         return 'RwrAccount:{}'.format(self.id)

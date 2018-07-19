@@ -142,12 +142,12 @@ def player_claim():
             create_if_unexisting=True
         )
 
-        # TODO Set this rwr_account as currently being claimed along a timestamp
+        rwr_account.init_claim(current_user.id)
 
         db.session.add(rwr_account)
         db.session.commit()
 
-        redirect(url_for('player_claim_finalize', rwr_account_id=rwr_account.id))
+        return redirect(url_for('player_finalize_claim', rwr_account_id=rwr_account.id))
 
     return render_template(
         'players/claim.html',
@@ -157,8 +157,25 @@ def player_claim():
 
 @app.route('/players/claim/<int:rwr_account_id>', methods=['GET', 'POST'])
 @login_required
-def player_claim_finalize(rwr_account_id):
-    return 'TODO'
+def player_finalize_claim(rwr_account_id):
+    rwr_account = RwrAccount.query.get(rwr_account_id)
+
+    if not rwr_account or rwr_account.claim_initiated_by_user_id != current_user.id:
+        abort(404)
+
+    if arrow.utcnow() >= rwr_account.claim_possible_until:
+        flash('Aborting: you didn\'t finalized the claim procedure in time. Please try again.', 'error')
+
+        rwr_account.abort_claim()
+
+        db.session.add(rwr_account)
+        db.session.commit()
+
+        return redirect(url_for('player_claim', type=rwr_account.type.value.lower(), username=rwr_account.username))
+
+    return render_template(
+        'players/finalize_claim.html'
+    )
 
 
 @app.route('/players/<username>')
@@ -434,9 +451,7 @@ def user_profile(user_id):
     user = User.query.get(user_id)
 
     if not user:
-        flash('Sorry, this user wasn\'t found.', 'error')
-
-        return redirect(url_for('home'))
+        abort(404)
 
     return render_template(
         'users/profile.html',

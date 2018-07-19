@@ -44,6 +44,9 @@ def upgrade_():
     sa.UniqueConstraint('steam_id')
     )
     op.add_column('rwr_accounts', sa.Column('user_id', sa.Integer(), nullable=True))
+    op.add_column('rwr_accounts', sa.Column('claim_initiated_by_user_id', sa.Integer(), nullable=True))
+    op.add_column('rwr_accounts', sa.Column('claim_possible_until', sqlalchemy_utils.types.arrow.ArrowType(), nullable=True))
+    op.add_column('rwr_accounts', sa.Column('claimed_at', sqlalchemy_utils.types.arrow.ArrowType(), nullable=True))
     op.create_foreign_key(None, 'rwr_accounts', 'users', ['user_id'], ['id'])
     # ### end Alembic commands ###
 

@@ -26,7 +26,8 @@ class PlayerClaimForm(FlaskForm):
             if rwr_account.user_id:
                 raise ValidationError('You cannot claim an already claimed RWR account (claimed by {}).'.format(rwr_account.user.steam_username))
 
-            # TODO Check if a claim procedure is already ongoing
+            if rwr_account.claim_initiated_by_user_id:
+                raise ValidationError('This RWR account is already being claimed.')
 
         servers = rwr.scraper.filter_servers(database=database, username=username)
 
