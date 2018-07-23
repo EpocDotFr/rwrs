@@ -62,7 +62,6 @@ class ServerPlayerCount(db.Model, Measurable):
             return self.filter(ServerPlayerCount.measured_at < one_week_ago()).all()
 
     __tablename__ = 'servers_player_count'
-    __bind_key__ = 'servers_player_count'
     __table_args__ = (db.Index('ip_port_idx', 'ip', 'port'), )
     query_class = ServerPlayerCountQuery
 
@@ -111,7 +110,6 @@ class SteamPlayerCount(db.Model, Measurable):
             return self.filter(SteamPlayerCount.measured_at < one_week_ago()).all()
 
     __tablename__ = 'steam_players_count'
-    __bind_key__ = 'steam_players_count'
     query_class = SteamPlayerCountQuery
 
     @staticmethod
@@ -400,7 +398,6 @@ class RwrAccount(db.Model):
 
 class RwrAccountStat(db.Model):
     __tablename__ = 'rwr_account_stats'
-    __bind_key__ = 'rwr_account_stats'
     __table_args__ = (
         db.Index('rwr_account_id_idx', 'rwr_account_id'),
         db.Index('created_at_idx', 'created_at'),

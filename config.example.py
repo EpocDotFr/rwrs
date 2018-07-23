@@ -1,5 +1,10 @@
 SECRET_KEY = 'secretkeyhere'
 SERVER_NAME = 'localhost:8080'
+DB_USERNAME = 'root'
+DB_PASSWORD = ''
+DB_HOST = '127.0.0.1'
+DB_PORT = 3306
+DB_NAME = 'rwrs'
 BETA = False
 GAUGES_SITE_ID = None
 BUGSNAG_API_KEY = None
