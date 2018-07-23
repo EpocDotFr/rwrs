@@ -384,7 +384,7 @@ class RwrAccount(db.Model):
     @memoized_property
     def has_stats(self):
         """Determine is this RwrAccount object have at least one RwrAccountStat."""
-        return RwrAccountStat.query.with_entities(func.count('*')).filter(RwrAccountStat.rwr_account_id == self.id).scalar() > 0 # TODO Enhance after real relation will be created
+        return RwrAccountStat.query.with_entities(func.count('*')).filter(RwrAccountStat.rwr_account_id == self.id).scalar() > 0
 
     @staticmethod
     def get_by_type_and_username(type, username):
