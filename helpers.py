@@ -123,12 +123,6 @@ def ping(host, network_timeout=3):
         return False
 
 
-def chunks(l, n):
-    """Yield successive n-sized chunks from l."""
-    for i in range(0, len(l), n):
-        yield l[i:i + n]
-
-
 def simplified_integer(integer):
     """Return a simplified human-readable integer."""
     if not integer:
