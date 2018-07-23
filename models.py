@@ -374,7 +374,7 @@ class RwrAccount(db.Model):
     type = db.Column(db.Enum(RwrAccountType), nullable=False)
     username = db.Column(db.String(16), nullable=False)
     created_at = db.Column(ArrowType, default=arrow.utcnow().floor('minute'), nullable=False)
-    updated_at = db.Column(ArrowType, default=arrow.utcnow().floor('minute'), nullable=False)
+    updated_at = db.Column(ArrowType, default=arrow.utcnow().floor('minute'), onupdate=arrow.utcnow().floor('minute'), nullable=False)
 
     @memoized_property
     def stats(self):

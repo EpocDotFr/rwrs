@@ -7,7 +7,6 @@
 {% block meta_description %}Get a banner to include in your website / blog / forum for the{{ ' ranked ' + server.database_name if server.is_ranked else ' dedicated' if server.is_dedicated }} Running With Rifles (RWR) server named {{ macros.server_name(server, link=False, no_icon=True) }}{% if server.location.country_code %} hosted in {{ server.location.text }}{% endif %}.{% endblock %}
 
 {% block jsfiles %}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/zepto/1.2.0/zepto.min.js"></script>
     {% assets 'js_friends' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
 {% endblock %}
 

@@ -29,6 +29,7 @@
     {% assets 'css_app' %}<link rel="stylesheet" href="{{ ASSET_URL }}">{% endassets %}
 
     {% block jsfiles %} {% endblock %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/zepto/1.2.0/zepto.min.js"></script>
 
     {% if canonical_url %}<link rel="canonical" href="{{ canonical_url }}">{% endif %}
 
