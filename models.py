@@ -44,7 +44,7 @@ class ServerPlayerCount(db.Model, Measurable):
             q = self._get_base_count_query(func.sum(ServerPlayerCount.count).label('v'))
 
             if ip and port:
-                q = q.filter(ServerPlayerCount._ip == ip, ServerPlayerCount.port == port)
+                q = q.filter(ServerPlayerCount.ip == ip, ServerPlayerCount.port == port)
 
             return q.all()
 
@@ -367,7 +367,7 @@ class RwrAccount(db.Model):
     @memoized_property
     def ordered_stats(self):
         """Return a query which have to be executed to get all RwrAccountStat linked to this RwrAccount."""
-        return self.stats.query.order_by(RwrAccountStat.created_at.desc())
+        return RwrAccountStat.query.filter(RwrAccountStat.rwr_account_id == self.id).order_by(RwrAccountStat.created_at.desc())
 
     @memoized_property
     def has_stats(self):
