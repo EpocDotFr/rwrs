@@ -376,7 +376,7 @@ def save_players_stats(reset):
                     all_rwr_accounts_stat.append(rwr_account_stat)
 
             # Finally save stats for all eligible players
-            db.session.add_all(all_rwr_accounts_stat)
+            db.session.bulk_save_objects(all_rwr_accounts_stat)
             db.session.commit()
 
     click.secho('Done', fg='green')
@@ -424,26 +424,22 @@ def migrate_to_percona():
         return socket.inet_ntoa(struct.pack('!L', long))
 
     def db_chunks(sqlite_db, table):
-        offset = 0
         limit = 100
 
-        while True:
-            rows = sqlite_db.execute('SELECT * FROM {table} LIMIT {offset}, {limit}'.format(table=table, offset=offset, limit=limit)).fetchall()
+        total = int(sqlite_db.execute('SELECT COUNT(*) AS total FROM {table}'.format(table=table)).fetchone()['total'])
 
-            if not rows:
-                break
-
-            yield rows
-
-            offset += limit
+        for offset in range(0, total, limit):
+            yield sqlite_db.execute('SELECT * FROM {table} LIMIT {offset}, {limit}'.format(table=table, offset=offset, limit=limit))
 
     # -----------------------------------------------------------------------
     # servers_player_count.sqlite
 
+    click.echo('servers_player_count.sqlite')
+
     sqlite_db = sqlite3.connect('storage/data/servers_player_count.sqlite')
     sqlite_db.row_factory = sqlite3.Row
 
-    rows = sqlite_db.execute('SELECT * FROM servers_player_count').fetchall()
+    rows = sqlite_db.execute('SELECT * FROM servers_player_count')
     new_rows = []
 
     for row in rows:
@@ -456,7 +452,7 @@ def migrate_to_percona():
 
         new_rows.append(model)
 
-    db.session.add_all(new_rows)
+    db.session.bulk_save_objects(new_rows)
     db.session.commit()
 
     sqlite_db.close()
@@ -464,10 +460,12 @@ def migrate_to_percona():
     # -----------------------------------------------------------------------
     # steam_players_count.sqlite
 
+    click.echo('steam_players_count.sqlite')
+
     sqlite_db = sqlite3.connect('storage/data/steam_players_count.sqlite')
     sqlite_db.row_factory = sqlite3.Row
 
-    rows = sqlite_db.execute('SELECT * FROM steam_players_count').fetchall()
+    rows = sqlite_db.execute('SELECT * FROM steam_players_count')
     new_rows = []
 
     for row in rows:
@@ -478,7 +476,7 @@ def migrate_to_percona():
 
         new_rows.append(model)
 
-    db.session.add_all(new_rows)
+    db.session.bulk_save_objects(new_rows)
     db.session.commit()
 
     sqlite_db.close()
@@ -486,12 +484,16 @@ def migrate_to_percona():
     # -----------------------------------------------------------------------
     # db.sqlite
 
+    click.echo('db.sqlite')
+
     sqlite_db = sqlite3.connect('storage/data/db.sqlite')
     sqlite_db.row_factory = sqlite3.Row
 
     # variables
 
-    rows = sqlite_db.execute('SELECT * FROM variables').fetchall()
+    click.echo('  variables')
+
+    rows = sqlite_db.execute('SELECT * FROM variables')
     new_rows = []
 
     for row in rows:
@@ -503,12 +505,14 @@ def migrate_to_percona():
 
         new_rows.append(model)
 
-    db.session.add_all(new_rows)
+    db.session.bulk_save_objects(new_rows)
     db.session.commit()
 
     # rwr_root_servers
 
-    rows = sqlite_db.execute('SELECT * FROM rwr_root_servers').fetchall()
+    click.echo('  rwr_root_servers')
+
+    rows = sqlite_db.execute('SELECT * FROM rwr_root_servers')
     new_rows = []
 
     for row in rows:
@@ -519,10 +523,12 @@ def migrate_to_percona():
 
         new_rows.append(model)
 
-    db.session.add_all(new_rows)
+    db.session.bulk_save_objects(new_rows)
     db.session.commit()
 
     # rwr_accounts
+
+    click.echo('  rwr_accounts')
 
     for rows in db_chunks(sqlite_db, 'rwr_accounts'):
         new_rows = []
@@ -537,13 +543,15 @@ def migrate_to_percona():
 
             new_rows.append(model)
 
-        db.session.add_all(new_rows)
+        db.session.bulk_save_objects(new_rows)
         db.session.commit()
 
     sqlite_db.close()
 
     # -----------------------------------------------------------------------
     # rwr_account_stats.sqlite
+
+    click.echo('rwr_account_stats.sqlite')
 
     sqlite_db = sqlite3.connect('storage/data/rwr_account_stats.sqlite')
     sqlite_db.row_factory = sqlite3.Row
@@ -573,7 +581,7 @@ def migrate_to_percona():
 
             new_rows.append(model)
 
-        db.session.add_all(new_rows)
+        db.session.bulk_save_objects(new_rows)
         db.session.commit()
 
     sqlite_db.close()
