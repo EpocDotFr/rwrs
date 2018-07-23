@@ -24,8 +24,6 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/metrics-graphics/2.15.6/metricsgraphics.min.js"></script>
     {%- endif -%}
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/zepto/1.2.0/zepto.min.js"></script>
-
     {%- if request.view_args.get('tab') == 'evolution' -%}
         {% assets 'js_friends_charts' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
     {%- else -%}
