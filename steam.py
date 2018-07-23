@@ -58,6 +58,9 @@ class SteamworksApiClient:
 
         return data['player_count']
 
+    def __repr__(self):
+        return 'SteamworksApiClient'
+
 
 @cache.memoize(timeout=app.config['RWR_EVENTS_CACHE_TIMEOUT'])
 def get_group_events(group_or_game_id, is_official=False, year=None, month=None):
