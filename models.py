@@ -377,12 +377,12 @@ class RwrAccount(db.Model):
     @memoized_property
     def stats(self):
         """Return a query which have to be executed to get all RwrAccountStat linked to this RwrAccount."""
-        return RwrAccountStat.query.filter(RwrAccountStat.rwr_account_id == self.id).order_by(RwrAccountStat.created_at.desc())
+        return RwrAccountStat.query.filter(RwrAccountStat.rwr_account_id == self.id).order_by(RwrAccountStat.created_at.desc()) # TODO Remove after real relation will be created
 
     @memoized_property
     def has_stats(self):
         """Determine is this RwrAccount object have at least one RwrAccountStat."""
-        return RwrAccountStat.query.with_entities(func.count('*')).filter(RwrAccountStat.rwr_account_id == self.id).scalar() > 0
+        return RwrAccountStat.query.with_entities(func.count('*')).filter(RwrAccountStat.rwr_account_id == self.id).scalar() > 0 # TODO Enhance after real relation will be created
 
     @staticmethod
     def get_by_type_and_username(type, username):
@@ -422,7 +422,7 @@ class RwrAccountStat(db.Model):
     hash = db.Column(db.String(32), nullable=False)
     created_at = db.Column(ArrowType, default=arrow.utcnow().floor('day'), nullable=False)
 
-    rwr_account_id = db.Column(db.Integer, nullable=False) # Weak foreign key to the rwr_accounts located in another DB
+    rwr_account_id = db.Column(db.Integer, nullable=False) # TODO Create real relation
 
     def compute_hash(self):
         """Compute the hash corresponding to the data of this RwrAccountStat."""
@@ -482,7 +482,7 @@ class RwrAccountStat(db.Model):
     @memoized_property
     def rwr_account(self):
         """Return the RwrAccount object linked to this RwrAccountStat."""
-        return RwrAccount.query.get(self.rwr_account_id)
+        return RwrAccount.query.get(self.rwr_account_id) # TODO Remove after real relation will be created
 
     @memoized_property
     def score(self):
