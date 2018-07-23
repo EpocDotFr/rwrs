@@ -66,16 +66,6 @@ def humanize_integer(integer):
     return format(integer, ',d').replace(',', ' ')
 
 
-def ip2long(ip):
-    """Convert an IP to its integer representation."""
-    return struct.unpack('!L', socket.inet_aton(ip))[0]
-
-
-def long2ip(long):
-    """Convert an integer IP to its string representation."""
-    return socket.inet_ntoa(struct.pack('!L', long))
-
-
 def merge_query_string_params(params):
     """Return the dict of all the current request query string parameters after merging params in it."""
     args = request.args.to_dict()

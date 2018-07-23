@@ -65,25 +65,13 @@ class ServerPlayerCount(db.Model, Measurable):
     __table_args__ = (db.Index('ip_port_idx', 'ip', 'port'), )
     query_class = ServerPlayerCountQuery
 
-    _ip = db.Column('ip', db.Integer, nullable=False)
+    ip = db.Column(db.String(15), nullable=False)
     port = db.Column(db.Integer, nullable=False)
-
-    @property
-    def ip(self):
-        return helpers.long2ip(self._ip) if self._ip else None
-
-    @ip.setter
-    def ip(self, value):
-        if value:
-            self._ip = helpers.ip2long(value)
 
     @staticmethod
     @cache.memoize(timeout=app.config['GRAPHS_DATA_CACHE_TIMEOUT'])
     def server_players_data(ip=None, port=None):
         """Return the servers players chart data, optionally filtering by a server's IP and port."""
-        if ip:
-            ip = helpers.ip2long(ip)
-
         return Measurable.transform_data(ServerPlayerCount.query.get_player_count(ip, port))
 
     @staticmethod
