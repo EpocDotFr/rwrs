@@ -2,8 +2,6 @@ from collections import OrderedDict
 from flask import request
 import subprocess
 import platform
-import socket
-import struct
 import json
 import os
 
