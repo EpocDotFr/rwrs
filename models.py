@@ -234,7 +234,7 @@ class Variable(db.Model):
 
     name = db.Column(db.String(255), nullable=False, unique=True)
     type = db.Column(db.Enum(VariableType), nullable=False)
-    _value = db.Column('value', db.String)
+    _value = db.Column('value', db.String(255))
 
     @property
     def value(self):
@@ -374,10 +374,12 @@ class RwrAccount(db.Model):
     created_at = db.Column(ArrowType, default=arrow.utcnow().floor('minute'), nullable=False)
     updated_at = db.Column(ArrowType, default=arrow.utcnow().floor('minute'), onupdate=arrow.utcnow().floor('minute'), nullable=False)
 
+    stats = db.relationship('RwrAccountStat', backref='rwr_account', lazy=True)
+
     @memoized_property
-    def stats(self):
+    def ordered_stats(self):
         """Return a query which have to be executed to get all RwrAccountStat linked to this RwrAccount."""
-        return RwrAccountStat.query.filter(RwrAccountStat.rwr_account_id == self.id).order_by(RwrAccountStat.created_at.desc()) # TODO Remove after real relation will be created
+        return self.stats.query.order_by(RwrAccountStat.created_at.desc())
 
     @memoized_property
     def has_stats(self):
@@ -422,7 +424,7 @@ class RwrAccountStat(db.Model):
     hash = db.Column(db.String(32), nullable=False)
     created_at = db.Column(ArrowType, default=arrow.utcnow().floor('day'), nullable=False)
 
-    rwr_account_id = db.Column(db.Integer, nullable=False) # TODO Create real relation
+    rwr_account_id = db.Column(db.Integer, db.ForeignKey('rwr_accounts.id'), nullable=False)
 
     def compute_hash(self):
         """Compute the hash corresponding to the data of this RwrAccountStat."""
@@ -478,11 +480,6 @@ class RwrAccountStat(db.Model):
             }
         else:
             return RwrAccountStat.transform_data(rwr_account_stats, column, format=None)
-
-    @memoized_property
-    def rwr_account(self):
-        """Return the RwrAccount object linked to this RwrAccountStat."""
-        return RwrAccount.query.get(self.rwr_account_id) # TODO Remove after real relation will be created
 
     @memoized_property
     def score(self):
