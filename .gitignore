@@ -1,7 +1,4 @@
 config.py
-storage/data/*.sqlite
-storage/data/*.sqlite.bak
-storage/data/backup_*.tar.gz
 storage/data/*.mmdb
 storage/cache
 storage/webassets-cache/*

@@ -17,12 +17,9 @@ import math
 app = Flask(__name__, static_url_path='')
 app.config.from_pyfile('config.py')
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///storage/data/db.sqlite'
-app.config['SQLALCHEMY_BINDS'] = {
-    'servers_player_count': 'sqlite:///storage/data/servers_player_count.sqlite',
-    'steam_players_count': 'sqlite:///storage/data/steam_players_count.sqlite',
-    'rwr_account_stats': 'sqlite:///storage/data/rwr_account_stats.sqlite'
-}
+import helpers
+
+app.config['SQLALCHEMY_DATABASE_URI'] = helpers.build_database_uri()
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['CACHE_TYPE'] = 'filesystem'
 app.config['CACHE_DIR'] = 'storage/cache'
@@ -67,7 +64,6 @@ assets.register('css_app', Bundle('css/flags.css', 'css/app.css', filters='cssut
 login_manager.session_protection = 'strong'
 login_manager.login_message_category = 'info'
 
-import helpers
 import rwr.constants
 import rwr.utils
 

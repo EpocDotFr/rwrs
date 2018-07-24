@@ -1,9 +1,8 @@
 from collections import OrderedDict
 from flask import request
+from rwrs import app
 import subprocess
 import platform
-import socket
-import struct
 import json
 import os
 import re
@@ -70,16 +69,6 @@ def humanize_integer(integer):
     return format(integer, ',d').replace(',', ' ')
 
 
-def ip2long(ip):
-    """Convert an IP to its integer representation."""
-    return struct.unpack('!L', socket.inet_aton(ip))[0]
-
-
-def long2ip(long):
-    """Convert an integer IP to its string representation."""
-    return socket.inet_ntoa(struct.pack('!L', long))
-
-
 def merge_query_string_params(params):
     """Return the dict of all the current request query string parameters after merging params in it."""
     args = request.args.to_dict()
@@ -139,12 +128,6 @@ def ping(host, network_timeout=3):
         return False
 
 
-def chunks(l, n):
-    """Yield successive n-sized chunks from l."""
-    for i in range(0, len(l), n):
-        yield l[i:i + n]
-
-
 def simplified_integer(integer):
     """Return a simplified human-readable integer."""
     if not integer:
@@ -158,6 +141,39 @@ def simplified_integer(integer):
         integer /= 1000.0
 
     return '{}{}'.format('{:f}'.format(integer).rstrip('0').rstrip('.'), ['', 'K', 'M', 'B', 'T'][magnitude])
+
+
+def build_database_uri():
+    """Return the database connection string."""
+    uri = 'mysql+pymysql://{username}:{password}@'
+
+    params = {
+        'username': app.config['DB_USERNAME'],
+        'password': app.config['DB_PASSWORD']
+    }
+
+    if not app.config['DB_UNIX_SOCKET']:
+        uri += '{host}:{port}'
+
+        params.update({
+            'host': app.config['DB_HOST'],
+            'port': app.config['DB_PORT']
+        })
+
+    uri += '/{dbname}'
+
+    params.update({
+        'dbname': app.config['DB_NAME']
+    })
+
+    if app.config['DB_UNIX_SOCKET']:
+        uri += '?unix_socket={unix_socket}'
+
+        params.update({
+            'unix_socket': app.config['DB_UNIX_SOCKET']
+        })
+
+    return uri.format(**params)
 
 
 def parse_steam_id_from_identity_url(identity_url):
