@@ -355,7 +355,7 @@ class User(db.Model, UserMixin):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 
-    steam_id = db.Column(db.Integer, nullable=False, unique=True)
+    steam_id = db.Column(db.Integer(17), nullable=False, unique=True)
     steam_username = db.Column(db.String(80), nullable=False)
     small_avatar_url = db.Column(db.String(255))
     large_avatar_url = db.Column(db.String(255))
