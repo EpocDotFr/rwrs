@@ -376,120 +376,8 @@ def save_players_stats(reset):
                     all_rwr_accounts_stat.append(rwr_account_stat)
 
             # Finally save stats for all eligible players
-            db.session.add_all(all_rwr_accounts_stat)
+            db.session.bulk_save_objects(all_rwr_accounts_stat)
             db.session.commit()
-
-    click.secho('Done', fg='green')
-
-
-@app.cli.command()
-@click.option('--directory', '-d', help='Directory containing the rwrtrack CSV files')
-@click.option('--reset', is_flag=True, help='Reset all RWR accounts and stats')
-def import_rwrtrack_data(directory, reset):
-    """Import data from rwrtrack."""
-    from models import RwrAccount, RwrAccountType, RwrAccountStat
-    from glob import glob
-    from rwrs import db
-    import helpers
-    import arrow
-    import csv
-    import os
-
-    if reset and click.confirm('Are you sure to reset all RWR accounts and stats?'):
-        RwrAccountStat.query.delete()
-        RwrAccount.query.delete()
-        db.session.commit()
-
-    csv_filenames = glob(os.path.join(directory, '*.csv'))
-    chunks = 100
-
-    click.echo('{} files to import'.format(len(csv_filenames)))
-
-    for csv_filename in csv_filenames:
-        click.echo('Opening ' + csv_filename)
-
-        created_at = arrow.get(os.path.splitext(os.path.basename(csv_filename))[0]).floor('day')
-
-        with open(csv_filename, 'r', encoding='utf-8', newline='') as f:
-            next(f, None) # Ignore first line as it's the CSV header
-
-            csv_data = csv.reader(f, quoting=csv.QUOTE_NONNUMERIC)
-            leaderboard_position = 1
-            start = 0
-
-            for players in helpers.chunks(list(csv_data), chunks):
-                click.echo('  Chunk start: {}'.format(start))
-
-                all_player_names = [player[0].encode('iso-8859-1').decode('utf-8') for player in players]
-
-                existing_rwr_accounts = RwrAccount.query.filter(
-                    RwrAccount.type == RwrAccountType.INVASION,
-                    RwrAccount.username.in_(all_player_names)
-                ).all()
-
-                rwr_accounts_by_username = {rwr_account.username: rwr_account for rwr_account in existing_rwr_accounts}
-
-                # Create RWR accounts if they do not exists / touch the updated_at timestamp if they exists
-                for player in players:
-                    username = player[0].encode('iso-8859-1').decode('utf-8')
-
-                    if username not in rwr_accounts_by_username:
-                        rwr_account = RwrAccount()
-
-                        rwr_account.username = username
-                        rwr_account.type = RwrAccountType.INVASION
-
-                        rwr_accounts_by_username[username] = rwr_account
-                    else:
-                        rwr_account = rwr_accounts_by_username[username]
-
-                        rwr_account.updated_at = arrow.utcnow().floor('minute')
-
-                    db.session.add(rwr_account)
-
-                db.session.commit()
-
-                # Create all the RwrAccountStat objects for each players
-                all_rwr_accounts_stat = []
-
-                for player in players:
-                    username = player[0].encode('iso-8859-1').decode('utf-8')
-
-                    rwr_account_stat = RwrAccountStat()
-
-                    rwr_account_stat.leaderboard_position = leaderboard_position
-                    rwr_account_stat.xp = int(player[1])
-                    rwr_account_stat.kills = int(player[3])
-                    rwr_account_stat.deaths = int(player[4])
-                    rwr_account_stat.time_played = int(player[2]) * 60
-                    rwr_account_stat.longest_kill_streak = int(player[5])
-                    rwr_account_stat.targets_destroyed = int(player[6])
-                    rwr_account_stat.vehicles_destroyed = int(player[7])
-                    rwr_account_stat.soldiers_healed = int(player[8])
-                    rwr_account_stat.teamkills = int(player[9])
-                    rwr_account_stat.distance_moved = round(int(player[10]) / 1000, 1)
-                    rwr_account_stat.shots_fired = int(player[11])
-                    rwr_account_stat.throwables_thrown = int(player[12])
-                    rwr_account_stat.created_at = created_at
-                    rwr_account_stat.rwr_account_id = rwr_accounts_by_username[username].id
-
-                    rwr_account_stat.compute_hash()
-
-                    # Get the latest RwrAccountStat object saved for this RwrAccount and check if its data is not the same
-                    already_existing_rwr_account_stat = RwrAccountStat.query.filter(
-                        RwrAccountStat.hash == rwr_account_stat.hash
-                    ).order_by(RwrAccountStat.created_at.desc()).first()
-
-                    if not already_existing_rwr_account_stat:
-                        all_rwr_accounts_stat.append(rwr_account_stat)
-
-                    leaderboard_position += 1
-
-                # Finally save stats for all eligible players
-                db.session.add_all(all_rwr_accounts_stat)
-                db.session.commit()
-
-                start += chunks
 
     click.secho('Done', fg='green')
 
@@ -521,3 +409,180 @@ def save_ranked_servers_admins():
     helpers.save_json(app.config['RANKED_SERVERS_ADMINS_FILE'], admins)
 
     click.secho('Done', fg='green')
+
+
+@app.cli.command()
+def migrate_to_percona():
+    from models import ServerPlayerCount, SteamPlayerCount, Variable, VariableType, RwrRootServer, RwrRootServerStatus, RwrAccount, RwrAccountType, RwrAccountStat
+    from rwrs import db
+    import sqlite3
+    import socket
+    import struct
+
+    def long2ip(long):
+        """Convert an integer IP to its string representation."""
+        return socket.inet_ntoa(struct.pack('!L', long))
+
+    def db_chunks(sqlite_db, table):
+        limit = 100
+
+        total = int(sqlite_db.execute('SELECT COUNT(*) AS total FROM {table}'.format(table=table)).fetchone()['total'])
+        cur = sqlite_db.execute('SELECT * FROM {table}'.format(table=table))
+
+        for _ in range(0, total, limit):
+            yield cur.fetchmany(size=limit)
+
+    # -----------------------------------------------------------------------
+    # servers_player_count.sqlite
+
+    click.echo('servers_player_count.sqlite')
+
+    sqlite_db = sqlite3.connect('storage/data/servers_player_count.sqlite')
+    sqlite_db.row_factory = sqlite3.Row
+
+    rows = sqlite_db.execute('SELECT * FROM servers_player_count')
+    new_rows = []
+
+    for row in rows:
+        model = ServerPlayerCount()
+        model.id = row['id']
+        model.measured_at = row['measured_at']
+        model.count = row['count']
+        model.ip = long2ip(row['ip'])
+        model.port = row['port']
+
+        new_rows.append(model)
+
+    db.session.bulk_save_objects(new_rows)
+    db.session.commit()
+
+    sqlite_db.close()
+
+    # -----------------------------------------------------------------------
+    # steam_players_count.sqlite
+
+    click.echo('steam_players_count.sqlite')
+
+    sqlite_db = sqlite3.connect('storage/data/steam_players_count.sqlite')
+    sqlite_db.row_factory = sqlite3.Row
+
+    rows = sqlite_db.execute('SELECT * FROM steam_players_count')
+    new_rows = []
+
+    for row in rows:
+        model = SteamPlayerCount()
+        model.id = row['id']
+        model.measured_at = row['measured_at']
+        model.count = row['count']
+
+        new_rows.append(model)
+
+    db.session.bulk_save_objects(new_rows)
+    db.session.commit()
+
+    sqlite_db.close()
+
+    # -----------------------------------------------------------------------
+    # db.sqlite
+
+    click.echo('db.sqlite')
+
+    sqlite_db = sqlite3.connect('storage/data/db.sqlite')
+    sqlite_db.row_factory = sqlite3.Row
+
+    # variables
+
+    click.echo('  variables')
+
+    rows = sqlite_db.execute('SELECT * FROM variables')
+    new_rows = []
+
+    for row in rows:
+        model = Variable()
+        model.id = row['id']
+        model.name = row['name']
+        model.value = row['value']
+        model.type = VariableType(row['type'])
+
+        new_rows.append(model)
+
+    db.session.bulk_save_objects(new_rows)
+    db.session.commit()
+
+    # rwr_root_servers
+
+    click.echo('  rwr_root_servers')
+
+    rows = sqlite_db.execute('SELECT * FROM rwr_root_servers')
+    new_rows = []
+
+    for row in rows:
+        model = RwrRootServer()
+        model.id = row['id']
+        model.host = row['host']
+        model.status = RwrRootServerStatus(row['status'])
+
+        new_rows.append(model)
+
+    db.session.bulk_save_objects(new_rows)
+    db.session.commit()
+
+    # rwr_accounts
+
+    click.echo('  rwr_accounts')
+
+    for rows in db_chunks(sqlite_db, 'rwr_accounts'):
+        new_rows = []
+
+        for row in rows:
+            model = RwrAccount()
+            model.id = row['id']
+            model.type = RwrAccountType(row['type'])
+            model.username = row['username']
+            model.created_at = row['created_at']
+            model.updated_at = row['updated_at']
+
+            new_rows.append(model)
+
+        db.session.bulk_save_objects(new_rows)
+        db.session.commit()
+
+    sqlite_db.close()
+
+    # -----------------------------------------------------------------------
+    # rwr_account_stats.sqlite
+
+    click.echo('rwr_account_stats.sqlite')
+
+    sqlite_db = sqlite3.connect('storage/data/rwr_account_stats.sqlite')
+    sqlite_db.row_factory = sqlite3.Row
+
+    for rows in db_chunks(sqlite_db, 'rwr_account_stats'):
+        new_rows = []
+
+        for row in rows:
+            model = RwrAccountStat()
+            model.id = row['id']
+            model.leaderboard_position = row['leaderboard_position']
+            model.xp = row['xp']
+            model.kills = row['kills']
+            model.deaths = row['deaths']
+            model.time_played = row['time_played']
+            model.longest_kill_streak = row['longest_kill_streak']
+            model.targets_destroyed = row['targets_destroyed']
+            model.vehicles_destroyed = row['vehicles_destroyed']
+            model.soldiers_healed = row['soldiers_healed']
+            model.teamkills = row['teamkills']
+            model.distance_moved = row['distance_moved']
+            model.shots_fired = row['shots_fired']
+            model.throwables_thrown = row['throwables_thrown']
+            model.hash = row['hash']
+            model.created_at = row['created_at']
+            model.rwr_account_id = row['rwr_account_id']
+
+            new_rows.append(model)
+
+        db.session.bulk_save_objects(new_rows)
+        db.session.commit()
+
+    sqlite_db.close()
