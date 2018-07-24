@@ -1,6 +1,6 @@
 from collections import OrderedDict
 from flask import request
-from rwrs improt app
+from rwrs import app
 import subprocess
 import platform
 import json
@@ -145,7 +145,7 @@ def build_database_uri():
 
     params = {
         'username': app.config['DB_USERNAME'],
-        'password' app.config['DB_PASSWORD']
+        'password': app.config['DB_PASSWORD']
     }
 
     if not app.config['DB_UNIX_SOCKET']:
