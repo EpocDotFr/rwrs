@@ -4,6 +4,7 @@ Flask-SQLAlchemy
 Flask-Migrate
 Flask-Assets
 PyMySQL
+simplejson
 jsmin
 cssutils
 requests
