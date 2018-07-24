@@ -49,6 +49,7 @@ and its Pacific DLC. Available at [rwrstats.com](https://rwrstats.com/).
   2. `pip install -r requirements.txt`
   3. `set FLASK_APP=rwrs.py`
   4. `flask db upgrade`
+  5. `bash scripts/geolite2_city_updater.sh`
 
 ## Configuration
 
@@ -180,13 +181,13 @@ Will ping RWR root servers and store their status (up or down).
 
 More information in the script comments.
 
-`sh scripts/geolite2_city_updater.sh`
+`bash scripts/geolite2_city_updater.sh`
 
 ### Updating RWRS
 
 More information in the script comments.
 
-`sh scripts/rwrs_updater.sh [TYPE, default=fast, fast|full] [DOMAIN, default=rwrstats.com]`
+`bash scripts/rwrs_updater.sh [TYPE, default=fast, fast|full] [DOMAIN, default=rwrstats.com]`
 
 ### Retrieve and save the players stats in DB
 
