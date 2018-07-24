@@ -63,7 +63,7 @@ More informations on the three above can be found [here](http://flask.pocoo.org/
 
   - `DB_USERNAME` Username to access the DBMS
   - `DB_PASSWORD` Password to access the DBMS
-  - `DB_UNIX_SOCKET` If set, `DB_HOST` and `DB_PORT` will be ignored in favor of using this Unix socket to communicate via the DBMS
+  - `DB_UNIX_SOCKET` If set, `DB_HOST` and `DB_PORT` will be ignored in favor of using this Unix socket to communicate with the DBMS
   - `DB_HOST` Host of the DBMS
   - `DB_PORT` Port of the DBMS
   - `DB_NAME` Name of the database to use
@@ -186,12 +186,6 @@ More information in the script comments.
 More information in the script comments.
 
 `sh scripts/rwrs_updater.sh [TYPE, default=fast, fast|full] [DOMAIN, default=rwrstats.com]`
-
-### Backuping SQLite databases
-
-More information in the script comments.
-
-`sh scripts/backup_databases.sh`
 
 ### Retrieve and save the players stats in DB
 
