@@ -39,7 +39,7 @@ and its Pacific DLC. Available at [rwrstats.com](https://rwrstats.com/).
 
   - Should work on any Python 3.x version. Feel free to test with another Python version and give me feedback
   - A modern web browser (which optionally support localStorage)
-  - A MySQL-compatible DBMS
+  - A MySQL-compatible DBMS (MySQL, MariaDB, Percona, etc)
   - (Optional, but recommended) A [uWSGI](https://uwsgi-docs.readthedocs.io/en/latest/)-capable web server
   - (Optional) Running With Rifles, if you need to extract data by using the commands below
 
@@ -63,6 +63,7 @@ More informations on the three above can be found [here](http://flask.pocoo.org/
 
   - `DB_USERNAME` Username to access the DBMS
   - `DB_PASSWORD` Password to access the DBMS
+  - `DB_UNIX_SOCKET` If set, `DB_HOST` and `DB_PORT` will be ignored in favor of using this Unix socket to communicate via the DBMS
   - `DB_HOST` Host of the DBMS
   - `DB_PORT` Port of the DBMS
   - `DB_NAME` Name of the database to use

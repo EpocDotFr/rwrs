@@ -15,15 +15,9 @@ import math
 app = Flask(__name__, static_url_path='')
 app.config.from_pyfile('config.py')
 
-db_config = {
-    'username': app.config['DB_USERNAME'],
-    'password': app.config['DB_PASSWORD'],
-    'host': app.config['DB_HOST'],
-    'port': app.config['DB_PORT'],
-    'dbname': app.config['DB_NAME']
-}
+import helpers
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://{username}:{password}@{host}:{port}/{dbname}'.format(**db_config)
+app.config['SQLALCHEMY_DATABASE_URI'] = helpers.build_database_uri()
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['CACHE_TYPE'] = 'filesystem'
 app.config['CACHE_DIR'] = 'storage/cache'
@@ -62,7 +56,6 @@ assets.register('js_friends_status', Bundle('js/common.js', 'js/friends.js', 'js
 assets.register('js_friends', Bundle('js/common.js', 'js/friends.js', filters='jsmin', output='js/friends.min.js'))
 assets.register('css_app', Bundle('css/flags.css', 'css/app.css', filters='cssutils', output='css/app.min.css'))
 
-import helpers
 import rwr.constants
 import rwr.utils
 

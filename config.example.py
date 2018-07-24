@@ -2,6 +2,7 @@ SECRET_KEY = 'secretkeyhere'
 SERVER_NAME = 'localhost:8080'
 DB_USERNAME = 'root'
 DB_PASSWORD = ''
+DB_UNIX_SOCKET = None
 DB_HOST = 'localhost'
 DB_PORT = 3306
 DB_NAME = 'rwrs'

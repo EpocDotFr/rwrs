@@ -1,5 +1,6 @@
 from collections import OrderedDict
 from flask import request
+from rwrs improt app
 import subprocess
 import platform
 import json
@@ -136,3 +137,36 @@ def simplified_integer(integer):
         integer /= 1000.0
 
     return '{}{}'.format('{:f}'.format(integer).rstrip('0').rstrip('.'), ['', 'K', 'M', 'B', 'T'][magnitude])
+
+
+def build_database_uri():
+    """Return the database connection string."""
+    uri = 'mysql+pymysql://{username}:{password}@'
+
+    params = {
+        'username': app.config['DB_USERNAME'],
+        'password' app.config['DB_PASSWORD']
+    }
+
+    if not app.config['DB_UNIX_SOCKET']:
+        uri += '{host}:{port}'
+
+        params.update({
+            'host': app.config['DB_HOST'],
+            'port': app.config['DB_PORT']
+        })
+
+    uri += '/{dbname}'
+
+    params.update({
+        'dbname': app.config['DB_NAME']
+    })
+
+    if app.config['DB_UNIX_SOCKET']:
+        uri += '?unix_socket={unix_socket}'
+
+        params.update({
+            'unix_socket': app.config['DB_UNIX_SOCKET']
+        })
+
+    return uri.format(**params)
