@@ -427,9 +427,10 @@ def migrate_to_percona():
         limit = 100
 
         total = int(sqlite_db.execute('SELECT COUNT(*) AS total FROM {table}'.format(table=table)).fetchone()['total'])
+        cur = sqlite_db.execute('SELECT * FROM {table}'.format(table=table))
 
-        for offset in range(0, total, limit):
-            yield sqlite_db.execute('SELECT * FROM {table} LIMIT {offset}, {limit}'.format(table=table, offset=offset, limit=limit))
+        for _ in range(0, total, limit):
+            yield cur.fetchmany(size=limit)
 
     # -----------------------------------------------------------------------
     # servers_player_count.sqlite
