@@ -20,4 +20,12 @@
     <loc>https://rwrstats.com/online-multiplayer-status</loc>
     <changefreq>daily</changefreq>
   </url>
+  <url>
+    <loc>https://rwrstats.com/players/claim</loc>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://rwrstats.com/sign-in</loc>
+    <changefreq>weekly</changefreq>
+  </url>
 </urlset>
