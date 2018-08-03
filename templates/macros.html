@@ -227,3 +227,11 @@
         </div>
     </div>
 {%- endmacro %}
+
+{% macro market_item_small(item) -%}
+    <div class="txtcenter mbs">
+        <div><a href="{{url_for('market_offer', offer_id=666) }}"><img src="http://via.placeholder.com/100x100" class="bordered"></a></div>
+        <div><a href="{{url_for('market_offer', offer_id=666) }}">Item name</a></div>
+        <div>666 RP</div>
+    </div>
+{%- endmacro %}

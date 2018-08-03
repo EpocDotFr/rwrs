@@ -475,3 +475,40 @@ def user_profile(user_id):
         'users/profile.html',
         user=user
     )
+
+
+@app.route('/market')
+def market():
+    return render_template(
+        'market/home.html'
+    )
+
+
+@app.route('/market/place-ad')
+@login_required
+def market_place_ad():
+    return 'TODO'
+
+
+@app.route('/market/offers')
+def market_offers():
+    return render_template(
+        'market/offers.html'
+    )
+
+
+@app.route('/market/offers/<int:offer_id>')
+def market_offer(offer_id):
+    return 'TODO'
+
+
+@app.route('/market/requests')
+def market_requests():
+    return render_template(
+        'market/requests.html'
+    )
+
+
+@app.route('/market/requests/<int:request_id>')
+def market_request(request_id):
+    return 'TODO'
