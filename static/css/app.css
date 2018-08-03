@@ -60,6 +60,10 @@ img.bordered {
     border: .2rem solid #333;
 }
 
+a > img {
+    vertical-align: initial;
+}
+
 /************************************************************************
  * Player stats page */
 
