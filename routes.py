@@ -464,8 +464,8 @@ def sign_out():
     return redirect(url_for('home'))
 
 
-@app.route('/users/<int:user_id>')
-def user_profile(user_id):
+@app.route('/users/<int:user_id>/<slug>')
+def user_profile(user_id, slug):
     user = User.query.get(user_id)
 
     if not user:
@@ -484,31 +484,20 @@ def market():
     )
 
 
-@app.route('/market/place-ad')
+@app.route('/market/place-ad', methods=['GET', 'POST'])
 @login_required
 def market_place_ad():
     return 'TODO'
 
 
-@app.route('/market/offers')
-def market_offers():
+@app.route('/market/<any(offers,requests):ad_type>')
+def market_ads(ad_type):
     return render_template(
-        'market/offers.html'
+        'market/list.html',
+        ad_type=ad_type
     )
 
 
-@app.route('/market/offers/<int:offer_id>')
-def market_offer(offer_id):
-    return 'TODO'
-
-
-@app.route('/market/requests')
-def market_requests():
-    return render_template(
-        'market/requests.html'
-    )
-
-
-@app.route('/market/requests/<int:request_id>')
-def market_request(request_id):
+@app.route('/market/<any(offers,requests):ad_type>/<category>/<int:ad_id>')
+def market_ad(ad_type, category, ad_id):
     return 'TODO'

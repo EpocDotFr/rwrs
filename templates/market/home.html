@@ -15,24 +15,24 @@
 {% block content %}
     <p class="mtm txtcenter">Welcome to the RWRS Market, the one stop RWR items shop!</p>
 
-    <p class="mtm mbm txtcenter big"><a class="btn mrm" href="{{ url_for('market_offers') }}">Offers</a>{% if current_user.is_authenticated %} <a class="btn mrm bigger" href="{{ url_for('market_place_ad') }}">Place an ad</a> {% endif %}<a class="btn" href="{{ url_for('market_requests') }}">Requests</a></p>
+    <p class="mtm mbm txtcenter big"><a class="btn mrm" href="{{ url_for('market_ads', ad_type='offers') }}">Offers</a>{% if current_user.is_authenticated %} <a class="btn mrm bigger" href="{{ url_for('market_place_ad') }}">Place an ad</a> {% else %} <a class="btn mrm bigger" href="{{ url_for('sign_in', next=url_for('market_place_ad')) }}">Sign-in to place an ad!</a>{% endif %}<a class="btn" href="{{ url_for('market_ads', ad_type='requests') }}">Requests</a></p>
 
     <div class="grid has-gutter">
         <div>
             <table class="mbn">
                 <thead>
                     <tr>
-                        <th><h2 class="mbn">Latest offers</h2></th>
+                        <th><h2 class="mbn">Latest offers <a href="#" title="Latest offers RSS feed"><i class="fas fa-rss-square"></i></a></h2></th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <td class="pbn">
                             <div class="grid-4 has-gutter">
-                                {{ macros.market_item_small() }}
-                                {{ macros.market_item_small() }}
-                                {{ macros.market_item_small() }}
-                                {{ macros.market_item_small() }}
+                                {{ macros.market_ad_small() }}
+                                {{ macros.market_ad_small() }}
+                                {{ macros.market_ad_small() }}
+                                {{ macros.market_ad_small() }}
                             </div>
                         </td>
                     </tr>
@@ -43,17 +43,17 @@
             <table class="mbn">
                 <thead>
                     <tr>
-                        <th><h2 class="mbn">Latest requests</h2></th>
+                        <th><h2 class="mbn">Latest requests <a href="#" title="Latest requests RSS feed"><i class="fas fa-rss-square"></i></a></h2></th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <td class="pbn">
                             <div class="grid-4 has-gutter">
-                                {{ macros.market_item_small() }}
-                                {{ macros.market_item_small() }}
-                                {{ macros.market_item_small() }}
-                                {{ macros.market_item_small() }}
+                                {{ macros.market_ad_small() }}
+                                {{ macros.market_ad_small() }}
+                                {{ macros.market_ad_small() }}
+                                {{ macros.market_ad_small() }}
                             </div>
                         </td>
                     </tr>

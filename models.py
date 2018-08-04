@@ -3,6 +3,7 @@ from sqlalchemy_utils import ArrowType
 from flask import url_for, current_app
 from flask_login import UserMixin
 from rwrs import db, cache, app
+from slugify import slugify
 from sqlalchemy import func
 from enum import Enum
 import rwr.constants
@@ -374,19 +375,31 @@ class User(db.Model, UserMixin):
     def country_name(self):
         return iso3166.countries_by_alpha2.get(self.country_code.upper()).name if self.country_code else ''
 
+    def get_link(self, absolute=False):
+        def _get_link(self, absolute):
+            return url_for('user_profile', user_id=self.id, slug=self.slug, _external=absolute)
+
+        if current_app:
+            link = _get_link(self, absolute=absolute)
+        else:
+            with app.app_context():
+                link = _get_link(self, absolute=absolute)
+
+        return link
+
     @memoized_property
     def link(self):
         """Return the link to this User profile page."""
-        def get_link(self):
-            return url_for('user_profile', user_id=self.id)
+        return self.get_link()
 
-        if current_app:
-            link = get_link(self)
-        else:
-            with app.app_context():
-                link = get_link(self)
+    @memoized_property
+    def link_absolute(self):
+        """Return the absolute link to this User profile page."""
+        return self.get_link(absolute=True)
 
-        return link
+    @memoized_property
+    def slug(self):
+        return slugify(self.steam_username)
 
     @staticmethod
     def get_by_steam_id(steam_id, create_if_unexisting=False):

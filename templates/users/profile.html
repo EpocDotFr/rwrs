@@ -10,7 +10,7 @@
     {% assets 'js_friends' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
 {% endblock %}
 
-{% set canonical_url = url_for('user_profile', user_id=user.id, _external=True) %}
+{% set canonical_url = user.link_absolute %}
 
 {% block content %}
     <div class="grid mts has-gutter">
