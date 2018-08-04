@@ -450,6 +450,39 @@ class MarketAd(db.Model):
     def total_price(self):
         return self.quantity * self.unit_price
 
+    @memoized_property
+    def total_price_display(self):
+        return helpers.humanize_integer(self.total_price)
+
+    @memoized_property
+    def unit_price_display(self):
+        return helpers.humanize_integer(self.unit_price)
+
+    @memoized_property
+    def is_free(self):
+        return self.total_price == 0
+
+    @memoized_property
+    def type_for_url(self):
+        if self.type == MarketAdType.OFFER:
+            return 'offers'
+        elif self.type == MarketAdType.REQUEST:
+            return 'requests'
+
+    @staticmethod
+    def get_market_ad_list(type, status=MarketAdStatus.ACTIVE, limit=None):
+        q = MarketAd.query.filter(
+            MarketAd.type == type,
+            MarketAd.status == status
+        )
+
+        q = q.order_by(MarketAd.created_at.desc())
+
+        if limit:
+            q = q.limit(limit)
+
+        return q.all()
+
 
 class RwrAccountType(Enum):
     INVASION = 'INVASION'

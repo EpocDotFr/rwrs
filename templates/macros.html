@@ -230,10 +230,10 @@
 
 {% macro market_ad_small(market_ad) -%}
     <div class="txtcenter mbs">
-        <div class="small txtgrey mbs">2 days ago</div>
-        <div class="mbs"><a href="{{url_for('market_ad', ad_type='offers', category='caca', ad_id=666) }}"><img src="http://via.placeholder.com/100x100" class="bordered"></a></div>
-        <div><a href="{{url_for('market_ad', ad_type='offers', category='caca', ad_id=666) }}">Item name longuer</a> <small>x66</small></div>
-        <div>666 RP</div>
-        <div class="small txtgrey">66 RP each</div>
+        <div class="small txtgrey mbs">{{ market_ad.created_at.humanize() }}</div>
+        <div class="mbs"><a href="{{ url_for('market_ad', ad_type=market_ad.type_for_url, category='caca', ad_id=666) }}"><img src="http://via.placeholder.com/100x100" class="bordered"></a></div>
+        <div><a href="{{ url_for('market_ad', ad_type=market_ad.type_for_url, category='caca', ad_id=666) }}">{{ market_ad.item_id }}</a>{% if market_ad.quantity > 1 %} <small>x{{ market_ad.quantity }}</small>{% endif %}</div>
+        <div>{%- if not market_ad.is_free %}{{ market_ad.total_price_display }} RP{% elif market_ad.type.value == 'OFFER' %}FREE{% endif %}</div>
+        {%- if not market_ad.is_free and market_ad.quantity > 1 %}<div class="small txtgrey">{{ market_ad.unit_price_display }} RP each</div>{% endif -%}
     </div>
 {%- endmacro %}

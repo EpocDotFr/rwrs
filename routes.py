@@ -2,9 +2,9 @@ from models import SteamPlayerCount, ServerPlayerCount, RwrRootServer, Variable,
 from flask import render_template, abort, request, redirect, url_for, flash, g
 from flask_login import login_required, current_user, logout_user
 from dynamic_image import DynamicServerImage, DynamicPlayerImage
+from models import User, MarketAd, MarketAdType
 from rwr.player import Player
 from rwrs import app, oid, db
-from models import User
 import rwr.constants
 import flask_openid
 import rwr.scraper
@@ -479,8 +479,13 @@ def user_profile(user_id, slug):
 
 @app.route('/market')
 def market():
+    latest_offers = MarketAd.get_market_ad_list(MarketAdType.OFFER, limit=4)
+    latest_requests = MarketAd.get_market_ad_list(MarketAdType.REQUEST, limit=4)
+
     return render_template(
-        'market/home.html'
+        'market/home.html',
+        latest_offers=latest_offers,
+        latest_requests=latest_requests
     )
 
 

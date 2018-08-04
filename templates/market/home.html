@@ -29,10 +29,9 @@
                     <tr>
                         <td class="pbn">
                             <div class="grid-4 has-gutter">
-                                {{ macros.market_ad_small() }}
-                                {{ macros.market_ad_small() }}
-                                {{ macros.market_ad_small() }}
-                                {{ macros.market_ad_small() }}
+                                {%- for latest_offer in latest_offers -%}
+                                    {{ macros.market_ad_small(latest_offer) }}
+                                {%- endfor -%}
                             </div>
                         </td>
                     </tr>
@@ -50,10 +49,9 @@
                     <tr>
                         <td class="pbn">
                             <div class="grid-4 has-gutter">
-                                {{ macros.market_ad_small() }}
-                                {{ macros.market_ad_small() }}
-                                {{ macros.market_ad_small() }}
-                                {{ macros.market_ad_small() }}
+                                {%- for latest_request in latest_requests -%}
+                                    {{ macros.market_ad_small(latest_request) }}
+                                {%- endfor -%}
                             </div>
                         </td>
                     </tr>
