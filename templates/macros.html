@@ -228,10 +228,12 @@
     </div>
 {%- endmacro %}
 
-{% macro market_ad_small(item) -%}
+{% macro market_ad_small(market_ad) -%}
     <div class="txtcenter mbs">
-        <div><a href="{{url_for('market_ad', ad_type='offers', category='caca', ad_id=666) }}"><img src="http://via.placeholder.com/100x100" class="bordered"></a></div>
-        <div><a href="{{url_for('market_ad', ad_type='offers', category='caca', ad_id=666) }}">Item name</a></div>
+        <div class="small txtgrey mbs">2 days ago</div>
+        <div class="mbs"><a href="{{url_for('market_ad', ad_type='offers', category='caca', ad_id=666) }}"><img src="http://via.placeholder.com/100x100" class="bordered"></a></div>
+        <div><a href="{{url_for('market_ad', ad_type='offers', category='caca', ad_id=666) }}">Item name longuer</a> <small>x66</small></div>
         <div>666 RP</div>
+        <div class="small txtgrey">66 RP each</div>
     </div>
 {%- endmacro %}

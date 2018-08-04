@@ -416,6 +416,41 @@ class User(db.Model, UserMixin):
         return 'User:{}'.format(self.id)
 
 
+class MarketAdType(Enum):
+    OFFER = 'OFFER'
+    REQUEST = 'REQUEST'
+
+
+class MarketAdStatus(Enum):
+    ACTIVE = 'ACTIVE'
+    CONCLUDED = 'CONCLUDED'
+    CANCELLED = 'CANCELLED'
+
+
+class MarketAd(db.Model):
+    __tablename__ = 'market_ads'
+    __table_args__ = (
+        db.Index('rwr_account_id_idx', 'rwr_account_id'),
+        db.Index('type_idx', 'type')
+    )
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+
+    type = db.Column(db.Enum(MarketAdType), nullable=False)
+    item_id = db.Column(db.String(100), nullable=False)
+    unit_price = db.Column(db.Integer, nullable=False)
+    quantity = db.Column(db.Integer, nullable=False, default=1)
+    status = db.Column(db.Enum(MarketAdStatus), nullable=False, default=MarketAdStatus.ACTIVE)
+    created_at = db.Column(ArrowType, default=arrow.utcnow().floor('minute'), nullable=False)
+    updated_at = db.Column(ArrowType, default=arrow.utcnow().floor('minute'), onupdate=arrow.utcnow().floor('minute'), nullable=False)
+
+    rwr_account_id = db.Column(db.Integer, db.ForeignKey('rwr_accounts.id'), nullable=False)
+
+    @memoized_property
+    def total_price(self):
+        return self.quantity * self.unit_price
+
+
 class RwrAccountType(Enum):
     INVASION = 'INVASION'
     PACIFIC = 'PACIFIC'
@@ -437,6 +472,9 @@ class RwrAccount(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     claim_initiated_by_user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
+    stats = db.relationship('RwrAccountStat', backref='rwr_account', lazy=True)
+    market_ads = db.relationship('MarketAd', backref='rwr_account', lazy=True)
+
     @memoized_property
     def link(self):
         """Return the link to this Player details page."""
@@ -455,8 +493,6 @@ class RwrAccount(db.Model):
     def type_display(self):
         """The database name."""
         return rwr.utils.get_database_name(self.type.value.lower())
-
-    stats = db.relationship('RwrAccountStat', backref='rwr_account', lazy=True)
 
     @memoized_property
     def ordered_stats(self):
