@@ -430,8 +430,9 @@ class MarketAdStatus(Enum):
 class MarketAd(db.Model):
     __tablename__ = 'market_ads'
     __table_args__ = (
+        db.Index('type_status_idx', 'type', 'status'),
         db.Index('rwr_account_id_idx', 'rwr_account_id'),
-        db.Index('type_idx', 'type')
+        db.Index('created_at_idx', 'created_at'),
     )
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -468,6 +469,30 @@ class MarketAd(db.Model):
             return 'offers'
         elif self.type == MarketAdType.REQUEST:
             return 'requests'
+        else:
+            return 'unknown'
+
+    def get_link(self, absolute=False):
+        def _get_link(self, absolute):
+            return url_for('market_ad', ad_type=self.type_for_url, category='caca', ad_id=self.id, _external=absolute) # TODO
+
+        if current_app:
+            link = _get_link(self, absolute=absolute)
+        else:
+            with app.app_context():
+                link = _get_link(self, absolute=absolute)
+
+        return link
+
+    @memoized_property
+    def link(self):
+        """Return the link to this MarketAd page."""
+        return self.get_link()
+
+    @memoized_property
+    def link_absolute(self):
+        """Return the absolute link to this MarketAd page."""
+        return self.get_link(absolute=True)
 
     @staticmethod
     def get_market_ad_list(type, status=MarketAdStatus.ACTIVE, limit=None):

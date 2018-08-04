@@ -184,3 +184,12 @@ def parse_steam_id_from_identity_url(identity_url):
         return match.group(1)
 
     return None
+
+
+def get_market_ad_type_name(market_ad_type):
+    if market_ad_type == 'offers':
+        return 'Offers'
+    elif market_ad_type == 'requests':
+        return 'Requests'
+    else:
+        return 'Unknown'

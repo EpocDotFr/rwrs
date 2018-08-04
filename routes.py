@@ -497,9 +497,14 @@ def market_place_ad():
 
 @app.route('/market/<any(offers,requests):ad_type>')
 def market_ads(ad_type):
+    ads = MarketAd.get_market_ad_list(
+        MarketAdType.OFFER if ad_type == 'offers' else MarketAdType.REQUEST if ad_type == 'requests' else None
+    )
+
     return render_template(
         'market/list.html',
-        ad_type=ad_type
+        ad_type=ad_type,
+        ads=ads
     )
 
 

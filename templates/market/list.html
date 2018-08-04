@@ -1,10 +1,16 @@
 {% extends 'layout.html' %}
 
-{% block page_title %}<h1><i class="fas fa-shopping-cart"></i> Market › {{ ad_type }}</h1>{% endblock %}
+{% block page_title %}<h1><i class="fas fa-shopping-cart"></i> Market › {{ get_market_ad_type_name(ad_type) }}</h1>{% endblock %}
 
-{% block meta_title %}Market › {{ ad_type }}{% endblock %}
+{% block meta_title %}Market › {{ get_market_ad_type_name(ad_type) }}{% endblock %}
 
-{% block meta_description %}{% if type == 'offers' %}Buy Running With Rifles items on the RWRS Market.{% else %}Tell everyone what Running With Rifles items you are looking for on the RWRS Market.{% endif %}{% endblock %}
+{% block meta_description %}
+    {%- if ad_type == 'offers' -%}
+        Buy Running With Rifles items on the RWRS Market.
+    {%- elif ad_type == 'requests' -%}
+        Tell everyone what Running With Rifles items you are looking for on the RWRS Market.
+    {%- endif -%}
+{% endblock %}
 
 {% block jsfiles %}
     {% assets 'js_friends' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
@@ -13,7 +19,24 @@
 {% set canonical_url = url_for('market_ads', ad_type=ad_type, _external=True) %}
 
 {% block content %}
-    TODO {{ ad_type }}
+    <form action="{{ url_for('market_ads', ad_type=ad_type) }}" method="GET" class="mts mbs">
+        <fieldset class="man">
+            <legend><i class="fas fa-filter"></i> Filters</legend>
+
+            <button type="submit" class="fr"><i class="fas fa-check"></i> Apply</button>
+        </fieldset>
+    </form>
+
+    {%- for market_ad in ads -%}
+        <div class="mbs">
+            <div><h2 class="mbn"><a href="{{ market_ad.link }}">{{ market_ad.item_id }}</a>{% if market_ad.quantity > 1 %} <small>x{{ market_ad.quantity }}</small>{% endif %}</h2></div>
+            <div class="small txtgrey mbs">{{ market_ad.created_at.humanize() }}</div>
+            <div>{%- if not market_ad.is_free %}{{ market_ad.total_price_display }} RP{% elif market_ad.type.value == 'OFFER' %}FREE{% endif %}</div>
+            {%- if not market_ad.is_free and market_ad.quantity > 1 %}<div class="small txtgrey">{{ market_ad.unit_price_display }} RP each</div>{% endif -%}
+        </div>
+    {%- else -%}
+        <div class="alert info pas">Nothing to display at this moment.</div>
+    {%- endfor -%}
 
     <script>
         friendsFeature.all_players_with_servers_details = {{ g.all_players_with_servers_details|tojson }};
