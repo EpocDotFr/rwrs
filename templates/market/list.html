@@ -6,7 +6,7 @@
 
 {% block meta_description %}
     {%- if ad_type == 'offers' -%}
-        Buy Running With Rifles items on the RWRS Market.
+        Buy and sell Running With Rifles items on the RWRS Market.
     {%- elif ad_type == 'requests' -%}
         Tell everyone what Running With Rifles items you are looking for on the RWRS Market.
     {%- endif -%}
@@ -27,16 +27,27 @@
         </fieldset>
     </form>
 
-    {%- for market_ad in ads -%}
-        <div class="mbs">
-            <div><h2 class="mbn"><a href="{{ market_ad.link }}">{{ market_ad.item_id }}</a>{% if market_ad.quantity > 1 %} <small>x{{ market_ad.quantity }}</small>{% endif %}</h2></div>
-            <div class="small txtgrey mbs">{{ market_ad.created_at.humanize() }}</div>
-            <div>{%- if not market_ad.is_free %}{{ market_ad.total_price_display }} RP{% elif market_ad.type.value == 'OFFER' %}FREE{% endif %}</div>
-            {%- if not market_ad.is_free and market_ad.quantity > 1 %}<div class="small txtgrey">{{ market_ad.unit_price_display }} RP each</div>{% endif -%}
+    {%- if ads -%}
+        <div class="grid-3 has-gutter">
+            {%- for market_ad in ads -%}
+                <div class="mbs">
+                    <div class="grid has-gutter">
+                        <div class="one-third">
+                            <a href="{{ market_ad.link }}"><img src="http://via.placeholder.com/100x150" class="bordered"></a>
+                        </div>
+                        <div class="two-third">
+                            <div><h2 class="mbn"><a href="{{ market_ad.link }}">{{ market_ad.item_id }}</a>{% if market_ad.quantity > 1 %} x{{ market_ad.quantity }}{% endif %}</h2></div>
+                            <div class="small txtgrey mbs">{{ market_ad.created_at.humanize() }}</div>
+                            <div><strong>{%- if not market_ad.is_free %}{{ market_ad.total_price_display }} RP{% elif market_ad.type.value == 'OFFER' %}FREE{% endif %}</strong></div>
+                            {%- if not market_ad.is_free and market_ad.quantity > 1 %} <div class="small txtgrey">{{ market_ad.unit_price_display }} RP each</div>{% endif -%}
+                        </div>
+                    </div>
+                </div>
+            {%- endfor -%}
         </div>
     {%- else -%}
         <div class="alert info pas">Nothing to display at this moment.</div>
-    {%- endfor -%}
+    {%- endif -%}
 
     <script>
         friendsFeature.all_players_with_servers_details = {{ g.all_players_with_servers_details|tojson }};
