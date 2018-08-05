@@ -27,7 +27,7 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td class="pbn">
+                        <td class="{{ 'pbn' if latest_offers }}">
                             {%- if latest_offers -%}
                                 <div class="grid-4 has-gutter">
                                     {%- for latest_offer in latest_offers -%}
@@ -52,7 +52,7 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td class="pbn">
+                        <td class="{{ 'pbn' if latest_offers }}">
                             {%- if latest_requests -%}
                                 <div class="grid-4 has-gutter">
                                     {%- for latest_request in latest_requests -%}
