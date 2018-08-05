@@ -474,7 +474,7 @@ class MarketAd(db.Model):
 
     def get_link(self, absolute=False):
         def _get_link(self, absolute):
-            return url_for('market_ad', ad_type=self.type_for_url, category='caca', ad_id=self.id, _external=absolute) # TODO
+            return url_for('market_ad', ad_type=self.type_for_url, ad_id=self.id, _external=absolute)
 
         if current_app:
             link = _get_link(self, absolute=absolute)

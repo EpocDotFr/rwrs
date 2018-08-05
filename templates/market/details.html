@@ -1,0 +1,24 @@
+{% extends 'layout.html' %}
+
+{% block page_title %}<h1><i class="fas fa-shopping-cart"></i> Market › {{ get_market_ad_type_name(request.view_args.get('ad_type')) }} › {{ ad.item_id }} by {{ ad.rwr_account.username }}</h1>{% endblock %}
+
+{% block meta_title %}Market › {{ get_market_ad_type_name(request.view_args.get('ad_type')) }} › {{ ad.item_id }} by {{ ad.rwr_account.username }}{% endblock %}
+
+{% block meta_description %}
+    TODO
+{% endblock %}
+
+{% block jsfiles %}
+    {% assets 'js_friends' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
+{% endblock %}
+
+{% set canonical_url = url_for('market_ad', ad_type=request.view_args.get('ad_type'), ad_id=ad.id, _external=True) %}
+
+{% block content %}
+    TODO
+
+    <script>
+        friendsFeature.all_players_with_servers_details = {{ g.all_players_with_servers_details|tojson }};
+        friendsFeature.init();
+    </script>
+{% endblock %}

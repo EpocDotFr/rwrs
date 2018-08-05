@@ -511,11 +511,18 @@ def market_ads(ad_type):
 
     return render_template(
         'market/list.html',
-        ad_type=ad_type,
         ads=ads
     )
 
 
-@app.route('/market/<any(offers,requests):ad_type>/<category>/<int:ad_id>')
-def market_ad(ad_type, category, ad_id):
-    return 'TODO'
+@app.route('/market/<any(offers,requests):ad_type>/<int:ad_id>')
+def market_ad(ad_type, ad_id):
+    ad = MarketAd.query.get(ad_id)
+
+    if not ad:
+        abort(404)
+
+    return render_template(
+        'market/details.html',
+        ad=ad
+    )

@@ -1,13 +1,13 @@
 {% extends 'layout.html' %}
 
-{% block page_title %}<h1><i class="fas fa-shopping-cart"></i> Market › {{ get_market_ad_type_name(ad_type) }}</h1>{% endblock %}
+{% block page_title %}<h1><i class="fas fa-shopping-cart"></i> Market › {{ get_market_ad_type_name(request.view_args.get('ad_type')) }}</h1>{% endblock %}
 
-{% block meta_title %}Market › {{ get_market_ad_type_name(ad_type) }}{% endblock %}
+{% block meta_title %}Market › {{ get_market_ad_type_name(request.view_args.get('ad_type')) }}{% endblock %}
 
 {% block meta_description %}
-    {%- if ad_type == 'offers' -%}
+    {%- if request.view_args.get('ad_type') == 'offers' -%}
         Buy and sell Running With Rifles items on the RWRS Market.
-    {%- elif ad_type == 'requests' -%}
+    {%- elif request.view_args.get('ad_type') == 'requests' -%}
         Tell everyone what Running With Rifles items you are looking for on the RWRS Market.
     {%- endif -%}
 {% endblock %}
@@ -16,10 +16,10 @@
     {% assets 'js_friends' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
 {% endblock %}
 
-{% set canonical_url = url_for('market_ads', ad_type=ad_type, _external=True) %}
+{% set canonical_url = url_for('market_ads', ad_type=request.view_args.get('ad_type'), _external=True) %}
 
 {% block content %}
-    <form action="{{ url_for('market_ads', ad_type=ad_type) }}" method="GET" class="mts mbs">
+    <form action="{{ url_for('market_ads', ad_type=request.view_args.get('ad_type')) }}" method="GET" class="mts mbs">
         <fieldset class="man">
             <legend><i class="fas fa-filter"></i> Filters</legend>
 
@@ -51,19 +51,19 @@
     <div class="grid">
         <div class="one-fifth txtleft">
             {%- if ads.page > 1 -%}
-                <a href="{{ url_for('market_ads', ad_type=ad_type, page=1, limit=request.args.get('limit')) }}" class="btn mrs"><i class="fas fa-angle-double-left"></i> First</a>
+                <a href="{{ url_for('market_ads', ad_type=request.view_args.get('ad_type'), page=1, limit=request.args.get('limit')) }}" class="btn mrs"><i class="fas fa-angle-double-left"></i> First</a>
             {%- endif -%}
             {%- if ads.has_prev -%}
-                <a href="{{ url_for('market_ads', ad_type=ad_type, page=ads.prev_num, limit=request.args.get('limit')) }}" class="btn"><i class="fas fa-angle-left"></i> Previous</a>
+                <a href="{{ url_for('market_ads', ad_type=request.view_args.get('ad_type'), page=ads.prev_num, limit=request.args.get('limit')) }}" class="btn"><i class="fas fa-angle-left"></i> Previous</a>
             {%- endif -%}
         </div>
         <div class="three-fifth txtcenter">Page {{ ads.page }} of {{ ads.pages }}</div>
         <div class="one-fifth txtright">
             {%- if ads.has_next -%}
-                <a href="{{ url_for('market_ads', ad_type=ad_type, page=ads.next_num, limit=request.args.get('limit')) }}" class="btn">Next <i class="fas fa-angle-right"></i></a>
+                <a href="{{ url_for('market_ads', ad_type=request.view_args.get('ad_type'), page=ads.next_num, limit=request.args.get('limit')) }}" class="btn">Next <i class="fas fa-angle-right"></i></a>
             {%- endif -%}
             {%- if ads.page < ads.pages -%}
-                <a href="{{ url_for('market_ads', ad_type=ad_type, page=ads.pages, limit=request.args.get('limit')) }}" class="btn mls"><i class="fas fa-angle-double-right"></i> Last</a>
+                <a href="{{ url_for('market_ads', ad_type=request.view_args.get('ad_type'), page=ads.pages, limit=request.args.get('limit')) }}" class="btn mls"><i class="fas fa-angle-double-right"></i> Last</a>
             {%- endif -%}
         </div>
     </div>
