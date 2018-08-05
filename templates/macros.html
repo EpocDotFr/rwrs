@@ -232,6 +232,6 @@
     <div class="txtcenter mbs">
         <div class="mbs"><a href="{{ market_ad.link }}"><img src="http://via.placeholder.com/100x150" class="bordered"></a></div>
         <div><a href="{{ market_ad.link }}">{{ market_ad.item_id }}</a></div>
-        <div>{%- if not market_ad.is_free %}{{ market_ad.unit_price_display }} RP{% elif market_ad.type.value == 'OFFER' %}FREE{% endif %}</div>
+        <div><strong>{%- if not market_ad.is_free %}{{ market_ad.unit_price_display }} RP{% elif market_ad.type.value == 'OFFER' %}FREE{% endif %}</strong></div>
     </div>
 {%- endmacro %}

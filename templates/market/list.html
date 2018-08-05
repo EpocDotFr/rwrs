@@ -27,9 +27,9 @@
         </fieldset>
     </form>
 
-    {%- if ads -%}
+    {%- if ads.items -%}
         <div class="grid-3 has-gutter">
-            {%- for market_ad in ads -%}
+            {%- for market_ad in ads.items -%}
                 <div class="mbs">
                     <div class="grid has-gutter">
                         <div class="one-third">
@@ -37,17 +37,36 @@
                         </div>
                         <div class="two-third">
                             <div><h2 class="mbn"><a href="{{ market_ad.link }}">{{ market_ad.item_id }}</a>{% if market_ad.quantity > 1 %} x{{ market_ad.quantity }}{% endif %}</h2></div>
-                            <div class="small txtgrey mbs">{{ market_ad.created_at.humanize() }}</div>
-                            <div><strong>{%- if not market_ad.is_free %}{{ market_ad.total_price_display }} RP{% elif market_ad.type.value == 'OFFER' %}FREE{% endif %}</strong></div>
-                            {%- if not market_ad.is_free and market_ad.quantity > 1 %} <div class="small txtgrey">{{ market_ad.unit_price_display }} RP each</div>{% endif -%}
+                            <div><strong>{%- if not market_ad.is_free %}{{ market_ad.total_price_display }} RP{% elif market_ad.type.value == 'OFFER' %}FREE{% endif %}</strong>{%- if not market_ad.is_free and market_ad.quantity > 1 %} <small class="txtgrey">{{ market_ad.unit_price_display }} RP each</small>{% endif -%}</div>
+                            <div class="small txtgrey mts">Assault Rifles • {{ market_ad.created_at.humanize() }}</div>
                         </div>
                     </div>
                 </div>
             {%- endfor -%}
         </div>
     {%- else -%}
-        <div class="alert info pas">Nothing to display at this moment.</div>
+        <div class="alert info pas mbs">Nothing to display at this moment.</div>
     {%- endif -%}
+
+    <div class="grid">
+        <div class="one-fifth txtleft">
+            {%- if ads.page > 1 -%}
+                <a href="{{ url_for('market_ads', ad_type=ad_type, page=1, limit=request.args.get('limit')) }}" class="btn mrs"><i class="fas fa-angle-double-left"></i> First</a>
+            {%- endif -%}
+            {%- if ads.has_prev -%}
+                <a href="{{ url_for('market_ads', ad_type=ad_type, page=ads.prev_num, limit=request.args.get('limit')) }}" class="btn"><i class="fas fa-angle-left"></i> Previous</a>
+            {%- endif -%}
+        </div>
+        <div class="three-fifth txtcenter">Page {{ ads.page }} of {{ ads.pages }}</div>
+        <div class="one-fifth txtright">
+            {%- if ads.has_next -%}
+                <a href="{{ url_for('market_ads', ad_type=ad_type, page=ads.next_num, limit=request.args.get('limit')) }}" class="btn">Next <i class="fas fa-angle-right"></i></a>
+            {%- endif -%}
+            {%- if ads.page < ads.pages -%}
+                <a href="{{ url_for('market_ads', ad_type=ad_type, page=ads.pages, limit=request.args.get('limit')) }}" class="btn mls"><i class="fas fa-angle-double-right"></i> Last</a>
+            {%- endif -%}
+        </div>
+    </div>
 
     <script>
         friendsFeature.all_players_with_servers_details = {{ g.all_players_with_servers_details|tojson }};

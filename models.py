@@ -495,7 +495,7 @@ class MarketAd(db.Model):
         return self.get_link(absolute=True)
 
     @staticmethod
-    def get_market_ad_list(type, status=MarketAdStatus.ACTIVE, limit=None):
+    def get_market_ad_list(type, status=MarketAdStatus.ACTIVE, paginate=False, page=1, per_page=12, limit=None):
         q = MarketAd.query.filter(
             MarketAd.type == type,
             MarketAd.status == status
@@ -503,7 +503,13 @@ class MarketAd(db.Model):
 
         q = q.order_by(MarketAd.created_at.desc())
 
-        if limit:
+        if paginate:
+            return q.paginate(
+                page=page,
+                per_page=per_page,
+                error_out=False
+            )
+        elif limit:
             q = q.limit(limit)
 
         return q.all()
