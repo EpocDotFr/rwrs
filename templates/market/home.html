@@ -32,7 +32,7 @@
                                 <div class="grid-4 has-gutter">
                                     {%- for latest_offer in latest_offers -%}
                                         {{ macros.market_ad_small(latest_offer) }}
-                                    {% -endfor -%}
+                                    {%- endfor -%}
                                 </div>
                             {%- else -%}
                                 <div class="alert info pas">Nothing to display at this moment.</div>
@@ -57,7 +57,7 @@
                                 <div class="grid-4 has-gutter">
                                     {%- for latest_request in latest_requests -%}
                                         {{ macros.market_ad_small(latest_request) }}
-                                    {% -endfor -%}
+                                    {%- endfor -%}
                                 </div>
                             {%- else -%}
                                 <div class="alert info pas">Nothing to display at this moment.</div>
