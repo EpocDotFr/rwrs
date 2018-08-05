@@ -187,7 +187,7 @@
         {% set start = players[0].leaderboard_position - (int(args.get('limit')) + 1) %}
 
         {%- if start >= 0 -%}
-            <a href="{{ url_for('players_list', database=request.view_args.get('database'), sort=args.get('sort'), target=args.get('target'), start=start, limit=args.get('limit')) }}" class="btn"><i class="fas fa-angle-double-left"></i> Previous</a>
+            <a href="{{ url_for('players_list', database=request.view_args.get('database'), sort=args.get('sort'), target=args.get('target'), start=start, limit=args.get('limit')) }}" class="btn"><i class="fas fa-angle-left"></i> Previous</a>
         {%- endif -%}
     {%- endif -%}
 {%- endmacro %}
@@ -196,7 +196,7 @@
     {%- if players and not args.get('target') -%}
         {% set start = players[-1].leaderboard_position %}
 
-        <a href="{{ url_for('players_list', database=request.view_args.get('database'), sort=args.get('sort'), target=args.get('target'), start=start, limit=args.get('limit')) }}" class="btn">Next <i class="fas fa-angle-double-right"></i></a>
+        <a href="{{ url_for('players_list', database=request.view_args.get('database'), sort=args.get('sort'), target=args.get('target'), start=start, limit=args.get('limit')) }}" class="btn">Next <i class="fas fa-angle-right"></i></a>
     {%- endif -%}
 {%- endmacro %}
 
