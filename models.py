@@ -596,7 +596,7 @@ class RwrAccount(db.Model):
 
         self.reset_claim()
 
-    def has_expired(self):
+    def has_claim_expired(self):
         """Determine if this RwrAccount claim period has expired."""
         if arrow.utcnow() >= self.claim_possible_until:
             self.reset_claim()

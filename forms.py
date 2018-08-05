@@ -32,7 +32,7 @@ class PlayerClaimForm(FlaskForm):
                 ))
 
             if rwr_account.claim_initiated_by_user_id:
-                if rwr_account.has_expired():
+                if rwr_account.has_claim_expired():
                     db.session.add(rwr_account)
                     db.session.commit()
                 else:

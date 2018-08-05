@@ -167,7 +167,7 @@ def player_finalize_claim(rwr_account_id):
     database = rwr_account.type.value.lower()
     username = rwr_account.username
 
-    if rwr_account.has_expired():
+    if rwr_account.has_claim_expired():
         db.session.add(rwr_account)
         db.session.commit()
 
