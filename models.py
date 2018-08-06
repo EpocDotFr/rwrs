@@ -44,7 +44,7 @@ class ServerPlayerCount(db.Model, Measurable):
             q = self._get_base_count_query(func.sum(ServerPlayerCount.count).label('v'))
 
             if ip and port:
-                q = q.filter(ServerPlayerCount._ip == ip, ServerPlayerCount.port == port)
+                q = q.filter(ServerPlayerCount.ip == ip, ServerPlayerCount.port == port)
 
             return q.all()
 
@@ -62,29 +62,16 @@ class ServerPlayerCount(db.Model, Measurable):
             return self.filter(ServerPlayerCount.measured_at < one_week_ago()).all()
 
     __tablename__ = 'servers_player_count'
-    __bind_key__ = 'servers_player_count'
     __table_args__ = (db.Index('ip_port_idx', 'ip', 'port'), )
     query_class = ServerPlayerCountQuery
 
-    _ip = db.Column('ip', db.Integer, nullable=False)
+    ip = db.Column(db.String(15), nullable=False)
     port = db.Column(db.Integer, nullable=False)
-
-    @property
-    def ip(self):
-        return helpers.long2ip(self._ip) if self._ip else None
-
-    @ip.setter
-    def ip(self, value):
-        if value:
-            self._ip = helpers.ip2long(value)
 
     @staticmethod
     @cache.memoize(timeout=app.config['GRAPHS_DATA_CACHE_TIMEOUT'])
     def server_players_data(ip=None, port=None):
         """Return the servers players chart data, optionally filtering by a server's IP and port."""
-        if ip:
-            ip = helpers.ip2long(ip)
-
         return Measurable.transform_data(ServerPlayerCount.query.get_player_count(ip, port))
 
     @staticmethod
@@ -111,7 +98,6 @@ class SteamPlayerCount(db.Model, Measurable):
             return self.filter(SteamPlayerCount.measured_at < one_week_ago()).all()
 
     __tablename__ = 'steam_players_count'
-    __bind_key__ = 'steam_players_count'
     query_class = SteamPlayerCountQuery
 
     @staticmethod
@@ -236,7 +222,7 @@ class Variable(db.Model):
 
     name = db.Column(db.String(255), nullable=False, unique=True)
     type = db.Column(db.Enum(VariableType), nullable=False)
-    _value = db.Column('value', db.String)
+    _value = db.Column('value', db.String(255))
 
     @property
     def value(self):
@@ -376,8 +362,10 @@ class RwrAccount(db.Model):
     created_at = db.Column(ArrowType, default=arrow.utcnow().floor('minute'), nullable=False)
     updated_at = db.Column(ArrowType, default=arrow.utcnow().floor('minute'), onupdate=arrow.utcnow().floor('minute'), nullable=False)
 
+    stats = db.relationship('RwrAccountStat', backref='rwr_account', lazy=True)
+
     @memoized_property
-    def stats(self):
+    def ordered_stats(self):
         """Return a query which have to be executed to get all RwrAccountStat linked to this RwrAccount."""
         return RwrAccountStat.query.filter(RwrAccountStat.rwr_account_id == self.id).order_by(RwrAccountStat.created_at.desc())
 
@@ -400,7 +388,6 @@ class RwrAccount(db.Model):
 
 class RwrAccountStat(db.Model):
     __tablename__ = 'rwr_account_stats'
-    __bind_key__ = 'rwr_account_stats'
     __table_args__ = (
         db.Index('rwr_account_id_idx', 'rwr_account_id'),
         db.Index('created_at_idx', 'created_at'),
@@ -425,7 +412,7 @@ class RwrAccountStat(db.Model):
     hash = db.Column(db.String(32), nullable=False)
     created_at = db.Column(ArrowType, default=arrow.utcnow().floor('day'), nullable=False)
 
-    rwr_account_id = db.Column(db.Integer, nullable=False) # Weak foreign key to the rwr_accounts located in another DB
+    rwr_account_id = db.Column(db.Integer, db.ForeignKey('rwr_accounts.id'), nullable=False)
 
     def compute_hash(self):
         """Compute the hash corresponding to the data of this RwrAccountStat."""
@@ -481,11 +468,6 @@ class RwrAccountStat(db.Model):
             }
         else:
             return RwrAccountStat.transform_data(rwr_account_stats, column, format=None)
-
-    @memoized_property
-    def rwr_account(self):
-        """Return the RwrAccount object linked to this RwrAccountStat."""
-        return RwrAccount.query.get(self.rwr_account_id)
 
     @memoized_property
     def score(self):
