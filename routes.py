@@ -497,16 +497,15 @@ def market_place_ad():
 
 @app.route('/market/<any(offers,requests):ad_type>')
 def market_ads(ad_type):
-    per_page = request.args.get('limit', 12, type=int)
+    limit = request.args.get('limit', 12, type=int)
 
-    if per_page > 12:
-        per_page = 12
+    if limit > 12:
+        limit = 12
 
     ads = MarketAd.get_market_ad_list(
-        MarketAdType.OFFER if ad_type == 'offers' else MarketAdType.REQUEST if ad_type == 'requests' else None,
-        paginate=True,
+        MarketAdType(ad_type.rstrip('s').upper()),
         page=request.args.get('page', 1, type=int),
-        per_page=per_page
+        limit=limit
     )
 
     return render_template(

@@ -38,7 +38,8 @@
                         <div class="two-third">
                             <div><h2 class="mbn"><a href="{{ market_ad.link }}">{{ market_ad.item_id }}</a>{% if market_ad.quantity > 1 %} x{{ market_ad.quantity }}{% endif %}</h2></div>
                             <div><strong>{%- if not market_ad.is_free %}{{ market_ad.total_price_display }} RP{% elif market_ad.type.value == 'OFFER' %}FREE{% endif %}</strong>{%- if not market_ad.is_free and market_ad.quantity > 1 %} <small class="txtgrey">{{ market_ad.unit_price_display }} RP each</small>{% endif -%}</div>
-                            <div class="small txtgrey mts">Assault Rifles • {{ market_ad.created_at.humanize() }}</div>
+                            <div class="small txtgrey mts">INVASION / Assault Rifles</div>
+                            <div class="small txtgrey">{{ market_ad.created_at.humanize() }}</div>
                         </div>
                     </div>
                 </div>
