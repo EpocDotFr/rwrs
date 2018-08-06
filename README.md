@@ -40,6 +40,7 @@ and its Pacific DLC. Available at [rwrstats.com](https://rwrstats.com/).
 
   - Should work on any Python 3.x version. Feel free to test with another Python version and give me feedback
   - A modern web browser (which optionally support localStorage)
+  - A MySQL-compatible DBMS (MySQL, MariaDB, Percona, etc)
   - (Optional, but recommended) A [uWSGI](https://uwsgi-docs.readthedocs.io/en/latest/)-capable web server
   - (Optional) Running With Rifles, if you need to extract data by using the commands below
 
@@ -49,6 +50,7 @@ and its Pacific DLC. Available at [rwrstats.com](https://rwrstats.com/).
   2. `pip install -r requirements.txt`
   3. `set FLASK_APP=rwrs.py`
   4. `flask db upgrade`
+  5. `bash scripts/geolite2_city_updater.sh`
 
 ## Configuration
 
@@ -61,6 +63,12 @@ Available configuration parameters are:
 
 More informations on the three above can be found [here](http://flask.pocoo.org/docs/0.12/config/#builtin-configuration-values).
 
+  - `DB_USERNAME` Username to access the DBMS
+  - `DB_PASSWORD` Password to access the DBMS
+  - `DB_UNIX_SOCKET` If set, `DB_HOST` and `DB_PORT` will be ignored in favor of using this Unix socket to communicate with the DBMS
+  - `DB_HOST` Host of the DBMS
+  - `DB_PORT` Port of the DBMS
+  - `DB_NAME` Name of the database to use
   - `BETA` Whether or not to enable the beta mode
   - `GAUGES_SITE_ID` A [Gauges](https://gaug.es/) site ID used to track visits on RWRS (optional)
   - `BUGSNAG_API_KEY` A [Bugsnag](https://www.bugsnag.com/) API key so that unhandled exceptions are automatically sent to Bugsnag in production env (optional)
@@ -181,19 +189,13 @@ They are saved at `static/images/maps/tiles/{game type}/{map ID}/{z}/{x}/{y}.png
 
 More information in the script comments.
 
-`sh scripts/geolite2_city_updater.sh`
+`bash scripts/geolite2_city_updater.sh`
 
 ### Updating RWRS
 
 More information in the script comments.
 
-`sh scripts/rwrs_updater.sh [TYPE, default=fast, fast|full] [DOMAIN, default=rwrstats.com]`
-
-### Backuping SQLite databases
-
-More information in the script comments.
-
-`sh scripts/backup_databases.sh`
+`bash scripts/rwrs_updater.sh [TYPE, default=fast, fast|full] [DOMAIN, default=rwrstats.com]`
 
 ### Retrieve and save the players stats in DB
 

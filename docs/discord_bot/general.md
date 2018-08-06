@@ -9,6 +9,6 @@
 
 **:page_facing_up: Commands list**
 
-{commands_list}
-
 Type `@rwrs help {{command name}}` for help regarding a specific command.
+
+{commands_list}
