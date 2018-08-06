@@ -121,9 +121,9 @@ class DynamicServerImage(DynamicImage):
 
         # Ranked server indicator
         if self.server.is_ranked:
-            yellow_star_image = Image.open('static/images/dynamic_images/yellow_star.png').convert('RGBA')
+            ranked_server_image = Image.open('static/images/dynamic_images/ranked_server.png').convert('RGBA')
 
-            self._paste(yellow_star_image, (x, 8))
+            self._paste(ranked_server_image, (x, 8))
 
             x += 23
 
