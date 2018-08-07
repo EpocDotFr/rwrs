@@ -12,7 +12,7 @@
     {% assets 'js_friends' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
 {% endblock %}
 
-{% set canonical_url = url_for('market_ad', ad_type=request.view_args.get('ad_type'), ad_id=ad.id, _external=True) %}
+{% set canonical_url = url_for('market_ad_details', ad_type=request.view_args.get('ad_type'), ad_id=ad.id, _external=True) %}
 
 {% block content %}
     TODO

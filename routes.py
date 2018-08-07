@@ -478,7 +478,7 @@ def user_profile(user_id, slug):
 
 
 @app.route('/market')
-def market():
+def market_home():
     latest_offers = MarketAd.get_market_ad_list(MarketAdType.OFFER, limit=4)
     latest_requests = MarketAd.get_market_ad_list(MarketAdType.REQUEST, limit=4)
 
@@ -496,7 +496,7 @@ def market_place_ad():
 
 
 @app.route('/market/<any(offers,requests):ad_type>')
-def market_ads(ad_type):
+def market_ad_list(ad_type):
     limit = request.args.get('limit', 12, type=int)
 
     if limit > 12:
@@ -515,7 +515,7 @@ def market_ads(ad_type):
 
 
 @app.route('/market/<any(offers,requests):ad_type>/<int:ad_id>')
-def market_ad(ad_type, ad_id):
+def market_ad_details(ad_type, ad_id):
     ad = MarketAd.query.get(ad_id)
 
     if not ad:

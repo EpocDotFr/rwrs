@@ -10,12 +10,12 @@
     {% assets 'js_friends' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
 {% endblock %}
 
-{% set canonical_url = url_for('market', _external=True) %}
+{% set canonical_url = url_for('market_home', _external=True) %}
 
 {% block content %}
     <p class="mtm txtcenter">Welcome to the RWRS Market, the one stop RWR items shop!</p>
 
-    <p class="mtm mbm txtcenter big"><a class="btn mrm" href="{{ url_for('market_ads', ad_type='offers') }}">Offers</a>{% if current_user.is_authenticated %} <a class="btn mrm bigger" href="{{ url_for('market_place_ad') }}">Place an ad</a> {% else %} <a class="btn mrm bigger" href="{{ url_for('sign_in', next=url_for('market_place_ad')) }}">Sign-in to place an ad!</a>{% endif %}<a class="btn" href="{{ url_for('market_ads', ad_type='requests') }}">Requests</a></p>
+    <p class="mtm mbm txtcenter big"><a class="btn mrm" href="{{ url_for('market_ad_list', ad_type='offers') }}">Offers</a>{% if current_user.is_authenticated %} <a class="btn mrm bigger" href="{{ url_for('market_place_ad') }}">Place an ad</a> {% else %} <a class="btn mrm bigger" href="{{ url_for('sign_in', next=url_for('market_place_ad')) }}">Sign-in to place an ad!</a>{% endif %}<a class="btn" href="{{ url_for('market_ad_list', ad_type='requests') }}">Requests</a></p>
 
     <div class="grid has-gutter">
         <div>
