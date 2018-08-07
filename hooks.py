@@ -80,6 +80,11 @@ def get_rwr_root_server_global_status():
     g.is_online_multiplayer_ok = RwrRootServer.are_rwr_root_servers_ok()
 
 
+@app.before_request
+def get_rwr_events():
+    g.RWR_EVENTS = steam.get_group_events(app.config['RWR_STEAM_APP_ID'], is_official=True)
+
+
 @app.errorhandler(401)
 @app.errorhandler(403)
 @app.errorhandler(404)

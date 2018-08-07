@@ -116,6 +116,27 @@ class RwrsBotDiscoPlugin(Plugin):
 
                 event.msg.reply('MOTD removed.')
 
+    @Plugin.command('events')
+    def on_events_command(self, event):
+        """Displays upcoming RWR events."""
+        rwr_events = steam.get_group_events(app.config['RWR_STEAM_APP_ID'], is_official=True)
+
+        if not rwr_events:
+            event.msg.reply('Sorry, no upcoming RWR events at this moment :cry:')
+
+            return
+
+        response = []
+
+        for rwr_event in rwr_events:
+            response.append('**{name}** ({start} GMT)\n{url}\n'.format(
+                name=rwr_event['name'],
+                start=rwr_event['start'].format('dddd, MMMM D @ h:mm A'),
+                url=rwr_event['url']
+            ))
+
+        event.msg.reply('\n'.join(response))
+
     @Plugin.command('help', parser=True)
     @Plugin.parser.add_argument('command', nargs='?')
     def on_help_command(self, event, args):
