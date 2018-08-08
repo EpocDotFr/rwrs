@@ -207,16 +207,18 @@
 {%- endmacro %}
 
 {% macro inline_form_field(field) -%}
-    {{ field.label(class='txtred' if field.errors) }} {{ field(**kwargs) }}
+    {%- set css_class = 'has_error ' + kwargs.pop('class', '') if field.errors -%}
+    {{ field.label() }} {{ field(class=css_class, **kwargs) }}
 {%- endmacro %}
 
 {% macro form_field(field) -%}
+    {%- set css_class = 'has_error ' + kwargs.pop('class', '') if field.errors -%}
     <div class="grid has-gutter mbs">
         <div class="txtright">
-            {{ field.label(class='txtred' if field.errors) }}
+            {{ field.label() }}
         </div>
         <div>
-            <div>{{ field(**kwargs) }}</div>
+            <div>{{ field(class=css_class, **kwargs) }}</div>
             {%- if field.errors -%}
                 <ul class="txtred pls">
                     {%- for error in field.errors -%}

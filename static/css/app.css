@@ -302,6 +302,12 @@ textarea.copypaste {
     font-size: 1.2rem;
 }
 
+input.has_error,
+select.has_error,
+textarea.has_error {
+    border: 0.1rem solid #f64242;
+}
+
 /************************************************************************
  * Tables */
 
