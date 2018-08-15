@@ -82,7 +82,11 @@
 
     <div class="alert info pas mts"><i class="fas fa-user-check mrs"></i>
         {%- if player.user -%}
-            This account is owned by <a href="{{ player.user.link }}">{{ 'yourself' if current_user.is_authenticated and current_user.id == player.user.id else player.user.steam_username }}</a>.
+            {%- if current_user.is_authenticated and current_user.id == player.user.id -%}
+                You already own this account.
+            {%- else -%}
+                This account is owned by <a href="{{ player.user.link }}">{{ player.user.steam_username }}</a>.
+            {%- endif -%}
         {%- elif not player.user and current_user.is_authenticated -%}
             <a href="{{ url_for('player_claim', type=player.database, username=player.username) }}">Claim this account now</a> to enable additional features.
         {%- elif not player.user and not current_user.is_authenticated -%}
