@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: f9e51c1c0b89
+Revision ID: f9d93143545f
 Revises: 0c6c5e50c10a
-Create Date: 2018-07-24 13:55:09.711582
+Create Date: 2018-08-15 21:42:14.927712
 
 """
 from alembic import op
@@ -11,7 +11,7 @@ import sqlalchemy_utils
 
 
 # revision identifiers, used by Alembic.
-revision = 'f9e51c1c0b89'
+revision = 'f9d93143545f'
 down_revision = '0c6c5e50c10a'
 branch_labels = None
 depends_on = None
@@ -22,16 +22,33 @@ def upgrade():
     op.create_table('users',
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('steam_id', sa.String(length=17), nullable=False),
-    sa.Column('steam_username', sa.String(length=80), nullable=False),
+    sa.Column('username', sa.String(length=80), nullable=False),
     sa.Column('small_avatar_url', sa.String(length=255), nullable=True),
     sa.Column('large_avatar_url', sa.String(length=255), nullable=True),
     sa.Column('country_code', sa.String(length=2), nullable=True),
+    sa.Column('is_profile_public', sa.Boolean(), nullable=False),
     sa.Column('created_at', sqlalchemy_utils.types.arrow.ArrowType(), nullable=False),
     sa.Column('updated_at', sqlalchemy_utils.types.arrow.ArrowType(), nullable=False),
     sa.Column('last_login_at', sqlalchemy_utils.types.arrow.ArrowType(), nullable=False),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('steam_id')
     )
+    op.create_table('market_ads',
+    sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
+    sa.Column('type', sa.Enum('OFFER', 'REQUEST', name='marketadtype'), nullable=False),
+    sa.Column('item_id', sa.String(length=100), nullable=False),
+    sa.Column('unit_price', sa.Integer(), nullable=False),
+    sa.Column('quantity', sa.Integer(), nullable=False),
+    sa.Column('status', sa.Enum('ACTIVE', 'CONCLUDED', 'CANCELLED', name='marketadstatus'), nullable=False),
+    sa.Column('created_at', sqlalchemy_utils.types.arrow.ArrowType(), nullable=False),
+    sa.Column('updated_at', sqlalchemy_utils.types.arrow.ArrowType(), nullable=False),
+    sa.Column('rwr_account_id', sa.Integer(), nullable=False),
+    sa.ForeignKeyConstraint(['rwr_account_id'], ['rwr_accounts.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_index('created_at_idx', 'market_ads', ['created_at'], unique=False)
+    op.create_index('rwr_account_id_idx', 'market_ads', ['rwr_account_id'], unique=False)
+    op.create_index('type_status_idx', 'market_ads', ['type', 'status'], unique=False)
     op.add_column('rwr_accounts', sa.Column('claim_initiated_by_user_id', sa.Integer(), nullable=True))
     op.add_column('rwr_accounts', sa.Column('claim_possible_until', sqlalchemy_utils.types.arrow.ArrowType(), nullable=True))
     op.add_column('rwr_accounts', sa.Column('claimed_at', sqlalchemy_utils.types.arrow.ArrowType(), nullable=True))
@@ -49,5 +66,9 @@ def downgrade():
     op.drop_column('rwr_accounts', 'claimed_at')
     op.drop_column('rwr_accounts', 'claim_possible_until')
     op.drop_column('rwr_accounts', 'claim_initiated_by_user_id')
+    op.drop_index('type_status_idx', table_name='market_ads')
+    op.drop_index('rwr_account_id_idx', table_name='market_ads')
+    op.drop_index('created_at_idx', table_name='market_ads')
+    op.drop_table('market_ads')
     op.drop_table('users')
     # ### end Alembic commands ###

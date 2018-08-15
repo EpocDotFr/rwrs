@@ -28,7 +28,7 @@ class PlayerClaimForm(FlaskForm):
         if rwr_account:
             if rwr_account.user_id:
                 raise ValidationError('This RWR account has already been claimed by {}.'.format(
-                    'yourself' if rwr_account.user_id == current_user.id else '<strong>{}</strong>'.format(rwr_account.user.steam_username)
+                    'yourself' if rwr_account.user_id == current_user.id else '<strong>{}</strong>'.format(rwr_account.user.username)
                 ))
 
             if rwr_account.claim_initiated_by_user_id:

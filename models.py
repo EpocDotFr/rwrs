@@ -357,10 +357,11 @@ class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 
     steam_id = db.Column(db.String(17), nullable=False, unique=True)
-    steam_username = db.Column(db.String(80), nullable=False)
+    username = db.Column(db.String(80), nullable=False)
     small_avatar_url = db.Column(db.String(255))
     large_avatar_url = db.Column(db.String(255))
     country_code = db.Column(db.String(2))
+    is_profile_public = db.Column(db.Boolean, nullable=False, default=True)
     created_at = db.Column(ArrowType, default=arrow.utcnow().floor('minute'), nullable=False)
     updated_at = db.Column(ArrowType, default=arrow.utcnow().floor('minute'), onupdate=arrow.utcnow().floor('minute'), nullable=False)
     last_login_at = db.Column(ArrowType, nullable=False)
@@ -399,7 +400,7 @@ class User(db.Model, UserMixin):
 
     @memoized_property
     def slug(self):
-        return slugify(self.steam_username)
+        return slugify(self.username)
 
     @staticmethod
     def get_by_steam_id(steam_id, create_if_unexisting=False):

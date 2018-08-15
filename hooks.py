@@ -33,10 +33,11 @@ def create_or_login(resp):
 
     user = User.get_by_steam_id(steam_id, create_if_unexisting=True)
 
-    user.steam_username = steam_user_info['personaname']
+    user.username = steam_user_info['personaname']
     user.small_avatar_url = steam_user_info['avatar']
     user.large_avatar_url = steam_user_info['avatarfull']
     user.country_code = steam_user_info['loccountrycode'].lower() if 'loccountrycode' in steam_user_info else None
+    user.is_profile_public = True if steam_user_info['communityvisibilitystate'] == 3 else False
     user.last_login_at = arrow.utcnow().floor('minute')
 
     db.session.add(user)
@@ -44,7 +45,7 @@ def create_or_login(resp):
 
     login_user(user, remember=True)
 
-    flash('Welcome, {}!'.format(user.steam_username), 'success')
+    flash('Welcome, {}!'.format(user.username), 'success')
 
     return redirect(oid.get_next_url())
 
