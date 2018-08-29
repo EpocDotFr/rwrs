@@ -46,7 +46,7 @@ and its Pacific DLC. Available at [rwrstats.com](https://rwrstats.com/).
 ## Installation
 
   1. Clone this repo somewhere
-  2. Rename `.env.local` to `.env`
+  2. Copy `.env.local` to `.env`
   3. `pip install -r requirements.txt`
   4. `flask db upgrade`
   5. `bash scripts/geolite2_city_updater.sh`
