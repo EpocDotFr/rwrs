@@ -1,3 +1,4 @@
+from flask_debugtoolbar import DebugToolbarExtension
 from flask_assets import Environment, Bundle
 from bugsnag.flask import handle_exceptions
 from flask_sqlalchemy import SQLAlchemy
@@ -52,6 +53,7 @@ cache = Cache(app)
 assets = Environment(app)
 login_manager = LoginManager(app)
 oid = OpenID(app)
+toolbar = DebugToolbarExtension(app)
 
 assets.cache = 'storage/webassets-cache/'
 
