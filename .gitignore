@@ -7,6 +7,7 @@ maintenance
 motd
 static/js/*.min.js
 static/css/*.min.css
+.env
 
 ### JetBrains template
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio

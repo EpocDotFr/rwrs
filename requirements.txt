@@ -8,6 +8,7 @@ simplejson
 Flask-Login
 Flask-OpenID
 flask-debugtoolbar
+python-dotenv
 jsmin
 cssutils
 requests
