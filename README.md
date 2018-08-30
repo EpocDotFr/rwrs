@@ -34,6 +34,10 @@ and its Pacific DLC. Available at [rwrstats.com](https://rwrstats.com/).
     - Peaks
   - Online multiplayer status
   - Discord bot able to give several kind of information. Available on the [RWR Discord Server](https://discord.gg/runningwithrifles)
+  - Accounts
+    - Sign-in via Steam
+    - Claim RWR profiles
+    - Market
 
 ## Prerequisites
 
@@ -47,7 +51,7 @@ and its Pacific DLC. Available at [rwrstats.com](https://rwrstats.com/).
 
   1. Clone this repo somewhere
   2. Copy `.env.local` to `.env`
-  3. `pip install -r requirements.txt`
+  3. `pip install -r requirements-dev.txt`
   4. `flask db upgrade`
   5. `bash scripts/geolite2_city_updater.sh`
 
@@ -60,7 +64,7 @@ Available configuration parameters are:
   - `SECRET_KEY` Set this to a complex random value
   - `SERVER_NAME` The IP or hostname where RWRS will be available
 
-More informations on the three above can be found [here](http://flask.pocoo.org/docs/0.12/config/#builtin-configuration-values).
+More informations on the three above can be found [here](http://flask.pocoo.org/docs/1.0/config/#builtin-configuration-values).
 
   - `DB_USERNAME` Username to access the DBMS
   - `DB_PASSWORD` Password to access the DBMS
