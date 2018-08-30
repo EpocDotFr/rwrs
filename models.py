@@ -413,6 +413,11 @@ class User(db.Model, UserMixin):
 
         return user
 
+    @memoized_property
+    def has_rwr_accounts(self):
+        """Determine is this User object have at least one RwrAccount."""
+        return RwrAccount.query.with_entities(func.count('*')).filter(RwrAccount.user_id == self.id).scalar() > 0
+
     def __repr__(self):
         return 'User:{}'.format(self.id)
 

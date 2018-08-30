@@ -477,6 +477,12 @@ def user_profile(user_id, slug):
     )
 
 
+@app.route('/settings', methods=['GET', 'POST'])
+@login_required
+def user_settings():
+    return 'TODO'
+
+
 @app.route('/market')
 def market_home():
     latest_offers = MarketAd.get_market_ad_list(MarketAdType.OFFER, limit=4)
