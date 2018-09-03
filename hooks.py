@@ -3,6 +3,7 @@ from werkzeug.exceptions import HTTPException
 from rwrs import app, login_manager, oid, db
 from models import RwrRootServer, User
 from flask_login import login_user
+from sqlalchemy import inspect
 import rwr.scraper
 import helpers
 import steam
@@ -33,12 +34,16 @@ def create_or_login(resp):
 
     user = User.get_by_steam_id(steam_id, create_if_unexisting=True)
 
+    # These attributes must be updated every time the user is signing-in because they may have been changed
     user.username = steam_user_info['personaname']
     user.small_avatar_url = steam_user_info['avatar']
     user.large_avatar_url = steam_user_info['avatarfull']
-    user.country_code = steam_user_info['loccountrycode'].lower() if 'loccountrycode' in steam_user_info else None
-    user.is_profile_public = True if steam_user_info['communityvisibilitystate'] == 3 else False
+    user.country_code = steam_user_info['loccountrycode'].lower() if 'loccountrycode' in steam_user_info and steam_user_info['loccountrycode'] else None
     user.last_login_at = arrow.utcnow().floor('minute')
+
+    # These attributes must be set only if the user doesn't already exist in DB
+    if inspect(user).transient:
+        user.is_profile_public = True if 'communityvisibilitystate' in steam_user_info and steam_user_info['communityvisibilitystate'] == 3 else False
 
     db.session.add(user)
     db.session.commit()
