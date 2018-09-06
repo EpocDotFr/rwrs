@@ -111,7 +111,7 @@ The uWSGI file you'll have to set in your uWSGI configuration is `uwsgi.py`. The
   - Others
 
 You'll probably have to hack with this application to make it work with one of the solutions described
-[here](http://flask.pocoo.org/docs/0.12/deploying/). Send me a pull request if you make it work.
+[here](http://flask.pocoo.org/docs/1.0/deploying/). Send me a pull request if you make it work.
 
 ### Extracting ranks data and images
 
