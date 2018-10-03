@@ -1,0 +1,39 @@
+{% extends 'layout.html' %}
+
+{% block page_title %}<h1><i class="fas fa-info-circle"></i> About</h1>{% endblock %}
+
+{% block meta_title %}About{% endblock %}
+
+{% block meta_description %}Learn things about RWRS, its background, why it was created and who's behind.{% endblock %}
+
+{% block jsfiles %}
+    {% assets 'js_friends' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
+{% endblock %}
+
+{% set canonical_url = url_for('about', _external=True) %}
+
+{% block content %}
+    <p>Running With Rifles Stats (RWRS) is a site (but not only!) created by and for <a href="http://www.runningwithrifles.com/">Running With Rifles</a> (RWR) players: it aims to be your everyday RWR companion tool.</p>
+    <p>If you don't know RWR already: it's a very noice top-down shooter game. There's a <a href="http://steamcommunity.com/app/270150">free demo</a> waiting for you!</p>
+
+    <h2>Purposes</h2>
+
+    <p>TODO</p>
+
+    <h2>Author and genesis</h2>
+
+    <p>TODO</p>
+
+    <h2>Credits</h2>
+
+    <p>TODO</p>
+
+    <h2>Thanks to</h2>
+
+    <p>TODO</p>
+
+    <script>
+        friendsFeature.all_players_with_servers_details = {{ g.all_players_with_servers_details|tojson }};
+        friendsFeature.init();
+    </script>
+{% endblock %}
