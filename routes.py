@@ -50,6 +50,27 @@ def my_friends():
     )
 
 
+@app.route('/about')
+def about():
+    return render_template(
+        'about.html'
+    )
+
+
+@app.route('/faq')
+def faq():
+    return render_template(
+        'faq.html'
+    )
+
+
+@app.route('/feedback')
+def feedback():
+    return render_template(
+        'feedback.html'
+    )
+
+
 @app.route('/online-multiplayer-status')
 def online_multiplayer_status():
     is_everything_ok, servers_statuses = RwrRootServer.get_data_for_display()
