@@ -5,6 +5,8 @@
 Players statistics, servers list and more for the [Running With Rifles](http://www.runningwithrifles.com/wp/) (RWR) game
 and its Pacific DLC. Available at [rwrstats.com](https://rwrstats.com/).
 
+> Your everyday RWR companion tool!
+
 ## Features
 
   - Players
@@ -198,25 +200,11 @@ More information in the script comments.
   1. `set FLASK_APP=rwrs.py`
   2. `flask import_rwrtrack_data --directory="{path to the rwrtrack data directory}" [--reset]`
 
-## How it works
-
-This project is mainly powered by [Flask](http://flask.pocoo.org/) (Python) for the backend.
-
-Data is fetched from the [official servers list](http://rwr.runningwithrifles.com/rwr_server_list/view_servers.php) page
-(which sucks) as well from the [official players list](http://rwr.runningwithrifles.com/rwr_stats/view_players.php?sort=score)
-page (which sucks, too). Data is cached so there isn't many requests sent to the server who hosts these lists.
-
-As the provided servers location is most of the time either missing or invalid, RWRS makes its own look up using a
-[GeoLite2](https://dev.maxmind.com/geoip/geoip2/geolite2/) database.
-
 ## Credits
 
 You'll find credits and legal mentions [here](https://rwrstats.com/about#credits).
 
-## End words
+## Feedback
 
-If you have questions or problems, you can either:
-
-  - Submit an issue [here on GitHub](https://github.com/EpocDotFr/rwrs/issues)
-  - Post a message in [this topic](http://www.runningwithrifles.com/phpBB3/viewtopic.php?f=12&t=3376) on the official RWR forums
-  - Post a message in [this Steam topic](https://steamcommunity.com/app/270150/discussions/0/1520386297704428050/)
+If you have suggestions or problems you can submit an issue [here on GitHub](https://github.com/EpocDotFr/rwrs/issues) or
+head over [here](https://rwrstats.com/feedback).

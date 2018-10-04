@@ -33,14 +33,13 @@
 
                 https://epoc.fr
 
-        Found a problem? Got a suggestion?
- This website and some of its data is open-source:
-        https://github.com/EpocDotFr/rwrs
+  This website and some of its data is open-source:
+         https://github.com/EpocDotFr/rwrs
 
-Feel free to open an issue or create a pull request.
+ Feel free to open an issue or create a pull request.
 
-        More credits can be found here:
-      https://rwrstats.com/about#credits
+       Found a problem? Got a suggestion?
+         https://rwrstats.com/feedback
 
-RWR forums topic: http://www.runningwithrifles.com/phpBB3/viewtopic.php?f=12&t=3376
-Steam Discussions topic: https://steamcommunity.com/app/270150/discussions/0/1520386297704428050/
+   Credits and legal mentions can be found here:
+        https://rwrstats.com/about#credits

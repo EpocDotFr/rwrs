@@ -138,8 +138,8 @@ class RwrsBotDiscoPlugin(Plugin):
     def on_info_command(self, event):
         """Displays information about the bot."""
         info = [
-            ':information_source: Hi! I was created by <@{}> - the guy behind https://rwrstats.com - around the beginning of March 2018.'.format(app.config['MY_DISCORD_ID']),
-            'Like the rwrstats.com website, my brain is powered by the Python programming language.',
+            ':information_source: Hi! I was created by <@{}> - the guy behind RWRS - around the beginning of March 2018.'.format(app.config['MY_DISCORD_ID']),
+            'Like the RWRS website, my brain is powered by the Python programming language. More info: https://rwrstats.com/about',
             'P.S. You look beautiful today.'
         ]
 
