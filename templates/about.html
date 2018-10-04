@@ -32,14 +32,20 @@
         <li>Flag icons by <a href="https://www.flag-sprites.com/en/">Flag Sprites</a> and <a href="https://www.gosquared.com/resources/flag-icons/">GoSquared</a> (freeware)</li>
         <li>Maps previews comes from the <a href="https://runningwithrifles.gamepedia.com/Maps">official RWR wiki</a></li>
         <li>Servers banner and players signature font by <a href="https://www.dafont.com/komika-axis.font">Vigilante Typeface Corporation</a> (freeware)</li>
-        <li>Old players stats are provided by the <a href="https://github.com/david-wm-sanders/rwrtrack">rwrtrack</a> project by David "MR. BANG" Sanders (<a href="https://github.com/david-wm-sanders/rwrtrack-data">actual data repo</a>) (MIT License)</li>
+        <li>Old players stats are provided by the <a href="https://github.com/david-wm-sanders/rwrtrack">rwrtrack</a> project by David "Mr. Bang" Sanders (<a href="https://github.com/david-wm-sanders/rwrtrack-data">actual data repo</a>) (MIT License)</li>
         <li>RWRS uses GeoLite2 data created by MaxMind, available from <a href="https://www.maxmind.com/">www.maxmind.com</a></li>
         <li>Home page fan art by <a href="https://www.deviantart.com/thanshuhai">thanshuhai</a> (public domain)</li>
     </ul>
 
-    <h2>Thanks to</h2>
+    <h2 id="thanks-to">Thanks to</h2>
 
-    <p>TODO</p>
+    <ul>
+        <li>Pasik and JackMayol (RWR developers), for answering my countless questions and (unofficially) supporting RWRS</li>
+        <li>Tremozl and The Soldier for providing us the Pacific DLC</li>
+        <li>People who contributed to RWRS in a way or another: {{ config['CONTRIBUTORS'] | join(', ') | title }}</li>
+    </ul>
+
+    <p>Did I forgot to thank you or to mention you in the credits? <a href="{{ url_for('feedback') }}">Contact me</a>.</p>
 
     <script>
         friendsFeature.all_players_with_servers_details = {{ g.all_players_with_servers_details|tojson }};
