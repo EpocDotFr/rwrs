@@ -4,7 +4,7 @@
 
 {% block meta_title %}About{% endblock %}
 
-{% block meta_description %}Learn things about RWRS, its background, why it was created and who's behind.{% endblock %}
+{% block meta_description %}Learn things about RWRS, its background and purposes, why it was created and who's behind.{% endblock %}
 
 {% block jsfiles %}
     {% assets 'js_friends' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
@@ -14,7 +14,7 @@
 
 {% block content %}
     <p>Running With Rifles Stats (RWRS) is a site (but not only!) created by and for <a href="http://www.runningwithrifles.com/">Running With Rifles</a> (RWR) players: it aims to be your everyday RWR companion tool.</p>
-    <p>If you don't know RWR already: it's a very noice top-down shooter game. There's a <a href="http://steamcommunity.com/app/270150">free demo</a> waiting for you!</p>
+    <p>If you don't know RWR already: it's a very noice top-down shooter game. There's a <a href="https://store.steampowered.com/app/{{ config['RWR_STEAM_APP_ID'] }}">free demo</a> waiting for you!</p>
 
     <h2>Purposes</h2>
 
@@ -24,9 +24,18 @@
 
     <p>TODO</p>
 
-    <h2>Credits</h2>
+    <h2 id="credits">Credits</h2>
 
-    <p>TODO</p>
+    <ul>
+        <li>RWRS icon by <a href="https://www.iconfinder.com/icons/2760623/army_bomb_grenade_military_navy_tank_weapon_icon#size=256">goodware std.</a> (CC BY 3.0)</li>
+        <li>RWRS font by <a href="https://www.dafont.com/fr/top-secret-kb.font">Typesgal</a> (freeware)</li>
+        <li>Flag icons by <a href="https://www.flag-sprites.com/en/">Flag Sprites</a> and <a href="https://www.gosquared.com/resources/flag-icons/">GoSquared</a> (freeware)</li>
+        <li>Maps previews comes from the <a href="https://runningwithrifles.gamepedia.com/Maps">official RWR wiki</a></li>
+        <li>Servers banner and players signature font by <a href="https://www.dafont.com/komika-axis.font">Vigilante Typeface Corporation</a> (freeware)</li>
+        <li>Old players stats are provided by the <a href="https://github.com/david-wm-sanders/rwrtrack">rwrtrack</a> project by David "MR. BANG" Sanders (<a href="https://github.com/david-wm-sanders/rwrtrack-data">actual data repo</a>) (MIT License)</li>
+        <li>RWRS uses GeoLite2 data created by MaxMind, available from <a href="https://www.maxmind.com/">www.maxmind.com</a></li>
+        <li>Home page fan art by <a href="https://www.deviantart.com/thanshuhai">thanshuhai</a> (public domain)</li>
+    </ul>
 
     <h2>Thanks to</h2>
 

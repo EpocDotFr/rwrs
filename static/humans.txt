@@ -40,7 +40,7 @@
 Feel free to open an issue or create a pull request.
 
         More credits can be found here:
-    https://github.com/EpocDotFr/rwrs#credits
+      https://rwrstats.com/about#credits
 
 RWR forums topic: http://www.runningwithrifles.com/phpBB3/viewtopic.php?f=12&t=3376
 Steam Discussions topic: https://steamcommunity.com/app/270150/discussions/0/1520386297704428050/
