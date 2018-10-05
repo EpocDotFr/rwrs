@@ -14,9 +14,11 @@
 
 {% block content %}
     <p>Running With Rifles Stats (RWRS) is a site (but not only!) created by and for <a href="http://www.runningwithrifles.com/">Running With Rifles</a> (RWR) players: it aims to be your everyday RWR companion tool.</p>
-    <p>If you don't know RWR already: it's a very noice top-down shooter game. There's a <a href="https://store.steampowered.com/app/{{ config['RWR_STEAM_APP_ID'] }}">free demo</a> waiting for you!</p>
+    <p><em>If you don't know RWR already: it's a very noice top-down shooter game. There's a <a href="https://store.steampowered.com/app/{{ config['RWR_STEAM_APP_ID'] }}">free demo</a> waiting for you!</em></p>
 
     <h2>Purposes</h2>
+
+    <img src="{{ url_for('static', filename='images/rwr_cover.jpg') }}" class="bordered fr">
 
     <p>TODO</p>
 
@@ -35,7 +37,10 @@
         <li>Old players stats are provided by the <a href="https://github.com/david-wm-sanders/rwrtrack">rwrtrack</a> project by David "Mr. Bang" Sanders (<a href="https://github.com/david-wm-sanders/rwrtrack-data">actual data repo</a>) (MIT License)</li>
         <li>RWRS uses GeoLite2 data created by MaxMind, available from <a href="https://www.maxmind.com/">www.maxmind.com</a></li>
         <li>Home page fan art by <a href="https://www.deviantart.com/thanshuhai">thanshuhai</a> (public domain)</li>
+        <li>All Running With Rifles assets (images, RWR logo, game data) © Osumia Games</li>
     </ul>
+
+    <p class="txtcenter"><img src="{{ url_for('static', filename='images/rwr_weapons.png') }}"></p>
 
     <h2 id="thanks-to">Thanks to</h2>
 

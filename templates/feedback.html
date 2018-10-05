@@ -15,7 +15,7 @@
 {% block content %}
     <p>The creator of RWRS is open to suggestions, bug reports or any useful feedback. Choose your preferred communication channel to be in touch:</p>
 
-    <div class="grid has-gutter txtcenter mtm">
+    <div class="grid has-gutter txtcenter mtl mbl">
         <div>
             <p><i class="fab fa-discord fa-4x"></i></p>
             <p>I'm <strong>Epoc#4256</strong>. You can also shoot me a message in the <strong>#rwrs</strong> channel on the <a href="https://discord.gg/runningwithrifles">official RWR Discord server</a>.</p>
@@ -34,9 +34,11 @@
         </div>
         <div>
             <p><i class="fab fa-github fa-4x"></i></p>
-            <p>RWRS is open-source, you can submit an issue <a href="https://github.com/EpocDotFr/rwrs/issues">on the Github project</a>.</p>
+            <p>RWRS and some of its data is open-source, you can submit an issue <a href="https://github.com/EpocDotFr/rwrs/issues">on the Github project</a>.</p>
         </div>
     </div>
+
+    <p>People who contributed to RWRS in a way or another gets a special icon next to their username (you can read the list of these people <a href="{{ url_for('about') }}#thanks-to">here</a>).</p>
 
     <script>
         friendsFeature.all_players_with_servers_details = {{ g.all_players_with_servers_details|tojson }};
