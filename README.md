@@ -7,36 +7,6 @@ and its Pacific DLC. Available at [rwrstats.com](https://rwrstats.com/).
 
 > Your everyday RWR companion tool!
 
-## Features
-
-  - Players
-    - Support stats for both the official invasion (vanilla RWR) servers and official Pacific servers
-    - Search for a player
-    - View player stats (as well as next rank progression, unlocks, on which server he's playing on, etc)
-    - Compare two players stats
-    - Friends list (easily know on which server your friends are playing on. There's no need to create a user account or whatever)
-    - Players list (leaderboard)
-    - Stats history
-    - Signatures
-  - Public servers
-    - Real servers location
-    - Real maps name
-    - Official invasion (ranked) servers are highlighted
-    - Game mode (coop, PvPvE, etc) and type (vanilla RWR, Pacific DLC, etc)
-    - Public server details (players list with link to their profile, current map preview and minimap, etc)
-    - Filtering capabilities
-    - Mapview
-    - Banners
-  - Online servers count (+ the active ones)
-  - Total players count (+ online ones + number of playing friends)
-  - Charts (for the past week)
-    - Number of online players
-    - Number of online servers (+ the active ones)
-    - Number of players on a server
-    - Peaks
-  - Online multiplayer status
-  - Discord bot able to give several kind of information. Available on the [RWR Discord Server](https://discord.gg/runningwithrifles)
-
 ## Prerequisites
 
   - Should work on any Python 3.x version. Feel free to test with another Python version and give me feedback
