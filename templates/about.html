@@ -1,0 +1,61 @@
+{% extends 'layout.html' %}
+
+{% block page_title %}<h1><i class="fas fa-info-circle"></i> About</h1>{% endblock %}
+
+{% block meta_title %}About{% endblock %}
+
+{% block meta_description %}Learn things about RWRS, its background and purposes, why it was created and who's behind.{% endblock %}
+
+{% block jsfiles %}
+    {% assets 'js_friends' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
+{% endblock %}
+
+{% set canonical_url = url_for('about', _external=True) %}
+
+{% block content %}
+    <p>Running With Rifles Stats (RWRS) is a site (but not only!) created by and for <a href="http://www.runningwithrifles.com/">Running With Rifles</a> (RWR) players: it aims to be your everyday RWR companion tool.</p>
+    <p><em>If you don't know RWR already: it's a very noice top-down shooter game. There's a <a href="https://store.steampowered.com/app/{{ config['RWR_STEAM_APP_ID'] }}">free demo</a> waiting for you!</em></p>
+
+    <h2>What's RWRS?</h2>
+
+    <img src="{{ url_for('static', filename='images/rwr_cover.jpg') }}" class="bordered fr">
+
+    <p>RWR may be played online on ranked (official) servers with other people. Ranked servers for vanilla RWR are called "Invasion", the ones for the <a href="https://store.steampowered.com/app/616850/RUNNING_WITH_RIFLES_PACIFIC/">Pacific DLC</a> are called "Pacific".</p>
+    <p>Players profile on these servers are persisted (just like Battlefield): RWRS allows you to check your player profile statistics for these servers, as well as access to the public servers list (server browser).</p>
+    <p>But it's not limited to these features, RWRS can do way more things. There's also a handy Discord bot available on the <a href="https://discord.gg/runningwithrifles">official RWR Discord server</a> (<strong>#rwrs</strong> channel).</p>
+
+    <h2>Author and genesis</h2>
+
+    <p>RWRS was created by <a href="https://epoc.fr/">Maxime "Epoc" G.</a> (AKA EpocDotFr) out of the frustration of the <a href="http://rwr.runningwithrifles.com/rwr_server_list/view_servers.php" rel="nofollow">official servers list</a> and <a href="http://rwr.runningwithrifles.com/rwr_stats/view_players.php?sort=score" rel="nofollow">official players list</a> pages not being user-friendly and not giving valuable information for us, players. RWRS was then born on October 3, 2017.</p>
+
+    <h2 id="credits">Credits</h2>
+
+    <ul>
+        <li>RWRS icon by <a href="https://www.iconfinder.com/icons/2760623/army_bomb_grenade_military_navy_tank_weapon_icon#size=256">goodware std.</a> (CC BY 3.0)</li>
+        <li>RWRS font by <a href="https://www.dafont.com/fr/top-secret-kb.font">Typesgal</a> (freeware)</li>
+        <li>Flag icons by <a href="https://www.flag-sprites.com/en/">Flag Sprites</a> and <a href="https://www.gosquared.com/resources/flag-icons/">GoSquared</a> (freeware)</li>
+        <li>Maps previews comes from the <a href="https://runningwithrifles.gamepedia.com/Maps">official RWR wiki</a></li>
+        <li>Servers banner and players signature font by <a href="https://www.dafont.com/komika-axis.font">Vigilante Typeface Corporation</a> (freeware)</li>
+        <li>Old players stats are provided by the <a href="https://github.com/david-wm-sanders/rwrtrack">rwrtrack</a> project by David "Mr. Bang" Sanders (<a href="https://github.com/david-wm-sanders/rwrtrack-data">actual data repo</a>) (MIT License)</li>
+        <li>RWRS uses GeoLite2 data created by MaxMind, available from <a href="https://www.maxmind.com/">www.maxmind.com</a></li>
+        <li>Home page fan art by <a href="https://www.deviantart.com/thanshuhai">thanshuhai</a> (public domain)</li>
+        <li>All Running With Rifles assets (images, RWR logo, game data) © Osumia Games</li>
+    </ul>
+
+    <p class="txtcenter"><img src="{{ url_for('static', filename='images/rwr_weapons.png') }}"></p>
+
+    <h2 id="thanks-to">Thanks to</h2>
+
+    <ul>
+        <li>Pasik and JackMayol (RWR developers), for answering my countless questions and (unofficially) supporting RWRS</li>
+        <li>Tremozl and The Soldier for providing us the Pacific DLC</li>
+        <li>People who contributed to RWRS in a way or another: {{ config['CONTRIBUTORS'] | join(', ') | title }}</li>
+    </ul>
+
+    <p>Did I forgot to thank you or to mention you in the credits? <a href="{{ url_for('feedback') }}">Get in touch</a>.</p>
+
+    <script>
+        friendsFeature.all_players_with_servers_details = {{ g.all_players_with_servers_details|tojson }};
+        friendsFeature.init();
+    </script>
+{% endblock %}

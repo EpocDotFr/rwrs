@@ -1,0 +1,47 @@
+{% extends 'layout.html' %}
+
+{% block page_title %}<h1><i class="fas fa-theater-masks"></i> Feedback</h1>{% endblock %}
+
+{% block meta_title %}Feedback{% endblock %}
+
+{% block meta_description %}Found a problem or got a suggestion for RWRS? You found the right place.{% endblock %}
+
+{% block jsfiles %}
+    {% assets 'js_friends' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
+{% endblock %}
+
+{% set canonical_url = url_for('feedback', _external=True) %}
+
+{% block content %}
+    <p>The creator of RWRS is open to suggestions, bug reports or any useful feedback. Choose your preferred communication channel to be in touch:</p>
+
+    <div class="grid has-gutter txtcenter mtl mbl">
+        <div>
+            <p><i class="fab fa-discord fa-4x"></i></p>
+            <p>I'm <strong>Epoc#4256</strong>. You can also shoot me a message in the <strong>#rwrs</strong> channel on the <a href="https://discord.gg/runningwithrifles">official RWR Discord server</a>.</p>
+        </div>
+        <div>
+            <p><i class="fa fa-comments fa-4x"></i></p>
+            <p>There's a <a href="http://www.runningwithrifles.com/phpBB3/viewtopic.php?f=12&t=3376">dedicated RWRS topic</a> on the official RWR forums.</p>
+        </div>
+        <div>
+            <p><i class="fab fa-steam fa-4x"></i></p>
+            <p>There's also a <a href="https://steamcommunity.com/app/270150/discussions/0/1520386297704428050/">dedicated RWRS topic</a> in the RWR Steam Discussions.</p>
+        </div>
+        <div>
+            <p><i class="fab fa-twitter fa-4x"></i></p>
+            <p>I'm <a href="https://twitter.com/EpocDotFr">EpocDotFr</a>. Although all my tweets are in French, I can of course answer in English.</p>
+        </div>
+        <div>
+            <p><i class="fab fa-github fa-4x"></i></p>
+            <p>RWRS and some of its data is open-source, you can submit an issue <a href="https://github.com/EpocDotFr/rwrs/issues">on the Github project</a>.</p>
+        </div>
+    </div>
+
+    <p>People who contributed to RWRS in a way or another gets a special icon next to their username (you can read the list of these people <a href="{{ url_for('about') }}#thanks-to">here</a>).</p>
+
+    <script>
+        friendsFeature.all_players_with_servers_details = {{ g.all_players_with_servers_details|tojson }};
+        friendsFeature.init();
+    </script>
+{% endblock %}
