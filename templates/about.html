@@ -20,7 +20,9 @@
 
     <img src="{{ url_for('static', filename='images/rwr_cover.jpg') }}" class="bordered fr">
 
-    <p>RWR may be played online on ranked (official) servers with other people. Ranked servers for vanilla RWR are called "Invasion", the ones for the <a href="https://store.steampowered.com/app/616850/RUNNING_WITH_RIFLES_PACIFIC/">Pacific DLC</a> are called "Pacific". Players profile on these servers are persisted (just like Battlefield): RWRS allows you to check your player profile statistics for these servers, as well as access to the public servers list (server browser). But it's not limited to these features, RWRS can do way more things. There's also a handy Discord bot available on the <a href="https://discord.gg/runningwithrifles">official RWR Discord server</a> (<strong>#rwrs</strong> channel).</p>
+    <p>RWR may be played online on ranked (official) servers with other people. Ranked servers for vanilla RWR are called "Invasion", the ones for the <a href="https://store.steampowered.com/app/616850/RUNNING_WITH_RIFLES_PACIFIC/">Pacific DLC</a> are called "Pacific".</p>
+    <p>Players profile on these servers are persisted (just like Battlefield): RWRS allows you to check your player profile statistics for these servers, as well as access to the public servers list (server browser).</p>
+    <p>But it's not limited to these features, RWRS can do way more things. There's also a handy Discord bot available on the <a href="https://discord.gg/runningwithrifles">official RWR Discord server</a> (<strong>#rwrs</strong> channel).</p>
 
     <h2>Author and genesis</h2>
 
@@ -50,7 +52,7 @@
         <li>People who contributed to RWRS in a way or another: {{ config['CONTRIBUTORS'] | join(', ') | title }}</li>
     </ul>
 
-    <p>Did I forgot to thank you or to mention you in the credits? <a href="{{ url_for('feedback') }}">Contact me</a>.</p>
+    <p>Did I forgot to thank you or to mention you in the credits? <a href="{{ url_for('feedback') }}">Get in touch</a>.</p>
 
     <script>
         friendsFeature.all_players_with_servers_details = {{ g.all_players_with_servers_details|tojson }};
