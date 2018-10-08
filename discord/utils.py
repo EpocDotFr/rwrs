@@ -179,6 +179,10 @@ def create_server_message_embed(server, username_to_highlight=None):
         embed.set_thumbnail(
             url=server.map.preview_absolute
         )
+    elif server.map.has_mapview:
+        embed.set_thumbnail(
+            url=server.map.mapview_absolute
+        )
 
     embed.add_field(
         name='Players count',

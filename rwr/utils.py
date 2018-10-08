@@ -1,5 +1,8 @@
 from . import constants
+from rwrs import app
+import helpers
 import re
+import os
 
 
 _time_regex = re.compile(r'(?:(?P<h>\d+)h(?:\s+)?)?(?:(?P<m>\d+)m(?:in)?(?:\s+)?)?(?:(?P<s>\d+)s)?')
@@ -53,3 +56,19 @@ def parse_map_path(map_path):
         map_id = parsed['map_id']
 
     return server_type, map_id
+
+
+def get_map(server_type, map_id, with_objects=False):
+    """Get a single map, with extra attributes."""
+    if server_type not in constants.MAPS or map_id not in constants.MAPS[server_type]:
+        return None
+
+    map = constants.MAPS[server_type][map_id]
+
+    map['id'] = map_id
+    map['server_type'] = server_type
+
+    if with_objects:
+        map['objects'] = helpers.load_json(os.path.join(app.config['MAPVIEWER_DATA_DIR'], server_type, map_id + '.json'))
+
+    return map

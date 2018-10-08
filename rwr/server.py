@@ -38,12 +38,12 @@ class Server:
         ret.map = ServerMap()
         ret.map.id = map_id
 
-        if ret.type in constants.MAPS and ret.map.id in constants.MAPS[ret.type]:
-            target_map = constants.MAPS[ret.type][ret.map.id]
+        target_map = utils.get_map(ret.type, ret.map.id)
 
+        if target_map:
             ret.map.name = target_map['name']
-            ret.map.has_minimap = target_map['has_minimap']
             ret.map.has_preview = target_map['has_preview']
+            ret.map.slug = target_map['slug']
 
             if ret.map.has_preview:
                 if current_app:
@@ -51,6 +51,15 @@ class Server:
                 else:
                     with app.app_context():
                         ret.map.set_preview_image_urls(ret.type)
+
+            ret.map.has_mapview = target_map['has_mapview']
+
+            if ret.map.has_mapview:
+                if current_app:
+                    ret.map.set_mapview_image_urls(ret.type)
+                else:
+                    with app.app_context():
+                        ret.map.set_mapview_image_urls(ret.type)
 
         ret.map.name_display = ret.map.name if ret.map.name else ret.map.id
 
@@ -162,7 +171,7 @@ class Server:
 
 class ServerMap:
     name = None
-    has_minimap = False
+    has_mapview = False
     has_preview = False
 
     def __repr__(self):
@@ -175,10 +184,22 @@ class ServerMap:
             'map_id': self.id
         }
 
-        preview_url = 'images/maps/preview/{game_type}/{map_id}.png'.format(**params)
+        preview_url = 'images/maps/previews/{game_type}/{map_id}.png'.format(**params)
 
         self.preview = url_for('static', filename=preview_url)
         self.preview_absolute = url_for('static', filename=preview_url, _external=True)
+
+    def set_mapview_image_urls(self, game_type):
+        """Set the relative and absolute URLs to the mapview image of this map."""
+        params = {
+            'game_type': game_type,
+            'map_id': self.id
+        }
+
+        mapview_url = 'images/maps/mapviews/{game_type}/{map_id}.png'.format(**params)
+
+        self.mapview = url_for('static', filename=mapview_url)
+        self.mapview_absolute = url_for('static', filename=mapview_url, _external=True)
 
 
 class ServerPlayers:

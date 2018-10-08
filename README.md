@@ -101,14 +101,14 @@ The Flask command `flask extract_maps_data` is used to extract and save all maps
 
 This command requires the game to be installed.
 
-### Extracting minimaps
+### Extracting mapviews
 
-The Flask command `flask extract_minimaps` is used to extract minimaps (the ones displayed when pressing on
-<kbd>TAB</kbd>). They are saved at `static/images/maps/minimap/{map ID}.png` and `static/images/maps/minimap/{map ID}_thumb.png`.
+The Flask command `flask extract_mapviews` is used to extract mapviews (the ones displayed when pressing on
+<kbd>TAB</kbd>). They are saved at `static/images/maps/mapviews/{game type}/{map ID}.png`.
 
   1. `pip install -r requirements-dev.txt`
   2. `set FLASK_APP=rwrs.py`
-  3. `flask extract_minimaps --steamdir="{path to the Steam root directory}"`
+  3. `flask extract_mapviews --steamdir="{path to the Steam root directory}"`
 
 This command requires the game to be installed.
 
@@ -147,6 +147,14 @@ Will ping RWR root servers and store their status (up or down).
 
   1. `set FLASK_APP=rwrs.py`
   2. `flask run_discord_bot`
+
+### Generating the maps tiles for the maps gallery
+
+They are saved at `static/images/maps/tiles/{game type}/{map ID}/{z}/{x}/{y}.png`.
+
+  1. `pip install -r requirements-dev.txt`
+  2. `set FLASK_APP=rwrs.py`
+  3. `flask generate_maps_tiles --steamdir="{path to the Steam root directory}"`
 
 ### Updating the MaxMind GeoLite2 City database
 

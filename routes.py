@@ -375,3 +375,28 @@ def server_banner(ip, port, slug=None):
 @app.route('/images/servers/<ip>-<int:port>.png')
 def dynamic_server_image(ip, port):
     return DynamicServerImage.create(ip, port)
+
+
+@app.route('/maps-gallery')
+def maps_list():
+    return render_template(
+        'maps/list.html',
+        maps=rwr.constants.MAPS
+    )
+
+
+@app.route('/maps-gallery/<server_type>/<map_id>')
+@app.route('/maps-gallery/<server_type>/<map_id>/<slug>')
+def map_details(server_type, map_id, slug=None):
+    map = rwr.utils.get_map(server_type, map_id, with_objects=True)
+
+    if not map:
+        abort(404)
+
+    if not slug:
+        return redirect(url_for('map_details', server_type=server_type, map_id=map_id, slug=map['slug']), code=301)
+
+    return render_template(
+        'maps/details.html',
+        map=map
+    )

@@ -23,9 +23,11 @@ app.config['CACHE_TYPE'] = 'filesystem'
 app.config['CACHE_DIR'] = 'storage/cache'
 app.config['RANKS_IMAGES_DIR'] = 'static/images/ranks'
 app.config['RANKS_DATA_FILE'] = 'storage/data/ranks.json'
-app.config['MINIMAPS_IMAGES_DIR'] = 'static/images/maps/minimap'
-app.config['MAPS_PREVIEW_IMAGES_DIR'] = 'static/images/maps/preview'
+app.config['MAPVIEWS_IMAGES_DIR'] = 'static/images/maps/mapviews'
+app.config['MAPS_TILES_DIR'] = 'static/images/maps/tiles'
+app.config['MAPS_PREVIEWS_IMAGES_DIR'] = 'static/images/maps/previews'
 app.config['MAPS_DATA_FILE'] = 'storage/data/maps.json'
+app.config['MAPVIEWER_DATA_DIR'] = 'storage/data/mapviewer'
 app.config['UNLOCKABLES_IMAGES_DIR'] = 'static/images/unlockables'
 app.config['UNLOCKABLES_DATA_FILE'] = 'storage/data/unlockables.json'
 app.config['GEOIP_DATABASE_FILE'] = 'storage/data/GeoLite2-City.mmdb'
@@ -36,6 +38,9 @@ app.config['DEVS'] = ['jackmayol', 'pasik', 'pasik2', 'tremozl', 'the soldier'] 
 app.config['LIST_PAGE_SIZES'] = [15, 30, 50, 100]
 app.config['RWR_STEAM_APP_ID'] = 270150
 app.config['ROOT_RWR_SERVERS_CHECK_INTERVAL'] = 5
+app.config['MAPS_GALLERY_TILE_SIZE'] = 256
+app.config['MAPS_GALLERY_MIN_ZOOM'] = 1
+app.config['MAPS_GALLERY_MAX_ZOOM'] = 3
 
 if app.config['ENV'] == 'production' and app.config['BUGSNAG_API_KEY']:
     bugsnag.configure(
@@ -53,6 +58,7 @@ assets.cache = 'storage/webassets-cache/'
 
 assets.register('js_friends_charts', Bundle('js/common.js', 'js/friends.js', 'js/charts.js', filters='jsmin', output='js/friends_charts.min.js'))
 assets.register('js_friends_status', Bundle('js/common.js', 'js/friends.js', 'js/status.js', filters='jsmin', output='js/friends_status.min.js'))
+assets.register('js_friends_map', Bundle('js/common.js', 'js/friends.js', 'js/map.js', filters='jsmin', output='js/friends_map.min.js'))
 assets.register('js_friends', Bundle('js/common.js', 'js/friends.js', filters='jsmin', output='js/friends.min.js'))
 assets.register('css_app', Bundle('css/flags.css', 'css/app.css', filters='cssutils', output='css/app.min.css'))
 
@@ -78,7 +84,8 @@ app.jinja_env.globals.update(
     PlayersSort=rwr.constants.PlayersSort,
     merge_query_string_params=helpers.merge_query_string_params,
     get_database_name=rwr.utils.get_database_name,
-    PLAYERS_LIST_DATABASES=rwr.constants.PLAYERS_LIST_DATABASES
+    PLAYERS_LIST_DATABASES=rwr.constants.PLAYERS_LIST_DATABASES,
+    server_type_name=rwr.utils.get_type_name
 )
 
 

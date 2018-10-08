@@ -1,8 +1,9 @@
 from collections import OrderedDict
+from slugify import slugify
+from . import utils, map
 from lxml import etree
 from glob import glob
 from rwrs import app
-from . import utils
 import helpers
 import click
 import math
@@ -29,21 +30,21 @@ class BaseExtractor:
         raise NotImplemented('Must be implemented')
 
 
-class MinimapsImageExtractor(BaseExtractor):
-    """Extract minimaps from RWR."""
-    minimap_image_size = (320, 320)
+class MapviewsImageExtractor(BaseExtractor):
+    """Extract mapviews from RWR."""
+    mapview_size = (320, 320)
 
     def extract(self):
         """Actually run the extraction process."""
         from PIL import Image
 
-        minimaps_paths = []
+        maps_paths = []
 
-        minimaps_paths.extend(glob(os.path.join(self.packages_dir, '*', 'maps', '*', 'map.png'))) # Maps in RWR game directory
-        minimaps_paths.extend(glob(os.path.join(self.workshop_dir, '*', 'media', 'packages', '*', 'maps', '*', 'map.png'))) # Maps in RWR workshop directory
+        maps_paths.extend(glob(os.path.join(self.packages_dir, '*', 'maps', '*', 'map.png'))) # Maps in RWR game directory
+        maps_paths.extend(glob(os.path.join(self.workshop_dir, '*', 'media', 'packages', '*', 'maps', '*', 'map.png'))) # Maps in RWR workshop directory
 
-        for minimap_path in minimaps_paths:
-            server_type, map_id = utils.parse_map_path(minimap_path.replace('\\', '/').replace('/map.png', ''))
+        for map_path in maps_paths:
+            server_type, map_id = utils.parse_map_path(map_path.replace('\\', '/').replace('/map.png', ''))
 
             if not map_id or map_id in INVALID_MAPS or server_type in INVALID_GAME_TYPES:
                 click.secho('Invalid map ID ({}) or server type ({})'.format(map_id, server_type), fg='yellow')
@@ -52,21 +53,77 @@ class MinimapsImageExtractor(BaseExtractor):
 
             click.echo(server_type + ':' + map_id)
 
-            output_dir = os.path.join(app.config['MINIMAPS_IMAGES_DIR'], server_type)
+            output_dir = os.path.join(app.config['MAPVIEWS_IMAGES_DIR'], server_type)
 
             if not os.path.isdir(output_dir):
                 os.makedirs(output_dir)
 
-            # Copy the original minimap first
-            minimap = Image.open(minimap_path)
-            minimap.save(os.path.join(output_dir, map_id + '.png'), optimize=True)
+            map_image = Image.open(map_path)
+            map_image.thumbnail(self.mapview_size, Image.LANCZOS)
+            map_image.save(os.path.join(output_dir, map_id + '.png'), optimize=True)
 
-            # Create the thumbnail
-            minimap.thumbnail(self.minimap_image_size, Image.LANCZOS)
-            minimap.save(os.path.join(output_dir, map_id + '_thumb.png'), optimize=True)
+
+class MapviewsTilesGenerator(BaseExtractor):
+    """Generate tiles from RWR mapviews."""
+    def extract(self):
+        """Actually run the generation process."""
+        from PIL import Image
+
+        tile_size = app.config['MAPS_GALLERY_TILE_SIZE']
+        min_zoom = app.config['MAPS_GALLERY_MIN_ZOOM']
+        max_zoom = app.config['MAPS_GALLERY_MAX_ZOOM']
+
+        maps_paths = []
+
+        maps_paths.extend(glob(os.path.join(self.packages_dir, '*', 'maps', '*', 'map.png'))) # Maps in RWR game directory
+        maps_paths.extend(glob(os.path.join(self.workshop_dir, '*', 'media', 'packages', '*', 'maps', '*', 'map.png'))) # Maps in RWR workshop directory
+
+        for map_path in maps_paths:
+            server_type, map_id = utils.parse_map_path(map_path.replace('\\', '/').replace('/map.png', ''))
+
+            if not map_id or map_id in INVALID_MAPS or server_type in INVALID_GAME_TYPES:
+                click.secho('Invalid map ID ({}) or server type ({})'.format(map_id, server_type), fg='yellow')
+
+                continue
+
+            click.echo(server_type + ':' + map_id)
+
+            original_mapview_image = Image.open(map_path)
+
+            for zoom_level in range(min_zoom, max_zoom + 1):
+                num_tiles = 2 ** zoom_level
+                map_size = num_tiles * tile_size
+
+                click.echo('  Zoom level {zoom_level} (edges: {num_tiles} tiles, {pixels} pixels)'.format(
+                    zoom_level=zoom_level,
+                    num_tiles=num_tiles,
+                    pixels=map_size
+                ))
+
+                working_mapview_image = original_mapview_image.resize((map_size, map_size), Image.LANCZOS)
+
+                for x in range(0, num_tiles):
+                    for y in range(0, num_tiles):
+                        tile_image = working_mapview_image.crop((
+                            x * tile_size,
+                            y * tile_size,
+                            (x * tile_size) + tile_size,
+                            (y * tile_size) + tile_size
+                        ))
+
+                        tile_path = os.path.join(app.config['MAPS_TILES_DIR'], server_type, map_id, str(zoom_level), str(x), '{}.png'.format(y))
+
+                        tile_dir = os.path.dirname(tile_path)
+
+                        if not os.path.isdir(tile_dir):
+                            os.makedirs(tile_dir)
+
+                        tile_image.save(tile_path, optimize=True)
 
 
 class MapsDataExtractor(BaseExtractor):
+    namespaces = {'svg': 'http://www.w3.org/2000/svg', 'inkscape': 'http://www.inkscape.org/namespaces/inkscape'}
+
     """Extract maps data from RWR."""
     def extract(self):
         """Actually run the extraction process."""
@@ -75,7 +132,7 @@ class MapsDataExtractor(BaseExtractor):
         maps_paths.extend(glob(os.path.join(self.packages_dir, '*', 'maps', '*', 'objects.svg'))) # Maps in RWR game directory
         maps_paths.extend(glob(os.path.join(self.workshop_dir, '*', 'media', 'packages', '*', 'maps', '*', 'objects.svg'))) # Maps in RWR workshop directory
 
-        data = OrderedDict()
+        all_maps_data = OrderedDict()
 
         for map_path in maps_paths:
             server_type, map_id = utils.parse_map_path(map_path.replace('\\', '/').replace('/objects.svg', ''))
@@ -85,38 +142,35 @@ class MapsDataExtractor(BaseExtractor):
 
                 continue
 
-            map_xml = etree.parse(map_path)
-
-            map_infos = map_xml.findtext('//svg:rect[@inkscape:label=\'#general\']/svg:desc', namespaces={'svg': 'http://www.w3.org/2000/svg', 'inkscape': 'http://www.inkscape.org/namespaces/inkscape'})
-
-            if not map_infos:
-                click.secho('No general map info found', fg='yellow')
-
-                continue
-
-            map_infos = self._parse_map_data(map_infos)
-
-            if 'name' not in map_infos:
-                click.secho('Map name not found', fg='yellow')
-
-                continue
-
             click.echo(server_type + ':' + map_id)
 
-            if server_type not in data:
-                data[server_type] = OrderedDict()
+            map_data = map.MapParser.parse(map_path)
 
-            data[server_type][map_id] = OrderedDict([
-                ('name', map_infos['name'].replace('Pacific: ', '').title()),
-                ('has_minimap', os.path.isfile(os.path.join(app.config['MINIMAPS_IMAGES_DIR'], server_type, map_id + '.png'))),
-                ('has_preview', os.path.isfile(os.path.join(app.config['MAPS_PREVIEW_IMAGES_DIR'], server_type, map_id + '.png')))
+            if not map_data['name']:
+                click.secho('  Map name not found', fg='yellow')
+
+                continue
+
+            if server_type not in all_maps_data:
+                all_maps_data[server_type] = OrderedDict()
+
+            map_name = map_data['name'].replace('Pacific: ', '').title()
+
+            all_maps_data[server_type][map_id] = OrderedDict([
+                ('name', map_name),
+                ('slug', slugify(map_name)),
+                ('has_mapview', os.path.isfile(os.path.join(app.config['MAPVIEWS_IMAGES_DIR'], server_type, map_id + '.png'))),
+                ('has_preview', os.path.isfile(os.path.join(app.config['MAPS_PREVIEWS_IMAGES_DIR'], server_type, map_id + '.png')))
             ])
 
-        helpers.save_json(app.config['MAPS_DATA_FILE'], data)
+            mapviewer_data_dir = os.path.join(app.config['MAPVIEWER_DATA_DIR'], server_type)
 
-    def _parse_map_data(self, map_infos):
-        """Parse a map's semicolon-separated data and return its dict representation as key-value pairs."""
-        return {entry[0]: entry[1] for entry in [[kv.strip() for kv in param.strip().split('=', maxsplit=1)] for param in filter(None, map_infos.strip().split(';'))]}
+            if not os.path.isdir(mapviewer_data_dir):
+                os.makedirs(mapviewer_data_dir)
+
+            helpers.save_json(os.path.join(mapviewer_data_dir, map_id + '.json'), map_data['objects'])
+
+        helpers.save_json(app.config['MAPS_DATA_FILE'], all_maps_data)
 
 
 class RanksExtractor(BaseExtractor):

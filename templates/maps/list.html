@@ -1,0 +1,44 @@
+{% import 'macros.html' as macros %}
+
+{% extends 'layout.html' %}
+
+{% block page_title %}<h1><i class="fas fa-map-marked-alt"></i> Maps gallery</h1>{% endblock %}
+
+{% block meta_title %}Maps gallery{% endblock %}
+
+{% block meta_description %}See information about Running With Rifles (RWR) maps.{% endblock %}
+
+{% block jsfiles %}
+    {% assets 'js_friends' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
+{% endblock %}
+
+{% set canonical_url = url_for('maps_list', _external=True) %}
+
+{% block content %}
+    {% for server_type, server_type_maps in maps.items() %}
+        <h2>{{ server_type_name(server_type) }}</h2>
+
+        <div class="grid-3 has-gutter maps-list">
+            {% for map_id, map in server_type_maps.items() %}
+                <div class="pas txtcenter mbs">
+                    {% if map.has_preview %}
+                        <div class="mbs">
+                            <a href="{{ url_for('map_details', server_type=server_type, map_id=map_id, slug=map['slug']) }}">
+                                <img src="{{ url_for('static', filename='images/maps/previews/{}/{}.png'.format(server_type, map_id)) }}" title="{{ map.name }} preview">
+                            </a>
+                        </div>
+                    {% endif %}
+
+                    <div>
+                        <a href="{{ url_for('map_details', server_type=server_type, map_id=map_id, slug=map['slug']) }}">{{ map.name }}</a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endfor %}
+
+    <script>
+        friendsFeature.all_players_with_servers_details = {{ g.all_players_with_servers_details|tojson }};
+        friendsFeature.init();
+    </script>
+{% endblock %}
