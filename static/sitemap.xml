@@ -21,7 +21,15 @@
     <changefreq>daily</changefreq>
   </url>
   <url>
+    <loc>https://rwrstats.com/about</loc>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://rwrstats.com/feedback</loc>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
     <loc>https://rwrstats.com/maps-gallery</loc>
-    <changefreq>weekly</changefreq>
+    <changefreq>monthly</changefreq>
   </url>
 </urlset>

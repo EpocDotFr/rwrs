@@ -10,10 +10,6 @@
     {% assets 'js_friends' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
 {% endblock %}
 
-{% block cssfiles %}
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/metrics-graphics/2.15.6/metricsgraphics.min.css">
-{% endblock %}
-
 {% set canonical_url = url_for('server_banner', ip=server.ip, port=server.port, slug=server.name_slug, _external=True) %}
 
 {% set meta_image = server.map.preview_absolute if server.map.has_preview %}

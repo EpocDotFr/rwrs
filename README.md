@@ -5,36 +5,7 @@
 Players statistics, servers list and more for the [Running With Rifles](http://www.runningwithrifles.com/wp/) (RWR) game
 and its Pacific DLC. Available at [rwrstats.com](https://rwrstats.com/).
 
-## Features
-
-  - Players
-    - Support stats for both the official invasion (vanilla RWR) servers and official Pacific servers
-    - Search for a player
-    - View player stats (as well as next rank progression, unlocks, on which server he's playing on, etc)
-    - Compare two players stats
-    - Friends list (easily know on which server your friends are playing on. There's no need to create a user account or whatever)
-    - Players list (leaderboard)
-    - Stats history
-    - Signatures
-  - Public servers
-    - Real servers location
-    - Real maps name
-    - Official invasion (ranked) servers are highlighted
-    - Game mode (coop, PvPvE, etc) and type (vanilla RWR, Pacific DLC, etc)
-    - Public server details (players list with link to their profile, current map preview and mapview, etc)
-    - Filtering capabilities
-    - Mapview
-    - Banners
-  - Online servers count (+ the active ones)
-  - Total players count (+ online ones + number of playing friends)
-  - Charts (for the past week)
-    - Number of online players
-    - Number of online servers (+ the active ones)
-    - Number of players on a server
-    - Peaks
-  - Online multiplayer status
-  - Discord bot able to give several kind of information. Available on the [RWR Discord Server](https://discord.gg/runningwithrifles)
-  - Maps gallery with details (spawn points, stashes, special crates, vehicles, etc)
+> Your everyday RWR companion tool!
 
 ## Prerequisites
 
@@ -207,34 +178,11 @@ More information in the script comments.
   1. `set FLASK_APP=rwrs.py`
   2. `flask import_rwrtrack_data --directory="{path to the rwrtrack data directory}" [--reset]`
 
-## How it works
-
-This project is mainly powered by [Flask](http://flask.pocoo.org/) (Python) for the backend.
-
-Data is fetched from the [official servers list](http://rwr.runningwithrifles.com/rwr_server_list/view_servers.php) page
-(which sucks) as well from the [official players list](http://rwr.runningwithrifles.com/rwr_stats/view_players.php?sort=score)
-page (which sucks, too). Data is cached so there isn't many requests sent to the server who hosts these lists.
-
-As the provided servers location is most of the time either missing or invalid, RWRS makes its own look up using a
-[GeoLite2](https://dev.maxmind.com/geoip/geoip2/geolite2/) database.
-
 ## Credits
 
-  - RWRS icon by [goodware std.](https://www.iconfinder.com/icons/2760623/army_bomb_grenade_military_navy_tank_weapon_icon#size=256) (CC BY 3.0)
-  - Font by [Typesgal](https://www.dafont.com/fr/top-secret-kb.font) (freeware)
-  - Flag icons by [Flag Sprites](https://www.flag-sprites.com/en/) and [GoSquared](https://www.gosquared.com/resources/flag-icons/) (freeware)
-  - Maps previews comes from the [official RWR wiki](https://runningwithrifles.gamepedia.com/Running_with_Rifles_Wiki)
-  - Servers banner and players signature font by [Vigilante Typeface Corporation](https://www.dafont.com/komika-axis.font) (freeware)
-  - Old players stats are provided by the [rwrtrack](https://github.com/david-wm-sanders/rwrtrack) project by David "MR. BANG" Sanders ([actual data repo](https://github.com/david-wm-sanders/rwrtrack-data)) (MIT License)
-  - This project uses GeoLite2 data created by MaxMind, available from [www.maxmind.com](https://www.maxmind.com/)
-  - Home page fan art by [thanshuhai](https://www.deviantart.com/thanshuhai) (public domain)
-  - All Running With Rifles assets © 2015 - 2018 Osumia Games
-  - This project is not affiliated with Osumia Games
+You'll find credits and legal mentions [here](https://rwrstats.com/about#credits).
 
-## End words
+## Feedback
 
-If you have questions or problems, you can either:
-
-  - Submit an issue [here on GitHub](https://github.com/EpocDotFr/rwrs/issues)
-  - Post a message in [this topic](http://www.runningwithrifles.com/phpBB3/viewtopic.php?f=12&t=3376) on the official RWR forums
-  - Post a message in [this Steam topic](https://steamcommunity.com/app/270150/discussions/0/1520386297704428050/)
+If you have suggestions or problems you can submit an issue [here on GitHub](https://github.com/EpocDotFr/rwrs/issues) or
+head over [here](https://rwrstats.com/feedback).
