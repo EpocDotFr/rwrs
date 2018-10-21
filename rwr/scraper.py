@@ -7,11 +7,7 @@ import geoip2.database
 import geoip2.errors
 import requests
 
-scraper_requests_session = requests.Session()
-scraper_requests_adaptater = requests.adapters.HTTPAdapter(max_retries=1)
-
-scraper_requests_session.mount('http://', scraper_requests_adaptater)
-scraper_requests_session.mount('https://', scraper_requests_adaptater)
+requests = requests.Session()
 
 servers_endpoint = 'http://rwr.runningwithrifles.com/rwr_server_list/'
 players_endpoint = 'http://rwr.runningwithrifles.com/rwr_stats/'
@@ -25,7 +21,7 @@ def _call(endpoint, resource, parser, params=None):
         'User-Agent': 'rwrstats.com'
     }
 
-    response = scraper_requests_session.get(url, params=params, headers=headers, timeout=5)
+    response = requests.get(url, params=params, headers=headers, timeout=5)
 
     response.raise_for_status()
 
