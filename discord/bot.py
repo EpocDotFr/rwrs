@@ -29,6 +29,9 @@ class RwrsBotDiscoPlugin(Plugin):
     @Plugin.pre_command()
     def check_guild(self, func, event, args, kwargs):
         """Check if the incoming message comes from the right Discord guild (server)."""
+        if not event: # For some reason, event may be None
+            return None
+
         if (app.config['BETA'] or app.config['ENV'] == 'development') and not event.msg.guild: # PM on development / beta env: cancel
             return None
 
