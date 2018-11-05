@@ -82,32 +82,32 @@ You'll probably have to hack with this application to make it work with one of t
 
 ### Extracting ranks data and images
 
-The Flask command `flask extract_ranks` is used to extract and save all ranks data to a JSON file located at `storage/data/ranks.json`.
+The Flask command `flask extract-ranks` is used to extract and save all ranks data to a JSON file located at `storage/data/ranks.json`.
 It also retrieve, process (the actual images content isn't centered) and save all the RWR ranks images. They are saved
 at `static/images/ranks/{country}/{rank ID}.png` and `static/images/ranks/{country}/{rank ID}_icon.png`.
 
   1. `pip install -r requirements-dev.txt`
-  2. `flask extract_ranks --steamdir="{path to the Steam root directory}"`
+  2. `flask extract-ranks --steamdir="{path to the Steam root directory}"`
 
 This command requires the game to be installed.
 
 ### Extracting maps data
 
-The Flask command `flask extract_maps_data` is used to extract and save all maps data to a JSON file located at `storage/data/maps.json`.
+The Flask command `flask extract-maps-data` is used to extract and save all maps data to a JSON file located at `storage/data/maps.json`.
 
 ```
-flask extract_maps_data --steamdir="{path to the Steam root directory}"
+flask extract-maps-data --steamdir="{path to the Steam root directory}"
 ```
 
 This command requires the game to be installed.
 
 ### Extracting minimaps
 
-The Flask command `flask extract_minimaps` is used to extract minimaps (the ones displayed when pressing on
+The Flask command `flask extract-minimaps` is used to extract minimaps (the ones displayed when pressing on
 <kbd>TAB</kbd>). They are saved at `static/images/maps/minimap/{map ID}.png` and `static/images/maps/minimap/{map ID}_thumb.png`.
 
   1. `pip install -r requirements-dev.txt`
-  2. `flask extract_minimaps --steamdir="{path to the Steam root directory}"`
+  2. `flask extract-minimaps --steamdir="{path to the Steam root directory}"`
 
 This command requires the game to be installed.
 
@@ -122,7 +122,7 @@ flask cc
 Data older than one week old will be deleted.
 
 ```
-flask clean_players_count
+flask clean-players-count
 ```
 
 ### Storing actual number of players (for graphs)
@@ -130,7 +130,7 @@ flask clean_players_count
 Will save the current number of Steam players which have RWR running, and the current number of players playing online.
 
 ```
-flask get_players_count
+flask get-players-count
 ```
 
 ### Migrating the database
@@ -144,13 +144,13 @@ flask db upgrade
 Will ping RWR root servers and store their status (up or down).
 
 ```
-flask get_root_rwr_servers_status
+flask get-root-rwr-servers-status
 ```
 
 ### Running the RWRS Discord bot
 
 ```
-flask run_discord_bot
+flask run-discord-bot
 ```
 
 ### Updating the MaxMind GeoLite2 City database
@@ -168,13 +168,13 @@ More information in the script comments.
 ### Retrieve and save the players stats in DB
 
 ```
-flask save_players_stats [--reset]
+flask save-players-stats [--reset]
 ```
 
 ### Import rwrtrack data
 
 ```
-flask import_rwrtrack_data --directory="{path to the rwrtrack data directory}" [--reset]
+flask import-rwrtrack-data --directory="{path to the rwrtrack data directory}" [--reset]
 ```
 
 ## Credits
