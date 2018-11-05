@@ -21,6 +21,14 @@
     <changefreq>daily</changefreq>
   </url>
   <url>
+    <loc>https://rwrstats.com/about</loc>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://rwrstats.com/feedback</loc>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
     <loc>https://rwrstats.com/players/claim</loc>
     <changefreq>weekly</changefreq>
   </url>

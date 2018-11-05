@@ -377,6 +377,11 @@ label {
     margin: 0;
 }
 
+select {
+    -webkit-appearance: menulist;
+    -moz-appearance: menulist;
+}
+
 /************************************************************************
  * Alerts */
 
@@ -536,12 +541,6 @@ label {
 
 footer {
     color: #a2a2a2;
-    display: table;
-}
-
-footer > * {
-    display: table-cell;
-    vertical-align: top;
 }
 
 footer a,
