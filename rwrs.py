@@ -1,3 +1,9 @@
+try:
+    from flask_debugtoolbar import DebugToolbarExtension
+    has_debug_toolbar_ext = True
+except ImportError:
+    has_debug_toolbar_ext = False
+
 from flask_assets import Environment, Bundle
 from bugsnag.flask import handle_exceptions
 from flask_sqlalchemy import SQLAlchemy
@@ -48,6 +54,9 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 cache = Cache(app)
 assets = Environment(app)
+
+if has_debug_toolbar_ext:
+    toolbar = DebugToolbarExtension(app)
 
 assets.cache = 'storage/webassets-cache/'
 

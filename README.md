@@ -18,8 +18,8 @@ and its Pacific DLC. Available at [rwrstats.com](https://rwrstats.com/).
 ## Installation
 
   1. Clone this repo somewhere
-  2. `pip install -r requirements.txt`
-  3. `set FLASK_APP=rwrs.py`
+  2. Copy `.env.local` to `.env`
+  3. `pip install -r requirements-dev.txt`
   4. `flask db upgrade`
   5. `bash scripts/geolite2_city_updater.sh`
 
@@ -32,7 +32,7 @@ Available configuration parameters are:
   - `SECRET_KEY` Set this to a complex random value
   - `SERVER_NAME` The IP or hostname where RWRS will be available
 
-More informations on the three above can be found [here](http://flask.pocoo.org/docs/0.12/config/#builtin-configuration-values).
+More informations on the three above can be found [here](http://flask.pocoo.org/docs/1.0/config/#builtin-configuration-values).
 
   - `DB_USERNAME` Username to access the DBMS
   - `DB_PASSWORD` Password to access the DBMS
@@ -66,7 +66,7 @@ I'll let you search yourself about how to configure a web server along uWSGI.
 Run the internal web server, which will be accessible at `http://localhost:8080`:
 
 ```
-python local.py
+flask run
 ```
 
 Edit this file and change the interface/port as needed.
@@ -78,7 +78,7 @@ The uWSGI file you'll have to set in your uWSGI configuration is `uwsgi.py`. The
   - Others
 
 You'll probably have to hack with this application to make it work with one of the solutions described
-[here](http://flask.pocoo.org/docs/0.12/deploying/). Send me a pull request if you make it work.
+[here](http://flask.pocoo.org/docs/1.0/deploying/). Send me a pull request if you make it work.
 
 ### Extracting ranks data and images
 
@@ -87,8 +87,7 @@ It also retrieve, process (the actual images content isn't centered) and save al
 at `static/images/ranks/{country}/{rank ID}.png` and `static/images/ranks/{country}/{rank ID}_icon.png`.
 
   1. `pip install -r requirements-dev.txt`
-  2. `set FLASK_APP=rwrs.py`
-  3. `flask extract_ranks --steamdir="{path to the Steam root directory}"`
+  2. `flask extract_ranks --steamdir="{path to the Steam root directory}"`
 
 This command requires the game to be installed.
 
@@ -96,8 +95,9 @@ This command requires the game to be installed.
 
 The Flask command `flask extract_maps_data` is used to extract and save all maps data to a JSON file located at `storage/data/maps.json`.
 
-  1. `set FLASK_APP=rwrs.py`
-  2. `flask extract_maps_data --steamdir="{path to the Steam root directory}"`
+```
+flask extract_maps_data --steamdir="{path to the Steam root directory}"
+```
 
 This command requires the game to be installed.
 
@@ -107,46 +107,51 @@ The Flask command `flask extract_minimaps` is used to extract minimaps (the ones
 <kbd>TAB</kbd>). They are saved at `static/images/maps/minimap/{map ID}.png` and `static/images/maps/minimap/{map ID}_thumb.png`.
 
   1. `pip install -r requirements-dev.txt`
-  2. `set FLASK_APP=rwrs.py`
-  3. `flask extract_minimaps --steamdir="{path to the Steam root directory}"`
+  2. `flask extract_minimaps --steamdir="{path to the Steam root directory}"`
 
 This command requires the game to be installed.
 
 ### Clearing cache
 
-  1. `set FLASK_APP=rwrs.py`
-  2. `flask cc`
+```
+flask cc
+```
 
 ### Clearing old graphs data
 
 Data older than one week old will be deleted.
 
-  1. `set FLASK_APP=rwrs.py`
-  2. `flask clean_players_count`
+```
+flask clean_players_count
+```
 
 ### Storing actual number of players (for graphs)
 
 Will save the current number of Steam players which have RWR running, and the current number of players playing online.
 
-  1. `set FLASK_APP=rwrs.py`
-  2. `flask get_players_count`
+```
+flask get_players_count
+```
 
 ### Migrating the database
 
-  1. `set FLASK_APP=rwrs.py`
-  2. `flask db upgrade`
+```
+flask db upgrade
+```
 
 ### Saving RWR root servers status
 
 Will ping RWR root servers and store their status (up or down).
 
-  1. `set FLASK_APP=rwrs.py`
-  2. `flask get_root_rwr_servers_status`
+```
+flask get_root_rwr_servers_status
+```
 
 ### Running the RWRS Discord bot
 
-  1. `set FLASK_APP=rwrs.py`
-  2. `flask run_discord_bot`
+```
+flask run_discord_bot
+```
 
 ### Updating the MaxMind GeoLite2 City database
 
@@ -162,13 +167,15 @@ More information in the script comments.
 
 ### Retrieve and save the players stats in DB
 
-  1. `set FLASK_APP=rwrs.py`
-  2. `flask save_players_stats [--reset]`
+```
+flask save_players_stats [--reset]
+```
 
 ### Import rwrtrack data
 
-  1. `set FLASK_APP=rwrs.py`
-  2. `flask import_rwrtrack_data --directory="{path to the rwrtrack data directory}" [--reset]`
+```
+flask import_rwrtrack_data --directory="{path to the rwrtrack data directory}" [--reset]
+```
 
 ## Credits
 
