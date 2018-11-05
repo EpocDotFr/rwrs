@@ -1,5 +1,6 @@
 try:
     from flask_debugtoolbar import DebugToolbarExtension
+
     has_debug_toolbar_ext = True
 except ImportError:
     has_debug_toolbar_ext = False
