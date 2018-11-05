@@ -298,6 +298,10 @@ textarea.copypaste {
 /************************************************************************
  * Tables */
 
+.table-responsive {
+    overflow-x: auto;
+}
+
 table,
 table td,
 table th {
