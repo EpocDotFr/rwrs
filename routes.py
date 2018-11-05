@@ -85,7 +85,7 @@ def players_list_without_db():
     username = request.args.get('username')
 
     if username:
-        username = username.strip()
+        username = username.strip().upper()
 
         # Redirect to a SEO-friendly URL if the username query parameter is detected
         return redirect(url_for('player_details', database=database, username=username), code=301)
