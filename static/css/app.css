@@ -52,10 +52,6 @@ h2, .h2-like {
     font-weight: normal;
 }
 
-.nowrap {
-    white-space: nowrap;
-}
-
 img.bordered {
     border: .2rem solid #333;
 }
@@ -300,6 +296,10 @@ textarea.copypaste {
 
 .table-responsive {
     overflow-x: auto;
+}
+
+table.nowrap tbody {
+    white-space: nowrap;
 }
 
 table,
