@@ -31,7 +31,7 @@
     </form>
 
     <div class="table-responsive">
-        <table class="{{ 'striped clickable' if servers }} mbn nowrap servers-list">
+        <table class="{{ 'striped clickable' if servers }} mbn servers-list {{ 'nowrap' if request.args.get('view') != 'extended' }}">
             <thead>
                 <tr>
                     <th>Name</th>
