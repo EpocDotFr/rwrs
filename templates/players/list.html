@@ -81,7 +81,7 @@
                         <td>{{ player.deaths_display }}</td>
                         <td class="{{ 'txtred' if player.kd_ratio < 1 else 'txtgreen' }}">{{ player.kd_ratio }}</td>
                         <td class="{{ 'txtred' if player.score < 0 else 'txtgreen' }}">{{ player.score_display }}</td>
-                        <td>{{ player.time_played|humanize_seconds_to_hours }}{% if player.display_time_played_in_days %}<br><small>({{ player.time_played|humanize_seconds_to_days }})</small>{% endif %}</td>
+                        <td>{{ player.time_played|humanize_seconds_to_hours }}{% if player.display_time_played_in_days %}<br /><small>({{ player.time_played|humanize_seconds_to_days }})</small>{% endif %}</td>
                         <td>{{ player.longest_kill_streak_display }}</td>
                         <td>{{ player.targets_destroyed_display }}</td>
                         <td>{{ player.distance_moved }}</td>

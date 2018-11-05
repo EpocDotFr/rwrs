@@ -27,7 +27,7 @@
 {%- endmacro %}
 
 {% macro rank_image(rank, icon=False) -%}
-    <img src="{{ rank.icon if icon else rank.image }}" title="{{ rank.name }}" class="{{ 'help' if icon }}">
+    <img src="{{ rank.icon if icon else rank.image }}" title="{{ rank.name }}{% if rank.alternative_name %} ({{ rank.alternative_name }}){% endif %}" class="{{ 'help' if icon }}">
 {%- endmacro %}
 
 {% macro server_name(server, link=True, raw=False, no_icon=False) -%}
@@ -159,7 +159,7 @@
 {%- endmacro %}
 
 {% macro stats_notice() -%}
-    <div class="small txtcenter">Players stats are updated daily and only concerns ranked servers which are tagged with a <i class="fas fa-star txtyellow"></i><br>Stats history is only recorded for the {{ config['MAX_NUM_OF_PLAYERS_TO_TRACK_STATS_FOR'] }} most experienced players</div>
+    <div class="small txtcenter">Players stats are updated daily and only concerns ranked servers which are tagged with a <i class="fas fa-star txtyellow"></i><br />Stats history is only recorded for the {{ config['MAX_NUM_OF_PLAYERS_TO_TRACK_STATS_FOR'] }} most experienced players</div>
 {%- endmacro %}
 
 {% macro players_list_header_link(label, sort, args, sublabel=None, type='numeric', direction='up') -%}
@@ -174,7 +174,7 @@
     {%- endif %}
 
     {%- if sublabel -%}
-        <br><small>{{ sublabel }}</small>
+        <br /><small>{{ sublabel }}</small>
     {%- endif %}
 
     {% if same_sort -%}

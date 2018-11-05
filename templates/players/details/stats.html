@@ -5,7 +5,7 @@
         <th class="txtcenter w30">Next rank</th>
     </tr>
     <tr>
-        <td class="big txtcenter">{{ macros.rank_image(player.rank) }} {{ player.rank.name }}</td>
+        <td class="big txtcenter">{{ macros.rank_image(player.rank) }} {{ player.rank.name }}{% if player.rank.alternative_name %}<br /><small class="txtgrey">({{ player.rank.alternative_name }})</small>{% endif %}</td>
         <td class="txtcenter">
             {% if player.playing_on_server %}
                 <div>{{ macros.location(player.playing_on_server.location) }} {{ macros.server_name(player.playing_on_server) }}</div>
@@ -23,7 +23,7 @@
         </td>
         <td class="{{ 'big' if player.next_rank }} txtcenter">
             {% if player.next_rank %}
-                {{ macros.rank_image(player.next_rank) }} {{ player.next_rank.name }}
+                {{ macros.rank_image(player.next_rank) }} {{ player.next_rank.name }}{% if player.next_rank.alternative_name %}<br /><small class="txtgrey">({{ player.next_rank.alternative_name }})</small>{% endif %}
             {% else %}
                 {{ player.username }} reached the highest possible rank.
             {% endif %}

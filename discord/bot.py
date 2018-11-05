@@ -525,7 +525,12 @@ class RwrsBotDiscoPlugin(Plugin):
                 return
 
         table_data = [
-            ['Rank', source_player.rank.name, utils.compare_values(source_player, target_player, lambda player: player.rank.id), target_player.rank.name],
+            [
+                'Rank',
+                source_player.rank.name + '\n(' + source_player.rank.alternative_name + ')' if source_player.rank.alternative_name else '',
+                utils.compare_values(source_player, target_player, lambda player: player.rank.id),
+                target_player.rank.name + '\n(' + target_player.rank.alternative_name + ')' if target_player.rank.alternative_name else ''
+            ],
             ['XP', source_player.xp_display, utils.compare_values(source_player, target_player, lambda player: player.xp), target_player.xp_display],
             ['Kills', source_player.kills_display, utils.compare_values(source_player, target_player, lambda player: player.kills), target_player.kills_display],
             ['Deaths', source_player.deaths_display, utils.compare_values(source_player, target_player, lambda player: player.deaths), target_player.deaths_display],
