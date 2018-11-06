@@ -57,6 +57,45 @@ img.bordered {
 }
 
 /************************************************************************
+ * Tippy */
+
+/* If `animateFill: true` (default) */
+.tippy-tooltip.rwrs-theme .tippy-backdrop {
+    background-color: #4D4D4D;
+    color: #FFF;
+}
+
+/* If `animateFill: false` */
+.tippy-tooltip.rwrs-theme {
+    background-color: #4D4D4D;
+    border: 0.2rem solid #333333;
+    border-radius: 0;
+    color: #FFF;
+}
+
+/* Default (sharp) arrow */
+.tippy-popper[x-placement^='top'] .tippy-tooltip.rwrs-theme .tippy-arrow {
+    border-top-color: #333333;
+}
+
+.tippy-popper[x-placement^='bottom'] .tippy-tooltip.rwrs-theme .tippy-arrow {
+    border-bottom-color: #333333;
+}
+
+.tippy-popper[x-placement^='left'] .tippy-tooltip.rwrs-theme .tippy-arrow {
+    border-left-color: #333333;
+}
+
+.tippy-popper[x-placement^='right'] .tippy-tooltip.rwrs-theme .tippy-arrow {
+    border-right-color: #333333;
+}
+
+/* Round arrow */
+.tippy-tooltip.rwrs-theme .tippy-roundarrow {
+    fill: #333333;
+}
+
+/************************************************************************
  * Player stats page */
 
 .unlockables-list {

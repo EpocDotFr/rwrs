@@ -1,0 +1,7 @@
+{%- import 'macros.html' as macros -%}
+
+{%- if not player -%}
+    Player <strong>{{ request.view_args.get('username') }}</strong> not found in <strong>{{ macros.database_name(request.view_args.get('database')) }}</strong> players list.
+{%- else -%}
+    {{ macros.player_name(player) }}
+{%- endif -%}
