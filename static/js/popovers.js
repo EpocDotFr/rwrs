@@ -3,45 +3,59 @@
  */
 popoversFeature = {
     initialContent: '<i class="fas fa-spinner fa-pulse"></i> Loading...',
-
+    defaultPopoverOptions: {
+        arrow: true,
+        delay: [500, 50],
+        duration: [200, 200],
+        performance: true
+    },
     /**
      * Initialize the Players charts on the Server details page.
      */
     initOnServerDetails: function() {
-        var $players_name_links = $('.players-list a[data-popover-url]');
+        var self = this;
 
-        var feature = this;
+        $('.players-list a[data-popover-url]').each(function() {
+            self.initPlayerPopover(this);
+        });
+    },
+    initPlayerPopover: function(element) {
+        return this.initPopover(
+            element,
+            {
+                theme: 'rwrs-player',
+            }
+        );
+    },
+    initPopover: function(element, options) {
+        var options = $.extend({}, this.defaultPopoverOptions, options, true);
+        var url = $(element).data('popover-url');
 
-        $players_name_links.each(function() {
-            var link = this;
+        options.content = this.initialContent;
 
-            tippy(link, {
-                content: feature.initialContent,
-                arrow: true,
-                theme: 'rwrs',
-                delay: [500, 50],
-                duration: [200, 200],
-                performance: true,
-                onShow: function(tip) {
-                    $.ajax({
-                        type: 'GET',
-                        url: $(link).data('popover-url'),
-                        dataType: 'html',
-                        cache: false,
-                        success: function(response, status, xhr) {
-                            if (tip.state.isVisible) {
-                                tip.setContent(response);
-                            }
-                        },
-                        error: function(xhr, errorType, error) {
-                            tip.setContent('Error fetching popover content: ' + error);
-                        }
-                    });
+        var self = this;
+
+        options.onShow = function(tip) {
+            $.ajax({
+                type: 'GET',
+                url: url,
+                dataType: 'html',
+                cache: false,
+                success: function(response, status, xhr) {
+                    if (tip.state.isVisible) {
+                        tip.setContent(response);
+                    }
                 },
-                onHidden: function(tip) {
-                    tip.setContent(feature.initialContent);
+                error: function(xhr, errorType, error) {
+                    tip.setContent('Error fetching popover content.');
                 }
             });
-        });
+        };
+
+        options.onHidden = function(tip) {
+            tip.setContent(self.initialContent);
+        };
+
+        return tippy(element, options);
     }
 };
