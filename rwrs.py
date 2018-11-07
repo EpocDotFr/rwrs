@@ -75,7 +75,8 @@ app.config['RANKED_SERVERS_ADMINS'] = helpers.load_json(app.config['RANKED_SERVE
 app.jinja_env.filters.update(
     humanize_seconds_to_days=helpers.humanize_seconds_to_days,
     humanize_seconds_to_hours=helpers.humanize_seconds_to_hours,
-    humanize_integer=helpers.humanize_integer
+    humanize_integer=helpers.humanize_integer,
+    simplified_integer=helpers.simplified_integer
 )
 
 app.jinja_env.globals.update(

@@ -7,7 +7,19 @@
         <div>{{ macros.player_name(player) }}<br />{{ player.rank.name }}{% if player.rank.alternative_name %} <small class="txtgrey">({{ player.rank.alternative_name }})</small>{% endif %}</div>
         <div>{{ player.database_name }} profile</div>
     </div>
-    <div class="body">
-
+    <div class="grid body">
+        <div>{{ macros.rank_image(player.rank) }}</div>
+        <div>
+            <div>XP<br />{{ player.xp|simplified_integer }}</div>
+            <div>Score<br />{{ player.score|simplified_integer }}</div>
+        </div>
+        <div>
+            <div>Kills<br />{{ player.kills|simplified_integer }}</div>
+            <div>Deaths<br />{{ player.deaths|simplified_integer }}</div>
+        </div>
+        <div>
+            <div>K/D ratio<br />{{ player.kd_ratio }}</div>
+            <div>Time played<br />{{ player.time_played|humanize_seconds_to_hours}}</div>
+        </div>
     </div>
 {%- endif -%}
