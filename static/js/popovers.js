@@ -13,32 +13,27 @@ popoversFeature = {
      * Initialize the Players charts on the Server details page.
      */
     initOnServerDetails: function() {
-        var self = this;
-
-        $('.players-list a[data-popover-url]').each(function() {
-            self.initPlayerPopover(this);
-        });
+        this.initPlayerPopover($('.players-list a[data-popover-url]').get());
     },
-    initPlayerPopover: function(element) {
+    initPlayerPopover: function(elements) {
         return this.initPopover(
-            element,
+            elements,
             {
                 theme: 'rwrs-player',
             }
         );
     },
-    initPopover: function(element, options) {
-        var options = $.extend({}, this.defaultPopoverOptions, options, true);
-        var url = $(element).data('popover-url');
-
-        options.content = this.initialContent;
-
+    initPopover: function(elements, options) {
         var self = this;
+
+        var options = $.extend({}, self.defaultPopoverOptions, options, true);
+
+        options.content = self.initialContent;
 
         options.onShow = function(tip) {
             $.ajax({
                 type: 'GET',
-                url: url,
+                url: $(tip.reference).data('popover-url'),
                 dataType: 'html',
                 cache: false,
                 success: function(response, status, xhr) {
@@ -56,6 +51,6 @@ popoversFeature = {
             tip.setContent(self.initialContent);
         };
 
-        return tippy(element, options);
+        return tippy(elements, options);
     }
 };
