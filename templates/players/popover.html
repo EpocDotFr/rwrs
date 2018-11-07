@@ -4,8 +4,8 @@
     Player <strong>{{ request.view_args.get('username') }}</strong> not found in <strong>{{ macros.database_name(request.view_args.get('database')) }}</strong> players list.
 {%- else -%}
     <div class="grid header">
-        <div>{{ macros.player_name(player) }}<br />{{ player.rank.name }}{% if player.rank.alternative_name %} <small class="txtgrey">({{ player.rank.alternative_name }})</small>{% endif %}</div>
-        <div>{{ player.database_name }} profile</div>
+        <div><strong>{{ macros.player_name(player) }}</strong><br /><small>{{ player.rank.name }}{% if player.rank.alternative_name %} <span class="txtgrey">({{ player.rank.alternative_name }})</span>{% endif %}</small></div>
+        <div class="txtright">{{ player.database_name }} profile</div>
     </div>
     <div class="grid body">
         <div>{{ macros.rank_image(player.rank) }}</div>

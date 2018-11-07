@@ -61,21 +61,23 @@ img.bordered {
 
 /* If `animateFill: false` */
 .tippy-tooltip.rwrs-player-theme {
-    background-color: #606060;
+    background-color: #4d4d4d;
     border: 0.2rem solid #727272;
     border-radius: 0;
     color: #FFF;
-    font-size: 1.6rem;
+    font-size: 1.4rem;
+    max-width: 500px;
+    text-align: left;
 }
 
 .tippy-tooltip.rwrs-player-theme[data-size=small],
 .tippy-tooltip.rwrs-player-theme[data-size=large] {
-    font-size: 1.6rem;
+    font-size: 1.4rem;
 }
 
 /* If `animateFill: true` (default) */
 .tippy-tooltip.rwrs-player-theme .tippy-backdrop {
-    background-color: #606060;
+    background-color: #4d4d4d;
     color: #FFF;
 }
 
