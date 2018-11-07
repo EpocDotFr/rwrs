@@ -61,8 +61,8 @@ img.bordered {
 
 /* If `animateFill: false` */
 .tippy-tooltip.rwrs-player-theme {
-    background-color: #4D4D4D;
-    border: 0.2rem solid #333333;
+    background-color: #606060;
+    border: 0.2rem solid #727272;
     border-radius: 0;
     color: #FFF;
     font-size: 1.6rem;
@@ -75,34 +75,34 @@ img.bordered {
 
 /* If `animateFill: true` (default) */
 .tippy-tooltip.rwrs-player-theme .tippy-backdrop {
-    background-color: #4D4D4D;
+    background-color: #606060;
     color: #FFF;
 }
 
 /* Default (sharp) arrow */
 .tippy-popper[x-placement^='top'] .tippy-tooltip.rwrs-player-theme .tippy-arrow {
     bottom: -9px;
-    border-top-color: #333333;
+    border-top-color: #727272;
 }
 
 .tippy-popper[x-placement^='bottom'] .tippy-tooltip.rwrs-player-theme .tippy-arrow {
     top: -9px;
-    border-bottom-color: #333333;
+    border-bottom-color: #727272;
 }
 
 .tippy-popper[x-placement^='left'] .tippy-tooltip.rwrs-player-theme .tippy-arrow {
     right: -9px;
-    border-left-color: #333333;
+    border-left-color: #727272;
 }
 
 .tippy-popper[x-placement^='right'] .tippy-tooltip.rwrs-player-theme .tippy-arrow {
     left: -9px;
-    border-right-color: #333333;
+    border-right-color: #727272;
 }
 
 /* Round arrow */
 .tippy-tooltip.rwrs-theme .tippy-roundarrow {
-    fill: #333333;
+    fill: #727272;
 }
 
 /************************************************************************
