@@ -1,4 +1,4 @@
-{% macro player_name(player, raw=False, link=False, show_rank=False, show_online=False, database=None) -%}
+{% macro player_name(player, raw=False, link=False, show_rank=False, show_online=False, database=None, popover_url=False) -%}
     {%- set username = player if raw else player.username -%}
     {%- set username_lower = username.lower() -%}
     {%- set database = database if database else request.view_args.get('database') -%}
@@ -11,7 +11,7 @@
     {% if show_online and not raw and player.playing_on_server %} <i class="fas fa-circle help txtgreen" title="Playing on {{ player.playing_on_server.name_display }} ({{ player.playing_on_server.summary }})"></i>
     {%- endif -%}
 
-    {%- if make_link %} <a href="{{ url_for('player_details', database=database, username=username) }}" data-popover-url="{{ url_for('player_popover', database=database, username=username) }}">
+    {%- if make_link %} <a href="{{ url_for('player_details', database=database, username=username) }}"{% if link and popover_url %} data-popover-url="{{ url_for('player_popover', database=database, username=username) }}"{% endif %}>
     {%- endif -%}
         {{ username }}
     {%- if make_link -%}
