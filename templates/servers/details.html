@@ -12,15 +12,12 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/metrics-graphics/2.15.6/metricsgraphics.min.js"></script>
     {% endif %}
 
-    {% if server.is_ranked %}
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/tippy.js/3.1.1/tippy.min.js"></script>
-    {% endif %}
-
     {% if not server.is_dedicated and not server.is_ranked %}
         {% assets 'js_friends' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
     {% elif server.is_dedicated and not server.is_ranked %}
         {% assets 'js_friends_charts' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
     {% elif server.is_ranked %}
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/tippy.js/3.1.1/tippy.min.js"></script>
         {% assets 'js_friends_charts_popovers' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
     {% endif %}
 {% endblock %}
@@ -28,9 +25,9 @@
 {% block cssfiles %}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/metrics-graphics/2.15.6/metricsgraphics.min.css">
 
-    {% if server.is_ranked %}
+    {%- if server.is_ranked -%}
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tippy.js/3.1.1/tippy.css">
-    {% endif %}
+    {%- endif -%}
 {% endblock %}
 
 {% set canonical_url = server.link_absolute %}
@@ -173,13 +170,13 @@
         friendsFeature.server_ip_and_port = '{{ server.ip_and_port }}';
         friendsFeature.initOnServerDetails();
 
-        {% if server.is_dedicated %}
+        {%- if server.is_dedicated -%}
             chartsFeature.server_players_data = {{ server_players_data|tojson }};
             chartsFeature.initOnServerDetails();
-        {% endif %}
+        {%- endif -%}
 
-        {% if server.is_ranked %}
+        {%- if server.is_ranked -%}
             popoversFeature.initOnServerDetails();
-        {% endif %}
+        {%- endif -%}
     </script>
 {% endblock %}

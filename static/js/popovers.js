@@ -10,10 +10,16 @@ popoversFeature = {
         performance: true
     },
     /**
-     * Initialize the Players charts on the Server details page.
+     * Initialize the Ajax "player" popover on the Server details page.
      */
     initOnServerDetails: function() {
         this.initPlayerPopover($('.players-list a[data-popover-url]').get());
+    },
+    /**
+     * Initialize the Ajax "player" popover on the Servers list page.
+     */
+    initOnServersList: function() {
+        this.initPlayerPopover($('.servers-list a[data-popover-url]').get());
     },
     /**
      * Initialize an Ajax "player" popover on a set of elements.
