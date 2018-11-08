@@ -5,7 +5,7 @@ popoversFeature = {
     initialContent: '<div class="pas"><i class="fas fa-spinner fa-pulse"></i> Loading...</div>',
     defaultPopoverOptions: {
         arrow: true,
-        delay: [500, 50],
+        delay: [700, 50],
         duration: [200, 200],
         performance: true
     },
