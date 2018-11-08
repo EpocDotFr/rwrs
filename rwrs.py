@@ -61,9 +61,11 @@ if has_debug_toolbar_ext:
 
 assets.cache = 'storage/webassets-cache/'
 
-assets.register('js_friends_charts', Bundle('js/common.js', 'js/friends.js', 'js/charts.js', filters='jsmin', output='js/friends_charts.min.js'))
 assets.register('js_friends_status', Bundle('js/common.js', 'js/friends.js', 'js/status.js', filters='jsmin', output='js/friends_status.min.js'))
 assets.register('js_friends', Bundle('js/common.js', 'js/friends.js', filters='jsmin', output='js/friends.min.js'))
+assets.register('js_friends_popovers', Bundle('js/common.js', 'js/friends.js', 'js/popovers.js', filters='jsmin', output='js/friends_popover.min.js'))
+assets.register('js_friends_charts', Bundle('js/common.js', 'js/friends.js', 'js/charts.js', filters='jsmin', output='js/friends_charts.min.js'))
+assets.register('js_friends_charts_popovers', Bundle('js/common.js', 'js/friends.js', 'js/charts.js', 'js/popovers.js', filters='jsmin', output='js/friends_charts_popover.min.js'))
 assets.register('css_app', Bundle('css/flags.css', 'css/app.css', filters='cssutils', output='css/app.min.css'))
 
 import rwr.constants
@@ -74,7 +76,8 @@ app.config['RANKED_SERVERS_ADMINS'] = helpers.load_json(app.config['RANKED_SERVE
 app.jinja_env.filters.update(
     humanize_seconds_to_days=helpers.humanize_seconds_to_days,
     humanize_seconds_to_hours=helpers.humanize_seconds_to_hours,
-    humanize_integer=helpers.humanize_integer
+    humanize_integer=helpers.humanize_integer,
+    simplified_integer=helpers.simplified_integer
 )
 
 app.jinja_env.globals.update(

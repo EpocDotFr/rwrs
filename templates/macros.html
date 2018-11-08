@@ -1,8 +1,8 @@
-{% macro player_name(player, raw=False, link=False, show_rank=False, show_online=False, database=None) -%}
-    {% set username = player if raw else player.username %}
-    {% set username_lower = username.lower() %}
-    {% set database = database if database else request.view_args.get('database') %}
-    {% set make_link = link and database %}
+{% macro player_name(player, raw=False, link=False, show_rank=False, show_online=False, database=None, popover_url=False) -%}
+    {%- set username = player if raw else player.username -%}
+    {%- set username_lower = username.lower() -%}
+    {%- set database = database if database else request.view_args.get('database') -%}
+    {%- set make_link = link and database -%}
 
     {%- if show_rank and not raw -%}
         {{ rank_image(player.rank, icon=True) }}
@@ -11,7 +11,7 @@
     {% if show_online and not raw and player.playing_on_server %} <i class="fas fa-circle help txtgreen" title="Playing on {{ player.playing_on_server.name_display }} ({{ player.playing_on_server.summary }})"></i>
     {%- endif -%}
 
-    {%- if make_link %} <a href="{{ url_for('player_details', database=database, username=username) }}">
+    {%- if make_link %} <a href="{{ url_for('player_details', database=database, username=username) }}"{% if link and popover_url %} data-popover-url="{{ url_for('player_popover', database=database, username=username) }}"{% endif %}>
     {%- endif -%}
         {{ username }}
     {%- if make_link -%}
@@ -27,7 +27,7 @@
 {%- endmacro %}
 
 {% macro rank_image(rank, icon=False) -%}
-    <img src="{{ rank.icon if icon else rank.image }}" title="{{ rank.name }}" class="{{ 'help' if icon }}">
+    <img src="{{ rank.icon if icon else rank.image }}" title="{{ rank.name }}{% if rank.alternative_name %} ({{ rank.alternative_name }}){% endif %}" class="{{ 'help' if icon }}">
 {%- endmacro %}
 
 {% macro server_name(server, link=True, raw=False, no_icon=False) -%}
@@ -78,31 +78,31 @@
 
 {% macro compare_numbers(first, second, attribute, type=int, above_zero_is_good=True, inverse=False) -%}
     {% if second -%}
-        {% set value = first[attribute] - second[attribute] %}
+        {%- set value = first[attribute] - second[attribute] -%}
 
-        {%- if type == int %}
+        {%- if type == int -%}
             {% set value_humanized = abs(value)|humanize_integer %}
-        {% elif type == float %}
+        {%- elif type == float -%}
             {% set value_humanized = str(fabs(round(value, 2))) %}
-        {% elif type == 'time' %}
+        {%- elif type == 'time' -%}
             {% set value_humanized = abs(value)|humanize_seconds_to_days %}
-        {% else %}
+        {%- else -%}
             {% set value_humanized = str(value) %}
-        {% endif %}
+        {%- endif -%}
 
-        {% if value > 0 %}
+        {%- if value > 0 -%}
             {% set icon_class = 'arrow-up' if not inverse else 'arrow-down' %}
             {% set color_class = 'txtgreen' if above_zero_is_good else 'txtred' %}
             {% set title = first.username + ' is ' + ('above' if not inverse else 'below') + ' ' + second.username + ' by ' + value_humanized %}
-        {% elif value < 0 %}
+        {%- elif value < 0 -%}
             {% set icon_class = 'arrow-down' if not inverse else 'arrow-up' %}
             {% set color_class = 'txtred' if above_zero_is_good else 'txtgreen' %}
             {% set title = first.username + ' is ' + ('below' if not inverse else 'above') + ' ' + second.username + ' by ' + value_humanized %}
-        {% else %}
+        {%- else -%}
             {% set icon_class = 'balance-scale' %}
             {% set color_class = 'txtgrey' %}
             {% set title = 'No difference between ' + first.username + ' and ' + second.username %}
-        {% endif %}
+        {%- endif -%}
 
         <i class="fas fa-{{ icon_class }} {{ color_class }} help" title="{{ title }}"></i>
     {%- endif %}
@@ -159,7 +159,7 @@
 {%- endmacro %}
 
 {% macro stats_notice() -%}
-    <div class="small txtcenter">Players stats are updated daily and only concerns ranked servers which are tagged with a <i class="fas fa-star txtyellow"></i><br>Stats history is only recorded for the {{ config['MAX_NUM_OF_PLAYERS_TO_TRACK_STATS_FOR'] }} most experienced players</div>
+    <div class="small txtcenter">Players stats are updated daily and only concerns ranked servers which are tagged with a <i class="fas fa-star txtyellow"></i><br />Stats history is only recorded for the {{ config['MAX_NUM_OF_PLAYERS_TO_TRACK_STATS_FOR'] }} most experienced players</div>
 {%- endmacro %}
 
 {% macro players_list_header_link(label, sort, args, sublabel=None, type='numeric', direction='up') -%}
@@ -174,7 +174,7 @@
     {%- endif %}
 
     {%- if sublabel -%}
-        <br><small>{{ sublabel }}</small>
+        <br /><small>{{ sublabel }}</small>
     {%- endif %}
 
     {% if same_sort -%}

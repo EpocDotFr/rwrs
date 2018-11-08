@@ -210,7 +210,6 @@ class Player:
             return None
 
         ranks_country = constants.PLAYERS_LIST_DATABASES[self.database]['ranks_country']
-
         rank_ids = [int(rank_id) for rank_id in constants.RANKS[ranks_country].keys()]
 
         if self.database == 'pacific' and ranks_country == 'us': # The President rank for USMC isn't available in Pacific
@@ -228,7 +227,8 @@ class Player:
     @memoized_property
     def rank(self):
         """Current player rank."""
-        ranks = constants.RANKS[constants.PLAYERS_LIST_DATABASES[self.database]['ranks_country']]
+        ranks_country = constants.PLAYERS_LIST_DATABASES[self.database]['ranks_country']
+        ranks = constants.RANKS[ranks_country]
 
         for rank_id, rank in ranks.items():
             if rank['xp'] > self.xp:
@@ -258,7 +258,8 @@ class Player:
         """Return a new PlayerRank object given a rank ID."""
         ret = PlayerRank()
 
-        ranks = constants.RANKS[constants.PLAYERS_LIST_DATABASES[self.database]['ranks_country']]
+        ranks_country = constants.PLAYERS_LIST_DATABASES[self.database]['ranks_country']
+        ranks = constants.RANKS[ranks_country]
 
         if str(rank_id) not in ranks:
             return ret
@@ -266,6 +267,9 @@ class Player:
         ret.id = rank_id
         ret.name = ranks[str(rank_id)]['name']
         ret.xp = ranks[str(rank_id)]['xp']
+
+        if ranks_country == 'jp' and str(rank_id) in constants.RANKS['us']:
+            ret.alternative_name = constants.RANKS['us'][str(rank_id)]['name']
 
         if current_app:
             ret.set_images_and_icons(self.database)
@@ -341,6 +345,7 @@ class Player:
 class PlayerRank:
     id = None
     name = None
+    alternative_name = None
     xp = 0
 
     def __repr__(self):

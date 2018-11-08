@@ -57,6 +57,71 @@ img.bordered {
 }
 
 /************************************************************************
+ * Tippy RWRS theme (players) */
+
+/* If `animateFill: false` */
+.tippy-tooltip.rwrs-player-theme {
+    background-color: #4d4d4d;
+    border: 0.2rem solid #727272;
+    border-radius: 0;
+    color: #FFF;
+    font-size: 1.4rem;
+    max-width: 350px;
+    text-align: left;
+    padding: 0;
+}
+
+.tippy-tooltip.rwrs-player-theme .pas {
+    padding: 0.5rem;
+}
+
+.tippy-tooltip.rwrs-player-theme .header {
+    background-color: #444;
+    border-bottom: 0.2rem solid #727272;
+}
+
+.tippy-tooltip.rwrs-player-theme .player-content {
+    width: 345px
+}
+
+.tippy-tooltip.rwrs-player-theme[data-size=small],
+.tippy-tooltip.rwrs-player-theme[data-size=large] {
+    font-size: 1.4rem;
+}
+
+/* If `animateFill: true` (default) */
+.tippy-tooltip.rwrs-player-theme .tippy-backdrop {
+    background-color: #4d4d4d;
+    color: #FFF;
+}
+
+/* Default (sharp) arrow */
+.tippy-popper[x-placement^='top'] .tippy-tooltip.rwrs-player-theme .tippy-arrow {
+    bottom: -9px;
+    border-top-color: #727272;
+}
+
+.tippy-popper[x-placement^='bottom'] .tippy-tooltip.rwrs-player-theme .tippy-arrow {
+    top: -9px;
+    border-bottom-color: #727272;
+}
+
+.tippy-popper[x-placement^='left'] .tippy-tooltip.rwrs-player-theme .tippy-arrow {
+    right: -9px;
+    border-left-color: #727272;
+}
+
+.tippy-popper[x-placement^='right'] .tippy-tooltip.rwrs-player-theme .tippy-arrow {
+    left: -9px;
+    border-right-color: #727272;
+}
+
+/* Round arrow */
+.tippy-tooltip.rwrs-player-theme .tippy-roundarrow {
+    fill: #727272;
+}
+
+/************************************************************************
  * Player stats page */
 
 .unlockables-list {
@@ -176,11 +241,11 @@ img.bordered {
     color: #44b2f8;
 }
 
-.txtgraphgreen {
+.txtaltgreen {
     color: #A4CF17;
 }
 
-.txtgraphblue {
+.txtaltblue {
     color: #44b2f8;
 }
 

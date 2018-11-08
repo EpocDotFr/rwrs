@@ -189,6 +189,16 @@ def dynamic_player_image(username, database):
     return DynamicPlayerImage.create(database, username)
 
 
+@app.route('/popover/players/<any({}):database>/<username>'.format(VALID_DATABASES_STRING_LIST))
+def player_popover(database, username):
+    player = rwr.scraper.search_player_by_username(database, username)
+
+    return render_template(
+        'players/popover.html',
+        player=player
+    )
+
+
 @app.route('/players/<username>/compare')
 @app.route('/players/<username>/compare/<username_to_compare_with>')
 def players_compare_without_db(username, username_to_compare_with=None):
