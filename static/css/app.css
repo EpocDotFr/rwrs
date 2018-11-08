@@ -71,9 +71,17 @@ img.bordered {
     padding: 0;
 }
 
+.tippy-tooltip.rwrs-player-theme .pas {
+    padding: 0.5rem;
+}
+
 .tippy-tooltip.rwrs-player-theme .header {
     background-color: #444;
     border-bottom: 0.2rem solid #727272;
+}
+
+.tippy-tooltip.rwrs-player-theme .player-content {
+    width: 345px
 }
 
 .tippy-tooltip.rwrs-player-theme[data-size=small],
