@@ -66,8 +66,14 @@ img.bordered {
     border-radius: 0;
     color: #FFF;
     font-size: 1.4rem;
-    max-width: 500px;
+    max-width: 350px;
     text-align: left;
+    padding: 0;
+}
+
+.tippy-tooltip.rwrs-player-theme .header {
+    background-color: #444;
+    border-bottom: 0.2rem solid #727272;
 }
 
 .tippy-tooltip.rwrs-player-theme[data-size=small],
@@ -103,7 +109,7 @@ img.bordered {
 }
 
 /* Round arrow */
-.tippy-tooltip.rwrs-theme .tippy-roundarrow {
+.tippy-tooltip.rwrs-player-theme .tippy-roundarrow {
     fill: #727272;
 }
 
@@ -227,11 +233,11 @@ img.bordered {
     color: #44b2f8;
 }
 
-.txtgraphgreen {
+.txtaltgreen {
     color: #A4CF17;
 }
 
-.txtgraphblue {
+.txtaltblue {
     color: #44b2f8;
 }
 

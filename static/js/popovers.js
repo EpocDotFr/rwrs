@@ -2,7 +2,7 @@
  * The Popovers feature logic.
  */
 popoversFeature = {
-    initialContent: '<i class="fas fa-spinner fa-pulse"></i> Loading...',
+    initialContent: '<div class="pas"><i class="fas fa-spinner fa-pulse"></i> Loading...</div>',
     defaultPopoverOptions: {
         arrow: true,
         delay: [500, 50],
@@ -15,6 +15,9 @@ popoversFeature = {
     initOnServerDetails: function() {
         this.initPlayerPopover($('.players-list a[data-popover-url]').get());
     },
+    /**
+     * Initialize an Ajax "player" popover on a set of elements.
+     */
     initPlayerPopover: function(elements) {
         return this.initPopover(
             elements,
@@ -23,6 +26,9 @@ popoversFeature = {
             }
         );
     },
+    /**
+     * Initialize an Ajax popover on a set of elements.
+     */
     initPopover: function(elements, options) {
         var self = this;
 
