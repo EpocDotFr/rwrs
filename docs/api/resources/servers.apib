@@ -18,6 +18,12 @@ Provide ways to manipulate Servers collection.
 
     + Attributes (array[Server Simple Object])
 
++ Response 503 (application/json)
+
+    Maintenance in progress.
+
+    + Attributes (Error Response)
+
 ## Server object [/servers/{ip}:{port}]
 
 Provide ways to manipulate a single Server.
@@ -37,5 +43,11 @@ Provide ways to manipulate a single Server.
 + Response 404 (application/json)
 
     The Server wasn't found.
+
+    + Attributes (Error Response)
+
++ Response 503 (application/json)
+
+    Maintenance in progress.
 
     + Attributes (Error Response)
