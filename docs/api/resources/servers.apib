@@ -1,0 +1,41 @@
+# Group Servers
+
+Available operation concerning Server objects.
+
+A Server represent a public Running With Rifles game, that may be hosted (or not) by a physically dedicated server.
+
+## Servers collection [/servers]
+
+Provide ways to manipulate Servers collection.
+
+### Get Servers [GET]
+
++ Response 200 (application/json)
+
+    Return all Servers.
+
+    An empty collection is returned if no servers were found.
+
+    + Attributes (array[Server Simple Object])
+
+## Server object [/servers/{ip}:{port}]
+
+Provide ways to manipulate a single Server.
+
++ Parameters
+    + ip (string) - The server IP
+    + port (integer) - The server port
+
+### Get a Server [GET]
+
++ Response 200 (application/json)
+
+    Return the Server corresponding to the given IP address / port couple.
+
+    + Attributes (Server Full Object)
+
++ Response 404 (application/json)
+
+    The Server wasn't found.
+
+    + Attributes (Error Response)

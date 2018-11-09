@@ -3,4 +3,82 @@ HOST: https://rwrstats.com/api
 
 # Running With Rifles Stats (RWRS) REST API
 
-TODO
+Documentation about the [Running With Rifles Stats (RWRS)](https://rwrstats.com/) REST API.
+
+Useful links:
+
+  - [About RWRS](https://rwrstats.com/about)
+  - [Feedback](https://rwrstats.com/feedback)
+
+## Endpoint
+
+The API endpoint is `https://rwrstats.com/api`. Using HTTPS is mandatory or you'll encounter redirections (which may
+not be appreciated by your HTTP client).
+
+## Authentication
+
+No authentication is needed to access this API.
+
+## Input & output data format
+
+Everything is [JSON](https://en.wikipedia.org/wiki/JSON) along a `Content-Type` HTTP header of `application/json`.
+
+## HTTP status codes
+
+The HTTP response status code must be used to check if the sent request was successfully handled or not:
+
+  - `2xx` Everything is OK. The response body will contain whatever the resource provide (check its doc)
+  - `4xx` The client made a mistake in its request, typically it's an input parameter validation error
+  - `5xx` There were a server error
+
+### Success (2xx)
+
+The output can be different regarding the resource. Check their respective doc.
+
+### Client error (4xx)
+
+Typically an input parameters validation error:
+
+```
+{
+    "message": {
+        "blow": "Missing required parameter in the JSON body",
+        "hey": "Missing required parameter in the JSON body"
+    }
+}
+```
+
+In this case the `hey` and `blow` input parameters are missing.
+
+If a query string parameter is missing or invalid, it's the same output:
+
+```
+{
+    "message": {
+        "active": "Missing required parameter in the query string"
+    }
+}
+```
+
+May also happen in other cases like the requested resource wasn't found:
+
+```
+{
+    "message": "This thing does not exists."
+}
+```
+
+### Server error (5xx)
+
+They should not happen. If so, please [get in touch](https://rwrstats.com/feedback).
+
+Example:
+
+```
+{
+    "message": "Error creating this thing: IndexError: out of bounds"
+}
+```
+
+<!-- include(data_structures/servers.apib) -->
+<!-- include(resources/servers.apib) -->
