@@ -19,3 +19,4 @@ tabulate
 matplotlib
 bugsnag[flask]
 Pillow
+Flask-RESTful
