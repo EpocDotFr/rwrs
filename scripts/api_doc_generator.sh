@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+#
+# RWRS API documentation generator
+#
+# Generate the RWRS API documentation. aglio must be installed. Input API Blueprint files are located in docs/api, output
+# file is saved in static/api_doc.html.
+# Refs:
+# - https://github.com/danielgtaylor/aglio
+
+set -e # Makes any subsequent failing commands to exit the script immediately
