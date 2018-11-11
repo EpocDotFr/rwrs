@@ -21,3 +21,4 @@ bugsnag[flask]
 Pillow
 Flask-RESTful
 Flask-HTTPAuth
+Flask-Limiter

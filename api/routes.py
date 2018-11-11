@@ -15,7 +15,7 @@ class ServerResource(Resource):
         server = rwr.scraper.get_server_by_ip_and_port(ip, port)
 
         if not server:
-            abort(404)
+            abort(404, message='Server not found')
 
         return server
 
