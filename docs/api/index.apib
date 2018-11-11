@@ -21,17 +21,22 @@ Using HTTPS is mandatory or you'll encounter redirections (which may not be appr
 ## Authentication
 
 All endpoints needs a valid API token, otherwise a 403 HTTP status code will be returned. Send this HTTP header in
-all of your HTTP requests with your API token:
+all of your HTTP requests along your API token:
 
 ```
 Authorization: Token <token>
 ```
 
-## Rate limits
+## Rate limit
 
 ::: note
 TODO
 :::
+
+## Cache
+
+Some resources are subject to server-side caching (i.e you'll not necessarily get the most up-to-date data from the
+server). Check their respective documentation for more information.
 
 ## HTTP status codes
 
@@ -40,6 +45,10 @@ The HTTP response status code must be used to check if the sent request was succ
   - `2xx` Everything is OK. The response body will contain whatever the resource provide (check its doc)
   - `4xx` The client made a mistake in its request, typically it's an input parameter validation error
   - `5xx` There were a server error
+
+::: note
+Use HTTP status codes wisely since the RWRS REST API doesn't provide internal error codes.
+:::
 
 ## Input & output data format
 

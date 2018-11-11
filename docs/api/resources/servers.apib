@@ -8,6 +8,12 @@ Provide ways to manipulate Servers collection.
 
 ### Get Servers [GET]
 
+Return the list of Servers.
+
+::: note
+This resource has a cache lifetime of **1 minute**.
+:::
+
 + Request
 
     + Headers
@@ -15,8 +21,6 @@ Provide ways to manipulate Servers collection.
             Authorization: Token <token>
 
 + Response 200 (application/json)
-
-    Return all Servers.
 
     An empty collection is returned if no servers were found.
 
@@ -44,6 +48,12 @@ Provide ways to manipulate a single Server.
 
 ### Get a Server [GET]
 
+Return the Server corresponding to the given IP address / port couple.
+
+::: note
+This resource has a cache lifetime of **1 minute**.
+:::
+
 + Request
 
     + Headers
@@ -51,8 +61,6 @@ Provide ways to manipulate a single Server.
             Authorization: Token <token>
 
 + Response 200 (application/json)
-
-    Return the Server corresponding to the given IP address / port couple.
 
     + Attributes (Server Full Object)
 

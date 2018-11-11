@@ -2,7 +2,7 @@
 
 ### Server Map Simple Object
 
-  + `name`: `Railroad Gap` (required) - Map name
+  + `name`: `Railroad Gap` (required) - Map name. If unknown, its internal ID will be used
 
 ### Server Map Full Object (Server Map Simple Object)
 
@@ -11,7 +11,7 @@
 ### Server Location Object
 
   + `name`: `Frankfurt am Main, Germany` - City name (if available) + country name of the server location. May be `null` if unknown
-  + `country_code`: `de` - [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country code of the server location. May be `null` if unknown
+  + `country_code`: `de` - ISO 3166-1 alpha-2 country code of the server location. May be `null` if unknown
 
 ### Server Players Simple Object
 
@@ -21,16 +21,16 @@
 
 ### Server Players Full Object (Server Players Simple Object)
 
-  + `list`: `EPOCDOTFR`, `JACKMAYOL`, `PASIK` (array[string], required) - List of players usernames
+  + `list`: `EPOCDOTFR`, `JACKMAYOL`, `PASIK` (array[string], required) - List of current players
 
 ### Server Simple Object
 
   + `name`: `InvasionEU2` (required) - Server name
-  + `type_name`: `Vanilla` (required) - Server type name (mod used)
+  + `type_name`: `Vanilla` (required) - Server type name (used mod or DLC)
   + `mode_name`: `Coop.` (required) - Server mode name (game mode)
   + `is_ranked`: `true` (boolean, required) - Whether this server is an official one
   + `website_url`: `https://runningwithrifles.com/` - Server website URL. May be `null` if none
-  + `url`: `https://rwrstats.com/servers/31.186.250.67:1235/invasioneu2` (required) - RWRS website URL
+  + `url`: `https://rwrstats.com/servers/31.186.250.67:1235/invasioneu2` (required) - RWRS server web page URL
   + `map` (Server Map Simple Object, required) - Server map
   + `players` (Server Players Simple Object, required) - Server players
   + `location` (Server Location Object, required) - Server location
@@ -39,7 +39,7 @@
 
   + `map` (Server Map Full Object, required) - Server map
   + `version`: `1.70.2` (required) - Server game version
-  + `database_name`: `Invasion` (required) - Database name
+  + `database_name`: `Invasion` - Database name. `null` if not a ranked server
   + `mode_name_long`: `Cooperation` (required) - Long server mode name
   + `is_dedicated`: `true` (boolean, required) - Whether this server is a dedicated one
   + `comment`: `Coop campaign` - Server comment. May be `null` if none
