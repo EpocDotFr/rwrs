@@ -6,12 +6,15 @@
 
 ### Server Map Full Object (Server Map Simple Object)
 
-  + `preview_image_url`: `https://rwrstats.com/images/maps/preview/vanilla.winter/map4.png` - Map preview image URL. May be `null` if none available
+  + `preview_image_url`: `https://rwrstats.com/images/maps/preview/vanilla.winter/map4.png` - Map preview image URL. `null` if none available
+    + Default: `null`
 
 ### Server Location Object
 
-  + `name`: `Frankfurt am Main, Germany` - City name (if available) + country name of the server location. May be `null` if unknown
-  + `country_code`: `de` - ISO 3166-1 alpha-2 country code of the server location. May be `null` if unknown
+  + `name`: `Frankfurt am Main, Germany` - City name (if available) + country name of the server location. `null` if unknown
+    + Default: `null`
+  + `country_code`: `de` - ISO 3166-1 alpha-2 country code of the server location. `null` if unknown
+    + Default: `null`
 
 ### Server Players Simple Object
 
@@ -29,7 +32,8 @@
   + `type_name`: `Vanilla` (required) - Server type name (used mod or DLC)
   + `mode_name`: `Coop.` (required) - Server mode name (game mode)
   + `is_ranked`: `true` (boolean, required) - Whether this server is an official one
-  + `website_url`: `https://runningwithrifles.com/` - Server website URL. May be `null` if none
+  + `website_url`: `https://runningwithrifles.com/` - Server website URL. `null` if none
+    + Default: `null`
   + `url`: `https://rwrstats.com/servers/31.186.250.67:1235/invasioneu2` (required) - RWRS server web page URL
   + `map` (Server Map Simple Object, required) - Server map
   + `players` (Server Players Simple Object, required) - Server players
@@ -40,9 +44,11 @@
   + `map` (Server Map Full Object, required) - Server map
   + `version`: `1.70.2` (required) - Server game version
   + `database_name`: `Invasion` - Database name. `null` if not a ranked server
+    + Default: `null`
   + `mode_name_long`: `Cooperation` (required) - Long server mode name
   + `is_dedicated`: `true` (boolean, required) - Whether this server is a dedicated one
-  + `comment`: `Coop campaign` - Server comment. May be `null` if none
+  + `comment`: `Coop campaign` - Server comment. `null` if none
+    + Default: `null`
   + `bots`: `104` (number, required) - Number of current bots
   + `players` (Server Players Full Object, required) - Server players
 
