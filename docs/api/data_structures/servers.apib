@@ -6,12 +6,12 @@
 
 ### Server Map Full Object (Server Map Simple Object)
 
-  + `preview_image_url`: `https://rwrstats.com/images/maps/preview/vanilla.winter/map4.png` - Map preview image URL
+  + `preview_image_url`: `https://rwrstats.com/images/maps/preview/vanilla.winter/map4.png` - Map preview image URL. May be `null` if none available
 
 ### Server Location Object
 
-  + `name`: `Frankfurt am Main, Germany` (required) - City name (if available) + country name of the server location
-  + `country_code`: `de` (required) - [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country code of the server location
+  + `name`: `Frankfurt am Main, Germany` - City name (if available) + country name of the server location. May be `null` if unknown
+  + `country_code`: `de` - [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country code of the server location. May be `null` if unknown
 
 ### Server Players Simple Object
 
@@ -29,22 +29,22 @@
   + `type_name`: `Vanilla` (required) - Server type name (mod used)
   + `mode_name`: `Coop.` (required) - Server mode name (game mode)
   + `is_ranked`: `true` (boolean, required) - Whether this server is an official one
-  + `website_url`: `https://runningwithrifles.com/` - Server website URL
+  + `website_url`: `https://runningwithrifles.com/` - Server website URL. May be `null` if none
   + `url`: `https://rwrstats.com/servers/31.186.250.67:1235/invasioneu2` (required) - RWRS website URL
-  + `map` (Server Map Simple Object) - Server map
-  + `players` (Server Players Simple Object) - Server players
-  + `location` (Server Location Object) - Server location
+  + `map` (Server Map Simple Object, required) - Server map
+  + `players` (Server Players Simple Object, required) - Server players
+  + `location` (Server Location Object, required) - Server location
 
 ### Server Full Object (Server Simple Object)
 
-  + `map` (Server Map Full Object) - Server map
+  + `map` (Server Map Full Object, required) - Server map
   + `version`: `1.70.2` (required) - Server game version
-  + `database_name`: `Invasion` (required) - Databse name
+  + `database_name`: `Invasion` (required) - Database name
   + `mode_name_long`: `Cooperation` (required) - Long server mode name
   + `is_dedicated`: `true` (boolean, required) - Whether this server is a dedicated one
-  + `comment`: `Coop campaign` - Server comment
+  + `comment`: `Coop campaign` - Server comment. May be `null` if none
   + `bots`: `104` (number, required) - Number of current bots
-  + `players` (Server Players Full Object) - Server players
+  + `players` (Server Players Full Object, required) - Server players
 
 ### Error Response
 

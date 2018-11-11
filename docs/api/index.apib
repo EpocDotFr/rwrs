@@ -12,16 +12,23 @@ Useful links:
 
 ## Endpoint
 
-The API endpoint is `https://rwrstats.com/api`. Using HTTPS is mandatory or you'll encounter redirections (which may
-not be appreciated by your HTTP client).
+The RWRS REST API endpoint is `https://rwrstats.com/api`.
+
+::: note
+Using HTTPS is mandatory or you'll encounter redirections (which may not be appreciated by your HTTP client).
+:::
 
 ## Authentication
 
-No authentication is needed to access this API.
+::: note
+TODO
+:::
 
-## Input & output data format
+## Rate limits
 
-Everything is [JSON](https://en.wikipedia.org/wiki/JSON) along a `Content-Type` HTTP header of `application/json`.
+::: note
+TODO
+:::
 
 ## HTTP status codes
 
@@ -30,6 +37,10 @@ The HTTP response status code must be used to check if the sent request was succ
   - `2xx` Everything is OK. The response body will contain whatever the resource provide (check its doc)
   - `4xx` The client made a mistake in its request, typically it's an input parameter validation error
   - `5xx` There were a server error
+
+## Input & output data format
+
+Everything is [JSON](https://en.wikipedia.org/wiki/JSON) along a `Content-Type` HTTP header of `application/json`.
 
 ### Success (2xx)
 
