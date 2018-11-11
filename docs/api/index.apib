@@ -20,9 +20,12 @@ Using HTTPS is mandatory or you'll encounter redirections (which may not be appr
 
 ## Authentication
 
-::: note
-TODO
-:::
+All endpoints needs a valid API token, otherwise a 403 HTTP status code will be returned. Send this HTTP header in
+all of your HTTP requests with your API token:
+
+```
+Authorization: Token <token>
+```
 
 ## Rate limits
 

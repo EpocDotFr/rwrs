@@ -1,3 +1,4 @@
+from flask_httpauth import HTTPTokenAuth
 from flask_restful import Api, abort
 from functools import wraps
 from rwrs import app
@@ -15,6 +16,7 @@ def check_under_maintenance(f):
     return decorated
 
 
-api = Api(app, prefix='/api', catch_all_404s=True, decorators=[check_under_maintenance])
+auth = HTTPTokenAuth(scheme='Token')
+api = Api(app, prefix='/api', catch_all_404s=True, decorators=[check_under_maintenance, auth.login_required])
 
-from . import routes
+from . import routes, hooks
