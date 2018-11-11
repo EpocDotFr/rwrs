@@ -18,9 +18,9 @@
 all of your HTTP requests along your API token:</p>
 <pre><code><span class="hljs-attribute">Authorization</span>: <span class="hljs-string">Token &lt;token&gt;</span></code></pre>
 <h2 id="header-rate-limit">Rate limit <a class="permalink" href="#header-rate-limit" aria-hidden="true">¶</a></h2>
-<div class="note">
-<p>TODO</p>
-</div>
+<p>To prevent abuse, all resources are rate-limited. Each IP address + API token couple is limited to <strong>1 request per
+second</strong>.</p>
+<p>If this rate limiting window isn’t respected, you’ll get a 429 HTTP status code.</p>
 <h2 id="header-cache">Cache <a class="permalink" href="#header-cache" aria-hidden="true">¶</a></h2>
 <p>Some resources are subject to server-side caching (i.e you’ll not necessarily get the most up-to-date data from the
 server). Check their respective documentation for more information.</p>
