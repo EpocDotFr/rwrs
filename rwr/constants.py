@@ -383,7 +383,7 @@ class PlayersSort:
     XP = 'rank_progression'
 
 
-VALID_CONTINENTS = OrderedDict([
+CONTINENTS = OrderedDict([
     ('af', 'Africa'),
     ('na', 'North America'),
     ('oc', 'Oceania'),
@@ -392,3 +392,5 @@ VALID_CONTINENTS = OrderedDict([
     ('eu', 'Europe'),
     ('sa', 'South America'),
 ])
+
+VALID_CONTINENTS = CONTINENTS.keys()

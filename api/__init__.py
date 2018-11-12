@@ -12,7 +12,7 @@ def check_under_maintenance(f):
     @wraps(f)
     def decorated(*args, **kwargs):
         if os.path.exists('maintenance'):
-            abort(503)
+            abort(503, message='Maintenance in progress')
 
         return f(*args, **kwargs)
 
