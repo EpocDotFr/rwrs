@@ -3,6 +3,7 @@ from flask_restful import fields
 
 
 server_map_simple = OrderedDict([
+    ('id', fields.String),
     ('name', fields.String(attribute='name_display')),
 ])
 
@@ -29,8 +30,12 @@ server_players_full.update(OrderedDict([
 
 server_simple = OrderedDict([
     ('name', fields.String),
+    ('type_id', fields.String(attribute='type')),
     ('type_name', fields.String),
+    ('mode_id', fields.String(attribute='mode')),
     ('mode_name', fields.String),
+    ('database_id', fields.String(attribute='database')),
+    ('database_name', fields.String),
     ('is_ranked', fields.Boolean),
     ('website_url', fields.String(attribute='website')),
     ('url', fields.String(attribute='link_absolute')),
@@ -42,7 +47,6 @@ server_simple = OrderedDict([
 server_full = server_simple.copy()
 server_full.update(OrderedDict([
     ('version', fields.String),
-    ('database_name', fields.String),
     ('mode_name_long', fields.String),
     ('is_dedicated', fields.Boolean),
     ('comment', fields.String),

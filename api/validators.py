@@ -16,7 +16,7 @@ def location(value):
 
     if location_match['location_code_single'] and location_match['location_code_single'].upper() not in iso3166.countries_by_alpha2:
         raise ValueError('Invalid country code')
-    if location_match['location_type'] == 'continent' and location_match['location_code_with_type'].lower() not in rwr.constants.VALID_CONTINENTS.keys():
+    if location_match['location_type'] == 'continent' and location_match['location_code_with_type'].lower() not in rwr.constants.VALID_CONTINENTS:
         raise ValueError('Invalid continent code')
     elif location_match['location_type'] == 'country' and location_match['location_code_with_type'].upper() not in iso3166.countries_by_alpha2:
         raise ValueError('Invalid country code')

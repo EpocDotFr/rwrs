@@ -277,12 +277,17 @@ account <strong>only</strong> if it is present in the query string.</p>
 </div><h5>Headers</h5><pre><code><span class="hljs-attribute">Content-Type</span>: <span class="hljs-string">application/json</span></code></pre><div style="height: 1px;"></div><h5>Body</h5><pre><code>[
   {
     "<span class="hljs-attribute">name</span>": <span class="hljs-value"><span class="hljs-string">"InvasionEU2"</span></span>,
+    "<span class="hljs-attribute">type_id</span>": <span class="hljs-value"><span class="hljs-string">"vanilla"</span></span>,
     "<span class="hljs-attribute">type_name</span>": <span class="hljs-value"><span class="hljs-string">"Vanilla"</span></span>,
+    "<span class="hljs-attribute">mode_id</span>": <span class="hljs-value"><span class="hljs-string">"COOP"</span></span>,
     "<span class="hljs-attribute">mode_name</span>": <span class="hljs-value"><span class="hljs-string">"Coop."</span></span>,
+    "<span class="hljs-attribute">database_id</span>": <span class="hljs-value"><span class="hljs-string">"invasion"</span></span>,
+    "<span class="hljs-attribute">database_name</span>": <span class="hljs-value"><span class="hljs-string">"Invasion"</span></span>,
     "<span class="hljs-attribute">is_ranked</span>": <span class="hljs-value"><span class="hljs-literal">true</span></span>,
     "<span class="hljs-attribute">website_url</span>": <span class="hljs-value"><span class="hljs-string">"https://runningwithrifles.com/"</span></span>,
     "<span class="hljs-attribute">url</span>": <span class="hljs-value"><span class="hljs-string">"https://rwrstats.com/servers/31.186.250.67:1235/invasioneu2"</span></span>,
     "<span class="hljs-attribute">map</span>": <span class="hljs-value">{
+      "<span class="hljs-attribute">id</span>": <span class="hljs-value"><span class="hljs-string">"map10"</span></span>,
       "<span class="hljs-attribute">name</span>": <span class="hljs-value"><span class="hljs-string">"Railroad Gap"</span>
     </span>}</span>,
     "<span class="hljs-attribute">players</span>": <span class="hljs-value">{
@@ -351,12 +356,17 @@ account <strong>only</strong> if it is present in the query string.</p>
 </dd><dt>port</dt><dd><code>integer</code>&nbsp;<span class="required">(required)</span>&nbsp;<span class="text-muted example"><strong>Example:&nbsp;</strong><span>1235</span></span><p>The Server port</p>
 </dd></dl></div><div class="title"><strong>Request</strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Authorization</span>: <span class="hljs-string">Token {token}</span></code></pre><div style="height: 1px;"></div></div></div><div class="title"><strong>Response&nbsp;&nbsp;<code>200</code></strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Content-Type</span>: <span class="hljs-string">application/json</span></code></pre><div style="height: 1px;"></div><h5>Body</h5><pre><code>{
   "<span class="hljs-attribute">name</span>": <span class="hljs-value"><span class="hljs-string">"InvasionEU2"</span></span>,
+  "<span class="hljs-attribute">type_id</span>": <span class="hljs-value"><span class="hljs-string">"vanilla"</span></span>,
   "<span class="hljs-attribute">type_name</span>": <span class="hljs-value"><span class="hljs-string">"Vanilla"</span></span>,
+  "<span class="hljs-attribute">mode_id</span>": <span class="hljs-value"><span class="hljs-string">"COOP"</span></span>,
   "<span class="hljs-attribute">mode_name</span>": <span class="hljs-value"><span class="hljs-string">"Coop."</span></span>,
+  "<span class="hljs-attribute">database_id</span>": <span class="hljs-value"><span class="hljs-string">"invasion"</span></span>,
+  "<span class="hljs-attribute">database_name</span>": <span class="hljs-value"><span class="hljs-string">"Invasion"</span></span>,
   "<span class="hljs-attribute">is_ranked</span>": <span class="hljs-value"><span class="hljs-literal">true</span></span>,
   "<span class="hljs-attribute">website_url</span>": <span class="hljs-value"><span class="hljs-string">"https://runningwithrifles.com/"</span></span>,
   "<span class="hljs-attribute">url</span>": <span class="hljs-value"><span class="hljs-string">"https://rwrstats.com/servers/31.186.250.67:1235/invasioneu2"</span></span>,
   "<span class="hljs-attribute">map</span>": <span class="hljs-value">{
+    "<span class="hljs-attribute">id</span>": <span class="hljs-value"><span class="hljs-string">"map10"</span></span>,
     "<span class="hljs-attribute">name</span>": <span class="hljs-value"><span class="hljs-string">"Railroad Gap"</span></span>,
     "<span class="hljs-attribute">preview_image_url</span>": <span class="hljs-value"><span class="hljs-string">"https://rwrstats.com/images/maps/preview/vanilla.winter/map4.png"</span>
   </span>}</span>,
@@ -375,7 +385,6 @@ account <strong>only</strong> if it is present in the query string.</p>
     "<span class="hljs-attribute">country_code</span>": <span class="hljs-value"><span class="hljs-string">"de"</span>
   </span>}</span>,
   "<span class="hljs-attribute">version</span>": <span class="hljs-value"><span class="hljs-string">"1.70.2"</span></span>,
-  "<span class="hljs-attribute">database_name</span>": <span class="hljs-value"><span class="hljs-string">"Invasion"</span></span>,
   "<span class="hljs-attribute">mode_name_long</span>": <span class="hljs-value"><span class="hljs-string">"Cooperation"</span></span>,
   "<span class="hljs-attribute">is_dedicated</span>": <span class="hljs-value"><span class="hljs-literal">true</span></span>,
   "<span class="hljs-attribute">comment</span>": <span class="hljs-value"><span class="hljs-string">"Coop campaign"</span></span>,
@@ -388,13 +397,29 @@ account <strong>only</strong> if it is present in the query string.</p>
       "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
       "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Server name"</span>
     </span>}</span>,
+    "<span class="hljs-attribute">type_id</span>": <span class="hljs-value">{
+      "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
+      "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Server type ID (used mod or DLC)"</span>
+    </span>}</span>,
     "<span class="hljs-attribute">type_name</span>": <span class="hljs-value">{
       "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
       "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Server type name (used mod or DLC)"</span>
     </span>}</span>,
+    "<span class="hljs-attribute">mode_id</span>": <span class="hljs-value">{
+      "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
+      "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Server mode ID (game mode)"</span>
+    </span>}</span>,
     "<span class="hljs-attribute">mode_name</span>": <span class="hljs-value">{
       "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
       "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Server mode name (game mode)"</span>
+    </span>}</span>,
+    "<span class="hljs-attribute">database_id</span>": <span class="hljs-value">{
+      "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
+      "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Database ID. `null` if not a ranked server"</span>
+    </span>}</span>,
+    "<span class="hljs-attribute">database_name</span>": <span class="hljs-value">{
+      "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
+      "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Database name. `null` if not a ranked server"</span>
     </span>}</span>,
     "<span class="hljs-attribute">is_ranked</span>": <span class="hljs-value">{
       "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"boolean"</span></span>,
@@ -412,6 +437,10 @@ account <strong>only</strong> if it is present in the query string.</p>
     "<span class="hljs-attribute">map</span>": <span class="hljs-value">{
       "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"object"</span></span>,
       "<span class="hljs-attribute">properties</span>": <span class="hljs-value">{
+        "<span class="hljs-attribute">id</span>": <span class="hljs-value">{
+          "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
+          "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Map ID. **Not unique**: must be used in conjonction of the mode ID"</span>
+        </span>}</span>,
         "<span class="hljs-attribute">name</span>": <span class="hljs-value">{
           "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
           "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Map name. If unknown, its internal ID will be used"</span>
@@ -423,6 +452,7 @@ account <strong>only</strong> if it is present in the query string.</p>
         </span>}
       </span>}</span>,
       "<span class="hljs-attribute">required</span>": <span class="hljs-value">[
+        <span class="hljs-string">"id"</span>,
         <span class="hljs-string">"name"</span>
       ]</span>,
       "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Server map"</span>
@@ -473,16 +503,12 @@ account <strong>only</strong> if it is present in the query string.</p>
     </span>}</span>,
     "<span class="hljs-attribute">version</span>": <span class="hljs-value">{
       "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
-      "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Server game version"</span>
-    </span>}</span>,
-    "<span class="hljs-attribute">database_name</span>": <span class="hljs-value">{
-      "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
-      "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Database name. `null` if not a ranked server"</span></span>,
+      "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Server game version"</span></span>,
       "<span class="hljs-attribute">default</span>": <span class="hljs-value"><span class="hljs-string">"null"</span>
     </span>}</span>,
     "<span class="hljs-attribute">mode_name_long</span>": <span class="hljs-value">{
       "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
-      "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Long server mode name"</span>
+      "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Long server mode name (game mode)"</span>
     </span>}</span>,
     "<span class="hljs-attribute">is_dedicated</span>": <span class="hljs-value">{
       "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"boolean"</span></span>,
@@ -500,7 +526,9 @@ account <strong>only</strong> if it is present in the query string.</p>
   </span>}</span>,
   "<span class="hljs-attribute">required</span>": <span class="hljs-value">[
     <span class="hljs-string">"name"</span>,
+    <span class="hljs-string">"type_id"</span>,
     <span class="hljs-string">"type_name"</span>,
+    <span class="hljs-string">"mode_id"</span>,
     <span class="hljs-string">"mode_name"</span>,
     <span class="hljs-string">"is_ranked"</span>,
     <span class="hljs-string">"url"</span>,
