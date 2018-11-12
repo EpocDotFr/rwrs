@@ -5,7 +5,7 @@ import helpers
 
 MAPS = helpers.load_json(app.config['MAPS_DATA_FILE'])
 
-VALID_MAPS = [map_id for mps in MAPS.values() for map_id in mps.keys()]
+VALID_MAPS = list(set([map_id for mps in MAPS.values() for map_id in mps.keys()]))
 
 RANKS = helpers.load_json(app.config['RANKS_DATA_FILE'])
 
