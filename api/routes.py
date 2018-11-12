@@ -1,13 +1,12 @@
 from flask_restful import Resource, marshal_with, abort
-from . import api, transformers
-from flask import request
+from . import api, transformers, validators
 import rwr.scraper
 
 
 class ServersResource(Resource):
     @marshal_with(transformers.server_simple)
     def get(self):
-        filters = request.args.to_dict()
+        filters = validators.get_servers_list.parse_args()
 
         if filters:
             servers = rwr.scraper.filter_servers(**filters)

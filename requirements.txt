@@ -22,3 +22,4 @@ Pillow
 Flask-RESTful
 Flask-HTTPAuth
 Flask-Limiter
+iso3166

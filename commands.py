@@ -15,17 +15,6 @@ def cc():
 
 
 @app.cli.command()
-def tmp():
-    import rwr.constants
-
-    for game_type, maps in rwr.constants.MAPS.items():
-        print('        - `{}`'.format(game_type))
-
-        for map_id, map in maps.items():
-            print('          - `{}` - {}'.format(map_id, map['name']))
-
-
-@app.cli.command()
 def get_root_rwr_servers_status():
     """Check the status of the root RWR servers."""
     from models import RwrRootServer, RwrRootServerStatus, Variable

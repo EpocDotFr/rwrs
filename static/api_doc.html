@@ -76,13 +76,16 @@ present in the query string.</p>
 <div class="note">
 <p>This resource has a cache lifetime of <strong>1 minute</strong>.</p>
 </div>
-<h4>Example URI</h4><div class="definition"><span class="method get">GET</span>&nbsp;<span class="uri"><span class="hostname">https://rwrstats.com/api</span>/servers?<span class="hljs-attribute">location=</span><span class="hljs-literal">continent:eu</span>&<span class="hljs-attribute">map=</span><span class="hljs-literal">map10</span>&<span class="hljs-attribute">type=</span><span class="hljs-literal">vanilla</span>&<span class="hljs-attribute">mode=</span><span class="hljs-literal">COOP</span>&<span class="hljs-attribute">dedicated=</span><span class="hljs-literal">yes</span>&<span class="hljs-attribute">ranked=</span><span class="hljs-literal">yes</span>&<span class="hljs-attribute">not_empty=</span><span class="hljs-literal">yes</span>&<span class="hljs-attribute">not_full=</span><span class="hljs-literal">yes</span>&<span class="hljs-attribute">limit=</span><span class="hljs-literal">10</span></span></div><div class="title"><strong>URI Parameters</strong><div class="collapse-button show"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><dl class="inner"><dt>location</dt><dd><code>string</code>&nbsp;<span>(optional)</span>&nbsp;<span class="text-muted example"><strong>Example:&nbsp;</strong><span>continent:eu</span></span><p>Servers country or continent of residence. This criteria format is either:</p>
+<h4>Example URI</h4><div class="definition"><span class="method get">GET</span>&nbsp;<span class="uri"><span class="hostname">https://rwrstats.com/api</span>/servers?<span class="hljs-attribute">location=</span><span class="hljs-literal">continent:eu</span>&<span class="hljs-attribute">map=</span><span class="hljs-literal">map10</span>&<span class="hljs-attribute">type=</span><span class="hljs-literal">vanilla</span>&<span class="hljs-attribute">mode=</span><span class="hljs-literal">COOP</span>&<span class="hljs-attribute">dedicated=</span><span class="hljs-literal">yes</span>&<span class="hljs-attribute">ranked=</span><span class="hljs-literal">yes</span>&<span class="hljs-attribute">not_empty=</span><span class="hljs-literal">yes</span>&<span class="hljs-attribute">not_full=</span><span class="hljs-literal">yes</span>&<span class="hljs-attribute">limit=</span><span class="hljs-literal">10</span></span></div><div class="title"><strong>URI Parameters</strong><div class="collapse-button show"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><dl class="inner"><dt>location</dt><dd><code>string</code>&nbsp;<span>(optional)</span>&nbsp;<span class="text-info default"><strong>Default:&nbsp;</strong><span>any</span></span>&nbsp;<span class="text-muted example"><strong>Example:&nbsp;</strong><span>continent:eu</span></span><p>Servers country or continent of residence. This criteria format is either:</p>
 <ul>
 <li>
 <p>A concatenation of a <strong>location type</strong> and a <strong>location code</strong>, separated by a colon, OR</p>
 </li>
 <li>
-<p>Just a <strong>country code</strong></p>
+<p>Just a <strong>country code</strong> OR</p>
+</li>
+<li>
+<p><code>any</code></p>
 </li>
 </ul>
 <p>Available <strong>location types</strong> are:</p>
@@ -119,10 +122,12 @@ present in the query string.</p>
 </li>
 </ul>
 <p><strong>Country code</strong> must conform to <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2">ISO 3166-1 alpha-2</a>.</p>
-</dd><dt>map</dt><dd><code>string</code>&nbsp;<span>(optional)</span>&nbsp;<span class="text-muted example"><strong>Example:&nbsp;</strong><span>map10</span></span><p>Servers map ID.</p>
-<p>This criteria value isn’t checked for its validity with <code>type</code>. May be one of (grouped by game type for
-convenience):</p>
+</dd><dt>map</dt><dd><code>string</code>&nbsp;<span>(optional)</span>&nbsp;<span class="text-info default"><strong>Default:&nbsp;</strong><span>any</span></span>&nbsp;<span class="text-muted example"><strong>Example:&nbsp;</strong><span>map10</span></span><p>Servers map ID.</p>
+<p>May be one of (grouped by game type for convenience):</p>
 <ul>
+<li>
+<p><code>any</code></p>
+</li>
 <li>
 <p><code>man_vs_world_mp</code></p>
 <ul>
@@ -211,17 +216,20 @@ convenience):</p>
 </ul>
 </li>
 </ul>
-</dd><dt>type</dt><dd><code>string</code>&nbsp;<span>(optional)</span>&nbsp;<span class="text-muted example"><strong>Example:&nbsp;</strong><span>vanilla</span></span><p>Servers type (used mod or DLC).</p>
-<p>This criteria value isn’t checked for its validity with <code>map</code>. May be one of:</p>
+</dd><dt>type</dt><dd><code>string</code>&nbsp;<span>(optional)</span>&nbsp;<span class="text-info default"><strong>Default:&nbsp;</strong><span>any</span></span>&nbsp;<span class="text-muted example"><strong>Example:&nbsp;</strong><span>vanilla</span></span><p>Servers type (used mod or DLC).</p>
+<p>May be one of:</p>
 <ul>
 <li>
-<p><code>vanilla</code> - Vanilla</p>
+<p><code>any</code></p>
 </li>
 <li>
-<p><code>vanilla.winter</code> - Vanilla</p>
+<p><code>vanilla</code> - Same as <code>vanilla.winter</code> and <code>pvp</code></p>
 </li>
 <li>
-<p><code>pvp</code> - Vanilla</p>
+<p><code>vanilla.winter</code> - Same as <code>vanilla</code> and <code>pvp</code></p>
+</li>
+<li>
+<p><code>pvp</code> - Same as <code>vanilla</code> and <code>vanilla.winter</code></p>
 </li>
 <li>
 <p><code>pacific</code> - RWR: PACIFIC</p>
@@ -245,8 +253,11 @@ convenience):</p>
 <p><code>viper</code> - Viper</p>
 </li>
 </ul>
-</dd><dt>mode</dt><dd><code>string</code>&nbsp;<span>(optional)</span>&nbsp;<span class="text-muted example"><strong>Example:&nbsp;</strong><span>COOP</span></span><p>Servers mode (game mode). May be one of:</p>
+</dd><dt>mode</dt><dd><code>string</code>&nbsp;<span>(optional)</span>&nbsp;<span class="text-info default"><strong>Default:&nbsp;</strong><span>any</span></span>&nbsp;<span class="text-muted example"><strong>Example:&nbsp;</strong><span>COOP</span></span><p>Servers mode (game mode). May be one of:</p>
 <ul>
+<li>
+<p><code>any</code></p>
+</li>
 <li>
 <p><code>COOP</code> - Cooperation</p>
 </li>
@@ -293,6 +304,21 @@ convenience):</p>
 ]</code></pre><div style="height: 1px;"></div><h5>Schema</h5><pre><code>{
   "<span class="hljs-attribute">$schema</span>": <span class="hljs-value"><span class="hljs-string">"http://json-schema.org/draft-04/schema#"</span></span>,
   "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"array"</span>
+</span>}</code></pre><div style="height: 1px;"></div></div></div><div class="title"><strong>Response&nbsp;&nbsp;<code>400</code></strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><div class="description"><p>One or more arguments are (is) invalid. Check the error message(s) for more information.</p>
+</div><h5>Headers</h5><pre><code><span class="hljs-attribute">Content-Type</span>: <span class="hljs-string">application/json</span></code></pre><div style="height: 1px;"></div><h5>Body</h5><pre><code>{
+  "<span class="hljs-attribute">message</span>": <span class="hljs-value"><span class="hljs-string">"Example error message"</span>
+</span>}</code></pre><div style="height: 1px;"></div><h5>Schema</h5><pre><code>{
+  "<span class="hljs-attribute">$schema</span>": <span class="hljs-value"><span class="hljs-string">"http://json-schema.org/draft-04/schema#"</span></span>,
+  "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"object"</span></span>,
+  "<span class="hljs-attribute">properties</span>": <span class="hljs-value">{
+    "<span class="hljs-attribute">message</span>": <span class="hljs-value">{
+      "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
+      "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"The error message explaining what happened"</span>
+    </span>}
+  </span>}</span>,
+  "<span class="hljs-attribute">required</span>": <span class="hljs-value">[
+    <span class="hljs-string">"message"</span>
+  ]
 </span>}</code></pre><div style="height: 1px;"></div></div></div><div class="title"><strong>Response&nbsp;&nbsp;<code>403</code></strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><div class="description"><p>Invalid token.</p>
 </div><h5>Headers</h5><pre><code><span class="hljs-attribute">Content-Type</span>: <span class="hljs-string">application/json</span></code></pre><div style="height: 1px;"></div><h5>Body</h5><pre><code>{
   "<span class="hljs-attribute">message</span>": <span class="hljs-value"><span class="hljs-string">"Example error message"</span>
@@ -537,7 +563,7 @@ convenience):</p>
   "<span class="hljs-attribute">required</span>": <span class="hljs-value">[
     <span class="hljs-string">"message"</span>
   ]
-</span>}</code></pre><div style="height: 1px;"></div></div></div></div></div></section></div></div></div><p style="text-align: center;" class="text-muted">Generated by&nbsp;<a href="https://github.com/danielgtaylor/aglio" class="aglio">aglio</a>&nbsp;on 11 Nov 2018</p><script>/* eslint-env browser */
+</span>}</code></pre><div style="height: 1px;"></div></div></div></div></div></section></div></div></div><p style="text-align: center;" class="text-muted">Generated by&nbsp;<a href="https://github.com/danielgtaylor/aglio" class="aglio">aglio</a>&nbsp;on 12 Nov 2018</p><script>/* eslint-env browser */
 /* eslint quotes: [2, "single"] */
 'use strict';
 

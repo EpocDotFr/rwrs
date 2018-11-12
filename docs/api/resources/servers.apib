@@ -12,7 +12,8 @@ present in the query string.
       Servers country or continent of residence. This criteria format is either:
 
         - A concatenation of a **location type** and a **location code**, separated by a colon, OR
-        - Just a **country code**
+        - Just a **country code** OR
+        - `any`
 
       Available **location types** are:
 
@@ -30,12 +31,14 @@ present in the query string.
         - `sa` - South America
 
       **Country code** must conform to [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2).
+
+      + Default: `any`
   + `map`: `map10` (enum[string], optional)
       Servers map ID.
 
-      This criteria value isn't checked for its validity with `type`. May be one of (grouped by game type for
-        convenience):
+       May be one of (grouped by game type for convenience):
 
+        - `any`
         - `man_vs_world_mp`
           - `lobby_2p` - Mvsw Lobby
         - `pacific`
@@ -79,14 +82,17 @@ present in the query string.
           - `viper` - Viper
         - `lab_def_koth`
           - `def_lab_koth` - Lab Def Koth
+
+      + Default: `any`
   + `type`: `vanilla` (enum[string], optional)
       Servers type (used mod or DLC).
 
-      This criteria value isn't checked for its validity with `map`. May be one of:
+      May be one of:
 
-        - `vanilla` - Vanilla
-        - `vanilla.winter` - Vanilla
-        - `pvp` - Vanilla
+        - `any`
+        - `vanilla` - Same as `vanilla.winter` and `pvp`
+        - `vanilla.winter` - Same as `vanilla` and `pvp`
+        - `pvp` - Same as `vanilla` and `vanilla.winter`
         - `pacific` - RWR: PACIFIC
         - `man_vs_world_mp` - Man vs World (MP)
         - `Running_with_the_Dead` - Running with the Dead
@@ -94,14 +100,19 @@ present in the query string.
         - `lab_defense` - Lab Defense
         - `lab_def_koth` - Lab Defense KOTH
         - `viper` - Viper
+
+      + Default: `any`
   + `mode`: `COOP` (enum[string], optional)
       Servers mode (game mode). May be one of:
 
+        - `any`
         - `COOP` - Cooperation
         - `DOM` - Dominance
         - `PvP` - Player versus player
         - `PvE` - Player versus environment
         - `PvPvE` - Player versus player versus environment
+
+      + Default: `any`
   + `dedicated`: `yes` (optional) - Whether to filter dedicated servers only. `yes` to enable this filter. Any other value is ignored and thus, disable this criteria
   + `ranked`: `yes` (optional) - Whether to filter official servers only. `yes` to enable this filter. Any other value is ignored and thus, disable this criteria
   + `not_empty`: `yes` (optional) - Whether to filter non-empty servers only. `yes` to enable this filter. Any other value is ignored and thus, disable this criteria
@@ -127,6 +138,12 @@ This resource has a cache lifetime of **1 minute**.
     An empty list is returned if no Servers were found.
 
     + Attributes (array[Server Simple Object])
+
++ Response 400 (application/json)
+
+    One or more arguments are (is) invalid. Check the error message(s) for more information.
+
+    + Attributes (Error Response)
 
 + Response 403 (application/json)
 

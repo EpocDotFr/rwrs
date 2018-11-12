@@ -30,7 +30,7 @@ limiter = Limiter(app, key_func=rate_limiter_key_func, headers_enabled=True)
 api = Api(app, prefix='/api', catch_all_404s=True, decorators=[
     check_under_maintenance,
     auth.login_required,
-    limiter.limit('1/second', error_message='Too many requests: you have been rate-limited.')
+    limiter.limit('1/second', error_message='Too many requests: you have been rate-limited')
 ])
 
 from . import routes, hooks
