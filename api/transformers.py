@@ -28,14 +28,31 @@ server_players_full.update(OrderedDict([
     ('list', fields.List(fields.String)),
 ]))
 
+server_type = OrderedDict([
+    ('id', fields.String(attribute='type')),
+    ('name', fields.String(attribute='type_name')),
+])
+
+server_database = OrderedDict([
+    ('id', fields.String(attribute='database')),
+    ('name', fields.String(attribute='database_name')),
+])
+
+server_mode_simple = OrderedDict([
+    ('id', fields.String(attribute='mode')),
+    ('name', fields.String(attribute='mode_name')),
+])
+
+server_mode_full = server_mode_simple.copy()
+server_mode_full.update(OrderedDict([
+    ('name_long', fields.String(attribute='mode_name_long')),
+]))
+
 server_simple = OrderedDict([
     ('name', fields.String),
-    ('type_id', fields.String(attribute='type')),
-    ('type_name', fields.String),
-    ('mode_id', fields.String(attribute='mode')),
-    ('mode_name', fields.String),
-    ('database_id', fields.String(attribute='database')),
-    ('database_name', fields.String),
+    ('type', fields.Nested(server_type, attribute=lambda server: server)),
+    ('mode', fields.Nested(server_mode_simple, attribute=lambda server: server)),
+    ('database', fields.Nested(server_database, attribute=lambda server: server)),
     ('is_ranked', fields.Boolean),
     ('website_url', fields.String(attribute='website')),
     ('url', fields.String(attribute='link_absolute')),
@@ -46,8 +63,8 @@ server_simple = OrderedDict([
 
 server_full = server_simple.copy()
 server_full.update(OrderedDict([
+    ('mode', fields.Nested(server_mode_full, attribute=lambda server: server)),
     ('version', fields.String),
-    ('mode_name_long', fields.String),
     ('is_dedicated', fields.Boolean),
     ('comment', fields.String),
     ('bots', fields.Integer),

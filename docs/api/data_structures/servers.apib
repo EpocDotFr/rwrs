@@ -17,6 +17,25 @@
   + `country_code`: `de` - ISO 3166-1 alpha-2 country code of the server location. `null` if unknown
     + Default: `null`
 
+### Server Type Object
+
+  + `id`: `vanilla` (required) - Server type ID (used mod or DLC)
+  + `name`: `Vanilla` (required) - Server type name (used mod or DLC)
+
+### Server Database Object
+
+  + `id`: `invasion` - Database ID. `null` if not a ranked server
+  + `name`: `Invasion` - Database name. `null` if not a ranked server
+
+### Server Mode Simple Object
+
+  + `id`: `COOP` (required) - Server mode ID (game mode)
+  + `name`: `Coop.` (required) - Server mode name (game mode)
+
+### Server Mode Full Object (Server Mode Simple Object)
+
+  + `name_long`: `Cooperation` (required) - Long server mode name (game mode)
+
 ### Server Players Simple Object
 
   + `current`: `20` (number, required) - Number of current players
@@ -30,12 +49,9 @@
 ### Server Simple Object
 
   + `name`: `InvasionEU2` (required) - Server name
-  + `type_id`: `vanilla` (required) - Server type ID (used mod or DLC)
-  + `type_name`: `Vanilla` (required) - Server type name (used mod or DLC)
-  + `mode_id`: `COOP` (required) - Server mode ID (game mode)
-  + `mode_name`: `Coop.` (required) - Server mode name (game mode)
-  + `database_id`: `invasion` - Database ID. `null` if not a ranked server
-  + `database_name`: `Invasion` - Database name. `null` if not a ranked server
+  + `type` (Server Type Object, required) - Server type
+  + `mode` (Server Mode Simple Object, required) - Server mode
+  + `database` (Server Database Object, required) - Server used database
   + `is_ranked`: `true` (boolean, required) - Whether this server is an official one
   + `website_url`: `https://runningwithrifles.com/` - Server website URL. `null` if none
     + Default: `null`
@@ -47,9 +63,9 @@
 ### Server Full Object (Server Simple Object)
 
   + `map` (Server Map Full Object, required) - Server map
+  + `mode` (Server Mode Full Object, required) - Server mode
   + `version`: `1.70.2` (required) - Server game version
     + Default: `null`
-  + `mode_name_long`: `Cooperation` (required) - Long server mode name (game mode)
   + `is_dedicated`: `true` (boolean, required) - Whether this server is a dedicated one
   + `comment`: `Coop campaign` - Server comment. `null` if none
     + Default: `null`
