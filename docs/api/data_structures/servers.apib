@@ -49,13 +49,15 @@
 ### Server Simple Object
 
   + `name`: `InvasionEU2` (required) - Server name
-  + `type` (Server Type Object, required) - Server type
-  + `mode` (Server Mode Simple Object, required) - Server mode
-  + `database` (Server Database Object, required) - Server used database
+  + `ip`: `31.186.250.67` (required) - Server IP address
+  + `port`: `1235` (required) - Server port
   + `is_ranked`: `true` (boolean, required) - Whether this server is an official one
   + `website_url`: `https://runningwithrifles.com/` - Server website URL. `null` if none
     + Default: `null`
   + `url`: `https://rwrstats.com/servers/31.186.250.67:1235/invasioneu2` (required) - RWRS server web page URL
+  + `type` (Server Type Object, required) - Server type
+  + `mode` (Server Mode Simple Object, required) - Server mode
+  + `database` (Server Database Object, required) - Server used database
   + `map` (Server Map Simple Object, required) - Server map
   + `players` (Server Players Simple Object, required) - Server players
   + `location` (Server Location Object, required) - Server location
@@ -63,13 +65,13 @@
 ### Server Full Object (Server Simple Object)
 
   + `map` (Server Map Full Object, required) - Server map
-  + `mode` (Server Mode Full Object, required) - Server mode
   + `version`: `1.70.2` (required) - Server game version
     + Default: `null`
   + `is_dedicated`: `true` (boolean, required) - Whether this server is a dedicated one
   + `comment`: `Coop campaign` - Server comment. `null` if none
     + Default: `null`
   + `bots`: `104` (number, required) - Number of current bots
+  + `mode` (Server Mode Full Object, required) - Server mode
   + `players` (Server Players Full Object, required) - Server players
 
 ### Error Response

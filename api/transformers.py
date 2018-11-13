@@ -50,12 +50,14 @@ server_mode_full.update(OrderedDict([
 
 server_simple = OrderedDict([
     ('name', fields.String),
-    ('type', fields.Nested(server_type, attribute=lambda server: server)),
-    ('mode', fields.Nested(server_mode_simple, attribute=lambda server: server)),
-    ('database', fields.Nested(server_database, attribute=lambda server: server)),
+    ('ip', fields.String),
+    ('port', fields.Integer),
     ('is_ranked', fields.Boolean),
     ('website_url', fields.String(attribute='website')),
     ('url', fields.String(attribute='link_absolute')),
+    ('type', fields.Nested(server_type, attribute=lambda server: server)),
+    ('mode', fields.Nested(server_mode_simple, attribute=lambda server: server)),
+    ('database', fields.Nested(server_database, attribute=lambda server: server)),
     ('map', fields.Nested(server_map_simple)),
     ('players', fields.Nested(server_players_simple)),
     ('location', fields.Nested(server_location)),
@@ -63,11 +65,11 @@ server_simple = OrderedDict([
 
 server_full = server_simple.copy()
 server_full.update(OrderedDict([
-    ('mode', fields.Nested(server_mode_full, attribute=lambda server: server)),
     ('version', fields.String),
     ('is_dedicated', fields.Boolean),
     ('comment', fields.String),
     ('bots', fields.Integer),
+    ('mode', fields.Nested(server_mode_full, attribute=lambda server: server)),
     ('map', fields.Nested(server_map_full)),
     ('players', fields.Nested(server_players_full)),
 ]))
