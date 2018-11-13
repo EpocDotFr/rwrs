@@ -52,6 +52,13 @@ class Server:
                     with app.app_context():
                         ret.map.set_preview_image_urls(ret.type)
 
+            if ret.map.has_minimap:
+                if current_app:
+                    ret.map.set_minimap_image_urls(ret.type)
+                else:
+                    with app.app_context():
+                        ret.map.set_minimap_image_urls(ret.type)
+
         ret.map.name_display = ret.map.name if ret.map.name else ret.map.id
 
         ret.bots = int(bots_node.text)
@@ -179,6 +186,18 @@ class ServerMap:
 
         self.preview = url_for('static', filename=preview_url)
         self.preview_absolute = url_for('static', filename=preview_url, _external=True)
+
+    def set_minimap_image_urls(self, game_type):
+        """Set the relative and absolute URLs to the minimap image of this map."""
+        params = {
+            'game_type': game_type,
+            'map_id': self.id
+        }
+
+        minimap_url = 'images/maps/minimap/{game_type}/{map_id}.png'.format(**params)
+
+        self.minimap = url_for('static', filename=minimap_url)
+        self.minimap_absolute = url_for('static', filename=minimap_url, _external=True)
 
 
 class ServerPlayers:

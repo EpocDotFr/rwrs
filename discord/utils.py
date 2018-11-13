@@ -181,6 +181,10 @@ def create_server_message_embed(server, username_to_highlight=None):
         embed.set_thumbnail(
             url=server.map.preview_absolute
         )
+    elif server.map.has_minimap:
+        embed.set_thumbnail(
+            url=server.map.minimap_absolute
+        )
 
     embed.add_field(
         name='Players count',

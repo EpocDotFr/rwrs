@@ -32,7 +32,7 @@
 
 {% set canonical_url = server.link_absolute %}
 
-{% set meta_image = server.map.preview_absolute if server.map.has_preview %}
+{% set meta_image = server.map.preview_absolute if server.map.has_preview else server.map.minimap_absolute if server.map.has_minimap %}
 
 {% block content %}
     <p class="txtcenter mbs">
@@ -142,7 +142,7 @@
                 {% if server.map.has_minimap %}
                     <tr>
                         <td class="txtcenter">
-                            <a href="{{ url_for('static', filename='images/maps/minimap/{game_type}/{map_id}.png'.format(game_type=server.type, map_id=server.map.id)) }}"><img src="{{ url_for('static', filename='images/maps/minimap/{game_type}/{map_id}_thumb.png'.format(game_type=server.type, map_id=server.map.id)) }}"></a>
+                            <a href="{{ url_for('static', filename=server.map.minimap) }}"><img src="{{ url_for('static', filename='images/maps/minimap/{game_type}/{map_id}_thumb.png'.format(game_type=server.type, map_id=server.map.id)) }}"></a>
                         </td>
                     </tr>
                 {% endif %}

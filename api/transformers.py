@@ -10,6 +10,7 @@ server_map_simple = OrderedDict([
 server_map_full = server_map_simple.copy()
 server_map_full.update(OrderedDict([
     ('preview_image_url', fields.String(attribute='preview_absolute')),
+    ('minimap_image_url', fields.String(attribute='minimap_absolute')),
 ]))
 
 server_location = OrderedDict([
