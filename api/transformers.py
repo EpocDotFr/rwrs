@@ -4,6 +4,10 @@ from flask_restful import fields
 player = OrderedDict([
     ('username', fields.String),
     ('url', fields.String(attribute='link_absolute')),
+    ('is_rwrs_creator', fields.Boolean(attribute='is_me')),
+    ('is_contributor', fields.Boolean),
+    ('is_rwr_dev', fields.Boolean),
+    ('is_ranked_servers_admin', fields.Boolean),
 ])
 
 server_map_simple = OrderedDict([
