@@ -137,25 +137,25 @@ This resource has a cache lifetime of **1 minute**.
 
     An empty list is returned if no Servers were found.
 
-    + Attributes (array[Server Simple Object])
+    + Attributes (array[Server Simple Object], fixed-type)
 
 + Response 400 (application/json)
 
     One or more arguments are (is) invalid. Check the error message(s) for more information.
 
-    + Attributes (Error Response)
+    + Attributes (Error Response, fixed-type)
 
 + Response 403 (application/json)
 
     Invalid token or token not provided.
 
-    + Attributes (Error Response)
+    + Attributes (Error Response, fixed-type)
 
 + Response 503 (application/json)
 
     Maintenance in progress.
 
-    + Attributes (Error Response)
+    + Attributes (Error Response, fixed-type)
 
 ## Server object [/servers/{ip}:{port}]
 
@@ -181,22 +181,22 @@ This resource has a cache lifetime of **1 minute**.
 
 + Response 200 (application/json)
 
-    + Attributes (Server Full Object)
+    + Attributes (Server Full Object, fixed-type)
 
 + Response 404 (application/json)
 
     The Server wasn't found.
 
-    + Attributes (Error Response)
+    + Attributes (Error Response, fixed-type)
 
 + Response 403 (application/json)
 
     Invalid token or token not provided.
 
-    + Attributes (Error Response)
+    + Attributes (Error Response, fixed-type)
 
 + Response 503 (application/json)
 
     Maintenance in progress.
 
-    + Attributes (Error Response)
+    + Attributes (Error Response, fixed-type)
