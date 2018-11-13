@@ -1,6 +1,10 @@
 from collections import OrderedDict
 from flask_restful import fields
 
+player = OrderedDict([
+    ('username', fields.String),
+    ('url', fields.String(attribute='link_absolute')),
+])
 
 server_map_simple = OrderedDict([
     ('id', fields.String),
@@ -26,7 +30,7 @@ server_players_simple = OrderedDict([
 
 server_players_full = server_players_simple.copy()
 server_players_full.update(OrderedDict([
-    ('list', fields.List(fields.String)),
+    ('list', fields.List(fields.Nested(player))), # Player usernames are replaced by objects in the API controller
 ]))
 
 server_type = OrderedDict([

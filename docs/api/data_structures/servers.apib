@@ -1,9 +1,7 @@
-## Data Structures
-
 ### Server Map Simple Object
 
   + `id`: `map10` (required) - Map ID. **Not unique**: must be used in conjonction of the mode ID
-  + `name`: `Railroad Gap` (required) - Map name. If unknown, its internal ID will be used
+  + `name`: `Railroad Gap` (required) - Map name. If unknown, `id` will be used
 
 ### Server Map Full Object (Server Map Simple Object)
 
@@ -27,16 +25,20 @@
 ### Server Database Object
 
   + `id`: `invasion` - Database ID. `null` if not a ranked server
+    + Default: `null`
   + `name`: `Invasion` - Database name. `null` if not a ranked server
+    + Default: `null`
 
 ### Server Mode Simple Object
 
-  + `id`: `COOP` (required) - Server mode ID (game mode)
+  + `id`: `COOP` - Server mode ID (game mode). `null` if unknown
+    + Default: `null`
   + `name`: `Coop.` (required) - Server mode name (game mode)
 
 ### Server Mode Full Object (Server Mode Simple Object)
 
-  + `name_long`: `Cooperation` (required) - Long server mode name (game mode)
+  + `name_long`: `Cooperation` - Long server mode name (game mode). `null` if unknown
+    + Default: `null`
 
 ### Server Players Simple Object
 
@@ -46,7 +48,7 @@
 
 ### Server Players Full Object (Server Players Simple Object)
 
-  + `list`: `EPOCDOTFR`, `JACKMAYOL`, `PASIK` (array[string], required) - List of current players
+  + `list` (array[Player Simple Object], required) - List of current players
 
 ### Server Simple Object
 
@@ -56,7 +58,7 @@
   + `is_ranked`: `true` (boolean, required) - Whether this server is an official one
   + `website_url`: `https://runningwithrifles.com/` - Server website URL. `null` if none
     + Default: `null`
-  + `url`: `https://rwrstats.com/servers/31.186.250.67:1235/invasioneu2` (required) - RWRS server web page URL
+  + `url`: `https://rwrstats.com/servers/31.186.250.67:1235/invasioneu2` (required) - RWRS server page URL
   + `type` (Server Type Object, required) - Server type
   + `mode` (Server Mode Simple Object, required) - Server mode
   + `database` (Server Database Object, required) - Server used database

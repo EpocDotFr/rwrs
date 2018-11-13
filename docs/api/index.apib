@@ -11,7 +11,9 @@ To prevent abuse, an API token is **required** to use this API. [Contact me](htt
 private** (Discord is the preferred way) with a short message explaining what do you plan to create, the purpose of
 your project along its name.
 
-Details about how to use this token follows below.
+::: warning
+You are **required** to mention somewhere in your project - in a visible manner - that you're using the RWRS REST API.
+:::
 
 ## Endpoint
 
@@ -50,8 +52,7 @@ The HTTP response status code must be used to check if the sent request was succ
   - `5xx` There were a server error
 
 ::: note
-The RWRS REST API doesn't provide internal error codes, but instead tries to make a meaningful use of HTTP status
-codes.
+The RWRS REST API doesn't provide internal error codes, but instead tries to make a meaningful use of HTTP status codes.
 :::
 
 ## Input & output data format
@@ -107,5 +108,9 @@ Example:
 }
 ```
 
+## Data Structures
+
+<!-- include(data_structures/players.apib) -->
 <!-- include(data_structures/servers.apib) -->
+
 <!-- include(resources/servers.apib) -->
