@@ -5,16 +5,16 @@
 
 ### Server Map Full Object (Server Map Simple Object)
 
-  + `preview_image_url`: `https://rwrstats.com/images/maps/preview/vanilla/map10.png` - Map preview image URL. `null` if none available
+  + `preview_image_url`: `https://rwrstats.com/images/maps/preview/vanilla/map10.png` (nullable) - Map preview image URL. `null` if none available
     + Default: `null`
-  + `minimap_image_url`: `https://rwrstats.com/images/maps/minimap/vanilla/map10.png` - Mapview image URL. `null` if none available
+  + `minimap_image_url`: `https://rwrstats.com/images/maps/minimap/vanilla/map10.png` (nullable) - Mapview image URL. `null` if none available
     + Default: `null`
 
 ### Server Location Object
 
-  + `name`: `Frankfurt am Main, Germany` - City name (if available) + country name of the server location. `null` if unknown
+  + `name`: `Frankfurt am Main, Germany` (nullable) - City name (if available) + country name of the server location. `null` if unknown
     + Default: `null`
-  + `country_code`: `de` - ISO 3166-1 alpha-2 country code of the server location. `null` if unknown
+  + `country_code`: `de` (nullable) - ISO 3166-1 alpha-2 country code of the server location. `null` if unknown
     + Default: `null`
 
 ### Server Type Object
@@ -24,20 +24,20 @@
 
 ### Server Database Object
 
-  + `id`: `invasion` - Database ID. `null` if not a ranked server
+  + `id`: `invasion` (nullable) - Database ID. `null` if not a ranked server
     + Default: `null`
-  + `name`: `Invasion` - Database name. `null` if not a ranked server
+  + `name`: `Invasion` (nullable) - Database name. `null` if not a ranked server
     + Default: `null`
 
 ### Server Mode Simple Object
 
-  + `id`: `COOP` - Server mode ID (game mode). `null` if unknown
+  + `id`: `COOP` (nullable) - Server mode ID (game mode). `null` if unknown
     + Default: `null`
   + `name`: `Coop.` (required) - Server mode name (game mode)
 
 ### Server Mode Full Object (Server Mode Simple Object)
 
-  + `name_long`: `Cooperation` - Long server mode name (game mode). `null` if unknown
+  + `name_long`: `Cooperation` (nullable) - Long server mode name (game mode). `null` if unknown
     + Default: `null`
 
 ### Server Players Simple Object
@@ -56,7 +56,7 @@
   + `ip`: `31.186.250.67` (required) - Server IP address
   + `port`: `1235` (number, required) - Server port
   + `is_ranked`: `true` (boolean, required) - Whether this server is an official one
-  + `website_url`: `https://runningwithrifles.com/` - Server website URL. `null` if none
+  + `website_url`: `https://runningwithrifles.com/` (nullable) - Server website URL. `null` if none
     + Default: `null`
   + `url`: `https://rwrstats.com/servers/31.186.250.67:1235/invasioneu2` (required) - RWRS server page URL
   + `type` (Server Type Object, required) - Server type
@@ -70,9 +70,8 @@
 
   + `map` (Server Map Full Object, required) - Server map
   + `version`: `1.70.2` (required) - Server game version
-    + Default: `null`
   + `is_dedicated`: `true` (boolean, required) - Whether this server is a dedicated one
-  + `comment`: `Coop campaign` - Server comment. `null` if none
+  + `comment`: `Coop campaign` (nullable) - Server comment. `null` if none
     + Default: `null`
   + `bots`: `104` (number, required) - Number of current bots
   + `mode` (Server Mode Full Object, required) - Server mode

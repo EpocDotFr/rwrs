@@ -335,7 +335,10 @@ account <strong>only</strong> if it is present in the query string.</p>
         "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Whether this server is an official one"</span>
       </span>}</span>,
       "<span class="hljs-attribute">website_url</span>": <span class="hljs-value">{
-        "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
+        "<span class="hljs-attribute">type</span>": <span class="hljs-value">[
+          <span class="hljs-string">"string"</span>,
+          <span class="hljs-string">"null"</span>
+        ]</span>,
         "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Server website URL. `null` if none"</span></span>,
         "<span class="hljs-attribute">default</span>": <span class="hljs-value"><span class="hljs-string">"null"</span>
       </span>}</span>,
@@ -365,7 +368,10 @@ account <strong>only</strong> if it is present in the query string.</p>
         "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"object"</span></span>,
         "<span class="hljs-attribute">properties</span>": <span class="hljs-value">{
           "<span class="hljs-attribute">id</span>": <span class="hljs-value">{
-            "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
+            "<span class="hljs-attribute">type</span>": <span class="hljs-value">[
+              <span class="hljs-string">"string"</span>,
+              <span class="hljs-string">"null"</span>
+            ]</span>,
             "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Server mode ID (game mode). `null` if unknown"</span></span>,
             "<span class="hljs-attribute">default</span>": <span class="hljs-value"><span class="hljs-string">"null"</span>
           </span>}</span>,
@@ -383,12 +389,18 @@ account <strong>only</strong> if it is present in the query string.</p>
         "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"object"</span></span>,
         "<span class="hljs-attribute">properties</span>": <span class="hljs-value">{
           "<span class="hljs-attribute">id</span>": <span class="hljs-value">{
-            "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
+            "<span class="hljs-attribute">type</span>": <span class="hljs-value">[
+              <span class="hljs-string">"string"</span>,
+              <span class="hljs-string">"null"</span>
+            ]</span>,
             "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Database ID. `null` if not a ranked server"</span></span>,
             "<span class="hljs-attribute">default</span>": <span class="hljs-value"><span class="hljs-string">"null"</span>
           </span>}</span>,
           "<span class="hljs-attribute">name</span>": <span class="hljs-value">{
-            "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
+            "<span class="hljs-attribute">type</span>": <span class="hljs-value">[
+              <span class="hljs-string">"string"</span>,
+              <span class="hljs-string">"null"</span>
+            ]</span>,
             "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Database name. `null` if not a ranked server"</span></span>,
             "<span class="hljs-attribute">default</span>": <span class="hljs-value"><span class="hljs-string">"null"</span>
           </span>}
@@ -440,12 +452,18 @@ account <strong>only</strong> if it is present in the query string.</p>
         "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"object"</span></span>,
         "<span class="hljs-attribute">properties</span>": <span class="hljs-value">{
           "<span class="hljs-attribute">name</span>": <span class="hljs-value">{
-            "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
+            "<span class="hljs-attribute">type</span>": <span class="hljs-value">[
+              <span class="hljs-string">"string"</span>,
+              <span class="hljs-string">"null"</span>
+            ]</span>,
             "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"City name (if available) + country name of the server location. `null` if unknown"</span></span>,
             "<span class="hljs-attribute">default</span>": <span class="hljs-value"><span class="hljs-string">"null"</span>
           </span>}</span>,
           "<span class="hljs-attribute">country_code</span>": <span class="hljs-value">{
-            "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
+            "<span class="hljs-attribute">type</span>": <span class="hljs-value">[
+              <span class="hljs-string">"string"</span>,
+              <span class="hljs-string">"null"</span>
+            ]</span>,
             "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"ISO 3166-1 alpha-2 country code of the server location. `null` if unknown"</span></span>,
             "<span class="hljs-attribute">default</span>": <span class="hljs-value"><span class="hljs-string">"null"</span>
           </span>}
@@ -592,7 +610,10 @@ account <strong>only</strong> if it is present in the query string.</p>
       "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Whether this server is an official one"</span>
     </span>}</span>,
     "<span class="hljs-attribute">website_url</span>": <span class="hljs-value">{
-      "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
+      "<span class="hljs-attribute">type</span>": <span class="hljs-value">[
+        <span class="hljs-string">"string"</span>,
+        <span class="hljs-string">"null"</span>
+      ]</span>,
       "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Server website URL. `null` if none"</span></span>,
       "<span class="hljs-attribute">default</span>": <span class="hljs-value"><span class="hljs-string">"null"</span>
     </span>}</span>,
@@ -622,7 +643,10 @@ account <strong>only</strong> if it is present in the query string.</p>
       "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"object"</span></span>,
       "<span class="hljs-attribute">properties</span>": <span class="hljs-value">{
         "<span class="hljs-attribute">id</span>": <span class="hljs-value">{
-          "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
+          "<span class="hljs-attribute">type</span>": <span class="hljs-value">[
+            <span class="hljs-string">"string"</span>,
+            <span class="hljs-string">"null"</span>
+          ]</span>,
           "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Server mode ID (game mode). `null` if unknown"</span></span>,
           "<span class="hljs-attribute">default</span>": <span class="hljs-value"><span class="hljs-string">"null"</span>
         </span>}</span>,
@@ -631,7 +655,10 @@ account <strong>only</strong> if it is present in the query string.</p>
           "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Server mode name (game mode)"</span>
         </span>}</span>,
         "<span class="hljs-attribute">name_long</span>": <span class="hljs-value">{
-          "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
+          "<span class="hljs-attribute">type</span>": <span class="hljs-value">[
+            <span class="hljs-string">"string"</span>,
+            <span class="hljs-string">"null"</span>
+          ]</span>,
           "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Long server mode name (game mode). `null` if unknown"</span></span>,
           "<span class="hljs-attribute">default</span>": <span class="hljs-value"><span class="hljs-string">"null"</span>
         </span>}
@@ -645,12 +672,18 @@ account <strong>only</strong> if it is present in the query string.</p>
       "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"object"</span></span>,
       "<span class="hljs-attribute">properties</span>": <span class="hljs-value">{
         "<span class="hljs-attribute">id</span>": <span class="hljs-value">{
-          "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
+          "<span class="hljs-attribute">type</span>": <span class="hljs-value">[
+            <span class="hljs-string">"string"</span>,
+            <span class="hljs-string">"null"</span>
+          ]</span>,
           "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Database ID. `null` if not a ranked server"</span></span>,
           "<span class="hljs-attribute">default</span>": <span class="hljs-value"><span class="hljs-string">"null"</span>
         </span>}</span>,
         "<span class="hljs-attribute">name</span>": <span class="hljs-value">{
-          "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
+          "<span class="hljs-attribute">type</span>": <span class="hljs-value">[
+            <span class="hljs-string">"string"</span>,
+            <span class="hljs-string">"null"</span>
+          ]</span>,
           "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Database name. `null` if not a ranked server"</span></span>,
           "<span class="hljs-attribute">default</span>": <span class="hljs-value"><span class="hljs-string">"null"</span>
         </span>}
@@ -669,12 +702,18 @@ account <strong>only</strong> if it is present in the query string.</p>
           "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Map name. If unknown, `id` will be used"</span>
         </span>}</span>,
         "<span class="hljs-attribute">preview_image_url</span>": <span class="hljs-value">{
-          "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
+          "<span class="hljs-attribute">type</span>": <span class="hljs-value">[
+            <span class="hljs-string">"string"</span>,
+            <span class="hljs-string">"null"</span>
+          ]</span>,
           "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Map preview image URL. `null` if none available"</span></span>,
           "<span class="hljs-attribute">default</span>": <span class="hljs-value"><span class="hljs-string">"null"</span>
         </span>}</span>,
         "<span class="hljs-attribute">minimap_image_url</span>": <span class="hljs-value">{
-          "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
+          "<span class="hljs-attribute">type</span>": <span class="hljs-value">[
+            <span class="hljs-string">"string"</span>,
+            <span class="hljs-string">"null"</span>
+          ]</span>,
           "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Mapview image URL. `null` if none available"</span></span>,
           "<span class="hljs-attribute">default</span>": <span class="hljs-value"><span class="hljs-string">"null"</span>
         </span>}
@@ -717,12 +756,18 @@ account <strong>only</strong> if it is present in the query string.</p>
       "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"object"</span></span>,
       "<span class="hljs-attribute">properties</span>": <span class="hljs-value">{
         "<span class="hljs-attribute">name</span>": <span class="hljs-value">{
-          "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
+          "<span class="hljs-attribute">type</span>": <span class="hljs-value">[
+            <span class="hljs-string">"string"</span>,
+            <span class="hljs-string">"null"</span>
+          ]</span>,
           "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"City name (if available) + country name of the server location. `null` if unknown"</span></span>,
           "<span class="hljs-attribute">default</span>": <span class="hljs-value"><span class="hljs-string">"null"</span>
         </span>}</span>,
         "<span class="hljs-attribute">country_code</span>": <span class="hljs-value">{
-          "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
+          "<span class="hljs-attribute">type</span>": <span class="hljs-value">[
+            <span class="hljs-string">"string"</span>,
+            <span class="hljs-string">"null"</span>
+          ]</span>,
           "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"ISO 3166-1 alpha-2 country code of the server location. `null` if unknown"</span></span>,
           "<span class="hljs-attribute">default</span>": <span class="hljs-value"><span class="hljs-string">"null"</span>
         </span>}
@@ -731,15 +776,17 @@ account <strong>only</strong> if it is present in the query string.</p>
     </span>}</span>,
     "<span class="hljs-attribute">version</span>": <span class="hljs-value">{
       "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
-      "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Server game version"</span></span>,
-      "<span class="hljs-attribute">default</span>": <span class="hljs-value"><span class="hljs-string">"null"</span>
+      "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Server game version"</span>
     </span>}</span>,
     "<span class="hljs-attribute">is_dedicated</span>": <span class="hljs-value">{
       "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"boolean"</span></span>,
       "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Whether this server is a dedicated one"</span>
     </span>}</span>,
     "<span class="hljs-attribute">comment</span>": <span class="hljs-value">{
-      "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
+      "<span class="hljs-attribute">type</span>": <span class="hljs-value">[
+        <span class="hljs-string">"string"</span>,
+        <span class="hljs-string">"null"</span>
+      ]</span>,
       "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Server comment. `null` if none"</span></span>,
       "<span class="hljs-attribute">default</span>": <span class="hljs-value"><span class="hljs-string">"null"</span>
     </span>}</span>,
