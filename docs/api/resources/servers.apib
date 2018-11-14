@@ -113,10 +113,10 @@ A Server represent a public multiplayer Running With Rifles game.
         - `PvPvE` - Player versus player versus environment
 
       + Default: `any`
-  + `dedicated`: `yes` (optional) - Whether to filter dedicated servers only. `yes` to enable this filter. Any other value will throw an error. Do not send to disable this criteria
-  + `ranked`: `yes` (optional) - Whether to filter official servers only. `yes` to enable this filter. Any other value will throw an error. Do not send to disable this criteria
-  + `not_empty`: `yes` (optional) - Whether to filter non-empty servers only. `yes` to enable this filter. Any other value will throw an error. Do not send to disable this criteria
-  + `not_full`: `yes` (optional) - Whether to filter non-full servers only. `yes` to enable this filter. Any other value will throw an error. Do not send to disable this criteria
+  + `dedicated`: `yes` (optional) - Whether to filter dedicated servers only. `yes` to enable this filter. Any other value will be ignored and thus disable this filter
+  + `ranked`: `yes` (optional) - Whether to filter official servers only. `yes` to enable this filter. Any other value will be ignored and thus disable this filter
+  + `not_empty`: `yes` (optional) - Whether to filter non-empty servers only. `yes` to enable this filter. Any other value will be ignored and thus disable this filter
+  + `not_full`: `yes` (optional) - Whether to filter non-full servers only. `yes` to enable this filter. Any other value will be ignored and thus disable this filter
   + `limit`: `10` (number, optional) - Return the _n_ first servers of the filtered list
 
 ### Get Servers [GET]

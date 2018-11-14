@@ -23,13 +23,6 @@ def location(value):
 
     return value
 
-
-def boolean(value):
-    if value != 'yes':
-        raise ValueError('The only valid value is "yes"')
-
-    return value
-
 maps_choices = ['any']
 maps_choices.extend(rwr.constants.VALID_MAPS)
 
@@ -45,8 +38,8 @@ get_servers_list.add_argument('location', location='args', type=location, defaul
 get_servers_list.add_argument('map', location='args', choices=maps_choices, default='any')
 get_servers_list.add_argument('type', location='args', choices=types_choices, default='any')
 get_servers_list.add_argument('mode', location='args', choices=modes_choices, default='any')
-get_servers_list.add_argument('dedicated', location='args', type=boolean)
-get_servers_list.add_argument('ranked', location='args', type=boolean)
-get_servers_list.add_argument('not_empty', location='args', type=boolean)
-get_servers_list.add_argument('not_full', location='args', type=boolean)
+get_servers_list.add_argument('dedicated', location='args')
+get_servers_list.add_argument('ranked', location='args')
+get_servers_list.add_argument('not_empty', location='args')
+get_servers_list.add_argument('not_full', location='args')
 get_servers_list.add_argument('limit', location='args', type=int)
