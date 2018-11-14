@@ -741,6 +741,46 @@ account <strong>only</strong> if it is present in the query string.</p>
         </span>}</span>,
         "<span class="hljs-attribute">list</span>": <span class="hljs-value">{
           "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"array"</span></span>,
+          "<span class="hljs-attribute">items</span>": <span class="hljs-value">{
+            "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"object"</span></span>,
+            "<span class="hljs-attribute">properties</span>": <span class="hljs-value">{
+              "<span class="hljs-attribute">username</span>": <span class="hljs-value">{
+                "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
+                "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Player username"</span>
+              </span>}</span>,
+              "<span class="hljs-attribute">url</span>": <span class="hljs-value">{
+                "<span class="hljs-attribute">type</span>": <span class="hljs-value">[
+                  <span class="hljs-string">"string"</span>,
+                  <span class="hljs-string">"null"</span>
+                ]</span>,
+                "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"RWRS player profile page URL. `null` if the player isn't playing on a ranked (official) server"</span></span>,
+                "<span class="hljs-attribute">default</span>": <span class="hljs-value"><span class="hljs-string">"null"</span>
+              </span>}</span>,
+              "<span class="hljs-attribute">is_rwrs_creator</span>": <span class="hljs-value">{
+                "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"boolean"</span></span>,
+                "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Whether this player is the creator of RWRS"</span>
+              </span>}</span>,
+              "<span class="hljs-attribute">is_contributor</span>": <span class="hljs-value">{
+                "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"boolean"</span></span>,
+                "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Whether this player contributed in a way or another to RWRS"</span>
+              </span>}</span>,
+              "<span class="hljs-attribute">is_rwr_dev</span>": <span class="hljs-value">{
+                "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"boolean"</span></span>,
+                "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Whether this player is one of the RWR developers"</span>
+              </span>}</span>,
+              "<span class="hljs-attribute">is_ranked_servers_admin</span>": <span class="hljs-value">{
+                "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"boolean"</span></span>,
+                "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Whether this player is admin on ranked (official) servers"</span>
+              </span>}
+            </span>}</span>,
+            "<span class="hljs-attribute">required</span>": <span class="hljs-value">[
+              <span class="hljs-string">"username"</span>,
+              <span class="hljs-string">"is_rwrs_creator"</span>,
+              <span class="hljs-string">"is_contributor"</span>,
+              <span class="hljs-string">"is_rwr_dev"</span>,
+              <span class="hljs-string">"is_ranked_servers_admin"</span>
+            ]
+          </span>}</span>,
           "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"List of current players"</span>
         </span>}
       </span>}</span>,
