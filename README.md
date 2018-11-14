@@ -56,6 +56,7 @@ More informations on the three above can be found [here](http://flask.pocoo.org/
   - `DISCORD_BOT_ADMINS` A list of Discord user IDs (snowflakes) allowed to use hidden bot commands
   - `DISCORD_BOT_GUILD_ID` A Discord guild (server) ID the bot will be allowed to listen for commands from
   - `MAX_NUM_OF_PLAYERS_TO_TRACK_STATS_FOR` How many players should RWRS track the stats for (top players storted by XP)
+  - `API_TOKENS` A set of API tokens allowed to use the API
 
 I'll let you search yourself about how to configure a web server along uWSGI.
 
@@ -164,6 +165,12 @@ More information in the script comments.
 More information in the script comments.
 
 `bash scripts/rwrs_updater.sh [TYPE, default=fast, fast|full] [DOMAIN, default=rwrstats.com]`
+
+### Generating RWRS REST API documentation
+
+More information in the script comments.
+
+`bash scripts/api_doc_generator.sh`
 
 ### Retrieve and save the players stats in DB
 

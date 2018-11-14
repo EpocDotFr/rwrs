@@ -19,3 +19,7 @@ tabulate
 matplotlib
 bugsnag[flask]
 Pillow
+Flask-RESTful
+Flask-HTTPAuth
+Flask-Limiter
+iso3166

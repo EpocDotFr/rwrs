@@ -4,6 +4,9 @@ import helpers
 
 
 MAPS = helpers.load_json(app.config['MAPS_DATA_FILE'])
+
+VALID_MAPS = list(set([map_id for mps in MAPS.values() for map_id in mps.keys()]))
+
 RANKS = helpers.load_json(app.config['RANKS_DATA_FILE'])
 
 SQUADMATES_STEPS_XP = 1000 # One squad mate is gained every 1000 XP
@@ -308,6 +311,8 @@ SERVER_MODES = {
     'PvPvE': {'short': 'PvPvE', 'long': 'PvPvE'}
 }
 
+VALID_SERVER_MODES = SERVER_MODES.keys()
+
 SERVER_TYPES = OrderedDict([
     ('vanilla', 'Vanilla'),
     ('vanilla.winter', 'Vanilla'),
@@ -320,6 +325,8 @@ SERVER_TYPES = OrderedDict([
     ('lab_def_koth', 'Lab Defense KOTH'),
     ('viper', 'Viper')
 ])
+
+VALID_SERVER_TYPES = SERVER_TYPES.keys()
 
 PLAYERS_LIST_DATABASES = {
     'invasion': {'name': 'Invasion', 'ranks_country': 'us', 'realm': 'official_invasion'},
@@ -374,3 +381,16 @@ class PlayersSort:
     SHOTS_FIRED = 'shots_fired'
     THROWABLES_THROWN = 'throwables_thrown'
     XP = 'rank_progression'
+
+
+CONTINENTS = OrderedDict([
+    ('af', 'Africa'),
+    ('na', 'North America'),
+    ('oc', 'Oceania'),
+    ('an', 'Antarctica'),
+    ('as', 'Asia'),
+    ('eu', 'Europe'),
+    ('sa', 'South America'),
+])
+
+VALID_CONTINENTS = CONTINENTS.keys()

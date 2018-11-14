@@ -103,3 +103,4 @@ import models
 import routes
 import commands
 import hooks
+import api

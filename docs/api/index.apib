@@ -1,0 +1,116 @@
+FORMAT: 1A
+HOST: https://rwrstats.com/api
+
+# Running With Rifles Stats REST API
+
+Documentation about the [Running With Rifles Stats (RWRS)](https://rwrstats.com/) REST API. [About RWRS](https://rwrstats.com/about)
+
+## Requesting an API token
+
+To prevent abuse, an API token is **required** to use this API. [Contact me](https://rwrstats.com/feedback) **in
+private** (Discord is the preferred way) with a short message explaining what do you plan to create, the purpose of
+your project along its name.
+
+::: warning
+You are **required** to mention somewhere in your project - in a visible manner - that you're using the RWRS REST API.
+:::
+
+## Endpoint
+
+The RWRS REST API endpoint is `https://rwrstats.com/api`.
+
+::: note
+Using HTTPS is mandatory or you'll encounter redirections (which may not be appreciated by your HTTP client).
+:::
+
+## Authentication
+
+All endpoints needs a valid API token, otherwise a [403](https://httpstatuses.com/403) HTTP status code will be returned.
+Send this HTTP header in all of your HTTP requests along your API token:
+
+```
+Authorization: Token {token}
+```
+
+## Rate limiting
+
+To prevent abuse, all resources are rate-limited. Each IP address + API token couple is limited to **1 request per
+second**. Failing to respect this rate-limiting window will lead to a [429](https://httpstatuses.com/429) HTTP status
+code.
+
+## Cache
+
+Some resources are subject to server-side caching (i.e you'll not necessarily get the most up-to-date data from the
+server). Check their respective documentation for more information.
+
+## HTTP status codes
+
+The HTTP response status code must be used to check if the sent request was successfully handled or not:
+
+  - `2xx` Everything is OK. The response body will contain whatever the resource provide (check its doc)
+  - `4xx` The client made a mistake in its request, typically it's an input parameter validation error
+  - `5xx` There were a server error
+
+::: note
+The RWRS REST API doesn't provide internal error codes, but tries to make a meaningful use of HTTP status codes instead.
+:::
+
+## Input & output data format
+
+Everything is [JSON](https://en.wikipedia.org/wiki/JSON) along a `Content-Type` HTTP header of `application/json`.
+
+### Success (2xx)
+
+The output can be different regarding the resource. Check their respective doc.
+
+### Client error (4xx)
+
+Typically an input parameters validation error:
+
+```
+{
+    "message": {
+        "blow": "Missing required parameter in the JSON body",
+        "hey": "Missing required parameter in the JSON body"
+    }
+}
+```
+
+In this case the `hey` and `blow` input parameters are missing.
+
+If a query string parameter is missing or invalid, it's the same output:
+
+```
+{
+    "message": {
+        "active": "Missing required parameter in the query string"
+    }
+}
+```
+
+May also happen in other cases like the requested resource wasn't found:
+
+```
+{
+    "message": "This thing does not exists."
+}
+```
+
+### Server error (5xx)
+
+They should not happen (exception for [503](https://httpstatuses.com/503)). If so, please [get in touch](https://rwrstats.com/feedback).
+
+Example:
+
+```
+{
+    "message": "Error creating this thing: IndexError: out of bounds"
+}
+```
+
+## Data Structures
+
+<!-- include(data_structures/players.apib) -->
+<!-- include(data_structures/servers.apib) -->
+
+<!-- include(resources/servers.apib) -->

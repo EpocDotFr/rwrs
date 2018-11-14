@@ -1,0 +1,202 @@
+# Group Servers
+
+A Server represent a public multiplayer Running With Rifles game.
+
+## Servers list [/servers{?location,map,type,mode,dedicated,ranked,not_empty,not_full,limit}]
+
++ Parameters
+  + `location`: `continent:eu` (optional)
+      Servers country or continent of residence. This criteria format is either:
+
+        - A concatenation of a **location type** and a **location code**, separated by a colon, OR
+        - Just a **country code** OR
+        - `any`
+
+      Available **location types** are:
+
+        - `continent`
+        - `country`
+
+      Available **continent codes**:
+
+        - `af` - Africa
+        - `na` - North America
+        - `oc` - Oceania
+        - `an` - Antarctica (_who knows!_)
+        - `as` - Asia
+        - `eu` - Europe
+        - `sa` - South America
+
+      **Country code** must conform to [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2).
+
+      + Default: `any`
+  + `map`: `map10` (enum[string], optional)
+      Servers map ID.
+
+       May be one of (grouped by game type for convenience):
+
+        - `any`
+        - `man_vs_world_mp`
+          - `lobby_2p` - Mvsw Lobby
+        - `pacific`
+          - `island1` - Guadalcanal
+          - `island2` - Russell Islands
+          - `island3` - Bougainville Island
+          - `island4` - Tarawa
+          - `island5` - Saipan
+          - `island6` - Iwo Jima
+          - `island7` - Downfall
+          - `island8` - Peleliu Airfield
+        - `pvp`
+          - `pvp1` - Islet Of Eflen
+        - `vanilla`
+          - `map1` - Moorland Trenches
+          - `map10` - Railroad Gap
+          - `map11` - Copehill Down
+          - `map13` - Iron Enclave
+          - `map14` - Misty Heights
+          - `map15` - Islet Of Eflen
+          - `map1_2` - Moorland Trenches V2
+          - `map2` - Keepsake Bay
+          - `map3` - Old Fort Creek
+          - `map5` - Bootleg Islands
+          - `map6` - Rattlesnake Crescent
+          - `map7` - Power Junction
+          - `map8` - Vigil Island
+          - `map9` - Black Gold Estuary
+        - `vanilla.winter`
+          - `map12` - Frozen Canyon
+          - `map4` - Fridge Valley
+        - `superhotrailroad`
+          - `map10` - Railroad Gap
+        - `Running_with_the_Dead`
+          - `rwd_map1` - Moorland Apocalypse
+        - `overlord_defense`
+          - `def_dday` - D-Day Defense
+        - `lab_defense`
+          - `def_lab` - Dark Soul Island
+        - `viper`
+          - `viper` - Viper
+        - `lab_def_koth`
+          - `def_lab_koth` - Lab Def Koth
+
+      + Default: `any`
+  + `type`: `vanilla` (enum[string], optional)
+      Servers type (used mod or DLC).
+
+      May be one of:
+
+        - `any`
+        - `vanilla` - Same as `vanilla.winter` and `pvp`
+        - `vanilla.winter` - Same as `vanilla` and `pvp`
+        - `pvp` - Same as `vanilla` and `vanilla.winter`
+        - `pacific` - RWR: PACIFIC
+        - `man_vs_world_mp` - Man vs World (MP)
+        - `Running_with_the_Dead` - Running with the Dead
+        - `overlord_defense` - Overlord Defense
+        - `lab_defense` - Lab Defense
+        - `lab_def_koth` - Lab Defense KOTH
+        - `viper` - Viper
+
+      + Default: `any`
+  + `mode`: `COOP` (enum[string], optional)
+      Servers mode (game mode). May be one of:
+
+        - `any`
+        - `COOP` - Cooperation
+        - `DOM` - Dominance
+        - `PvP` - Player versus player
+        - `PvE` - Player versus environment
+        - `PvPvE` - Player versus player versus environment
+
+      + Default: `any`
+  + `dedicated`: `yes` (optional) - Whether to filter dedicated servers only. `yes` to enable this filter. Any other value will throw an error. Do not send to disable this criteria
+  + `ranked`: `yes` (optional) - Whether to filter official servers only. `yes` to enable this filter. Any other value will throw an error. Do not send to disable this criteria
+  + `not_empty`: `yes` (optional) - Whether to filter non-empty servers only. `yes` to enable this filter. Any other value will throw an error. Do not send to disable this criteria
+  + `not_full`: `yes` (optional) - Whether to filter non-full servers only. `yes` to enable this filter. Any other value will throw an error. Do not send to disable this criteria
+  + `limit`: `10` (number, optional) - Return the _n_ first servers of the filtered list
+
+### Get Servers [GET]
+
+Return the list of Servers. The list may be optionally filtered by one or more criteria. The criteria is taken into
+account **only** if it is present in the query string.
+
+::: note
+## Server-side caching
+
+This resource has a cache lifetime of **1 minute**.
+:::
+
++ Request
+
+    + Headers
+
+            Authorization: Token {token}
+
++ Response 200 (application/json)
+
+    An empty list is returned if no Servers were found.
+
+    + Attributes (array[Server Simple Object], fixed-type)
+
++ Response 400 (application/json)
+
+    One or more arguments are (is) invalid. Check the error message(s) for more information.
+
+    + Attributes (Error Response, fixed-type)
+
++ Response 403 (application/json)
+
+    Invalid token or token not provided.
+
+    + Attributes (Error Response, fixed-type)
+
++ Response 503 (application/json)
+
+    Maintenance in progress.
+
+    + Attributes (Error Response, fixed-type)
+
+## Server object [/servers/{ip}:{port}]
+
++ Parameters
+    + ip: `31.186.250.67` - The Server IP
+    + port: `1235` (integer) - The Server port
+
+### Get a Server [GET]
+
+Return the Server corresponding to the given IP address / port couple.
+
+::: note
+## Server-side caching
+
+This resource has a cache lifetime of **1 minute**.
+:::
+
++ Request
+
+    + Headers
+
+            Authorization: Token {token}
+
++ Response 200 (application/json)
+
+    + Attributes (Server Full Object, fixed-type)
+
++ Response 404 (application/json)
+
+    The Server wasn't found.
+
+    + Attributes (Error Response, fixed-type)
+
++ Response 403 (application/json)
+
+    Invalid token or token not provided.
+
+    + Attributes (Error Response, fixed-type)
+
++ Response 503 (application/json)
+
+    Maintenance in progress.
+
+    + Attributes (Error Response, fixed-type)
