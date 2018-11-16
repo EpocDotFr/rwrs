@@ -1,6 +1,7 @@
 from flask_restful import reqparse
 import rwr.constants
 import iso3166
+import arrow
 import re
 
 _location_regex = re.compile(r'^(?:any|(?P<location_code_single>[a-zA-Z]{2})|(?P<location_type>country|continent):(?P<location_code_with_type>[a-zA-Z]{2}))$')
@@ -23,6 +24,15 @@ def location(value):
 
     return value
 
+
+def arrow_date(value):
+    try:
+        value = arrow.get(value, 'YYYY-MM-DD')
+    except Exception:
+        raise ValueError('Invalid format')
+
+    return value
+
 maps_choices = ['any']
 maps_choices.extend(rwr.constants.VALID_MAPS)
 
@@ -31,7 +41,6 @@ types_choices.extend(rwr.constants.VALID_SERVER_TYPES)
 
 modes_choices = ['any']
 modes_choices.extend(rwr.constants.VALID_SERVER_MODES)
-
 
 get_servers_list = reqparse.RequestParser(bundle_errors=True)
 get_servers_list.add_argument('location', location='args', type=location, default='any')
@@ -43,3 +52,6 @@ get_servers_list.add_argument('ranked', location='args')
 get_servers_list.add_argument('not_empty', location='args')
 get_servers_list.add_argument('not_full', location='args')
 get_servers_list.add_argument('limit', location='args', type=int)
+
+get_one_player = reqparse.RequestParser(bundle_errors=True)
+get_one_player.add_argument('date', location='args', type=arrow_date)

@@ -1,6 +1,8 @@
 from flask_restful import Resource, marshal_with, abort
+from models import RwrAccount, RwrAccountStat
 from . import api, transformers, validators
 from types import SimpleNamespace
+from rwr.player import Player
 from flask import url_for
 from rwrs import app
 import rwr.constants
@@ -10,10 +12,10 @@ import rwr.scraper
 class ServersResource(Resource):
     @marshal_with(transformers.server_simple)
     def get(self):
-        filters = validators.get_servers_list.parse_args()
+        args = validators.get_servers_list.parse_args()
 
-        if filters:
-            servers = rwr.scraper.filter_servers(**filters)
+        if args:
+            servers = rwr.scraper.filter_servers(**args)
         else:
             servers = rwr.scraper.get_servers()
 
@@ -47,10 +49,30 @@ class ServerResource(Resource):
 class PlayerResource(Resource):
     @marshal_with(transformers.player_full)
     def get(self, database, username):
-        player = rwr.scraper.search_player_by_username(database, username)
+        args = validators.get_one_player.parse_args()
 
-        if not player:
-            abort(404, message='Player not found')
+        if args['date']: # Stats history lookup mode
+            player_exist = rwr.scraper.search_player_by_username(database, username, check_exist_only=True)
+
+            if not player_exist:
+                abort(404, message='Player not found')
+
+            rwr_account = RwrAccount.get_by_type_and_username(database, username)
+
+            if not rwr_account:
+                abort(412, message='Stats history unavailable for this player')
+
+            rwr_account_stat = RwrAccountStat.get_stats_for_date(rwr_account.id, args['date'])
+
+            if not rwr_account_stat:
+                abort(412, message='No stats found for the given date')
+
+            player = Player.craft(rwr_account, rwr_account_stat)
+        else: # Live data mode
+            player = rwr.scraper.search_player_by_username(database, username)
+
+            if not player:
+                abort(404, message='Player not found')
 
         servers = rwr.scraper.get_servers()
 
