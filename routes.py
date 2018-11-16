@@ -13,8 +13,6 @@ ERROR_PLAYER_NOT_FOUND = 'Sorry, the player "{username}" wasn\'t found in the {d
 ERROR_NO_RWR_ACCOUNT = 'Sorry, stats history isn\'t recorded for {username}. He/she must be part of the {database} {max_players} most experienced players.'
 ERROR_NO_RWR_ACCOUNT_STATS = 'No stats were found for the given date for {username}. Are you sure he/she is/was part of the {database} {max_players} most experienced players?'
 
-VALID_DATABASES_STRING_LIST = ','.join(rwr.constants.VALID_DATABASES)
-
 
 @app.route('/')
 def home():
@@ -98,7 +96,7 @@ def players_list_without_db():
     return redirect(url_for('players_list', database=database), code=301)
 
 
-@app.route('/players/<any({}):database>'.format(VALID_DATABASES_STRING_LIST))
+@app.route('/players/<any({}):database>'.format(rwr.constants.VALID_DATABASES_STRING_LIST))
 def players_list(database):
     args = request.args.to_dict()
 
@@ -144,8 +142,8 @@ def player_details_without_db(username):
     return redirect(url_for('player_details', database='invasion', username=username), code=301)
 
 
-@app.route('/players/<any({}):database>/<username>'.format(VALID_DATABASES_STRING_LIST))
-@app.route('/players/<any({}):database>/<username>/<any(unlockables,evolution,"stats-history",signature):tab>'.format(VALID_DATABASES_STRING_LIST))
+@app.route('/players/<any({}):database>/<username>'.format(rwr.constants.VALID_DATABASES_STRING_LIST))
+@app.route('/players/<any({}):database>/<username>/<any(unlockables,evolution,"stats-history",signature):tab>'.format(rwr.constants.VALID_DATABASES_STRING_LIST))
 def player_details(database, username, tab=None):
     player = rwr.scraper.search_player_by_username(database, username)
 
@@ -189,12 +187,12 @@ def player_details(database, username, tab=None):
     )
 
 
-@app.route('/images/players/<username>-<any({}):database>.png'.format(VALID_DATABASES_STRING_LIST))
+@app.route('/images/players/<username>-<any({}):database>.png'.format(rwr.constants.VALID_DATABASES_STRING_LIST))
 def dynamic_player_image(username, database):
     return DynamicPlayerImage.create(database, username)
 
 
-@app.route('/popover/players/<any({}):database>/<username>'.format(VALID_DATABASES_STRING_LIST))
+@app.route('/popover/players/<any({}):database>/<username>'.format(rwr.constants.VALID_DATABASES_STRING_LIST))
 def player_popover(database, username):
     player = rwr.scraper.search_player_by_username(database, username)
 
@@ -213,9 +211,9 @@ def players_compare_without_db(username, username_to_compare_with=None):
     return redirect(url_for('players_compare', database='invasion', username=username, username_to_compare_with=username_to_compare_with), code=301)
 
 
-@app.route('/players/<any({}):database>/<username>/compare'.format(VALID_DATABASES_STRING_LIST))
-@app.route('/players/<any({}):database>/<username>/compare/<username_to_compare_with>'.format(VALID_DATABASES_STRING_LIST))
-@app.route('/players/<any({}):database>/<username>/compare/<username_to_compare_with>/<date>'.format(VALID_DATABASES_STRING_LIST))
+@app.route('/players/<any({}):database>/<username>/compare'.format(rwr.constants.VALID_DATABASES_STRING_LIST))
+@app.route('/players/<any({}):database>/<username>/compare/<username_to_compare_with>'.format(rwr.constants.VALID_DATABASES_STRING_LIST))
+@app.route('/players/<any({}):database>/<username>/compare/<username_to_compare_with>/<date>'.format(rwr.constants.VALID_DATABASES_STRING_LIST))
 def players_compare(database, username, username_to_compare_with=None, date=None):
     # Redirect to a SEO-friendly URL if the username_to_compare_with or date query parameters are detected
     if (not username_to_compare_with and request.args.get('username_to_compare_with')) or (not date and request.args.get('date')):

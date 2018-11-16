@@ -119,7 +119,7 @@ A Server represent a public multiplayer Running With Rifles game.
   + `not_full`: `yes` (optional) - Whether to filter non-full servers only. `yes` to enable this filter. Any other value will be ignored and thus disable this filter
   + `limit`: `10` (number, optional) - Return the _n_ first servers of the filtered list
 
-### Get Servers [GET]
+### Get Server list [GET]
 
 Return the list of Servers. The list may be optionally filtered by one or more criteria. The criteria is taken into
 account **only** if it is present in the query string.
@@ -166,7 +166,7 @@ This resource has a cache lifetime of **1 minute**.
     + ip: `31.186.250.67` - The Server IP
     + port: `1235` (integer) - The Server port
 
-### Get a Server [GET]
+### Get one Server [GET]
 
 Return the Server corresponding to the given IP address / port couple.
 

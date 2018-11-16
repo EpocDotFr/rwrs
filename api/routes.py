@@ -3,6 +3,7 @@ from . import api, transformers, validators
 from types import SimpleNamespace
 from flask import url_for
 from rwrs import app
+import rwr.constants
 import rwr.scraper
 
 
@@ -42,5 +43,21 @@ class ServerResource(Resource):
 
         return server
 
+
+class PlayerResource(Resource):
+    @marshal_with(transformers.player_full)
+    def get(self, database, username):
+        player = rwr.scraper.search_player_by_username(database, username)
+
+        if not player:
+            abort(404, message='Player not found')
+
+        servers = rwr.scraper.get_servers()
+
+        player.set_playing_on_server(servers)
+
+        return player
+
 api.add_resource(ServersResource, '/servers')
 api.add_resource(ServerResource, '/servers/<ip>:<int:port>')
+api.add_resource(PlayerResource, '/players/<any({}):database>/<username>'.format(rwr.constants.VALID_DATABASES_STRING_LIST))
