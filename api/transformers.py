@@ -114,6 +114,7 @@ player_rank = OrderedDict([
     ('icon_url', fields.String(attribute='icon_absolute')),
 ])
 
+# TODO Add date for player profile retrieved for a specific date / player stats history
 player_full = player_simple.copy()
 player_full.update(OrderedDict([
     ('database', fields.Nested(database, attribute=lambda player: player)),

@@ -65,7 +65,7 @@ class PlayerResource(Resource):
             rwr_account_stat = RwrAccountStat.get_stats_for_date(rwr_account.id, args['date'])
 
             if not rwr_account_stat:
-                abort(412, message='No stats found for the given date')
+                abort(404, message='No stats found for the given date')
 
             player = Player.craft(rwr_account, rwr_account_stat)
         else: # Live data mode
