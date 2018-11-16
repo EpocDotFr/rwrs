@@ -84,7 +84,6 @@ server_full.update(OrderedDict([
 ]))
 
 player_stats = OrderedDict([
-    ('leaderboard_position', fields.Integer),
     ('kills', fields.Integer),
     ('deaths', fields.Integer),
     ('score', fields.Integer),
@@ -100,6 +99,11 @@ player_stats = OrderedDict([
     ('throwables_thrown', fields.Integer),
     ('xp', fields.Integer),
 ])
+
+player_stats_list = player_stats.copy()
+player_stats_list.update(OrderedDict([
+    ('leaderboard_position', fields.Integer),
+]))
 
 player_rank = OrderedDict([
     ('id', fields.Integer),
