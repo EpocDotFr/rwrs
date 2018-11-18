@@ -42,7 +42,7 @@ types_choices.extend(rwr.constants.VALID_SERVER_TYPES)
 modes_choices = ['any']
 modes_choices.extend(rwr.constants.VALID_SERVER_MODES)
 
-get_servers_list = reqparse.RequestParser(bundle_errors=True)
+get_servers_list = reqparse.RequestParser()
 get_servers_list.add_argument('location', location='args', type=location, default='any')
 get_servers_list.add_argument('map', location='args', choices=maps_choices, default='any')
 get_servers_list.add_argument('type', location='args', choices=types_choices, default='any')
@@ -53,5 +53,5 @@ get_servers_list.add_argument('not_empty', location='args')
 get_servers_list.add_argument('not_full', location='args')
 get_servers_list.add_argument('limit', location='args', type=int)
 
-get_one_player = reqparse.RequestParser(bundle_errors=True)
+get_one_player = reqparse.RequestParser()
 get_one_player.add_argument('date', location='args', type=arrow_date)

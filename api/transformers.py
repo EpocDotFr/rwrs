@@ -1,6 +1,11 @@
 from collections import OrderedDict
 from flask_restful import fields
 
+
+class ArrowDateField(fields.Raw):
+    def format(self, value):
+        return value.format('YYYY-MM-DD') if value else None
+
 database = OrderedDict([
     ('id', fields.String(attribute='database')),
     ('name', fields.String(attribute='database_name')),
@@ -114,7 +119,6 @@ player_rank = OrderedDict([
     ('icon_url', fields.String(attribute='icon_absolute')),
 ])
 
-# TODO Add date for player profile retrieved for a specific date / player stats history
 player_full = player_simple.copy()
 player_full.update(OrderedDict([
     ('database', fields.Nested(database, attribute=lambda player: player)),
@@ -124,4 +128,5 @@ player_full.update(OrderedDict([
     ('next_rank', fields.Nested(player_rank)),
     ('xp_to_next_rank', fields.Integer),
     ('xp_percent_completion_to_next_rank', fields.Float),
+    ('date', ArrowDateField),
 ]))
