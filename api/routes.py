@@ -31,7 +31,9 @@ class ServerResource(Resource):
             is_me=player_username.lower() == app.config['MY_USERNAME'],
             is_contributor=player_username.lower() in app.config['CONTRIBUTORS'],
             is_rwr_dev=player_username.lower() in app.config['DEVS'],
-            is_ranked_servers_admin=player_username.lower() in app.config['RANKED_SERVERS_ADMINS']
+            is_ranked_servers_admin=player_username.lower() in app.config['RANKED_SERVERS_ADMINS'],
+            database=server.database,
+            database_name=server.database_name
         ) for player_username in server.players.list]
 
     @marshal_with(transformers.server_full)

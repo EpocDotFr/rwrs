@@ -18,6 +18,7 @@ player_simple = OrderedDict([
     ('is_contributor', fields.Boolean),
     ('is_rwr_dev', fields.Boolean),
     ('is_ranked_servers_admin', fields.Boolean),
+    ('database', fields.Nested(database, attribute=lambda player: player)),
 ])
 
 server_map_simple = OrderedDict([
@@ -121,12 +122,11 @@ player_rank = OrderedDict([
 
 player_full = player_simple.copy()
 player_full.update(OrderedDict([
-    ('database', fields.Nested(database, attribute=lambda player: player)),
     ('current_server', fields.Nested(server_simple, attribute='playing_on_server', allow_null=True)),
     ('stats', fields.Nested(player_stats, attribute=lambda player: player)),
     ('current_rank', fields.Nested(player_rank, attribute='rank')),
     ('next_rank', fields.Nested(player_rank)),
     ('xp_to_next_rank', fields.Integer),
     ('xp_percent_completion_to_next_rank', fields.Float),
-    ('date', ArrowDateField),
+    ('date', ArrowDateField), # Added in the API controller
 ]))
