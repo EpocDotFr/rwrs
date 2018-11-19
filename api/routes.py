@@ -70,7 +70,7 @@ class PlayerResource(Resource):
                 abort(404, message='No stats found for the given date')
 
             player = Player.craft(rwr_account, rwr_account_stat)
-            player.date = args['date']
+            player.created_at = args['date']
         else: # Live data mode
             player = rwr.scraper.search_player_by_username(database, username)
 

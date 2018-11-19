@@ -128,5 +128,5 @@ player_full.update(OrderedDict([
     ('next_rank', fields.Nested(player_rank)),
     ('xp_to_next_rank', fields.Integer),
     ('xp_percent_completion_to_next_rank', fields.Float),
-    ('date', ArrowDateField), # Added in the API controller
+    ('date', ArrowDateField(attribute='created_at')), # Added in the API controller
 ]))
