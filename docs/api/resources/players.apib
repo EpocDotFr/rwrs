@@ -1,0 +1,53 @@
+# Group Players
+
+TODO
+
+## Player object [/players/{database}/{username}]
+
++ Parameters
+    + database: `invasion` (enum[string])
+        The player's database.
+
+        May be one of:
+
+          - `invasion` - Official vanilla RWR servers
+          - `pacific` - Official Pacific DLC servers
+    + username: `EPOCDOTFR` - The player's username
+
+### Get one Player [GET]
+
+Return the Player corresponding to the given database / username couple.
+
+::: note
+## Server-side caching
+
+This resource has a cache lifetime of **1 hour**.
+:::
+
++ Request
+
+    + Headers
+
+            Authorization: Token {token}
+
++ Response 200 (application/json)
+
+        TODO
+
++ Response 404 (application/json)
+
+    The Player wasn't found.
+
+    + Attributes (Error Response, fixed-type)
+
++ Response 403 (application/json)
+
+    Invalid token or token not provided.
+
+    + Attributes (Error Response, fixed-type)
+
++ Response 503 (application/json)
+
+    Maintenance in progress.
+
+    + Attributes (Error Response, fixed-type)
