@@ -410,6 +410,7 @@ class RwrAccountStat(db.Model):
     shots_fired = db.Column(db.Integer, nullable=False)
     throwables_thrown = db.Column(db.Integer, nullable=False)
     hash = db.Column(db.String(32), nullable=False)
+    promoted_to_rank_id = db.Column(db.Integer)
     created_at = db.Column(ArrowType, default=arrow.utcnow().floor('day'), nullable=False)
 
     rwr_account_id = db.Column(db.Integer, db.ForeignKey('rwr_accounts.id'), nullable=False)
