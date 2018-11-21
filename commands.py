@@ -373,8 +373,8 @@ def save_players_stats(reset):
                     RwrAccountStat.rwr_account_id == rwr_account_stat.rwr_account_id
                 ).order_by(RwrAccountStat.created_at.desc()).first()
 
+                # Check if the player has been promoted
                 if already_existing_rwr_account_stat:
-                    # Check if the player has been promoted
                     previous_rank = rwr.utils.get_rank_from_xp(database, already_existing_rwr_account_stat.xp)
                     current_rank = rwr.utils.get_rank_from_xp(database, rwr_account_stat.xp)
 

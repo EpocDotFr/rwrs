@@ -26,8 +26,8 @@
     {%- endif %}
 {%- endmacro %}
 
-{% macro rank_image(rank, icon=False) -%}
-    <img src="{{ rank.icon if icon else rank.image }}" title="{{ rank.name }}{% if rank.alternative_name %} ({{ rank.alternative_name }}){% endif %}" class="{{ 'help' if icon }}">
+{% macro rank_image(rank, icon=False, prefix=None) -%}
+    <img src="{{ rank.icon if icon else rank.image }}" title="{{ prefix + ' ' if prefix }}{{ rank.name }}{% if rank.alternative_name %} ({{ rank.alternative_name }}){% endif %}" class="{{ 'help' if icon }}">
 {%- endmacro %}
 
 {% macro server_name(server, link=True, raw=False, no_icon=False) -%}
