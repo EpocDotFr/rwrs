@@ -222,21 +222,12 @@ class Player:
 
         next_rank_id = self.rank.id + 1
 
-        return self._get_rank_object(next_rank_id)
+        return utils.get_rank_object(self.database, next_rank_id)
 
     @memoized_property
     def rank(self):
         """Current player rank."""
-        ranks_country = constants.PLAYERS_LIST_DATABASES[self.database]['ranks_country']
-        ranks = constants.RANKS[ranks_country]
-
-        for rank_id, rank in ranks.items():
-            if rank['xp'] > self.xp:
-                break
-
-            current_rank_id = rank_id
-
-        return self._get_rank_object(int(current_rank_id))
+        return utils.get_rank_from_xp(self.database, self.xp)
 
     @memoized_property
     def xp_to_next_rank(self):
@@ -253,31 +244,6 @@ class Player:
             return None
 
         return round((self.xp * 100) / self.next_rank.xp, 2)
-
-    def _get_rank_object(self, rank_id):
-        """Return a new PlayerRank object given a rank ID."""
-        ret = PlayerRank()
-
-        ranks_country = constants.PLAYERS_LIST_DATABASES[self.database]['ranks_country']
-        ranks = constants.RANKS[ranks_country]
-
-        if str(rank_id) not in ranks:
-            return ret
-
-        ret.id = rank_id
-        ret.name = ranks[str(rank_id)]['name']
-        ret.xp = ranks[str(rank_id)]['xp']
-
-        if ranks_country == 'jp' and str(rank_id) in constants.RANKS['us']:
-            ret.alternative_name = constants.RANKS['us'][str(rank_id)]['name']
-
-        if current_app:
-            ret.set_images_and_icons(self.database)
-        else:
-            with app.app_context():
-                ret.set_images_and_icons(self.database)
-
-        return ret
 
     @memoized_property
     def unlocks(self):

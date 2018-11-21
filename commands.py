@@ -284,6 +284,7 @@ def save_players_stats(reset):
     from models import RwrAccount, RwrAccountType, RwrAccountStat
     from rwrs import db, cache
     import rwr.scraper
+    import rwr.utils
     import arrow
 
     if reset and click.confirm('Are you sure to reset all RWR accounts and stats?'):
@@ -367,12 +368,20 @@ def save_players_stats(reset):
 
                 rwr_account_stat.compute_hash()
 
-                # Get the latest RwrAccountStat object saved for this RwrAccount and check if its data is not the same
+                # Get the latest RwrAccountStat object saved for this RwrAccount
                 already_existing_rwr_account_stat = RwrAccountStat.query.filter(
                     RwrAccountStat.rwr_account_id == rwr_account_stat.rwr_account_id
                 ).order_by(RwrAccountStat.created_at.desc()).first()
 
-                if not already_existing_rwr_account_stat or already_existing_rwr_account_stat.hash != rwr_account_stat.hash:
+                if already_existing_rwr_account_stat:
+                    # Check if the player has been promoted
+                    previous_rank = rwr.utils.get_rank_from_xp(database, already_existing_rwr_account_stat.xp)
+                    current_rank = rwr.utils.get_rank_from_xp(database, rwr_account_stat.xp)
+
+                    rwr_account_stat.promoted_to_rank_id = current_rank.id if current_rank.id != previous_rank.id else None
+
+                # Check if the latest RwrAccountStats data is not the same
+                if not already_existing_rwr_account_stat or rwr_account_stat.promoted_to_rank_id or already_existing_rwr_account_stat.hash != rwr_account_stat.hash:
                     all_rwr_accounts_stat.append(rwr_account_stat)
 
             # Finally save stats for all eligible players

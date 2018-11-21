@@ -4,6 +4,7 @@ from rwrs import db, cache, app
 from sqlalchemy import func
 from enum import Enum
 import rwr.constants
+import rwr.utils
 import helpers
 import hashlib
 import arrow
@@ -469,6 +470,10 @@ class RwrAccountStat(db.Model):
             }
         else:
             return RwrAccountStat.transform_data(rwr_account_stats, column, format=None)
+
+    @memoized_property
+    def promoted_to_rank(self):
+        return rwr.utils.get_rank_object(self.rwr_account.type.value.lower(), self.promoted_to_rank_id) if self.promoted_to_rank_id else None
 
     @memoized_property
     def score(self):

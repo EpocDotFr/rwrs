@@ -1,4 +1,7 @@
+from .player import PlayerRank
+from flask import current_app
 from . import constants
+from rwrs import app
 import re
 
 
@@ -53,3 +56,42 @@ def parse_map_path(map_path):
         map_id = parsed['map_id']
 
     return server_type, map_id
+
+
+def get_rank_from_xp(database, xp):
+    ranks_country = constants.PLAYERS_LIST_DATABASES[database]['ranks_country']
+    ranks = constants.RANKS[ranks_country]
+
+    for rank_id, rank in ranks.items():
+        if rank['xp'] > xp:
+            break
+
+        current_rank_id = rank_id
+
+    return get_rank_object(database, int(current_rank_id))
+
+
+def get_rank_object(database, rank_id):
+    """Return a new PlayerRank object given a rank ID."""
+    ret = PlayerRank()
+
+    ranks_country = constants.PLAYERS_LIST_DATABASES[database]['ranks_country']
+    ranks = constants.RANKS[ranks_country]
+
+    if str(rank_id) not in ranks:
+        return ret
+
+    ret.id = rank_id
+    ret.name = ranks[str(rank_id)]['name']
+    ret.xp = ranks[str(rank_id)]['xp']
+
+    if ranks_country == 'jp' and str(rank_id) in constants.RANKS['us']:
+        ret.alternative_name = constants.RANKS['us'][str(rank_id)]['name']
+
+    if current_app:
+        ret.set_images_and_icons(database)
+    else:
+        with app.app_context():
+            ret.set_images_and_icons(database)
+
+    return ret
