@@ -521,7 +521,10 @@ select {
 /************************************************************************
  * Charts */
 
-.mg-histogram .axis text, .mg-x-axis text, .mg-y-axis text {
+.mg-histogram .axis text,
+.mg-x-axis text,
+.mg-y-axis text,
+.mg-markers text {
     fill: #fff;
     opacity: 1;
     font-size: 1.2rem;
@@ -552,6 +555,10 @@ select {
 
 .mg-missing-pane .mg-missing-background {
     display: none;
+}
+
+.mg-markers line {
+    stroke: #44b2f8;
 }
 
 /************************************************************************

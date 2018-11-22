@@ -442,8 +442,12 @@ class RwrAccountStat(db.Model):
 
     @staticmethod
     def transform_data(rows, column, format='YYYY-MM-DD'):
-        """Given a list of RwrAccountStat, convert to a list of date => number."""
-        return [{'t': row.created_at.format(format) if format else row.created_at, 'v': getattr(row, column)} for row in rows]
+        """Given a list of RwrAccountStat, convert to a list exploitable to be displayed in a chart."""
+        return [{
+            't': row.created_at.format(format) if format else row.created_at,
+            'v': getattr(row, column),
+            'ptr': row.promoted_to_rank.name if row.promoted_to_rank else None
+        } for row in rows]
 
     @staticmethod
     def get_stats_for_date(rwr_account_id, date):

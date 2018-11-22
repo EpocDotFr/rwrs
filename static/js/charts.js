@@ -25,21 +25,13 @@ chartsFeature = {
         left: 10,
         right: 15
     },
-    convertDates: function(data, format) {
-        var format = typeof format !== 'undefined' ? format : '%Y-%m-%dT%H:%M:%S';
-        var to_date_object = d3.utcParse(format);
-
-        $.each(data, function(key, value) {
-            value.t = to_date_object(value.t);
-        });
-    },
     /**
      * Initialize the charts on the Player's Evolution page.
      */
     initOnPlayerEvolution: function() {
         // K/D ratio
         if (this.player_evolution_data.ratio.length == 0) {
-            // If there's no data ti display, create a "missing data" chart
+            // If there's no data to display, create a "missing data" chart
             this.createMissingDataChart({
                 target: '#ratio-chart'
             });
@@ -51,13 +43,15 @@ chartsFeature = {
                 color: '#A4CF17',
                 x_mouseover: '%b %e, %Y ',
                 min_y_from_data: true,
-                data: this.player_evolution_data.ratio
+                data: this.player_evolution_data.ratio,
+                top: 30,
+                markers: this.getPromotionMarkers(this.player_evolution_data.ratio)
             });
         }
 
         // Score
         if (this.player_evolution_data.score.length == 0) {
-            // If there's no data ti display, create a "missing data" chart
+            // If there's no data to display, create a "missing data" chart
             this.createMissingDataChart({
                 target: '#score-chart'
             });
@@ -69,13 +63,15 @@ chartsFeature = {
                 color: '#A4CF17',
                 x_mouseover: '%b %e, %Y ',
                 min_y_from_data: true,
-                data: this.player_evolution_data.score
+                data: this.player_evolution_data.score,
+                top: 30,
+                markers: this.getPromotionMarkers(this.player_evolution_data.score)
             });
         }
 
         // Leaderboard position (by XP)
         if (this.player_evolution_data.position.length == 0) {
-            // If there's no data ti display, create a "missing data" chart
+            // If there's no data to display, create a "missing data" chart
             this.createMissingDataChart({
                 target: '#position-chart'
             });
@@ -87,7 +83,9 @@ chartsFeature = {
                 color: '#A4CF17',
                 x_mouseover: '%b %e, %Y ',
                 min_y_from_data: true,
-                data: this.player_evolution_data.position
+                data: this.player_evolution_data.position,
+                top: 30,
+                markers: this.getPromotionMarkers(this.player_evolution_data.position)
             });
         }
     },
@@ -96,7 +94,7 @@ chartsFeature = {
      */
     initOnServerDetails: function() {
         if (this.server_players_data.length == 0) {
-            // If there's no data ti display, create a "missing data" chart
+            // If there's no data to display, create a "missing data" chart
             this.createMissingDataChart({
                 target: '#server-players-chart'
             });
@@ -117,7 +115,7 @@ chartsFeature = {
     initOnHome: function() {
         // Total and online players chart
         if (this.players_data.length == 0 || (this.players_data[0].length == 0 && this.players_data[1].length == 0)) {
-            // If there's no data ti display, create a "missing data" chart
+            // If there's no data to display, create a "missing data" chart
             this.createMissingDataChart({
                 target: '#players-chart'
             });
@@ -139,7 +137,7 @@ chartsFeature = {
 
         // Online and active servers
         if (this.servers_data.length == 0 || (this.servers_data[0].length == 0 && this.servers_data[1].length == 0)) {
-            // If there's no data ti display, create a "missing data" chart
+            // If there's no data to display, create a "missing data" chart
             this.createMissingDataChart({
                 target: '#servers-chart'
             });
@@ -159,10 +157,39 @@ chartsFeature = {
             });
         }
     },
+    /**
+     * Initialize a chart with the given options.
+     */
     createChart: function(options) {
         MG.data_graphic($.extend({}, this.defaultChartOptions, options, true));
     },
+    /**
+     * Initialize a "missing data" chart with the given options.
+     */
     createMissingDataChart: function(options) {
         this.createChart($.extend({}, this.missingDataChartOptions, options, true));
+    },
+    /**
+     * Converts dates in a list of objects.
+     */
+    convertDates: function(data, format) {
+        var format = typeof format !== 'undefined' ? format : '%Y-%m-%dT%H:%M:%S';
+        var to_date_object = d3.utcParse(format);
+
+        $.each(data, function(key, item) {
+            item.t = to_date_object(item.t);
+        });
+    },
+    getPromotionMarkers: function(data) {
+        return $.map(data, function(item) {
+            if (!item.ptr) {
+                return null;
+            }
+
+            return {
+                't': item.t,
+                'label': item.ptr
+            };
+        });
     }
 };
