@@ -18,7 +18,7 @@ import matplotlib.pyplot as plt
 _time_ago_regex = re.compile(r'(?P<days_ago>\d+) day(?:s?) ago|(?P<weeks_ago>\d+) week(?:s?) ago|(?P<months_ago>\d+) month(?:s?) ago|(?P<years_ago>\d+) year(?:s?) ago')
 
 
-def create_player_message_embed(player):
+def create_player_message_embed(player, description_addendum=None):
     """Create a RWRS player rich Discord message."""
     embed = create_base_message_embed()
 
@@ -35,6 +35,9 @@ def create_player_message_embed(player):
 
     if player.is_ranked_servers_admin:
         description.append(':scales: Ranked (official) servers admin')
+
+    if description_addendum:
+        description.append(description_addendum)
 
     if description:
         embed.description = '\n'.join(description)

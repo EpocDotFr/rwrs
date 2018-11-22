@@ -192,6 +192,8 @@ class RwrsBotDiscoPlugin(Plugin):
                 return
 
             player = Player.craft(rwr_account, rwr_account_stat)
+
+            description_addendum = 'Promoted that day to ' + rwr_account_stat.promoted_to_rank.name_display if rwr_account_stat.promoted_to_rank else None
         else: # Live data mode
             player = rwr.scraper.search_player_by_username(args.database, args.username)
 
@@ -199,6 +201,8 @@ class RwrsBotDiscoPlugin(Plugin):
                 event.msg.reply('Sorry dude, this player don\'t exist :confused:')
 
                 return
+
+            description_addendum = None
 
         servers = rwr.scraper.get_servers()
 
@@ -208,7 +212,7 @@ class RwrsBotDiscoPlugin(Plugin):
             player.username_display,
             player.database_name,
             ' for **' + args.date.format('MMMM D, YYYY') + '**' if args.date else ''
-        ), embed=utils.create_player_message_embed(player))
+        ), embed=utils.create_player_message_embed(player, description_addendum=description_addendum))
 
     @Plugin.command('evolution', parser=True)
     @Plugin.parser.add_argument('username')

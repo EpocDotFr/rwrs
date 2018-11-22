@@ -317,6 +317,13 @@ class PlayerRank:
     def __repr__(self):
         return 'PlayerRank:' + self.id
 
+    @memoized_property
+    def name_display(self):
+        return '{}{}'.format(
+            self.name,
+            ' (' + self.alternative_name + ')' if self.alternative_name else ''
+        )
+
     def set_images_and_icons(self, database):
         """Set the relative and absolute URLs to the images and icon of this rank."""
         params = {

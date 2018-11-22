@@ -56,7 +56,7 @@
         <tbody>
             {% for stat in stats.items %}
                 <tr{% if stat.promoted_to_rank %} class="notice"{% endif %}>
-                    <td>{{ stat.created_at.format('MMMM D, YYYY') }}{% if stat.promoted_to_rank %} {{ macros.rank_image(stat.promoted_to_rank, icon=True, prefix='Promoted to') }}{% endif %}</td>
+                    <td>{{ stat.created_at.format('MMMM D, YYYY') }}{% if stat.promoted_to_rank %} {{ macros.rank_image(stat.promoted_to_rank, icon=True, prefix='Promoted that day to ') }}{% endif %}</td>
                     <td>{{ stat.leaderboard_position_display }}</td>
                     <td>{{ stat.xp_display }}</td>
                     <td>{{ stat.kills_display }}</td>
