@@ -180,6 +180,9 @@ chartsFeature = {
             item.t = to_date_object(item.t);
         });
     },
+    /**
+     * Get the markers which will represent when the player has been promoted.
+     */
     getPromotionMarkers: function(data) {
         return $.map(data, function(item) {
             if (!item.ptr) {

@@ -371,6 +371,12 @@ def create_evolution_chart(rwr_account_id, column, title):
         'g-'
     )
 
+    for data in player_evolution_data:
+        if not data['ptr']:
+            continue
+
+        ax.axvline(date2num(data['t'].datetime), color='b', linestyle=':', label=data['ptr'])
+
     ax.autoscale_view()
 
     ax.grid(True, which='both')
