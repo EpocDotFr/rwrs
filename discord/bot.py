@@ -191,9 +191,11 @@ class RwrsBotDiscoPlugin(Plugin):
 
                 return
 
+            rwr_account_stat.rwr_account = rwr_account # Explicitely setting the RwrAccount relation now to economize one query
+
             player = Player.craft(rwr_account, rwr_account_stat)
 
-            description_addendum = 'Promoted that day to ' + rwr_account_stat.promoted_to_rank.name_display if rwr_account_stat.promoted_to_rank else None
+            description_addendum = ':up: Promoted that day to ' + rwr_account_stat.promoted_to_rank.name_display if rwr_account_stat.promoted_to_rank else None
         else: # Live data mode
             player = rwr.scraper.search_player_by_username(args.database, args.username)
 
