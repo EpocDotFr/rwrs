@@ -347,11 +347,11 @@ def parse_date(date):
     return arrow.get(date, allowed_formats).replace(year=now.year)
 
 
-def create_evolution_chart(rwr_account_id, column, title):
+def create_evolution_chart(rwr_account, column, title):
     """Create an image containing a chart representing the evolution of a given player stat."""
     evolution_chart = BytesIO()
 
-    player_evolution_data = RwrAccountStat.get_stats_for_column(rwr_account_id, column)
+    player_evolution_data = RwrAccountStat.get_stats_for_column(rwr_account, column)
 
     fig, ax = plt.subplots()
 

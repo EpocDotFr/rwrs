@@ -392,6 +392,44 @@ def save_players_stats(reset):
 
 
 @app.cli.command()
+def compute_promotions():
+    """Compute promotions for all players."""
+    from models import RwrAccount, RwrAccountStat
+    from rwrs import db
+    import rwr.utils
+    import helpers
+
+    if not click.confirm('This will reset all already-computed promotions prior computing. Proceed?'):
+        return
+
+    click.echo('Resetting all already-computed promotions...')
+
+    RwrAccountStat.query.update({RwrAccountStat.promoted_to_rank_id: None})
+    db.session.commit()
+
+    for rwr_account in RwrAccount.query.all():
+        database = rwr_account.type.value.lower()
+
+        click.echo('{} / {}'.format(database, rwr_account.username))
+
+        rwr_account_stats = RwrAccountStat.query.filter(RwrAccountStat.rwr_account_id == rwr_account.id).order_by(RwrAccountStat.created_at.asc()).all()
+
+        for previous_rwr_account_stat, current_rwr_account_stat, _ in helpers.previous_and_next(rwr_account_stats):
+            if not previous_rwr_account_stat:
+                continue
+
+            previous_rank = rwr.utils.get_rank_from_xp(database, previous_rwr_account_stat.xp)
+            current_rank = rwr.utils.get_rank_from_xp(database, current_rwr_account_stat.xp)
+
+            current_rwr_account_stat.promoted_to_rank_id = current_rank.id if current_rank.id != previous_rank.id else None
+
+        db.session.bulk_save_objects(rwr_account_stats)
+        db.session.commit()
+
+    click.secho('Done', fg='green')
+
+
+@app.cli.command()
 def save_ranked_servers_admins():
     """Retrieve and save the ranked servers admins."""
     from lxml import etree

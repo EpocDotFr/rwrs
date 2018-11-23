@@ -191,7 +191,7 @@ class RwrsBotDiscoPlugin(Plugin):
 
                 return
 
-            rwr_account_stat.rwr_account = rwr_account # Setting the RwrAccount relation now to prevent lazy loading issue (and to prevent one DB query)
+            rwr_account_stat.rwr_account = rwr_account # Setting the RwrAccount relation now to prevent lazy loading issue (also preventing one extra DB query)
 
             player = Player.craft(rwr_account, rwr_account_stat)
 
@@ -240,7 +240,7 @@ class RwrsBotDiscoPlugin(Plugin):
             return
 
         evolution_chart = utils.create_evolution_chart(
-            player.rwr_account.id,
+            player.rwr_account,
             constants.VALID_EVOLUTION_TYPES[args.type]['column'],
             'Past year {} evolution for {}\n({} ranked servers, {} is better)'.format(
                 constants.VALID_EVOLUTION_TYPES[args.type]['name'],

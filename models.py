@@ -459,12 +459,16 @@ class RwrAccountStat(db.Model):
 
     @staticmethod
     @cache.memoize(timeout=app.config['GRAPHS_DATA_CACHE_TIMEOUT'])
-    def get_stats_for_column(rwr_account_id, column=None):
+    def get_stats_for_column(rwr_account, column=None):
         """Return the player's score, K/D ratio and/or leaderboard position evolution data for the past year."""
         rwr_account_stats = RwrAccountStat.query.filter(
-            RwrAccountStat.rwr_account_id == rwr_account_id,
+            RwrAccountStat.rwr_account_id == rwr_account.id,
             RwrAccountStat.created_at >= one_year_ago()
         ).order_by(RwrAccountStat.created_at.desc()).all()
+
+        # Set RwrAccount relations now to prevent lazy loading issue (and to prevent extra DB query)
+        for rwr_account_stat in rwr_account_stats:
+            rwr_account_stat.rwr_account = rwr_account
 
         if not column:
             return {
