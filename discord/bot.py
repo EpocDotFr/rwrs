@@ -191,7 +191,7 @@ class RwrsBotDiscoPlugin(Plugin):
 
                 return
 
-            rwr_account_stat.rwr_account = rwr_account # Explicitely setting the RwrAccount relation now to economize one query
+            rwr_account_stat.rwr_account = rwr_account # Setting the RwrAccount relation now to prevent lazy loading issue (and to prevent one DB query)
 
             player = Player.craft(rwr_account, rwr_account_stat)
 
