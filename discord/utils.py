@@ -375,7 +375,8 @@ def create_evolution_chart(rwr_account_id, column, title):
         if not data['ptr']:
             continue
 
-        ax.axvline(date2num(data['t'].datetime), color='b', linestyle=':', label=data['ptr'])
+        ax.axvline(date2num(data['t'].datetime), color='b', linestyle=':')
+        ax.text(date2num(data['t'].datetime), data['v'], data['ptr'], rotation=90)
 
     ax.autoscale_view()
 
