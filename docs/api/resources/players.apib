@@ -31,9 +31,15 @@ This resource has a cache lifetime of **1 hour**.
 
         TODO
 
++ Response 412 (application/json)
+
+    If the `date` parameter is provided: the Player isn't eligible for stats history.
+
+    + Attributes (Error Response, fixed-type)
+
 + Response 404 (application/json)
 
-    The Player wasn't found.
+    The Player wasn't found or, only when the `date` parameter is provided: no stats found for this player (although he's eligible for stats history).
 
     + Attributes (Error Response, fixed-type)
 
