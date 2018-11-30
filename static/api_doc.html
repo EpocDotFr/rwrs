@@ -74,7 +74,7 @@ account <strong>only</strong> if it is present in the query string.</p>
 <h2 id="header-server-side-caching">Server-side caching <a class="permalink" href="#header-server-side-caching" aria-hidden="true">¶</a></h2>
 <p>This resource has a cache lifetime of <strong>1 minute</strong>.</p>
 </div>
-<h4>Example URI</h4><div class="definition"><span class="method get">GET</span>&nbsp;<span class="uri"><span class="hostname">https://rwrstats.com/api</span>/servers?<span class="hljs-attribute">location=</span><span class="hljs-literal">continent:eu</span>&<span class="hljs-attribute">map=</span><span class="hljs-literal">map10</span>&<span class="hljs-attribute">type=</span><span class="hljs-literal">vanilla</span>&<span class="hljs-attribute">mode=</span><span class="hljs-literal">COOP</span>&<span class="hljs-attribute">dedicated=</span><span class="hljs-literal">yes</span>&<span class="hljs-attribute">ranked=</span><span class="hljs-literal">yes</span>&<span class="hljs-attribute">not_empty=</span><span class="hljs-literal">yes</span>&<span class="hljs-attribute">not_full=</span><span class="hljs-literal">yes</span>&<span class="hljs-attribute">limit=</span><span class="hljs-literal">10</span></span></div><div class="title"><strong>URI Parameters</strong><div class="collapse-button show"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><dl class="inner"><dt>location</dt><dd><code>string</code>&nbsp;<span>(optional)</span>&nbsp;<span class="text-info default"><strong>Default:&nbsp;</strong><span>any</span></span>&nbsp;<span class="text-muted example"><strong>Example:&nbsp;</strong><span>continent:eu</span></span><p>Servers country or continent of residence. This criteria format is either:</p>
+<h4>Example URI</h4><div class="definition"><span class="method get">GET</span>&nbsp;<span class="uri"><span class="hostname">https://rwrstats.com/api</span>/servers?<span class="hljs-attribute">location=</span><span class="hljs-literal">continent:eu</span>&<span class="hljs-attribute">map=</span><span class="hljs-literal">map10</span>&<span class="hljs-attribute">type=</span><span class="hljs-literal">vanilla</span>&<span class="hljs-attribute">mode=</span><span class="hljs-literal">COOP</span>&<span class="hljs-attribute">dedicated=</span><span class="hljs-literal">true</span>&<span class="hljs-attribute">ranked=</span><span class="hljs-literal">true</span>&<span class="hljs-attribute">not_empty=</span><span class="hljs-literal">true</span>&<span class="hljs-attribute">not_full=</span><span class="hljs-literal">true</span>&<span class="hljs-attribute">limit=</span><span class="hljs-literal">10</span></span></div><div class="title"><strong>URI Parameters</strong><div class="collapse-button show"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><dl class="inner"><dt>location</dt><dd><code>string</code>&nbsp;<span>(optional)</span>&nbsp;<span class="text-info default"><strong>Default:&nbsp;</strong><span>any</span></span>&nbsp;<span class="text-muted example"><strong>Example:&nbsp;</strong><span>continent:eu</span></span><p>Servers country or continent of residence. This criteria format is either:</p>
 <ul>
 <li>
 <p>A concatenation of a <strong>location type</strong> and a <strong>location code</strong>, separated by a colon, OR</p>
@@ -123,162 +123,13 @@ account <strong>only</strong> if it is present in the query string.</p>
 </dd><dt>map</dt><dd><code>string</code>&nbsp;<span>(optional)</span>&nbsp;<span class="text-info default"><strong>Default:&nbsp;</strong><span>any</span></span>&nbsp;<span class="text-muted example"><strong>Example:&nbsp;</strong><span>map10</span></span><p>Servers map ID.</p>
 <p>See also <a href="https://github.com/EpocDotFr/rwrs/blob/master/storage/data/maps.json">this file</a>, part of the RWRS source
 code, which contains all the RWR maps metadata stored in the JSON format.</p>
-<p>May be one of (grouped by game type for convenience):</p>
-<ul>
-<li>
-<p><code>any</code></p>
-</li>
-<li>
-<p><code>man_vs_world_mp</code></p>
-<ul>
-<li><code>lobby_2p</code> - Mvsw Lobby</li>
-</ul>
-</li>
-<li>
-<p><code>pacific</code></p>
-<ul>
-<li><code>island1</code> - Guadalcanal</li>
-<li><code>island2</code> - Russell Islands</li>
-<li><code>island3</code> - Bougainville Island</li>
-<li><code>island4</code> - Tarawa</li>
-<li><code>island5</code> - Saipan</li>
-<li><code>island6</code> - Iwo Jima</li>
-<li><code>island7</code> - Downfall</li>
-<li><code>island8</code> - Peleliu Airfield</li>
-</ul>
-</li>
-<li>
-<p><code>pvp</code></p>
-<ul>
-<li><code>pvp1</code> - Islet Of Eflen</li>
-</ul>
-</li>
-<li>
-<p><code>vanilla</code></p>
-<ul>
-<li><code>map1</code> - Moorland Trenches</li>
-<li><code>map10</code> - Railroad Gap</li>
-<li><code>map11</code> - Copehill Down</li>
-<li><code>map13</code> - Iron Enclave</li>
-<li><code>map14</code> - Misty Heights</li>
-<li><code>map15</code> - Islet Of Eflen</li>
-<li><code>map1_2</code> - Moorland Trenches V2</li>
-<li><code>map2</code> - Keepsake Bay</li>
-<li><code>map3</code> - Old Fort Creek</li>
-<li><code>map5</code> - Bootleg Islands</li>
-<li><code>map6</code> - Rattlesnake Crescent</li>
-<li><code>map7</code> - Power Junction</li>
-<li><code>map8</code> - Vigil Island</li>
-<li><code>map9</code> - Black Gold Estuary</li>
-</ul>
-</li>
-<li>
-<p><code>vanilla.winter</code></p>
-<ul>
-<li><code>map12</code> - Frozen Canyon</li>
-<li><code>map4</code> - Fridge Valley</li>
-</ul>
-</li>
-<li>
-<p><code>superhotrailroad</code></p>
-<ul>
-<li><code>map10</code> - Railroad Gap</li>
-</ul>
-</li>
-<li>
-<p><code>Running_with_the_Dead</code></p>
-<ul>
-<li><code>rwd_map1</code> - Moorland Apocalypse</li>
-</ul>
-</li>
-<li>
-<p><code>overlord_defense</code></p>
-<ul>
-<li><code>def_dday</code> - D-Day Defense</li>
-</ul>
-</li>
-<li>
-<p><code>lab_defense</code></p>
-<ul>
-<li><code>def_lab</code> - Dark Soul Island</li>
-</ul>
-</li>
-<li>
-<p><code>viper</code></p>
-<ul>
-<li><code>viper</code> - Viper</li>
-</ul>
-</li>
-<li>
-<p><code>lab_def_koth</code></p>
-<ul>
-<li><code>def_lab_koth</code> - Lab Def Koth</li>
-</ul>
-</li>
-</ul>
-</dd><dt>type</dt><dd><code>string</code>&nbsp;<span>(optional)</span>&nbsp;<span class="text-info default"><strong>Default:&nbsp;</strong><span>any</span></span>&nbsp;<span class="text-muted example"><strong>Example:&nbsp;</strong><span>vanilla</span></span><p>Servers type (used mod or DLC).</p>
-<p>May be one of:</p>
-<ul>
-<li>
-<p><code>any</code></p>
-</li>
-<li>
-<p><code>vanilla</code> - Same as <code>vanilla.winter</code> and <code>pvp</code></p>
-</li>
-<li>
-<p><code>vanilla.winter</code> - Same as <code>vanilla</code> and <code>pvp</code></p>
-</li>
-<li>
-<p><code>pvp</code> - Same as <code>vanilla</code> and <code>vanilla.winter</code></p>
-</li>
-<li>
-<p><code>pacific</code> - RWR: PACIFIC</p>
-</li>
-<li>
-<p><code>man_vs_world_mp</code> - Man vs World (MP)</p>
-</li>
-<li>
-<p><code>Running_with_the_Dead</code> - Running with the Dead</p>
-</li>
-<li>
-<p><code>overlord_defense</code> - Overlord Defense</p>
-</li>
-<li>
-<p><code>lab_defense</code> - Lab Defense</p>
-</li>
-<li>
-<p><code>lab_def_koth</code> - Lab Defense KOTH</p>
-</li>
-<li>
-<p><code>viper</code> - Viper</p>
-</li>
-</ul>
-</dd><dt>mode</dt><dd><code>string</code>&nbsp;<span>(optional)</span>&nbsp;<span class="text-info default"><strong>Default:&nbsp;</strong><span>any</span></span>&nbsp;<span class="text-muted example"><strong>Example:&nbsp;</strong><span>COOP</span></span><p>Servers mode (game mode). May be one of:</p>
-<ul>
-<li>
-<p><code>any</code></p>
-</li>
-<li>
-<p><code>COOP</code> - Cooperation</p>
-</li>
-<li>
-<p><code>DOM</code> - Dominance</p>
-</li>
-<li>
-<p><code>PvP</code> - Player versus player</p>
-</li>
-<li>
-<p><code>PvE</code> - Player versus environment</p>
-</li>
-<li>
-<p><code>PvPvE</code> - Player versus player versus environment</p>
-</li>
-</ul>
-</dd><dt>dedicated</dt><dd><code>string</code>&nbsp;<span>(optional)</span>&nbsp;<span class="text-muted example"><strong>Example:&nbsp;</strong><span>yes</span></span><p>Whether to filter dedicated servers only. <code>yes</code> to enable this filter. Any other value will be ignored and thus disable this filter</p>
-</dd><dt>ranked</dt><dd><code>string</code>&nbsp;<span>(optional)</span>&nbsp;<span class="text-muted example"><strong>Example:&nbsp;</strong><span>yes</span></span><p>Whether to filter official servers only. <code>yes</code> to enable this filter. Any other value will be ignored and thus disable this filter</p>
-</dd><dt>not_empty</dt><dd><code>string</code>&nbsp;<span>(optional)</span>&nbsp;<span class="text-muted example"><strong>Example:&nbsp;</strong><span>yes</span></span><p>Whether to filter non-empty servers only. <code>yes</code> to enable this filter. Any other value will be ignored and thus disable this filter</p>
-</dd><dt>not_full</dt><dd><code>string</code>&nbsp;<span>(optional)</span>&nbsp;<span class="text-muted example"><strong>Example:&nbsp;</strong><span>yes</span></span><p>Whether to filter non-full servers only. <code>yes</code> to enable this filter. Any other value will be ignored and thus disable this filter</p>
-</dd><dt>limit</dt><dd><code>number</code>&nbsp;<span>(optional)</span>&nbsp;<span class="text-muted example"><strong>Example:&nbsp;</strong><span>10</span></span><p>Return the <em>n</em> first servers of the filtered list</p>
+<p class="choices"><strong>Choices:&nbsp;</strong><code>any</code> <code>lobby_2p</code> <code>island1</code> <code>island2</code> <code>island3</code> <code>island4</code> <code>island5</code> <code>island6</code> <code>island7</code> <code>island8</code> <code>pvp1</code> <code>map1</code> <code>map1_2</code> <code>map2</code> <code>map3</code> <code>map4</code> <code>map5</code> <code>map6</code> <code>map7</code> <code>map8</code> <code>map9</code> <code>map10</code> <code>map11</code> <code>map12</code> <code>map13</code> <code>map14</code> <code>map15</code> <code>rwd_map1</code> <code>def_dday</code> <code>def_lab</code> <code>viper</code> <code>def_lab_koth</code> </p></dd><dt>type</dt><dd><code>string</code>&nbsp;<span>(optional)</span>&nbsp;<span class="text-info default"><strong>Default:&nbsp;</strong><span>any</span></span>&nbsp;<span class="text-muted example"><strong>Example:&nbsp;</strong><span>vanilla</span></span><p>Servers type (used mod or DLC).</p>
+<p class="choices"><strong>Choices:&nbsp;</strong><code>any</code> <code>vanilla</code> <code>vanilla.winter</code> <code>pvp</code> <code>pacific</code> <code>man_vs_world_mp</code> <code>Running_with_the_Dead</code> <code>overlord_defense</code> <code>lab_defense</code> <code>lab_def_koth</code> <code>viper</code> </p></dd><dt>mode</dt><dd><code>string</code>&nbsp;<span>(optional)</span>&nbsp;<span class="text-info default"><strong>Default:&nbsp;</strong><span>any</span></span>&nbsp;<span class="text-muted example"><strong>Example:&nbsp;</strong><span>COOP</span></span><p>Servers mode (game mode).</p>
+<p class="choices"><strong>Choices:&nbsp;</strong><code>any</code> <code>COOP</code> <code>DOM</code> <code>PvP</code> <code>PvE</code> <code>PvPvE</code> </p></dd><dt>dedicated</dt><dd><code>string, number</code>&nbsp;<span>(optional)</span>&nbsp;<span class="text-muted example"><strong>Example:&nbsp;</strong><span>true</span></span><p>Whether to filter dedicated servers only. <code>true</code> or <code>1</code> to enable this filter. <code>false</code> or <code>0</code> will be ignored and thus disable this filter.</p>
+<p class="choices"><strong>Choices:&nbsp;</strong><code>true</code> <code>1</code> <code>false</code> <code>0</code> </p></dd><dt>ranked</dt><dd><code>string, number</code>&nbsp;<span>(optional)</span>&nbsp;<span class="text-muted example"><strong>Example:&nbsp;</strong><span>true</span></span><p>Whether to filter official servers only. <code>true</code> or <code>1</code> to enable this filter. <code>false</code> or <code>0</code> will be ignored and thus disable this filter.</p>
+<p class="choices"><strong>Choices:&nbsp;</strong><code>true</code> <code>1</code> <code>false</code> <code>0</code> </p></dd><dt>not_empty</dt><dd><code>string, number</code>&nbsp;<span>(optional)</span>&nbsp;<span class="text-muted example"><strong>Example:&nbsp;</strong><span>true</span></span><p>Whether to filter non-empty servers only. <code>true</code> or <code>1</code> to enable this filter. <code>false</code> or <code>0</code> will be ignored and thus disable this filter.</p>
+<p class="choices"><strong>Choices:&nbsp;</strong><code>true</code> <code>1</code> <code>false</code> <code>0</code> </p></dd><dt>not_full</dt><dd><code>string, number</code>&nbsp;<span>(optional)</span>&nbsp;<span class="text-muted example"><strong>Example:&nbsp;</strong><span>true</span></span><p>Whether to filter non-full servers only. <code>true</code> or <code>1</code> to enable this filter. <code>false</code> or <code>0</code> will be ignored and thus disable this filter.</p>
+<p class="choices"><strong>Choices:&nbsp;</strong><code>true</code> <code>1</code> <code>false</code> <code>0</code> </p></dd><dt>limit</dt><dd><code>number</code>&nbsp;<span>(optional)</span>&nbsp;<span class="text-muted example"><strong>Example:&nbsp;</strong><span>10</span></span><p>Return the <em>n</em> first servers of the filtered list.</p>
 </dd></dl></div><div class="title"><strong>Request</strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Authorization</span>: <span class="hljs-string">Token {token}</span></code></pre><div style="height: 1px;"></div></div></div><div class="title"><strong>Response&nbsp;&nbsp;<code>200</code></strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><div class="description"><p>An empty list is returned if no Servers were found.</p>
 </div><h5>Headers</h5><pre><code><span class="hljs-attribute">Content-Type</span>: <span class="hljs-string">application/json</span></code></pre><div style="height: 1px;"></div><h5>Body</h5><pre><code>[
   {
@@ -969,7 +820,7 @@ code, which contains all the RWR maps metadata stored in the JSON format.</p>
     <span class="hljs-string">"message"</span>
   ]</span>,
   "<span class="hljs-attribute">additionalProperties</span>": <span class="hljs-value"><span class="hljs-literal">false</span>
-</span>}</code></pre><div style="height: 1px;"></div></div></div></div></div></section></div></div></div><p style="text-align: center;" class="text-muted">Generated by&nbsp;<a href="https://github.com/danielgtaylor/aglio" class="aglio">aglio</a>&nbsp;on 19 Nov 2018</p><script>/* eslint-env browser */
+</span>}</code></pre><div style="height: 1px;"></div></div></div></div></div></section></div></div></div><p style="text-align: center;" class="text-muted">Generated by&nbsp;<a href="https://github.com/danielgtaylor/aglio" class="aglio">aglio</a>&nbsp;on 30 Nov 2018</p><script>/* eslint-env browser */
 /* eslint quotes: [2, "single"] */
 'use strict';
 

@@ -1,4 +1,4 @@
-from flask_restful import reqparse
+from flask_restful import reqparse, inputs
 import rwr.constants
 import iso3166
 import arrow
@@ -47,11 +47,11 @@ get_servers_list.add_argument('location', location='args', type=location, defaul
 get_servers_list.add_argument('map', location='args', choices=maps_choices, default='any')
 get_servers_list.add_argument('type', location='args', choices=types_choices, default='any')
 get_servers_list.add_argument('mode', location='args', choices=modes_choices, default='any')
-get_servers_list.add_argument('dedicated', location='args')
-get_servers_list.add_argument('ranked', location='args')
-get_servers_list.add_argument('not_empty', location='args')
-get_servers_list.add_argument('not_full', location='args')
-get_servers_list.add_argument('limit', location='args', type=int)
+get_servers_list.add_argument('dedicated', location='args', type=inputs.boolean)
+get_servers_list.add_argument('ranked', location='args', type=inputs.boolean)
+get_servers_list.add_argument('not_empty', location='args', type=inputs.boolean)
+get_servers_list.add_argument('not_full', location='args', type=inputs.boolean)
+get_servers_list.add_argument('limit', location='args', type=inputs.positive)
 
 get_one_player = reqparse.RequestParser()
 get_one_player.add_argument('date', location='args', type=arrow_date)

@@ -10,11 +10,21 @@ import rwr.scraper
 
 
 class ServersResource(Resource):
+    @staticmethod
+    def replace_true_by_yes(dct, key):
+        if key in dct and dct[key] is True:
+            dct[key] = 'yes'
+
     @marshal_with(transformers.server_simple)
     def get(self):
         args = validators.get_servers_list.parse_args()
 
         if args:
+            ServersResource.replace_true_by_yes(args, 'dedicated')
+            ServersResource.replace_true_by_yes(args, 'ranked')
+            ServersResource.replace_true_by_yes(args, 'not_empty')
+            ServersResource.replace_true_by_yes(args, 'not_full')
+
             servers = rwr.scraper.filter_servers(**args)
         else:
             servers = rwr.scraper.get_servers()
