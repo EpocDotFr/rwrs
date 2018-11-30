@@ -125,7 +125,7 @@ player_full.update(OrderedDict([
     ('current_server', fields.Nested(server_simple, attribute='playing_on_server', allow_null=True)),
     ('stats', fields.Nested(player_stats, attribute=lambda player: player)),
     ('current_rank', fields.Nested(player_rank, attribute='rank')),
-    ('next_rank', fields.Nested(player_rank)),
+    ('next_rank', fields.Nested(player_rank, allow_null=True)),
     ('xp_to_next_rank', fields.Integer),
     ('xp_percent_completion_to_next_rank', fields.Float),
     ('date', ArrowDateField(attribute='created_at')), # Added in the API controller
