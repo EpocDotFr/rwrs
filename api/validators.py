@@ -1,6 +1,7 @@
-from flask_restful import reqparse
+from flask_restful import reqparse, inputs
 import rwr.constants
 import iso3166
+import arrow
 import re
 
 _location_regex = re.compile(r'^(?:any|(?P<location_code_single>[a-zA-Z]{2})|(?P<location_type>country|continent):(?P<location_code_with_type>[a-zA-Z]{2}))$')
@@ -23,6 +24,15 @@ def location(value):
 
     return value
 
+
+def arrow_date(value):
+    try:
+        value = arrow.get(value, 'YYYY-MM-DD')
+    except Exception:
+        raise ValueError('Invalid format')
+
+    return value
+
 maps_choices = ['any']
 maps_choices.extend(rwr.constants.VALID_MAPS)
 
@@ -32,14 +42,16 @@ types_choices.extend(rwr.constants.VALID_SERVER_TYPES)
 modes_choices = ['any']
 modes_choices.extend(rwr.constants.VALID_SERVER_MODES)
 
-
-get_servers_list = reqparse.RequestParser(bundle_errors=True)
+get_servers_list = reqparse.RequestParser()
 get_servers_list.add_argument('location', location='args', type=location, default='any')
 get_servers_list.add_argument('map', location='args', choices=maps_choices, default='any')
 get_servers_list.add_argument('type', location='args', choices=types_choices, default='any')
 get_servers_list.add_argument('mode', location='args', choices=modes_choices, default='any')
-get_servers_list.add_argument('dedicated', location='args')
-get_servers_list.add_argument('ranked', location='args')
-get_servers_list.add_argument('not_empty', location='args')
-get_servers_list.add_argument('not_full', location='args')
-get_servers_list.add_argument('limit', location='args', type=int)
+get_servers_list.add_argument('dedicated', location='args', type=inputs.boolean)
+get_servers_list.add_argument('ranked', location='args', type=inputs.boolean)
+get_servers_list.add_argument('not_empty', location='args', type=inputs.boolean)
+get_servers_list.add_argument('not_full', location='args', type=inputs.boolean)
+get_servers_list.add_argument('limit', location='args', type=inputs.positive)
+
+get_one_player = reqparse.RequestParser()
+get_one_player.add_argument('date', location='args', type=arrow_date)

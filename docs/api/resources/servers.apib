@@ -36,96 +36,96 @@ A Server represent a public multiplayer Running With Rifles game.
       See also [this file](https://github.com/EpocDotFr/rwrs/blob/master/storage/data/maps.json), part of the RWRS source
       code, which contains all the RWR maps metadata stored in the JSON format.
 
-       May be one of (grouped by game type for convenience):
-
-        - `any`
-        - `man_vs_world_mp`
-          - `lobby_2p` - Mvsw Lobby
-        - `pacific`
-          - `island1` - Guadalcanal
-          - `island2` - Russell Islands
-          - `island3` - Bougainville Island
-          - `island4` - Tarawa
-          - `island5` - Saipan
-          - `island6` - Iwo Jima
-          - `island7` - Downfall
-          - `island8` - Peleliu Airfield
-        - `pvp`
-          - `pvp1` - Islet Of Eflen
-        - `vanilla`
-          - `map1` - Moorland Trenches
-          - `map10` - Railroad Gap
-          - `map11` - Copehill Down
-          - `map13` - Iron Enclave
-          - `map14` - Misty Heights
-          - `map15` - Islet Of Eflen
-          - `map1_2` - Moorland Trenches V2
-          - `map2` - Keepsake Bay
-          - `map3` - Old Fort Creek
-          - `map5` - Bootleg Islands
-          - `map6` - Rattlesnake Crescent
-          - `map7` - Power Junction
-          - `map8` - Vigil Island
-          - `map9` - Black Gold Estuary
-        - `vanilla.winter`
-          - `map12` - Frozen Canyon
-          - `map4` - Fridge Valley
-        - `superhotrailroad`
-          - `map10` - Railroad Gap
-        - `Running_with_the_Dead`
-          - `rwd_map1` - Moorland Apocalypse
-        - `overlord_defense`
-          - `def_dday` - D-Day Defense
-        - `lab_defense`
-          - `def_lab` - Dark Soul Island
-        - `viper`
-          - `viper` - Viper
-        - `lab_def_koth`
-          - `def_lab_koth` - Lab Def Koth
-
+      + Members
+          + `any`
+          + `lobby_2p`
+          + `island1`
+          + `island2`
+          + `island3`
+          + `island4`
+          + `island5`
+          + `island6`
+          + `island7`
+          + `island8`
+          + `pvp1`
+          + `map1`
+          + `map1_2`
+          + `map2`
+          + `map3`
+          + `map4`
+          + `map5`
+          + `map6`
+          + `map7`
+          + `map8`
+          + `map9`
+          + `map10`
+          + `map11`
+          + `map12`
+          + `map13`
+          + `map14`
+          + `map15`
+          + `rwd_map1`
+          + `def_dday`
+          + `def_lab`
+          + `viper`
+          + `def_lab_koth`
       + Default: `any`
-  + `type`: `vanilla` (enum[string], optional)
-      Servers type (used mod or DLC).
-
-      May be one of:
-
-        - `any`
-        - `vanilla` - Same as `vanilla.winter` and `pvp`
-        - `vanilla.winter` - Same as `vanilla` and `pvp`
-        - `pvp` - Same as `vanilla` and `vanilla.winter`
-        - `pacific` - RWR: PACIFIC
-        - `man_vs_world_mp` - Man vs World (MP)
-        - `Running_with_the_Dead` - Running with the Dead
-        - `overlord_defense` - Overlord Defense
-        - `lab_defense` - Lab Defense
-        - `lab_def_koth` - Lab Defense KOTH
-        - `viper` - Viper
-
+  + `type`: `vanilla` (enum[string], optional) - Servers type (used mod or DLC).
+      + Members
+          + `any`
+          + `vanilla`
+          + `vanilla.winter`
+          + `pvp`
+          + `pacific`
+          + `man_vs_world_mp`
+          + `Running_with_the_Dead`
+          + `overlord_defense`
+          + `lab_defense`
+          + `lab_def_koth`
+          + `viper`
       + Default: `any`
-  + `mode`: `COOP` (enum[string], optional)
-      Servers mode (game mode). May be one of:
-
-        - `any`
-        - `COOP` - Cooperation
-        - `DOM` - Dominance
-        - `PvP` - Player versus player
-        - `PvE` - Player versus environment
-        - `PvPvE` - Player versus player versus environment
-
+  + `mode`: `COOP` (enum[string], optional) - Servers mode (game mode).
+      + Members
+          + `any`
+          + `COOP`
+          + `DOM`
+          + `PvP`
+          + `PvE`
+          + `PvPvE`
       + Default: `any`
-  + `dedicated`: `yes` (optional) - Whether to filter dedicated servers only. `yes` to enable this filter. Any other value will be ignored and thus disable this filter
-  + `ranked`: `yes` (optional) - Whether to filter official servers only. `yes` to enable this filter. Any other value will be ignored and thus disable this filter
-  + `not_empty`: `yes` (optional) - Whether to filter non-empty servers only. `yes` to enable this filter. Any other value will be ignored and thus disable this filter
-  + `not_full`: `yes` (optional) - Whether to filter non-full servers only. `yes` to enable this filter. Any other value will be ignored and thus disable this filter
-  + `limit`: `10` (number, optional) - Return the _n_ first servers of the filtered list
+  + `dedicated`: `true` (enum[string, number], optional) - Whether to filter dedicated servers only. `true` or `1` to enable this filter. `false` or `0` will be ignored and thus disable this filter.
+      + Members
+          + `true`
+          + `1`
+          + `false`
+          + `0`
+  + `ranked`: `true` (enum[string, number], optional) - Whether to filter official servers only. `true` or `1` to enable this filter. `false` or `0` will be ignored and thus disable this filter.
+      + Members
+          + `true`
+          + `1`
+          + `false`
+          + `0`
+  + `not_empty`: `true` (enum[string, number], optional) - Whether to filter non-empty servers only. `true` or `1` to enable this filter. `false` or `0` will be ignored and thus disable this filter.
+      + Members
+          + `true`
+          + `1`
+          + `false`
+          + `0`
+  + `not_full`: `true` (enum[string, number], optional) - Whether to filter non-full servers only. `true` or `1` to enable this filter. `false` or `0` will be ignored and thus disable this filter.
+      + Members
+          + `true`
+          + `1`
+          + `false`
+          + `0`
+  + `limit`: `10` (number, optional) - Return the _n_ first servers of the filtered list.
 
-### Get Servers [GET]
+### Get Server list [GET]
 
 Return the list of Servers. The list may be optionally filtered by one or more criteria. The criteria is taken into
 account **only** if it is present in the query string.
 
 ::: note
-## Server-side caching
+#### Server-side caching
 
 This resource has a cache lifetime of **1 minute**.
 :::
@@ -166,7 +166,7 @@ This resource has a cache lifetime of **1 minute**.
     + ip: `31.186.250.67` - The Server IP
     + port: `1235` (integer) - The Server port
 
-### Get a Server [GET]
+### Get one Server [GET]
 
 Return the Server corresponding to the given IP address / port couple.
 

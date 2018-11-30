@@ -22,13 +22,6 @@
   + `id`: `vanilla` (required) - Server type ID (used mod or DLC)
   + `name`: `Vanilla` (required) - Server type name (used mod or DLC)
 
-### Server Database Object
-
-  + `id`: `invasion` (nullable) - Database ID. `null` if not a ranked server
-    + Default: `null`
-  + `name`: `Invasion` (nullable) - Database name. `null` if not a ranked server
-    + Default: `null`
-
 ### Server Mode Simple Object
 
   + `id`: `COOP` (nullable) - Server mode ID (game mode). `null` if unknown
@@ -61,7 +54,7 @@
   + `url`: `https://rwrstats.com/servers/31.186.250.67:1235/invasioneu2` (required) - RWRS server page URL
   + `type` (Server Type Object, required) - Server type
   + `mode` (Server Mode Simple Object, required) - Server mode
-  + `database` (Server Database Object, required) - Server used database
+  + `database` (Database Object, required) - Server used database (if ranked server)
   + `map` (Server Map Simple Object, required) - Server map
   + `players` (Server Players Simple Object, required) - Server players
   + `location` (Server Location Object, required) - Server location
@@ -76,7 +69,3 @@
   + `bots`: `104` (number, required) - Number of current bots
   + `mode` (Server Mode Full Object, required) - Server mode
   + `players` (Server Players Full Object, required) - Server players
-
-### Error Response
-
-  + message: `Example error message` (required) - The error message explaining what happened

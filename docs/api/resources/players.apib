@@ -1,0 +1,69 @@
+# Group Players
+
+A Player represent an online multiplayer Running With Rifles account.
+
+::: note
+**Important note**
+
+Players stats are updated daily and **only** concerns ranked (official) Invasion and Pacific servers.
+
+Also, stats history is only recorded for the 5000 most experienced players.
+:::
+
+## Player object [/players/{database}/{username}{?date}]
+
++ Parameters
+    + database: `invasion` (enum[string]) - The player database.
+      + Members
+          + `invasion`
+          + `pacific`
+    + username: `EPOCDOTFR` - The player username.
+    + date: `2018-11-30` (optional)
+
+        [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) date for which to retrieve the stats for.
+
+        Note the player must be part of the 5000 most experienced players for its stats history to be recorded.
+
+### Get one Player [GET]
+
+Return the Player corresponding to the given database / username couple.
+
+::: note
+#### Server-side caching
+
+This resource has a cache lifetime of **1 hour**.
+:::
+
++ Request
+
+    + Headers
+
+            Authorization: Token {token}
+
++ Response 200 (application/json)
+
+    + Attributes (Player Full Object, fixed-type)
+
++ Response 412 (application/json)
+
+    If the `date` parameter is provided: the Player isn't eligible for stats history (5000 most experienced players only).
+
+    + Attributes (Error Response, fixed-type)
+
++ Response 404 (application/json)
+
+    The Player wasn't found or, only when the `date` parameter is provided: no stats found for this player (although he's eligible for stats history).
+
+    + Attributes (Error Response, fixed-type)
+
++ Response 403 (application/json)
+
+    Invalid token or token not provided.
+
+    + Attributes (Error Response, fixed-type)
+
++ Response 503 (application/json)
+
+    Maintenance in progress.
+
+    + Attributes (Error Response, fixed-type)
