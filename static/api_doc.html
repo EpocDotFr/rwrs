@@ -218,15 +218,14 @@ code, which contains all the RWR maps metadata stored in the JSON format.</p>
         "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Server type"</span>
       </span>}</span>,
       "<span class="hljs-attribute">mode</span>": <span class="hljs-value">{
-        "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"object"</span></span>,
+        "<span class="hljs-attribute">type</span>": <span class="hljs-value">[
+          <span class="hljs-string">"object"</span>,
+          <span class="hljs-string">"null"</span>
+        ]</span>,
         "<span class="hljs-attribute">properties</span>": <span class="hljs-value">{
           "<span class="hljs-attribute">id</span>": <span class="hljs-value">{
-            "<span class="hljs-attribute">type</span>": <span class="hljs-value">[
-              <span class="hljs-string">"string"</span>,
-              <span class="hljs-string">"null"</span>
-            ]</span>,
-            "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Server mode ID (game mode). `null` if unknown"</span></span>,
-            "<span class="hljs-attribute">default</span>": <span class="hljs-value"><span class="hljs-string">"null"</span>
+            "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
+            "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Server mode ID (game mode)"</span>
           </span>}</span>,
           "<span class="hljs-attribute">name</span>": <span class="hljs-value">{
             "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
@@ -234,9 +233,10 @@ code, which contains all the RWR maps metadata stored in the JSON format.</p>
           </span>}
         </span>}</span>,
         "<span class="hljs-attribute">required</span>": <span class="hljs-value">[
+          <span class="hljs-string">"id"</span>,
           <span class="hljs-string">"name"</span>
         ]</span>,
-        "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Server mode"</span>
+        "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Server mode. `null` if unknown"</span>
       </span>}</span>,
       "<span class="hljs-attribute">database</span>": <span class="hljs-value">{
         "<span class="hljs-attribute">type</span>": <span class="hljs-value">[
@@ -326,7 +326,6 @@ code, which contains all the RWR maps metadata stored in the JSON format.</p>
       <span class="hljs-string">"is_ranked"</span>,
       <span class="hljs-string">"url"</span>,
       <span class="hljs-string">"type"</span>,
-      <span class="hljs-string">"mode"</span>,
       <span class="hljs-string">"map"</span>,
       <span class="hljs-string">"players"</span>,
       <span class="hljs-string">"location"</span>
@@ -487,15 +486,14 @@ code, which contains all the RWR maps metadata stored in the JSON format.</p>
       "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Server type"</span>
     </span>}</span>,
     "<span class="hljs-attribute">mode</span>": <span class="hljs-value">{
-      "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"object"</span></span>,
+      "<span class="hljs-attribute">type</span>": <span class="hljs-value">[
+        <span class="hljs-string">"object"</span>,
+        <span class="hljs-string">"null"</span>
+      ]</span>,
       "<span class="hljs-attribute">properties</span>": <span class="hljs-value">{
         "<span class="hljs-attribute">id</span>": <span class="hljs-value">{
-          "<span class="hljs-attribute">type</span>": <span class="hljs-value">[
-            <span class="hljs-string">"string"</span>,
-            <span class="hljs-string">"null"</span>
-          ]</span>,
-          "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Server mode ID (game mode). `null` if unknown"</span></span>,
-          "<span class="hljs-attribute">default</span>": <span class="hljs-value"><span class="hljs-string">"null"</span>
+          "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
+          "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Server mode ID (game mode)"</span>
         </span>}</span>,
         "<span class="hljs-attribute">name</span>": <span class="hljs-value">{
           "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
@@ -511,9 +509,10 @@ code, which contains all the RWR maps metadata stored in the JSON format.</p>
         </span>}
       </span>}</span>,
       "<span class="hljs-attribute">required</span>": <span class="hljs-value">[
+        <span class="hljs-string">"id"</span>,
         <span class="hljs-string">"name"</span>
       ]</span>,
-      "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Server mode"</span>
+      "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Server mode. `null` if unknown"</span>
     </span>}</span>,
     "<span class="hljs-attribute">database</span>": <span class="hljs-value">{
       "<span class="hljs-attribute">type</span>": <span class="hljs-value">[
@@ -940,15 +939,14 @@ code, which contains all the RWR maps metadata stored in the JSON format.</p>
           "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Server type"</span>
         </span>}</span>,
         "<span class="hljs-attribute">mode</span>": <span class="hljs-value">{
-          "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"object"</span></span>,
+          "<span class="hljs-attribute">type</span>": <span class="hljs-value">[
+            <span class="hljs-string">"object"</span>,
+            <span class="hljs-string">"null"</span>
+          ]</span>,
           "<span class="hljs-attribute">properties</span>": <span class="hljs-value">{
             "<span class="hljs-attribute">id</span>": <span class="hljs-value">{
-              "<span class="hljs-attribute">type</span>": <span class="hljs-value">[
-                <span class="hljs-string">"string"</span>,
-                <span class="hljs-string">"null"</span>
-              ]</span>,
-              "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Server mode ID (game mode). `null` if unknown"</span></span>,
-              "<span class="hljs-attribute">default</span>": <span class="hljs-value"><span class="hljs-string">"null"</span>
+              "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
+              "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Server mode ID (game mode)"</span>
             </span>}</span>,
             "<span class="hljs-attribute">name</span>": <span class="hljs-value">{
               "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
@@ -956,9 +954,10 @@ code, which contains all the RWR maps metadata stored in the JSON format.</p>
             </span>}
           </span>}</span>,
           "<span class="hljs-attribute">required</span>": <span class="hljs-value">[
+            <span class="hljs-string">"id"</span>,
             <span class="hljs-string">"name"</span>
           ]</span>,
-          "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Server mode"</span>
+          "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Server mode. `null` if unknown"</span>
         </span>}</span>,
         "<span class="hljs-attribute">database</span>": <span class="hljs-value">{
           "<span class="hljs-attribute">type</span>": <span class="hljs-value">[
@@ -1048,7 +1047,6 @@ code, which contains all the RWR maps metadata stored in the JSON format.</p>
         <span class="hljs-string">"is_ranked"</span>,
         <span class="hljs-string">"url"</span>,
         <span class="hljs-string">"type"</span>,
-        <span class="hljs-string">"mode"</span>,
         <span class="hljs-string">"map"</span>,
         <span class="hljs-string">"players"</span>,
         <span class="hljs-string">"location"</span>

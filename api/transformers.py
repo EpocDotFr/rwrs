@@ -71,7 +71,7 @@ server_simple = OrderedDict([
     ('website_url', fields.String(attribute='website')),
     ('url', fields.String(attribute='link_absolute')),
     ('type', fields.Nested(server_type, attribute=lambda server: server)),
-    ('mode', fields.Nested(server_mode_simple, attribute=lambda server: server)),
+    ('mode', fields.Nested(server_mode_simple, attribute=lambda server: server if server.mode else None, allow_null=True)),
     ('database', fields.Nested(database, attribute=lambda server: server if server.database else None, allow_null=True)),
     ('map', fields.Nested(server_map_simple)),
     ('players', fields.Nested(server_players_simple)),
@@ -84,7 +84,7 @@ server_full.update(OrderedDict([
     ('is_dedicated', fields.Boolean),
     ('comment', fields.String),
     ('bots', fields.Integer),
-    ('mode', fields.Nested(server_mode_full, attribute=lambda server: server)),
+    ('mode', fields.Nested(server_mode_full, attribute=lambda server: server if server.mode else None, allow_null=True)),
     ('map', fields.Nested(server_map_full)),
     ('players', fields.Nested(server_players_full)),
 ]))

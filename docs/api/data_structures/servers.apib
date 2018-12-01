@@ -24,8 +24,7 @@
 
 ### Server Mode Simple Object
 
-  + `id`: `COOP` (nullable) - Server mode ID (game mode). `null` if unknown
-    + Default: `null`
+  + `id`: `COOP` (required) - Server mode ID (game mode)
   + `name`: `Coop.` (required) - Server mode name (game mode)
 
 ### Server Mode Full Object (Server Mode Simple Object)
@@ -53,7 +52,7 @@
     + Default: `null`
   + `url`: `https://rwrstats.com/servers/31.186.250.67:1235/invasioneu2` (required) - RWRS server page URL
   + `type` (Server Type Object, required) - Server type
-  + `mode` (Server Mode Simple Object, required) - Server mode
+  + `mode` (Server Mode Simple Object, nullable) - Server mode. `null` if unknown
   + `database` (Database Object, nullable) - Server used database. `null` if not a ranked (official) server
   + `map` (Server Map Simple Object, required) - Server map
   + `players` (Server Players Simple Object, required) - Server players
@@ -67,5 +66,5 @@
   + `comment`: `Coop campaign` (nullable) - Server comment. `null` if none
     + Default: `null`
   + `bots`: `104` (number, required) - Number of current bots
-  + `mode` (Server Mode Full Object, required) - Server mode
+  + `mode` (Server Mode Full Object, nullable) - Server mode. `null` if unknown
   + `players` (Server Players Full Object, required) - Server players
