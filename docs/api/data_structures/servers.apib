@@ -12,10 +12,8 @@
 
 ### Server Location Object
 
-  + `name`: `Frankfurt am Main, Germany` (nullable) - City name (if available) + country name of the server location. `null` if unknown
-    + Default: `null`
-  + `country_code`: `de` (nullable) - [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country code of the server location. `null` if unknown
-    + Default: `null`
+  + `name`: `Frankfurt am Main, Germany` (required) - City name (if available) + country name of the server location.
+  + `country_code`: `de` (required) - [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country code of the server location.
 
 ### Server Type Object
 
@@ -56,7 +54,7 @@
   + `database` (Database Object, nullable) - Server used database. `null` if not a ranked (official) server
   + `map` (Server Map Simple Object, required) - Server map
   + `players` (Server Players Simple Object, required) - Server players
-  + `location` (Server Location Object, required) - Server location
+  + `location` (Server Location Object, nullable) - Server location. `null` if unknown
 
 ### Server Full Object (Server Simple Object)
 

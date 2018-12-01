@@ -297,26 +297,25 @@ code, which contains all the RWR maps metadata stored in the JSON format.</p>
         "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Server players"</span>
       </span>}</span>,
       "<span class="hljs-attribute">location</span>": <span class="hljs-value">{
-        "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"object"</span></span>,
+        "<span class="hljs-attribute">type</span>": <span class="hljs-value">[
+          <span class="hljs-string">"object"</span>,
+          <span class="hljs-string">"null"</span>
+        ]</span>,
         "<span class="hljs-attribute">properties</span>": <span class="hljs-value">{
           "<span class="hljs-attribute">name</span>": <span class="hljs-value">{
-            "<span class="hljs-attribute">type</span>": <span class="hljs-value">[
-              <span class="hljs-string">"string"</span>,
-              <span class="hljs-string">"null"</span>
-            ]</span>,
-            "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"City name (if available) + country name of the server location. `null` if unknown"</span></span>,
-            "<span class="hljs-attribute">default</span>": <span class="hljs-value"><span class="hljs-string">"null"</span>
+            "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
+            "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"City name (if available) + country name of the server location."</span>
           </span>}</span>,
           "<span class="hljs-attribute">country_code</span>": <span class="hljs-value">{
-            "<span class="hljs-attribute">type</span>": <span class="hljs-value">[
-              <span class="hljs-string">"string"</span>,
-              <span class="hljs-string">"null"</span>
-            ]</span>,
-            "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"[ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country code of the server location. `null` if unknown"</span></span>,
-            "<span class="hljs-attribute">default</span>": <span class="hljs-value"><span class="hljs-string">"null"</span>
+            "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
+            "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"[ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country code of the server location."</span>
           </span>}
         </span>}</span>,
-        "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Server location"</span>
+        "<span class="hljs-attribute">required</span>": <span class="hljs-value">[
+          <span class="hljs-string">"name"</span>,
+          <span class="hljs-string">"country_code"</span>
+        ]</span>,
+        "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Server location. `null` if unknown"</span>
       </span>}
     </span>}</span>,
     "<span class="hljs-attribute">required</span>": <span class="hljs-value">[
@@ -327,8 +326,7 @@ code, which contains all the RWR maps metadata stored in the JSON format.</p>
       <span class="hljs-string">"url"</span>,
       <span class="hljs-string">"type"</span>,
       <span class="hljs-string">"map"</span>,
-      <span class="hljs-string">"players"</span>,
-      <span class="hljs-string">"location"</span>
+      <span class="hljs-string">"players"</span>
     ]
   </span>}
 </span>}</code></pre><div style="height: 1px;"></div></div></div><div class="title"><strong>Response&nbsp;&nbsp;<code>400</code></strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><div class="description"><p>One or more arguments are (is) invalid. Check the error message(s) for more information.</p>
@@ -634,26 +632,25 @@ code, which contains all the RWR maps metadata stored in the JSON format.</p>
       "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Server players"</span>
     </span>}</span>,
     "<span class="hljs-attribute">location</span>": <span class="hljs-value">{
-      "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"object"</span></span>,
+      "<span class="hljs-attribute">type</span>": <span class="hljs-value">[
+        <span class="hljs-string">"object"</span>,
+        <span class="hljs-string">"null"</span>
+      ]</span>,
       "<span class="hljs-attribute">properties</span>": <span class="hljs-value">{
         "<span class="hljs-attribute">name</span>": <span class="hljs-value">{
-          "<span class="hljs-attribute">type</span>": <span class="hljs-value">[
-            <span class="hljs-string">"string"</span>,
-            <span class="hljs-string">"null"</span>
-          ]</span>,
-          "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"City name (if available) + country name of the server location. `null` if unknown"</span></span>,
-          "<span class="hljs-attribute">default</span>": <span class="hljs-value"><span class="hljs-string">"null"</span>
+          "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
+          "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"City name (if available) + country name of the server location."</span>
         </span>}</span>,
         "<span class="hljs-attribute">country_code</span>": <span class="hljs-value">{
-          "<span class="hljs-attribute">type</span>": <span class="hljs-value">[
-            <span class="hljs-string">"string"</span>,
-            <span class="hljs-string">"null"</span>
-          ]</span>,
-          "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"[ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country code of the server location. `null` if unknown"</span></span>,
-          "<span class="hljs-attribute">default</span>": <span class="hljs-value"><span class="hljs-string">"null"</span>
+          "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
+          "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"[ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country code of the server location."</span>
         </span>}
       </span>}</span>,
-      "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Server location"</span>
+      "<span class="hljs-attribute">required</span>": <span class="hljs-value">[
+        <span class="hljs-string">"name"</span>,
+        <span class="hljs-string">"country_code"</span>
+      ]</span>,
+      "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Server location. `null` if unknown"</span>
     </span>}</span>,
     "<span class="hljs-attribute">version</span>": <span class="hljs-value">{
       "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
@@ -1018,26 +1015,25 @@ code, which contains all the RWR maps metadata stored in the JSON format.</p>
           "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Server players"</span>
         </span>}</span>,
         "<span class="hljs-attribute">location</span>": <span class="hljs-value">{
-          "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"object"</span></span>,
+          "<span class="hljs-attribute">type</span>": <span class="hljs-value">[
+            <span class="hljs-string">"object"</span>,
+            <span class="hljs-string">"null"</span>
+          ]</span>,
           "<span class="hljs-attribute">properties</span>": <span class="hljs-value">{
             "<span class="hljs-attribute">name</span>": <span class="hljs-value">{
-              "<span class="hljs-attribute">type</span>": <span class="hljs-value">[
-                <span class="hljs-string">"string"</span>,
-                <span class="hljs-string">"null"</span>
-              ]</span>,
-              "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"City name (if available) + country name of the server location. `null` if unknown"</span></span>,
-              "<span class="hljs-attribute">default</span>": <span class="hljs-value"><span class="hljs-string">"null"</span>
+              "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
+              "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"City name (if available) + country name of the server location."</span>
             </span>}</span>,
             "<span class="hljs-attribute">country_code</span>": <span class="hljs-value">{
-              "<span class="hljs-attribute">type</span>": <span class="hljs-value">[
-                <span class="hljs-string">"string"</span>,
-                <span class="hljs-string">"null"</span>
-              ]</span>,
-              "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"[ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country code of the server location. `null` if unknown"</span></span>,
-              "<span class="hljs-attribute">default</span>": <span class="hljs-value"><span class="hljs-string">"null"</span>
+              "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
+              "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"[ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country code of the server location."</span>
             </span>}
           </span>}</span>,
-          "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Server location"</span>
+          "<span class="hljs-attribute">required</span>": <span class="hljs-value">[
+            <span class="hljs-string">"name"</span>,
+            <span class="hljs-string">"country_code"</span>
+          ]</span>,
+          "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Server location. `null` if unknown"</span>
         </span>}
       </span>}</span>,
       "<span class="hljs-attribute">required</span>": <span class="hljs-value">[
@@ -1048,8 +1044,7 @@ code, which contains all the RWR maps metadata stored in the JSON format.</p>
         <span class="hljs-string">"url"</span>,
         <span class="hljs-string">"type"</span>,
         <span class="hljs-string">"map"</span>,
-        <span class="hljs-string">"players"</span>,
-        <span class="hljs-string">"location"</span>
+        <span class="hljs-string">"players"</span>
       ]</span>,
       "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Server on which the player is currently playing"</span>
     </span>}</span>,
