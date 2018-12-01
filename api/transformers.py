@@ -18,7 +18,7 @@ player_simple = OrderedDict([
     ('is_contributor', fields.Boolean),
     ('is_rwr_dev', fields.Boolean),
     ('is_ranked_servers_admin', fields.Boolean),
-    ('database', fields.Nested(database, attribute=lambda player: player)),
+    ('database', fields.Nested(database, attribute=lambda player: player if player.database else None, allow_null=True)),
 ])
 
 server_map_simple = OrderedDict([
@@ -72,7 +72,7 @@ server_simple = OrderedDict([
     ('url', fields.String(attribute='link_absolute')),
     ('type', fields.Nested(server_type, attribute=lambda server: server)),
     ('mode', fields.Nested(server_mode_simple, attribute=lambda server: server)),
-    ('database', fields.Nested(database, attribute=lambda server: server)),
+    ('database', fields.Nested(database, attribute=lambda server: server if server.database else None, allow_null=True)),
     ('map', fields.Nested(server_map_simple)),
     ('players', fields.Nested(server_players_simple)),
     ('location', fields.Nested(server_location)),

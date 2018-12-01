@@ -239,26 +239,21 @@ code, which contains all the RWR maps metadata stored in the JSON format.</p>
         "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Server mode"</span>
       </span>}</span>,
       "<span class="hljs-attribute">database</span>": <span class="hljs-value">{
-        "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"object"</span></span>,
+        "<span class="hljs-attribute">type</span>": <span class="hljs-value">[
+          <span class="hljs-string">"object"</span>,
+          <span class="hljs-string">"null"</span>
+        ]</span>,
         "<span class="hljs-attribute">properties</span>": <span class="hljs-value">{
           "<span class="hljs-attribute">id</span>": <span class="hljs-value">{
-            "<span class="hljs-attribute">type</span>": <span class="hljs-value">[
-              <span class="hljs-string">"string"</span>,
-              <span class="hljs-string">"null"</span>
-            ]</span>,
-            "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Database ID. `null` if not a ranked server or not a ranked player profile"</span></span>,
-            "<span class="hljs-attribute">default</span>": <span class="hljs-value"><span class="hljs-string">"null"</span>
+            "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
+            "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"The database ID"</span>
           </span>}</span>,
           "<span class="hljs-attribute">name</span>": <span class="hljs-value">{
-            "<span class="hljs-attribute">type</span>": <span class="hljs-value">[
-              <span class="hljs-string">"string"</span>,
-              <span class="hljs-string">"null"</span>
-            ]</span>,
-            "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Database name. `null` if not a ranked server or not a ranked player profile"</span></span>,
-            "<span class="hljs-attribute">default</span>": <span class="hljs-value"><span class="hljs-string">"null"</span>
+            "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
+            "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"The database name"</span>
           </span>}
         </span>}</span>,
-        "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Server used database (if ranked server)"</span>
+        "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Server used database. `null` if not a ranked (official) server"</span>
       </span>}</span>,
       "<span class="hljs-attribute">map</span>": <span class="hljs-value">{
         "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"object"</span></span>,
@@ -332,7 +327,6 @@ code, which contains all the RWR maps metadata stored in the JSON format.</p>
       <span class="hljs-string">"url"</span>,
       <span class="hljs-string">"type"</span>,
       <span class="hljs-string">"mode"</span>,
-      <span class="hljs-string">"database"</span>,
       <span class="hljs-string">"map"</span>,
       <span class="hljs-string">"players"</span>,
       <span class="hljs-string">"location"</span>
@@ -522,26 +516,21 @@ code, which contains all the RWR maps metadata stored in the JSON format.</p>
       "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Server mode"</span>
     </span>}</span>,
     "<span class="hljs-attribute">database</span>": <span class="hljs-value">{
-      "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"object"</span></span>,
+      "<span class="hljs-attribute">type</span>": <span class="hljs-value">[
+        <span class="hljs-string">"object"</span>,
+        <span class="hljs-string">"null"</span>
+      ]</span>,
       "<span class="hljs-attribute">properties</span>": <span class="hljs-value">{
         "<span class="hljs-attribute">id</span>": <span class="hljs-value">{
-          "<span class="hljs-attribute">type</span>": <span class="hljs-value">[
-            <span class="hljs-string">"string"</span>,
-            <span class="hljs-string">"null"</span>
-          ]</span>,
-          "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Database ID. `null` if not a ranked server or not a ranked player profile"</span></span>,
-          "<span class="hljs-attribute">default</span>": <span class="hljs-value"><span class="hljs-string">"null"</span>
+          "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
+          "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"The database ID"</span>
         </span>}</span>,
         "<span class="hljs-attribute">name</span>": <span class="hljs-value">{
-          "<span class="hljs-attribute">type</span>": <span class="hljs-value">[
-            <span class="hljs-string">"string"</span>,
-            <span class="hljs-string">"null"</span>
-          ]</span>,
-          "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Database name. `null` if not a ranked server or not a ranked player profile"</span></span>,
-          "<span class="hljs-attribute">default</span>": <span class="hljs-value"><span class="hljs-string">"null"</span>
+          "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
+          "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"The database name"</span>
         </span>}
       </span>}</span>,
-      "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Server used database (if ranked server)"</span>
+      "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Server used database. `null` if not a ranked (official) server"</span>
     </span>}</span>,
     "<span class="hljs-attribute">map</span>": <span class="hljs-value">{
       "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"object"</span></span>,
@@ -882,26 +871,21 @@ code, which contains all the RWR maps metadata stored in the JSON format.</p>
       "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Whether this player is admin on ranked (official) servers"</span>
     </span>}</span>,
     "<span class="hljs-attribute">database</span>": <span class="hljs-value">{
-      "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"object"</span></span>,
+      "<span class="hljs-attribute">type</span>": <span class="hljs-value">[
+        <span class="hljs-string">"object"</span>,
+        <span class="hljs-string">"null"</span>
+      ]</span>,
       "<span class="hljs-attribute">properties</span>": <span class="hljs-value">{
         "<span class="hljs-attribute">id</span>": <span class="hljs-value">{
-          "<span class="hljs-attribute">type</span>": <span class="hljs-value">[
-            <span class="hljs-string">"string"</span>,
-            <span class="hljs-string">"null"</span>
-          ]</span>,
-          "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Database ID. `null` if not a ranked server or not a ranked player profile"</span></span>,
-          "<span class="hljs-attribute">default</span>": <span class="hljs-value"><span class="hljs-string">"null"</span>
+          "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
+          "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"The database ID"</span>
         </span>}</span>,
         "<span class="hljs-attribute">name</span>": <span class="hljs-value">{
-          "<span class="hljs-attribute">type</span>": <span class="hljs-value">[
-            <span class="hljs-string">"string"</span>,
-            <span class="hljs-string">"null"</span>
-          ]</span>,
-          "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Database name. `null` if not a ranked server or not a ranked player profile"</span></span>,
-          "<span class="hljs-attribute">default</span>": <span class="hljs-value"><span class="hljs-string">"null"</span>
+          "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
+          "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"The database name"</span>
         </span>}
       </span>}</span>,
-      "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Player database (if ranked player profile)"</span>
+      "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Player database. `null` if not a ranked (official) player profile"</span>
     </span>}</span>,
     "<span class="hljs-attribute">current_server</span>": <span class="hljs-value">{
       "<span class="hljs-attribute">type</span>": <span class="hljs-value">[
@@ -977,26 +961,21 @@ code, which contains all the RWR maps metadata stored in the JSON format.</p>
           "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Server mode"</span>
         </span>}</span>,
         "<span class="hljs-attribute">database</span>": <span class="hljs-value">{
-          "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"object"</span></span>,
+          "<span class="hljs-attribute">type</span>": <span class="hljs-value">[
+            <span class="hljs-string">"object"</span>,
+            <span class="hljs-string">"null"</span>
+          ]</span>,
           "<span class="hljs-attribute">properties</span>": <span class="hljs-value">{
             "<span class="hljs-attribute">id</span>": <span class="hljs-value">{
-              "<span class="hljs-attribute">type</span>": <span class="hljs-value">[
-                <span class="hljs-string">"string"</span>,
-                <span class="hljs-string">"null"</span>
-              ]</span>,
-              "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Database ID. `null` if not a ranked server or not a ranked player profile"</span></span>,
-              "<span class="hljs-attribute">default</span>": <span class="hljs-value"><span class="hljs-string">"null"</span>
+              "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
+              "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"The database ID"</span>
             </span>}</span>,
             "<span class="hljs-attribute">name</span>": <span class="hljs-value">{
-              "<span class="hljs-attribute">type</span>": <span class="hljs-value">[
-                <span class="hljs-string">"string"</span>,
-                <span class="hljs-string">"null"</span>
-              ]</span>,
-              "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Database name. `null` if not a ranked server or not a ranked player profile"</span></span>,
-              "<span class="hljs-attribute">default</span>": <span class="hljs-value"><span class="hljs-string">"null"</span>
+              "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
+              "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"The database name"</span>
             </span>}
           </span>}</span>,
-          "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Server used database (if ranked server)"</span>
+          "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Server used database. `null` if not a ranked (official) server"</span>
         </span>}</span>,
         "<span class="hljs-attribute">map</span>": <span class="hljs-value">{
           "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"object"</span></span>,
@@ -1070,7 +1049,6 @@ code, which contains all the RWR maps metadata stored in the JSON format.</p>
         <span class="hljs-string">"url"</span>,
         <span class="hljs-string">"type"</span>,
         <span class="hljs-string">"mode"</span>,
-        <span class="hljs-string">"database"</span>,
         <span class="hljs-string">"map"</span>,
         <span class="hljs-string">"players"</span>,
         <span class="hljs-string">"location"</span>
@@ -1255,7 +1233,7 @@ code, which contains all the RWR maps metadata stored in the JSON format.</p>
         <span class="hljs-string">"string"</span>,
         <span class="hljs-string">"null"</span>
       ]</span>,
-      "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"If not null, [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) date for which this player date are available for"</span></span>,
+      "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"If not `null`: [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) date for which this player date are available for"</span></span>,
       "<span class="hljs-attribute">default</span>": <span class="hljs-value"><span class="hljs-string">"null"</span>
     </span>}
   </span>}</span>,
@@ -1340,7 +1318,7 @@ code, which contains all the RWR maps metadata stored in the JSON format.</p>
     <span class="hljs-string">"message"</span>
   ]</span>,
   "<span class="hljs-attribute">additionalProperties</span>": <span class="hljs-value"><span class="hljs-literal">false</span>
-</span>}</code></pre><div style="height: 1px;"></div></div></div></div></div></section></div></div></div><p style="text-align: center;" class="text-muted">Generated by&nbsp;<a href="https://github.com/danielgtaylor/aglio" class="aglio">aglio</a>&nbsp;on 30 Nov 2018</p><script>/* eslint-env browser */
+</span>}</code></pre><div style="height: 1px;"></div></div></div></div></div></section></div></div></div><p style="text-align: center;" class="text-muted">Generated by&nbsp;<a href="https://github.com/danielgtaylor/aglio" class="aglio">aglio</a>&nbsp;on 01 Dec 2018</p><script>/* eslint-env browser */
 /* eslint quotes: [2, "single"] */
 'use strict';
 
