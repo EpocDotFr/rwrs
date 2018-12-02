@@ -181,7 +181,7 @@ img.bordered {
 /************************************************************************
  * Online status page */
 
-.servers-list thead:hover th {
+.servers-statuses thead:hover th {
     cursor: pointer;
 }
 
