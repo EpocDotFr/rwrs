@@ -833,7 +833,15 @@ code, which contains all the RWR maps metadata stored in the JSON format.</p>
   </span>}</span>,
   "<span class="hljs-attribute">xp_to_next_rank</span>": <span class="hljs-value"><span class="hljs-number">280079</span></span>,
   "<span class="hljs-attribute">xp_percent_completion_to_next_rank</span>": <span class="hljs-value"><span class="hljs-number">43.98</span></span>,
-  "<span class="hljs-attribute">date</span>": <span class="hljs-value"><span class="hljs-string">"2018-11-30"</span>
+  "<span class="hljs-attribute">date</span>": <span class="hljs-value"><span class="hljs-string">"2018-11-30"</span></span>,
+  "<span class="hljs-attribute">promoted_to_rank</span>": <span class="hljs-value">{
+    "<span class="hljs-attribute">id</span>": <span class="hljs-value"><span class="hljs-number">14</span></span>,
+    "<span class="hljs-attribute">name</span>": <span class="hljs-value"><span class="hljs-string">"Lieutenant General"</span></span>,
+    "<span class="hljs-attribute">alternative_name</span>": <span class="hljs-value"><span class="hljs-string">"Hello, world!"</span></span>,
+    "<span class="hljs-attribute">required_xp</span>": <span class="hljs-value"><span class="hljs-number">200000</span></span>,
+    "<span class="hljs-attribute">image_url</span>": <span class="hljs-value"><span class="hljs-string">"https://rwrstats.com/images/ranks/us/14.png"</span></span>,
+    "<span class="hljs-attribute">icon_url</span>": <span class="hljs-value"><span class="hljs-string">"https://rwrstats.com/images/ranks/us/14_icon.png"</span>
+  </span>}
 </span>}</code></pre><div style="height: 1px;"></div><h5>Schema</h5><pre><code>{
   "<span class="hljs-attribute">$schema</span>": <span class="hljs-value"><span class="hljs-string">"http://json-schema.org/draft-04/schema#"</span></span>,
   "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"object"</span></span>,
@@ -1226,8 +1234,52 @@ code, which contains all the RWR maps metadata stored in the JSON format.</p>
         <span class="hljs-string">"string"</span>,
         <span class="hljs-string">"null"</span>
       ]</span>,
-      "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"If not `null`: [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) date for which this player date are available for"</span></span>,
+      "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"If not `null`: [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) date for which this player date are available for (stats history mode only)"</span></span>,
       "<span class="hljs-attribute">default</span>": <span class="hljs-value"><span class="hljs-string">"null"</span>
+    </span>}</span>,
+    "<span class="hljs-attribute">promoted_to_rank</span>": <span class="hljs-value">{
+      "<span class="hljs-attribute">type</span>": <span class="hljs-value">[
+        <span class="hljs-string">"object"</span>,
+        <span class="hljs-string">"null"</span>
+      ]</span>,
+      "<span class="hljs-attribute">properties</span>": <span class="hljs-value">{
+        "<span class="hljs-attribute">id</span>": <span class="hljs-value">{
+          "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"number"</span></span>,
+          "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Rank ID"</span>
+        </span>}</span>,
+        "<span class="hljs-attribute">name</span>": <span class="hljs-value">{
+          "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
+          "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Rank name"</span>
+        </span>}</span>,
+        "<span class="hljs-attribute">alternative_name</span>": <span class="hljs-value">{
+          "<span class="hljs-attribute">type</span>": <span class="hljs-value">[
+            <span class="hljs-string">"string"</span>,
+            <span class="hljs-string">"null"</span>
+          ]</span>,
+          "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"English rank name if this rank is an IJA one"</span></span>,
+          "<span class="hljs-attribute">default</span>": <span class="hljs-value"><span class="hljs-string">"null"</span>
+        </span>}</span>,
+        "<span class="hljs-attribute">required_xp</span>": <span class="hljs-value">{
+          "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"number"</span></span>,
+          "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Number of experience points this rank requires to be promoted to"</span>
+        </span>}</span>,
+        "<span class="hljs-attribute">image_url</span>": <span class="hljs-value">{
+          "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
+          "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Rank image URL"</span>
+        </span>}</span>,
+        "<span class="hljs-attribute">icon_url</span>": <span class="hljs-value">{
+          "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
+          "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Small rank image URL"</span>
+        </span>}
+      </span>}</span>,
+      "<span class="hljs-attribute">required</span>": <span class="hljs-value">[
+        <span class="hljs-string">"id"</span>,
+        <span class="hljs-string">"name"</span>,
+        <span class="hljs-string">"required_xp"</span>,
+        <span class="hljs-string">"image_url"</span>,
+        <span class="hljs-string">"icon_url"</span>
+      ]</span>,
+      "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"If not `null`: rank this player has been promoted to (stats history mode only)"</span>
     </span>}
   </span>}</span>,
   "<span class="hljs-attribute">required</span>": <span class="hljs-value">[
@@ -1244,7 +1296,8 @@ code, which contains all the RWR maps metadata stored in the JSON format.</p>
     <span class="hljs-string">"next_rank"</span>,
     <span class="hljs-string">"xp_to_next_rank"</span>,
     <span class="hljs-string">"xp_percent_completion_to_next_rank"</span>,
-    <span class="hljs-string">"date"</span>
+    <span class="hljs-string">"date"</span>,
+    <span class="hljs-string">"promoted_to_rank"</span>
   ]</span>,
   "<span class="hljs-attribute">additionalProperties</span>": <span class="hljs-value"><span class="hljs-literal">false</span>
 </span>}</code></pre><div style="height: 1px;"></div></div></div><div class="title"><strong>Response&nbsp;&nbsp;<code>412</code></strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><div class="description"><p>If the <code>date</code> parameter is provided: the Player isn’t eligible for stats history (5000 most experienced players only).</p>
@@ -1311,7 +1364,7 @@ code, which contains all the RWR maps metadata stored in the JSON format.</p>
     <span class="hljs-string">"message"</span>
   ]</span>,
   "<span class="hljs-attribute">additionalProperties</span>": <span class="hljs-value"><span class="hljs-literal">false</span>
-</span>}</code></pre><div style="height: 1px;"></div></div></div></div></div></section></div></div></div><p style="text-align: center;" class="text-muted">Generated by&nbsp;<a href="https://github.com/danielgtaylor/aglio" class="aglio">aglio</a>&nbsp;on 02 Dec 2018</p><script>/* eslint-env browser */
+</span>}</code></pre><div style="height: 1px;"></div></div></div></div></div></section></div></div></div><p style="text-align: center;" class="text-muted">Generated by&nbsp;<a href="https://github.com/danielgtaylor/aglio" class="aglio">aglio</a>&nbsp;on 05 Dec 2018</p><script>/* eslint-env browser */
 /* eslint quotes: [2, "single"] */
 'use strict';
 

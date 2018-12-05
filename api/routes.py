@@ -81,6 +81,7 @@ class PlayerResource(Resource):
 
             player = Player.craft(rwr_account, rwr_account_stat)
             player.created_at = args['date']
+            player.promoted_to_rank = rwr_account_stat.promoted_to_rank
         else: # Live data mode
             player = rwr.scraper.search_player_by_username(database, username)
 
