@@ -218,7 +218,7 @@ class Player:
         highest_rank_id = max(rank_ids)
 
         if self.rank.id == highest_rank_id: # Highest rank already reached
-            return False
+            return None
 
         next_rank_id = self.rank.id + 1
 
@@ -233,7 +233,7 @@ class Player:
     def xp_to_next_rank(self):
         """Amount of XP the player needs to be promoted to the next rank."""
         if not self.next_rank:
-            return None
+            return 0
 
         return self.next_rank.xp - self.xp
 
@@ -241,7 +241,7 @@ class Player:
     def xp_percent_completion_to_next_rank(self):
         """Percentage of XP the player obtained for the next rank."""
         if not self.next_rank:
-            return None
+            return 0.0
 
         return round((self.xp * 100) / self.next_rank.xp, 2)
 

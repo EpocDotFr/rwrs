@@ -12,27 +12,17 @@
 
 ### Server Location Object
 
-  + `name`: `Frankfurt am Main, Germany` (nullable) - City name (if available) + country name of the server location. `null` if unknown
-    + Default: `null`
-  + `country_code`: `de` (nullable) - [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country code of the server location. `null` if unknown
-    + Default: `null`
+  + `name`: `Frankfurt am Main, Germany` (required) - City name (if available) + country name of the server location.
+  + `country_code`: `de` (required) - [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country code of the server location.
 
 ### Server Type Object
 
   + `id`: `vanilla` (required) - Server type ID (used mod or DLC)
   + `name`: `Vanilla` (required) - Server type name (used mod or DLC)
 
-### Server Database Object
-
-  + `id`: `invasion` (nullable) - Database ID. `null` if not a ranked server
-    + Default: `null`
-  + `name`: `Invasion` (nullable) - Database name. `null` if not a ranked server
-    + Default: `null`
-
 ### Server Mode Simple Object
 
-  + `id`: `COOP` (nullable) - Server mode ID (game mode). `null` if unknown
-    + Default: `null`
+  + `id`: `COOP` (required) - Server mode ID (game mode)
   + `name`: `Coop.` (required) - Server mode name (game mode)
 
 ### Server Mode Full Object (Server Mode Simple Object)
@@ -60,11 +50,11 @@
     + Default: `null`
   + `url`: `https://rwrstats.com/servers/31.186.250.67:1235/invasioneu2` (required) - RWRS server page URL
   + `type` (Server Type Object, required) - Server type
-  + `mode` (Server Mode Simple Object, required) - Server mode
-  + `database` (Server Database Object, required) - Server used database
+  + `mode` (Server Mode Simple Object, nullable) - Server mode. `null` if unknown
+  + `database` (Database Object, nullable) - Server used database. `null` if not a ranked (official) server
   + `map` (Server Map Simple Object, required) - Server map
   + `players` (Server Players Simple Object, required) - Server players
-  + `location` (Server Location Object, required) - Server location
+  + `location` (Server Location Object, nullable) - Server location. `null` if unknown
 
 ### Server Full Object (Server Simple Object)
 
@@ -74,9 +64,5 @@
   + `comment`: `Coop campaign` (nullable) - Server comment. `null` if none
     + Default: `null`
   + `bots`: `104` (number, required) - Number of current bots
-  + `mode` (Server Mode Full Object, required) - Server mode
+  + `mode` (Server Mode Full Object, nullable) - Server mode. `null` if unknown
   + `players` (Server Players Full Object, required) - Server players
-
-### Error Response
-
-  + message: `Example error message` (required) - The error message explaining what happened

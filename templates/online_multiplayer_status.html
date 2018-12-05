@@ -25,7 +25,7 @@
         <div class="grid-2 has-gutter">
             {% for group in servers_statuses %}
                 <div>
-                    <table class="servers-list mbn">
+                    <table class="servers-statuses mbn">
                         <thead>
                             <tr>
                                 <th><i class="fas fa-{{ group.status_icon }}-circle fa-fw txt{{ group.status_color }} help" title="{{ group.status_text }}"></i> {{ group.label }} <span class="fr"><i class="fas fa-{{ 'minus' if not group.is_everything_ok else 'plus'}}-square toggle-icon" title="Show / hide details"></i></span></th>
