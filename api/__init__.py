@@ -5,13 +5,12 @@ from flask_limiter import Limiter
 from functools import wraps
 from rwrs import app
 from flask import g
-import os
 
 
 def check_under_maintenance(f):
     @wraps(f)
     def decorated(*args, **kwargs):
-        if os.path.exists('maintenance'):
+        if g.UNDER_MAINTENANCE:
             abort(503, message='Maintenance in progress')
 
         return f(*args, **kwargs)

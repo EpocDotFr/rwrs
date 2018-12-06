@@ -9,20 +9,18 @@ import os
 
 @app.before_request
 def define_globals():
+    g.UNDER_MAINTENANCE = False
+
     if request.endpoint in ('dynamic_player_image', 'dynamic_server_image'):
         return
 
     g.INCLUDE_WEB_ANALYTICS = not app.config['DEBUG']
-    g.UNDER_MAINTENANCE = False
     g.LAYOUT = 'normal'
 
 
 @app.before_request
 def set_beta_data():
-    if request.endpoint in ('dynamic_player_image', 'dynamic_server_image'):
-        return
-
-    if not app.config['BETA']:
+    if request.endpoint in ('dynamic_player_image', 'dynamic_server_image') or not app.config['BETA']:
         return
 
     from git import Repo
@@ -47,10 +45,10 @@ def get_motd():
 
 @app.before_request
 def check_under_maintenance():
-    if not os.path.exists('maintenance'):
-        return
+    g.UNDER_MAINTENANCE = os.path.exists('maintenance')
 
-    g.UNDER_MAINTENANCE = True
+    if request.endpoint in ('dynamic_player_image', 'dynamic_server_image') or not g.UNDER_MAINTENANCE:
+        return
 
     abort(503)
 
