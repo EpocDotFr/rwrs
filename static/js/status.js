@@ -6,7 +6,7 @@ onlineStatusFeature = {
      * Initialize the feature.
      */
     init: function() {
-        this.servers_lists = $('.servers-list');
+        this.servers_lists = $('.servers-statuses');
         this.servers_lists.find('tbody:not(.has-outages)').addClass('is-hidden');
 
         this.initToggles();
