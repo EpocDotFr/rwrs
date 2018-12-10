@@ -1,5 +1,5 @@
 from PIL import Image, ImageDraw, ImageFont
-from flask import make_response
+from flask import make_response, g
 from io import BytesIO
 import rwr.scraper
 import rwr.utils
@@ -85,6 +85,12 @@ class DynamicServerImage(DynamicImage):
         self.port = port
 
     def do_create(self):
+        if g.UNDER_MAINTENANCE:
+            self.status = 503
+            self.do_create_error('Maintenance in progress.')
+
+            return
+
         try:
             self.server = rwr.scraper.get_server_by_ip_and_port(self.ip, self.port)
 
@@ -160,6 +166,12 @@ class DynamicPlayerImage(DynamicImage):
         self.username = username
 
     def do_create(self):
+        if g.UNDER_MAINTENANCE:
+            self.status = 503
+            self.do_create_error('Maintenance in progress.')
+
+            return
+
         try:
             self.player = rwr.scraper.search_player_by_username(self.database, self.username)
 

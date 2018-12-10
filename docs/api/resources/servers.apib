@@ -2,7 +2,7 @@
 
 A Server represent a public multiplayer Running With Rifles game.
 
-## Servers list [/servers{?location,map,type,mode,dedicated,ranked,not_empty,not_full,limit}]
+## Servers [/servers{?location,map,type,mode,dedicated,ranked,not_empty,not_full,limit}]
 
 + Parameters
   + `location`: `continent:eu` (optional)
@@ -119,7 +119,7 @@ A Server represent a public multiplayer Running With Rifles game.
           + `0`
   + `limit`: `10` (number, optional) - Return the _n_ first servers of the filtered list.
 
-### Get Server list [GET]
+### Get the list of Servers [GET]
 
 Return the list of Servers. The list may be optionally filtered by one or more criteria. The criteria is taken into
 account **only** if it is present in the query string.
@@ -160,13 +160,13 @@ This resource has a cache lifetime of **1 minute**.
 
     + Attributes (Error Response, fixed-type)
 
-## Server object [/servers/{ip}:{port}]
+## Server [/servers/{ip}:{port}]
 
 + Parameters
     + ip: `31.186.250.67` - The Server IP
     + port: `1235` (integer) - The Server port
 
-### Get one Server [GET]
+### Get a specific Server [GET]
 
 Return the Server corresponding to the given IP address / port couple.
 

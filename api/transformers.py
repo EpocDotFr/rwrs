@@ -6,6 +6,17 @@ class ArrowDateField(fields.Raw):
     def format(self, value):
         return value.format('YYYY-MM-DD') if value else None
 
+live_counters = OrderedDict([
+    ('players', fields.Nested(OrderedDict([
+        ('total', fields.Integer),
+        ('online', fields.Integer),
+    ]))),
+    ('servers', fields.Nested(OrderedDict([
+        ('total', fields.Integer),
+        ('active', fields.Integer),
+    ]))),
+])
+
 database = OrderedDict([
     ('id', fields.String(attribute='database')),
     ('name', fields.String(attribute='database_name')),

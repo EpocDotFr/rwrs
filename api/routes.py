@@ -3,7 +3,7 @@ from models import RwrAccount, RwrAccountStat
 from . import api, transformers, validators
 from types import SimpleNamespace
 from rwr.player import Player
-from flask import url_for
+from flask import url_for, g
 from rwrs import app
 import rwr.constants
 import rwr.scraper
@@ -94,6 +94,23 @@ class PlayerResource(Resource):
 
         return player
 
+
+class LiveCountersResource(Resource):
+    @marshal_with(transformers.live_counters)
+    def get(self):
+        return SimpleNamespace(
+            players=SimpleNamespace(
+                total=g.total_players,
+                online=g.online_players
+            ),
+            servers=SimpleNamespace(
+                total=g.total_servers,
+                active=g.active_servers
+            )
+        )
+
+
 api.add_resource(ServersResource, '/servers')
 api.add_resource(ServerResource, '/servers/<ip>:<int:port>')
 api.add_resource(PlayerResource, '/players/<any({}):database>/<username>'.format(rwr.constants.VALID_DATABASES_STRING_LIST))
+api.add_resource(LiveCountersResource, '/live-counters')

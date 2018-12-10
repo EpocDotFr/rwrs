@@ -1,0 +1,37 @@
+# Group Misc
+
+Miscellanous resources.
+
+## Live counters [/live-counters]
+
+### Get live counters [GET]
+
+Return the current number of players (total / online) and servers (total / active).
+
+::: note
+#### Server-side caching
+
+This resource has a cache lifetime of **1 minute**.
+:::
+
++ Request
+
+    + Headers
+
+            Authorization: Token {token}
+
++ Response 200 (application/json)
+
+    + Attributes (Map Counters Object, fixed-type)
+
++ Response 403 (application/json)
+
+    Invalid token or token not provided.
+
+    + Attributes (Error Response, fixed-type)
+
++ Response 503 (application/json)
+
+    Maintenance in progress.
+
+    + Attributes (Error Response, fixed-type)

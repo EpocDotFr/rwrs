@@ -10,7 +10,7 @@ Players stats are updated daily and **only** concerns ranked (official) Invasion
 Also, stats history is only recorded for the 5000 most experienced players.
 :::
 
-## Player object [/players/{database}/{username}{?date}]
+## Player [/players/{database}/{username}{?date}]
 
 + Parameters
     + database: `invasion` (enum[string]) - The player database.
@@ -24,7 +24,7 @@ Also, stats history is only recorded for the 5000 most experienced players.
 
         Note the player must be part of the 5000 most experienced players for its stats history to be recorded.
 
-### Get one Player [GET]
+### Get a specific Player [GET]
 
 Return the Player corresponding to the given database / username couple.
 
