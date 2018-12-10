@@ -545,7 +545,7 @@ code, which contains all the RWR maps metadata stored in the JSON format.</p>
             <span class="hljs-string">"string"</span>,
             <span class="hljs-string">"null"</span>
           ]</span>,
-          "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Map preview image URL. `null` if none available"</span></span>,
+          "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Map preview image URL (ingame screenshot). `null` if none available. Size may vary"</span></span>,
           "<span class="hljs-attribute">default</span>": <span class="hljs-value"><span class="hljs-string">"null"</span>
         </span>}</span>,
         "<span class="hljs-attribute">minimap_image_url</span>": <span class="hljs-value">{
@@ -553,7 +553,7 @@ code, which contains all the RWR maps metadata stored in the JSON format.</p>
             <span class="hljs-string">"string"</span>,
             <span class="hljs-string">"null"</span>
           ]</span>,
-          "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Mapview image URL. `null` if none available"</span></span>,
+          "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Mapview image URL. `null` if none available. 2048x2048 pixels"</span></span>,
           "<span class="hljs-attribute">default</span>": <span class="hljs-value"><span class="hljs-string">"null"</span>
         </span>}
       </span>}</span>,
@@ -1151,11 +1151,11 @@ code, which contains all the RWR maps metadata stored in the JSON format.</p>
         </span>}</span>,
         "<span class="hljs-attribute">image_url</span>": <span class="hljs-value">{
           "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
-          "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Rank image URL"</span>
+          "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Rank image URL. 64x64 pixels"</span>
         </span>}</span>,
         "<span class="hljs-attribute">icon_url</span>": <span class="hljs-value">{
           "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
-          "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Small rank image URL"</span>
+          "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Small rank image URL. 20x20 pixels"</span>
         </span>}
       </span>}</span>,
       "<span class="hljs-attribute">required</span>": <span class="hljs-value">[
@@ -1195,11 +1195,11 @@ code, which contains all the RWR maps metadata stored in the JSON format.</p>
         </span>}</span>,
         "<span class="hljs-attribute">image_url</span>": <span class="hljs-value">{
           "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
-          "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Rank image URL"</span>
+          "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Rank image URL. 64x64 pixels"</span>
         </span>}</span>,
         "<span class="hljs-attribute">icon_url</span>": <span class="hljs-value">{
           "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
-          "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Small rank image URL"</span>
+          "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Small rank image URL. 20x20 pixels"</span>
         </span>}
       </span>}</span>,
       "<span class="hljs-attribute">required</span>": <span class="hljs-value">[
@@ -1226,7 +1226,7 @@ code, which contains all the RWR maps metadata stored in the JSON format.</p>
         <span class="hljs-string">"string"</span>,
         <span class="hljs-string">"null"</span>
       ]</span>,
-      "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"If not `null`: [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) date for which this player date are available for"</span></span>,
+      "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"If not `null`: [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) date for which this player date are available for (stats history mode only)"</span></span>,
       "<span class="hljs-attribute">default</span>": <span class="hljs-value"><span class="hljs-string">"null"</span>
     </span>}
   </span>}</span>,
@@ -1404,7 +1404,7 @@ code, which contains all the RWR maps metadata stored in the JSON format.</p>
     <span class="hljs-string">"message"</span>
   ]</span>,
   "<span class="hljs-attribute">additionalProperties</span>": <span class="hljs-value"><span class="hljs-literal">false</span>
-</span>}</code></pre><div style="height: 1px;"></div></div></div></div></div></section></div></div></div><p style="text-align: center;" class="text-muted">Generated by&nbsp;<a href="https://github.com/danielgtaylor/aglio" class="aglio">aglio</a>&nbsp;on 06 Dec 2018</p><script>/* eslint-env browser */
+</span>}</code></pre><div style="height: 1px;"></div></div></div></div></div></section></div></div></div><p style="text-align: center;" class="text-muted">Generated by&nbsp;<a href="https://github.com/danielgtaylor/aglio" class="aglio">aglio</a>&nbsp;on 10 Dec 2018</p><script>/* eslint-env browser */
 /* eslint quotes: [2, "single"] */
 'use strict';
 

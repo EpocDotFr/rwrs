@@ -22,8 +22,8 @@
   + `alternative_name` (nullable) - English rank name if this rank is an IJA one
     + Default: `null`
   + `required_xp`: `200000` (number, required) - Number of experience points this rank requires to be promoted to
-  + `image_url`: `https://rwrstats.com/images/ranks/us/14.png` (required) - Rank image URL
-  + `icon_url`: `https://rwrstats.com/images/ranks/us/14_icon.png` (required) - Small rank image URL
+  + `image_url`: `https://rwrstats.com/images/ranks/us/14.png` (required) - Rank image URL. 64x64 pixels
+  + `icon_url`: `https://rwrstats.com/images/ranks/us/14_icon.png` (required) - Small rank image URL. 20x20 pixels
 
 ### Player Simple Object
 
@@ -46,5 +46,5 @@
     + Default: `0`
   + `xp_percent_completion_to_next_rank`: `43.98` (number) - Percentage of experience points to gain until the next promotion
     + Default: `0.0`
-  + `date`: `2018-11-30` (nullable) - If not `null`: [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) date for which this player date are available for
+  + `date`: `2018-11-30` (nullable) - If not `null`: [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) date for which this player date are available for (stats history mode only)
     + Default: `null`

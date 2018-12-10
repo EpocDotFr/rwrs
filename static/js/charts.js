@@ -39,7 +39,7 @@ chartsFeature = {
     initOnPlayerEvolution: function() {
         // K/D ratio
         if (this.player_evolution_data.ratio.length == 0) {
-            // If there's no data ti display, create a "missing data" chart
+            // If there's no data to display, create a "missing data" chart
             this.createMissingDataChart({
                 target: '#ratio-chart'
             });
@@ -57,7 +57,7 @@ chartsFeature = {
 
         // Score
         if (this.player_evolution_data.score.length == 0) {
-            // If there's no data ti display, create a "missing data" chart
+            // If there's no data to display, create a "missing data" chart
             this.createMissingDataChart({
                 target: '#score-chart'
             });
@@ -75,7 +75,7 @@ chartsFeature = {
 
         // Leaderboard position (by XP)
         if (this.player_evolution_data.position.length == 0) {
-            // If there's no data ti display, create a "missing data" chart
+            // If there's no data to display, create a "missing data" chart
             this.createMissingDataChart({
                 target: '#position-chart'
             });
@@ -96,7 +96,7 @@ chartsFeature = {
      */
     initOnServerDetails: function() {
         if (this.server_players_data.length == 0) {
-            // If there's no data ti display, create a "missing data" chart
+            // If there's no data to display, create a "missing data" chart
             this.createMissingDataChart({
                 target: '#server-players-chart'
             });
@@ -117,7 +117,7 @@ chartsFeature = {
     initOnHome: function() {
         // Total and online players chart
         if (this.players_data.length == 0 || (this.players_data[0].length == 0 && this.players_data[1].length == 0)) {
-            // If there's no data ti display, create a "missing data" chart
+            // If there's no data to display, create a "missing data" chart
             this.createMissingDataChart({
                 target: '#players-chart'
             });
@@ -139,7 +139,7 @@ chartsFeature = {
 
         // Online and active servers
         if (this.servers_data.length == 0 || (this.servers_data[0].length == 0 && this.servers_data[1].length == 0)) {
-            // If there's no data ti display, create a "missing data" chart
+            // If there's no data to display, create a "missing data" chart
             this.createMissingDataChart({
                 target: '#servers-chart'
             });

@@ -326,7 +326,10 @@ class Player:
     @property
     def rwr_account(self):
         """Return the RwrAccount associated to this Player."""
-        return RwrAccount.get_by_type_and_username(self.database, self.username) if not self._rwr_account else self._rwr_account
+        if not self._rwr_account:
+            self._rwr_account = RwrAccount.get_by_type_and_username(self.database, self.username)
+
+        return self._rwr_account
 
     @rwr_account.setter
     def rwr_account(self, rwr_account):
