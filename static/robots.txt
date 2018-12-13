@@ -1,4 +1,6 @@
 User-agent: *
 Allow: /
 Disallow: /my-friends
+Disallow: /popover
+Disallow: /api
 Sitemap: https://rwrstats.com/sitemap.xml
