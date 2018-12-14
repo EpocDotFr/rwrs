@@ -1,4 +1,4 @@
-from models import RwrRootServer, Variable, RwrAccount, RwrAccountStat
+from models import Variable, RwrAccount, RwrAccountStat
 from disco.types.user import GameType, Game, Status
 from disco.client import Client, ClientConfig
 from disco.util.logging import setup_logging
@@ -7,7 +7,6 @@ from . import constants, utils
 from tabulate import tabulate
 from rwr.player import Player
 from rwrs import app, cache
-from flask import url_for
 from gevent import monkey
 import rwr.scraper
 import rwr.utils
@@ -310,14 +309,8 @@ class RwrsBotDiscoPlugin(Plugin):
 
     @Plugin.command('status')
     def on_status_command(self, event):
-        """Displays the current status of the online multiplayer."""
-        is_everything_ok, servers_statuses = RwrRootServer.get_data_for_display()
-
-        if is_everything_ok:
-            event.msg.reply(':white_check_mark: Online multiplayer is working fine. Go play with others!')
-        else:
-            with app.app_context():
-                event.msg.reply(':warning: Looks like online multiplayer is encountering issues.\nFor details, head over here: {}'.format(url_for('online_multiplayer_status', _external=True)))
+        """Displays a link to the RWR ecosystem status page."""
+        event.msg.reply('Please visit the RWR ecosystem status page: {}'.format(app.config['STATUS_PAGE_URL']))
 
     @Plugin.command('servers', parser=True)
     @Plugin.parser.add_argument('type', choices=constants.VALID_SERVER_TYPES.keys(), nargs='?', default=None)
