@@ -3,7 +3,6 @@ from sqlalchemy_utils import ArrowType
 from rwrs import db, cache, app
 from sqlalchemy import func
 from enum import Enum
-import rwr.constants
 import helpers
 import hashlib
 import arrow
@@ -108,103 +107,6 @@ class SteamPlayerCount(db.Model, Measurable):
 
     def __repr__(self):
         return 'SteamPlayerCount:{}'.format(self.id)
-
-
-class RwrRootServerStatus(Enum):
-    UP = 'UP'
-    DOWN = 'DOWN'
-
-
-class RwrRootServer(db.Model):
-    __tablename__ = 'rwr_root_servers'
-    __table_args__ = (db.Index('host_idx', 'host'), )
-
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-
-    host = db.Column(db.String(255), nullable=False)
-    status = db.Column(db.Enum(RwrRootServerStatus), nullable=False)
-
-    @property
-    def status_icon(self):
-        if self.status == RwrRootServerStatus.UP:
-            return 'check'
-        elif self.status == RwrRootServerStatus.DOWN:
-            return 'times'
-
-    @property
-    def status_text(self):
-        if self.status == RwrRootServerStatus.UP:
-            return 'Up'
-        elif self.status == RwrRootServerStatus.DOWN:
-            return 'Down'
-
-    @property
-    def status_color(self):
-        if self.status == RwrRootServerStatus.UP:
-            return 'green'
-        elif self.status == RwrRootServerStatus.DOWN:
-            return 'red'
-
-    @staticmethod
-    def are_rwr_root_servers_ok():
-        """Return True if all root RWR servers are OK, False otherwise."""
-        hosts_count = len(rwr.constants.ROOT_RWR_HOSTS)
-        up_hosts_count = RwrRootServer.query.with_entities(func.count('*')).filter(
-            RwrRootServer.status == RwrRootServerStatus.UP,
-            RwrRootServer.host.in_(rwr.constants.ROOT_RWR_HOSTS)
-        ).scalar()
-
-        return hosts_count == up_hosts_count
-
-    @staticmethod
-    def get_data_for_display():
-        """Return data to be displayed on the status page."""
-        servers_statuses = rwr.constants.ROOT_RWR_SERVERS
-
-        root_servers = RwrRootServer.query.all()
-        servers_down_count = 0
-
-        for group in servers_statuses:
-            group['status_icon'] = 'check'
-            group['status_text'] = 'Everything operating normally'
-            group['status_color'] = 'green'
-
-            group_servers_down_count = 0
-
-            for server in group['servers']:
-                server['status_icon'] = 'question'
-                server['status_text'] = 'Status unknown'
-                server['status_color'] = 'grey'
-
-                for root_server in root_servers:
-                    if root_server.host == server['host']:
-                        server['status_icon'] = root_server.status_icon
-                        server['status_text'] = root_server.status_text
-                        server['status_color'] = root_server.status_color
-
-                        if root_server.status == RwrRootServerStatus.DOWN:
-                            servers_down_count += 1
-                            group_servers_down_count += 1
-
-                        break
-
-            group['is_everything_ok'] = group_servers_down_count == 0
-
-            if group_servers_down_count == len(group['servers']):
-                group['status_icon'] = 'times'
-                group['status_text'] = 'Major outage'
-                group['status_color'] = 'red'
-            elif group_servers_down_count > 0 and group_servers_down_count < len(group['servers']):
-                group['status_icon'] = 'exclamation'
-                group['status_text'] = 'Partial outage'
-                group['status_color'] = 'orange'
-
-        is_everything_ok = servers_down_count == 0
-
-        return (is_everything_ok, servers_statuses)
-
-    def __repr__(self):
-        return 'RwrRootServer:{}'.format(self.id)
 
 
 class VariableType(Enum):
