@@ -140,14 +140,6 @@ flask get-players-count
 flask db upgrade
 ```
 
-### Saving RWR root servers status
-
-Will ping RWR root servers and store their status (up or down).
-
-```
-flask get-root-rwr-servers-status
-```
-
 ### Running the RWRS Discord bot
 
 ```

@@ -1,8 +1,6 @@
 from collections import OrderedDict
 from flask import request
 from rwrs import app
-import subprocess
-import platform
 import json
 import os
 
@@ -89,39 +87,6 @@ def save_json(file, data):
         json.dump(data, f)
 
     return data
-
-
-def ping(host, network_timeout=3):
-    """Send a ping packet to the specified host, using the system "ping" command."""
-    args = [
-        'ping'
-    ]
-
-    platform_os = platform.system()
-
-    if platform_os == 'Windows':
-        args.extend(['-n', '1'])
-        args.extend(['-w', str(network_timeout * 1000)])
-    elif platform_os in ('Linux', 'Darwin'):
-        args.extend(['-c', '1'])
-        args.extend(['-W', str(network_timeout)])
-    else:
-        raise NotImplemented('Unsupported OS: {}'.format(platform_os))
-
-    args.append(host)
-
-    try:
-        if platform_os == 'Windows':
-            output = subprocess.run(args, check=True, universal_newlines=True).stdout
-
-            if output and 'TTL' not in output:
-                return False
-        else:
-            subprocess.run(args, check=True)
-
-        return True
-    except (subprocess.CalledProcessError, subprocess.TimeoutExpired):
-        return False
 
 
 def simplified_integer(integer):

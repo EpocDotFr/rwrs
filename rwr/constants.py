@@ -336,35 +336,6 @@ PLAYERS_LIST_DATABASES = {
 VALID_DATABASES = PLAYERS_LIST_DATABASES.keys()
 VALID_DATABASES_STRING_LIST = ','.join(VALID_DATABASES)
 
-ROOT_RWR_SERVERS = [
-    {
-        'label': 'Master servers',
-        'description': 'Needed to play online with other people.',
-        'servers': [
-            {
-                'location': 'St Louis, United States',
-                'host': 'us3.runningwithrifles.com'
-            },
-            {
-                'location': 'Tokyo, Japan',
-                'host': 'jp1.runningwithrifles.com'
-            }
-        ]
-    },
-    {
-        'label': 'Stats servers',
-        'description': 'Needed to keep track of your stats on ranked (official) servers.',
-        'servers': [
-            {
-                'location': 'Chicago, United States',
-                'host': 'us6.runningwithrifles.com'
-            }
-        ]
-    }
-]
-
-ROOT_RWR_HOSTS = [server['host'] for group in ROOT_RWR_SERVERS for server in group['servers']]
-
 
 class PlayersSort:
     USERNAME = 'username'
