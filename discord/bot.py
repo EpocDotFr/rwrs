@@ -307,11 +307,6 @@ class RwrsBotDiscoPlugin(Plugin):
             **peaks
         ))
 
-    @Plugin.command('status')
-    def on_status_command(self, event):
-        """Displays a link to the RWR ecosystem status page."""
-        event.msg.reply('Please visit the RWR ecosystem status page: {}'.format(app.config['STATUS_PAGE_URL']))
-
     @Plugin.command('servers', parser=True)
     @Plugin.parser.add_argument('type', choices=constants.VALID_SERVER_TYPES.keys(), nargs='?', default=None)
     @Plugin.parser.add_argument('--ranked', action='store_const', const='yes')
