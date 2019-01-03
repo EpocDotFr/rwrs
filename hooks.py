@@ -1,5 +1,6 @@
 from flask import g, abort, render_template, make_response, request
 from werkzeug.exceptions import HTTPException
+from datetime import datetime
 from rwrs import app
 import rwr.scraper
 import steam
@@ -67,6 +68,11 @@ def get_counts():
     g.online_players = online_players
     g.active_servers = active_servers
     g.total_servers = total_servers
+
+
+@app.context_processor
+def inject_current_year():
+    return {'current_year': datetime.now().year}
 
 
 @app.errorhandler(401)
