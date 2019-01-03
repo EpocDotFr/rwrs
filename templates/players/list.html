@@ -48,61 +48,63 @@
         </div>
     </div>
 
-    <table class="{{ 'striped' if players }} mbn players-list">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>{{ macros.players_list_header_link('Username', PlayersSort.USERNAME, args, type='alpha', direction='down') }}</th>
-                <th>{{ macros.players_list_header_link('XP', PlayersSort.XP, args) }}</th>
-                <th>{{ macros.players_list_header_link('Kills', PlayersSort.KILLS, args) }}</th>
-                <th>{{ macros.players_list_header_link('Deaths', PlayersSort.DEATHS, args) }}</th>
-                <th>{{ macros.players_list_header_link('K/D ratio', PlayersSort.KD_RATIO, args) }}</th>
-                <th>{{ macros.players_list_header_link('Score', PlayersSort.SCORE, args) }}</th>
-                <th>{{ macros.players_list_header_link('Time played', PlayersSort.TIME_PLAYED, args) }}</th>
-                <th>{{ macros.players_list_header_link('Longest kill streak', PlayersSort.LONGEST_KILL_STREAK, args) }}</th>
-                <th>{{ macros.players_list_header_link('Targets destroyed', PlayersSort.TARGETS_DESTROYED, args) }}</th>
-                <th>{{ macros.players_list_header_link('Distance moved', PlayersSort.DISTANCE_MOVED, args, sublabel='(km)') }}</th>
-                <th>{{ macros.players_list_header_link('Vehicles destroyed', PlayersSort.VEHICLES_DESTROYED, args) }}</th>
-                <th>{{ macros.players_list_header_link('Soldiers healed', PlayersSort.SOLDIERS_HEALED, args) }}</th>
-                <th>{{ macros.players_list_header_link('Teamkills', PlayersSort.TEAMKILLS, args) }}</th>
-                <th>{{ macros.players_list_header_link('Shots fired', PlayersSort.SHOTS_FIRED, args) }}</th>
-                <th>{{ macros.players_list_header_link('Throwables thrown', PlayersSort.THROWABLES_THROWN, args) }}</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for player in players %}
-                <tr{% if args.get('target') == player.username %} class="notice"{% endif %} data-username="{{ player.username }}">
-                    <td>{{ player.leaderboard_position_display }}</td>
-                    <td class="nowrap">{{ macros.player_name(player, link=True, show_rank=True, show_online=True) }}</td>
-                    <td>{{ player.xp_display }}</td>
-                    <td>{{ player.kills_display }}</td>
-                    <td>{{ player.deaths_display }}</td>
-                    <td class="{{ 'txtred' if player.kd_ratio < 1 else 'txtgreen' }}">{{ player.kd_ratio }}</td>
-                    <td class="{{ 'txtred' if player.score < 0 else 'txtgreen' }}">{{ player.score_display }}</td>
-                    <td>{{ player.time_played|humanize_seconds_to_hours }}{% if player.display_time_played_in_days %}<br><small>({{ player.time_played|humanize_seconds_to_days }})</small>{% endif %}</td>
-                    <td>{{ player.longest_kill_streak_display }}</td>
-                    <td>{{ player.targets_destroyed_display }}</td>
-                    <td>{{ player.distance_moved }}</td>
-                    <td>{{ player.vehicles_destroyed_display }}</td>
-                    <td>{{ player.soldiers_healed_display }}</td>
-                    <td>{{ player.teamkills_display }}</td>
-                    <td>{{ player.shots_fired_display }}</td>
-                    <td>{{ player.throwables_thrown_display }}</td>
-                    <td>
-                        <a href="#" title="Add {{ player.username }} to friends list" class="btn add-friend is-hidden"><i class="fas fa-user-plus"></i></a>
-                        <a href="#" title="Remove {{ player.username }} from friends list" class="btn remove-friend is-hidden"><i class="fas fa-user-times"></i></a>
-                    </td>
-                </tr>
-            {% else %}
+    <div class="table-responsive">
+        <table class="{{ 'striped' if players }} mbn nowrap players-list">
+            <thead>
                 <tr>
-                    <td colspan="17">
-                        <div class="alert info pas txtcenter">There isn't any player to display.</div>
-                    </td>
+                    <th>#</th>
+                    <th>{{ macros.players_list_header_link('Username', PlayersSort.USERNAME, args, type='alpha', direction='down') }}</th>
+                    <th>{{ macros.players_list_header_link('XP', PlayersSort.XP, args) }}</th>
+                    <th>{{ macros.players_list_header_link('Kills', PlayersSort.KILLS, args) }}</th>
+                    <th>{{ macros.players_list_header_link('Deaths', PlayersSort.DEATHS, args) }}</th>
+                    <th>{{ macros.players_list_header_link('K/D ratio', PlayersSort.KD_RATIO, args) }}</th>
+                    <th>{{ macros.players_list_header_link('Score', PlayersSort.SCORE, args) }}</th>
+                    <th>{{ macros.players_list_header_link('Time played', PlayersSort.TIME_PLAYED, args) }}</th>
+                    <th>{{ macros.players_list_header_link('Longest kill streak', PlayersSort.LONGEST_KILL_STREAK, args) }}</th>
+                    <th>{{ macros.players_list_header_link('Targets destroyed', PlayersSort.TARGETS_DESTROYED, args) }}</th>
+                    <th>{{ macros.players_list_header_link('Distance moved', PlayersSort.DISTANCE_MOVED, args, sublabel='(km)') }}</th>
+                    <th>{{ macros.players_list_header_link('Vehicles destroyed', PlayersSort.VEHICLES_DESTROYED, args) }}</th>
+                    <th>{{ macros.players_list_header_link('Soldiers healed', PlayersSort.SOLDIERS_HEALED, args) }}</th>
+                    <th>{{ macros.players_list_header_link('Teamkills', PlayersSort.TEAMKILLS, args) }}</th>
+                    <th>{{ macros.players_list_header_link('Shots fired', PlayersSort.SHOTS_FIRED, args) }}</th>
+                    <th>{{ macros.players_list_header_link('Throwables thrown', PlayersSort.THROWABLES_THROWN, args) }}</th>
+                    <th></th>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                {% for player in players %}
+                    <tr{% if args.get('target') == player.username %} class="notice"{% endif %} data-username="{{ player.username }}">
+                        <td>{{ player.leaderboard_position_display }}</td>
+                        <td>{{ macros.player_name(player, link=True, show_rank=True, show_online=True) }}</td>
+                        <td>{{ player.xp_display }}</td>
+                        <td>{{ player.kills_display }}</td>
+                        <td>{{ player.deaths_display }}</td>
+                        <td class="{{ 'txtred' if player.kd_ratio < 1 else 'txtgreen' }}">{{ player.kd_ratio }}</td>
+                        <td class="{{ 'txtred' if player.score < 0 else 'txtgreen' }}">{{ player.score_display }}</td>
+                        <td>{{ player.time_played|humanize_seconds_to_hours }}{% if player.display_time_played_in_days %}<br /><small>({{ player.time_played|humanize_seconds_to_days }})</small>{% endif %}</td>
+                        <td>{{ player.longest_kill_streak_display }}</td>
+                        <td>{{ player.targets_destroyed_display }}</td>
+                        <td>{{ player.distance_moved }}</td>
+                        <td>{{ player.vehicles_destroyed_display }}</td>
+                        <td>{{ player.soldiers_healed_display }}</td>
+                        <td>{{ player.teamkills_display }}</td>
+                        <td>{{ player.shots_fired_display }}</td>
+                        <td>{{ player.throwables_thrown_display }}</td>
+                        <td>
+                            <a href="#" title="Add {{ player.username }} to friends list" class="btn add-friend is-hidden"><i class="fas fa-user-plus"></i></a>
+                            <a href="#" title="Remove {{ player.username }} from friends list" class="btn remove-friend is-hidden"><i class="fas fa-user-times"></i></a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="17">
+                            <div class="alert info pas txtcenter">There isn't any player to display.</div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 
     <div class="grid w1140p center mts">
         <div class="one-fifth txtleft">

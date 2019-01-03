@@ -1,4 +1,4 @@
-from models import RwrRootServer, Variable, RwrAccount, RwrAccountStat
+from models import Variable, RwrAccount, RwrAccountStat
 from disco.types.user import GameType, Game, Status
 from disco.client import Client, ClientConfig
 from disco.util.logging import setup_logging
@@ -7,7 +7,6 @@ from . import constants, utils
 from tabulate import tabulate
 from rwr.player import Player
 from rwrs import app, cache
-from flask import url_for
 from gevent import monkey
 import rwr.scraper
 import rwr.utils
@@ -29,6 +28,9 @@ class RwrsBotDiscoPlugin(Plugin):
     @Plugin.pre_command()
     def check_guild(self, func, event, args, kwargs):
         """Check if the incoming message comes from the right Discord guild (server)."""
+        if not event: # For some reason, event may be None
+            return None
+
         if (app.config['BETA'] or app.config['ENV'] == 'development') and not event.msg.guild: # PM on development / beta env: cancel
             return None
 
@@ -305,17 +307,6 @@ class RwrsBotDiscoPlugin(Plugin):
             **peaks
         ))
 
-    @Plugin.command('status')
-    def on_status_command(self, event):
-        """Displays the current status of the online multiplayer."""
-        is_everything_ok, servers_statuses = RwrRootServer.get_data_for_display()
-
-        if is_everything_ok:
-            event.msg.reply(':white_check_mark: Online multiplayer is working fine. Go play with others!')
-        else:
-            with app.app_context():
-                event.msg.reply(':warning: Looks like online multiplayer is encountering issues.\nFor details, head over here: {}'.format(url_for('online_multiplayer_status', _external=True)))
-
     @Plugin.command('servers', parser=True)
     @Plugin.parser.add_argument('type', choices=constants.VALID_SERVER_TYPES.keys(), nargs='?', default=None)
     @Plugin.parser.add_argument('--ranked', action='store_const', const='yes')
@@ -522,7 +513,12 @@ class RwrsBotDiscoPlugin(Plugin):
                 return
 
         table_data = [
-            ['Rank', source_player.rank.name, utils.compare_values(source_player, target_player, lambda player: player.rank.id), target_player.rank.name],
+            [
+                'Rank',
+                source_player.rank.name + '\n(' + source_player.rank.alternative_name + ')' if source_player.rank.alternative_name else '',
+                utils.compare_values(source_player, target_player, lambda player: player.rank.id),
+                target_player.rank.name + '\n(' + target_player.rank.alternative_name + ')' if target_player.rank.alternative_name else ''
+            ],
             ['XP', source_player.xp_display, utils.compare_values(source_player, target_player, lambda player: player.xp), target_player.xp_display],
             ['Kills', source_player.kills_display, utils.compare_values(source_player, target_player, lambda player: player.kills), target_player.kills_display],
             ['Deaths', source_player.deaths_display, utils.compare_values(source_player, target_player, lambda player: player.deaths), target_player.deaths_display],

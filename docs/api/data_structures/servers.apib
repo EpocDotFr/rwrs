@@ -1,0 +1,68 @@
+### Server Map Simple Object
+
+  + `id`: `map10` (required) - Map ID. **Not unique**: must be used in conjonction of the mode ID
+  + `name`: `Railroad Gap` (required) - Map name. If unknown, `id` will be used
+
+### Server Map Full Object (Server Map Simple Object)
+
+  + `preview_image_url`: `https://rwrstats.com/images/maps/preview/vanilla/map10.png` (nullable) - Map preview image URL (ingame screenshot). `null` if none available. Size may vary
+    + Default: `null`
+  + `minimap_image_url`: `https://rwrstats.com/images/maps/minimap/vanilla/map10.png` (nullable) - Mapview image URL. `null` if none available. 2048x2048 pixels
+    + Default: `null`
+
+### Server Location Object
+
+  + `name`: `Frankfurt am Main, Germany` (required) - City name (if available) + country name of the server location.
+  + `country_code`: `de` (required) - [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country code of the server location.
+
+### Server Type Object
+
+  + `id`: `vanilla` (required) - Server type ID (used mod or DLC)
+  + `name`: `Vanilla` (required) - Server type name (used mod or DLC)
+
+### Server Mode Simple Object
+
+  + `id`: `COOP` (required) - Server mode ID (game mode)
+  + `name`: `Coop.` (required) - Server mode name (game mode)
+
+### Server Mode Full Object (Server Mode Simple Object)
+
+  + `name_long`: `Cooperation` (nullable) - Long server mode name (game mode). `null` if unknown
+    + Default: `null`
+
+### Server Players Simple Object
+
+  + `current`: `20` (number, required) - Number of current players
+  + `max`: `24` (number, required) - Maximum allowed number of players
+  + `free`: `4` (number, required) - Number of free player slots
+
+### Server Players Full Object (Server Players Simple Object)
+
+  + `list` (array[Player Simple Object], fixed-type, required) - List of current players
+
+### Server Simple Object
+
+  + `name`: `InvasionEU2` (required) - Server name
+  + `ip`: `31.186.250.67` (required) - Server IP address
+  + `port`: `1235` (number, required) - Server port
+  + `is_ranked`: `true` (boolean, required) - Whether this server is an official one
+  + `website_url`: `https://runningwithrifles.com/` (nullable) - Server website URL. `null` if none
+    + Default: `null`
+  + `url`: `https://rwrstats.com/servers/31.186.250.67:1235/invasioneu2` (required) - RWRS server page URL
+  + `type` (Server Type Object, required) - Server type
+  + `mode` (Server Mode Simple Object, nullable) - Server mode. `null` if unknown
+  + `database` (Database Object, nullable) - Server used database. `null` if not a ranked (official) server
+  + `map` (Server Map Simple Object, required) - Server map
+  + `players` (Server Players Simple Object, required) - Server players
+  + `location` (Server Location Object, nullable) - Server location. `null` if unknown
+
+### Server Full Object (Server Simple Object)
+
+  + `map` (Server Map Full Object, required) - Server map
+  + `version`: `1.70.2` (required) - Server game version
+  + `is_dedicated`: `true` (boolean, required) - Whether this server is a dedicated one
+  + `comment`: `Coop campaign` (nullable) - Server comment. `null` if none
+    + Default: `null`
+  + `bots`: `104` (number, required) - Number of current bots
+  + `mode` (Server Mode Full Object, nullable) - Server mode. `null` if unknown
+  + `players` (Server Players Full Object, required) - Server players

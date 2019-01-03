@@ -1,0 +1,50 @@
+### Player Stats Object
+
+  + `kills`: `38689` (number, required) - Number of soldiers killed
+  + `deaths`: `3695` (number, required) - Number of times being killed
+  + `score`: `34994` (number, required) - Score as shown in-game (kills minus deaths)
+  + `kd_ratio`: `10.47` (number, required) - Kills / deaths ratio. The higher above 1.0, the better
+  + `time_played`: `640200` (number, required) - Number of seconds played online
+  + `longest_kill_streak`: `301` (number, required) - Maximum number of consecutive kills without a single death
+  + `targets_destroyed`: `633` (number, required) - Number of structures destroyed (radars, prisons, etc)
+  + `vehicles_destroyed`: `638` (number, required) - Number of vehicles destroyed
+  + `soldiers_healed`: `31` (number, required) - Number of soldiers healed
+  + `teamkills`: `785` (number, required) - Number of friendly soldiers killed
+  + `distance_moved`: `790.4` (number, required) - Number of kilometers traveled (includes vehicles use)
+  + `shots_fired`: `417868` (number, required) - Number of bullets fired (includes static weapons, tank turrets, etc)
+  + `throwables_thrown`: `3057` (number, required) - Number of grenades, C4s, etc thrown
+  + `xp`: `219921` (number, required) - Current number of experience points
+
+### Player Rank Object
+
+  + `id`: `14` (number, required) - Rank ID
+  + `name`: `Lieutenant General` (required) - Rank name
+  + `alternative_name` (nullable) - English rank name if this rank is an IJA one
+    + Default: `null`
+  + `required_xp`: `200000` (number, required) - Number of experience points this rank requires to be promoted to
+  + `image_url`: `https://rwrstats.com/images/ranks/us/14.png` (required) - Rank image URL. 64x64 pixels
+  + `icon_url`: `https://rwrstats.com/images/ranks/us/14_icon.png` (required) - Small rank image URL. 20x20 pixels
+
+### Player Simple Object
+
+  + `username`: `EPOCDOTFR` (required) - Player username
+  + `url`: `https://rwrstats.com/players/invasion/EPOCDOTFR` (nullable) - RWRS player profile page URL. `null` if the player isn't a ranked profile
+    + Default: `null`
+  + `is_rwrs_creator`: `true` (boolean, required) - Whether this player is the creator of RWRS
+  + `is_contributor`: `false` (boolean, required) - Whether this player contributed in a way or another to RWRS
+  + `is_rwr_dev`: `false` (boolean, required) - Whether this player is one of the RWR developers
+  + `is_ranked_servers_admin`: `false` (boolean, required) - Whether this player is admin on ranked (official) servers
+
+### Player Full Object (Player Simple Object)
+
+  + `database` (Database Object, nullable) - Player database. `null` if not a ranked (official) player profile
+  + `current_server` (Server Simple Object, nullable) - Server on which the player is currently playing
+  + `stats` (Player Stats Object, required) - Player statistics
+  + `current_rank` (Player Rank Object, required) - Player current rank
+  + `next_rank` (Player Rank Object, nullable) - Player next rank (if applicable)
+  + `xp_to_next_rank`: `280079` (number) - Number of experience points to gain until the next promotion
+    + Default: `0`
+  + `xp_percent_completion_to_next_rank`: `43.98` (number) - Percentage of experience points to gain until the next promotion
+    + Default: `0.0`
+  + `date`: `2018-11-30` (nullable) - If not `null`: [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) date for which this player date are available for (stats history mode only)
+    + Default: `null`

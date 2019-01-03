@@ -1,4 +1,4 @@
-from models import SteamPlayerCount, ServerPlayerCount, RwrRootServer, Variable, RwrAccountStat, RwrAccount
+from models import SteamPlayerCount, ServerPlayerCount, Variable, RwrAccountStat, RwrAccount
 from flask import render_template, abort, request, redirect, url_for, flash, g
 from flask_login import login_required, current_user, logout_user
 from dynamic_image import DynamicServerImage, DynamicPlayerImage
@@ -16,8 +16,6 @@ import forms
 ERROR_PLAYER_NOT_FOUND = 'Sorry, the player "{username}" wasn\'t found in the {database} players list. Maybe this player hasn\'t already played on a ranked server yet. If this player started to play today on a ranked server, please wait until tomorrow as stats are refreshed daily.'
 ERROR_NO_RWR_ACCOUNT = 'Sorry, stats history isn\'t recorded for {username}. He/she must be part of the {database} {max_players} most experienced players.'
 ERROR_NO_RWR_ACCOUNT_STATS = 'No stats were found for the given date for {username}. Are you sure he/she is/was part of the {database} {max_players} most experienced players?'
-
-VALID_DATABASES_STRING_LIST = ','.join(rwr.constants.VALID_DATABASES)
 
 
 @app.route('/')
@@ -70,17 +68,12 @@ def feedback():
 
 @app.route('/online-multiplayer-status')
 def online_multiplayer_status():
-    is_everything_ok, servers_statuses = RwrRootServer.get_data_for_display()
+    return redirect(app.config['STATUS_PAGE_URL'], code=301)
 
-    last_root_rwr_servers_check = Variable.get_value('last_root_rwr_servers_check')
-    next_root_rwr_servers_check = last_root_rwr_servers_check.shift(minutes=app.config['ROOT_RWR_SERVERS_CHECK_INTERVAL']) if last_root_rwr_servers_check else None
 
-    return render_template(
-        'online_multiplayer_status.html',
-        is_everything_ok=is_everything_ok,
-        servers_statuses=servers_statuses,
-        next_root_rwr_servers_check=next_root_rwr_servers_check
-    )
+@app.route('/api')
+def api_home():
+    return redirect(url_for('static', filename='/api_doc.html'), code=301)
 
 
 @app.route('/players')
@@ -89,7 +82,7 @@ def players_list_without_db():
     username = request.args.get('username')
 
     if username:
-        username = username.strip()
+        username = username.strip().upper()
 
         # Redirect to a SEO-friendly URL if the username query parameter is detected
         return redirect(url_for('player_details', database=database, username=username), code=301)
@@ -97,7 +90,7 @@ def players_list_without_db():
     return redirect(url_for('players_list', database=database), code=301)
 
 
-@app.route('/players/<any({}):database>'.format(VALID_DATABASES_STRING_LIST))
+@app.route('/players/<any({}):database>'.format(rwr.constants.VALID_DATABASES_STRING_LIST))
 def players_list(database):
     args = request.args.to_dict()
 
@@ -215,8 +208,8 @@ def player_details_without_db(username):
     return redirect(url_for('player_details', database='invasion', username=username), code=301)
 
 
-@app.route('/players/<any({}):database>/<username>'.format(VALID_DATABASES_STRING_LIST))
-@app.route('/players/<any({}):database>/<username>/<any(unlockables,evolution,"stats-history",signature):tab>'.format(VALID_DATABASES_STRING_LIST))
+@app.route('/players/<any({}):database>/<username>'.format(rwr.constants.VALID_DATABASES_STRING_LIST))
+@app.route('/players/<any({}):database>/<username>/<any(unlockables,evolution,"stats-history",signature):tab>'.format(rwr.constants.VALID_DATABASES_STRING_LIST))
 def player_details(database, username, tab=None):
     player = rwr.scraper.search_player_by_username(database, username)
 
@@ -260,9 +253,19 @@ def player_details(database, username, tab=None):
     )
 
 
-@app.route('/images/players/<username>-<any({}):database>.png'.format(VALID_DATABASES_STRING_LIST))
+@app.route('/images/players/<username>-<any({}):database>.png'.format(rwr.constants.VALID_DATABASES_STRING_LIST))
 def dynamic_player_image(username, database):
     return DynamicPlayerImage.create(database, username)
+
+
+@app.route('/popover/players/<any({}):database>/<username>'.format(rwr.constants.VALID_DATABASES_STRING_LIST))
+def player_popover(database, username):
+    player = rwr.scraper.search_player_by_username(database, username)
+
+    return render_template(
+        'players/popover.html',
+        player=player
+    )
 
 
 @app.route('/players/<username>/compare')
@@ -274,9 +277,9 @@ def players_compare_without_db(username, username_to_compare_with=None):
     return redirect(url_for('players_compare', database='invasion', username=username, username_to_compare_with=username_to_compare_with), code=301)
 
 
-@app.route('/players/<any({}):database>/<username>/compare'.format(VALID_DATABASES_STRING_LIST))
-@app.route('/players/<any({}):database>/<username>/compare/<username_to_compare_with>'.format(VALID_DATABASES_STRING_LIST))
-@app.route('/players/<any({}):database>/<username>/compare/<username_to_compare_with>/<date>'.format(VALID_DATABASES_STRING_LIST))
+@app.route('/players/<any({}):database>/<username>/compare'.format(rwr.constants.VALID_DATABASES_STRING_LIST))
+@app.route('/players/<any({}):database>/<username>/compare/<username_to_compare_with>'.format(rwr.constants.VALID_DATABASES_STRING_LIST))
+@app.route('/players/<any({}):database>/<username>/compare/<username_to_compare_with>/<date>'.format(rwr.constants.VALID_DATABASES_STRING_LIST))
 def players_compare(database, username, username_to_compare_with=None, date=None):
     # Redirect to a SEO-friendly URL if the username_to_compare_with or date query parameters are detected
     if (not username_to_compare_with and request.args.get('username_to_compare_with')) or (not date and request.args.get('date')):

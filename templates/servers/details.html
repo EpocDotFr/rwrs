@@ -12,16 +12,27 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/metrics-graphics/2.15.6/metricsgraphics.min.js"></script>
     {% endif %}
 
-    {% assets 'js_friends_charts' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
+    {% if not server.is_dedicated and not server.is_ranked %}
+        {% assets 'js_friends' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
+    {% elif server.is_dedicated and not server.is_ranked %}
+        {% assets 'js_friends_charts' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
+    {% elif server.is_ranked %}
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/tippy.js/3.1.1/tippy.min.js"></script>
+        {% assets 'js_friends_charts_popovers' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
+    {% endif %}
 {% endblock %}
 
 {% block cssfiles %}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/metrics-graphics/2.15.6/metricsgraphics.min.css">
+
+    {%- if server.is_ranked -%}
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tippy.js/3.1.1/tippy.css">
+    {%- endif -%}
 {% endblock %}
 
 {% set canonical_url = server.link_absolute %}
 
-{% set meta_image = server.map.preview_absolute if server.map.has_preview %}
+{% set meta_image = server.map.preview_absolute if server.map.has_preview else server.map.minimap_absolute if server.map.has_minimap %}
 
 {% block content %}
     <p class="txtcenter mbs">
@@ -96,7 +107,7 @@
                                     </span>
                                 </div>
 
-                                {{ macros.player_name(player, raw=True, link=True, database=server.database) }}
+                                {{ macros.player_name(player, raw=True, link=True, database=server.database, popover_url=True) }}
                             </td>
                         </tr>
                     {% else %}
@@ -131,7 +142,7 @@
                 {% if server.map.has_minimap %}
                     <tr>
                         <td class="txtcenter">
-                            <a href="{{ url_for('static', filename='images/maps/minimap/{game_type}/{map_id}.png'.format(game_type=server.type, map_id=server.map.id)) }}"><img src="{{ url_for('static', filename='images/maps/minimap/{game_type}/{map_id}_thumb.png'.format(game_type=server.type, map_id=server.map.id)) }}"></a>
+                            <a href="{{ server.map.minimap }}"><img src="{{ url_for('static', filename='images/maps/minimap/{game_type}/{map_id}_thumb.png'.format(game_type=server.type, map_id=server.map.id)) }}"></a>
                         </td>
                     </tr>
                 {% endif %}
@@ -159,9 +170,13 @@
         friendsFeature.server_ip_and_port = '{{ server.ip_and_port }}';
         friendsFeature.initOnServerDetails();
 
-        {% if server.is_dedicated %}
+        {%- if server.is_dedicated -%}
             chartsFeature.server_players_data = {{ server_players_data|tojson }};
             chartsFeature.initOnServerDetails();
-        {% endif %}
+        {%- endif -%}
+
+        {%- if server.is_ranked -%}
+            popoversFeature.initOnServerDetails();
+        {%- endif -%}
     </script>
 {% endblock %}

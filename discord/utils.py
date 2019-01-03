@@ -45,8 +45,9 @@ def create_player_message_embed(player):
 
     embed.add_field(
         name='Current rank',
-        value='{}\n{} XP'.format(
+        value='{}\n{}{} XP'.format(
             player.rank.name,
+            '(' + player.rank.alternative_name + ')\n' if player.rank.alternative_name else '',
             player.xp_display
         ),
         inline=True
@@ -54,8 +55,9 @@ def create_player_message_embed(player):
 
     embed.add_field(
         name='Next rank',
-        value='{}\n{} XP'.format(
+        value='{}\n{}{} XP'.format(
             player.next_rank.name,
+            '(' + player.next_rank.alternative_name + ')\n' if player.next_rank.alternative_name else '',
             helpers.humanize_integer(player.next_rank.xp)
         ) if player.next_rank else 'Highest possible\nrank reached',
         inline=True
@@ -176,8 +178,12 @@ def create_server_message_embed(server, username_to_highlight=None):
         )
 
     if server.map.has_preview:
-        embed.set_thumbnail(
+        embed.set_image(
             url=server.map.preview_absolute
+        )
+    elif server.map.has_minimap:
+        embed.set_image(
+            url=server.map.minimap_absolute
         )
 
     embed.add_field(

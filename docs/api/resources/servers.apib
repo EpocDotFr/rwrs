@@ -1,0 +1,205 @@
+# Group Servers
+
+A Server represent a public multiplayer Running With Rifles game.
+
+## Servers [/servers{?location,map,type,mode,dedicated,ranked,not_empty,not_full,limit}]
+
++ Parameters
+  + `location`: `continent:eu` (optional)
+      Servers country or continent of residence. This criteria format is either:
+
+        - A concatenation of a **location type** and a **location code**, separated by a colon, OR
+        - Just a **country code** OR
+        - `any`
+
+      Available **location types** are:
+
+        - `continent`
+        - `country`
+
+      Available **continent codes**:
+
+        - `af` - Africa
+        - `na` - North America
+        - `oc` - Oceania
+        - `an` - Antarctica (_who knows!_)
+        - `as` - Asia
+        - `eu` - Europe
+        - `sa` - South America
+
+      **Country code** must conform to [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2).
+
+      + Default: `any`
+  + `map`: `map10` (enum[string], optional)
+      Servers map ID.
+
+      See also [this file](https://github.com/EpocDotFr/rwrs/blob/master/storage/data/maps.json), part of the RWRS source
+      code, which contains all the RWR maps metadata stored in the JSON format.
+
+      + Members
+          + `any`
+          + `lobby_2p`
+          + `island1`
+          + `island2`
+          + `island3`
+          + `island4`
+          + `island5`
+          + `island6`
+          + `island7`
+          + `island8`
+          + `pvp1`
+          + `map1`
+          + `map1_2`
+          + `map2`
+          + `map3`
+          + `map4`
+          + `map5`
+          + `map6`
+          + `map7`
+          + `map8`
+          + `map9`
+          + `map10`
+          + `map11`
+          + `map12`
+          + `map13`
+          + `map14`
+          + `map15`
+          + `rwd_map1`
+          + `def_dday`
+          + `def_lab`
+          + `viper`
+          + `def_lab_koth`
+      + Default: `any`
+  + `type`: `vanilla` (enum[string], optional) - Servers type (used mod or DLC).
+      + Members
+          + `any`
+          + `vanilla`
+          + `vanilla.winter`
+          + `pvp`
+          + `pacific`
+          + `man_vs_world_mp`
+          + `Running_with_the_Dead`
+          + `overlord_defense`
+          + `lab_defense`
+          + `lab_def_koth`
+          + `viper`
+      + Default: `any`
+  + `mode`: `COOP` (enum[string], optional) - Servers mode (game mode).
+      + Members
+          + `any`
+          + `COOP`
+          + `DOM`
+          + `PvP`
+          + `PvE`
+          + `PvPvE`
+      + Default: `any`
+  + `dedicated`: `true` (enum[string, number], optional) - Whether to filter dedicated servers only. `true` or `1` to enable this filter. `false` or `0` will be ignored and thus disable this filter.
+      + Members
+          + `true`
+          + `1`
+          + `false`
+          + `0`
+  + `ranked`: `true` (enum[string, number], optional) - Whether to filter official servers only. `true` or `1` to enable this filter. `false` or `0` will be ignored and thus disable this filter.
+      + Members
+          + `true`
+          + `1`
+          + `false`
+          + `0`
+  + `not_empty`: `true` (enum[string, number], optional) - Whether to filter non-empty servers only. `true` or `1` to enable this filter. `false` or `0` will be ignored and thus disable this filter.
+      + Members
+          + `true`
+          + `1`
+          + `false`
+          + `0`
+  + `not_full`: `true` (enum[string, number], optional) - Whether to filter non-full servers only. `true` or `1` to enable this filter. `false` or `0` will be ignored and thus disable this filter.
+      + Members
+          + `true`
+          + `1`
+          + `false`
+          + `0`
+  + `limit`: `10` (number, optional) - Return the _n_ first servers of the filtered list.
+
+### Get the list of Servers [GET]
+
+Return the list of Servers. The list may be optionally filtered by one or more criteria. The criteria is taken into
+account **only** if it is present in the query string.
+
+::: note
+#### Server-side caching
+
+This resource has a cache lifetime of **1 minute**.
+:::
+
++ Request
+
+    + Headers
+
+            Authorization: Token {token}
+
++ Response 200 (application/json)
+
+    An empty list is returned if no Servers were found.
+
+    + Attributes (array[Server Simple Object], fixed-type)
+
++ Response 400 (application/json)
+
+    One or more arguments are (is) invalid. Check the error message(s) for more information.
+
+    + Attributes (Error Response, fixed-type)
+
++ Response 403 (application/json)
+
+    Invalid token or token not provided.
+
+    + Attributes (Error Response, fixed-type)
+
++ Response 503 (application/json)
+
+    Maintenance in progress.
+
+    + Attributes (Error Response, fixed-type)
+
+## Server [/servers/{ip}:{port}]
+
++ Parameters
+    + ip: `31.186.250.67` - The Server IP
+    + port: `1235` (integer) - The Server port
+
+### Get a specific Server [GET]
+
+Return the Server corresponding to the given IP address / port couple.
+
+::: note
+#### Server-side caching
+
+This resource has a cache lifetime of **1 minute**.
+:::
+
++ Request
+
+    + Headers
+
+            Authorization: Token {token}
+
++ Response 200 (application/json)
+
+    + Attributes (Server Full Object, fixed-type)
+
++ Response 404 (application/json)
+
+    The Server wasn't found.
+
+    + Attributes (Error Response, fixed-type)
+
++ Response 403 (application/json)
+
+    Invalid token or token not provided.
+
+    + Attributes (Error Response, fixed-type)
+
++ Response 503 (application/json)
+
+    Maintenance in progress.
+
+    + Attributes (Error Response, fixed-type)

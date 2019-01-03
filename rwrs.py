@@ -41,10 +41,10 @@ app.config['GEOIP_DATABASE_FILE'] = 'storage/data/GeoLite2-City.mmdb'
 app.config['RANKED_SERVERS_ADMINS_FILE'] = 'storage/data/ranked_servers_admins.json'
 app.config['MY_USERNAME'] = 'epocdotfr'
 app.config['CONTRIBUTORS'] = ['street veteran', 'mastock', 'dio', 'jatimatik', 'mellcor', 'teratai', 'harrified', 'mr. bang', 'dogtato']
-app.config['DEVS'] = ['jackmayol', 'pasik', 'pasik2', 'tremozl', 'the soldier'] # ahnold
+app.config['DEVS'] = ['jackmayol', 'pasik', 'pasik2', 'tremozl', 'the soldier', '577']
 app.config['LIST_PAGE_SIZES'] = [15, 30, 50, 100]
 app.config['RWR_STEAM_APP_ID'] = 270150
-app.config['ROOT_RWR_SERVERS_CHECK_INTERVAL'] = 5
+app.config['BUNDLE_ERRORS'] = True
 
 if app.config['ENV'] == 'production' and app.config['BUGSNAG_API_KEY']:
     bugsnag.configure(
@@ -65,10 +65,11 @@ if has_debug_toolbar_ext:
 
 assets.cache = 'storage/webassets-cache/'
 
-assets.register('js_friends_charts', Bundle('js/common.js', 'js/friends.js', 'js/charts.js', filters='jsmin', output='js/friends_charts.min.js'))
-assets.register('js_friends_status', Bundle('js/common.js', 'js/friends.js', 'js/status.js', filters='jsmin', output='js/friends_status.min.js'))
-assets.register('js_friends_player_claim', Bundle('js/common.js', 'js/friends.js', 'js/player_claim.js', filters='jsmin', output='js/friends_player_claim.min.js'))
 assets.register('js_friends', Bundle('js/common.js', 'js/friends.js', filters='jsmin', output='js/friends.min.js'))
+assets.register('js_friends_popovers', Bundle('js/common.js', 'js/friends.js', 'js/popovers.js', filters='jsmin', output='js/friends_popover.min.js'))
+assets.register('js_friends_charts', Bundle('js/common.js', 'js/friends.js', 'js/charts.js', filters='jsmin', output='js/friends_charts.min.js'))
+assets.register('js_friends_charts_popovers', Bundle('js/common.js', 'js/friends.js', 'js/charts.js', 'js/popovers.js', filters='jsmin', output='js/friends_charts_popover.min.js'))
+assets.register('js_friends_player_claim', Bundle('js/common.js', 'js/friends.js', 'js/player_claim.js', filters='jsmin', output='js/friends_player_claim.min.js'))
 assets.register('css_app', Bundle('css/flags.css', 'css/app.css', filters='cssutils', output='css/app.min.css'))
 
 login_manager.session_protection = 'strong'
@@ -82,7 +83,8 @@ app.config['RANKED_SERVERS_ADMINS'] = helpers.load_json(app.config['RANKED_SERVE
 app.jinja_env.filters.update(
     humanize_seconds_to_days=helpers.humanize_seconds_to_days,
     humanize_seconds_to_hours=helpers.humanize_seconds_to_hours,
-    humanize_integer=helpers.humanize_integer
+    humanize_integer=helpers.humanize_integer,
+    simplified_integer=helpers.simplified_integer
 )
 
 app.jinja_env.globals.update(
@@ -109,3 +111,4 @@ import models
 import routes
 import commands
 import hooks
+import api

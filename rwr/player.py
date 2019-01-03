@@ -210,7 +210,6 @@ class Player:
             return None
 
         ranks_country = constants.PLAYERS_LIST_DATABASES[self.database]['ranks_country']
-
         rank_ids = [int(rank_id) for rank_id in constants.RANKS[ranks_country].keys()]
 
         if self.database == 'pacific' and ranks_country == 'us': # The President rank for USMC isn't available in Pacific
@@ -219,7 +218,7 @@ class Player:
         highest_rank_id = max(rank_ids)
 
         if self.rank.id == highest_rank_id: # Highest rank already reached
-            return False
+            return None
 
         next_rank_id = self.rank.id + 1
 
@@ -228,7 +227,8 @@ class Player:
     @memoized_property
     def rank(self):
         """Current player rank."""
-        ranks = constants.RANKS[constants.PLAYERS_LIST_DATABASES[self.database]['ranks_country']]
+        ranks_country = constants.PLAYERS_LIST_DATABASES[self.database]['ranks_country']
+        ranks = constants.RANKS[ranks_country]
 
         for rank_id, rank in ranks.items():
             if rank['xp'] > self.xp:
@@ -242,7 +242,7 @@ class Player:
     def xp_to_next_rank(self):
         """Amount of XP the player needs to be promoted to the next rank."""
         if not self.next_rank:
-            return None
+            return 0
 
         return self.next_rank.xp - self.xp
 
@@ -250,7 +250,7 @@ class Player:
     def xp_percent_completion_to_next_rank(self):
         """Percentage of XP the player obtained for the next rank."""
         if not self.next_rank:
-            return None
+            return 0.0
 
         return round((self.xp * 100) / self.next_rank.xp, 2)
 
@@ -258,7 +258,8 @@ class Player:
         """Return a new PlayerRank object given a rank ID."""
         ret = PlayerRank()
 
-        ranks = constants.RANKS[constants.PLAYERS_LIST_DATABASES[self.database]['ranks_country']]
+        ranks_country = constants.PLAYERS_LIST_DATABASES[self.database]['ranks_country']
+        ranks = constants.RANKS[ranks_country]
 
         if str(rank_id) not in ranks:
             return ret
@@ -266,6 +267,9 @@ class Player:
         ret.id = rank_id
         ret.name = ranks[str(rank_id)]['name']
         ret.xp = ranks[str(rank_id)]['xp']
+
+        if ranks_country == 'jp' and str(rank_id) in constants.RANKS['us']:
+            ret.alternative_name = constants.RANKS['us'][str(rank_id)]['name']
 
         if current_app:
             ret.set_images_and_icons(self.database)
@@ -322,7 +326,10 @@ class Player:
     @property
     def rwr_account(self):
         """Return the RwrAccount associated to this Player."""
-        return RwrAccount.get_by_type_and_username(self.database, self.username) if not self._rwr_account else self._rwr_account
+        if not self._rwr_account:
+            self._rwr_account = RwrAccount.get_by_type_and_username(self.database, self.username)
+
+        return self._rwr_account
 
     @rwr_account.setter
     def rwr_account(self, rwr_account):
@@ -346,6 +353,7 @@ class Player:
 class PlayerRank:
     id = None
     name = None
+    alternative_name = None
     xp = 0
 
     def __repr__(self):

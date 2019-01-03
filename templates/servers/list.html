@@ -7,7 +7,18 @@
 {% block meta_description %}Public Running With Rifles (RWR) servers list.{% endblock %}
 
 {% block jsfiles %}
-    {% assets 'js_friends' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
+    {%- if request.args.get('view') == 'extended' -%}
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/tippy.js/3.1.1/tippy.min.js"></script>
+        {% assets 'js_friends_popovers' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
+    {%- else -%}
+        {% assets 'js_friends' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
+    {%- endif -%}
+{% endblock %}
+
+{% block cssfiles %}
+    {%- if request.args.get('view') == 'extended' -%}
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tippy.js/3.1.1/tippy.css">
+    {%- endif -%}
 {% endblock %}
 
 {% set canonical_url = url_for('servers_list', _external=True) %}
@@ -30,62 +41,64 @@
         </fieldset>
     </form>
 
-    <table class="{{ 'striped clickable' if servers }} mbn servers-list">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Current players</th>
-                <th>Max players</th>
-                {% if request.args.get('view') == 'extended' %}
-                    <th>Bots</th>
-                {% endif %}
-                <th>Map</th>
-                <th>Type</th>
-                <th>Mode</th>
-                {% if request.args.get('view') == 'extended' %}
-                    <th>Version</th>
-                    <th>Message</th>
-                    <th>Players</th>
-                {% endif %}
-                <th class="w150p"></th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for server in servers %}
-                <tr onclick="window.location.href = '{{ server.link }}';" data-server-ip-and-port="{{ server.ip_and_port }}">
-                    <td class="nowrap">{{ macros.location(server.location) }} {{ macros.server_name(server) }}</td>
-                    <td class="{{ macros.server_slots_class(server) }}">{{ server.players.current }}</td>
-                    <td>{{ server.players.max }}</td>
-                    {% if request.args.get('view') == 'extended' %}
-                        <td>{{ server.bots }}</td>
-                    {% endif %}
-                    <td>{{ server.map.name_display }}</td>
-                    <td>{{ server.type_name }}</td>
-                    <td>{{ server.mode_name }}</td>
-                    {% if request.args.get('view') == 'extended' %}
-                        <td>{{ server.version }}</td>
-                        <td>{{ server.comment if server.comment }}</td>
-                        <td>
-                            {% for player in server.players.list %}
-                                {{ macros.player_name(player, raw=True, link=True, database=server.database) }}{{ ', ' if not loop.last }}
-                            {% endfor %}
-                        </td>
-                    {% endif %}
-                    <td class="txtcenter">
-                        {{ macros.server_join_button(server) }}
-
-                        <a href="{{ server.link }}" class="btn" title="Details"><i class="fas fa-eye"></i></a>
-                    </td>
-                </tr>
-            {% else %}
+    <div class="table-responsive">
+        <table class="{{ 'striped clickable' if servers }} mbn servers-list {{ 'nowrap' if request.args.get('view') != 'extended' }}">
+            <thead>
                 <tr>
-                    <td colspan="7">
-                        <div class="alert info pas txtcenter">There isn't any server to display.</div>
-                    </td>
+                    <th>Name</th>
+                    <th>Current players</th>
+                    <th>Max players</th>
+                    {% if request.args.get('view') == 'extended' %}
+                        <th>Bots</th>
+                    {% endif %}
+                    <th>Map</th>
+                    <th>Type</th>
+                    <th>Mode</th>
+                    {% if request.args.get('view') == 'extended' %}
+                        <th>Version</th>
+                        <th>Message</th>
+                        <th>Players</th>
+                    {% endif %}
+                    <th class="w150p"></th>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                {% for server in servers %}
+                    <tr onclick="window.location.href = '{{ server.link }}';" data-server-ip-and-port="{{ server.ip_and_port }}">
+                        <td>{{ macros.location(server.location) }} {{ macros.server_name(server) }}</td>
+                        <td class="{{ macros.server_slots_class(server) }}">{{ server.players.current }}</td>
+                        <td>{{ server.players.max }}</td>
+                        {% if request.args.get('view') == 'extended' %}
+                            <td>{{ server.bots }}</td>
+                        {% endif %}
+                        <td>{{ server.map.name_display }}</td>
+                        <td>{{ server.type_name }}</td>
+                        <td>{{ server.mode_name }}</td>
+                        {% if request.args.get('view') == 'extended' %}
+                            <td>{{ server.version }}</td>
+                            <td>{{ server.comment if server.comment }}</td>
+                            <td>
+                                {% for player in server.players.list %}
+                                    {{ macros.player_name(player, raw=True, link=True, database=server.database, popover_url=True) }}{{ ', ' if not loop.last }}
+                                {% endfor %}
+                            </td>
+                        {% endif %}
+                        <td class="txtcenter">
+                            {{ macros.server_join_button(server) }}
+
+                            <a href="{{ server.link }}" class="btn" title="Details"><i class="fas fa-eye"></i></a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="7">
+                            <div class="alert info pas txtcenter">There isn't any server to display.</div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 
     {% set view_link_params = merge_query_string_params({'view': None if request.args.get('view') == 'extended' else 'extended'}) %}
     {% set view_link_icon = 'compress' if request.args.get('view') == 'extended' else 'expand' %}
@@ -98,5 +111,9 @@
     <script>
         friendsFeature.all_players_with_servers_details = {{ g.all_players_with_servers_details|tojson }};
         friendsFeature.initOnServersList();
+
+        {%- if request.args.get('view') == 'extended' -%}
+            popoversFeature.initOnServersList();
+        {% endif %}
     </script>
 {% endblock %}

@@ -15,69 +15,6 @@ def cc():
 
 
 @app.cli.command()
-def get_root_rwr_servers_status():
-    """Check the status of the root RWR servers."""
-    from models import RwrRootServer, RwrRootServerStatus, Variable
-    from disco.api.client import APIClient as DiscordAPIClient
-    from flask import url_for
-    from rwrs import db
-    import rwr.constants
-    import helpers
-    import arrow
-
-    click.echo('Pinging servers')
-
-    rwr_root_servers = RwrRootServer.query.filter(RwrRootServer.host.in_(rwr.constants.ROOT_RWR_HOSTS)).all()
-    rwr_root_servers_by_host = {rwr_root_server.host: rwr_root_server for rwr_root_server in rwr_root_servers}
-    servers_down_count_then = sum([1 for rwr_root_server in rwr_root_servers if rwr_root_server.status == RwrRootServerStatus.DOWN])
-    servers_down_count_now = 0
-
-    for host in rwr.constants.ROOT_RWR_HOSTS:
-        click.echo(host, nl=False)
-
-        is_server_up = helpers.ping(host)
-
-        if is_server_up:
-            click.secho(' Up', fg='green')
-        else:
-            click.secho(' Down', fg='red')
-
-            servers_down_count_now += 1
-
-        if host not in rwr_root_servers_by_host:
-            rwr_root_server = RwrRootServer()
-            rwr_root_server.host = host
-        else:
-            rwr_root_server = rwr_root_servers_by_host[host]
-
-        rwr_root_server.status = RwrRootServerStatus.UP if is_server_up else RwrRootServerStatus.DOWN
-
-        db.session.add(rwr_root_server)
-
-    Variable.set_value('last_root_rwr_servers_check', arrow.utcnow().floor('minute'))
-
-    click.echo('Persisting to database')
-
-    db.session.commit()
-
-    message = None
-
-    if servers_down_count_then == 0 and servers_down_count_now > 0:
-        with app.app_context():
-            message = ':warning: Online multiplayer is having issues right now. Some details here: {}'.format(url_for('online_multiplayer_status', _external=True))
-    elif servers_down_count_then > 0 and servers_down_count_now == 0:
-        message = ':white_check_mark: Outage update: online multiplayer is back up and running!'
-
-    if message:
-        click.echo('Sending Discord bot message')
-
-        discord_api_client = DiscordAPIClient(app.config['DISCORD_BOT_TOKEN'])
-        discord_api_client.channels_messages_create(app.config['DISCORD_BOT_CHANNEL_ID'], message)
-
-    click.secho('Done', fg='green')
-
-
-@app.cli.command()
 def get_players_count():
     """Store the number of players."""
     from models import ServerPlayerCount, SteamPlayerCount, Variable

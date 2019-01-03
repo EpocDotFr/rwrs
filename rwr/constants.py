@@ -4,6 +4,9 @@ import helpers
 
 
 MAPS = helpers.load_json(app.config['MAPS_DATA_FILE'])
+
+VALID_MAPS = list(set([map_id for mps in MAPS.values() for map_id in mps.keys()]))
+
 RANKS = helpers.load_json(app.config['RANKS_DATA_FILE'])
 
 SQUADMATES_STEPS_XP = 1000 # One squad mate is gained every 1000 XP
@@ -308,6 +311,8 @@ SERVER_MODES = {
     'PvPvE': {'short': 'PvPvE', 'long': 'PvPvE'}
 }
 
+VALID_SERVER_MODES = SERVER_MODES.keys()
+
 SERVER_TYPES = OrderedDict([
     ('vanilla', 'Vanilla'),
     ('vanilla.winter', 'Vanilla'),
@@ -321,41 +326,15 @@ SERVER_TYPES = OrderedDict([
     ('viper', 'Viper')
 ])
 
+VALID_SERVER_TYPES = SERVER_TYPES.keys()
+
 PLAYERS_LIST_DATABASES = OrderedDict([
     ('invasion', {'name': 'Invasion', 'ranks_country': 'us', 'realm': 'official_invasion'}),
     ('pacific', {'name': 'Pacific', 'ranks_country': app.config['PACIFIC_PLAYERS_RANKS_COUNTRY'], 'realm': 'official_pacific'})
 ])
 
 VALID_DATABASES = PLAYERS_LIST_DATABASES.keys()
-
-ROOT_RWR_SERVERS = [
-    {
-        'label': 'Master servers',
-        'description': 'Needed to play online with other people.',
-        'servers': [
-            {
-                'location': 'St Louis, United States',
-                'host': 'us3.runningwithrifles.com'
-            },
-            {
-                'location': 'Tokyo, Japan',
-                'host': 'jp1.runningwithrifles.com'
-            }
-        ]
-    },
-    {
-        'label': 'Stats servers',
-        'description': 'Needed to keep track of your stats on ranked (official) servers.',
-        'servers': [
-            {
-                'location': 'Chicago, United States',
-                'host': 'us6.runningwithrifles.com'
-            }
-        ]
-    }
-]
-
-ROOT_RWR_HOSTS = [server['host'] for group in ROOT_RWR_SERVERS for server in group['servers']]
+VALID_DATABASES_STRING_LIST = ','.join(VALID_DATABASES)
 
 
 class PlayersSort:
@@ -374,3 +353,16 @@ class PlayersSort:
     SHOTS_FIRED = 'shots_fired'
     THROWABLES_THROWN = 'throwables_thrown'
     XP = 'rank_progression'
+
+
+CONTINENTS = OrderedDict([
+    ('af', 'Africa'),
+    ('na', 'North America'),
+    ('oc', 'Oceania'),
+    ('an', 'Antarctica'),
+    ('as', 'Asia'),
+    ('eu', 'Europe'),
+    ('sa', 'South America'),
+])
+
+VALID_CONTINENTS = CONTINENTS.keys()

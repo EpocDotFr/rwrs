@@ -1,9 +1,10 @@
 from flask import g, abort, render_template, make_response, request, redirect, flash
 from werkzeug.exceptions import HTTPException
 from rwrs import app, login_manager, oid, db
-from models import RwrRootServer, User
 from flask_login import login_user
 from sqlalchemy import inspect
+from datetime import datetime
+from models import User
 import rwr.scraper
 import helpers
 import steam
@@ -57,20 +58,18 @@ def create_or_login(resp):
 
 @app.before_request
 def define_globals():
+    g.UNDER_MAINTENANCE = False
+
     if request.endpoint in ('dynamic_player_image', 'dynamic_server_image'):
         return
 
     g.INCLUDE_WEB_ANALYTICS = not app.config['DEBUG']
-    g.UNDER_MAINTENANCE = False
     g.LAYOUT = 'normal'
 
 
 @app.before_request
 def set_beta_data():
-    if request.endpoint in ('dynamic_player_image', 'dynamic_server_image'):
-        return
-
-    if not app.config['BETA']:
+    if request.endpoint in ('dynamic_player_image', 'dynamic_server_image') or not app.config['BETA']:
         return
 
     from git import Repo
@@ -95,10 +94,10 @@ def get_motd():
 
 @app.before_request
 def check_under_maintenance():
-    if not os.path.exists('maintenance'):
-        return
+    g.UNDER_MAINTENANCE = os.path.exists('maintenance')
 
-    g.UNDER_MAINTENANCE = True
+    if request.endpoint in ('dynamic_player_image', 'dynamic_server_image') or not g.UNDER_MAINTENANCE:
+        return
 
     abort(503)
 
@@ -120,12 +119,9 @@ def get_counts():
     g.total_servers = total_servers
 
 
-@app.before_request
-def get_rwr_root_server_global_status():
-    if request.endpoint in ('dynamic_player_image', 'dynamic_server_image'):
-        return
-
-    g.is_online_multiplayer_ok = RwrRootServer.are_rwr_root_servers_ok()
+@app.context_processor
+def inject_current_year():
+    return {'current_year': datetime.now().year}
 
 
 @app.errorhandler(401)

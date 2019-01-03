@@ -56,6 +56,7 @@ More informations on the three above can be found [here](http://flask.pocoo.org/
   - `DISCORD_BOT_ADMINS` A list of Discord user IDs (snowflakes) allowed to use hidden bot commands
   - `DISCORD_BOT_GUILD_ID` A Discord guild (server) ID the bot will be allowed to listen for commands from
   - `MAX_NUM_OF_PLAYERS_TO_TRACK_STATS_FOR` How many players should RWRS track the stats for (top players storted by XP)
+  - `API_TOKENS` A set of API tokens allowed to use the API
   - `PLAYER_CLAIM_DELAY` Maximum amount of minutes users are allowed to finalize an RWR account claim procedure
 
 I'll let you search yourself about how to configure a web server along uWSGI.
@@ -83,32 +84,32 @@ You'll probably have to hack with this application to make it work with one of t
 
 ### Extracting ranks data and images
 
-The Flask command `flask extract_ranks` is used to extract and save all ranks data to a JSON file located at `storage/data/ranks.json`.
+The Flask command `flask extract-ranks` is used to extract and save all ranks data to a JSON file located at `storage/data/ranks.json`.
 It also retrieve, process (the actual images content isn't centered) and save all the RWR ranks images. They are saved
 at `static/images/ranks/{country}/{rank ID}.png` and `static/images/ranks/{country}/{rank ID}_icon.png`.
 
   1. `pip install -r requirements-dev.txt`
-  2. `flask extract_ranks --steamdir="{path to the Steam root directory}"`
+  2. `flask extract-ranks --steamdir="{path to the Steam root directory}"`
 
 This command requires the game to be installed.
 
 ### Extracting maps data
 
-The Flask command `flask extract_maps_data` is used to extract and save all maps data to a JSON file located at `storage/data/maps.json`.
+The Flask command `flask extract-maps-data` is used to extract and save all maps data to a JSON file located at `storage/data/maps.json`.
 
 ```
-flask extract_maps_data --steamdir="{path to the Steam root directory}"
+flask extract-maps-data --steamdir="{path to the Steam root directory}"
 ```
 
 This command requires the game to be installed.
 
 ### Extracting minimaps
 
-The Flask command `flask extract_minimaps` is used to extract minimaps (the ones displayed when pressing on
+The Flask command `flask extract-minimaps` is used to extract minimaps (the ones displayed when pressing on
 <kbd>TAB</kbd>). They are saved at `static/images/maps/minimap/{map ID}.png` and `static/images/maps/minimap/{map ID}_thumb.png`.
 
   1. `pip install -r requirements-dev.txt`
-  2. `flask extract_minimaps --steamdir="{path to the Steam root directory}"`
+  2. `flask extract-minimaps --steamdir="{path to the Steam root directory}"`
 
 This command requires the game to be installed.
 
@@ -123,7 +124,7 @@ flask cc
 Data older than one week old will be deleted.
 
 ```
-flask clean_players_count
+flask clean-players-count
 ```
 
 ### Storing actual number of players (for graphs)
@@ -131,7 +132,7 @@ flask clean_players_count
 Will save the current number of Steam players which have RWR running, and the current number of players playing online.
 
 ```
-flask get_players_count
+flask get-players-count
 ```
 
 ### Migrating the database
@@ -140,18 +141,10 @@ flask get_players_count
 flask db upgrade
 ```
 
-### Saving RWR root servers status
-
-Will ping RWR root servers and store their status (up or down).
-
-```
-flask get_root_rwr_servers_status
-```
-
 ### Running the RWRS Discord bot
 
 ```
-flask run_discord_bot
+flask run-discord-bot
 ```
 
 ### Updating the MaxMind GeoLite2 City database
@@ -166,16 +159,22 @@ More information in the script comments.
 
 `bash scripts/rwrs_updater.sh [TYPE, default=fast, fast|full] [DOMAIN, default=rwrstats.com]`
 
+### Generating RWRS REST API documentation
+
+More information in the script comments.
+
+`bash scripts/api_doc_generator.sh`
+
 ### Retrieve and save the players stats in DB
 
 ```
-flask save_players_stats [--reset]
+flask save-players-stats [--reset]
 ```
 
 ### Import rwrtrack data
 
 ```
-flask import_rwrtrack_data --directory="{path to the rwrtrack data directory}" [--reset]
+flask import-rwrtrack-data --directory="{path to the rwrtrack data directory}" [--reset]
 ```
 
 ## Credits
