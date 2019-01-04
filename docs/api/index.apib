@@ -5,15 +5,24 @@ HOST: https://rwrstats.com/api
 
 Documentation about the [Running With Rifles Stats (RWRS)](https://rwrstats.com/) REST API. [About RWRS](https://rwrstats.com/about)
 
-## Requesting an API token
+## Access restriction
 
-To prevent abuse, an API token is **required** to use this API. [Contact me](https://rwrstats.com/feedback) **in
-private** (Discord is the preferred way) with a short message explaining what do you plan to create, the purpose of
+Although this API is public, to prevent abuses an API token is **required**. [Contact me](https://rwrstats.com/feedback)
+**in private** (Discord is the preferred way) with a short message explaining what do you plan to create, the purpose of
 your project along its name.
 
 ::: warning
 You are **required** to mention somewhere in your project - in a visible manner - that you're using the RWRS REST API.
 :::
+
+## Sending the API token
+
+All endpoints needs a valid API token, otherwise a [403](https://httpstatuses.com/403) HTTP status code will be returned.
+Send this HTTP header in all of your HTTP requests along your API token:
+
+```
+Authorization: Token {token}
+```
 
 ## Endpoint
 
@@ -22,15 +31,6 @@ The RWRS REST API endpoint is `https://rwrstats.com/api`.
 ::: note
 Using HTTPS is mandatory or you'll encounter redirections (which may not be appreciated by your HTTP client).
 :::
-
-## Authentication
-
-All endpoints needs a valid API token, otherwise a [403](https://httpstatuses.com/403) HTTP status code will be returned.
-Send this HTTP header in all of your HTTP requests along your API token:
-
-```
-Authorization: Token {token}
-```
 
 ## Rate limiting
 
