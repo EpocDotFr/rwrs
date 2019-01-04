@@ -162,7 +162,7 @@ code, which contains all the RWR maps metadata stored in the JSON format.</p>
     </span>}</span>,
     "<span class="hljs-attribute">location</span>": <span class="hljs-value">{
       "<span class="hljs-attribute">name</span>": <span class="hljs-value"><span class="hljs-string">"Frankfurt am Main, Germany"</span></span>,
-      "<span class="hljs-attribute">country_code</span>": <span class="hljs-value"><span class="hljs-string">"de"</span>
+      "<span class="hljs-attribute">flag_url</span>": <span class="hljs-value"><span class="hljs-string">"https://rwrstats.com/images/flags/DE.png"</span>
     </span>}
   </span>}
 ]</code></pre><div style="height: 1px;"></div><h5>Schema</h5><pre><code>{
@@ -306,14 +306,14 @@ code, which contains all the RWR maps metadata stored in the JSON format.</p>
             "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
             "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"City name (if available) + country name of the server location."</span>
           </span>}</span>,
-          "<span class="hljs-attribute">country_code</span>": <span class="hljs-value">{
+          "<span class="hljs-attribute">flag_url</span>": <span class="hljs-value">{
             "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
-            "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"[ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country code of the server location."</span>
+            "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Image URL of the server country location. 24x24 pixels"</span>
           </span>}
         </span>}</span>,
         "<span class="hljs-attribute">required</span>": <span class="hljs-value">[
           <span class="hljs-string">"name"</span>,
-          <span class="hljs-string">"country_code"</span>
+          <span class="hljs-string">"flag_url"</span>
         ]</span>,
         "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Server location. `null` if unknown"</span>
       </span>}
@@ -428,7 +428,7 @@ to the <code>GET /servers</code> resource (e.g the player list).</p>
   </span>}</span>,
   "<span class="hljs-attribute">location</span>": <span class="hljs-value">{
     "<span class="hljs-attribute">name</span>": <span class="hljs-value"><span class="hljs-string">"Frankfurt am Main, Germany"</span></span>,
-    "<span class="hljs-attribute">country_code</span>": <span class="hljs-value"><span class="hljs-string">"de"</span>
+    "<span class="hljs-attribute">flag_url</span>": <span class="hljs-value"><span class="hljs-string">"https://rwrstats.com/images/flags/DE.png"</span>
   </span>}</span>,
   "<span class="hljs-attribute">version</span>": <span class="hljs-value"><span class="hljs-string">"1.70.2"</span></span>,
   "<span class="hljs-attribute">is_dedicated</span>": <span class="hljs-value"><span class="hljs-literal">true</span></span>,
@@ -642,14 +642,14 @@ to the <code>GET /servers</code> resource (e.g the player list).</p>
           "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
           "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"City name (if available) + country name of the server location."</span>
         </span>}</span>,
-        "<span class="hljs-attribute">country_code</span>": <span class="hljs-value">{
+        "<span class="hljs-attribute">flag_url</span>": <span class="hljs-value">{
           "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
-          "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"[ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country code of the server location."</span>
+          "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Image URL of the server country location. 24x24 pixels"</span>
         </span>}
       </span>}</span>,
       "<span class="hljs-attribute">required</span>": <span class="hljs-value">[
         <span class="hljs-string">"name"</span>,
-        <span class="hljs-string">"country_code"</span>
+        <span class="hljs-string">"flag_url"</span>
       ]</span>,
       "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Server location. `null` if unknown"</span>
     </span>}</span>,
@@ -797,7 +797,7 @@ to the <code>GET /servers</code> resource (e.g the player list).</p>
     </span>}</span>,
     "<span class="hljs-attribute">location</span>": <span class="hljs-value">{
       "<span class="hljs-attribute">name</span>": <span class="hljs-value"><span class="hljs-string">"Frankfurt am Main, Germany"</span></span>,
-      "<span class="hljs-attribute">country_code</span>": <span class="hljs-value"><span class="hljs-string">"de"</span>
+      "<span class="hljs-attribute">flag_url</span>": <span class="hljs-value"><span class="hljs-string">"https://rwrstats.com/images/flags/DE.png"</span>
     </span>}
   </span>}</span>,
   "<span class="hljs-attribute">stats</span>": <span class="hljs-value">{
@@ -1025,14 +1025,14 @@ to the <code>GET /servers</code> resource (e.g the player list).</p>
               "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
               "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"City name (if available) + country name of the server location."</span>
             </span>}</span>,
-            "<span class="hljs-attribute">country_code</span>": <span class="hljs-value">{
+            "<span class="hljs-attribute">flag_url</span>": <span class="hljs-value">{
               "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
-              "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"[ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country code of the server location."</span>
+              "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Image URL of the server country location. 24x24 pixels"</span>
             </span>}
           </span>}</span>,
           "<span class="hljs-attribute">required</span>": <span class="hljs-value">[
             <span class="hljs-string">"name"</span>,
-            <span class="hljs-string">"country_code"</span>
+            <span class="hljs-string">"flag_url"</span>
           ]</span>,
           "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Server location. `null` if unknown"</span>
         </span>}
