@@ -63,6 +63,8 @@ def _set_servers_location(servers):
                 server.location.country_name
             )
 
+            server.location.set_flags()
+
     geoip_db_reader.close()
 
 
