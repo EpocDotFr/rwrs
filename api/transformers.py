@@ -45,7 +45,8 @@ server_map_full.update(OrderedDict([
 
 server_location = OrderedDict([
     ('name', fields.String(attribute='text')),
-    ('flag_url', fields.String(attribute='flag_absolute')),
+    ('country_code', fields.String),
+    ('flag_image_url', fields.String(attribute='flag_absolute')),
 ])
 
 server_type = OrderedDict([

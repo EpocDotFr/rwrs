@@ -1,3 +1,4 @@
+from flask import current_app
 from lxml import html, etree
 from rwrs import app, cache
 from .server import Server
@@ -63,7 +64,11 @@ def _set_servers_location(servers):
                 server.location.country_name
             )
 
-            server.location.set_flags()
+            if current_app:
+                server.location.set_flags()
+            else:
+                with app.app_context():
+                    server.location.set_flags()
 
     geoip_db_reader.close()
 
