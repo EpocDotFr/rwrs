@@ -59,7 +59,7 @@ class ServerResource(Resource):
 
 
 class PlayersResource(Resource):
-    @marshal_with(transformers.player_full) # TODO Use correct transformer
+    @marshal_with(transformers.player_list)
     def get(self, database):
         args = validators.get_players_list.parse_args()
 
