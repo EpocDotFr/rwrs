@@ -353,7 +353,7 @@ def get_all_players_with_servers_details():
 
 
 @cache.memoize(timeout=app.config['PLAYERS_CACHE_TIMEOUT'])
-def get_players(database, sort=constants.PlayersSort.SCORE, target=None, start=0, limit=app.config['LIST_PAGE_SIZES'][0]):
+def get_players(database, sort=constants.PlayersSort.SCORE.value, target=None, start=0, limit=app.config['LIST_PAGE_SIZES'][0]):
     """Get and parse a list of RWR players."""
     if limit > 100:
         raise ValueError('limit cannot be greater than 100')

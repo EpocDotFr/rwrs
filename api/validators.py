@@ -1,4 +1,5 @@
 from flask_restful import reqparse, inputs
+from rwrs import app
 import rwr.constants
 import iso3166
 import arrow
@@ -52,6 +53,12 @@ get_servers_list.add_argument('ranked', location='args', type=inputs.boolean)
 get_servers_list.add_argument('not_empty', location='args', type=inputs.boolean)
 get_servers_list.add_argument('not_full', location='args', type=inputs.boolean)
 get_servers_list.add_argument('limit', location='args', type=inputs.positive)
+
+get_players_list = reqparse.RequestParser()
+get_players_list.add_argument('sort', location='args', choices=rwr.constants.VALID_PLAYERS_SORTS, default=rwr.constants.PlayersSort.SCORE.value)
+get_players_list.add_argument('target', location='args', default=None)
+get_players_list.add_argument('start', location='args', type=inputs.natural, default=0)
+get_players_list.add_argument('limit', location='args', type=inputs.int_range(1, app.config['LIST_PAGE_SIZES'][-1]), default=app.config['LIST_PAGE_SIZES'][0])
 
 get_one_player = reqparse.RequestParser()
 get_one_player.add_argument('date', location='args', type=arrow_date)

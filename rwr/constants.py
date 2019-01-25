@@ -1,4 +1,5 @@
 from collections import OrderedDict
+from enum import Enum
 from rwrs import app
 import helpers
 
@@ -337,7 +338,7 @@ VALID_DATABASES = PLAYERS_LIST_DATABASES.keys()
 VALID_DATABASES_STRING_LIST = ','.join(VALID_DATABASES)
 
 
-class PlayersSort:
+class PlayersSort(Enum):
     USERNAME = 'username'
     KILLS = 'kills'
     DEATHS = 'deaths'
@@ -354,6 +355,7 @@ class PlayersSort:
     THROWABLES_THROWN = 'throwables_thrown'
     XP = 'rank_progression'
 
+VALID_PLAYERS_SORTS = [ps.value for ps in PlayersSort]
 
 CONTINENTS = OrderedDict([
     ('af', 'Africa'),

@@ -228,7 +228,7 @@ def save_players_stats(reset):
         RwrAccount.query.delete()
         db.session.commit()
 
-    players_sort = rwr.constants.PlayersSort.XP
+    players_sort = rwr.constants.PlayersSort.XP.value
     players_count = app.config['MAX_NUM_OF_PLAYERS_TO_TRACK_STATS_FOR']
     chunks = 100
 
