@@ -23,4 +23,4 @@ DISCORD_BOT_ADMINS = [MY_DISCORD_ID]
 DISCORD_BOT_GUILD_ID = 0
 MAX_NUM_OF_PLAYERS_TO_TRACK_STATS_FOR = 5000
 API_TOKENS = {'token': 'Token description'}
-STATUS_PAGE_URL = 'https://stats.uptimerobot.com/Z0PkQf9YY'
+STATUS_PAGE_URL = 'https://status.rwrstats.com/'
