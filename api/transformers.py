@@ -99,6 +99,7 @@ server_full.update(OrderedDict([
     ('mode', fields.Nested(server_mode_full, attribute=lambda server: server if server.mode else None, allow_null=True)),
     ('map', fields.Nested(server_map_full)),
     ('players', fields.Nested(server_players_full)),
+    ('banner_image_url', fields.String(attribute='banner_absolute'))
 ]))
 
 player_stats = OrderedDict([

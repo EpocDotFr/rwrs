@@ -440,7 +440,8 @@ to the <code>GET /servers</code> resource (e.g the player list).</p>
   "<span class="hljs-attribute">version</span>": <span class="hljs-value"><span class="hljs-string">"1.70.2"</span></span>,
   "<span class="hljs-attribute">is_dedicated</span>": <span class="hljs-value"><span class="hljs-literal">true</span></span>,
   "<span class="hljs-attribute">comment</span>": <span class="hljs-value"><span class="hljs-string">"Coop campaign"</span></span>,
-  "<span class="hljs-attribute">bots</span>": <span class="hljs-value"><span class="hljs-number">104</span>
+  "<span class="hljs-attribute">bots</span>": <span class="hljs-value"><span class="hljs-number">104</span></span>,
+  "<span class="hljs-attribute">banner_image_url</span>": <span class="hljs-value"><span class="hljs-string">"https://rwrstats.com/images/servers/106.14.208.129-1234.png"</span>
 </span>}</code></pre><div style="height: 1px;"></div><h5>Schema</h5><pre><code>{
   "<span class="hljs-attribute">$schema</span>": <span class="hljs-value"><span class="hljs-string">"http://json-schema.org/draft-04/schema#"</span></span>,
   "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"object"</span></span>,
@@ -684,6 +685,13 @@ to the <code>GET /servers</code> resource (e.g the player list).</p>
     "<span class="hljs-attribute">bots</span>": <span class="hljs-value">{
       "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"number"</span></span>,
       "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Number of current bots"</span>
+    </span>}</span>,
+    "<span class="hljs-attribute">banner_image_url</span>": <span class="hljs-value">{
+      "<span class="hljs-attribute">type</span>": <span class="hljs-value">[
+        <span class="hljs-string">"string"</span>,
+        <span class="hljs-string">"null"</span>
+      ]</span>,
+      "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Server banner image URL. 485x95 pixels"</span>
     </span>}
   </span>}</span>,
   "<span class="hljs-attribute">required</span>": <span class="hljs-value">[
@@ -702,7 +710,8 @@ to the <code>GET /servers</code> resource (e.g the player list).</p>
     <span class="hljs-string">"version"</span>,
     <span class="hljs-string">"is_dedicated"</span>,
     <span class="hljs-string">"comment"</span>,
-    <span class="hljs-string">"bots"</span>
+    <span class="hljs-string">"bots"</span>,
+    <span class="hljs-string">"banner_image_url"</span>
   ]</span>,
   "<span class="hljs-attribute">additionalProperties</span>": <span class="hljs-value"><span class="hljs-literal">false</span>
 </span>}</code></pre><div style="height: 1px;"></div></div></div><div class="title"><strong>Response&nbsp;&nbsp;<code>400</code></strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><div class="description"><p>One or more arguments are (is) invalid. Check the error message(s) for more information.</p>

@@ -90,9 +90,11 @@ class Server:
 
         if current_app:
             ret.set_links()
+            ret.set_images()
         else:
             with app.app_context():
                 ret.set_links()
+                ret.set_images()
 
         return ret
 
@@ -146,8 +148,24 @@ class Server:
 
     def set_links(self):
         """Set the relative and absolute URLs of this server's details page."""
-        self.link = url_for('server_details', ip=self.ip, port=self.port, slug=self.name_slug)
-        self.link_absolute = url_for('server_details', ip=self.ip, port=self.port, slug=self.name_slug, _external=True)
+        params = {
+            'ip': self.ip,
+            'port': self.port,
+            'slug': self.name_slug
+        }
+
+        self.link = url_for('server_details', **params)
+        self.link_absolute = url_for('server_details', **params, _external=True)
+
+    def set_images(self):
+        """Set the relative and absolute URLs to the images of this Server."""
+        params = {
+            'ip': self.ip,
+            'port': self.port
+        }
+
+        self.banner = url_for('dynamic_server_image', **params)
+        self.banner_absolute = url_for('dynamic_server_image', **params, _external=True)
 
     @memoized_property
     def database(self):
