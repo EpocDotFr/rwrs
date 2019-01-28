@@ -46,6 +46,7 @@ server_map_full.update(OrderedDict([
 server_location = OrderedDict([
     ('name', fields.String(attribute='text')),
     ('country_code', fields.String),
+    ('flag_image_url', fields.String(attribute='flag_absolute')),
 ])
 
 server_type = OrderedDict([
@@ -131,11 +132,19 @@ player_rank = OrderedDict([
     ('icon_url', fields.String(attribute='icon_absolute')),
 ])
 
-player_full = player_simple.copy()
-player_full.update(OrderedDict([
+player_list = player_simple.copy()
+player_list.update(OrderedDict([
+    ('position', fields.Integer(attribute='leaderboard_position')),
     ('current_server', fields.Nested(server_simple, attribute='playing_on_server', allow_null=True)),
     ('stats', fields.Nested(player_stats, attribute=lambda player: player)),
     ('current_rank', fields.Nested(player_rank, attribute='rank')),
+]))
+
+player_full = player_list.copy()
+
+del player_full['position']
+
+player_full.update(OrderedDict([
     ('next_rank', fields.Nested(player_rank, allow_null=True)),
     ('xp_to_next_rank', fields.Integer),
     ('xp_percent_completion_to_next_rank', fields.Float),

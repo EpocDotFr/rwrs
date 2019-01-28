@@ -1,3 +1,4 @@
+from flask import current_app
 from lxml import html, etree
 from rwrs import app, cache
 from .server import Server
@@ -62,6 +63,12 @@ def _set_servers_location(servers):
                 server.location.city_name + ', ' if server.location.city_name else '',
                 server.location.country_name
             )
+
+            if current_app:
+                server.location.set_flags()
+            else:
+                with app.app_context():
+                    server.location.set_flags()
 
     geoip_db_reader.close()
 
@@ -346,7 +353,7 @@ def get_all_players_with_servers_details():
 
 
 @cache.memoize(timeout=app.config['PLAYERS_CACHE_TIMEOUT'])
-def get_players(database, sort=constants.PlayersSort.SCORE, target=None, start=0, limit=app.config['LIST_PAGE_SIZES'][0]):
+def get_players(database, sort=constants.PlayersSort.SCORE.value, target=None, start=0, limit=app.config['LIST_PAGE_SIZES'][0]):
     """Get and parse a list of RWR players."""
     if limit > 100:
         raise ValueError('limit cannot be greater than 100')

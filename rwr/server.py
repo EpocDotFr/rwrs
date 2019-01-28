@@ -215,5 +215,18 @@ class ServerLocation:
     continent_name = None
     text = None
 
+    def set_flags(self):
+        if not self.country_code:
+            return
+
+        params = {
+            'country_code': self.country_code.upper(),
+        }
+
+        flag_url = 'images/flags/{country_code}.png'.format(**params)
+
+        self.flag = url_for('static', filename=flag_url)
+        self.flag_absolute = url_for('static', filename=flag_url, _external=True)
+
     def __repr__(self):
         return 'ServerLocation:' + self.country_code

@@ -58,6 +58,30 @@ class ServerResource(Resource):
         return server
 
 
+class PlayersResource(Resource):
+    @marshal_with(transformers.player_list)
+    def get(self, database):
+        args = validators.get_players_list.parse_args()
+
+        players = rwr.scraper.get_players(
+            database,
+            sort=args['sort'],
+            target=args['target'],
+            start=args['start'],
+            limit=args['limit']
+        )
+
+        if args['target'] and not players:
+            abort(404, message='Target player not found')
+
+        servers = rwr.scraper.get_servers()
+
+        for player in players:
+            player.set_playing_on_server(servers)
+
+        return players
+
+
 class PlayerResource(Resource):
     @marshal_with(transformers.player_full)
     def get(self, database, username):
@@ -111,5 +135,6 @@ class LiveCountersResource(Resource):
 
 api.add_resource(ServersResource, '/servers')
 api.add_resource(ServerResource, '/servers/<ip>:<int:port>')
+api.add_resource(PlayersResource, '/players/<any({}):database>'.format(rwr.constants.VALID_DATABASES_STRING_LIST))
 api.add_resource(PlayerResource, '/players/<any({}):database>/<username>'.format(rwr.constants.VALID_DATABASES_STRING_LIST))
 api.add_resource(LiveCountersResource, '/live-counters')
