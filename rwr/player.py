@@ -54,9 +54,11 @@ class Player:
 
         if current_app:
             ret.set_links()
+            ret.set_images()
         else:
             with app.app_context():
                 ret.set_links()
+                ret.set_images()
 
         return ret
 
@@ -89,9 +91,11 @@ class Player:
 
         if current_app:
             ret.set_links()
+            ret.set_images()
         else:
             with app.app_context():
                 ret.set_links()
+                ret.set_images()
 
         return ret
 
@@ -176,6 +180,16 @@ class Player:
 
         self.link = url_for('player_details', **params)
         self.link_absolute = url_for('player_details', **params, _external=True)
+
+    def set_images(self):
+        """Set the relative and absolute URLs to the images of this Player."""
+        params = {
+            'database': self.database,
+            'username': self.username
+        }
+
+        self.signature = url_for('dynamic_player_image', **params)
+        self.signature_absolute = url_for('dynamic_player_image', **params, _external=True)
 
     def set_playing_on_server(self, servers):
         """Determine if this user is playing on one of the given servers."""

@@ -1347,7 +1347,8 @@ to the <code>GET /servers</code> resource (e.g the player list).</p>
   </span>}</span>,
   "<span class="hljs-attribute">xp_to_next_rank</span>": <span class="hljs-value"><span class="hljs-number">280079</span></span>,
   "<span class="hljs-attribute">xp_percent_completion_to_next_rank</span>": <span class="hljs-value"><span class="hljs-number">43.98</span></span>,
-  "<span class="hljs-attribute">date</span>": <span class="hljs-value"><span class="hljs-string">"2018-11-30"</span>
+  "<span class="hljs-attribute">date</span>": <span class="hljs-value"><span class="hljs-string">"2018-11-30"</span></span>,
+  "<span class="hljs-attribute">signature_image_url</span>": <span class="hljs-value"><span class="hljs-string">"https://rwrstats.com/images/players/EPOCDOTFR-invasion.png"</span>
 </span>}</code></pre><div style="height: 1px;"></div><h5>Schema</h5><pre><code>{
   "<span class="hljs-attribute">$schema</span>": <span class="hljs-value"><span class="hljs-string">"http://json-schema.org/draft-04/schema#"</span></span>,
   "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"object"</span></span>,
@@ -1747,6 +1748,13 @@ to the <code>GET /servers</code> resource (e.g the player list).</p>
       ]</span>,
       "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"If not `null`: [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) date for which this player date are available for (stats history mode only)"</span></span>,
       "<span class="hljs-attribute">default</span>": <span class="hljs-value"><span class="hljs-string">"null"</span>
+    </span>}</span>,
+    "<span class="hljs-attribute">signature_image_url</span>": <span class="hljs-value">{
+      "<span class="hljs-attribute">type</span>": <span class="hljs-value">[
+        <span class="hljs-string">"string"</span>,
+        <span class="hljs-string">"null"</span>
+      ]</span>,
+      "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Player signature image URL. 387x108 pixels"</span>
     </span>}
   </span>}</span>,
   "<span class="hljs-attribute">required</span>": <span class="hljs-value">[
@@ -1763,7 +1771,8 @@ to the <code>GET /servers</code> resource (e.g the player list).</p>
     <span class="hljs-string">"next_rank"</span>,
     <span class="hljs-string">"xp_to_next_rank"</span>,
     <span class="hljs-string">"xp_percent_completion_to_next_rank"</span>,
-    <span class="hljs-string">"date"</span>
+    <span class="hljs-string">"date"</span>,
+    <span class="hljs-string">"signature_image_url"</span>
   ]</span>,
   "<span class="hljs-attribute">additionalProperties</span>": <span class="hljs-value"><span class="hljs-literal">false</span>
 </span>}</code></pre><div style="height: 1px;"></div></div></div><div class="title"><strong>Response&nbsp;&nbsp;<code>400</code></strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><div class="description"><p>One or more arguments are (is) invalid. Check the error message(s) for more information.</p>

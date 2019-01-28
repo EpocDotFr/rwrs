@@ -149,4 +149,5 @@ player_full.update(OrderedDict([
     ('xp_to_next_rank', fields.Integer),
     ('xp_percent_completion_to_next_rank', fields.Float),
     ('date', ArrowDateField(attribute='created_at')), # Added in the API controller
+    ('signature_image_url', fields.String(attribute='signature_absolute'))
 ]))
