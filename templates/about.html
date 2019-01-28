@@ -54,10 +54,6 @@
 
     <p>Did I forgot to thank you or to mention you in the credits? <a href="{{ url_for('feedback') }}">Get in touch</a>.</p>
 
-    <h2>API</h2>
-
-    <p>RWRS provides a simple, free web API. Everything you need to know is located <a href="{{ url_for('static', filename='/api_doc.html') }}">here</a>.</p>
-
     <script>
         friendsFeature.all_players_with_servers_details = {{ g.all_players_with_servers_details|tojson }};
         friendsFeature.init();
