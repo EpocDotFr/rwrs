@@ -21,6 +21,7 @@ Also, stats history is only recorded for the 5000 most experienced players.
         Pagination start offset.
 
         Minimum value: `0`
+      + Default: `0`
     + sort: `rank_progression` (optional) - The stat value (or column) on which the player list should be sorted.
       + Members
           + `username`
@@ -46,6 +47,7 @@ Also, stats history is only recorded for the 5000 most experienced players.
         Minimum value: `1`
 
         Maximum value: `100`
+      + Default: `15`
 
 ### Get a list of Players [GET]
 
@@ -63,6 +65,10 @@ This resource has a cache lifetime of **1 hour**.
 
             Authorization: Token {token}
 
++ Response 200 (application/json)
+
+    + Attributes (array[Player List Object], fixed-type)
+
 + Response 400 (application/json)
 
     One or more arguments are (is) invalid. Check the error message(s) for more information.
@@ -72,6 +78,12 @@ This resource has a cache lifetime of **1 hour**.
 + Response 403 (application/json)
 
     Invalid token or token not provided.
+
+    + Attributes (Error Response, fixed-type)
+
++ Response 404 (application/json)
+
+    Only if the `target` parameter was provided: the given player username doesn't exist.
 
     + Attributes (Error Response, fixed-type)
 
@@ -115,9 +127,9 @@ This resource has a cache lifetime of **1 hour**.
 
     + Attributes (Player Full Object, fixed-type)
 
-+ Response 412 (application/json)
++ Response 400 (application/json)
 
-    If the `date` parameter is provided: the Player isn't eligible for stats history (5000 most experienced players only).
+    One or more arguments are (is) invalid. Check the error message(s) for more information.
 
     + Attributes (Error Response, fixed-type)
 
@@ -130,6 +142,12 @@ This resource has a cache lifetime of **1 hour**.
 + Response 403 (application/json)
 
     Invalid token or token not provided.
+
+    + Attributes (Error Response, fixed-type)
+
++ Response 412 (application/json)
+
+    If the `date` parameter is provided: the Player isn't eligible for stats history (5000 most experienced players only).
 
     + Attributes (Error Response, fixed-type)
 
