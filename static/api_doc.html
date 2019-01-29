@@ -164,7 +164,8 @@ code, which contains all the RWR maps metadata stored in the JSON format.</p>
       "<span class="hljs-attribute">name</span>": <span class="hljs-value"><span class="hljs-string">"Frankfurt am Main, Germany"</span></span>,
       "<span class="hljs-attribute">country_code</span>": <span class="hljs-value"><span class="hljs-string">"de"</span></span>,
       "<span class="hljs-attribute">flag_image_url</span>": <span class="hljs-value"><span class="hljs-string">"https://rwrstats.com/images/flags/DE.png"</span>
-    </span>}
+    </span>}</span>,
+    "<span class="hljs-attribute">steam_join_url</span>": <span class="hljs-value"><span class="hljs-string">"steam://rungameid/270150//server_address=178.32.58.160 server_port=1240"</span>
   </span>}
 ]</code></pre><div style="height: 1px;"></div><h5>Schema</h5><pre><code>{
   "<span class="hljs-attribute">$schema</span>": <span class="hljs-value"><span class="hljs-string">"http://json-schema.org/draft-04/schema#"</span></span>,
@@ -322,6 +323,10 @@ code, which contains all the RWR maps metadata stored in the JSON format.</p>
           <span class="hljs-string">"flag_image_url"</span>
         ]</span>,
         "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Server location. `null` if unknown"</span>
+      </span>}</span>,
+      "<span class="hljs-attribute">steam_join_url</span>": <span class="hljs-value">{
+        "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
+        "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"[Steam browser protocol](https://developer.valvesoftware.com/wiki/Steam_browser_protocol) URL to be used to load Running With Rifles onto the given server lobby screen"</span>
       </span>}
     </span>}</span>,
     "<span class="hljs-attribute">required</span>": <span class="hljs-value">[
@@ -332,7 +337,8 @@ code, which contains all the RWR maps metadata stored in the JSON format.</p>
       <span class="hljs-string">"url"</span>,
       <span class="hljs-string">"type"</span>,
       <span class="hljs-string">"map"</span>,
-      <span class="hljs-string">"players"</span>
+      <span class="hljs-string">"players"</span>,
+      <span class="hljs-string">"steam_join_url"</span>
     ]
   </span>}
 </span>}</code></pre><div style="height: 1px;"></div></div></div><div class="title"><strong>Response&nbsp;&nbsp;<code>400</code></strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><div class="description"><p>One or more arguments are (is) invalid. Check the error message(s) for more information.</p>
@@ -437,6 +443,7 @@ to the <code>GET /servers</code> resource (e.g the player list).</p>
     "<span class="hljs-attribute">country_code</span>": <span class="hljs-value"><span class="hljs-string">"de"</span></span>,
     "<span class="hljs-attribute">flag_image_url</span>": <span class="hljs-value"><span class="hljs-string">"https://rwrstats.com/images/flags/DE.png"</span>
   </span>}</span>,
+  "<span class="hljs-attribute">steam_join_url</span>": <span class="hljs-value"><span class="hljs-string">"steam://rungameid/270150//server_address=178.32.58.160 server_port=1240"</span></span>,
   "<span class="hljs-attribute">version</span>": <span class="hljs-value"><span class="hljs-string">"1.70.2"</span></span>,
   "<span class="hljs-attribute">is_dedicated</span>": <span class="hljs-value"><span class="hljs-literal">true</span></span>,
   "<span class="hljs-attribute">comment</span>": <span class="hljs-value"><span class="hljs-string">"Coop campaign"</span></span>,
@@ -666,6 +673,10 @@ to the <code>GET /servers</code> resource (e.g the player list).</p>
       ]</span>,
       "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Server location. `null` if unknown"</span>
     </span>}</span>,
+    "<span class="hljs-attribute">steam_join_url</span>": <span class="hljs-value">{
+      "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
+      "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"[Steam browser protocol](https://developer.valvesoftware.com/wiki/Steam_browser_protocol) URL to be used to load Running With Rifles onto the given server lobby screen"</span>
+    </span>}</span>,
     "<span class="hljs-attribute">version</span>": <span class="hljs-value">{
       "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
       "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Server game version"</span>
@@ -691,7 +702,8 @@ to the <code>GET /servers</code> resource (e.g the player list).</p>
         <span class="hljs-string">"string"</span>,
         <span class="hljs-string">"null"</span>
       ]</span>,
-      "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Server banner image URL. 485x95 pixels"</span>
+      "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Server banner image URL. Only available for dedicated servers. 485x95 pixels"</span></span>,
+      "<span class="hljs-attribute">default</span>": <span class="hljs-value"><span class="hljs-string">"null"</span>
     </span>}
   </span>}</span>,
   "<span class="hljs-attribute">required</span>": <span class="hljs-value">[
@@ -707,6 +719,7 @@ to the <code>GET /servers</code> resource (e.g the player list).</p>
     <span class="hljs-string">"map"</span>,
     <span class="hljs-string">"players"</span>,
     <span class="hljs-string">"location"</span>,
+    <span class="hljs-string">"steam_join_url"</span>,
     <span class="hljs-string">"version"</span>,
     <span class="hljs-string">"is_dedicated"</span>,
     <span class="hljs-string">"comment"</span>,
@@ -837,7 +850,8 @@ to the <code>GET /servers</code> resource (e.g the player list).</p>
         "<span class="hljs-attribute">name</span>": <span class="hljs-value"><span class="hljs-string">"Frankfurt am Main, Germany"</span></span>,
         "<span class="hljs-attribute">country_code</span>": <span class="hljs-value"><span class="hljs-string">"de"</span></span>,
         "<span class="hljs-attribute">flag_image_url</span>": <span class="hljs-value"><span class="hljs-string">"https://rwrstats.com/images/flags/DE.png"</span>
-      </span>}
+      </span>}</span>,
+      "<span class="hljs-attribute">steam_join_url</span>": <span class="hljs-value"><span class="hljs-string">"steam://rungameid/270150//server_address=178.32.58.160 server_port=1240"</span>
     </span>}</span>,
     "<span class="hljs-attribute">stats</span>": <span class="hljs-value">{
       "<span class="hljs-attribute">kills</span>": <span class="hljs-value"><span class="hljs-number">38689</span></span>,
@@ -1055,6 +1069,10 @@ to the <code>GET /servers</code> resource (e.g the player list).</p>
               <span class="hljs-string">"flag_image_url"</span>
             ]</span>,
             "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Server location. `null` if unknown"</span>
+          </span>}</span>,
+          "<span class="hljs-attribute">steam_join_url</span>": <span class="hljs-value">{
+            "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
+            "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"[Steam browser protocol](https://developer.valvesoftware.com/wiki/Steam_browser_protocol) URL to be used to load Running With Rifles onto the given server lobby screen"</span>
           </span>}
         </span>}</span>,
         "<span class="hljs-attribute">required</span>": <span class="hljs-value">[
@@ -1065,7 +1083,8 @@ to the <code>GET /servers</code> resource (e.g the player list).</p>
           <span class="hljs-string">"url"</span>,
           <span class="hljs-string">"type"</span>,
           <span class="hljs-string">"map"</span>,
-          <span class="hljs-string">"players"</span>
+          <span class="hljs-string">"players"</span>,
+          <span class="hljs-string">"steam_join_url"</span>
         ]</span>,
         "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Server on which the player is currently playing"</span>
       </span>}</span>,
@@ -1316,7 +1335,8 @@ to the <code>GET /servers</code> resource (e.g the player list).</p>
       "<span class="hljs-attribute">name</span>": <span class="hljs-value"><span class="hljs-string">"Frankfurt am Main, Germany"</span></span>,
       "<span class="hljs-attribute">country_code</span>": <span class="hljs-value"><span class="hljs-string">"de"</span></span>,
       "<span class="hljs-attribute">flag_image_url</span>": <span class="hljs-value"><span class="hljs-string">"https://rwrstats.com/images/flags/DE.png"</span>
-    </span>}
+    </span>}</span>,
+    "<span class="hljs-attribute">steam_join_url</span>": <span class="hljs-value"><span class="hljs-string">"steam://rungameid/270150//server_address=178.32.58.160 server_port=1240"</span>
   </span>}</span>,
   "<span class="hljs-attribute">stats</span>": <span class="hljs-value">{
     "<span class="hljs-attribute">kills</span>": <span class="hljs-value"><span class="hljs-number">38689</span></span>,
@@ -1546,6 +1566,10 @@ to the <code>GET /servers</code> resource (e.g the player list).</p>
             <span class="hljs-string">"flag_image_url"</span>
           ]</span>,
           "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Server location. `null` if unknown"</span>
+        </span>}</span>,
+        "<span class="hljs-attribute">steam_join_url</span>": <span class="hljs-value">{
+          "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
+          "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"[Steam browser protocol](https://developer.valvesoftware.com/wiki/Steam_browser_protocol) URL to be used to load Running With Rifles onto the given server lobby screen"</span>
         </span>}
       </span>}</span>,
       "<span class="hljs-attribute">required</span>": <span class="hljs-value">[
@@ -1556,7 +1580,8 @@ to the <code>GET /servers</code> resource (e.g the player list).</p>
         <span class="hljs-string">"url"</span>,
         <span class="hljs-string">"type"</span>,
         <span class="hljs-string">"map"</span>,
-        <span class="hljs-string">"players"</span>
+        <span class="hljs-string">"players"</span>,
+        <span class="hljs-string">"steam_join_url"</span>
       ]</span>,
       "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Server on which the player is currently playing"</span>
     </span>}</span>,
@@ -1957,7 +1982,7 @@ to the <code>GET /servers</code> resource (e.g the player list).</p>
     <span class="hljs-string">"message"</span>
   ]</span>,
   "<span class="hljs-attribute">additionalProperties</span>": <span class="hljs-value"><span class="hljs-literal">false</span>
-</span>}</code></pre><div style="height: 1px;"></div></div></div></div></div></section></div></div></div><p style="text-align: center;" class="text-muted">Generated by&nbsp;<a href="https://github.com/danielgtaylor/aglio" class="aglio">aglio</a>&nbsp;on 28 Jan 2019</p><script>/* eslint-env browser */
+</span>}</code></pre><div style="height: 1px;"></div></div></div></div></div></section></div></div></div><p style="text-align: center;" class="text-muted">Generated by&nbsp;<a href="https://github.com/danielgtaylor/aglio" class="aglio">aglio</a>&nbsp;on 29 Jan 2019</p><script>/* eslint-env browser */
 /* eslint quotes: [2, "single"] */
 'use strict';
 

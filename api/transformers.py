@@ -88,6 +88,7 @@ server_simple = OrderedDict([
     ('map', fields.Nested(server_map_simple)),
     ('players', fields.Nested(server_players_simple)),
     ('location', fields.Nested(server_location, attribute=lambda server: server.location if server.location.country_code else None, allow_null=True)),
+    ('steam_join_url', fields.String(attribute='steam_join_link')),
 ])
 
 server_full = server_simple.copy()

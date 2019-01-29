@@ -159,6 +159,12 @@ class Server:
 
     def set_images(self):
         """Set the relative and absolute URLs to the images of this Server."""
+        if not self.is_dedicated:
+            self.banner = None
+            self.banner_absolute = None
+
+            return
+
         params = {
             'ip': self.ip,
             'port': self.port
