@@ -14,6 +14,7 @@
 
   + `name`: `Frankfurt am Main, Germany` (required) - City name (if available) + country name of the server location.
   + `country_code`: `de` (required) - [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country code of the server location.
+  + `flag_image_url`: `https://rwrstats.com/images/flags/DE.png` (required) - Image URL of the server country location. 24x24 pixels
 
 ### Server Type Object
 
@@ -55,6 +56,7 @@
   + `map` (Server Map Simple Object, required) - Server map
   + `players` (Server Players Simple Object, required) - Server players
   + `location` (Server Location Object, nullable) - Server location. `null` if unknown
+  + `steam_join_url`: `steam://rungameid/270150//server_address=178.32.58.160 server_port=1240` (required) - [Steam browser protocol](https://developer.valvesoftware.com/wiki/Steam_browser_protocol) URL to be used to load Running With Rifles onto the given server lobby screen
 
 ### Server Full Object (Server Simple Object)
 
@@ -66,3 +68,5 @@
   + `bots`: `104` (number, required) - Number of current bots
   + `mode` (Server Mode Full Object, nullable) - Server mode. `null` if unknown
   + `players` (Server Players Full Object, required) - Server players
+  + `banner_image_url`: `https://rwrstats.com/images/servers/106.14.208.129-1234.png` (nullable) - Server banner image URL. Only available for dedicated servers. 485x95 pixels
+    + Default: `null`

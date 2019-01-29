@@ -1,20 +1,20 @@
 <p>Highlight your RWR profile everywhere by putting this signature on your website / blog / forum. It features information about the RWR profile, and is refreshed daily.</p>
 
 <p class="txtcenter">
-    <img src="{{ url_for('dynamic_player_image', database=request.view_args.get('database'), username=player.username) }}">
+    <img src="{{ player.signature }}">
 </p>
 
 <div class="grid has-gutter mts">
     <div>
         <fieldset class="man pan">
             <legend class="mls">HTML code <small>(websites / blogs)</small></legend>
-            <textarea readonly spellcheck="false" class="copypaste" rows="3" onClick="this.setSelectionRange(0, this.value.length)">&lt;a href=&quot;{{ url_for('player_details', database=request.view_args.get('database'), username=player.username, _external=True) }}&quot; target=&quot;_blank&quot;&gt;&lt;img src=&quot;{{ url_for('dynamic_player_image', database=request.view_args.get('database'), username=player.username, _external=True) }}&quot; border=&quot;0&quot;/&gt;&lt;/a&gt;</textarea>
+            <textarea readonly spellcheck="false" class="copypaste" rows="3" onClick="this.setSelectionRange(0, this.value.length)">&lt;a href=&quot;{{ url_for('player_details', database=request.view_args.get('database'), username=player.username, _external=True) }}&quot; target=&quot;_blank&quot;&gt;&lt;img src=&quot;{{ player.signature_absolute }}&quot; border=&quot;0&quot;/&gt;&lt;/a&gt;</textarea>
         </fieldset>
     </div>
     <div>
         <fieldset class="man pan">
             <legend class="mls">BBCode <small>(forums)</small></legend>
-            <textarea readonly spellcheck="false" class="copypaste" rows="3" onClick="this.setSelectionRange(0, this.value.length)">[url={{ url_for('player_details', database=request.view_args.get('database'), username=player.username, _external=True) }}][img]{{ url_for('dynamic_player_image', database=request.view_args.get('database'), username=player.username, _external=True) }}[/img][/url]</textarea>
+            <textarea readonly spellcheck="false" class="copypaste" rows="3" onClick="this.setSelectionRange(0, this.value.length)">[url={{ url_for('player_details', database=request.view_args.get('database'), username=player.username, _external=True) }}][img]{{ player.signature_absolute }}[/img][/url]</textarea>
         </fieldset>
     </div>
 </div>

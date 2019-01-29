@@ -42,7 +42,6 @@ app.config['CONTRIBUTORS'] = ['street veteran', 'mastock', 'dio', 'jatimatik', '
 app.config['DEVS'] = ['jackmayol', 'pasik', 'pasik2', 'tremozl', 'the soldier', '577']
 app.config['LIST_PAGE_SIZES'] = [15, 30, 50, 100]
 app.config['RWR_STEAM_APP_ID'] = 270150
-app.config['ROOT_RWR_SERVERS_CHECK_INTERVAL'] = 5
 app.config['BUNDLE_ERRORS'] = True
 
 if app.config['ENV'] == 'production' and app.config['BUGSNAG_API_KEY']:
@@ -62,7 +61,6 @@ if has_debug_toolbar_ext:
 
 assets.cache = 'storage/webassets-cache/'
 
-assets.register('js_friends_status', Bundle('js/common.js', 'js/friends.js', 'js/status.js', filters='jsmin', output='js/friends_status.min.js'))
 assets.register('js_friends', Bundle('js/common.js', 'js/friends.js', filters='jsmin', output='js/friends.min.js'))
 assets.register('js_friends_popovers', Bundle('js/common.js', 'js/friends.js', 'js/popovers.js', filters='jsmin', output='js/friends_popover.min.js'))
 assets.register('js_friends_charts', Bundle('js/common.js', 'js/friends.js', 'js/charts.js', filters='jsmin', output='js/friends_charts.min.js'))

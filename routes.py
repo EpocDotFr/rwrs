@@ -1,4 +1,4 @@
-from models import SteamPlayerCount, ServerPlayerCount, RwrRootServer, Variable, RwrAccountStat, RwrAccount
+from models import SteamPlayerCount, ServerPlayerCount, Variable, RwrAccountStat, RwrAccount
 from flask import render_template, abort, request, redirect, url_for, flash, g
 from dynamic_image import DynamicServerImage, DynamicPlayerImage
 from rwr.player import Player
@@ -64,17 +64,7 @@ def feedback():
 
 @app.route('/online-multiplayer-status')
 def online_multiplayer_status():
-    is_everything_ok, servers_statuses = RwrRootServer.get_data_for_display()
-
-    last_root_rwr_servers_check = Variable.get_value('last_root_rwr_servers_check')
-    next_root_rwr_servers_check = last_root_rwr_servers_check.shift(minutes=app.config['ROOT_RWR_SERVERS_CHECK_INTERVAL']) if last_root_rwr_servers_check else None
-
-    return render_template(
-        'online_multiplayer_status.html',
-        is_everything_ok=is_everything_ok,
-        servers_statuses=servers_statuses,
-        next_root_rwr_servers_check=next_root_rwr_servers_check
-    )
+    return redirect(app.config['STATUS_PAGE_URL'], code=301)
 
 
 @app.route('/api')
@@ -100,7 +90,7 @@ def players_list_without_db():
 def players_list(database):
     args = request.args.to_dict()
 
-    args['sort'] = args.get('sort', rwr.constants.PlayersSort.SCORE)
+    args['sort'] = args.get('sort', rwr.constants.PlayersSort.SCORE.value)
 
     if not args.get('limit') or int(args.get('limit')) > app.config['LIST_PAGE_SIZES'][-1]:
         args['limit'] = app.config['LIST_PAGE_SIZES'][0]
