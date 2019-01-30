@@ -344,7 +344,12 @@ def parse_date(date):
         'YYYY-MM-DD'
     ]
 
-    return arrow.get(date, allowed_formats).replace(year=now.year)
+    ret = arrow.get(date, allowed_formats)
+
+    if ret.year == 1:
+        ret = ret.replace(year=now.year)
+
+    return ret
 
 
 def create_evolution_chart(rwr_account, column, title):
