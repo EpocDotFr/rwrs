@@ -40,7 +40,6 @@ More informations on the three above can be found [here](http://flask.pocoo.org/
   - `DB_HOST` Host of the DBMS
   - `DB_PORT` Port of the DBMS
   - `DB_NAME` Name of the database to use
-  - `BETA` Whether or not to enable the beta mode
   - `GAUGES_SITE_ID` A [Gauges](https://gaug.es/) site ID used to track visits on RWRS (optional)
   - `BUGSNAG_API_KEY` A [Bugsnag](https://www.bugsnag.com/) API key so that unhandled exceptions are automatically sent to Bugsnag in production env (optional)
   - `CACHE_THRESHOLD` The maximum number of items the cache will store before it starts deleting some (see [here](https://pythonhosted.org/Flask-Cache/#configuring-flask-cache) for more configuration parameters related to Flask-Cache)
