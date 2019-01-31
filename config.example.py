@@ -6,7 +6,6 @@ DB_UNIX_SOCKET = None
 DB_HOST = 'localhost'
 DB_PORT = 3306
 DB_NAME = 'rwrs'
-BETA = False
 GAUGES_SITE_ID = None
 BUGSNAG_API_KEY = None
 CACHE_THRESHOLD = 800
