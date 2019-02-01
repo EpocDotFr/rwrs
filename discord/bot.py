@@ -99,28 +99,24 @@ class RwrsBotDiscoPlugin(Plugin):
 
                 event.msg.reply('Maintenance mode disabled.')
 
-    @Plugin.command('motd', parser=True)
-    @Plugin.parser.add_argument('action', choices=['set', 'remove'])
-    @Plugin.parser.add_argument('message', nargs='?')
-    def on_motd_command(self, event, args):
-        """Admin command: sets or removes the MOTD."""
-        if args.action == 'set':
-            if not args.message:
-                event.msg.reply('Argument required: message')
+    @Plugin.command('set', parser=True, group='motd')
+    @Plugin.parser.add_argument('message')
+    def on_motd_set_command(self, event, args):
+        """Admin command: sets the MOTD."""
+        with open('motd', 'w', encoding='utf-8') as f:
+            f.write(args.message)
 
-                return
+        event.msg.reply('MOTD updated.')
 
-            with open('motd', 'w', encoding='utf-8') as f:
-                f.write(args.message)
+    @Plugin.command('remove', group='motd')
+    def on_motd_remove_command(self, event):
+        """Admin command: removes the MOTD."""
+        if not os.path.exists('motd'):
+            event.msg.reply('MOTD already removed.')
+        else:
+            os.remove('motd')
 
-            event.msg.reply('MOTD updated.')
-        elif args.action == 'remove':
-            if not os.path.exists('motd'):
-                event.msg.reply('MOTD already removed.')
-            else:
-                os.remove('motd')
-
-                event.msg.reply('MOTD removed.')
+            event.msg.reply('MOTD removed.')
 
     @Plugin.command('help', parser=True)
     @Plugin.parser.add_argument('command', nargs='?')
