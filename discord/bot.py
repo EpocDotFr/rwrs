@@ -61,7 +61,7 @@ class RwrsBotDiscoPlugin(Plugin):
     @Plugin.listen('Ready')
     def on_ready_event(self, event):
         """Performs things when the bot is ready."""
-        self.client.update_presence(Status.ONLINE, Game(type=GameType.DEFAULT, name='rwrstats.com | @rwrs help'))
+        self.client.update_presence(Status.ONLINE, Game(type=GameType.DEFAULT, name='"@rwrs help" for help', url='https://rwrstats.com/'))
 
     @Plugin.command('cc')
     def on_cc_command(self, event):
