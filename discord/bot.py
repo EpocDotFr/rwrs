@@ -80,24 +80,25 @@ class RwrsBotDiscoPlugin(Plugin):
         """Admin command: makes the bot to say something."""
         self.client.api.channels_messages_create(app.config['DISCORD_BOT_CHANNEL_ID'], args.message)
 
-    @Plugin.command('maintenance', parser=True)
-    @Plugin.parser.add_argument('action', choices=['enable', 'disable'])
-    def on_maintenance_command(self, event, args):
-        """Admin command: enables or disables the maintenance mode."""
-        if args.action == 'enable':
-            if os.path.exists('maintenance'):
-                event.msg.reply('Maintenance mode already enabled.')
-            else:
-                open('maintenance', 'a').close()
+    @Plugin.command('enable', group='maintenance')
+    def on_maintenance_enable_command(self, event):
+        """Admin command: enables the maintenance mode."""
+        if os.path.exists('maintenance'):
+            event.msg.reply('Maintenance mode already enabled.')
+        else:
+            open('maintenance', 'a').close()
 
-                event.msg.reply('Maintenance mode enabled.')
-        elif args.action == 'disable':
-            if not os.path.exists('maintenance'):
-                event.msg.reply('Maintenance mode already disabled.')
-            else:
-                os.remove('maintenance')
+            event.msg.reply('Maintenance mode enabled.')
 
-                event.msg.reply('Maintenance mode disabled.')
+    @Plugin.command('disable', group='maintenance')
+    def on_maintenance_disable_command(self, event):
+        """Admin command: disables the maintenance mode."""
+        if not os.path.exists('maintenance'):
+            event.msg.reply('Maintenance mode already disabled.')
+        else:
+            os.remove('maintenance')
+
+            event.msg.reply('Maintenance mode disabled.')
 
     @Plugin.command('set', parser=True, group='motd')
     @Plugin.parser.add_argument('message')
