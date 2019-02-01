@@ -80,47 +80,44 @@ class RwrsBotDiscoPlugin(Plugin):
         """Admin command: makes the bot to say something."""
         self.client.api.channels_messages_create(app.config['DISCORD_BOT_CHANNEL_ID'], args.message)
 
-    @Plugin.command('maintenance', parser=True)
-    @Plugin.parser.add_argument('action', choices=['enable', 'disable'])
-    def on_maintenance_command(self, event, args):
-        """Admin command: enables or disables the maintenance mode."""
-        if args.action == 'enable':
-            if os.path.exists('maintenance'):
-                event.msg.reply('Maintenance mode already enabled.')
-            else:
-                open('maintenance', 'a').close()
+    @Plugin.command('enable', group='maintenance')
+    def on_maintenance_enable_command(self, event):
+        """Admin command: enables the maintenance mode."""
+        if os.path.exists('maintenance'):
+            event.msg.reply('Maintenance mode already enabled.')
+        else:
+            open('maintenance', 'a').close()
 
-                event.msg.reply('Maintenance mode enabled.')
-        elif args.action == 'disable':
-            if not os.path.exists('maintenance'):
-                event.msg.reply('Maintenance mode already disabled.')
-            else:
-                os.remove('maintenance')
+            event.msg.reply('Maintenance mode enabled.')
 
-                event.msg.reply('Maintenance mode disabled.')
+    @Plugin.command('disable', group='maintenance')
+    def on_maintenance_disable_command(self, event):
+        """Admin command: disables the maintenance mode."""
+        if not os.path.exists('maintenance'):
+            event.msg.reply('Maintenance mode already disabled.')
+        else:
+            os.remove('maintenance')
 
-    @Plugin.command('motd', parser=True)
-    @Plugin.parser.add_argument('action', choices=['set', 'remove'])
-    @Plugin.parser.add_argument('message', nargs='?')
-    def on_motd_command(self, event, args):
-        """Admin command: sets or removes the MOTD."""
-        if args.action == 'set':
-            if not args.message:
-                event.msg.reply('Argument required: message')
+            event.msg.reply('Maintenance mode disabled.')
 
-                return
+    @Plugin.command('set', parser=True, group='motd')
+    @Plugin.parser.add_argument('message')
+    def on_motd_set_command(self, event, args):
+        """Admin command: sets the MOTD."""
+        with open('motd', 'w', encoding='utf-8') as f:
+            f.write(args.message)
 
-            with open('motd', 'w', encoding='utf-8') as f:
-                f.write(args.message)
+        event.msg.reply('MOTD updated.')
 
-            event.msg.reply('MOTD updated.')
-        elif args.action == 'remove':
-            if not os.path.exists('motd'):
-                event.msg.reply('MOTD already removed.')
-            else:
-                os.remove('motd')
+    @Plugin.command('remove', group='motd')
+    def on_motd_remove_command(self, event):
+        """Admin command: removes the MOTD."""
+        if not os.path.exists('motd'):
+            event.msg.reply('MOTD already removed.')
+        else:
+            os.remove('motd')
 
-                event.msg.reply('MOTD removed.')
+            event.msg.reply('MOTD removed.')
 
     @Plugin.command('help', parser=True)
     @Plugin.parser.add_argument('command', nargs='?')
