@@ -2,7 +2,7 @@ from models import Variable, RwrAccount, RwrAccountStat
 from disco.types.user import GameType, Game, Status
 from disco.client import Client, ClientConfig
 from disco.util.logging import setup_logging
-from disco.bot import Bot, Plugin
+from disco.bot import Bot, Plugin, BotConfig
 from . import constants, utils
 from tabulate import tabulate
 from rwr.player import Player
@@ -24,6 +24,10 @@ class RwrsBotDiscoPlugin(Plugin):
         super(RwrsBotDiscoPlugin, self).load(ctx)
 
         self.steamworks_api_client = steam.SteamworksApiClient(app.config['STEAM_API_KEY'])
+
+    @Plugin.route('/ping')
+    def status_check_route(self):
+        return 'pong'
 
     @Plugin.pre_command()
     def check_guild(self, func, event, args, kwargs):
@@ -61,7 +65,7 @@ class RwrsBotDiscoPlugin(Plugin):
     @Plugin.listen('Ready')
     def on_ready_event(self, event):
         """Performs things when the bot is ready."""
-        self.client.update_presence(Status.ONLINE, Game(type=GameType.DEFAULT, name='rwrstats.com | @rwrs help'))
+        self.client.update_presence(Status.ONLINE, Game(type=GameType.DEFAULT, name='"@rwrs help" for help', url='https://rwrstats.com/'))
 
     @Plugin.command('cc')
     def on_cc_command(self, event):
@@ -565,7 +569,10 @@ class RwrsBot:
 
         self.client = Client(self.client_config)
 
-        self.bot = Bot(self.client)
+        self.bot_config = BotConfig()
+        self.bot_config.http_enabled = True
+
+        self.bot = Bot(self.client, config=self.bot_config)
         self.bot.add_plugin(RwrsBotDiscoPlugin)
 
     def run(self):
