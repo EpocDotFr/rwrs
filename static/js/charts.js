@@ -44,7 +44,6 @@ chartsFeature = {
                 x_mouseover: '%b %e, %Y ',
                 min_y_from_data: true,
                 data: this.player_evolution_data.ratio,
-                top: 30,
                 markers: this.getPromotionMarkers(this.player_evolution_data.ratio)
             });
         }
@@ -64,7 +63,6 @@ chartsFeature = {
                 x_mouseover: '%b %e, %Y ',
                 min_y_from_data: true,
                 data: this.player_evolution_data.score,
-                top: 30,
                 markers: this.getPromotionMarkers(this.player_evolution_data.score)
             });
         }
@@ -84,7 +82,6 @@ chartsFeature = {
                 x_mouseover: '%b %e, %Y ',
                 min_y_from_data: true,
                 data: this.player_evolution_data.position,
-                top: 30,
                 markers: this.getPromotionMarkers(this.player_evolution_data.position)
             });
         }
