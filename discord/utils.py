@@ -383,7 +383,7 @@ def create_evolution_chart(rwr_account, column, title):
         date = date2num(data['t'].datetime)
 
         ax.axvline(date, color='b', linestyle=':')
-        ax.text(date, data['v'], data['ptr'], rotation=90)
+        ax.text(date, data['v'], data['ptr'], rotation=90, bbox={'color': 'white'})
 
     ax.autoscale_view()
 
