@@ -344,7 +344,7 @@ def compute_promotions():
     RwrAccountStat.query.update({RwrAccountStat.promoted_to_rank_id: None})
     db.session.commit()
 
-    for rwr_account in RwrAccount.query.all():
+    for rwr_account in RwrAccount.query.yield_per(100).all():
         database = rwr_account.type.value.lower()
 
         click.echo('{} / {}'.format(database, rwr_account.username))
