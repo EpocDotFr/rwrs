@@ -6,7 +6,6 @@ import json
 import os
 import re
 
-
 _steam_identity_url_regex = re.compile('steamcommunity.com/openid/id/([0-9]+)$')
 
 

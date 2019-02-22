@@ -249,13 +249,6 @@ img.bordered {
     color: #44b2f8;
 }
 
-.txtred a,
-.txtred a:visited,
-.txtred a:hover,
-.txtred a:focus {
-    color: inherit;
-}
-
 /************************************************************************
  * Header */
 

@@ -3,8 +3,6 @@ from rwrs import app, cache
 import requests
 import arrow
 
-steam_requests_session = requests.Session()
-
 
 class SteamworksApiClient:
     steamworks_api_endpoint = 'https://api.steampowered.com/{interface}/{method}/v{method_version}/'
@@ -33,7 +31,7 @@ class SteamworksApiClient:
         if params:
             params_to_send.update(params)
 
-        response = steam_requests_session.get(url, params=params_to_send, headers=headers)
+        response = requests.get(url, params=params_to_send, headers=headers)
 
         response.raise_for_status()
 
