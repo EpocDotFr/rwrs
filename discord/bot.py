@@ -2,7 +2,7 @@ from models import Variable, RwrAccount, RwrAccountStat
 from disco.types.user import GameType, Game, Status
 from disco.client import Client, ClientConfig
 from disco.util.logging import setup_logging
-from disco.bot import Bot, Plugin
+from disco.bot import Bot, Plugin, BotConfig
 from . import constants, utils
 from tabulate import tabulate
 from rwr.player import Player
@@ -25,13 +25,17 @@ class RwrsBotDiscoPlugin(Plugin):
 
         self.steamworks_api_client = steam.SteamworksApiClient(app.config['STEAM_API_KEY'])
 
+    @Plugin.route('/ping')
+    def status_check_route(self):
+        return 'pong'
+
     @Plugin.pre_command()
     def check_guild(self, func, event, args, kwargs):
         """Check if the incoming message comes from the right Discord guild (server)."""
         if not event: # For some reason, event may be None
             return None
 
-        if (app.config['BETA'] or app.config['ENV'] == 'development') and not event.msg.guild: # PM on development / beta env: cancel
+        if app.config['ENV'] == 'development' and not event.msg.guild: # PM on development env: cancel
             return None
 
         if event.msg.guild and event.msg.guild.id != app.config['DISCORD_BOT_GUILD_ID']: # Message not sent from the right guild
@@ -61,7 +65,7 @@ class RwrsBotDiscoPlugin(Plugin):
     @Plugin.listen('Ready')
     def on_ready_event(self, event):
         """Performs things when the bot is ready."""
-        self.client.update_presence(Status.ONLINE, Game(type=GameType.DEFAULT, name='rwrstats.com | @rwrs help'))
+        self.client.update_presence(Status.ONLINE, Game(type=GameType.DEFAULT, name='"@rwrs help" for help', url='https://rwrstats.com/'))
 
     @Plugin.command('cc')
     def on_cc_command(self, event):
@@ -76,47 +80,44 @@ class RwrsBotDiscoPlugin(Plugin):
         """Admin command: makes the bot to say something."""
         self.client.api.channels_messages_create(app.config['DISCORD_BOT_CHANNEL_ID'], args.message)
 
-    @Plugin.command('maintenance', parser=True)
-    @Plugin.parser.add_argument('action', choices=['enable', 'disable'])
-    def on_maintenance_command(self, event, args):
-        """Admin command: enables or disables the maintenance mode."""
-        if args.action == 'enable':
-            if os.path.exists('maintenance'):
-                event.msg.reply('Maintenance mode already enabled.')
-            else:
-                open('maintenance', 'a').close()
+    @Plugin.command('enable', group='maintenance')
+    def on_maintenance_enable_command(self, event):
+        """Admin command: enables the maintenance mode."""
+        if os.path.exists('maintenance'):
+            event.msg.reply('Maintenance mode already enabled.')
+        else:
+            open('maintenance', 'a').close()
 
-                event.msg.reply('Maintenance mode enabled.')
-        elif args.action == 'disable':
-            if not os.path.exists('maintenance'):
-                event.msg.reply('Maintenance mode already disabled.')
-            else:
-                os.remove('maintenance')
+            event.msg.reply('Maintenance mode enabled.')
 
-                event.msg.reply('Maintenance mode disabled.')
+    @Plugin.command('disable', group='maintenance')
+    def on_maintenance_disable_command(self, event):
+        """Admin command: disables the maintenance mode."""
+        if not os.path.exists('maintenance'):
+            event.msg.reply('Maintenance mode already disabled.')
+        else:
+            os.remove('maintenance')
 
-    @Plugin.command('motd', parser=True)
-    @Plugin.parser.add_argument('action', choices=['set', 'remove'])
-    @Plugin.parser.add_argument('message', nargs='?')
-    def on_motd_command(self, event, args):
-        """Admin command: sets or removes the MOTD."""
-        if args.action == 'set':
-            if not args.message:
-                event.msg.reply('Argument required: message')
+            event.msg.reply('Maintenance mode disabled.')
 
-                return
+    @Plugin.command('set', parser=True, group='motd')
+    @Plugin.parser.add_argument('message')
+    def on_motd_set_command(self, event, args):
+        """Admin command: sets the MOTD."""
+        with open('motd', 'w', encoding='utf-8') as f:
+            f.write(args.message)
 
-            with open('motd', 'w', encoding='utf-8') as f:
-                f.write(args.message)
+        event.msg.reply('MOTD updated.')
 
-            event.msg.reply('MOTD updated.')
-        elif args.action == 'remove':
-            if not os.path.exists('motd'):
-                event.msg.reply('MOTD already removed.')
-            else:
-                os.remove('motd')
+    @Plugin.command('remove', group='motd')
+    def on_motd_remove_command(self, event):
+        """Admin command: removes the MOTD."""
+        if not os.path.exists('motd'):
+            event.msg.reply('MOTD already removed.')
+        else:
+            os.remove('motd')
 
-                event.msg.reply('MOTD removed.')
+            event.msg.reply('MOTD removed.')
 
     @Plugin.command('help', parser=True)
     @Plugin.parser.add_argument('command', nargs='?')
@@ -190,7 +191,11 @@ class RwrsBotDiscoPlugin(Plugin):
 
                 return
 
+            rwr_account_stat.rwr_account = rwr_account # Setting the RwrAccount relation now to prevent lazy loading issue (also preventing one extra DB query)
+
             player = Player.craft(rwr_account, rwr_account_stat)
+
+            description_addendum = ':up: Promoted that day to ' + rwr_account_stat.promoted_to_rank.name_display if rwr_account_stat.promoted_to_rank else None
         else: # Live data mode
             player = rwr.scraper.search_player_by_username(args.database, args.username)
 
@@ -198,6 +203,8 @@ class RwrsBotDiscoPlugin(Plugin):
                 event.msg.reply('Sorry dude, this player don\'t exist :confused:')
 
                 return
+
+            description_addendum = None
 
         servers = rwr.scraper.get_servers()
 
@@ -207,7 +214,7 @@ class RwrsBotDiscoPlugin(Plugin):
             player.username_display,
             player.database_name,
             ' for **' + args.date.format('MMMM D, YYYY') + '**' if args.date else ''
-        ), embed=utils.create_player_message_embed(player))
+        ), embed=utils.create_player_message_embed(player, description_addendum=description_addendum))
 
     @Plugin.command('evolution', parser=True)
     @Plugin.parser.add_argument('username')
@@ -233,7 +240,7 @@ class RwrsBotDiscoPlugin(Plugin):
             return
 
         evolution_chart = utils.create_evolution_chart(
-            player.rwr_account.id,
+            player.rwr_account,
             constants.VALID_EVOLUTION_TYPES[args.type]['column'],
             'Past year {} evolution for {}\n({} ranked servers, {} is better)'.format(
                 constants.VALID_EVOLUTION_TYPES[args.type]['name'],
@@ -515,9 +522,9 @@ class RwrsBotDiscoPlugin(Plugin):
         table_data = [
             [
                 'Rank',
-                source_player.rank.name + '\n(' + source_player.rank.alternative_name + ')' if source_player.rank.alternative_name else '',
+                source_player.rank.name + '\n(' + source_player.rank.alternative_name + ')' if source_player.rank.alternative_name else source_player.rank.name,
                 utils.compare_values(source_player, target_player, lambda player: player.rank.id),
-                target_player.rank.name + '\n(' + target_player.rank.alternative_name + ')' if target_player.rank.alternative_name else ''
+                target_player.rank.name + '\n(' + target_player.rank.alternative_name + ')' if target_player.rank.alternative_name else target_player.rank.name
             ],
             ['XP', source_player.xp_display, utils.compare_values(source_player, target_player, lambda player: player.xp), target_player.xp_display],
             ['Kills', source_player.kills_display, utils.compare_values(source_player, target_player, lambda player: player.kills), target_player.kills_display],
@@ -559,7 +566,10 @@ class RwrsBot:
 
         self.client = Client(self.client_config)
 
-        self.bot = Bot(self.client)
+        self.bot_config = BotConfig()
+        self.bot_config.http_enabled = True
+
+        self.bot = Bot(self.client, config=self.bot_config)
         self.bot.add_plugin(RwrsBotDiscoPlugin)
 
     def run(self):

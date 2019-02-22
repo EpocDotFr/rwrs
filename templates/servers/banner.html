@@ -18,20 +18,20 @@
     <p>Make this RWR server visible by putting this banner on your website / blog / forum. It features live information about the server, and is refreshed every 5 minutes.</p>
 
     <p class="txtcenter">
-        <img src="{{ url_for('dynamic_server_image', ip=server.ip, port=server.port) }}">
+        <img src="{{ server.banner }}">
     </p>
 
     <div class="grid has-gutter mts">
         <div>
             <fieldset class="man pan">
                 <legend class="mls">HTML code <small>(websites / blogs)</small></legend>
-                <textarea readonly spellcheck="false" class="copypaste" rows="3" onClick="this.setSelectionRange(0, this.value.length)">&lt;a href=&quot;{{ server.link_absolute }}&quot; target=&quot;_blank&quot;&gt;&lt;img src=&quot;{{ url_for('dynamic_server_image', ip=server.ip, port=server.port, _external=True) }}&quot; border=&quot;0&quot;/&gt;&lt;/a&gt;</textarea>
+                <textarea readonly spellcheck="false" class="copypaste" rows="3" onClick="this.setSelectionRange(0, this.value.length)">&lt;a href=&quot;{{ server.link_absolute }}&quot; target=&quot;_blank&quot;&gt;&lt;img src=&quot;{{ server.banner_absolute }}&quot; border=&quot;0&quot;/&gt;&lt;/a&gt;</textarea>
             </fieldset>
         </div>
         <div>
             <fieldset class="man pan">
                 <legend class="mls">BBCode <small>(forums)</small></legend>
-                <textarea readonly spellcheck="false" class="copypaste" rows="3" onClick="this.setSelectionRange(0, this.value.length)">[url={{ server.link_absolute }}][img]{{ url_for('dynamic_server_image', ip=server.ip, port=server.port, _external=True) }}[/img][/url]</textarea>
+                <textarea readonly spellcheck="false" class="copypaste" rows="3" onClick="this.setSelectionRange(0, this.value.length)">[url={{ server.link_absolute }}][img]{{ server.banner_absolute }}[/img][/url]</textarea>
             </fieldset>
         </div>
     </div>

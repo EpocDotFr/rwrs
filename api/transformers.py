@@ -46,6 +46,7 @@ server_map_full.update(OrderedDict([
 server_location = OrderedDict([
     ('name', fields.String(attribute='text')),
     ('country_code', fields.String),
+    ('flag_image_url', fields.String(attribute='flag_absolute')),
 ])
 
 server_type = OrderedDict([
@@ -87,6 +88,7 @@ server_simple = OrderedDict([
     ('map', fields.Nested(server_map_simple)),
     ('players', fields.Nested(server_players_simple)),
     ('location', fields.Nested(server_location, attribute=lambda server: server.location if server.location.country_code else None, allow_null=True)),
+    ('steam_join_url', fields.String(attribute='steam_join_link')),
 ])
 
 server_full = server_simple.copy()
@@ -98,6 +100,7 @@ server_full.update(OrderedDict([
     ('mode', fields.Nested(server_mode_full, attribute=lambda server: server if server.mode else None, allow_null=True)),
     ('map', fields.Nested(server_map_full)),
     ('players', fields.Nested(server_players_full)),
+    ('banner_image_url', fields.String(attribute='banner_absolute'))
 ]))
 
 player_stats = OrderedDict([
@@ -131,13 +134,23 @@ player_rank = OrderedDict([
     ('icon_url', fields.String(attribute='icon_absolute')),
 ])
 
-player_full = player_simple.copy()
-player_full.update(OrderedDict([
+player_list = player_simple.copy()
+player_list.update(OrderedDict([
+    ('position', fields.Integer(attribute='leaderboard_position')),
     ('current_server', fields.Nested(server_simple, attribute='playing_on_server', allow_null=True)),
     ('stats', fields.Nested(player_stats, attribute=lambda player: player)),
     ('current_rank', fields.Nested(player_rank, attribute='rank')),
+]))
+
+player_full = player_list.copy()
+
+del player_full['position']
+
+player_full.update(OrderedDict([
     ('next_rank', fields.Nested(player_rank, allow_null=True)),
     ('xp_to_next_rank', fields.Integer),
     ('xp_percent_completion_to_next_rank', fields.Float),
     ('date', ArrowDateField(attribute='created_at')), # Added in the API controller
+    ('signature_image_url', fields.String(attribute='signature_absolute')),
+    ('promoted_to_rank', fields.Nested(player_rank, allow_null=True)), # Added in the API controller
 ]))

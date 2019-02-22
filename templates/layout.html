@@ -41,14 +41,6 @@
     <meta name="google-site-verification" content="58YRXAqZgsPP1fJar_ymC-4xSWtW3O2NmYwuRDzyRpg" />
 </head>
 <body itemscope itemtype="http://schema.org/WebSite">
-    {% if config['BETA'] %}
-        <div class="top-bar yellow pts pbs">
-            <div class="w1140p center txtcenter small">
-                <i class="fas fa-wrench fa-lg"></i> You are using the beta version of RWRS. Please report issues by PM to <strong>Epoc#4256</strong> on Discord. Version: <a href="https://github.com/EpocDotFr/rwrs/commit/{{ g.BETA_COMMIT }}">{{ g.BETA_COMMIT[:7] }}</a>@<a href="https://github.com/EpocDotFr/rwrs/tree/{{ g.BETA_BRANCH }}">{{ g.BETA_BRANCH }}</a>
-            </div>
-        </div>
-    {% endif %}
-
     {% if g.MOTD %}
         <div class="top-bar green pts pbs">
             <div class="w1140p center txtcenter small">
@@ -138,7 +130,7 @@
             </div>
             <div class="txtright">
                 <p class="mtn"><a href="http://www.runningwithrifles.com/" title="RWR website"><i class="fas fa-globe-americas fa-2x fa-fw"></i></a> <a href="http://www.runningwithrifles.com/phpBB3/" title="RWR forums"><i class="fas fa-comments fa-2x fa-fw"></i></a> <a href="https://runningwithrifles.gamepedia.com/Running_with_Rifles_Wiki" title="RWR wiki"><i class="fas fa-book-open fa-2x fa-fw"></i></a> <a href="http://steamcommunity.com/app/{{ config['RWR_STEAM_APP_ID'] }}" title="RWR on Steam"><i class="fab fa-steam-symbol fa-2x fa-fw"></i></a> <a href="https://www.reddit.com/r/Runningwithrifles/" title="RWR on Reddit"><i class="fab fa-reddit-alien fa-2x fa-fw"></i></a> <a href="https://twitter.com/osumiagames" title="RWR on Twitter"><i class="fab fa-twitter fa-2x fa-fw"></i></a> <a href="https://discord.gg/runningwithrifles" title="RWR on Discord"><img src="https://discordapp.com/api/guilds/181119538664964097/widget.png?style=shield"></a></p>
-                <p class="mbs"><a href="{{ url_for('about') }}">About</a> • <a href="{{ url_for('feedback') }}">Feedback</a> • <a href="{{ config['STATUS_PAGE_URL'] }}">Status</a></p>
+                <p class="mbs"><a href="{{ url_for('about') }}">About</a> • <a href="{{ url_for('feedback') }}">Feedback</a> • <a href="{{ url_for('static', filename='/api_doc.html') }}">API</a> • <a href="{{ config['STATUS_PAGE_URL'] }}">Status</a></p>
             </div>
         </div>
     </footer>

@@ -54,9 +54,11 @@ class Player:
 
         if current_app:
             ret.set_links()
+            ret.set_images()
         else:
             with app.app_context():
                 ret.set_links()
+                ret.set_images()
 
         return ret
 
@@ -89,9 +91,11 @@ class Player:
 
         if current_app:
             ret.set_links()
+            ret.set_images()
         else:
             with app.app_context():
                 ret.set_links()
+                ret.set_images()
 
         return ret
 
@@ -177,6 +181,16 @@ class Player:
         self.link = url_for('player_details', **params)
         self.link_absolute = url_for('player_details', **params, _external=True)
 
+    def set_images(self):
+        """Set the relative and absolute URLs to the images of this Player."""
+        params = {
+            'database': self.database,
+            'username': self.username
+        }
+
+        self.signature = url_for('dynamic_player_image', **params)
+        self.signature_absolute = url_for('dynamic_player_image', **params, _external=True)
+
     def set_playing_on_server(self, servers):
         """Determine if this user is playing on one of the given servers."""
         for server in servers:
@@ -222,21 +236,12 @@ class Player:
 
         next_rank_id = self.rank.id + 1
 
-        return self._get_rank_object(next_rank_id)
+        return utils.get_rank_object(self.database, next_rank_id)
 
     @memoized_property
     def rank(self):
         """Current player rank."""
-        ranks_country = constants.PLAYERS_LIST_DATABASES[self.database]['ranks_country']
-        ranks = constants.RANKS[ranks_country]
-
-        for rank_id, rank in ranks.items():
-            if rank['xp'] > self.xp:
-                break
-
-            current_rank_id = rank_id
-
-        return self._get_rank_object(int(current_rank_id))
+        return utils.get_rank_from_xp(self.database, self.xp)
 
     @memoized_property
     def xp_to_next_rank(self):
@@ -253,31 +258,6 @@ class Player:
             return 0.0
 
         return round((self.xp * 100) / self.next_rank.xp, 2)
-
-    def _get_rank_object(self, rank_id):
-        """Return a new PlayerRank object given a rank ID."""
-        ret = PlayerRank()
-
-        ranks_country = constants.PLAYERS_LIST_DATABASES[self.database]['ranks_country']
-        ranks = constants.RANKS[ranks_country]
-
-        if str(rank_id) not in ranks:
-            return ret
-
-        ret.id = rank_id
-        ret.name = ranks[str(rank_id)]['name']
-        ret.xp = ranks[str(rank_id)]['xp']
-
-        if ranks_country == 'jp' and str(rank_id) in constants.RANKS['us']:
-            ret.alternative_name = constants.RANKS['us'][str(rank_id)]['name']
-
-        if current_app:
-            ret.set_images_and_icons(self.database)
-        else:
-            with app.app_context():
-                ret.set_images_and_icons(self.database)
-
-        return ret
 
     @memoized_property
     def unlocks(self):
@@ -358,6 +338,13 @@ class PlayerRank:
 
     def __repr__(self):
         return 'PlayerRank:' + self.id
+
+    @memoized_property
+    def name_display(self):
+        return '{}{}'.format(
+            self.name,
+            ' (' + self.alternative_name + ')' if self.alternative_name else ''
+        )
 
     def set_images_and_icons(self, database):
         """Set the relative and absolute URLs to the images and icon of this rank."""

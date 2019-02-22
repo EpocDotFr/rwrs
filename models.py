@@ -547,6 +547,7 @@ class RwrAccountStat(db.Model):
     shots_fired = db.Column(db.Integer, nullable=False)
     throwables_thrown = db.Column(db.Integer, nullable=False)
     hash = db.Column(db.String(32), nullable=False)
+    promoted_to_rank_id = db.Column(db.Integer)
     created_at = db.Column(ArrowType, default=arrow.utcnow().floor('day'), nullable=False)
 
     rwr_account_id = db.Column(db.Integer, db.ForeignKey('rwr_accounts.id'), nullable=False)
@@ -577,8 +578,12 @@ class RwrAccountStat(db.Model):
 
     @staticmethod
     def transform_data(rows, column, format='YYYY-MM-DD'):
-        """Given a list of RwrAccountStat, convert to a list of date => number."""
-        return [{'t': row.created_at.format(format) if format else row.created_at, 'v': getattr(row, column)} for row in rows]
+        """Given a list of RwrAccountStat, convert to a list exploitable to be displayed in a chart."""
+        return [{
+            't': row.created_at.format(format) if format else row.created_at,
+            'v': getattr(row, column),
+            'ptr': row.promoted_to_rank.name if row.promoted_to_rank else None
+        } for row in rows]
 
     @staticmethod
     def get_stats_for_date(rwr_account_id, date):
@@ -590,12 +595,16 @@ class RwrAccountStat(db.Model):
 
     @staticmethod
     @cache.memoize(timeout=app.config['GRAPHS_DATA_CACHE_TIMEOUT'])
-    def get_stats_for_column(rwr_account_id, column=None):
+    def get_stats_for_column(rwr_account, column=None):
         """Return the player's score, K/D ratio and/or leaderboard position evolution data for the past year."""
         rwr_account_stats = RwrAccountStat.query.filter(
-            RwrAccountStat.rwr_account_id == rwr_account_id,
+            RwrAccountStat.rwr_account_id == rwr_account.id,
             RwrAccountStat.created_at >= one_year_ago()
         ).order_by(RwrAccountStat.created_at.desc()).all()
+
+        # Set RwrAccount relations now to prevent lazy loading issue (and to prevent extra DB query)
+        for rwr_account_stat in rwr_account_stats:
+            rwr_account_stat.rwr_account = rwr_account
 
         if not column:
             return {
@@ -605,6 +614,10 @@ class RwrAccountStat(db.Model):
             }
         else:
             return RwrAccountStat.transform_data(rwr_account_stats, column, format=None)
+
+    @memoized_property
+    def promoted_to_rank(self):
+        return rwr.utils.get_rank_object(self.rwr_account.type.value.lower(), self.promoted_to_rank_id) if self.promoted_to_rank_id else None
 
     @memoized_property
     def score(self):

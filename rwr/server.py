@@ -90,9 +90,11 @@ class Server:
 
         if current_app:
             ret.set_links()
+            ret.set_images()
         else:
             with app.app_context():
                 ret.set_links()
+                ret.set_images()
 
         return ret
 
@@ -146,8 +148,30 @@ class Server:
 
     def set_links(self):
         """Set the relative and absolute URLs of this server's details page."""
-        self.link = url_for('server_details', ip=self.ip, port=self.port, slug=self.name_slug)
-        self.link_absolute = url_for('server_details', ip=self.ip, port=self.port, slug=self.name_slug, _external=True)
+        params = {
+            'ip': self.ip,
+            'port': self.port,
+            'slug': self.name_slug
+        }
+
+        self.link = url_for('server_details', **params)
+        self.link_absolute = url_for('server_details', **params, _external=True)
+
+    def set_images(self):
+        """Set the relative and absolute URLs to the images of this Server."""
+        if not self.is_dedicated:
+            self.banner = None
+            self.banner_absolute = None
+
+            return
+
+        params = {
+            'ip': self.ip,
+            'port': self.port
+        }
+
+        self.banner = url_for('dynamic_server_image', **params)
+        self.banner_absolute = url_for('dynamic_server_image', **params, _external=True)
 
     @memoized_property
     def database(self):
@@ -214,6 +238,19 @@ class ServerLocation:
     continent_code = None
     continent_name = None
     text = None
+
+    def set_flags(self):
+        if not self.country_code:
+            return
+
+        params = {
+            'country_code': self.country_code.upper(),
+        }
+
+        flag_url = 'images/flags/{country_code}.png'.format(**params)
+
+        self.flag = url_for('static', filename=flag_url)
+        self.flag_absolute = url_for('static', filename=flag_url, _external=True)
 
     def __repr__(self):
         return 'ServerLocation:' + self.country_code

@@ -18,7 +18,7 @@ import matplotlib.pyplot as plt
 _time_ago_regex = re.compile(r'(?P<days_ago>\d+) day(?:s?) ago|(?P<weeks_ago>\d+) week(?:s?) ago|(?P<months_ago>\d+) month(?:s?) ago|(?P<years_ago>\d+) year(?:s?) ago')
 
 
-def create_player_message_embed(player):
+def create_player_message_embed(player, description_addendum=None):
     """Create a RWRS player rich Discord message."""
     embed = create_base_message_embed()
 
@@ -35,6 +35,9 @@ def create_player_message_embed(player):
 
     if player.is_ranked_servers_admin:
         description.append(':scales: Ranked (official) servers admin')
+
+    if description_addendum:
+        description.append(description_addendum)
 
     if description:
         embed.description = '\n'.join(description)
@@ -341,14 +344,19 @@ def parse_date(date):
         'YYYY-MM-DD'
     ]
 
-    return arrow.get(date, allowed_formats).replace(year=now.year)
+    ret = arrow.get(date, allowed_formats)
+
+    if ret.year == 1:
+        ret = ret.replace(year=now.year)
+
+    return ret
 
 
-def create_evolution_chart(rwr_account_id, column, title):
+def create_evolution_chart(rwr_account, column, title):
     """Create an image containing a chart representing the evolution of a given player stat."""
     evolution_chart = BytesIO()
 
-    player_evolution_data = RwrAccountStat.get_stats_for_column(rwr_account_id, column)
+    player_evolution_data = RwrAccountStat.get_stats_for_column(rwr_account, column)
 
     fig, ax = plt.subplots()
 
@@ -367,6 +375,15 @@ def create_evolution_chart(rwr_account_id, column, title):
         [data['v'] for data in player_evolution_data],
         'g-'
     )
+
+    for data in player_evolution_data:
+        if not data['ptr']:
+            continue
+
+        date = date2num(data['t'].datetime)
+
+        ax.axvline(date, color='b', linestyle=':')
+        ax.text(date, data['v'], data['ptr'], rotation=90, bbox={'color': 'white'})
 
     ax.autoscale_view()
 

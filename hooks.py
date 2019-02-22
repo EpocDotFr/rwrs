@@ -68,19 +68,6 @@ def define_globals():
 
 
 @app.before_request
-def set_beta_data():
-    if request.endpoint in ('dynamic_player_image', 'dynamic_server_image') or not app.config['BETA']:
-        return
-
-    from git import Repo
-
-    repo = Repo(app.root_path)
-
-    g.BETA_BRANCH = repo.active_branch.name
-    g.BETA_COMMIT = repo.head.commit.hexsha
-
-
-@app.before_request
 def get_motd():
     if request.endpoint in ('dynamic_player_image', 'dynamic_server_image'):
         return

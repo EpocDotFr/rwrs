@@ -1,3 +1,4 @@
+from itertools import tee, islice, chain
 from collections import OrderedDict
 from flask import request
 from rwrs import app
@@ -139,6 +140,14 @@ def build_database_uri():
         })
 
     return uri.format(**params)
+
+
+def previous_and_next(some_iterable):
+    prevs, items, nexts = tee(some_iterable, 3)
+    prevs = chain([None], prevs)
+    nexts = chain(islice(nexts, 1, None), [None])
+
+    return zip(prevs, items, nexts)
 
 
 def parse_steam_id_from_identity_url(identity_url):
