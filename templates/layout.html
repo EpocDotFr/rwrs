@@ -57,14 +57,24 @@
                         Right now: <abbr title="Number of people playing RWR multiplayer online" class="help">{{ g.online_players }}</abbr><span class="total-playing-friends is-hidden"> (<abbr title="Number of friends playing RWR multiplayer online" class="help txtblue">?</abbr>)</span>/<abbr title="Total number of people playing RWR" class="help">{{ g.total_players }}</abbr> players • <abbr title="Number of active (non-empty) public RWR servers" class="help">{{ g.active_servers }}</abbr>/<abbr title="Total number of public RWR servers" class="help">{{ g.total_servers }}</abbr> servers
                     </div>
                     <div class="txtright">
-                        <form method="get" action="{{ url_for('players_list_without_db') }}" itemprop="potentialAction" itemscope itemtype="http://schema.org/SearchAction">
+                        <form method="get" action="{{ url_for('players_list_without_db') }}" itemprop="potentialAction" itemscope itemtype="http://schema.org/SearchAction" class="inbl mrs">
                             <meta itemprop="target" content="{{ url_for('players_list_without_db') }}?username={username}&amp;database=invasion"/>
 
-                            <input type="text" name="username" placeholder="Type a player name" itemprop="query-input" required>
+                            <input type="text" name="username" placeholder="Type a player name" itemprop="query-input" required class="w200p">
                             <label><input type="radio" name="database" value="invasion" checked required> {{ macros.database_name('invasion') }}</label>
                             <label><input type="radio" name="database" value="pacific" required> {{ macros.database_name('pacific') }}</label>
                             <button type="submit"><i class="fas fa-search"></i></button>
                         </form>
+
+                        {%- if current_user.is_authenticated -%}
+                            {% if current_user.small_avatar_url %}<a href="{{ current_user.link }}"><img src="{{ current_user.small_avatar_url }}" height="28" width="28" class="bordered"></a> {% endif %}<a href="{{ current_user.link }}" class="mrs"><strong>{{ current_user.username }}</strong></a>
+                        {%- endif -%}
+
+                        <a href="{{ url_for('my_friends') }}" class="manage-friends-link is-hidden"><i class="fas fa-users"></i></a> <a href="{{ url_for('my_friends') }}" class="mrs manage-friends-link is-hidden">My friends</a>
+
+                        {%- if not current_user.is_authenticated -%}
+                            <a href="{{ url_for('sign_in') }}"><i class="fas fa-sign-in-alt"></i></a> <a href="{{ url_for('sign_in') }}">Sign in</a>
+                        {%- endif -%}
                     </div>
                 </div>
             </div>
@@ -81,7 +91,6 @@
                     <li class="inbl"><a href="{{ url_for('players_list', database='invasion') }}" class="btn {{ 'active' if request.path.startswith('/players') and request.view_args.get('database') == 'invasion' }}"><i class="fas fa-user"></i> Players: Invasion</a></li>
                     <li class="inbl"><a href="{{ url_for('players_list', database='pacific') }}" class="btn {{ 'active' if request.path.startswith('/players') and request.view_args.get('database') == 'pacific' }}"><i class="fas fa-user"></i> Players: Pacific</a></li>
                     <li class="inbl"><a href="{{ url_for('servers_list') }}" class="btn {{ 'active' if request.path.startswith('/servers') }}"><i class="fas fa-server"></i> Servers</a></li>
-                    <li class="inbl manage-friends-link is-hidden"><a href="{{ url_for('my_friends') }}" class="btn {{ 'active' if request.path.startswith('/my-friends') }}"><i class="fas fa-users"></i> My friends</a></li>
                 </ul>
             </nav>
         {% endif %}
@@ -94,7 +103,7 @@
             {% with flash_messages = get_flashed_messages(with_categories=true) %}
               {% if flash_messages %}
                 {% for category, message in flash_messages %}
-                  <p class="alert {{ category }} pas mbs">{{ message }}</p>
+                  <p class="alert {{ category }} pas mbs">{{ message|safe }}</p>
                 {% endfor %}
               {% endif %}
             {% endwith %}

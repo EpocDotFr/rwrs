@@ -214,6 +214,13 @@ img.bordered {
     color: #f64242;
 }
 
+.txtred a,
+.txtred a:visited,
+.txtred a:hover,
+.txtred a:focus {
+    color: inherit;
+}
+
 .txtorange {
     color: #f9b53a;
 }
@@ -347,6 +354,12 @@ textarea.copypaste {
     border: none;
     font-family: Consolas, Courier, monospace;
     font-size: 1.2rem;
+}
+
+input.has_error,
+select.has_error,
+textarea.has_error {
+    border: 0.1rem solid #f64242;
 }
 
 /************************************************************************
@@ -504,6 +517,10 @@ select {
 
 .top-bar.main .content > * {
     display: table-cell;
+    vertical-align: middle;
+}
+
+.top-bar.main .inbl {
     vertical-align: middle;
 }
 

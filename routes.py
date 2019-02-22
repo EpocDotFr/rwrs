@@ -1,9 +1,12 @@
 from models import SteamPlayerCount, ServerPlayerCount, Variable, RwrAccountStat, RwrAccount
 from flask import render_template, abort, request, redirect, url_for, flash, g
+from flask_login import login_required, current_user, logout_user
 from dynamic_image import DynamicServerImage, DynamicPlayerImage
 from rwr.player import Player
-from rwrs import app
+from rwrs import app, oid
+from models import User
 import rwr.constants
+import flask_openid
 import rwr.scraper
 import rwr.utils
 import arrow
@@ -38,6 +41,44 @@ def home():
         players_data=players_data,
         servers_data=servers_data,
         peaks=peaks
+    )
+
+
+@app.route('/sign-in')
+@oid.loginhandler
+def sign_in():
+    if current_user.is_authenticated:
+        return redirect(oid.get_next_url())
+
+    if request.args.get('go_to_steam'):
+        return oid.try_login(flask_openid.COMMON_PROVIDERS['steam'])
+
+    return render_template(
+        'users/sign_in.html',
+        oid_error_message=oid.fetch_error()
+    )
+
+
+@app.route('/sign-out')
+@login_required
+def sign_out():
+    logout_user()
+
+    flash('You are now signed out, see ya!', 'success')
+
+    return redirect(url_for('home'))
+
+
+@app.route('/users/<int:user_id>/<slug>')
+def user_profile(user_id, slug):
+    user = User.query.get(user_id)
+
+    if not user:
+        abort(404)
+
+    return render_template(
+        'users/profile.html',
+        user=user
     )
 
 

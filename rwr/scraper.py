@@ -247,6 +247,14 @@ def filter_servers(**filters):
         ranked = filters.get('ranked')
         not_empty = filters.get('not_empty')
         not_full = filters.get('not_full')
+        database = filters.get('database')
+        username = filters.get('username')
+
+        if database and database != server.database:
+            return False
+
+        if username and username not in server.players.list:
+            return False
 
         if location != 'any':
             if ':' in location:

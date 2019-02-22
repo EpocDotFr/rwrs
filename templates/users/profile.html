@@ -1,0 +1,32 @@
+{% extends 'layout.html' %}
+
+{% block page_title %}<h1><i class="fas fa-user-circle"></i> Users › {{ user.username }}{% if user.country_code %} <i class="flag flag-{{ user.country_code }}" title="{{ user.country_name }}"></i>{% endif %}</h1>{% endblock %}
+
+{% block meta_title %}Users › {{ user.username }}{% endblock %}
+
+{% block meta_description %}{{ user.username }} profile on RWRS.{% endblock %}
+
+{% block jsfiles %}
+    {% assets 'js_friends' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
+{% endblock %}
+
+{% set canonical_url = user.link_absolute %}
+
+{% block content %}
+    {%- if current_user.is_authenticated and user.id == current_user.id and not current_user.is_profile_public -%}
+        <div class="alert info pas mts"><i class="fas fa-lock"></i> Your profile is set as private. You can change this behavior in <a href="{{ url_for('user_settings') }}">your settings</a>.</div>
+    {%- endif -%}
+
+    <div class="grid mts has-gutter">
+        {%- if user.large_avatar_url -%}
+            <div class="one-fifth">
+                <img src="{{ user.large_avatar_url }}" class="bordered">
+            </div>
+        {%- endif -%}
+    </div>
+
+    <script>
+        friendsFeature.all_players_with_servers_details = {{ g.all_players_with_servers_details|tojson }};
+        friendsFeature.init();
+    </script>
+{% endblock %}

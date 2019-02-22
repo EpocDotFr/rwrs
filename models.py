@@ -1,11 +1,15 @@
 from sqlalchemy.util import memoized_property
 from sqlalchemy_utils import ArrowType
+from flask import url_for, current_app
+from flask_login import UserMixin
 from rwrs import db, cache, app
 from sqlalchemy import func
+from slugify import slugify
 from enum import Enum
 import rwr.utils
 import helpers
 import hashlib
+import iso3166
 import arrow
 
 
@@ -247,6 +251,66 @@ class Variable(db.Model):
 
     def __repr__(self):
         return 'Variable:{}'.format(self.id)
+
+
+class User(db.Model, UserMixin):
+    __tablename__ = 'users'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+
+    steam_id = db.Column(db.String(17), nullable=False, unique=True)
+    username = db.Column(db.String(80), nullable=False)
+    small_avatar_url = db.Column(db.String(255))
+    large_avatar_url = db.Column(db.String(255))
+    country_code = db.Column(db.String(2))
+    is_profile_public = db.Column(db.Boolean, nullable=False, default=True)
+    created_at = db.Column(ArrowType, default=arrow.utcnow().floor('minute'), nullable=False)
+    updated_at = db.Column(ArrowType, default=arrow.utcnow().floor('minute'), onupdate=arrow.utcnow().floor('minute'), nullable=False)
+    last_login_at = db.Column(ArrowType, nullable=False)
+
+    @memoized_property
+    def country_name(self):
+        return iso3166.countries_by_alpha2.get(self.country_code.upper()).name if self.country_code else ''
+
+    def get_link(self, absolute=False):
+        def _get_link(self, absolute):
+            return url_for('user_profile', user_id=self.id, slug=self.slug, _external=absolute)
+
+        if current_app:
+            link = _get_link(self, absolute=absolute)
+        else:
+            with app.app_context():
+                link = _get_link(self, absolute=absolute)
+
+        return link
+
+    @memoized_property
+    def link(self):
+        """Return the link to this User profile page."""
+        return self.get_link()
+
+    @memoized_property
+    def link_absolute(self):
+        """Return the absolute link to this User profile page."""
+        return self.get_link(absolute=True)
+
+    @memoized_property
+    def slug(self):
+        return slugify(self.username)
+
+    @staticmethod
+    def get_by_steam_id(steam_id, create_if_unexisting=False):
+        """Get a User according its Steam ID, optionally creating it if it doesn't exist."""
+        user = User.query.filter(User.steam_id == steam_id).first()
+
+        if not user and create_if_unexisting:
+            user = User()
+            user.steam_id = steam_id
+
+        return user
+
+    def __repr__(self):
+        return 'User:{}'.format(self.id)
 
 
 class RwrAccountType(Enum):
