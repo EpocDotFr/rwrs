@@ -14,7 +14,7 @@
 
 {% block content %}
     {%- if current_user.is_authenticated and user.id == current_user.id and not current_user.is_profile_public -%}
-        <div class="alert info pas mts"><i class="fas fa-lock"></i> Your profile is set as private. You can change this behavior in <a href="{{ url_for('user_settings') }}">your settings</a>.</div>
+        <div class="alert info pas mts"><i class="fas fa-lock"></i> Your RWRS user profile is set as private, respecting your Steam settings.</div>
     {%- endif -%}
 
     <div class="grid mts has-gutter">

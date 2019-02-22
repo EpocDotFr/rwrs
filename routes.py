@@ -76,6 +76,9 @@ def user_profile(user_id, slug):
     if not user:
         abort(404)
 
+    if not user.is_profile_public and ((current_user.is_authenticated and user.id != current_user.id) or not current_user.is_authenticated):
+        abort(404)
+
     return render_template(
         'users/profile.html',
         user=user
