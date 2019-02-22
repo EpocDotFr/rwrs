@@ -72,6 +72,10 @@
 
                         <a href="{{ url_for('my_friends') }}" class="manage-friends-link is-hidden"><i class="fas fa-users"></i></a> <a href="{{ url_for('my_friends') }}" class="mrs manage-friends-link is-hidden">My friends</a>
 
+                        {%- if current_user.is_authenticated -%}
+                            <a href="{{ url_for('sign_out') }}"><i class="fas fa-sign-out-alt"></i></a> <a href="{{ url_for('sign_out') }}">Sign out</a>
+                        {%- endif -%}
+
                         {%- if not current_user.is_authenticated -%}
                             <a href="{{ url_for('sign_in') }}"><i class="fas fa-sign-in-alt"></i></a> <a href="{{ url_for('sign_in') }}">Sign in</a>
                         {%- endif -%}

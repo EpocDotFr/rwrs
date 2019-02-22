@@ -1,4 +1,4 @@
-from flask import g, abort, render_template, make_response, request, redirect, flash
+from flask import g, abort, render_template, make_response, request, redirect, flash, url_for
 from rwrs import app, login_manager, oid, db
 from werkzeug.exceptions import HTTPException
 from flask_login import login_user
@@ -30,11 +30,10 @@ def create_or_login(resp):
     except:
         flash('An error occured while fetching your Steam account information. Please try again.', 'error')
 
-        return redirect(oid.get_next_url())
+        return redirect(url_for('sign_in'))
 
     user = User.get_by_steam_id(steam_id, create_if_unexisting=True)
 
-    # These attributes must be updated every time the user is signing-in because they may have been changed
     user.username = steam_user_info['personaname']
     user.small_avatar_url = steam_user_info['avatar']
     user.large_avatar_url = steam_user_info['avatarfull']
@@ -49,7 +48,7 @@ def create_or_login(resp):
 
     flash('Welcome, {}!'.format(user.username), 'success')
 
-    return redirect(oid.get_next_url())
+    return redirect(url_for('home'))
 
 
 @app.before_request

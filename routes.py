@@ -48,7 +48,7 @@ def home():
 @oid.loginhandler
 def sign_in():
     if current_user.is_authenticated:
-        return redirect(oid.get_next_url())
+        return redirect(url_for('home'))
 
     if request.args.get('go_to_steam'):
         return oid.try_login(flask_openid.COMMON_PROVIDERS['steam'])
