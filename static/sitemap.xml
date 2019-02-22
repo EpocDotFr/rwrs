@@ -29,11 +29,11 @@
     <changefreq>monthly</changefreq>
   </url>
   <url>
-    <loc>https://rwrstats.com/players/claim</loc>
-    <changefreq>weekly</changefreq>
+    <loc>https://rwrstats.com/sign-in</loc>
+    <changefreq>monthly</changefreq>
   </url>
   <url>
-    <loc>https://rwrstats.com/sign-in</loc>
+    <loc>https://rwrstats.com/players/claim</loc>
     <changefreq>weekly</changefreq>
   </url>
   <url>

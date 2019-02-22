@@ -45,6 +45,47 @@ def home():
     )
 
 
+@app.route('/sign-in')
+@oid.loginhandler
+def sign_in():
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
+
+    if request.args.get('go_to_steam'):
+        return oid.try_login(flask_openid.COMMON_PROVIDERS['steam'])
+
+    return render_template(
+        'users/sign_in.html',
+        oid_error_message=oid.fetch_error()
+    )
+
+
+@app.route('/sign-out')
+@login_required
+def sign_out():
+    logout_user()
+
+    flash('You are now signed out, see ya!', 'success')
+
+    return redirect(url_for('home'))
+
+
+@app.route('/users/<int:user_id>/<slug>')
+def user_profile(user_id, slug):
+    user = User.query.get(user_id)
+
+    if not user:
+        abort(404)
+
+    if not user.is_profile_public and ((current_user.is_authenticated and user.id != current_user.id) or not current_user.is_authenticated):
+        abort(404)
+
+    return render_template(
+        'users/profile.html',
+        user=user
+    )
+
+
 @app.route('/my-friends')
 def my_friends():
     return render_template(
@@ -454,44 +495,6 @@ def server_banner(ip, port, slug=None):
 @app.route('/images/servers/<ip>-<int:port>.png')
 def dynamic_server_image(ip, port):
     return DynamicServerImage.create(ip, port)
-
-
-@app.route('/sign-in')
-@oid.loginhandler
-def sign_in():
-    if current_user.is_authenticated:
-        return redirect(oid.get_next_url())
-
-    if request.args.get('go_to_steam'):
-        return oid.try_login(flask_openid.COMMON_PROVIDERS['steam'])
-
-    return render_template(
-        'users/sign_in.html',
-        oid_error_message=oid.fetch_error()
-    )
-
-
-@app.route('/sign-out')
-@login_required
-def sign_out():
-    logout_user()
-
-    flash('You are now signed out, see ya!', 'success')
-
-    return redirect(url_for('home'))
-
-
-@app.route('/users/<int:user_id>/<slug>')
-def user_profile(user_id, slug):
-    user = User.query.get(user_id)
-
-    if not user:
-        abort(404)
-
-    return render_template(
-        'users/profile.html',
-        user=user
-    )
 
 
 @app.route('/settings', methods=['GET', 'POST'])

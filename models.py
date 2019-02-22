@@ -3,8 +3,8 @@ from sqlalchemy_utils import ArrowType
 from flask import url_for, current_app
 from flask_login import UserMixin
 from rwrs import db, cache, app
-from slugify import slugify
 from sqlalchemy import func
+from slugify import slugify
 from enum import Enum
 import rwr.utils
 import helpers

@@ -214,6 +214,13 @@ img.bordered {
     color: #f64242;
 }
 
+.txtred a,
+.txtred a:visited,
+.txtred a:hover,
+.txtred a:focus {
+    color: inherit;
+}
+
 .txtorange {
     color: #f9b53a;
 }
