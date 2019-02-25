@@ -109,7 +109,7 @@ This resource has a cache lifetime of **1 hour**.
 
 ### Get a specific Player [GET]
 
-Return the Player corresponding to the given database / username couple.
+Return the Player corresponding to the given database / player username couple.
 
 ::: note
 #### Server-side caching
@@ -148,6 +148,71 @@ This resource has a cache lifetime of **1 hour**.
 + Response 412 (application/json)
 
     If the `date` parameter is provided: the Player isn't eligible for stats history (5000 most experienced players only).
+
+    + Attributes (Error Response, fixed-type)
+
++ Response 503 (application/json)
+
+    Maintenance in progress.
+
+    + Attributes (Error Response, fixed-type)
+
+## Player [/players/{database}/{username}/stats-history{?page,limit}]
+
++ Parameters
+    + database: `invasion` (enum[string]) - The player database.
+      + Members
+          + `invasion`
+          + `pacific`
+    + username: `EPOCDOTFR` - The player username.
+    + page: `1` (integer, optional)
+        Minimum value: `1`
+      + Default: `1`
+    + limit: `25` (integer, optional)
+        Number of stats row to return.
+
+        Minimum value: `1`
+
+        Maximum value: `100`
+      + Default: `15`
+
+### Get stats history [GET]
+
+Return stats history corresponding to the given database / player username couple.
+
+Available only for the 5000 most experienced players.
+
++ Request
+
+    + Headers
+
+            Authorization: Token {token}
+
++ Response 200 (application/json)
+
+    + Attributes (array[Player Stats History Object], fixed-type)
+
++ Response 400 (application/json)
+
+    One or more arguments are (is) invalid. Check the error message(s) for more information.
+
+    + Attributes (Error Response, fixed-type)
+
++ Response 404 (application/json)
+
+    The Player wasn't found.
+
+    + Attributes (Error Response, fixed-type)
+
++ Response 403 (application/json)
+
+    Invalid token or token not provided.
+
+    + Attributes (Error Response, fixed-type)
+
++ Response 412 (application/json)
+
+    The Player isn't eligible for stats history (5000 most experienced players only).
 
     + Attributes (Error Response, fixed-type)
 
