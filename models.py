@@ -467,6 +467,25 @@ class RwrAccount(db.Model):
         return rwr.utils.get_database_name(self.type.value.lower())
 
     @memoized_property
+    def link(self):
+        """Return the link to this Player details page."""
+        def get_link(self):
+            return url_for('player_details', database=self.type.value.lower(), username=self.username)
+
+        if current_app:
+            link = get_link(self)
+        else:
+            with app.app_context():
+                link = get_link(self)
+
+        return link
+
+    @memoized_property
+    def type_display(self):
+        """The database name."""
+        return rwr.utils.get_database_name(self.type.value.lower())
+
+    @memoized_property
     def ordered_stats(self):
         """Return a query which have to be executed to get all RwrAccountStat linked to this RwrAccount."""
         return RwrAccountStat.query.filter(RwrAccountStat.rwr_account_id == self.id).order_by(RwrAccountStat.created_at.desc())
