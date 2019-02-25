@@ -205,3 +205,35 @@
 
     {{- get_database_name(database) }}
 {%- endmacro %}
+
+{% macro inline_form_field(field) -%}
+    {%- set css_class = 'has_error ' + kwargs.pop('class', '') if field.errors -%}
+    {{ field.label() }} {{ field(class=css_class, **kwargs) }}
+{%- endmacro %}
+
+{% macro form_field(field) -%}
+    {%- set css_class = 'has_error ' + kwargs.pop('class', '') if field.errors -%}
+    <div class="grid has-gutter mbs">
+        <div class="txtright">
+            {{ field.label() }}
+        </div>
+        <div>
+            <div>{{ field(class=css_class, **kwargs) }}</div>
+            {%- if field.errors -%}
+                <ul class="txtred pls">
+                    {%- for error in field.errors -%}
+                        <li>{{ error|safe }}</li>
+                    {%- endfor -%}
+                </ul>
+            {%- endif %}
+        </div>
+    </div>
+{%- endmacro %}
+
+{% macro market_ad_small(market_ad) -%}
+    <div class="txtcenter mbs">
+        <div class="mbs"><a href="{{ market_ad.link }}"><img src="http://via.placeholder.com/100x150" class="bordered"></a></div>
+        <div><a href="{{ market_ad.link }}">{{ market_ad.item_id }}</a></div>
+        <div><strong>{%- if not market_ad.is_free %}{{ market_ad.unit_price_display }} RP{% elif market_ad.type.value == 'OFFER' %}FREE{% endif %}</strong></div>
+    </div>
+{%- endmacro %}

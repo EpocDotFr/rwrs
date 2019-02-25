@@ -268,6 +268,12 @@ class User(db.Model, UserMixin):
     updated_at = db.Column(ArrowType, default=arrow.utcnow().floor('minute'), onupdate=arrow.utcnow().floor('minute'), nullable=False)
     last_login_at = db.Column(ArrowType, nullable=False)
 
+    rwr_accounts = db.relationship('RwrAccount', backref='user', lazy=True, foreign_keys='RwrAccount.user_id')
+
+    def get_rwr_accounts_by_type(self, type):
+        """Return the RwrAccounts linked to this user, filtered by account type."""
+        return [rwr_account for rwr_account in self.rwr_accounts if rwr_account.type == RwrAccountType(type.upper())]
+
     @memoized_property
     def country_name(self):
         return iso3166.countries_by_alpha2.get(self.country_code.upper()).name if self.country_code else ''
@@ -309,6 +315,11 @@ class User(db.Model, UserMixin):
 
         return user
 
+    @memoized_property
+    def has_rwr_accounts(self):
+        """Determine is this User object have at least one RwrAccount."""
+        return RwrAccount.query.with_entities(func.count('*')).filter(RwrAccount.user_id == self.id).scalar() > 0
+
     def __repr__(self):
         return 'User:{}'.format(self.id)
 
@@ -328,8 +339,32 @@ class RwrAccount(db.Model):
     username = db.Column(db.String(16), nullable=False)
     created_at = db.Column(ArrowType, default=arrow.utcnow().floor('minute'), nullable=False)
     updated_at = db.Column(ArrowType, default=arrow.utcnow().floor('minute'), onupdate=arrow.utcnow().floor('minute'), nullable=False)
+    claim_possible_until = db.Column(ArrowType)
+    claimed_at = db.Column(ArrowType)
+
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    claim_initiated_by_user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
     stats = db.relationship('RwrAccountStat', backref='rwr_account', lazy=True)
+
+    @memoized_property
+    def link(self):
+        """Return the link to this Player details page."""
+        def get_link(self):
+            return url_for('player_details', database=self.type.value.lower(), username=self.username)
+
+        if current_app:
+            link = get_link(self)
+        else:
+            with app.app_context():
+                link = get_link(self)
+
+        return link
+
+    @memoized_property
+    def type_display(self):
+        """The database name."""
+        return rwr.utils.get_database_name(self.type.value.lower())
 
     @memoized_property
     def ordered_stats(self):
@@ -342,12 +377,47 @@ class RwrAccount(db.Model):
         return RwrAccountStat.query.with_entities(func.count('*')).filter(RwrAccountStat.rwr_account_id == self.id).scalar() > 0
 
     @staticmethod
-    def get_by_type_and_username(type, username):
-        """Return an RwrAccount given its type and username."""
-        return RwrAccount.query.filter(
-            RwrAccount.type == RwrAccountType(type.upper()),
+    def get_by_type_and_username(type, username, create_if_unexisting=False):
+        """Return an RwrAccount given its type and username, optionally creating it if it doesn't exist."""
+        type = RwrAccountType(type.upper())
+
+        rwr_account = RwrAccount.query.filter(
+            RwrAccount.type == type,
             RwrAccount.username == username
         ).first()
+
+        if not rwr_account and create_if_unexisting:
+            rwr_account = RwrAccount()
+            rwr_account.type = type
+            rwr_account.username = username
+
+        return rwr_account
+
+    def init_claim(self, user_id):
+        """Initialize the claim procedure for this RwrAccount."""
+        self.claim_initiated_by_user_id = user_id
+        self.claim_possible_until = arrow.utcnow().floor('second').shift(minutes=+app.config['PLAYER_CLAIM_DELAY'])
+
+    def reset_claim(self):
+        """Reset the claim procedure for this RwrAccount."""
+        self.claim_initiated_by_user_id = None
+        self.claim_possible_until = None
+
+    def claim(self, user_id):
+        """Make a User claim this RwrAccount."""
+        self.user_id = user_id
+        self.claimed_at = arrow.utcnow().floor('minute')
+
+        self.reset_claim()
+
+    def has_claim_expired(self):
+        """Determine if this RwrAccount claim period has expired."""
+        if arrow.utcnow() >= self.claim_possible_until:
+            self.reset_claim()
+
+            return True
+
+        return False
 
     def __repr__(self):
         return 'RwrAccount:{}'.format(self.id)

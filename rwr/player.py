@@ -321,6 +321,11 @@ class Player:
         """Determine if this Player has a RwrAccount and at least one persisted RwrAccountStat."""
         return self.rwr_account and self.rwr_account.has_stats
 
+    @memoized_property
+    def user(self):
+        """Return the User linked to this Player."""
+        return self.rwr_account.user if self.rwr_account else None
+
     def __repr__(self):
         return 'Player:' + self.username
 

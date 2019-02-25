@@ -23,6 +23,30 @@
                 <img src="{{ user.large_avatar_url }}" class="bordered">
             </div>
         {%- endif -%}
+
+        {%- for database, database_info in PLAYERS_LIST_DATABASES.items() -%}
+            {%- set rwr_accounts_by_type = user.get_rwr_accounts_by_type(database) -%}
+            <div class="{{ 'two-fifth' if user.large_avatar_url else 'one-half' }}">
+                <table class="{{ 'striped' if rwr_accounts_by_type }}">
+                    <thead>
+                        <tr>
+                            <th>RWR {{ database_info.name }} accounts</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {%- for rwr_account in rwr_accounts_by_type -%}
+                            <tr>
+                                <td><a href="{{ rwr_account.link }}">{{ rwr_account.username }}</a></td>
+                            </tr>
+                        {%- else -%}
+                            <tr>
+                                <td><div class="alert info pas txtcenter">Nothing to display.</div></td>
+                            </tr>
+                        {%- endfor -%}
+                    </tbody>
+                </table>
+            </div>
+        {%- endfor -%}
     </div>
 
     <script>
