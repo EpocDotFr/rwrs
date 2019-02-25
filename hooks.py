@@ -6,6 +6,7 @@ from datetime import datetime
 from models import User
 import rwr.scraper
 import helpers
+import bugsnag
 import steam
 import arrow
 import os
@@ -26,8 +27,10 @@ def create_or_login(resp):
         steam_user_info = steamworks_api_client.get_user_summaries(steam_id)
 
         if not steam_user_info:
-            raise Exception()
-    except:
+            raise Exception('Unable to get Steam user info for Steam ID {}'.format(steam_id))
+    except Exception as e:
+        bugsnag.notify(e)
+
         flash('An error occured while fetching your Steam account information. Please try again.', 'error')
 
         return redirect(url_for('sign_in'))
