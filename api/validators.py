@@ -66,4 +66,4 @@ get_one_player = reqparse.RequestParser()
 get_one_player.add_argument('date', location='args', type=arrow_date)
 
 get_player_stats_history = limit_parser.copy()
-get_player_stats_history.add_argument('page', location='args', type=inputs.positive)
+get_player_stats_history.add_argument('page', location='args', type=inputs.positive, default=1)

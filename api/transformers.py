@@ -122,7 +122,7 @@ player_stats = OrderedDict([
 
 player_stats_list = player_stats.copy()
 player_stats_list.update(OrderedDict([
-    ('leaderboard_position', fields.Integer),
+    ('position', fields.Integer(attribute='leaderboard_position')),
 ]))
 
 player_rank = OrderedDict([
