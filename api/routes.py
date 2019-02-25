@@ -119,6 +119,26 @@ class PlayerResource(Resource):
         return player
 
 
+class PlayerStatsHistoryResource(Resource):
+    @marshal_with(transformers.player_stats_history)
+    def get(self, database, username):
+        args = validators.get_player_stats_history.parse_args()
+
+        player = rwr.scraper.search_player_by_username(database, username)
+
+        if not player:
+            abort(404, message='Player not found')
+
+        if not player.rwr_account:
+            abort(412, message='Stats history unavailable for this player')
+
+        return player.rwr_account.ordered_stats.paginate(
+            page=args['page'],
+            per_page=args['limit'],
+            error_out=False
+        ).items
+
+
 class LiveCountersResource(Resource):
     @marshal_with(transformers.live_counters)
     def get(self):
@@ -138,4 +158,5 @@ api.add_resource(ServersResource, '/servers')
 api.add_resource(ServerResource, '/servers/<ip>:<int:port>')
 api.add_resource(PlayersResource, '/players/<any({}):database>'.format(rwr.constants.VALID_DATABASES_STRING_LIST))
 api.add_resource(PlayerResource, '/players/<any({}):database>/<username>'.format(rwr.constants.VALID_DATABASES_STRING_LIST))
+api.add_resource(PlayerStatsHistoryResource, '/players/<any({}):database>/<username>/stats-history'.format(rwr.constants.VALID_DATABASES_STRING_LIST))
 api.add_resource(LiveCountersResource, '/live-counters')
