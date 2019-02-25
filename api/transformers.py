@@ -134,6 +134,12 @@ player_rank = OrderedDict([
     ('icon_url', fields.String(attribute='icon_absolute')),
 ])
 
+player_stats_history = player_stats_list.copy()
+player_stats_history.update(OrderedDict([
+    ('date', ArrowDateField(attribute='created_at')),
+    ('promoted_to_rank', fields.Nested(player_rank, allow_null=True)),
+]))
+
 player_list = player_simple.copy()
 player_list.update(OrderedDict([
     ('position', fields.Integer(attribute='leaderboard_position')),
