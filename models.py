@@ -274,7 +274,12 @@ class User(db.Model, UserMixin):
 
     def get_link(self, absolute=False):
         def _get_link(self, absolute):
-            return url_for('user_profile', user_id=self.id, slug=self.slug, _external=absolute)
+            params = {
+                'user_id': self.id,
+                'slug': self.slug
+            }
+
+            return url_for('user_profile', **params, _external=absolute)
 
         if current_app:
             link = _get_link(self, absolute=absolute)
@@ -293,6 +298,37 @@ class User(db.Model, UserMixin):
     def link_absolute(self):
         """Return the absolute link to this User profile page."""
         return self.get_link(absolute=True)
+
+    def get_country_flag(self, absolute=False):
+        if not self.country_code:
+            return None
+
+        def _get_country_flag(self, absolute):
+            params = {
+                'country_code': self.country_code.upper(),
+            }
+
+            flag_url = 'images/flags/{country_code}.png'.format(**params)
+
+            return url_for('static', filename=flag_url, _external=absolute)
+
+        if current_app:
+            link = _get_country_flag(self, absolute=absolute)
+        else:
+            with app.app_context():
+                link = _get_country_flag(self, absolute=absolute)
+
+        return link
+
+    @memoized_property
+    def country_flag(self):
+        """Return the URL to this User country flag image."""
+        return self.get_country_flag()
+
+    @memoized_property
+    def country_flag_absolute(self):
+        """Return the absolute URL to this User country flag image."""
+        return self.get_country_flag(absolute=True)
 
     @memoized_property
     def slug(self):
