@@ -56,6 +56,7 @@ More informations on the three above can be found [here](http://flask.pocoo.org/
   - `DISCORD_BOT_GUILD_ID` A Discord guild (server) ID the bot will be allowed to listen for commands from
   - `MAX_NUM_OF_PLAYERS_TO_TRACK_STATS_FOR` How many players should RWRS track the stats for (top players storted by XP)
   - `API_TOKENS` A set of API tokens allowed to use the API
+  - `ENABLE_SIGN_IN` Enable the "Sign in via Steam" feature
 
 I'll let you search yourself about how to configure a web server along uWSGI.
 
