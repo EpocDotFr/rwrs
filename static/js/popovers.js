@@ -22,6 +22,12 @@ popoversFeature = {
         this.initPlayerPopover($('.servers-list a[data-popover-url]').get());
     },
     /**
+     * Initialize the Ajax "player" popover on the User profile page.
+     */
+    initOnUserProfile: function() {
+        this.initPlayerPopover($('.rwr-accounts-list a[data-popover-url]').get());
+    },
+    /**
      * Initialize an Ajax "player" popover on a set of elements.
      */
     initPlayerPopover: function(elements) {
