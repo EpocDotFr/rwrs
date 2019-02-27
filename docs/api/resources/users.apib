@@ -1,0 +1,46 @@
+# Group Users
+
+A User represent a RWRS user, created after the User signed-in via Steam.
+
+## User [/users/{user_id}]
+
++ Parameters
+    + user_id: `56` (number) - The RWRS user ID.
+
+### Get a specific User [GET]
+
+Return the User corresponding to the given RWRS user ID.
+
++ Request
+
+    + Headers
+
+            Authorization: Token {token}
+
++ Response 200 (application/json)
+
+    + Attributes (User Full Object, fixed-type)
+
++ Response 400 (application/json)
+
+    One or more arguments are (is) invalid. Check the error message(s) for more information.
+
+    + Attributes (Error Response, fixed-type)
+
++ Response 404 (application/json)
+
+    The User wasn't found, or its profile is set as private.
+
+    + Attributes (Error Response, fixed-type)
+
++ Response 403 (application/json)
+
+    Invalid token or token not provided.
+
+    + Attributes (Error Response, fixed-type)
+
++ Response 503 (application/json)
+
+    Maintenance in progress.
+
+    + Attributes (Error Response, fixed-type)
