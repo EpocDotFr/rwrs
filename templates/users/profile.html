@@ -1,6 +1,6 @@
 {% extends 'layout.html' %}
 
-{% block page_title %}<h1><i class="fas fa-user-circle"></i> Users › {{ user.username }}{% if user.country_code %} <i class="flag flag-{{ user.country_code }}" title="{{ user.country_name }}"></i>{% endif %}</h1>{% endblock %}
+{% block page_title %}<h1><i class="fas fa-user-circle"></i> Users › {{ user.username }}</h1>{% endblock %}
 
 {% block meta_title %}Users › {{ user.username }}{% endblock %}
 
@@ -14,20 +14,31 @@
 
 {% block content %}
     {%- if current_user.is_authenticated and user.id == current_user.id and not current_user.is_profile_public -%}
-        <div class="alert info pas mts"><i class="fas fa-lock"></i> Your RWRS user profile is set as private, respecting your Steam settings.</div>
+        <div class="alert info pas mtm"><i class="fas fa-lock"></i> Your RWRS user profile is set as private, respecting your Steam settings.</div>
     {%- endif -%}
 
-    <div class="grid mts has-gutter">
-        {%- if user.large_avatar_url -%}
-            <div class="one-fifth">
-                <img src="{{ user.large_avatar_url }}" class="bordered">
-            </div>
-        {%- endif -%}
-
-        {%- for database, database_info in PLAYERS_LIST_DATABASES.items() -%}
-            {%- set rwr_accounts_by_type = user.get_rwr_accounts_by_type(database) -%}
-            <div class="{{ 'two-fifth' if user.large_avatar_url else 'one-half' }}">
-                <table class="{{ 'striped' if rwr_accounts_by_type }}">
+    <div class="grid has-gutter mtm">
+        <div class="one-fifth">
+            <table class="mtn mbn">
+                {%- if user.large_avatar_url -%}
+                    <tr>
+                        <td class="txtcenter"><img src="{{ user.large_avatar_url }}" title="{{ user.username }}'s avatar"></td>
+                    </tr>
+                {%- endif -%}
+                {%- if user.country_code -%}
+                <tr>
+                    <td class="txtcenter"><i class="flag flag-{{ user.country_code }}" title="{{ user.country_name }}"></i> {{ user.country_name }}</td>
+                </tr>
+                {%- endif -%}
+                <tr>
+                    <td class="txtcenter">Registered {{ user.created_at.humanize() }}</td>
+                </tr>
+            </table>
+        </div>
+        <div class="four-fifth">
+	        {%- for database, database_info in PLAYERS_LIST_DATABASES.items() -%}
+	            {%- set rwr_accounts_by_type = user.get_rwr_accounts_by_type(database) -%}
+                <table class="mbs {{ 'striped' if rwr_accounts_by_type }}">
                     <thead>
                         <tr>
                             <th>RWR {{ database_info.name }} accounts</th>
@@ -45,8 +56,8 @@
                         {%- endfor -%}
                     </tbody>
                 </table>
-            </div>
-        {%- endfor -%}
+	        {%- endfor -%}
+        </div>
     </div>
 
     <script>
