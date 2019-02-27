@@ -2,9 +2,14 @@ from collections import OrderedDict
 from flask_restful import fields
 
 
-class ArrowDateField(fields.Raw):
+class ArrowIsoDateField(fields.Raw):
     def format(self, value):
         return value.format('YYYY-MM-DD') if value else None
+
+
+class ArrowIsoDateTimeField(fields.Raw):
+    def format(self, value):
+        return value.isoformat() if value else None
 
 live_counters = OrderedDict([
     ('players', fields.Nested(OrderedDict([
@@ -136,7 +141,7 @@ player_rank = OrderedDict([
 
 player_stats_history = player_stats_list.copy()
 player_stats_history.update(OrderedDict([
-    ('date', ArrowDateField(attribute='created_at')),
+    ('date', ArrowIsoDateField(attribute='created_at')),
     ('promoted_to_rank', fields.Nested(player_rank, allow_null=True)),
 ]))
 
@@ -156,7 +161,23 @@ player_full.update(OrderedDict([
     ('next_rank', fields.Nested(player_rank, allow_null=True)),
     ('xp_to_next_rank', fields.Integer),
     ('xp_percent_completion_to_next_rank', fields.Float),
-    ('date', ArrowDateField(attribute='created_at')), # Added in the API controller
+    ('date', ArrowIsoDateField(attribute='created_at')), # Added in the API controller
     ('signature_image_url', fields.String(attribute='signature_absolute')),
     ('promoted_to_rank', fields.Nested(player_rank, allow_null=True)), # Added in the API controller
 ]))
+
+user_country = OrderedDict([
+    ('name', fields.String(attribute='country_name')),
+    ('code', fields.String(attribute='country_code')),
+    ('flag_image_url', fields.String(attribute='country_flag_absolute')),
+])
+
+user_full = OrderedDict([
+    ('id', fields.Integer),
+    ('username', fields.String),
+    ('url', fields.String(attribute='link_absolute')),
+    ('small_avatar_url', fields.String),
+    ('large_avatar_url', fields.String),
+    ('registered_at', ArrowIsoDateTimeField(attribute='created_at')),
+    ('country', fields.Nested(user_country, attribute=lambda user: user if user.country_code else None, allow_null=True)),
+])
