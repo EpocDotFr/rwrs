@@ -383,24 +383,61 @@ class RwrAccount(db.Model):
 
     stats = db.relationship('RwrAccountStat', backref='rwr_account', lazy=True)
 
-    @memoized_property
-    def link(self):
-        """Return the link to this Player details page."""
-        def get_link(self):
-            return url_for('player_details', database=self.type.value.lower(), username=self.username)
+    def get_link(self, absolute=False):
+        def _get_link(self, absolute):
+            params = {
+                'database': self.type.value.lower(),
+                'username': self.username
+            }
+
+            return url_for('player_details', **params, _external=absolute)
 
         if current_app:
-            link = get_link(self)
+            link = _get_link(self, absolute=absolute)
         else:
             with app.app_context():
-                link = get_link(self)
+                link = _get_link(self, absolute=absolute)
 
         return link
 
     @memoized_property
+    def link(self):
+        """Return the link to this Player profile page."""
+        return self.get_link()
+
+    @memoized_property
+    def link_absolute(self):
+        """Return the absolute link to this Player profile page."""
+        return self.get_link(absolute=True)
+
+    @memoized_property
     def type_display(self):
         """The database name."""
-        return rwr.utils.get_database_name(self.type.value.lower())
+        return rwr.utils.get_database_name(self.database)
+
+    @memoized_property
+    def is_me(self):
+        return helpers.is_player_me(self.username)
+
+    @memoized_property
+    def is_contributor(self):
+        return helpers.is_player_contributor(self.username)
+
+    @memoized_property
+    def is_rwr_dev(self):
+        return helpers.is_player_rwr_dev(self.username)
+
+    @memoized_property
+    def is_ranked_servers_admin(self):
+        return helpers.is_player_ranked_server_admin(self.username)
+
+    @memoized_property
+    def database(self):
+        return self.type.value.lower()
+
+    @memoized_property
+    def database_name(self):
+        return self.type_display
 
     @memoized_property
     def ordered_stats(self):

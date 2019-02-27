@@ -105,19 +105,19 @@ class Player:
 
     @memoized_property
     def is_me(self):
-        return self.username.lower() == app.config['MY_USERNAME']
+        return helpers.is_player_me(self.username)
 
     @memoized_property
     def is_contributor(self):
-        return self.username.lower() in app.config['CONTRIBUTORS']
+        return helpers.is_player_contributor(self.username)
 
     @memoized_property
     def is_rwr_dev(self):
-        return self.username.lower() in app.config['DEVS']
+        return helpers.is_player_rwr_dev(self.username)
 
     @memoized_property
     def is_ranked_servers_admin(self):
-        return self.username.lower() in app.config['RANKED_SERVERS_ADMINS']
+        return helpers.is_player_ranked_server_admin(self.username)
 
     @memoized_property
     def username_display(self):
