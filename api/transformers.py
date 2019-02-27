@@ -108,6 +108,22 @@ server_full.update(OrderedDict([
     ('banner_image_url', fields.String(attribute='banner_absolute'))
 ]))
 
+user_country = OrderedDict([
+    ('name', fields.String(attribute='country_name')),
+    ('code', fields.String(attribute='country_code')),
+    ('flag_image_url', fields.String(attribute='country_flag_absolute')),
+])
+
+user_full = OrderedDict([
+    ('id', fields.Integer),
+    ('username', fields.String),
+    ('url', fields.String(attribute='link_absolute')),
+    ('small_avatar_url', fields.String),
+    ('large_avatar_url', fields.String),
+    ('registered_at', ArrowIsoDateTimeField(attribute='created_at')),
+    ('country', fields.Nested(user_country, attribute=lambda user: user if user.country_code else None, allow_null=True)),
+])
+
 player_stats = OrderedDict([
     ('kills', fields.Integer),
     ('deaths', fields.Integer),
@@ -164,20 +180,5 @@ player_full.update(OrderedDict([
     ('date', ArrowIsoDateField(attribute='created_at')), # Added in the API controller
     ('signature_image_url', fields.String(attribute='signature_absolute')),
     ('promoted_to_rank', fields.Nested(player_rank, allow_null=True)), # Added in the API controller
+    ('owner', fields.Nested(user_full, attribute=lambda player: player.user if player.user and player.user.is_profile_public else None, allow_null=True)),
 ]))
-
-user_country = OrderedDict([
-    ('name', fields.String(attribute='country_name')),
-    ('code', fields.String(attribute='country_code')),
-    ('flag_image_url', fields.String(attribute='country_flag_absolute')),
-])
-
-user_full = OrderedDict([
-    ('id', fields.Integer),
-    ('username', fields.String),
-    ('url', fields.String(attribute='link_absolute')),
-    ('small_avatar_url', fields.String),
-    ('large_avatar_url', fields.String),
-    ('registered_at', ArrowIsoDateTimeField(attribute='created_at')),
-    ('country', fields.Nested(user_country, attribute=lambda user: user if user.country_code else None, allow_null=True)),
-])
