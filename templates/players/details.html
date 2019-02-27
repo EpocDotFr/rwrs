@@ -90,9 +90,17 @@
                 This account is owned by <a href="{{ player.user.link }}">{{ player.user.username }}</a>.
             {%- endif -%}
         {%- elif not player.user and current_user.is_authenticated -%}
-            <a href="{{ url_for('player_claim', type=player.database, username=player.username) }}">Claim this account now</a> to enable additional features.
+            {%- if config['ENABLE_PLAYER_CLAIMING'] -%}
+                <a href="{{ url_for('player_claim', type=player.database, username=player.username) }}">Claim this account now</a> to enable additional features.
+            {%- else -%}
+                You cannot claim this account at this moment.
+            {%- endif -%}
         {%- elif not player.user and not current_user.is_authenticated -%}
-            <a href="{{ url_for('sign_in', next=url_for('player_claim', type=player.database, username=player.username)) }}">Sign-in</a> to claim this account and access additional features.
+            {%- if config['ENABLE_PLAYER_CLAIMING'] -%}
+                <a href="{{ url_for('sign_in', next=url_for('player_claim', type=player.database, username=player.username)) }}">Sign-in</a> to claim this account and access additional features.
+            {%- else -%}
+                You cannot claim this account at this moment.
+            {%- endif -%}
         {%- endif -%}
     </div>
 {% endblock %}
