@@ -1,0 +1,39 @@
+{% extends 'layout.html' %}
+
+{% block page_title %}<h1><i class="fas fa-sign-in-alt"></i> Sign in</h1>{% endblock %}
+
+{% block meta_title %}Sign in{% endblock %}
+
+{% block meta_description %}Sign in into RWRS and access additional features.{% endblock %}
+
+{% block jsfiles %}
+    {% assets 'js_friends' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
+{% endblock %}
+
+{% set canonical_url = url_for('sign_in', _external=True) %}
+
+{% block content %}
+    {%- if oid_error_message -%}
+        <p class="alert error pas mbs">{{ oid_error_message }}</p>
+    {%- endif -%}
+
+    <div class="grid has-gutter mtm mbm">
+        <div>
+            <p class="txtcenter big"><strong>Sign in to RWRS and access additional features</strong></p>
+            <ul class="fa-ul">
+                <li><span class="fa-li"><i class="fas fa-users fa-fw"></i></span> Friends list: what are they doing right now?</li>
+                <li><span class="fa-li"><i class="fas fa-shopping-cart fa-fw"></i></span> Market: buy and sell RWR weapons, equipments and valuables</li>
+                <li><span class="fa-li"><i class="fas fa-ellipsis-h fa-fw "></i></span> <i>More to (hopefully) come</i></li>
+            </ul>
+        </div>
+        <div class="txtcenter">
+            <p class="mtm mbm"><a href="{{ url_for('sign_in', go_to_steam='yes') }}"><img src="{{ url_for('static', filename='images/steam_openid.png') }}"></a></p>
+            <p class="small txtgrey">RWRS will not be aware of your credentials.<br>Cookies will be used to keep your session active.<br>RWRS will fetch publicly available data from your Steam profile.<br>RWRS will take into account whether your Steam profile is public or private.</p>
+        </div>
+    </div>
+
+    <script>
+        friendsFeature.all_players_with_servers_details = {{ g.all_players_with_servers_details|tojson }};
+        friendsFeature.init();
+    </script>
+{% endblock %}

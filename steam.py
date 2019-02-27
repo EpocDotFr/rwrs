@@ -38,10 +38,11 @@ class SteamworksApiClient:
         if self.output_format == 'json':
             data = response.json()
 
-            if data['response']['result'] != 1:
-                raise Exception('Response was not successful')
+            if 'result' in data['response']:
+                if data['response']['result'] != 1:
+                    raise Exception('Steamworks response was not successful')
 
-            del data['response']['result']
+                del data['response']['result']
 
             return data['response']
         else:
@@ -57,6 +58,16 @@ class SteamworksApiClient:
         data = self._call_steamworks_api('ISteamUserStats', 'GetNumberOfCurrentPlayers', params=params)
 
         return data['player_count']
+
+    def get_user_summaries(self, steam_id):
+        """Return information about a specific user."""
+        params = {
+            'steamids': steam_id
+        }
+
+        data = self._call_steamworks_api('ISteamUser', 'GetPlayerSummaries', method_version=2, params=params)
+
+        return data['players'][0] if 'players' in data and len(data['players']) == 1 else None
 
     def __repr__(self):
         return 'SteamworksApiClient'

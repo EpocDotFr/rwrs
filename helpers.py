@@ -4,6 +4,9 @@ from flask import request
 from rwrs import app
 import json
 import os
+import re
+
+_steam_identity_url_regex = re.compile('steamcommunity.com/openid/id/([0-9]+)$')
 
 
 def humanize_seconds_to_days(seconds):
@@ -144,3 +147,13 @@ def previous_and_next(some_iterable):
     nexts = chain(islice(nexts, 1, None), [None])
 
     return zip(prevs, items, nexts)
+
+
+def parse_steam_id_from_identity_url(identity_url):
+    """Extract the Steam ID from a Steam identity URL."""
+    match = _steam_identity_url_regex.search(identity_url)
+
+    if match:
+        return match.group(1)
+
+    return None

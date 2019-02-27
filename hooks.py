@@ -1,10 +1,57 @@
-from flask import g, abort, render_template, make_response, request
+from flask import g, abort, render_template, make_response, request, redirect, flash, url_for
+from rwrs import app, login_manager, oid, db
 from werkzeug.exceptions import HTTPException
+from flask_login import login_user
 from datetime import datetime
-from rwrs import app
+from models import User
 import rwr.scraper
+import helpers
+import bugsnag
 import steam
+import arrow
 import os
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(user_id)
+
+
+@oid.after_login
+def create_or_login(resp):
+    steam_id = helpers.parse_steam_id_from_identity_url(resp.identity_url)
+
+    steamworks_api_client = steam.SteamworksApiClient(app.config['STEAM_API_KEY'])
+
+    try:
+        steam_user_info = steamworks_api_client.get_user_summaries(steam_id)
+
+        if not steam_user_info:
+            raise Exception('Unable to get Steam user info for Steam ID {}'.format(steam_id))
+    except Exception as e:
+        bugsnag.notify(e)
+
+        flash('An error occured while fetching your Steam account information. Please try again.', 'error')
+
+        return redirect(url_for('sign_in'))
+
+    user = User.get_by_steam_id(steam_id, create_if_unexisting=True)
+
+    user.username = steam_user_info['personaname']
+    user.small_avatar_url = steam_user_info['avatar']
+    user.large_avatar_url = steam_user_info['avatarfull']
+    user.country_code = steam_user_info['loccountrycode'].lower() if 'loccountrycode' in steam_user_info and steam_user_info['loccountrycode'] else None
+    user.last_login_at = arrow.utcnow().floor('minute')
+    user.is_profile_public = True if 'communityvisibilitystate' in steam_user_info and steam_user_info['communityvisibilitystate'] == 3 else False
+
+    db.session.add(user)
+    db.session.commit()
+
+    login_user(user, remember=True)
+
+    flash('Welcome, {}!'.format(user.username), 'success')
+
+    return redirect(url_for('home'))
 
 
 @app.before_request

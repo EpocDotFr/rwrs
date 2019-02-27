@@ -329,10 +329,10 @@ SERVER_TYPES = OrderedDict([
 
 VALID_SERVER_TYPES = SERVER_TYPES.keys()
 
-PLAYERS_LIST_DATABASES = {
-    'invasion': {'name': 'Invasion', 'ranks_country': 'us', 'realm': 'official_invasion'},
-    'pacific': {'name': 'Pacific', 'ranks_country': app.config['PACIFIC_PLAYERS_RANKS_COUNTRY'], 'realm': 'official_pacific'}
-}
+PLAYERS_LIST_DATABASES = OrderedDict([
+    ('invasion', {'name': 'Invasion', 'ranks_country': 'us', 'realm': 'official_invasion'}),
+    ('pacific', {'name': 'Pacific', 'ranks_country': app.config['PACIFIC_PLAYERS_RANKS_COUNTRY'], 'realm': 'official_pacific'})
+])
 
 VALID_DATABASES = PLAYERS_LIST_DATABASES.keys()
 VALID_DATABASES_STRING_LIST = ','.join(VALID_DATABASES)

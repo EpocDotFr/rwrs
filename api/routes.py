@@ -1,5 +1,5 @@
 from flask_restful import Resource, marshal_with, abort
-from models import RwrAccount, RwrAccountStat
+from models import RwrAccount, RwrAccountStat, User
 from . import api, transformers, validators
 from types import SimpleNamespace
 from rwr.player import Player
@@ -154,9 +154,20 @@ class LiveCountersResource(Resource):
         )
 
 
+class UserResource(Resource):
+    @marshal_with(transformers.user_full)
+    def get(self, user_id):
+        user = User.query.get(user_id)
+
+        if not user or not user.is_profile_public:
+            abort(404, message='User not found')
+
+        return user
+
 api.add_resource(ServersResource, '/servers')
 api.add_resource(ServerResource, '/servers/<ip>:<int:port>')
 api.add_resource(PlayersResource, '/players/<any({}):database>'.format(rwr.constants.VALID_DATABASES_STRING_LIST))
 api.add_resource(PlayerResource, '/players/<any({}):database>/<username>'.format(rwr.constants.VALID_DATABASES_STRING_LIST))
 api.add_resource(PlayerStatsHistoryResource, '/players/<any({}):database>/<username>/stats-history'.format(rwr.constants.VALID_DATABASES_STRING_LIST))
+api.add_resource(UserResource, '/users/<int:user_id>')
 api.add_resource(LiveCountersResource, '/live-counters')
