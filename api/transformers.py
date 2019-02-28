@@ -171,7 +171,7 @@ user_full = user_simple.copy()
 user_full.update(OrderedDict([
     ('registered_at', ArrowIsoDateTimeField(attribute='created_at')),
     ('country', fields.Nested(user_country, attribute=lambda user: user if user.country_code else None, allow_null=True)),
-    ('accounts', fields.List(fields.Nested(player_simple), attribute='rwr_accounts')), # FIXME
+    ('accounts', fields.List(fields.Nested(player_simple), attribute='rwr_accounts')),
 ]))
 
 player_full = player_list.copy()
