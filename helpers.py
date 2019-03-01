@@ -159,6 +159,22 @@ def parse_steam_id_from_identity_url(identity_url):
     return None
 
 
+def is_player_me(player_nickname):
+    return player_nickname.lower() == app.config['MY_USERNAME']
+
+
+def is_player_contributor(player_nickname):
+    return player_nickname.lower() in app.config['CONTRIBUTORS']
+
+
+def is_player_rwr_dev(player_nickname):
+    return player_nickname.lower() in app.config['DEVS']
+
+
+def is_player_ranked_server_admin(player_nickname):
+    return player_nickname.lower() in app.config['RANKED_SERVERS_ADMINS']
+
+
 def get_market_ad_type_name(market_ad_type):
     if market_ad_type == 'offers':
         return 'Offers'
@@ -166,3 +182,4 @@ def get_market_ad_type_name(market_ad_type):
         return 'Requests'
     else:
         return 'Unknown'
+
