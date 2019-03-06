@@ -159,7 +159,7 @@ def parse_steam_id_from_identity_url(identity_url):
     return None
 
 
-def is_player_me(player_nickname):
+def is_player_myself(player_nickname):
     return player_nickname.lower() == app.config['MY_USERNAME']
 
 

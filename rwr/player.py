@@ -104,8 +104,8 @@ class Player:
         return helpers.humanize_integer(self.leaderboard_position)
 
     @memoized_property
-    def is_me(self):
-        return helpers.is_player_me(self.username)
+    def is_myself(self):
+        return helpers.is_player_myself(self.username)
 
     @memoized_property
     def is_contributor(self):
@@ -123,7 +123,7 @@ class Player:
     def username_display(self):
         return '{}{}{}'.format(
             self.username,
-            ' :wave:' if self.is_me else ' :v:️' if self.is_contributor else ' :tools:' if self.is_rwr_dev else '',
+            ' :wave:' if self.is_myself else ' :v:️' if self.is_contributor else ' :tools:' if self.is_rwr_dev else '',
             ' :scales:' if self.is_ranked_servers_admin else ''
         )
 
