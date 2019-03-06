@@ -33,10 +33,6 @@
     <changefreq>monthly</changefreq>
   </url>
   <url>
-    <loc>https://rwrstats.com/players/claim</loc>
-    <changefreq>monthly</changefreq>
-  </url>
-  <url>
     <loc>https://rwrstats.com/market</loc>
     <changefreq>always</changefreq>
   </url>
