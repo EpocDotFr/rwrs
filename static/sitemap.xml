@@ -32,8 +32,4 @@
     <loc>https://rwrstats.com/sign-in</loc>
     <changefreq>monthly</changefreq>
   </url>
-  <url>
-    <loc>https://rwrstats.com/players/claim</loc>
-    <changefreq>monthly</changefreq>
-  </url>
 </urlset>
