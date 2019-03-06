@@ -38,7 +38,7 @@ class ServerResource(Resource):
         server.players.list = [SimpleNamespace(
             username=player_username,
             link_absolute=url_for('player_details', database=server.database, username=player_username, _external=True) if server.is_ranked and server.database else None,
-            is_me=helpers.is_player_me(player_username),
+            is_myself=helpers.is_player_myself(player_username),
             is_contributor=helpers.is_player_contributor(player_username),
             is_rwr_dev=helpers.is_player_rwr_dev(player_username),
             is_ranked_servers_admin=helpers.is_player_ranked_server_admin(player_username),

@@ -26,7 +26,7 @@ def create_player_message_embed(player, description_addendum=None):
 
     description = []
 
-    if player.is_me:
+    if player.is_myself:
         description.append(':wave: Hey, I\'m the creator of RWRS and this bot! Glad to see you\'re using it.')
     elif player.is_contributor:
         description.append(':v: This player contributed in a way or another to RWRS. Thanks to her/him!')

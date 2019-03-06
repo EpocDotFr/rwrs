@@ -535,8 +535,8 @@ class RwrAccount(db.Model):
         return rwr.utils.get_database_name(self.database)
 
     @memoized_property
-    def is_me(self):
-        return helpers.is_player_me(self.username)
+    def is_myself(self):
+        return helpers.is_player_myself(self.username)
 
     @memoized_property
     def is_contributor(self):
