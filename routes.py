@@ -131,7 +131,7 @@ def players_list_without_db():
     return redirect(url_for('players_list', database=database), code=301)
 
 
-@app.route('/players/claim', methods=['GET', 'POST'])
+@app.route('/claim', methods=['GET', 'POST'])
 @login_required
 def player_claim():
     # Player claim form may be pre-filled with values in query string parameters
@@ -162,7 +162,7 @@ def player_claim():
     )
 
 
-@app.route('/players/claim/<int:rwr_account_id>', methods=['GET', 'POST'])
+@app.route('/claim/<int:rwr_account_id>', methods=['GET', 'POST'])
 @login_required
 def player_finalize_claim(rwr_account_id):
     rwr_account = RwrAccount.query.get(rwr_account_id)
