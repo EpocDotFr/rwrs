@@ -117,6 +117,20 @@ def api_home():
     return redirect(url_for('static', filename='/api_doc.html'), code=301)
 
 
+@app.route('/players')
+def players_list_without_db():
+    database = request.args.get('database', 'invasion')
+    username = request.args.get('username')
+
+    if username:
+        username = username.strip().upper()
+
+        # Redirect to a SEO-friendly URL if the username query parameter is detected
+        return redirect(url_for('player_details', database=database, username=username), code=301)
+
+    return redirect(url_for('players_list', database=database), code=301)
+
+
 @app.route('/players/claim', methods=['GET', 'POST'])
 @login_required
 def player_claim():
@@ -187,20 +201,6 @@ def player_finalize_claim(rwr_account_id):
         rwr_account=rwr_account,
         milliseconds_remaining=rwr_account.claim_possible_until.timestamp * 1000
     )
-
-
-@app.route('/players')
-def players_list_without_db():
-    database = request.args.get('database', 'invasion')
-    username = request.args.get('username')
-
-    if username:
-        username = username.strip().upper()
-
-        # Redirect to a SEO-friendly URL if the username query parameter is detected
-        return redirect(url_for('player_details', database=database, username=username), code=301)
-
-    return redirect(url_for('players_list', database=database), code=301)
 
 
 @app.route('/players/<any({}):database>'.format(rwr.constants.VALID_DATABASES_STRING_LIST))
