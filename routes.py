@@ -117,61 +117,6 @@ def api_home():
     return redirect(url_for('static', filename='/api_doc.html'), code=301)
 
 
-@app.route('/players')
-def players_list_without_db():
-    database = request.args.get('database', 'invasion')
-    username = request.args.get('username')
-
-    if username:
-        username = username.strip().upper()
-
-        # Redirect to a SEO-friendly URL if the username query parameter is detected
-        return redirect(url_for('player_details', database=database, username=username), code=301)
-
-    return redirect(url_for('players_list', database=database), code=301)
-
-
-@app.route('/players/<any({}):database>'.format(rwr.constants.VALID_DATABASES_STRING_LIST))
-def players_list(database):
-    args = request.args.to_dict()
-
-    args['sort'] = args.get('sort', rwr.constants.PlayersSort.SCORE.value)
-
-    if not args.get('limit') or int(args.get('limit')) > app.config['LIST_PAGE_SIZES'][-1]:
-        args['limit'] = app.config['LIST_PAGE_SIZES'][0]
-    else:
-        args['limit'] = int(args.get('limit'))
-
-    if args.get('target'):
-        args['target'] = args.get('target').upper()
-
-    players = rwr.scraper.get_players(
-        database,
-        sort=args['sort'],
-        target=args['target'] if args.get('target') else None,
-        start=int(args['start']) if args.get('start') else 0,
-        limit=args['limit']
-    )
-
-    if args.get('target') and not players:
-        flash(ERROR_PLAYER_NOT_FOUND.format(username=args.get('target'), database=rwr.utils.get_database_name(database)), 'error')
-
-        return redirect(url_for('players_list', database=database))
-
-    servers = rwr.scraper.get_servers()
-
-    for player in players:
-        player.set_playing_on_server(servers)
-
-    g.LAYOUT = 'large'
-
-    return render_template(
-        'players/list.html',
-        players=players,
-        args=args
-    )
-
-
 @app.route('/players/claim', methods=['GET', 'POST'])
 @login_required
 def player_claim():
@@ -241,6 +186,61 @@ def player_finalize_claim(rwr_account_id):
         error_message=error_message,
         rwr_account=rwr_account,
         milliseconds_remaining=rwr_account.claim_possible_until.timestamp * 1000
+    )
+
+
+@app.route('/players')
+def players_list_without_db():
+    database = request.args.get('database', 'invasion')
+    username = request.args.get('username')
+
+    if username:
+        username = username.strip().upper()
+
+        # Redirect to a SEO-friendly URL if the username query parameter is detected
+        return redirect(url_for('player_details', database=database, username=username), code=301)
+
+    return redirect(url_for('players_list', database=database), code=301)
+
+
+@app.route('/players/<any({}):database>'.format(rwr.constants.VALID_DATABASES_STRING_LIST))
+def players_list(database):
+    args = request.args.to_dict()
+
+    args['sort'] = args.get('sort', rwr.constants.PlayersSort.SCORE.value)
+
+    if not args.get('limit') or int(args.get('limit')) > app.config['LIST_PAGE_SIZES'][-1]:
+        args['limit'] = app.config['LIST_PAGE_SIZES'][0]
+    else:
+        args['limit'] = int(args.get('limit'))
+
+    if args.get('target'):
+        args['target'] = args.get('target').upper()
+
+    players = rwr.scraper.get_players(
+        database,
+        sort=args['sort'],
+        target=args['target'] if args.get('target') else None,
+        start=int(args['start']) if args.get('start') else 0,
+        limit=args['limit']
+    )
+
+    if args.get('target') and not players:
+        flash(ERROR_PLAYER_NOT_FOUND.format(username=args.get('target'), database=rwr.utils.get_database_name(database)), 'error')
+
+        return redirect(url_for('players_list', database=database))
+
+    servers = rwr.scraper.get_servers()
+
+    for player in players:
+        player.set_playing_on_server(servers)
+
+    g.LAYOUT = 'large'
+
+    return render_template(
+        'players/list.html',
+        players=players,
+        args=args
     )
 
 
