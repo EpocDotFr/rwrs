@@ -79,4 +79,22 @@
     {% elif request.view_args.get('tab') == 'signature' %}
         {% include 'players/details/signature.html' %}
     {% endif %}
+
+    {%- if config['ENABLE_PLAYER_CLAIMING'] -%}
+        <div class="alert info pas mts"><i class="fas fa-user-check mrs"></i>
+            {%- if player.user -%}
+                {%- if current_user.is_authenticated and current_user.id == player.user.id -%}
+                    You already own this account.
+                {%- elif not player.user.is_profile_public -%}
+                    This account was claimed by someone who wants to be anonymous.
+                {%- else -%}
+                    This account was claimed by <a href="{{ player.user.link }}">{{ player.user.username }}</a>.
+                {%- endif -%}
+            {%- elif not player.user and current_user.is_authenticated -%}
+                <a href="{{ url_for('player_claim', type=player.database, username=player.username) }}">Claim this account now</a> to enable additional features.
+            {%- elif not player.user and not current_user.is_authenticated -%}
+                <a href="{{ url_for('sign_in', next=url_for('player_claim', type=player.database, username=player.username)) }}">Sign-in</a> to claim this account and access additional features.
+            {%- endif -%}
+        </div>
+    {%- endif -%}
 {% endblock %}

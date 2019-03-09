@@ -69,6 +69,7 @@ assets.register('js_friends', Bundle('js/common.js', 'js/friends.js', filters='j
 assets.register('js_friends_popovers', Bundle('js/common.js', 'js/friends.js', 'js/popovers.js', filters='jsmin', output='js/friends_popover.min.js'))
 assets.register('js_friends_charts', Bundle('js/common.js', 'js/friends.js', 'js/charts.js', filters='jsmin', output='js/friends_charts.min.js'))
 assets.register('js_friends_charts_popovers', Bundle('js/common.js', 'js/friends.js', 'js/charts.js', 'js/popovers.js', filters='jsmin', output='js/friends_charts_popover.min.js'))
+assets.register('js_friends_player_claim', Bundle('js/common.js', 'js/friends.js', 'js/player_claim.js', filters='jsmin', output='js/friends_player_claim.min.js'))
 assets.register('css_app', Bundle('css/flags.css', 'css/app.css', filters='cssutils', output='css/app.min.css'))
 
 login_manager.session_protection = 'strong'

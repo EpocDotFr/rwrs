@@ -30,7 +30,7 @@ database = OrderedDict([
 player_simple = OrderedDict([
     ('username', fields.String),
     ('url', fields.String(attribute='link_absolute')),
-    ('is_rwrs_creator', fields.Boolean(attribute='is_me')),
+    ('is_rwrs_creator', fields.Boolean(attribute='is_myself')),
     ('is_contributor', fields.Boolean),
     ('is_rwr_dev', fields.Boolean),
     ('is_ranked_servers_admin', fields.Boolean),
@@ -153,6 +153,27 @@ player_list.update(OrderedDict([
     ('current_rank', fields.Nested(player_rank, attribute='rank')),
 ]))
 
+user_country = OrderedDict([
+    ('name', fields.String(attribute='country_name')),
+    ('code', fields.String(attribute='country_code')),
+    ('flag_image_url', fields.String(attribute='country_flag_absolute')),
+])
+
+user_simple = OrderedDict([
+    ('id', fields.Integer),
+    ('username', fields.String),
+    ('url', fields.String(attribute='link_absolute')),
+    ('small_avatar_url', fields.String),
+    ('large_avatar_url', fields.String),
+])
+
+user_full = user_simple.copy()
+user_full.update(OrderedDict([
+    ('registered_at', ArrowIsoDateTimeField(attribute='created_at')),
+    ('country', fields.Nested(user_country, attribute=lambda user: user if user.country_code else None, allow_null=True)),
+    ('accounts', fields.List(fields.Nested(player_simple), attribute='rwr_accounts')),
+]))
+
 player_full = player_list.copy()
 
 del player_full['position']
@@ -164,20 +185,5 @@ player_full.update(OrderedDict([
     ('date', ArrowIsoDateField(attribute='created_at')), # Added in the API controller
     ('signature_image_url', fields.String(attribute='signature_absolute')),
     ('promoted_to_rank', fields.Nested(player_rank, allow_null=True)), # Added in the API controller
+    ('owner', fields.Nested(user_simple, attribute=lambda player: player.user if player.user and player.user.is_profile_public else None, allow_null=True)),
 ]))
-
-user_country = OrderedDict([
-    ('name', fields.String(attribute='country_name')),
-    ('code', fields.String(attribute='country_code')),
-    ('flag_image_url', fields.String(attribute='country_flag_absolute')),
-])
-
-user_full = OrderedDict([
-    ('id', fields.Integer),
-    ('username', fields.String),
-    ('url', fields.String(attribute='link_absolute')),
-    ('small_avatar_url', fields.String),
-    ('large_avatar_url', fields.String),
-    ('registered_at', ArrowIsoDateTimeField(attribute='created_at')),
-    ('country', fields.Nested(user_country, attribute=lambda user: user if user.country_code else None, allow_null=True)),
-])

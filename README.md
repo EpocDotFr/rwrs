@@ -57,6 +57,8 @@ More informations on the three above can be found [here](http://flask.pocoo.org/
   - `MAX_NUM_OF_PLAYERS_TO_TRACK_STATS_FOR` How many players should RWRS track the stats for (top players storted by XP)
   - `API_TOKENS` A set of API tokens allowed to use the API
   - `ENABLE_SIGN_IN` Enable the "Sign in via Steam" feature
+  - `ENABLE_PLAYER_CLAIMING` Enable the "claim player" feature
+  - `PLAYER_CLAIM_DELAY` Maximum amount of minutes users are allowed to finalize an RWR account claim procedure
 
 I'll let you search yourself about how to configure a web server along uWSGI.
 

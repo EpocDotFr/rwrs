@@ -434,7 +434,11 @@ to the <code>GET /servers</code> resource (e.g the player list).</p>
         "<span class="hljs-attribute">is_rwrs_creator</span>": <span class="hljs-value"><span class="hljs-literal">true</span></span>,
         "<span class="hljs-attribute">is_contributor</span>": <span class="hljs-value"><span class="hljs-literal">false</span></span>,
         "<span class="hljs-attribute">is_rwr_dev</span>": <span class="hljs-value"><span class="hljs-literal">false</span></span>,
-        "<span class="hljs-attribute">is_ranked_servers_admin</span>": <span class="hljs-value"><span class="hljs-literal">false</span>
+        "<span class="hljs-attribute">is_ranked_servers_admin</span>": <span class="hljs-value"><span class="hljs-literal">false</span></span>,
+        "<span class="hljs-attribute">database</span>": <span class="hljs-value">{
+          "<span class="hljs-attribute">id</span>": <span class="hljs-value"><span class="hljs-string">"invasion"</span></span>,
+          "<span class="hljs-attribute">name</span>": <span class="hljs-value"><span class="hljs-string">"Invasion"</span>
+        </span>}
       </span>}
     ]
   </span>}</span>,
@@ -626,6 +630,23 @@ to the <code>GET /servers</code> resource (e.g the player list).</p>
               "<span class="hljs-attribute">is_ranked_servers_admin</span>": <span class="hljs-value">{
                 "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"boolean"</span></span>,
                 "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Whether this player is admin on ranked (official) servers"</span>
+              </span>}</span>,
+              "<span class="hljs-attribute">database</span>": <span class="hljs-value">{
+                "<span class="hljs-attribute">type</span>": <span class="hljs-value">[
+                  <span class="hljs-string">"object"</span>,
+                  <span class="hljs-string">"null"</span>
+                ]</span>,
+                "<span class="hljs-attribute">properties</span>": <span class="hljs-value">{
+                  "<span class="hljs-attribute">id</span>": <span class="hljs-value">{
+                    "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
+                    "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"The database ID"</span>
+                  </span>}</span>,
+                  "<span class="hljs-attribute">name</span>": <span class="hljs-value">{
+                    "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
+                    "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"The database name"</span>
+                  </span>}
+                </span>}</span>,
+                "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Player database. `null` if not a ranked (official) player profile"</span>
               </span>}
             </span>}</span>,
             "<span class="hljs-attribute">required</span>": <span class="hljs-value">[
@@ -818,6 +839,10 @@ to the <code>GET /servers</code> resource (e.g the player list).</p>
     "<span class="hljs-attribute">is_contributor</span>": <span class="hljs-value"><span class="hljs-literal">false</span></span>,
     "<span class="hljs-attribute">is_rwr_dev</span>": <span class="hljs-value"><span class="hljs-literal">false</span></span>,
     "<span class="hljs-attribute">is_ranked_servers_admin</span>": <span class="hljs-value"><span class="hljs-literal">false</span></span>,
+    "<span class="hljs-attribute">database</span>": <span class="hljs-value">{
+      "<span class="hljs-attribute">id</span>": <span class="hljs-value"><span class="hljs-string">"invasion"</span></span>,
+      "<span class="hljs-attribute">name</span>": <span class="hljs-value"><span class="hljs-string">"Invasion"</span>
+    </span>}</span>,
     "<span class="hljs-attribute">current_server</span>": <span class="hljs-value">{
       "<span class="hljs-attribute">name</span>": <span class="hljs-value"><span class="hljs-string">"InvasionEU2"</span></span>,
       "<span class="hljs-attribute">ip</span>": <span class="hljs-value"><span class="hljs-string">"31.186.250.67"</span></span>,
@@ -912,6 +937,23 @@ to the <code>GET /servers</code> resource (e.g the player list).</p>
       "<span class="hljs-attribute">is_ranked_servers_admin</span>": <span class="hljs-value">{
         "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"boolean"</span></span>,
         "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Whether this player is admin on ranked (official) servers"</span>
+      </span>}</span>,
+      "<span class="hljs-attribute">database</span>": <span class="hljs-value">{
+        "<span class="hljs-attribute">type</span>": <span class="hljs-value">[
+          <span class="hljs-string">"object"</span>,
+          <span class="hljs-string">"null"</span>
+        ]</span>,
+        "<span class="hljs-attribute">properties</span>": <span class="hljs-value">{
+          "<span class="hljs-attribute">id</span>": <span class="hljs-value">{
+            "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
+            "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"The database ID"</span>
+          </span>}</span>,
+          "<span class="hljs-attribute">name</span>": <span class="hljs-value">{
+            "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
+            "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"The database name"</span>
+          </span>}
+        </span>}</span>,
+        "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Player database. `null` if not a ranked (official) player profile"</span>
       </span>}</span>,
       "<span class="hljs-attribute">current_server</span>": <span class="hljs-value">{
         "<span class="hljs-attribute">type</span>": <span class="hljs-value">[
@@ -1303,6 +1345,10 @@ to the <code>GET /servers</code> resource (e.g the player list).</p>
   "<span class="hljs-attribute">is_contributor</span>": <span class="hljs-value"><span class="hljs-literal">false</span></span>,
   "<span class="hljs-attribute">is_rwr_dev</span>": <span class="hljs-value"><span class="hljs-literal">false</span></span>,
   "<span class="hljs-attribute">is_ranked_servers_admin</span>": <span class="hljs-value"><span class="hljs-literal">false</span></span>,
+  "<span class="hljs-attribute">database</span>": <span class="hljs-value">{
+    "<span class="hljs-attribute">id</span>": <span class="hljs-value"><span class="hljs-string">"invasion"</span></span>,
+    "<span class="hljs-attribute">name</span>": <span class="hljs-value"><span class="hljs-string">"Invasion"</span>
+  </span>}</span>,
   "<span class="hljs-attribute">current_server</span>": <span class="hljs-value">{
     "<span class="hljs-attribute">name</span>": <span class="hljs-value"><span class="hljs-string">"InvasionEU2"</span></span>,
     "<span class="hljs-attribute">ip</span>": <span class="hljs-value"><span class="hljs-string">"31.186.250.67"</span></span>,
@@ -1362,10 +1408,6 @@ to the <code>GET /servers</code> resource (e.g the player list).</p>
     "<span class="hljs-attribute">image_url</span>": <span class="hljs-value"><span class="hljs-string">"https://rwrstats.com/images/ranks/us/14.png"</span></span>,
     "<span class="hljs-attribute">icon_url</span>": <span class="hljs-value"><span class="hljs-string">"https://rwrstats.com/images/ranks/us/14_icon.png"</span>
   </span>}</span>,
-  "<span class="hljs-attribute">database</span>": <span class="hljs-value">{
-    "<span class="hljs-attribute">id</span>": <span class="hljs-value"><span class="hljs-string">"invasion"</span></span>,
-    "<span class="hljs-attribute">name</span>": <span class="hljs-value"><span class="hljs-string">"Invasion"</span>
-  </span>}</span>,
   "<span class="hljs-attribute">next_rank</span>": <span class="hljs-value">{
     "<span class="hljs-attribute">id</span>": <span class="hljs-value"><span class="hljs-number">14</span></span>,
     "<span class="hljs-attribute">name</span>": <span class="hljs-value"><span class="hljs-string">"Lieutenant General"</span></span>,
@@ -1385,6 +1427,13 @@ to the <code>GET /servers</code> resource (e.g the player list).</p>
     "<span class="hljs-attribute">required_xp</span>": <span class="hljs-value"><span class="hljs-number">200000</span></span>,
     "<span class="hljs-attribute">image_url</span>": <span class="hljs-value"><span class="hljs-string">"https://rwrstats.com/images/ranks/us/14.png"</span></span>,
     "<span class="hljs-attribute">icon_url</span>": <span class="hljs-value"><span class="hljs-string">"https://rwrstats.com/images/ranks/us/14_icon.png"</span>
+  </span>}</span>,
+  "<span class="hljs-attribute">owner</span>": <span class="hljs-value">{
+    "<span class="hljs-attribute">id</span>": <span class="hljs-value"><span class="hljs-number">56</span></span>,
+    "<span class="hljs-attribute">username</span>": <span class="hljs-value"><span class="hljs-string">"Epoc"</span></span>,
+    "<span class="hljs-attribute">url</span>": <span class="hljs-value"><span class="hljs-string">"https://rwrstats.com/users/56/epoc"</span></span>,
+    "<span class="hljs-attribute">small_avatar_url</span>": <span class="hljs-value"><span class="hljs-string">"https://steamcdn-a.akamaihd.net/steamcommunity/public/images/avatars/18/18a19ee73965fb3b92f39db8a307df80f5624122.jpg"</span></span>,
+    "<span class="hljs-attribute">large_avatar_url</span>": <span class="hljs-value"><span class="hljs-string">"https://steamcdn-a.akamaihd.net/steamcommunity/public/images/avatars/18/18a19ee73965fb3b92f39db8a307df80f5624122_full.jpg"</span>
   </span>}
 </span>}</code></pre><div style="height: 1px;"></div><h5>Schema</h5><pre><code>{
   "<span class="hljs-attribute">$schema</span>": <span class="hljs-value"><span class="hljs-string">"http://json-schema.org/draft-04/schema#"</span></span>,
@@ -1417,6 +1466,23 @@ to the <code>GET /servers</code> resource (e.g the player list).</p>
     "<span class="hljs-attribute">is_ranked_servers_admin</span>": <span class="hljs-value">{
       "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"boolean"</span></span>,
       "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Whether this player is admin on ranked (official) servers"</span>
+    </span>}</span>,
+    "<span class="hljs-attribute">database</span>": <span class="hljs-value">{
+      "<span class="hljs-attribute">type</span>": <span class="hljs-value">[
+        <span class="hljs-string">"object"</span>,
+        <span class="hljs-string">"null"</span>
+      ]</span>,
+      "<span class="hljs-attribute">properties</span>": <span class="hljs-value">{
+        "<span class="hljs-attribute">id</span>": <span class="hljs-value">{
+          "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
+          "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"The database ID"</span>
+        </span>}</span>,
+        "<span class="hljs-attribute">name</span>": <span class="hljs-value">{
+          "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
+          "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"The database name"</span>
+        </span>}
+      </span>}</span>,
+      "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Player database. `null` if not a ranked (official) player profile"</span>
     </span>}</span>,
     "<span class="hljs-attribute">current_server</span>": <span class="hljs-value">{
       "<span class="hljs-attribute">type</span>": <span class="hljs-value">[
@@ -1712,23 +1778,6 @@ to the <code>GET /servers</code> resource (e.g the player list).</p>
       ]</span>,
       "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Player current rank"</span>
     </span>}</span>,
-    "<span class="hljs-attribute">database</span>": <span class="hljs-value">{
-      "<span class="hljs-attribute">type</span>": <span class="hljs-value">[
-        <span class="hljs-string">"object"</span>,
-        <span class="hljs-string">"null"</span>
-      ]</span>,
-      "<span class="hljs-attribute">properties</span>": <span class="hljs-value">{
-        "<span class="hljs-attribute">id</span>": <span class="hljs-value">{
-          "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
-          "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"The database ID"</span>
-        </span>}</span>,
-        "<span class="hljs-attribute">name</span>": <span class="hljs-value">{
-          "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
-          "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"The database name"</span>
-        </span>}
-      </span>}</span>,
-      "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Player database. `null` if not a ranked (official) player profile"</span>
-    </span>}</span>,
     "<span class="hljs-attribute">next_rank</span>": <span class="hljs-value">{
       "<span class="hljs-attribute">type</span>": <span class="hljs-value">[
         <span class="hljs-string">"object"</span>,
@@ -1841,6 +1890,48 @@ to the <code>GET /servers</code> resource (e.g the player list).</p>
         <span class="hljs-string">"icon_url"</span>
       ]</span>,
       "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"If not `null`: rank this player has been promoted to (stats history mode only)"</span>
+    </span>}</span>,
+    "<span class="hljs-attribute">owner</span>": <span class="hljs-value">{
+      "<span class="hljs-attribute">type</span>": <span class="hljs-value">[
+        <span class="hljs-string">"object"</span>,
+        <span class="hljs-string">"null"</span>
+      ]</span>,
+      "<span class="hljs-attribute">properties</span>": <span class="hljs-value">{
+        "<span class="hljs-attribute">id</span>": <span class="hljs-value">{
+          "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"number"</span></span>,
+          "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"RWRS user ID"</span>
+        </span>}</span>,
+        "<span class="hljs-attribute">username</span>": <span class="hljs-value">{
+          "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
+          "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"The user nickname (as provided by Steam)"</span>
+        </span>}</span>,
+        "<span class="hljs-attribute">url</span>": <span class="hljs-value">{
+          "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
+          "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"RWRS user profile page URL"</span>
+        </span>}</span>,
+        "<span class="hljs-attribute">small_avatar_url</span>": <span class="hljs-value">{
+          "<span class="hljs-attribute">type</span>": <span class="hljs-value">[
+            <span class="hljs-string">"string"</span>,
+            <span class="hljs-string">"null"</span>
+          ]</span>,
+          "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"User small avatar (as provided by Steam). 32x32 pixels"</span></span>,
+          "<span class="hljs-attribute">default</span>": <span class="hljs-value"><span class="hljs-string">"null"</span>
+        </span>}</span>,
+        "<span class="hljs-attribute">large_avatar_url</span>": <span class="hljs-value">{
+          "<span class="hljs-attribute">type</span>": <span class="hljs-value">[
+            <span class="hljs-string">"string"</span>,
+            <span class="hljs-string">"null"</span>
+          ]</span>,
+          "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"User large avatar (as provided by Steam). 184x184 pixels"</span></span>,
+          "<span class="hljs-attribute">default</span>": <span class="hljs-value"><span class="hljs-string">"null"</span>
+        </span>}
+      </span>}</span>,
+      "<span class="hljs-attribute">required</span>": <span class="hljs-value">[
+        <span class="hljs-string">"id"</span>,
+        <span class="hljs-string">"username"</span>,
+        <span class="hljs-string">"url"</span>
+      ]</span>,
+      "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"The RWRS user that owns this RWR account or `null` if this player wasn't claimed by anyone or if the RWRS user has defined its profile as private"</span>
     </span>}
   </span>}</span>,
   "<span class="hljs-attribute">required</span>": <span class="hljs-value">[
@@ -1850,16 +1941,17 @@ to the <code>GET /servers</code> resource (e.g the player list).</p>
     <span class="hljs-string">"is_contributor"</span>,
     <span class="hljs-string">"is_rwr_dev"</span>,
     <span class="hljs-string">"is_ranked_servers_admin"</span>,
+    <span class="hljs-string">"database"</span>,
     <span class="hljs-string">"current_server"</span>,
     <span class="hljs-string">"stats"</span>,
     <span class="hljs-string">"current_rank"</span>,
-    <span class="hljs-string">"database"</span>,
     <span class="hljs-string">"next_rank"</span>,
     <span class="hljs-string">"xp_to_next_rank"</span>,
     <span class="hljs-string">"xp_percent_completion_to_next_rank"</span>,
     <span class="hljs-string">"date"</span>,
     <span class="hljs-string">"signature_image_url"</span>,
-    <span class="hljs-string">"promoted_to_rank"</span>
+    <span class="hljs-string">"promoted_to_rank"</span>,
+    <span class="hljs-string">"owner"</span>
   ]</span>,
   "<span class="hljs-attribute">additionalProperties</span>": <span class="hljs-value"><span class="hljs-literal">false</span>
 </span>}</code></pre><div style="height: 1px;"></div></div></div><div class="title"><strong>Response&nbsp;&nbsp;<code>400</code></strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><div class="description"><p>One or more arguments are (is) invalid. Check the error message(s) for more information.</p>
@@ -2204,7 +2296,21 @@ to the <code>GET /servers</code> resource (e.g the player list).</p>
     "<span class="hljs-attribute">name</span>": <span class="hljs-value"><span class="hljs-string">"France"</span></span>,
     "<span class="hljs-attribute">code</span>": <span class="hljs-value"><span class="hljs-string">"fr"</span></span>,
     "<span class="hljs-attribute">flag_image_url</span>": <span class="hljs-value"><span class="hljs-string">"https://rwrstats.com/images/flags/FR.png"</span>
-  </span>}
+  </span>}</span>,
+  "<span class="hljs-attribute">accounts</span>": <span class="hljs-value">[
+    {
+      "<span class="hljs-attribute">username</span>": <span class="hljs-value"><span class="hljs-string">"EPOCDOTFR"</span></span>,
+      "<span class="hljs-attribute">url</span>": <span class="hljs-value"><span class="hljs-string">"https://rwrstats.com/players/invasion/EPOCDOTFR"</span></span>,
+      "<span class="hljs-attribute">is_rwrs_creator</span>": <span class="hljs-value"><span class="hljs-literal">true</span></span>,
+      "<span class="hljs-attribute">is_contributor</span>": <span class="hljs-value"><span class="hljs-literal">false</span></span>,
+      "<span class="hljs-attribute">is_rwr_dev</span>": <span class="hljs-value"><span class="hljs-literal">false</span></span>,
+      "<span class="hljs-attribute">is_ranked_servers_admin</span>": <span class="hljs-value"><span class="hljs-literal">false</span></span>,
+      "<span class="hljs-attribute">database</span>": <span class="hljs-value">{
+        "<span class="hljs-attribute">id</span>": <span class="hljs-value"><span class="hljs-string">"invasion"</span></span>,
+        "<span class="hljs-attribute">name</span>": <span class="hljs-value"><span class="hljs-string">"Invasion"</span>
+      </span>}
+    </span>}
+  ]
 </span>}</code></pre><div style="height: 1px;"></div><h5>Schema</h5><pre><code>{
   "<span class="hljs-attribute">$schema</span>": <span class="hljs-value"><span class="hljs-string">"http://json-schema.org/draft-04/schema#"</span></span>,
   "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"object"</span></span>,
@@ -2266,6 +2372,67 @@ to the <code>GET /servers</code> resource (e.g the player list).</p>
         <span class="hljs-string">"flag_image_url"</span>
       ]</span>,
       "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"If not `null`: user country (as provided by Steam)"</span>
+    </span>}</span>,
+    "<span class="hljs-attribute">accounts</span>": <span class="hljs-value">{
+      "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"array"</span></span>,
+      "<span class="hljs-attribute">items</span>": <span class="hljs-value">{
+        "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"object"</span></span>,
+        "<span class="hljs-attribute">properties</span>": <span class="hljs-value">{
+          "<span class="hljs-attribute">username</span>": <span class="hljs-value">{
+            "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
+            "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Player username"</span>
+          </span>}</span>,
+          "<span class="hljs-attribute">url</span>": <span class="hljs-value">{
+            "<span class="hljs-attribute">type</span>": <span class="hljs-value">[
+              <span class="hljs-string">"string"</span>,
+              <span class="hljs-string">"null"</span>
+            ]</span>,
+            "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"RWRS player profile page URL. `null` if the player isn't a ranked profile"</span></span>,
+            "<span class="hljs-attribute">default</span>": <span class="hljs-value"><span class="hljs-string">"null"</span>
+          </span>}</span>,
+          "<span class="hljs-attribute">is_rwrs_creator</span>": <span class="hljs-value">{
+            "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"boolean"</span></span>,
+            "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Whether this player is the creator of RWRS"</span>
+          </span>}</span>,
+          "<span class="hljs-attribute">is_contributor</span>": <span class="hljs-value">{
+            "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"boolean"</span></span>,
+            "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Whether this player contributed in a way or another to RWRS"</span>
+          </span>}</span>,
+          "<span class="hljs-attribute">is_rwr_dev</span>": <span class="hljs-value">{
+            "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"boolean"</span></span>,
+            "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Whether this player is one of the RWR developers"</span>
+          </span>}</span>,
+          "<span class="hljs-attribute">is_ranked_servers_admin</span>": <span class="hljs-value">{
+            "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"boolean"</span></span>,
+            "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Whether this player is admin on ranked (official) servers"</span>
+          </span>}</span>,
+          "<span class="hljs-attribute">database</span>": <span class="hljs-value">{
+            "<span class="hljs-attribute">type</span>": <span class="hljs-value">[
+              <span class="hljs-string">"object"</span>,
+              <span class="hljs-string">"null"</span>
+            ]</span>,
+            "<span class="hljs-attribute">properties</span>": <span class="hljs-value">{
+              "<span class="hljs-attribute">id</span>": <span class="hljs-value">{
+                "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
+                "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"The database ID"</span>
+              </span>}</span>,
+              "<span class="hljs-attribute">name</span>": <span class="hljs-value">{
+                "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
+                "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"The database name"</span>
+              </span>}
+            </span>}</span>,
+            "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Player database. `null` if not a ranked (official) player profile"</span>
+          </span>}
+        </span>}</span>,
+        "<span class="hljs-attribute">required</span>": <span class="hljs-value">[
+          <span class="hljs-string">"username"</span>,
+          <span class="hljs-string">"is_rwrs_creator"</span>,
+          <span class="hljs-string">"is_contributor"</span>,
+          <span class="hljs-string">"is_rwr_dev"</span>,
+          <span class="hljs-string">"is_ranked_servers_admin"</span>
+        ]
+      </span>}</span>,
+      "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"List of linked RWR accounts"</span>
     </span>}
   </span>}</span>,
   "<span class="hljs-attribute">required</span>": <span class="hljs-value">[
@@ -2275,7 +2442,8 @@ to the <code>GET /servers</code> resource (e.g the player list).</p>
     <span class="hljs-string">"small_avatar_url"</span>,
     <span class="hljs-string">"large_avatar_url"</span>,
     <span class="hljs-string">"registered_at"</span>,
-    <span class="hljs-string">"country"</span>
+    <span class="hljs-string">"country"</span>,
+    <span class="hljs-string">"accounts"</span>
   ]</span>,
   "<span class="hljs-attribute">additionalProperties</span>": <span class="hljs-value"><span class="hljs-literal">false</span>
 </span>}</code></pre><div style="height: 1px;"></div></div></div><div class="title"><strong>Response&nbsp;&nbsp;<code>400</code></strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><div class="description"><p>One or more arguments are (is) invalid. Check the error message(s) for more information.</p>
@@ -2435,7 +2603,7 @@ to the <code>GET /servers</code> resource (e.g the player list).</p>
     <span class="hljs-string">"message"</span>
   ]</span>,
   "<span class="hljs-attribute">additionalProperties</span>": <span class="hljs-value"><span class="hljs-literal">false</span>
-</span>}</code></pre><div style="height: 1px;"></div></div></div></div></div></section></div></div></div><p style="text-align: center;" class="text-muted">Generated by&nbsp;<a href="https://github.com/danielgtaylor/aglio" class="aglio">aglio</a>&nbsp;on 27 Feb 2019</p><script>/* eslint-env browser */
+</span>}</code></pre><div style="height: 1px;"></div></div></div></div></div></section></div></div></div><p style="text-align: center;" class="text-muted">Generated by&nbsp;<a href="https://github.com/danielgtaylor/aglio" class="aglio">aglio</a>&nbsp;on 28 Feb 2019</p><script>/* eslint-env browser */
 /* eslint quotes: [2, "single"] */
 'use strict';
 

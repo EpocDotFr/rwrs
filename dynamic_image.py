@@ -197,10 +197,10 @@ class DynamicPlayerImage(DynamicImage):
         self._draw_text((9, 0), self.player.username, font=big_font)
 
         # Player icon
-        if self.player.is_me or self.player.is_contributor or self.player.is_rwr_dev or self.player.is_ranked_servers_admin:
+        if self.player.is_myself or self.player.is_contributor or self.player.is_rwr_dev or self.player.is_ranked_servers_admin:
             x, _ = self.image_draw.textsize(self.player.username, font=big_font)
 
-            if self.player.is_me:
+            if self.player.is_myself:
                 epoc_image = Image.open('static/images/epoc.png').convert('RGBA')
 
                 x += 8

@@ -7,7 +7,12 @@
 {% block meta_description %}{{ user.username }} profile on RWRS.{% endblock %}
 
 {% block jsfiles %}
-    {% assets 'js_friends' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tippy.js/3.1.1/tippy.min.js"></script>
+    {% assets 'js_friends_popovers' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
+{% endblock %}
+
+{% block cssfiles %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tippy.js/3.1.1/tippy.css">
 {% endblock %}
 
 {% set canonical_url = user.link_absolute %}
@@ -36,12 +41,38 @@
             </table>
         </div>
         <div class="four-fifth">
-            <div class="alert info pas">Not much to see here for now.</div>
+            <div class="grid has-gutter">
+    	        {%- for database, database_info in PLAYERS_LIST_DATABASES.items() -%}
+    	            {%- set rwr_accounts_by_type = user.get_rwr_accounts_by_type(database) -%}
+                    <div>
+                        <table class="mbs {{ 'striped' if rwr_accounts_by_type }} rwr-accounts-list">
+                            <thead>
+                                <tr>
+                                    <th>RWR {{ database_info.name }} accounts</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {%- for rwr_account in rwr_accounts_by_type -%}
+                                    <tr>
+                                        <td><a href="{{ rwr_account.link }}">{{ macros.player_name(rwr_account.username, raw=True, link=True, database=database, popover_url=True) }}</a></td>
+                                    </tr>
+                                {%- else -%}
+                                    <tr>
+                                        <td><div class="alert info pas txtcenter">None at this moment.</div></td>
+                                    </tr>
+                                {%- endfor -%}
+                            </tbody>
+                        </table>
+                    </div>
+    	        {%- endfor -%}
+            </div>
         </div>
     </div>
 
     <script>
         friendsFeature.all_players_with_servers_details = {{ g.all_players_with_servers_details|tojson }};
         friendsFeature.init();
+
+        popoversFeature.initOnUserProfile();
     </script>
 {% endblock %}

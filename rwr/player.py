@@ -104,26 +104,26 @@ class Player:
         return helpers.humanize_integer(self.leaderboard_position)
 
     @memoized_property
-    def is_me(self):
-        return self.username.lower() == app.config['MY_USERNAME']
+    def is_myself(self):
+        return helpers.is_player_myself(self.username)
 
     @memoized_property
     def is_contributor(self):
-        return self.username.lower() in app.config['CONTRIBUTORS']
+        return helpers.is_player_contributor(self.username)
 
     @memoized_property
     def is_rwr_dev(self):
-        return self.username.lower() in app.config['DEVS']
+        return helpers.is_player_rwr_dev(self.username)
 
     @memoized_property
     def is_ranked_servers_admin(self):
-        return self.username.lower() in app.config['RANKED_SERVERS_ADMINS']
+        return helpers.is_player_ranked_server_admin(self.username)
 
     @memoized_property
     def username_display(self):
         return '{}{}{}'.format(
             self.username,
-            ' :wave:' if self.is_me else ' :v:️' if self.is_contributor else ' :tools:' if self.is_rwr_dev else '',
+            ' :wave:' if self.is_myself else ' :v:️' if self.is_contributor else ' :tools:' if self.is_rwr_dev else '',
             ' :scales:' if self.is_ranked_servers_admin else ''
         )
 
@@ -320,6 +320,11 @@ class Player:
     def has_stats(self):
         """Determine if this Player has a RwrAccount and at least one persisted RwrAccountStat."""
         return self.rwr_account and self.rwr_account.has_stats
+
+    @memoized_property
+    def user(self):
+        """Return the User linked to this Player."""
+        return self.rwr_account.user if self.rwr_account else None
 
     def __repr__(self):
         return 'Player:' + self.username

@@ -34,6 +34,7 @@
   + `is_contributor`: `false` (boolean, required) - Whether this player contributed in a way or another to RWRS
   + `is_rwr_dev`: `false` (boolean, required) - Whether this player is one of the RWR developers
   + `is_ranked_servers_admin`: `false` (boolean, required) - Whether this player is admin on ranked (official) servers
+  + `database` (Database Object, nullable) - Player database. `null` if not a ranked (official) player profile
 
 ### Player Advanced Object (Player Simple Object)
 
@@ -53,7 +54,6 @@
 
 ### Player Full Object (Player Advanced Object)
 
-  + `database` (Database Object, nullable) - Player database. `null` if not a ranked (official) player profile
   + `next_rank` (Player Rank Object, nullable) - Player next rank (if applicable)
   + `xp_to_next_rank`: `280079` (number) - Number of experience points to gain until the next promotion
     + Default: `0`
@@ -63,3 +63,4 @@
     + Default: `null`
   + `signature_image_url`: `https://rwrstats.com/images/players/EPOCDOTFR-invasion.png` (nullable) - Player signature image URL. 387x108 pixels
   + `promoted_to_rank` (Player Rank Object, nullable) - If not `null`: rank this player has been promoted to (stats history mode only)
+  + `owner` (User Simple Object, nullable) - The RWRS user that owns this RWR account or `null` if this player wasn't claimed by anyone or if the RWRS user has defined its profile as private
