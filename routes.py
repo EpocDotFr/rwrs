@@ -131,6 +131,78 @@ def players_list_without_db():
     return redirect(url_for('players_list', database=database), code=301)
 
 
+@app.route('/claim', methods=['GET', 'POST'])
+@login_required
+def player_claim():
+    # Player claim form may be pre-filled with values in query string parameters
+    form_default_values = {
+        'type': request.args.get('type'),
+        'username': request.args.get('username')
+    }
+
+    form = forms.PlayerClaimForm(data=form_default_values)
+
+    if form.validate_on_submit():
+        rwr_account = RwrAccount.get_by_type_and_username(
+            form.type.data,
+            form.username.data.upper(),
+            create_if_unexisting=True
+        )
+
+        rwr_account.init_claim(current_user.id)
+
+        db.session.add(rwr_account)
+        db.session.commit()
+
+        return redirect(url_for('player_finalize_claim', rwr_account_id=rwr_account.id))
+
+    return render_template(
+        'players/claim.html',
+        form=form
+    )
+
+
+@app.route('/claim/<int:rwr_account_id>', methods=['GET', 'POST'])
+@login_required
+def player_finalize_claim(rwr_account_id):
+    rwr_account = RwrAccount.query.get(rwr_account_id)
+    error_message = None
+
+    if not rwr_account or rwr_account.claim_initiated_by_user_id != current_user.id:
+        abort(404)
+
+    database = rwr_account.type.value.lower()
+    username = rwr_account.username
+
+    if rwr_account.has_claim_expired():
+        db.session.add(rwr_account)
+        db.session.commit()
+
+        flash('Sorry, you didn\'t finalized the claim procedure in time. Please try again.', 'error')
+
+        return redirect(url_for('player_claim', type=database, username=username))
+
+    if request.method == 'POST':
+        if rwr.scraper.filter_servers(database=database, username=username):
+            rwr_account.claim(current_user.id)
+
+            db.session.add(rwr_account)
+            db.session.commit()
+
+            flash('Awesome, you successfully claimed this RWR account!', 'success')
+
+            return redirect(rwr_account.link)
+        else:
+            error_message = '<strong>{}</strong> wasn\'t found connected on any ranked (official) <strong>{}</strong> server. Please wait a few seconds and try again.'.format(username, rwr_account.type_display)
+
+    return render_template(
+        'players/finalize_claim.html',
+        error_message=error_message,
+        rwr_account=rwr_account,
+        milliseconds_remaining=rwr_account.claim_possible_until.timestamp * 1000
+    )
+
+
 @app.route('/players/<any({}):database>'.format(rwr.constants.VALID_DATABASES_STRING_LIST))
 def players_list(database):
     args = request.args.to_dict()
@@ -169,78 +241,6 @@ def players_list(database):
         'players/list.html',
         players=players,
         args=args
-    )
-
-
-@app.route('/players/claim', methods=['GET', 'POST'])
-@login_required
-def player_claim():
-    # Player claim form may be pre-filled with values in query string parameters
-    form_default_values = {
-        'type': request.args.get('type'),
-        'username': request.args.get('username')
-    }
-
-    form = forms.PlayerClaimForm(data=form_default_values)
-
-    if form.validate_on_submit():
-        rwr_account = RwrAccount.get_by_type_and_username(
-            form.type.data,
-            form.username.data.upper(),
-            create_if_unexisting=True
-        )
-
-        rwr_account.init_claim(current_user.id)
-
-        db.session.add(rwr_account)
-        db.session.commit()
-
-        return redirect(url_for('player_finalize_claim', rwr_account_id=rwr_account.id))
-
-    return render_template(
-        'players/claim.html',
-        form=form
-    )
-
-
-@app.route('/players/claim/<int:rwr_account_id>', methods=['GET', 'POST'])
-@login_required
-def player_finalize_claim(rwr_account_id):
-    rwr_account = RwrAccount.query.get(rwr_account_id)
-    error_message = None
-
-    if not rwr_account or rwr_account.claim_initiated_by_user_id != current_user.id:
-        abort(404)
-
-    database = rwr_account.type.value.lower()
-    username = rwr_account.username
-
-    if rwr_account.has_claim_expired():
-        db.session.add(rwr_account)
-        db.session.commit()
-
-        flash('Sorry, you didn\'t finalized the claim procedure in time. Please try again.', 'error')
-
-        return redirect(url_for('player_claim', type=database, username=username))
-
-    if request.method == 'POST':
-        if rwr.scraper.filter_servers(database=database, username=username):
-            rwr_account.claim(current_user.id)
-
-            db.session.add(rwr_account)
-            db.session.commit()
-
-            flash('Awesome, you successfully claimed this RWR account!', 'success')
-
-            return redirect(rwr_account.link)
-        else:
-            error_message = '<strong>{}</strong> wasn\'t found connected on any ranked (official) <strong>{}</strong> server. Please wait a few seconds and try again.'.format(username, rwr_account.type_display)
-
-    return render_template(
-        'players/finalize_claim.html',
-        error_message=error_message,
-        rwr_account=rwr_account,
-        milliseconds_remaining=rwr_account.claim_possible_until.timestamp * 1000
     )
 
 

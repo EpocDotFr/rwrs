@@ -84,7 +84,7 @@
         <div class="alert info pas mts"><i class="fas fa-user-check mrs"></i>
             {%- if player.user -%}
                 {%- if current_user.is_authenticated and current_user.id == player.user.id -%}
-                    You already own this account.
+                    You already claimed this account.
                 {%- elif not player.user.is_profile_public -%}
                     This account was claimed by someone who wants to be anonymous.
                 {%- else -%}
