@@ -424,7 +424,7 @@ class MarketAd(db.Model):
         return self.get_link(absolute=True)
 
     @staticmethod
-    def get_market_ad_list(status=MarketAdStatus.ACTIVE, page=None, limit=None):
+    def get_list(status=MarketAdStatus.ACTIVE, page=None, limit=None):
         q = MarketAd.query.filter(
             MarketAd.status == status
         )

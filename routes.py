@@ -499,11 +499,19 @@ def dynamic_server_image(ip, port):
 
 @app.route('/market')
 def market_home():
-    latest_offers = MarketAd.get_market_ad_list(limit=4)
+    limit = request.args.get('limit', 12, type=int)
+
+    if limit > 12:
+        limit = 12
+
+    ads = MarketAd.get_list(
+        page=request.args.get('page', 1, type=int),
+        limit=limit
+    )
 
     return render_template(
         'market/home.html',
-        latest_offers=latest_offers
+        ads=ads
     )
 
 
@@ -511,24 +519,6 @@ def market_home():
 @login_required
 def market_place_ad():
     return 'TODO'
-
-
-@app.route('/market/<any(offers,requests):ad_type>')
-def market_ad_list(ad_type):
-    limit = request.args.get('limit', 12, type=int)
-
-    if limit > 12:
-        limit = 12
-
-    ads = MarketAd.get_market_ad_list(
-        page=request.args.get('page', 1, type=int),
-        limit=limit
-    )
-
-    return render_template(
-        'market/list.html',
-        ads=ads
-    )
 
 
 @app.route('/market/<int:ad_id>')
