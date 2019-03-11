@@ -360,11 +360,6 @@ class User(db.Model, UserMixin):
         return 'User:{}'.format(self.id)
 
 
-class MarketAdType(Enum):
-    OFFER = 'OFFER'
-    REQUEST = 'REQUEST'
-
-
 class MarketAdStatus(Enum):
     ACTIVE = 'ACTIVE'
     CONCLUDED = 'CONCLUDED'
@@ -374,14 +369,13 @@ class MarketAdStatus(Enum):
 class MarketAd(db.Model):
     __tablename__ = 'market_ads'
     __table_args__ = (
-        db.Index('type_status_idx', 'type', 'status'),
+        db.Index('status_idx', 'status'),
         db.Index('rwr_account_id_idx', 'rwr_account_id'),
         db.Index('created_at_idx', 'created_at'),
     )
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 
-    type = db.Column(db.Enum(MarketAdType), nullable=False)
     item_id = db.Column(db.String(100), nullable=False)
     unit_price = db.Column(db.Integer, nullable=False)
     quantity = db.Column(db.Integer, nullable=False, default=1)
@@ -407,18 +401,9 @@ class MarketAd(db.Model):
     def is_free(self):
         return self.total_price == 0
 
-    @memoized_property
-    def type_for_url(self):
-        if self.type == MarketAdType.OFFER:
-            return 'offers'
-        elif self.type == MarketAdType.REQUEST:
-            return 'requests'
-        else:
-            return 'unknown'
-
     def get_link(self, absolute=False):
         def _get_link(self, absolute):
-            return url_for('market_ad_details', ad_type=self.type_for_url, ad_id=self.id, _external=absolute)
+            return url_for('market_ad_details', ad_id=self.id, _external=absolute)
 
         if current_app:
             link = _get_link(self, absolute=absolute)
@@ -439,9 +424,8 @@ class MarketAd(db.Model):
         return self.get_link(absolute=True)
 
     @staticmethod
-    def get_market_ad_list(type, status=MarketAdStatus.ACTIVE, page=None, limit=None):
+    def get_market_ad_list(status=MarketAdStatus.ACTIVE, page=None, limit=None):
         q = MarketAd.query.filter(
-            MarketAd.type == type,
             MarketAd.status == status
         )
 
@@ -482,25 +466,6 @@ class RwrAccount(db.Model):
 
     stats = db.relationship('RwrAccountStat', backref='rwr_account', lazy=True)
     market_ads = db.relationship('MarketAd', backref='rwr_account', lazy=True)
-
-    @memoized_property
-    def link(self):
-        """Return the link to this Player details page."""
-        def get_link(self):
-            return url_for('player_details', database=self.type.value.lower(), username=self.username)
-
-        if current_app:
-            link = get_link(self)
-        else:
-            with app.app_context():
-                link = get_link(self)
-
-        return link
-
-    @memoized_property
-    def type_display(self):
-        """The database name."""
-        return rwr.utils.get_database_name(self.type.value.lower())
 
     def get_link(self, absolute=False):
         def _get_link(self, absolute):

@@ -173,13 +173,3 @@ def is_player_rwr_dev(player_nickname):
 
 def is_player_ranked_server_admin(player_nickname):
     return player_nickname.lower() in app.config['RANKED_SERVERS_ADMINS']
-
-
-def get_market_ad_type_name(market_ad_type):
-    if market_ad_type == 'offers':
-        return 'Offers'
-    elif market_ad_type == 'requests':
-        return 'Requests'
-    else:
-        return 'Unknown'
-

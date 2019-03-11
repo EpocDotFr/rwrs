@@ -36,12 +36,4 @@
     <loc>https://rwrstats.com/market</loc>
     <changefreq>always</changefreq>
   </url>
-  <url>
-    <loc>https://rwrstats.com/market/offers</loc>
-    <changefreq>always</changefreq>
-  </url>
-  <url>
-    <loc>https://rwrstats.com/market/requests</loc>
-    <changefreq>always</changefreq>
-  </url>
 </urlset>
