@@ -26,3 +26,4 @@ STATUS_PAGE_URL = 'https://status.rwrstats.com/'
 ENABLE_SIGN_IN = True
 ENABLE_PLAYER_CLAIMING = True
 PLAYER_CLAIM_DELAY = 5
+ENABLE_MARKET = True

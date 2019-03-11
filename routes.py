@@ -531,8 +531,8 @@ def market_ad_list(ad_type):
     )
 
 
-@app.route('/market/<any(offers,requests):ad_type>/<int:ad_id>')
-def market_ad_details(ad_type, ad_id):
+@app.route('/market/<int:ad_id>')
+def market_ad_details(ad_id):
     ad = MarketAd.query.get(ad_id)
 
     if not ad:
