@@ -1,8 +1,8 @@
 {% extends 'layout.html' %}
 
-{% block page_title %}<h1><i class="fas fa-shopping-cart"></i> Market › {{ get_market_ad_type_name(request.view_args.get('ad_type')) }} › {{ ad.item_id }} by {{ ad.rwr_account.username }}</h1>{% endblock %}
+{% block page_title %}<h1><i class="fas fa-shopping-cart"></i> Market › {{ ad.item_id }} by {{ ad.rwr_account.username }}</h1>{% endblock %}
 
-{% block meta_title %}Market › {{ get_market_ad_type_name(request.view_args.get('ad_type')) }} › {{ ad.item_id }} by {{ ad.rwr_account.username }}{% endblock %}
+{% block meta_title %}Market › {{ ad.item_id }} by {{ ad.rwr_account.username }}{% endblock %}
 
 {% block meta_description %}
     TODO
@@ -12,7 +12,7 @@
     {% assets 'js_friends' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
 {% endblock %}
 
-{% set canonical_url = url_for('market_ad_details', ad_type=request.view_args.get('ad_type'), ad_id=ad.id, _external=True) %}
+{% set canonical_url = url_for('market_ad_details', ad_id=ad.id, _external=True) %}
 
 {% block content %}
     TODO
