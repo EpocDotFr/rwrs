@@ -250,7 +250,7 @@ def player_details_without_db(username):
 
 
 @app.route('/players/<any({}):database>/<username>'.format(rwr.constants.VALID_DATABASES_STRING_LIST))
-@app.route('/players/<any({}):database>/<username>/<any(unlockables,evolution,"stats-history",signature):tab>'.format(rwr.constants.VALID_DATABASES_STRING_LIST))
+@app.route('/players/<any({}):database>/<username>/<any(evolution,"stats-history",signature):tab>'.format(rwr.constants.VALID_DATABASES_STRING_LIST))
 def player_details(database, username, tab=None):
     player = rwr.scraper.search_player_by_username(database, username)
 

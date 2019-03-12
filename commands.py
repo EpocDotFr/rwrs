@@ -142,26 +142,6 @@ def extract_ranks(steamdir):
 
 @app.cli.command()
 @click.option('--steamdir', '-g', help='Steam root directory')
-def extract_unlockables(steamdir):
-    """Extract unlockables data and images from RWR."""
-    import rwr.extractors
-
-    context = click.get_current_context()
-
-    if not steamdir:
-        click.echo(extract_unlockables.get_help(context))
-        context.exit()
-
-    click.echo('Extraction started')
-
-    extractor = rwr.extractors.UnlockablesExtractor(steamdir)
-    extractor.extract()
-
-    click.secho('Done', fg='green')
-
-
-@app.cli.command()
-@click.option('--steamdir', '-g', help='Steam root directory')
 def extract_maps_data(steamdir):
     """Extract maps data from RWR."""
     import rwr.extractors
