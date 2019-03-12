@@ -259,50 +259,6 @@ class Player:
 
         return round((self.xp * 100) / self.next_rank.xp, 2)
 
-    @memoized_property
-    def unlocks(self):
-        """What the player unlocked (or not)."""
-        def _init_unlockable(ret, type):
-            ret[type] = {
-                'list': [],
-                'current': 0,
-                'max': len([un for required_xp, unlocks in constants.UNLOCKABLES[self.database_game_type].items() for unlock_id, unlock in unlocks.items() if unlock_id == type for un in unlock])
-            }
-
-        def _compute_unlockable(unlocks, ret, type):
-            if type in unlocks:
-                for unlockable in unlocks[type]:
-                    unlocked = self.xp >= required_xp
-
-                    unlockable['required_xp'] = required_xp
-                    unlockable['unlocked'] = unlocked
-
-                    if unlocked:
-                        ret[type]['current'] += 1
-
-                    ret[type]['list'].append(unlockable)
-
-        ret = {
-            'squad_mates': {
-                'current': math.floor(self.xp / constants.SQUADMATES_STEPS_XP) if self.xp < constants.MAX_SQUADMATES * constants.SQUADMATES_STEPS_XP else constants.MAX_SQUADMATES,
-                'xp_steps': constants.SQUADMATES_STEPS_XP,
-                'max': constants.MAX_SQUADMATES
-            }
-        }
-
-        _init_unlockable(ret, 'radio_calls')
-        _init_unlockable(ret, 'weapons')
-        _init_unlockable(ret, 'equipment')
-        _init_unlockable(ret, 'throwables')
-
-        for required_xp, unlocks in constants.UNLOCKABLES[self.database_game_type].items():
-            _compute_unlockable(unlocks, ret, 'radio_calls')
-            _compute_unlockable(unlocks, ret, 'weapons')
-            _compute_unlockable(unlocks, ret, 'equipment')
-            _compute_unlockable(unlocks, ret, 'throwables')
-
-        return ret
-
     @property
     def rwr_account(self):
         """Return the RwrAccount associated to this Player."""

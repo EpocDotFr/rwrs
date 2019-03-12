@@ -68,14 +68,6 @@
     {%- endif %}
 {%- endmacro %}
 
-{% macro unlockables_list(player, unlocks_type) -%}
-    {% for unlock in player.unlocks[unlocks_type]['list'] -%}
-        <div>
-            <img src="{{ url_for('static', filename='images/unlockables/' + player.database_game_type + '/' + unlocks_type + '/' + unlock['image'] + '.png') }}" class="{{ 'locked' if not unlock['unlocked'] }} help" title="{{ unlock['name'] }} ({{ unlock['required_xp'] }} XP)">
-        </div>
-    {%- endfor %}
-{%- endmacro %}
-
 {% macro compare_numbers(first, second, attribute, type=int, above_zero_is_good=True, inverse=False) -%}
     {% if second -%}
         {%- set value = first[attribute] - second[attribute] -%}

@@ -124,43 +124,6 @@ img.bordered {
 /************************************************************************
  * Player stats page */
 
-.unlockables-list {
-    padding-bottom: 0;
-}
-
-.unlockables-list .locked {
-    opacity: 0.2;
-    filter: grayscale(100%);
-}
-
-.unlockables-list > div {
-    background-color: #4d4d4d;
-    margin-bottom: 0.4em;
-    vertical-align: middle;
-    float: left;
-    margin-right: 0.4em;
-}
-
-.unlockables-list > div:last-child {
-    margin-right: 0;
-}
-
-.unlockables-list.radio-calls > div {
-    height: 64px;
-}
-
-.unlockables-list.weapons > div {
-    height: 190px;
-}
-
-.unlockables-list.equipment > div {
-    height: 150px;
-}
-
-.unlockables-list.throwables > div {
-    height: 85px;
-}
-
 .progress-bar {
     background-color: #4A542C;
     position: relative;

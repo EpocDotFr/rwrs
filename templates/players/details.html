@@ -1,13 +1,11 @@
 {% extends 'layout.html' %}
 
-{% block page_title %}<h1><i class="fas fa-user"></i> Players › {{ player.database_name }} › {{ macros.player_name(player) }}{% if request.view_args.get('tab') == 'unlockables' %} › Unlockables{% elif request.view_args.get('tab') == 'stats-history' %} › Statistics history{% elif request.view_args.get('tab') == 'evolution' %} › Evolution{% elif request.view_args.get('tab') == 'signature' %} › Signature{% endif %}</h1>{% endblock %}
+{% block page_title %}<h1><i class="fas fa-user"></i> Players › {{ player.database_name }} › {{ macros.player_name(player) }}{% if request.view_args.get('tab') == 'stats-history' %} › Statistics history{% elif request.view_args.get('tab') == 'evolution' %} › Evolution{% elif request.view_args.get('tab') == 'signature' %} › Signature{% endif %}</h1>{% endblock %}
 
-{% block meta_title %}Players › {{ player.database_name }} › {{ player.username }}{% if request.view_args.get('tab') == 'unlockables' %} › Unlockables{% elif request.view_args.get('tab') == 'stats-history' %} › Statistics history{% elif request.view_args.get('tab') == 'evolution' %} › Evolution{% elif request.view_args.get('tab') == 'signature' %} › Signature{% endif %}{% endblock %}
+{% block meta_title %}Players › {{ player.database_name }} › {{ player.username }}{% if request.view_args.get('tab') == 'stats-history' %} › Statistics history{% elif request.view_args.get('tab') == 'evolution' %} › Evolution{% elif request.view_args.get('tab') == 'signature' %} › Signature{% endif %}{% endblock %}
 
 {% block meta_description -%}
-    {% if request.view_args.get('tab') == 'unlockables' -%}
-        Items unlocked by {{ player.username }} on Running With Rifles (RWR) {{ player.database_name }} ranked servers.
-    {%- elif request.view_args.get('tab') == 'stats-history' -%}
+    {%- if request.view_args.get('tab') == 'stats-history' -%}
         Statistics history of {{ player.username }} on Running With Rifles (RWR) {{ player.database_name }} ranked servers.
     {%- elif request.view_args.get('tab') == 'evolution' -%}
         Charts about the stats evolution of {{ player.username }} on Running With Rifles (RWR) {{ player.database_name }} ranked servers.
@@ -15,7 +13,7 @@
         Get a signature to include in your website / blog / forum for {{ player.username }} on Running With Rifles (RWR) {{ player.database_name }} ranked servers.
     {%- else -%}
         Player statistics of {{ player.username }} on Running With Rifles (RWR) {{ player.database_name }} ranked servers.
-    {%- endif %}
+    {%- endif -%}
 {%- endblock %}
 
 {% block jsfiles %}
@@ -64,7 +62,6 @@
                 <li class="inbl prs {{ 'active' if request.view_args.get('tab') == 'evolution' }}"><a href="{{ url_for('player_details', database=request.view_args.get('database'), username=player.username, tab='evolution') }}" class="inbl pas"><i class="fas fa-chart-line"></i> Evolution</a></li>
             {% endif %}
             <li class="inbl prs {{ 'active' if request.view_args.get('tab') == 'signature' }}"><a href="{{ url_for('player_details', database=request.view_args.get('database'), username=player.username, tab='signature') }}" class="inbl pas"><i class="fas fa-image"></i> Signature</a></li>
-            <li class="inbl prs {{ 'active' if request.view_args.get('tab') == 'unlockables' }}"><a href="{{ url_for('player_details', database=request.view_args.get('database'), username=player.username, tab='unlockables') }}" class="inbl pas"><i class="fas fa-unlock-alt"></i> Unlockables</a></li>
         </ul>
     </nav>
 
@@ -72,8 +69,6 @@
         {% include 'players/details/stats.html' %}
     {% elif request.view_args.get('tab') == 'stats-history' %}
         {% include 'players/details/stats_history.html' %}
-    {% elif request.view_args.get('tab') == 'unlockables' %}
-        {% include 'players/details/unlockables.html' %}
     {% elif request.view_args.get('tab') == 'evolution' %}
         {% include 'players/details/evolution.html' %}
     {% elif request.view_args.get('tab') == 'signature' %}
