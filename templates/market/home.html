@@ -13,8 +13,6 @@
 {% set canonical_url = url_for('market_home', _external=True) %}
 
 {% block content %}
-    <p class="mtm txtcenter">Welcome to the RWRS Market, the one stop RWR items shop on official (ranked) servers!</p>
-
     <p class="mtm mbm txtcenter big">{% if current_user.is_authenticated %}{%if current_user.has_rwr_accounts %}<a class="btn mrm bigger" href="{{ url_for('market_place_ad') }}">Place an ad</a>{% else %}<a class="btn mrm bigger" href="{{ url_for('player_claim') }}">Claim an RWR account to place an ad!</a>{% endif %}{% else %}<a class="btn mrm bigger" href="{{ url_for('sign_in', next=url_for('market_place_ad')) }}">Sign-in to place an ad!</a>{% endif %}</p>
 
     <form action="{{ url_for('market_home') }}" method="GET" class="mts mbs">
@@ -26,20 +24,14 @@
     </form>
 
     {%- if ads.items -%}
-        <div class="grid-3 has-gutter">
+        <div class="grid-4 has-gutter">
             {%- for market_ad in ads.items -%}
                 <div class="mbs">
-                    <div class="grid has-gutter">
-                        <div class="one-third">
-                            <a href="{{ market_ad.link }}"><img src="https://placekitten.com/100/150" class="bordered"></a>
-                        </div>
-                        <div class="two-third">
-                            <div><h2 class="mbn"><a href="{{ market_ad.link }}">{{ market_ad.item_id }}</a>{% if market_ad.quantity > 1 %} x{{ market_ad.quantity }}{% endif %}</h2></div>
-                            <div><strong>{%- if not market_ad.is_free %}{{ market_ad.total_price_display }} RP{% else %}FREE{% endif %}</strong>{%- if not market_ad.is_free and market_ad.quantity > 1 %} <small class="txtgrey">{{ market_ad.unit_price_display }} RP each</small>{% endif -%}</div>
-                            <div class="small txtgrey mts">{{ market_ad.rwr_account.type_display }} / Assault Rifles</div>
-                            <div class="small txtgrey">{{ market_ad.created_at.humanize() }}</div>
-                        </div>
-                    </div>
+                    <div class="txtcenter"><a href="{{ market_ad.link }}"><img src="https://placekitten.com/270/80"></a></div>
+                    <div><h2 class="mbn"><a href="{{ market_ad.link }}">{{ market_ad.item_id }}</a>{% if market_ad.quantity > 1 %} x{{ market_ad.quantity }}{% endif %}</h2></div>
+                    <div><strong>{%- if not market_ad.is_free %}{{ market_ad.total_price_display }} RP{% else %}FREE{% endif %}</strong>{%- if not market_ad.is_free and market_ad.quantity > 1 %} <small class="txtgrey">{{ market_ad.unit_price_display }} RP each</small>{% endif -%}</div>
+                    <div class="small txtgrey mts">{{ market_ad.rwr_account.type_display }} / Assault Rifles</div>
+                    <div class="small txtgrey">{{ market_ad.created_at.humanize() }}</div>
                 </div>
             {%- endfor -%}
         </div>
