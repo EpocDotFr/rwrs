@@ -232,8 +232,8 @@ class ItemsExtractor(BaseExtractor):
 
         ret = OrderedDict()
 
-        main_weapons_file = os.path.join(self.packages_dir, game_type, 'weapons', 'all_weapons.xml')
-        weapons_directory = os.path.dirname(main_weapons_file)
+        weapons_directory = os.path.join(self.packages_dir, game_type, 'weapons')
+        main_weapons_file = os.path.join(weapons_directory, 'all_weapons.xml')
 
         main_weapons_xml = etree.parse(main_weapons_file)
         main_weapons_xml_root = main_weapons_xml.getroot()
@@ -257,8 +257,9 @@ class ItemsExtractor(BaseExtractor):
 
             specification_node = weapon_xml_root.find('specification')
             hud_icon_node = weapon_xml_root.find('hud_icon')
+            inventory_node = weapon_xml_root.find('inventory')
 
-            if specification_node is None or hud_icon_node is None or not specification_node.get('name') or not hud_icon_node.get('filename'):
+            if specification_node is None or hud_icon_node is None or inventory_node is None or not specification_node.get('name') or not hud_icon_node.get('filename'):
                 click.secho('  Not usable', fg='yellow')
 
                 continue
