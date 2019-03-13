@@ -205,3 +205,103 @@ class RanksExtractor(BaseExtractor):
                 os.makedirs(new_rank_image_dir)
 
             new_rank_image.save(os.path.join(new_rank_image_dir, image_size['name'](rank_id) + '.png'), optimize=True)
+
+
+class ItemsExtractor(BaseExtractor):
+    """Extract items data and images from RWR."""
+    image_size = (270, 80)
+
+    def extract(self):
+        """Actually run the extraction process."""
+        data = OrderedDict()
+
+        for game_type in VALID_GAME_TYPES:
+            click.echo(game_type)
+
+            data[game_type] = OrderedDict([
+                ('weapons', self._extract_weapons(game_type))
+            ])
+
+        helpers.save_json(app.config['ITEMS_DATA_FILE'], data)
+
+    def _extract_weapons(self, game_type):
+        """Extract weapons data and images from RWR ."""
+        from PIL import Image
+
+        click.echo('Extracting weapons')
+
+        ret = OrderedDict()
+
+        weapons_directory = os.path.join(self.packages_dir, game_type, 'weapons')
+        main_weapons_file = os.path.join(weapons_directory, 'all_weapons.xml')
+
+        main_weapons_xml = etree.parse(main_weapons_file)
+        main_weapons_xml_root = main_weapons_xml.getroot()
+
+        for main_weapon_node in main_weapons_xml_root.iterchildren('weapon'):
+            weapon_basename = main_weapon_node.get('file')
+            weapon_file = os.path.join(weapons_directory, weapon_basename)
+
+            if not os.path.isfile(weapon_file) and game_type != 'vanilla': # Try to use weapon inherited from Vanilla
+                weapon_file = os.path.join(self.packages_dir, 'vanilla', 'weapons', weapon_basename)
+
+                if not os.path.isfile(weapon_file): # Abort as there's nothing we can do
+                    click.secho('No applicable file found for {}'.format(weapon_file), fg='yellow')
+
+                    continue
+
+            click.echo(weapon_file)
+
+            weapon_xml = etree.parse(weapon_file)
+            weapon_xml_root = weapon_xml.getroot()
+
+            specification_node = weapon_xml_root.find('specification')
+            hud_icon_node = weapon_xml_root.find('hud_icon')
+            inventory_node = weapon_xml_root.find('inventory')
+
+            if specification_node is None or hud_icon_node is None or inventory_node is None or not specification_node.get('name') or not hud_icon_node.get('filename'):
+                click.secho('  Not usable', fg='yellow')
+
+                continue
+
+            weapon_id = os.path.splitext(os.path.basename(weapon_basename))[0]
+            weapon_name = specification_node.get('name')
+
+            ret[weapon_id] = OrderedDict([
+                ('name', weapon_name)
+            ])
+
+            weapon_image_file = os.path.join(self.packages_dir, game_type, 'textures', hud_icon_node.get('filename'))
+
+            if not os.path.isfile(weapon_image_file) and game_type != 'vanilla': # Try to use call image inherited from Vanilla
+                weapon_image_file = os.path.join(self.packages_dir, 'vanilla', 'textures', hud_icon_node.get('filename'))
+
+                if not os.path.isfile(weapon_image_file):
+                    click.secho('No applicable image found for {}'.format(weapon_file), fg='yellow')
+
+                    continue
+
+            weapon_image = Image.open(weapon_image_file)
+
+            # Only get the actual content of the image
+            weapon_image = weapon_image.crop(weapon_image.convert('RGBa').getbbox())
+            weapon_image = weapon_image.transpose(Image.ROTATE_270)
+
+            weapon_image.thumbnail(self.image_size, Image.LANCZOS)
+
+            paste_pos = (
+                math.floor(self.image_size[0] / 2) - math.floor(weapon_image.width / 2),
+                math.floor(self.image_size[1] / 2) - math.floor(weapon_image.height / 2)
+            )
+
+            new_weapon_image = Image.new('RGBA', self.image_size)
+            new_weapon_image.paste(weapon_image, paste_pos)
+
+            output_dir = os.path.join(app.config['ITEMS_IMAGES_DIR'], game_type, 'weapons')
+
+            if not os.path.isdir(output_dir):
+                os.makedirs(output_dir)
+
+            new_weapon_image.save(os.path.join(output_dir, weapon_id + '.png'), optimize=True)
+
+        return ret
