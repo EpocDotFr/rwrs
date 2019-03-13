@@ -216,6 +216,53 @@ class ItemsExtractor(BaseExtractor):
         for game_type in VALID_GAME_TYPES:
             click.echo(game_type)
 
-            data[game_type] = OrderedDict()
+            data[game_type] = OrderedDict([
+                ('weapons', self._extract_weapons(game_type))
+            ])
 
         helpers.save_json(app.config['ITEMS_DATA_FILE'], data)
+
+    def _extract_weapons(self, game_type):
+        """Extract weapons data and images from RWR ."""
+        click.echo('Extracting weapons')
+
+        ret = OrderedDict()
+
+        main_weapons_file = os.path.join(self.packages_dir, game_type, 'weapons', 'all_weapons.xml')
+        weapons_directory = os.path.dirname(main_weapons_file)
+
+        main_weapons_xml = etree.parse(main_weapons_file)
+        main_weapons_xml_root = main_weapons_xml.getroot()
+
+        for main_weapon_node in main_weapons_xml_root.iterchildren('weapon'):
+            weapon_basename = main_weapon_node.get('file')
+            weapon_file = os.path.join(weapons_directory, weapon_basename)
+
+            if not os.path.isfile(weapon_file) and game_type != 'vanilla': # Try to use weapon inherited from Vanilla
+                weapon_file = os.path.join(self.packages_dir, 'vanilla', 'weapons', weapon_basename)
+
+                if not os.path.isfile(weapon_file): # Abort as there's nothing we can do
+                    click.secho('No applicable file found for {}'.format(weapon_file), fg='yellow')
+
+                    continue
+
+            click.echo(weapon_file)
+
+            weapon_xml = etree.parse(weapon_file)
+            weapon_xml_root = weapon_xml.getroot()
+
+            specification_node = weapon_xml_root.find('specification')
+
+            if specification_node is None or not specification_node.get('name'):
+                click.secho('  Not usable', fg='yellow')
+
+                continue
+
+            weapon_id = os.path.splitext(os.path.basename(weapon_basename))[0]
+            weapon_name = specification_node.get('name')
+
+            ret[weapon_id] = OrderedDict([
+                ('name', weapon_name)
+            ])
+
+        return ret
