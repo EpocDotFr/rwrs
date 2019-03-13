@@ -209,6 +209,8 @@ class RanksExtractor(BaseExtractor):
 
 class ItemsExtractor(BaseExtractor):
     """Extract items data and images from RWR."""
+    weapon_size = (270, 80)
+
     def extract(self):
         """Actually run the extraction process."""
         data = OrderedDict()
@@ -224,6 +226,8 @@ class ItemsExtractor(BaseExtractor):
 
     def _extract_weapons(self, game_type):
         """Extract weapons data and images from RWR ."""
+        from PIL import Image
+
         click.echo('Extracting weapons')
 
         ret = OrderedDict()
@@ -252,8 +256,9 @@ class ItemsExtractor(BaseExtractor):
             weapon_xml_root = weapon_xml.getroot()
 
             specification_node = weapon_xml_root.find('specification')
+            hud_icon_node = weapon_xml_root.find('hud_icon')
 
-            if specification_node is None or not specification_node.get('name'):
+            if specification_node is None or hud_icon_node is None or not specification_node.get('name'):
                 click.secho('  Not usable', fg='yellow')
 
                 continue
@@ -264,5 +269,38 @@ class ItemsExtractor(BaseExtractor):
             ret[weapon_id] = OrderedDict([
                 ('name', weapon_name)
             ])
+
+            weapon_image_file = os.path.join(self.packages_dir, game_type, 'textures', hud_icon_node.get('filename'))
+
+            if not os.path.isfile(weapon_image_file) and game_type != 'vanilla': # Try to use call image inherited from Vanilla
+                weapon_image_file = os.path.join(self.packages_dir, 'vanilla', 'textures', hud_icon_node.get('filename'))
+
+                if not os.path.isfile(weapon_image_file):
+                    click.secho('No applicable image found for {}'.format(weapon_file), fg='yellow')
+
+                    continue
+
+            weapon_image = Image.open(weapon_image_file)
+
+            # Only get the actual content of the image
+            weapon_image = weapon_image.crop(weapon_image.convert('RGBa').getbbox())
+            weapon_image = weapon_image.transpose(Image.ROTATE_270)
+
+            weapon_image.thumbnail(self.weapon_size, Image.LANCZOS)
+
+            paste_pos = (
+                math.floor(self.weapon_size[0] / 2) - math.floor(weapon_image.width / 2),
+                math.floor(self.weapon_size[1] / 2) - math.floor(weapon_image.height / 2)
+            )
+
+            new_weapon_image = Image.new('RGBA', self.weapon_size)
+            new_weapon_image.paste(weapon_image, paste_pos)
+
+            output_dir = os.path.join(app.config['ITEMS_IMAGES_DIR'], game_type, 'weapons')
+
+            if not os.path.isdir(output_dir):
+                os.makedirs(output_dir)
+
+            new_weapon_image.save(os.path.join(output_dir, weapon_id + '.png'), optimize=True)
 
         return ret
