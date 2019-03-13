@@ -205,3 +205,17 @@ class RanksExtractor(BaseExtractor):
                 os.makedirs(new_rank_image_dir)
 
             new_rank_image.save(os.path.join(new_rank_image_dir, image_size['name'](rank_id) + '.png'), optimize=True)
+
+
+class ItemsExtractor(BaseExtractor):
+    """Extract items data and images from RWR."""
+    def extract(self):
+        """Actually run the extraction process."""
+        data = OrderedDict()
+
+        for game_type in VALID_GAME_TYPES:
+            click.echo(game_type)
+
+            data[game_type] = OrderedDict()
+
+        helpers.save_json(app.config['ITEMS_DATA_FILE'], data)
