@@ -209,7 +209,7 @@ class RanksExtractor(BaseExtractor):
 
 class ItemsExtractor(BaseExtractor):
     """Extract items data and images from RWR."""
-    weapon_size = (270, 80)
+    image_size = (270, 80)
 
     def extract(self):
         """Actually run the extraction process."""
@@ -258,7 +258,7 @@ class ItemsExtractor(BaseExtractor):
             specification_node = weapon_xml_root.find('specification')
             hud_icon_node = weapon_xml_root.find('hud_icon')
 
-            if specification_node is None or hud_icon_node is None or not specification_node.get('name'):
+            if specification_node is None or hud_icon_node is None or not specification_node.get('name') or not hud_icon_node.get('filename'):
                 click.secho('  Not usable', fg='yellow')
 
                 continue
@@ -286,14 +286,14 @@ class ItemsExtractor(BaseExtractor):
             weapon_image = weapon_image.crop(weapon_image.convert('RGBa').getbbox())
             weapon_image = weapon_image.transpose(Image.ROTATE_270)
 
-            weapon_image.thumbnail(self.weapon_size, Image.LANCZOS)
+            weapon_image.thumbnail(self.image_size, Image.LANCZOS)
 
             paste_pos = (
-                math.floor(self.weapon_size[0] / 2) - math.floor(weapon_image.width / 2),
-                math.floor(self.weapon_size[1] / 2) - math.floor(weapon_image.height / 2)
+                math.floor(self.image_size[0] / 2) - math.floor(weapon_image.width / 2),
+                math.floor(self.image_size[1] / 2) - math.floor(weapon_image.height / 2)
             )
 
-            new_weapon_image = Image.new('RGBA', self.weapon_size)
+            new_weapon_image = Image.new('RGBA', self.image_size)
             new_weapon_image.paste(weapon_image, paste_pos)
 
             output_dir = os.path.join(app.config['ITEMS_IMAGES_DIR'], game_type, 'weapons')
