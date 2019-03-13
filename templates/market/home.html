@@ -27,7 +27,7 @@
         <div class="grid-4 has-gutter">
             {%- for market_ad in ads.items -%}
                 <div class="mbs">
-                    <div class="txtcenter"><a href="{{ market_ad.link }}"><img src="https://placekitten.com/270/80"></a></div>
+                    <div class="txtcenter"><a href="{{ market_ad.link }}"><img src="{{ market_ad.image_url }}"></a></div>
                     <div><h2 class="mbn"><a href="{{ market_ad.link }}">{{ market_ad.item_id }}</a>{% if market_ad.quantity > 1 %} x{{ market_ad.quantity }}{% endif %}</h2></div>
                     <div><strong>{%- if not market_ad.is_free %}{{ market_ad.total_price_display }} RP{% else %}FREE{% endif %}</strong>{%- if not market_ad.is_free and market_ad.quantity > 1 %} <small class="txtgrey">{{ market_ad.unit_price_display }} RP each</small>{% endif -%}</div>
                     <div class="small txtgrey mts">{{ market_ad.rwr_account.type_display }} / Assault Rifles</div>

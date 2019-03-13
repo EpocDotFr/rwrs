@@ -423,6 +423,36 @@ class MarketAd(db.Model):
         """Return the absolute link to this MarketAd page."""
         return self.get_link(absolute=True)
 
+    def get_image_url(self, absolute=False):
+        def _get_image_url(self, absolute):
+            params = {
+                'game_type': '',
+                'item_type': '',
+                'item_id': self.item_id
+            }
+
+            image_url = 'images/items/{game_type}/{item_type}/{item_id}.png'.format(**params)
+
+            return url_for('static', filename=image_url, _external=absolute)
+
+        if current_app:
+            link = _get_image_url(self, absolute=absolute)
+        else:
+            with app.app_context():
+                link = _get_image_url(self, absolute=absolute)
+
+        return link
+
+    @memoized_property
+    def image_url(self):
+        """Return the URL to this MarketAd image."""
+        return self.get_image_url()
+
+    @memoized_property
+    def image_url_absolute(self):
+        """Return the absolute URL to this MarketAd image."""
+        return self.get_image_url(absolute=True)
+
     @staticmethod
     def get_list(status=MarketAdStatus.ACTIVE, page=None, limit=None):
         q = MarketAd.query.filter(
@@ -441,6 +471,9 @@ class MarketAd(db.Model):
             q = q.limit(limit)
 
         return q.all()
+
+    def __repr__(self):
+        return 'MarketAd:{}'.format(self.id)
 
 
 class RwrAccountType(Enum):
