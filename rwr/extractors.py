@@ -218,19 +218,17 @@ class ItemsExtractor(BaseExtractor):
         for game_type in VALID_GAME_TYPES:
             click.echo(game_type)
 
-            data[game_type] = OrderedDict([
-                ('weapons', self._extract_weapons(game_type))
-            ])
+            data[game_type] = OrderedDict()
+
+            self._extract_weapons(game_type, data[game_type])
 
         helpers.save_json(app.config['ITEMS_DATA_FILE'], data)
 
-    def _extract_weapons(self, game_type):
+    def _extract_weapons(self, game_type, data):
         """Extract weapons data and images from RWR ."""
         from PIL import Image
 
         click.echo('Extracting weapons')
-
-        ret = OrderedDict()
 
         weapons_directory = os.path.join(self.packages_dir, game_type, 'weapons')
         main_weapons_file = os.path.join(weapons_directory, 'all_weapons.xml')
@@ -266,9 +264,11 @@ class ItemsExtractor(BaseExtractor):
 
             weapon_id = os.path.splitext(os.path.basename(weapon_basename))[0]
             weapon_name = specification_node.get('name')
+            weapon_price = int(float(inventory_node.get('price')))
 
-            ret[weapon_id] = OrderedDict([
-                ('name', weapon_name)
+            data[weapon_id] = OrderedDict([
+                ('name', weapon_name),
+                ('price', weapon_price)
             ])
 
             weapon_image_file = os.path.join(self.packages_dir, game_type, 'textures', hud_icon_node.get('filename'))
@@ -297,11 +297,9 @@ class ItemsExtractor(BaseExtractor):
             new_weapon_image = Image.new('RGBA', self.image_size)
             new_weapon_image.paste(weapon_image, paste_pos)
 
-            output_dir = os.path.join(app.config['ITEMS_IMAGES_DIR'], game_type, 'weapons')
+            output_dir = os.path.join(app.config['ITEMS_IMAGES_DIR'], game_type)
 
             if not os.path.isdir(output_dir):
                 os.makedirs(output_dir)
 
             new_weapon_image.save(os.path.join(output_dir, weapon_id + '.png'), optimize=True)
-
-        return ret
