@@ -228,7 +228,7 @@ class ItemsExtractor(BaseExtractor):
         """Extract weapons data and images from RWR ."""
         from PIL import Image
 
-        click.echo('Extracting weapons')
+        click.echo('  Extracting weapons')
 
         weapons_directory = os.path.join(self.packages_dir, game_type, 'weapons')
         main_weapons_file = os.path.join(weapons_directory, 'all_weapons.xml')
@@ -244,11 +244,11 @@ class ItemsExtractor(BaseExtractor):
                 weapon_file = os.path.join(self.packages_dir, 'vanilla', 'weapons', weapon_basename)
 
                 if not os.path.isfile(weapon_file): # Abort as there's nothing we can do
-                    click.secho('No applicable file found for {}'.format(weapon_file), fg='yellow')
+                    click.secho('    No applicable file found for {}'.format(weapon_file), fg='yellow')
 
                     continue
 
-            click.echo(weapon_file)
+            click.echo('    ' + weapon_file)
 
             weapon_xml = etree.parse(weapon_file)
             weapon_xml_root = weapon_xml.getroot()
@@ -258,7 +258,7 @@ class ItemsExtractor(BaseExtractor):
             inventory_node = weapon_xml_root.find('inventory')
 
             if specification_node is None or hud_icon_node is None or inventory_node is None or not specification_node.get('name') or not hud_icon_node.get('filename'):
-                click.secho('  Not usable', fg='yellow')
+                click.secho('      Not usable', fg='yellow')
 
                 continue
 
@@ -277,7 +277,7 @@ class ItemsExtractor(BaseExtractor):
                 weapon_image_file = os.path.join(self.packages_dir, 'vanilla', 'textures', hud_icon_node.get('filename'))
 
                 if not os.path.isfile(weapon_image_file):
-                    click.secho('No applicable image found for {}'.format(weapon_file), fg='yellow')
+                    click.secho('      No applicable image found for {}'.format(weapon_file), fg='yellow')
 
                     continue
 
