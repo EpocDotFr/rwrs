@@ -426,12 +426,11 @@ class MarketAd(db.Model):
     def get_image_url(self, absolute=False):
         def _get_image_url(self, absolute):
             params = {
-                'game_type': '',
-                'item_type': '',
+                'game_type': self.database_game_type,
                 'item_id': self.item_id
             }
 
-            image_url = 'images/items/{game_type}/{item_type}/{item_id}.png'.format(**params)
+            image_url = 'images/items/{game_type}/{item_id}.png'.format(**params)
 
             return url_for('static', filename=image_url, _external=absolute)
 
@@ -452,6 +451,18 @@ class MarketAd(db.Model):
     def image_url_absolute(self):
         """Return the absolute URL to this MarketAd image."""
         return self.get_image_url(absolute=True)
+
+    @memoized_property
+    def database(self):
+        return self.rwr_account.type.value.lower()
+
+    @memoized_property
+    def database_game_type(self):
+        return helpers.get_game_type_from_database(self.database)
+
+    @memoized_property
+    def item_name(self):
+        return rwr.utils.get_item_name(self.database_game_type, self.item_id)
 
     @staticmethod
     def get_list(status=MarketAdStatus.ACTIVE, page=None, limit=None):

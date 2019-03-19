@@ -212,10 +212,7 @@ class Player:
 
     @memoized_property
     def database_game_type(self):
-        if self.database == 'invasion':
-            return 'vanilla'
-        else:
-            return self.database
+        return helpers.get_game_type_from_database(self.database)
 
     @memoized_property
     def next_rank(self):

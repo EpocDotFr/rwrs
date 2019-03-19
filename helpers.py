@@ -173,3 +173,7 @@ def is_player_rwr_dev(player_nickname):
 
 def is_player_ranked_server_admin(player_nickname):
     return player_nickname.lower() in app.config['RANKED_SERVERS_ADMINS']
+
+
+def get_game_type_from_database(database):
+    return 'vanilla' if database == 'invasion' else database

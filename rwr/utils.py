@@ -95,3 +95,16 @@ def get_rank_object(database, rank_id):
             ret.set_images_and_icons(database)
 
     return ret
+
+
+def get_item(game_type, item_id):
+    if game_type not in constants.ITEMS or item_id not in constants.ITEMS[game_type]:
+        return None
+
+    return constants.ITEMS[game_type][item_id]
+
+
+def get_item_name(game_type, item_id):
+    item = get_item(game_type, item_id)
+
+    return item['name'] if item else None
