@@ -257,20 +257,21 @@ class ItemsExtractor(BaseExtractor):
             hud_icon_node = weapon_xml_root.find('hud_icon')
             inventory_node = weapon_xml_root.find('inventory')
 
-            if specification_node is None or hud_icon_node is None or inventory_node is None or not specification_node.get('name') or not hud_icon_node.get('filename'):
+            if not weapon_xml_root.get('file') or not weapon_xml_root.get('file').startswith('base_') or specification_node is None or hud_icon_node is None or not specification_node.get('name') or not hud_icon_node.get('filename'):
                 click.secho('      Not usable', fg='yellow')
 
                 continue
 
             weapon_id = os.path.splitext(os.path.basename(weapon_file_name))[0]
-            weapon_name = specification_node.get('name')
-            weapon_price = int(float(inventory_node.get('price')))
-            weapon_image_file_name = hud_icon_node.get('filename')
 
             if weapon_id in data:
                 click.secho('      {} already exists'.format(weapon_id), fg='yellow')
 
                 continue
+
+            weapon_name = specification_node.get('name')
+            weapon_image_file_name = hud_icon_node.get('filename')
+            weapon_price = int(float(inventory_node.get('price'))) if inventory_node is not None else 0
 
             data[weapon_id] = OrderedDict([
                 ('name', weapon_name),
