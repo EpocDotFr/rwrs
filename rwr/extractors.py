@@ -218,11 +218,33 @@ class ItemsExtractor(BaseExtractor):
         for game_type in VALID_GAME_TYPES:
             click.echo(game_type)
 
-            data[game_type] = OrderedDict()
-
-            self._extract_weapons(game_type, data[game_type])
+            self._extract_weapons(game_type, data)
 
         helpers.save_json(app.config['ITEMS_DATA_FILE'], data)
+
+    def _get_weapon_type(self, weapon_xml_root):
+        specification_node = weapon_xml_root.find('specification')
+
+        if specification_node is not None:
+            slot = specification_node.get('slot')
+
+            if slot:
+                slot = int(slot)
+
+                if slot == 0:
+                    return 'primary'
+                if slot == 1:
+                    return 'secondary'
+
+        base_file_name = weapon_xml_root.get('file')
+
+        if base_file_name:
+            if base_file_name.startswith('base_primary'):
+                return 'primary'
+            elif base_file_name.startswith('base_secondary'):
+                return 'secondary'
+
+        return 'unknown'
 
     def _extract_weapons(self, game_type, data):
         """Extract weapons data and images from RWR ."""
@@ -257,7 +279,7 @@ class ItemsExtractor(BaseExtractor):
             hud_icon_node = weapon_xml_root.find('hud_icon')
             inventory_node = weapon_xml_root.find('inventory')
 
-            if not weapon_xml_root.get('file') or not weapon_xml_root.get('file').startswith('base_') or specification_node is None or hud_icon_node is None or not specification_node.get('name') or not hud_icon_node.get('filename'):
+            if specification_node is None or hud_icon_node is None or not specification_node.get('name') or not hud_icon_node.get('filename'):
                 click.secho('      Not usable', fg='yellow')
 
                 continue
@@ -265,9 +287,14 @@ class ItemsExtractor(BaseExtractor):
             weapon_id = os.path.splitext(os.path.basename(weapon_file_name))[0]
 
             if weapon_id in data:
-                click.secho('      {} already exists'.format(weapon_id), fg='yellow')
+                click.secho('      Already existing', fg='yellow')
 
                 continue
+
+            weapon_type = self._get_weapon_type(weapon_xml_root)
+
+            if weapon_type == 'unknown':
+                click.secho('      Unknown type', fg='yellow')
 
             weapon_name = specification_node.get('name')
             weapon_image_file_name = hud_icon_node.get('filename')
@@ -275,7 +302,9 @@ class ItemsExtractor(BaseExtractor):
 
             data[weapon_id] = OrderedDict([
                 ('name', weapon_name),
-                ('price', weapon_price)
+                ('price', weapon_price),
+                ('game', game_type),
+                ('type', weapon_type)
             ])
 
             weapon_image_file = os.path.join(self.packages_dir, game_type, 'textures', weapon_image_file_name)
