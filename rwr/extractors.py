@@ -210,6 +210,14 @@ class RanksExtractor(BaseExtractor):
 class ItemsExtractor(BaseExtractor):
     """Extract items data and images from RWR."""
     images_size = (270, 80)
+    do_not_rotate_images_for = [
+        # Vanilla
+        'tti',
+        # Pacific
+        'binoculars',
+        'medikit',
+        'morphine'
+    ]
 
     def extract(self):
         """Actually run the extraction process."""
@@ -218,7 +226,9 @@ class ItemsExtractor(BaseExtractor):
         for game_type in VALID_GAME_TYPES:
             click.echo(game_type)
 
-            self._extract_weapons(game_type, data)
+            data[game_type] = OrderedDict()
+
+            self._extract_weapons(game_type, data[game_type])
 
         helpers.save_json(app.config['ITEMS_DATA_FILE'], data)
 
@@ -310,7 +320,6 @@ class ItemsExtractor(BaseExtractor):
             data[weapon_id] = OrderedDict([
                 ('name', weapon_name),
                 ('price', weapon_price),
-                ('game', game_type),
                 ('type', weapon_slot)
             ])
 
@@ -328,7 +337,11 @@ class ItemsExtractor(BaseExtractor):
             weapon_image = Image.open(weapon_image_file)
 
             # Only get the actual content of the image
-            weapon_image = weapon_image.crop(weapon_image.convert('RGBa').getbbox()).transpose(Image.ROTATE_270)
+            weapon_image = weapon_image.crop(weapon_image.convert('RGBa').getbbox())
+
+            if not weapon_id.endswith('_resource') and weapon_id not in self.do_not_rotate_images_for:
+                weapon_image = weapon_image.transpose(Image.ROTATE_270)
+
             weapon_image.thumbnail(self.images_size, Image.LANCZOS)
 
             paste_pos = (
