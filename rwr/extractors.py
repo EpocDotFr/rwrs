@@ -346,7 +346,7 @@ class ItemsExtractor(BaseExtractor):
             new_weapon_image = Image.new('RGBA', self.images_size)
             new_weapon_image.paste(weapon_image, paste_pos)
 
-            output_dir = os.path.join(app.config['ITEMS_IMAGES_DIR'], game_type)
+            output_dir = os.path.join(app.config['ITEMS_IMAGES_DIR'], game_type, weapon_slot)
 
             if not os.path.isdir(output_dir):
                 os.makedirs(output_dir)
@@ -449,7 +449,7 @@ class ItemsExtractor(BaseExtractor):
             new_throwable_image = Image.new('RGBA', self.images_size)
             new_throwable_image.paste(throwable_image, paste_pos)
 
-            output_dir = os.path.join(app.config['ITEMS_IMAGES_DIR'], game_type)
+            output_dir = os.path.join(app.config['ITEMS_IMAGES_DIR'], game_type, 'throwables')
 
             if not os.path.isdir(output_dir):
                 os.makedirs(output_dir)
