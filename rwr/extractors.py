@@ -222,29 +222,18 @@ class ItemsExtractor(BaseExtractor):
 
         helpers.save_json(app.config['ITEMS_DATA_FILE'], data)
 
-    def _get_weapon_type(self, weapon_xml_root):
-        specification_node = weapon_xml_root.find('specification')
+    def _get_item_type_from_weapon_slot(self, weapon_slot):
+        if weapon_slot:
+            weapon_slot = int(weapon_slot)
 
-        if specification_node is not None:
-            slot = specification_node.get('slot')
-
-            if slot:
-                slot = int(slot)
-
-                if slot == 0:
-                    return 'primary'
-                if slot == 1:
-                    return 'secondary'
-
-        base_file_name = weapon_xml_root.get('file')
-
-        if base_file_name:
-            if base_file_name.startswith('base_primary'):
+            if weapon_slot == 0:
                 return 'primary'
-            elif base_file_name.startswith('base_secondary'):
+            elif weapon_slot == 1:
                 return 'secondary'
+            elif weapon_slot == 2:
+                return False # Static / mounted weapon
 
-        return 'unknown'
+        return 'primary'
 
     def _extract_weapons(self, game_type, data):
         """Extract weapons data and images from RWR ."""
@@ -272,18 +261,6 @@ class ItemsExtractor(BaseExtractor):
 
             click.echo('    ' + weapon_file)
 
-            weapon_xml = etree.parse(weapon_file)
-            weapon_xml_root = weapon_xml.getroot()
-
-            specification_node = weapon_xml_root.find('specification')
-            hud_icon_node = weapon_xml_root.find('hud_icon')
-            inventory_node = weapon_xml_root.find('inventory')
-
-            if specification_node is None or hud_icon_node is None or not specification_node.get('name') or not hud_icon_node.get('filename'):
-                click.secho('      Not usable', fg='yellow')
-
-                continue
-
             weapon_id = os.path.splitext(os.path.basename(weapon_file_name))[0]
 
             if weapon_id in data:
@@ -291,22 +268,53 @@ class ItemsExtractor(BaseExtractor):
 
                 continue
 
-            weapon_type = self._get_weapon_type(weapon_xml_root)
+            weapon_xml = etree.parse(weapon_file)
+            weapon_xml_root = weapon_xml.getroot()
 
-            if weapon_type == 'unknown':
-                click.secho('      Unknown type', fg='yellow')
+            specification_node = weapon_xml_root.find('specification')
+
+            if specification_node is None:
+                click.secho('      specification node not found', fg='yellow')
+
+                continue
+
+            weapon_slot = self._get_item_type_from_weapon_slot(specification_node.get('slot'))
+
+            if not weapon_slot:
+                click.secho('      Static / mounted weapon', fg='yellow')
+
+                continue
+
+            hud_icon_node = weapon_xml_root.find('hud_icon')
+
+            if hud_icon_node is None:
+                click.secho('      hud_icon node not found', fg='yellow')
+
+                continue
+
+            if not specification_node.get('name'):
+                click.secho('      No name set', fg='yellow')
+
+                continue
+
+            if not hud_icon_node.get('filename'):
+                click.secho('      No HUD icon set', fg='yellow')
+
+                continue
 
             weapon_name = specification_node.get('name')
-            weapon_image_file_name = hud_icon_node.get('filename')
+
+            inventory_node = weapon_xml_root.find('inventory')
             weapon_price = int(float(inventory_node.get('price'))) if inventory_node is not None else 0
 
             data[weapon_id] = OrderedDict([
                 ('name', weapon_name),
                 ('price', weapon_price),
                 ('game', game_type),
-                ('type', weapon_type)
+                ('type', weapon_slot)
             ])
 
+            weapon_image_file_name = hud_icon_node.get('filename')
             weapon_image_file = os.path.join(self.packages_dir, game_type, 'textures', weapon_image_file_name)
 
             if not os.path.isfile(weapon_image_file) and game_type != 'vanilla': # Try to use weapon image inherited from Vanilla
