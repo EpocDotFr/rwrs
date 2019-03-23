@@ -261,11 +261,6 @@ class ItemsExtractor(BaseExtractor):
 
             weapon_id = os.path.splitext(os.path.basename(weapon_file_name))[0]
 
-            if weapon_id in data:
-                click.secho('      Already existing', fg='yellow')
-
-                continue
-
             weapon_xml = etree.parse(weapon_file)
             weapon_xml_root = weapon_xml.getroot()
 
@@ -314,10 +309,12 @@ class ItemsExtractor(BaseExtractor):
             inventory_node = weapon_xml_root.find('inventory')
             weapon_price = int(float(inventory_node.get('price'))) if inventory_node is not None else 0
 
-            data[weapon_id] = OrderedDict([
+            if weapon_slot not in data:
+                data[weapon_slot] = OrderedDict()
+
+            data[weapon_slot][weapon_id] = OrderedDict([
                 ('name', weapon_name),
-                ('price', weapon_price),
-                ('type', weapon_slot)
+                ('price', weapon_price)
             ])
 
             weapon_image_file_name = hud_icon_node.get('filename')
@@ -384,11 +381,6 @@ class ItemsExtractor(BaseExtractor):
 
             throwable_id = os.path.splitext(os.path.basename(throwable_file_name))[0]
 
-            if throwable_id in data:
-                click.secho('      Already existing', fg='yellow')
-
-                continue
-
             throwable_xml = etree.parse(throwable_file)
             throwable_xml_root = throwable_xml.getroot()
 
@@ -424,10 +416,12 @@ class ItemsExtractor(BaseExtractor):
             inventory_node = throwable_xml_root.find('inventory')
             throwable_price = int(float(inventory_node.get('price'))) if inventory_node is not None else 0
 
-            data[throwable_id] = OrderedDict([
+            if 'throwables' not in data:
+                data['throwables'] = OrderedDict()
+
+            data['throwables'][throwable_id] = OrderedDict([
                 ('name', throwable_name),
-                ('price', throwable_price),
-                ('type', 'throwable')
+                ('price', throwable_price)
             ])
 
             throwable_image_file_name = hud_icon_node.get('filename')
