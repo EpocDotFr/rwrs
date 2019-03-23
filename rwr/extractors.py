@@ -229,6 +229,7 @@ class ItemsExtractor(BaseExtractor):
             data[game_type] = OrderedDict()
 
             self._extract_weapons(game_type, data[game_type])
+            self._extract_throwables(game_type, data[game_type])
 
         helpers.save_json(app.config['ITEMS_DATA_FILE'], data)
 
@@ -358,3 +359,109 @@ class ItemsExtractor(BaseExtractor):
                 os.makedirs(output_dir)
 
             new_weapon_image.save(os.path.join(output_dir, weapon_id + '.png'), optimize=True)
+
+    def _extract_throwables(self, game_type, data):
+        """Extract throwable data and images from RWR ."""
+        from PIL import Image
+
+        click.echo('  Extracting throwables')
+
+        weapons_directory = os.path.join(self.packages_dir, game_type, 'weapons')
+        all_throwables_file = os.path.join(weapons_directory, 'all_throwables.xml')
+
+        all_throwables_xml = etree.parse(all_throwables_file)
+        all_throwables_xml_root = all_throwables_xml.getroot()
+
+        for throwable_node in all_throwables_xml_root.iterchildren('projectile'):
+            throwable_file_name = throwable_node.get('file')
+            throwable_file = os.path.join(weapons_directory, throwable_file_name)
+
+            if not os.path.isfile(throwable_file) and game_type != 'vanilla': # Try to use throwable inherited from Vanilla
+                throwable_file = os.path.join(self.packages_dir, 'vanilla', 'weapons', throwable_file_name)
+
+                if not os.path.isfile(throwable_file): # Abort as there's nothing we can do
+                    click.secho('    No applicable file found for {}'.format(throwable_file), fg='yellow')
+
+                    continue
+
+            click.echo('    ' + throwable_file)
+
+            throwable_id = os.path.splitext(os.path.basename(throwable_file_name))[0]
+
+            if throwable_id in data:
+                click.secho('      Already existing', fg='yellow')
+
+                continue
+
+            throwable_xml = etree.parse(throwable_file)
+            throwable_xml_root = throwable_xml.getroot()
+
+            throwable_slot = throwable_xml_root.get('slot')
+
+            if throwable_slot:
+                throwable_slot = int(throwable_slot)
+
+                if throwable_slot in (1, 2):
+                    click.secho('      System throwable', fg='yellow')
+
+                    continue
+
+            hud_icon_node = throwable_xml_root.find('hud_icon')
+
+            if hud_icon_node is None:
+                click.secho('      hud_icon node not found', fg='yellow')
+
+                continue
+
+            if not throwable_xml_root.get('name'):
+                click.secho('      No name set', fg='yellow')
+
+                continue
+
+            if not hud_icon_node.get('filename'):
+                click.secho('      No HUD icon set', fg='yellow')
+
+                continue
+
+            throwable_name = throwable_xml_root.get('name')
+
+            inventory_node = throwable_xml_root.find('inventory')
+            throwable_price = int(float(inventory_node.get('price'))) if inventory_node is not None else 0
+
+            data[throwable_id] = OrderedDict([
+                ('name', throwable_name),
+                ('price', throwable_price),
+                ('type', 'throwable')
+            ])
+
+            throwable_image_file_name = hud_icon_node.get('filename')
+            throwable_image_file = os.path.join(self.packages_dir, game_type, 'textures', throwable_image_file_name)
+
+            if not os.path.isfile(throwable_image_file) and game_type != 'vanilla': # Try to use throwable image inherited from Vanilla
+                throwable_image_file = os.path.join(self.packages_dir, 'vanilla', 'textures', throwable_image_file_name)
+
+                if not os.path.isfile(throwable_image_file):
+                    click.secho('      No applicable image found for {}'.format(throwable_file), fg='yellow')
+
+                    continue
+
+            throwable_image = Image.open(throwable_image_file)
+
+            # Only get the actual content of the image
+            throwable_image = throwable_image.crop(throwable_image.convert('RGBa').getbbox())
+            throwable_image.thumbnail(self.images_size, Image.LANCZOS)
+
+            paste_pos = (
+                math.floor(self.images_size[0] / 2) - math.floor(throwable_image.width / 2),
+                math.floor(self.images_size[1] / 2) - math.floor(throwable_image.height / 2)
+            )
+
+            new_throwable_image = Image.new('RGBA', self.images_size)
+            new_throwable_image.paste(throwable_image, paste_pos)
+
+            output_dir = os.path.join(app.config['ITEMS_IMAGES_DIR'], game_type)
+
+            if not os.path.isdir(output_dir):
+                os.makedirs(output_dir)
+
+            new_throwable_image.save(os.path.join(output_dir, throwable_id + '.png'), optimize=True)
