@@ -233,19 +233,6 @@ class ItemsExtractor(BaseExtractor):
 
         helpers.save_json(app.config['ITEMS_DATA_FILE'], data)
 
-    def _get_item_type_from_weapon_slot(self, weapon_slot):
-        if weapon_slot:
-            weapon_slot = int(weapon_slot)
-
-            if weapon_slot == 0:
-                return 'primary'
-            elif weapon_slot == 1:
-                return 'secondary'
-            elif weapon_slot == 2:
-                return False # Static / mounted weapon
-
-        return 'primary'
-
     def _extract_weapons(self, game_type, data):
         """Extract weapons data and images from RWR ."""
         from PIL import Image
@@ -289,12 +276,21 @@ class ItemsExtractor(BaseExtractor):
 
                 continue
 
-            weapon_slot = self._get_item_type_from_weapon_slot(specification_node.get('slot'))
+            weapon_slot = specification_node.get('slot')
 
-            if not weapon_slot:
-                click.secho('      Static / mounted weapon', fg='yellow')
+            if weapon_slot:
+                weapon_slot = int(weapon_slot)
 
-                continue
+                if weapon_slot == 0:
+                    weapon_slot = 'primary'
+                elif weapon_slot == 1:
+                    weapon_slot = 'secondary'
+                elif weapon_slot == 2:
+                    click.secho('      Static / mounted weapon', fg='yellow')
+
+                    continue
+            else:
+                weapon_slot = 'primary'
 
             hud_icon_node = weapon_xml_root.find('hud_icon')
 
@@ -402,7 +398,7 @@ class ItemsExtractor(BaseExtractor):
                 throwable_slot = int(throwable_slot)
 
                 if throwable_slot in (1, 2):
-                    click.secho('      System throwable', fg='yellow')
+                    click.secho('      System projectile', fg='yellow')
 
                     continue
 
