@@ -287,6 +287,13 @@ class ItemsExtractor(BaseExtractor):
             else:
                 weapon_slot = 'primary'
 
+            commonness_node = weapon_xml_root.find('commonness')
+
+            if commonness_node is not None and (not commonness_node.get('can_respawn_with') or (commonness_node.get('can_respawn_with') and int(commonness_node.get('can_respawn_with')) == 1)):
+                click.secho('      Not a rare weapon', fg='yellow')
+
+                continue
+
             hud_icon_node = weapon_xml_root.find('hud_icon')
 
             if hud_icon_node is None:
@@ -393,6 +400,13 @@ class ItemsExtractor(BaseExtractor):
                     click.secho('      System projectile', fg='yellow')
 
                     continue
+
+            commonness_node = throwable_xml_root.find('commonness')
+
+            if commonness_node is not None and (not commonness_node.get('can_respawn_with') or (commonness_node.get('can_respawn_with') and int(commonness_node.get('can_respawn_with')) == 1)):
+                click.secho('      Not a rare throwable', fg='yellow')
+
+                continue
 
             hud_icon_node = throwable_xml_root.find('hud_icon')
 
