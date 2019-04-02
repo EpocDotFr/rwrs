@@ -230,6 +230,7 @@ class ItemsExtractor(BaseExtractor):
 
             self._extract_weapons(game_type, data[game_type])
             self._extract_throwables(game_type, data[game_type])
+            self._extract_carry_items(game_type, data[game_type])
 
         helpers.save_json(app.config['ITEMS_DATA_FILE'], data)
 
@@ -388,7 +389,7 @@ class ItemsExtractor(BaseExtractor):
             if throwable_slot:
                 throwable_slot = int(throwable_slot)
 
-                if throwable_slot in (1, 2):
+                if throwable_slot != 0:
                     click.secho('      System projectile', fg='yellow')
 
                     continue
@@ -453,3 +454,108 @@ class ItemsExtractor(BaseExtractor):
                 os.makedirs(output_dir)
 
             throwable_image.save(os.path.join(output_dir, throwable_id + '.png'), optimize=True)
+
+    def _extract_carry_items(self, game_type, data):
+        """Extract carry items data and images from RWR ."""
+        from PIL import Image
+
+        click.echo('  Extracting carry items')
+
+        carry_items_directory = os.path.join(self.packages_dir, game_type, 'items')
+        all_carry_items_file = os.path.join(carry_items_directory, 'all_carry_items.xml')
+
+        all_carry_items_xml = etree.parse(all_carry_items_file)
+        all_carry_items_xml_root = all_carry_items_xml.getroot()
+
+        for carry_item_node in all_carry_items_xml_root.iterchildren('carry_item'):
+            carry_item_file_name = carry_item_node.get('file')
+            carry_item_file = os.path.join(carry_items_directory, carry_item_file_name)
+
+            if not os.path.isfile(carry_item_file) and game_type != 'vanilla': # Try to use carry item inherited from Vanilla
+                carry_item_file = os.path.join(self.packages_dir, 'vanilla', 'items', carry_item_file_name)
+
+                if not os.path.isfile(carry_item_file): # Abort as there's nothing we can do
+                    click.secho('    No applicable file found for {}'.format(carry_item_file), fg='yellow')
+
+                    continue
+
+            click.echo('    ' + carry_item_file)
+
+            carry_item_id = os.path.splitext(os.path.basename(carry_item_file_name))[0]
+
+            carry_item_xml = etree.parse(carry_item_file)
+            carry_item_xml_root = carry_item_xml.getroot()
+
+            carry_item_slot = carry_item_xml_root.get('slot')
+
+            if carry_item_slot:
+                carry_item_slot = int(carry_item_slot)
+
+                if carry_item_slot == 0:
+                    carry_item_slot = 'valuable'
+                elif carry_item_slot == 1:
+                    carry_item_slot = 'wearable'
+            else:
+                carry_item_slot = 'valuable'
+
+            commonness_node = carry_item_xml_root.find('commonness')
+
+            # FIXME can_respawn_with is defined in base_valuable.carry_item
+            if commonness_node is not None and (not commonness_node.get('can_respawn_with') or (commonness_node.get('can_respawn_with') and int(commonness_node.get('can_respawn_with')) == 1)):
+                click.secho('      Not a rare carry item', fg='yellow')
+
+                continue
+
+            hud_icon_node = carry_item_xml_root.find('hud_icon')
+
+            if hud_icon_node is None:
+                click.secho('      hud_icon node not found', fg='yellow')
+
+                continue
+
+            if not carry_item_xml_root.get('name'):
+                click.secho('      No name set', fg='yellow')
+
+                continue
+
+            if not hud_icon_node.get('filename'):
+                click.secho('      No HUD icon set', fg='yellow')
+
+                continue
+
+            carry_item_name = carry_item_xml_root.get('name')
+
+            inventory_node = carry_item_xml_root.find('inventory')
+            carry_item_price = int(float(inventory_node.get('price'))) if inventory_node is not None else 0
+
+            if carry_item_slot not in data:
+                data[carry_item_slot] = OrderedDict()
+
+            data[carry_item_slot][carry_item_id] = OrderedDict([
+                ('name', carry_item_name),
+                ('price', carry_item_price)
+            ])
+
+            carry_item_image_file_name = hud_icon_node.get('filename')
+            carry_item_image_file = os.path.join(self.packages_dir, game_type, 'textures', carry_item_image_file_name)
+
+            if not os.path.isfile(carry_item_image_file) and game_type != 'vanilla': # Try to use carry item image inherited from Vanilla
+                carry_item_image_file = os.path.join(self.packages_dir, 'vanilla', 'textures', carry_item_image_file_name)
+
+                if not os.path.isfile(carry_item_image_file):
+                    click.secho('      No applicable image found for {}'.format(carry_item_file), fg='yellow')
+
+                    continue
+
+            carry_item_image = Image.open(carry_item_image_file)
+
+            # Only get the actual content of the image
+            carry_item_image = carry_item_image.crop(carry_item_image.convert('RGBa').getbbox())
+            carry_item_image.thumbnail(self.images_size, Image.LANCZOS)
+
+            output_dir = os.path.join(app.config['ITEMS_IMAGES_DIR'], game_type, carry_item_slot)
+
+            if not os.path.isdir(output_dir):
+                os.makedirs(output_dir)
+
+            carry_item_image.save(os.path.join(output_dir, carry_item_id + '.png'), optimize=True)
