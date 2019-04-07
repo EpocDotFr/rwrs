@@ -1432,6 +1432,8 @@ to the <code>GET /servers</code> resource (e.g the player list).</p>
     "<span class="hljs-attribute">id</span>": <span class="hljs-value"><span class="hljs-number">56</span></span>,
     "<span class="hljs-attribute">username</span>": <span class="hljs-value"><span class="hljs-string">"Epoc"</span></span>,
     "<span class="hljs-attribute">url</span>": <span class="hljs-value"><span class="hljs-string">"https://rwrstats.com/users/56/epoc"</span></span>,
+    "<span class="hljs-attribute">steam_id</span>": <span class="hljs-value"><span class="hljs-number">76561198051750940</span></span>,
+    "<span class="hljs-attribute">steam_profile_url</span>": <span class="hljs-value"><span class="hljs-string">"https://steamcommunity.com/profiles/76561198051750940"</span></span>,
     "<span class="hljs-attribute">small_avatar_url</span>": <span class="hljs-value"><span class="hljs-string">"https://steamcdn-a.akamaihd.net/steamcommunity/public/images/avatars/18/18a19ee73965fb3b92f39db8a307df80f5624122.jpg"</span></span>,
     "<span class="hljs-attribute">large_avatar_url</span>": <span class="hljs-value"><span class="hljs-string">"https://steamcdn-a.akamaihd.net/steamcommunity/public/images/avatars/18/18a19ee73965fb3b92f39db8a307df80f5624122_full.jpg"</span>
   </span>}
@@ -1909,6 +1911,14 @@ to the <code>GET /servers</code> resource (e.g the player list).</p>
           "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
           "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"RWRS user profile page URL"</span>
         </span>}</span>,
+        "<span class="hljs-attribute">steam_id</span>": <span class="hljs-value">{
+          "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"number"</span></span>,
+          "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"SteamID64 of this user"</span>
+        </span>}</span>,
+        "<span class="hljs-attribute">steam_profile_url</span>": <span class="hljs-value">{
+          "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
+          "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"URL to this Steam user profile page"</span>
+        </span>}</span>,
         "<span class="hljs-attribute">small_avatar_url</span>": <span class="hljs-value">{
           "<span class="hljs-attribute">type</span>": <span class="hljs-value">[
             <span class="hljs-string">"string"</span>,
@@ -1929,7 +1939,9 @@ to the <code>GET /servers</code> resource (e.g the player list).</p>
       "<span class="hljs-attribute">required</span>": <span class="hljs-value">[
         <span class="hljs-string">"id"</span>,
         <span class="hljs-string">"username"</span>,
-        <span class="hljs-string">"url"</span>
+        <span class="hljs-string">"url"</span>,
+        <span class="hljs-string">"steam_id"</span>,
+        <span class="hljs-string">"steam_profile_url"</span>
       ]</span>,
       "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"The RWRS user that owns this RWR account or `null` if this player wasn't claimed by anyone or if the RWRS user has defined its profile as private"</span>
     </span>}
@@ -2289,6 +2301,8 @@ to the <code>GET /servers</code> resource (e.g the player list).</p>
   "<span class="hljs-attribute">id</span>": <span class="hljs-value"><span class="hljs-number">56</span></span>,
   "<span class="hljs-attribute">username</span>": <span class="hljs-value"><span class="hljs-string">"Epoc"</span></span>,
   "<span class="hljs-attribute">url</span>": <span class="hljs-value"><span class="hljs-string">"https://rwrstats.com/users/56/epoc"</span></span>,
+  "<span class="hljs-attribute">steam_id</span>": <span class="hljs-value"><span class="hljs-number">76561198051750940</span></span>,
+  "<span class="hljs-attribute">steam_profile_url</span>": <span class="hljs-value"><span class="hljs-string">"https://steamcommunity.com/profiles/76561198051750940"</span></span>,
   "<span class="hljs-attribute">small_avatar_url</span>": <span class="hljs-value"><span class="hljs-string">"https://steamcdn-a.akamaihd.net/steamcommunity/public/images/avatars/18/18a19ee73965fb3b92f39db8a307df80f5624122.jpg"</span></span>,
   "<span class="hljs-attribute">large_avatar_url</span>": <span class="hljs-value"><span class="hljs-string">"https://steamcdn-a.akamaihd.net/steamcommunity/public/images/avatars/18/18a19ee73965fb3b92f39db8a307df80f5624122_full.jpg"</span></span>,
   "<span class="hljs-attribute">registered_at</span>": <span class="hljs-value"><span class="hljs-string">"2019-02-22T10:46:00+00:00"</span></span>,
@@ -2326,6 +2340,14 @@ to the <code>GET /servers</code> resource (e.g the player list).</p>
     "<span class="hljs-attribute">url</span>": <span class="hljs-value">{
       "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
       "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"RWRS user profile page URL"</span>
+    </span>}</span>,
+    "<span class="hljs-attribute">steam_id</span>": <span class="hljs-value">{
+      "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"number"</span></span>,
+      "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"SteamID64 of this user"</span>
+    </span>}</span>,
+    "<span class="hljs-attribute">steam_profile_url</span>": <span class="hljs-value">{
+      "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
+      "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"URL to this Steam user profile page"</span>
     </span>}</span>,
     "<span class="hljs-attribute">small_avatar_url</span>": <span class="hljs-value">{
       "<span class="hljs-attribute">type</span>": <span class="hljs-value">[
@@ -2439,6 +2461,8 @@ to the <code>GET /servers</code> resource (e.g the player list).</p>
     <span class="hljs-string">"id"</span>,
     <span class="hljs-string">"username"</span>,
     <span class="hljs-string">"url"</span>,
+    <span class="hljs-string">"steam_id"</span>,
+    <span class="hljs-string">"steam_profile_url"</span>,
     <span class="hljs-string">"small_avatar_url"</span>,
     <span class="hljs-string">"large_avatar_url"</span>,
     <span class="hljs-string">"registered_at"</span>,
@@ -2603,7 +2627,7 @@ to the <code>GET /servers</code> resource (e.g the player list).</p>
     <span class="hljs-string">"message"</span>
   ]</span>,
   "<span class="hljs-attribute">additionalProperties</span>": <span class="hljs-value"><span class="hljs-literal">false</span>
-</span>}</code></pre><div style="height: 1px;"></div></div></div></div></div></section></div></div></div><p style="text-align: center;" class="text-muted">Generated by&nbsp;<a href="https://github.com/danielgtaylor/aglio" class="aglio">aglio</a>&nbsp;on 28 Feb 2019</p><script>/* eslint-env browser */
+</span>}</code></pre><div style="height: 1px;"></div></div></div></div></div></section></div></div></div><p style="text-align: center;" class="text-muted">Generated by&nbsp;<a href="https://github.com/danielgtaylor/aglio" class="aglio">aglio</a>&nbsp;on 05 Apr 2019</p><script>/* eslint-env browser */
 /* eslint quotes: [2, "single"] */
 'use strict';
 

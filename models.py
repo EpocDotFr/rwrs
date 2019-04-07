@@ -340,6 +340,10 @@ class User(db.Model, UserMixin):
     def slug(self):
         return slugify(self.username)
 
+    @memoized_property
+    def steam_profile_url(self):
+        return 'https://steamcommunity.com/profiles/{}'.format(self.steam_id)
+
     @staticmethod
     def get_by_steam_id(steam_id, create_if_unexisting=False):
         """Get a User according its Steam ID, optionally creating it if it doesn't exist."""

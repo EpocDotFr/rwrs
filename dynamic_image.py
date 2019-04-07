@@ -1,6 +1,7 @@
 from PIL import Image, ImageDraw, ImageFont
 from flask import make_response, g
 from io import BytesIO
+from rwrs import app
 import rwr.scraper
 import rwr.utils
 import helpers
@@ -114,7 +115,7 @@ class DynamicServerImage(DynamicImage):
         self._draw_text((10, 50), message)
 
     def _do_create_header(self):
-        """Create the top of the dynamic server image."""
+        """Creates the top of the dynamic server image."""
         x = 7
 
         # Country flag
@@ -137,7 +138,7 @@ class DynamicServerImage(DynamicImage):
         self._draw_text((x, 2), self.server.name, font=big_font)
 
     def _do_create_body(self):
-        """Create the body (main area) of the dynamic server image."""
+        """Creates the body (main area) of the dynamic server image."""
         # IP
         self._draw_text((7, 44), self.server.ip)
 
@@ -192,9 +193,9 @@ class DynamicPlayerImage(DynamicImage):
         self._draw_text((10, 45), message)
 
     def _do_create_header(self):
-        """Create the top of the dynamic player image."""
+        """Creates the top of the dynamic player image."""
         # Username
-        self._draw_text((9, 0), self.player.username, font=big_font)
+        self._draw_text((7, 0), self.player.username, font=big_font)
 
         # Player icon
         if self.player.is_myself or self.player.is_contributor or self.player.is_rwr_dev or self.player.is_ranked_servers_admin:
@@ -203,7 +204,7 @@ class DynamicPlayerImage(DynamicImage):
             if self.player.is_myself:
                 epoc_image = Image.open('static/images/epoc.png').convert('RGBA')
 
-                x += 8
+                x += 10
 
                 self._paste(epoc_image, (x, 2))
 
@@ -211,7 +212,7 @@ class DynamicPlayerImage(DynamicImage):
             elif self.player.is_contributor:
                 contributor_image = Image.open('static/images/dynamic_images/contributor.png').convert('RGBA')
 
-                x += 12
+                x += 10
 
                 self._paste(contributor_image, (x, 5))
 
@@ -219,7 +220,7 @@ class DynamicPlayerImage(DynamicImage):
             elif self.player.is_rwr_dev:
                 rwr_icon_image = Image.open('static/images/rwr_icon.png').convert('RGBA')
 
-                x += 13
+                x += 10
 
                 self._paste(rwr_icon_image, (x, 2))
 
@@ -230,20 +231,26 @@ class DynamicPlayerImage(DynamicImage):
 
                 x += 5 if self.player.is_rwr_dev or self.player.is_contributor else 12
 
-                self._paste(admin_image, (x, 5))
+                self._paste(admin_image, (x, 6))
 
         # Rank name
-        self._draw_text((9, 22), self.player.rank.name, font=small_font)
+        self._draw_text((7, 22), self.player.rank.name, font=small_font)
 
         # Database name
         database_name = '{} profile'.format(self.player.database_name)
 
         database_name_w, _ = self.image_draw.textsize(database_name, font=normal_font)
 
-        self._draw_text((self.image.width - database_name_w - 7, 12), database_name, font=normal_font)
+        self._draw_text((self.image.width - database_name_w - 4, 1), database_name, font=normal_font)
+
+        # Claimed icon
+        if app.config['ENABLE_PLAYER_CLAIMING'] and self.player.user:
+            claimed_image = Image.open('static/images/dynamic_images/claimed.png').convert('RGBA')
+
+            self._paste(claimed_image, (self.image.width - claimed_image.width - 4, 22))
 
     def _do_create_body(self):
-        """Create the body (main area) of the dynamic player image."""
+        """Creates the body (main area) of the dynamic player image."""
         # Rank image
         rank_image = Image.open('static' + self.player.rank.image).convert('RGBA')
 
@@ -262,7 +269,7 @@ class DynamicPlayerImage(DynamicImage):
         self._draw_text((148, 86), helpers.simplified_integer(self.player.deaths))
 
         # K/D ratio
-        self._draw_text((219, 54), str(self.player.kd_ratio))
+        self._draw_text((219, 55), str(self.player.kd_ratio))
 
         # Time played
         self._draw_text((219, 86), helpers.humanize_seconds_to_hours(self.player.time_played))
