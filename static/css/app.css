@@ -56,6 +56,17 @@ img.bordered {
     border: .2rem solid #333;
 }
 
+.claimed-icon {
+    color: #44b2f8;
+}
+
+.claimed-icon a,
+.claimed-icon a:visited,
+.claimed-icon a:hover,
+.claimed-icon a:focus {
+    color: inherit;
+}
+
 /************************************************************************
  * Tippy RWRS theme (players) */
 
@@ -149,8 +160,8 @@ img.bordered {
     background-color: #444;
 }
 
-.tabs li a,
-.tabs li a:visited {
+.tabs li > a,
+.tabs li > a:visited {
     color: #FFF;
     text-decoration: none;
     font-weight: bold;
@@ -159,13 +170,13 @@ img.bordered {
     border-right: 0.2rem solid #333;
 }
 
-.tabs li a:hover,
-.tabs li a:focus {
+.tabs li > a:hover,
+.tabs li > a:focus {
     background-color: #606060;
     border-color: #333;
 }
 
-.tabs li.active a {
+.tabs li.active > a {
     background-color: #7da109;
     border-color: #9cc321;
 }
@@ -206,10 +217,6 @@ img.bordered {
 
 .txtaltgreen {
     color: #A4CF17;
-}
-
-.txtaltblue {
-    color: #44b2f8;
 }
 
 /************************************************************************
