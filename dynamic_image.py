@@ -230,7 +230,7 @@ class DynamicPlayerImage(DynamicImage):
 
                 x += 5 if self.player.is_rwr_dev or self.player.is_contributor else 12
 
-                self._paste(admin_image, (x, 5))
+                self._paste(admin_image, (x, 6))
 
         # Rank name
         self._draw_text((9, 22), self.player.rank.name, font=small_font)
