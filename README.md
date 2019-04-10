@@ -128,6 +128,12 @@ Data older than one week old will be deleted.
 flask clean-players-count
 ```
 
+### Computing promotions for all players
+
+```
+flask compute-promotions
+```
+
 ### Storing actual number of players (for graphs)
 
 Will save the current number of Steam players which have RWR running, and the current number of players playing online.
@@ -176,6 +182,12 @@ bash scripts/api_doc_generator.sh
 
 ```
 flask save-players-stats [--reset]
+```
+
+### Retrieve and save the ranked servers admins
+
+```
+flask save-ranked-servers-admins
 ```
 
 ### Import rwrtrack data
