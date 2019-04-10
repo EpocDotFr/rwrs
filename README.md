@@ -152,19 +152,25 @@ flask run-discord-bot
 
 More information in the script comments.
 
-`bash scripts/geolite2_city_updater.sh`
+```
+bash scripts/geolite2_city_updater.sh
+```
 
 ### Updating RWRS
 
 More information in the script comments.
 
-`bash scripts/rwrs_updater.sh [TYPE, default=fast, fast|full] [DOMAIN, default=rwrstats.com]`
+```
+bash scripts/rwrs_updater.sh [TYPE, default=fast, fast|full]
+```
 
 ### Generating RWRS REST API documentation
 
 More information in the script comments.
 
-`bash scripts/api_doc_generator.sh`
+```
+bash scripts/api_doc_generator.sh
+```
 
 ### Retrieve and save the players stats in DB
 
