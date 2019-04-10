@@ -7,7 +7,6 @@
 set -e # Makes any subsequent failing commands to exit the script immediately
 
 TYPE=${1:-fast}
-DOMAIN=${2:-rwrstats.com}
 
 echo "## Initializing ($TYPE update)"
 
@@ -41,7 +40,7 @@ echo "## Restarting services"
 
 chown -R www-data:www-data ./
 
-supervisorctl restart $DOMAIN discordbot.$DOMAIN
+supervisorctl restart rwrstats.com discordbot.rwrstats.com
 
 echo "## Disabling maintenance mode"
 
