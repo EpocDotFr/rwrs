@@ -17,16 +17,25 @@
             <p>Once the claim procedure has been initiated, you'll have <strong>{{ config['PLAYER_CLAIM_DELAY'] }} minutes</strong> to join a ranked (official) server to finally claim the desired RWR account.</p>
         </div>
         <div>
-            <form method="post" action="{{ url_for('player_claim') }}" class="ptm">
-                <fieldset class="man pam">
-                    {{ form.csrf_token }}
+            <table class="mts mbn">
+                <tbody>
+                    <tr>
+                        <th class="txtcenter">Claim form</th>
+                    </tr>
+                    <tr>
+                        <td class="pam">
+                            <form method="post" action="{{ url_for('player_claim') }}">
+                                {{ form.csrf_token }}
 
-                    {{ macros.form_field(form.type, class="w200p") }}
-                    {{ macros.form_field(form.username, class="w200p") }}
+                                {{ macros.form_field(form.type, class="w200p") }}
+                                {{ macros.form_field(form.username, class="w200p") }}
 
-                    <p class="txtcenter mtm"><button type="submit" class="big"><i class="fa fa-chevron-right"></i> Start!</button></p>
-                </fieldset>
-            </form>
+                                <p class="txtcenter mtm"><button type="submit" class="big"><i class="fa fa-chevron-right"></i> Start!</button></p>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 
