@@ -128,6 +128,12 @@ Data older than one week old will be deleted.
 flask clean-players-count
 ```
 
+### Computing promotions for all players
+
+```
+flask compute-promotions
+```
+
 ### Storing actual number of players (for graphs)
 
 Will save the current number of Steam players which have RWR running, and the current number of players playing online.
@@ -152,24 +158,36 @@ flask run-discord-bot
 
 More information in the script comments.
 
-`bash scripts/geolite2_city_updater.sh`
+```
+bash scripts/geolite2_city_updater.sh
+```
 
 ### Updating RWRS
 
 More information in the script comments.
 
-`bash scripts/rwrs_updater.sh [TYPE, default=fast, fast|full] [DOMAIN, default=rwrstats.com]`
+```
+bash scripts/rwrs_updater.sh [TYPE, default=fast, fast|full]
+```
 
 ### Generating RWRS REST API documentation
 
 More information in the script comments.
 
-`bash scripts/api_doc_generator.sh`
+```
+bash scripts/api_doc_generator.sh
+```
 
 ### Retrieve and save the players stats in DB
 
 ```
 flask save-players-stats [--reset]
+```
+
+### Retrieve and save the ranked servers admins
+
+```
+flask save-ranked-servers-admins
 ```
 
 ### Import rwrtrack data
