@@ -156,26 +156,27 @@ class Variable(db.Model):
     @value.setter
     def value(self, value):
         """Set the value an d type of this Variable."""
-        if isinstance(value, int):
-            self.type = VariableType.INTEGER
-            self._value = str(value)
-        elif isinstance(value, float):
-            self.type = VariableType.FLOAT
-            self._value = str(value)
-        elif isinstance(value, str):
-            self.type = VariableType.STRING
-            self._value = value
-        elif isinstance(value, bool):
-            self.type = VariableType.BOOL
-            self._value = str(int(value))
-        elif isinstance(value, arrow.Arrow):
-            self.type = VariableType.ARROW
-            self._value = value.format()
-        elif isinstance(value, dict):
-            self.type = VariableType.JSON
-            self._value = json.dumps(value)
-        else:
-            raise ValueError('Unhandled value type')
+        if self._value and not isinstance(value, str):
+            if isinstance(value, int):
+                self.type = VariableType.INTEGER
+                self._value = str(value)
+            elif isinstance(value, float):
+                self.type = VariableType.FLOAT
+                self._value = str(value)
+            elif isinstance(value, bool):
+                self.type = VariableType.BOOL
+                self._value = str(int(value))
+            elif isinstance(value, arrow.Arrow):
+                self.type = VariableType.ARROW
+                self._value = value.format()
+            elif isinstance(value, dict):
+                self.type = VariableType.JSON
+                self._value = json.dumps(value)
+            else:
+                raise ValueError('Unhandled value type')
+
+        self.type = VariableType.STRING
+        self._value = value
 
     @staticmethod
     def get_value(name):

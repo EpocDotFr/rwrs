@@ -119,6 +119,16 @@ class RwrsBotDiscoPlugin(Plugin):
 
             event.msg.reply('MOTD removed.')
 
+    @Plugin.command('set', parser=True, group='event')
+    def on_event_set_command(self, event, args):
+        """Admin command: sets the next RWR event."""
+        pass
+
+    @Plugin.command('remove', group='event')
+    def on_event_remove_command(self, event):
+        """Admin command: removes the next RWR event."""
+        pass
+
     @Plugin.command('help', parser=True)
     @Plugin.parser.add_argument('command', nargs='?')
     def on_help_command(self, event, args):
