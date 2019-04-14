@@ -12,6 +12,7 @@ import rwr.scraper
 import rwr.utils
 import logging
 import helpers
+import arrow
 import steam
 import os
 
@@ -125,10 +126,19 @@ class RwrsBotDiscoPlugin(Plugin):
     @Plugin.parser.add_argument('server_ip_and_port')
     def on_event_set_command(self, event, args):
         """Admin command: sets the next RWR event."""
+        datetime_format = 'YYYY-MM-DD HH:mm ZZZ'
+
+        try:
+            args.datetime = arrow.get(args.datetime, datetime_format).floor('minute')
+        except Exception:
+            event.msg.reply('Invalid datetime provided (should be `{}`)'.format(datetime_format))
+
+            return
+
         Variable.set_value('event', {
             'name': args.name,
-            'datetime': args.datetime,
-            'server_ip_and_port': args.server_ip_and_port
+            'datetime': args.datetime.format(),
+            'server_ip_and_port': args.server_ip_and_port # TODO Validate
         })
 
         db.session.commit()
