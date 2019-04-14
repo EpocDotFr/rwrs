@@ -93,7 +93,7 @@ class SteamPlayerCount(db.Model, Measurable):
         def get_player_count(self):
             """Return the Steam players count."""
             q = self.with_entities(SteamPlayerCount.measured_at.label('t'), SteamPlayerCount.count.label('v'))
-            q = q.filter(SteamPlayerCount.measured_at >= one_week_ago()).group_by('t')
+            q = q.filter(SteamPlayerCount.measured_at >= one_week_ago()).group_by('t', 'v')
 
             return q.all()
 
@@ -151,23 +151,24 @@ class Variable(db.Model):
     @value.setter
     def value(self, value):
         """Set the value an d type of this Variable."""
-        if isinstance(value, int):
-            self.type = VariableType.INTEGER
-            self._value = str(value)
-        elif isinstance(value, float):
-            self.type = VariableType.FLOAT
-            self._value = str(value)
-        elif isinstance(value, str):
-            self.type = VariableType.STRING
-            self._value = value
-        elif isinstance(value, bool):
-            self.type = VariableType.BOOL
-            self._value = str(int(value))
-        elif isinstance(value, arrow.Arrow):
-            self.type = VariableType.ARROW
-            self._value = value.format()
-        else:
-            raise ValueError('Unhandled value type')
+        if value and not isinstance(value, str):
+            if isinstance(value, int):
+                self.type = VariableType.INTEGER
+                self._value = str(value)
+            elif isinstance(value, float):
+                self.type = VariableType.FLOAT
+                self._value = str(value)
+            elif isinstance(value, bool):
+                self.type = VariableType.BOOL
+                self._value = str(int(value))
+            elif isinstance(value, arrow.Arrow):
+                self.type = VariableType.ARROW
+                self._value = value.format()
+            else:
+                raise ValueError('Unhandled value type')
+
+        self.type = VariableType.STRING
+        self._value = value
 
     @staticmethod
     def get_value(name):
