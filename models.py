@@ -1,6 +1,7 @@
 from sqlalchemy.util import memoized_property
 from sqlalchemy_utils import ArrowType
 from flask import url_for, current_app
+from collections import OrderedDict
 from flask_login import UserMixin
 from rwrs import db, cache, app
 from sqlalchemy import func
@@ -11,6 +12,7 @@ import helpers
 import hashlib
 import iso3166
 import arrow
+import json
 
 
 def one_week_ago():
@@ -120,6 +122,7 @@ class VariableType(Enum):
     STRING = 'STRING'
     BOOL = 'BOOL'
     ARROW = 'ARROW'
+    JSON = 'JSON'
 
 
 class Variable(db.Model):
@@ -129,7 +132,7 @@ class Variable(db.Model):
 
     name = db.Column(db.String(255), nullable=False, unique=True)
     type = db.Column(db.Enum(VariableType), nullable=False)
-    _value = db.Column('value', db.String(255))
+    _value = db.Column('value', db.Text)
 
     @property
     def value(self):
@@ -143,6 +146,8 @@ class Variable(db.Model):
                 return bool(int(self._value))
             elif self.type == VariableType.ARROW:
                 return arrow.get(self._value)
+            elif self.type == VariableType.JSON:
+                return json.loads(self._value, object_pairs_hook=OrderedDict)
             else:
                 raise ValueError('Unhandled value type')
 
@@ -166,6 +171,9 @@ class Variable(db.Model):
         elif isinstance(value, arrow.Arrow):
             self.type = VariableType.ARROW
             self._value = value.format()
+        elif isinstance(value, dict):
+            self.type = VariableType.JSON
+            self._value = json.dumps(value)
         else:
             raise ValueError('Unhandled value type')
 
