@@ -95,7 +95,7 @@ class SteamPlayerCount(db.Model, Measurable):
         def get_player_count(self):
             """Return the Steam players count."""
             q = self.with_entities(SteamPlayerCount.measured_at.label('t'), SteamPlayerCount.count.label('v'))
-            q = q.filter(SteamPlayerCount.measured_at >= one_week_ago()).group_by('t')
+            q = q.filter(SteamPlayerCount.measured_at >= one_week_ago()).group_by('t', 'v')
 
             return q.all()
 
@@ -174,9 +174,9 @@ class Variable(db.Model):
                 self._value = json.dumps(value)
             else:
                 raise ValueError('Unhandled value type')
-
-        self.type = VariableType.STRING
-        self._value = value
+        else:
+            self.type = VariableType.STRING
+            self._value = value
 
     @staticmethod
     def get_value(name):
