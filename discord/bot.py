@@ -3,10 +3,10 @@ from disco.types.user import GameType, Game, Status
 from disco.client import Client, ClientConfig
 from disco.util.logging import setup_logging
 from disco.bot import Bot, Plugin, BotConfig
+from rwrs import app, cache, db
 from . import constants, utils
 from tabulate import tabulate
 from rwr.player import Player
-from rwrs import app, cache
 from gevent import monkey
 import rwr.scraper
 import rwr.utils
@@ -120,14 +120,32 @@ class RwrsBotDiscoPlugin(Plugin):
             event.msg.reply('MOTD removed.')
 
     @Plugin.command('set', parser=True, group='event')
+    @Plugin.parser.add_argument('name')
+    @Plugin.parser.add_argument('datetime')
+    @Plugin.parser.add_argument('server_ip_and_port')
     def on_event_set_command(self, event, args):
         """Admin command: sets the next RWR event."""
-        pass
+        Variable.set_value('event', {
+            'name': args.name,
+            'datetime': args.datetime,
+            'server_ip_and_port': args.server_ip_and_port
+        })
+
+        db.session.commit()
+
+        event.msg.reply('Event updated.')
 
     @Plugin.command('remove', group='event')
     def on_event_remove_command(self, event):
         """Admin command: removes the next RWR event."""
-        pass
+        if not Variable.get_value('event'):
+            event.msg.reply('Event already removed.')
+        else:
+            Variable.set_value('event', None)
+
+            db.session.commit()
+
+            event.msg.reply('Event removed.')
 
     @Plugin.command('help', parser=True)
     @Plugin.parser.add_argument('command', nargs='?')
