@@ -156,7 +156,7 @@ class Variable(db.Model):
     @value.setter
     def value(self, value):
         """Set the value an d type of this Variable."""
-        if self._value and not isinstance(value, str):
+        if value and not isinstance(value, str):
             if isinstance(value, int):
                 self.type = VariableType.INTEGER
                 self._value = str(value)
