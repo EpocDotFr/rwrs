@@ -166,9 +166,9 @@ class Variable(db.Model):
                 self._value = value.format()
             else:
                 raise ValueError('Unhandled value type')
-
-        self.type = VariableType.STRING
-        self._value = value
+        else:
+            self.type = VariableType.STRING
+            self._value = value
 
     @staticmethod
     def get_value(name):
