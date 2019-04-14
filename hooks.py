@@ -1,9 +1,9 @@
 from flask import g, abort, render_template, make_response, request, redirect, flash, url_for
 from rwrs import app, login_manager, oid, db
 from werkzeug.exceptions import HTTPException
+from models import User, Variable
 from flask_login import login_user
 from datetime import datetime
-from models import User
 import rwr.scraper
 import helpers
 import bugsnag
@@ -75,6 +75,23 @@ def get_motd():
     if os.path.exists('motd'):
         with open('motd', 'r', encoding='utf-8') as f:
             g.MOTD = f.read()
+
+
+@app.before_request
+def get_event():
+    if request.endpoint in ('dynamic_player_image', 'dynamic_server_image'):
+        return
+
+    g.EVENT = None
+
+    event = Variable.get_value('event')
+
+    if event:
+        g.EVENT = {
+            'name': event.name,
+            'datetime': arrow.get(event.datetime),
+            'server': rwr.scraper.get_server_by_ip_and_port(event.server_ip_and_port) if event.server_ip_and_port else None
+        }
 
 
 @app.before_request

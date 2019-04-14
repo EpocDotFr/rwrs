@@ -110,12 +110,25 @@ def get_servers():
     return servers
 
 
-def get_server_by_ip_and_port(ip, port):
+def get_server_by_ip_and_port(*args):
     """Search for a RWR public server based on its IP and port."""
+    if len(args) == 1:
+        def server_found(*args):
+            server, ip_and_port = args
+
+            return server.ip_and_port == ip_and_port
+    elif len(args) == 2:
+        def server_found(*args):
+            server, ip, port = args
+
+            return server.ip == ip and server.port == port
+    else:
+        raise ValueError('get_server_by_ip_and_port takes either one IP:port string argument or two IP (string) and port (int) arguments')
+
     servers = get_servers()
 
     for server in servers:
-        if server.ip == ip and server.port == port:
+        if server_found(server, *args):
             return server
 
     return None

@@ -123,7 +123,7 @@ class RwrsBotDiscoPlugin(Plugin):
     @Plugin.command('set', parser=True, group='event')
     @Plugin.parser.add_argument('name')
     @Plugin.parser.add_argument('datetime')
-    @Plugin.parser.add_argument('server_ip_and_port')
+    @Plugin.parser.add_argument('server_ip_and_port', nargs='?')
     def on_event_set_command(self, event, args):
         """Admin command: sets the next RWR event."""
         datetime_format = 'YYYY-MM-DD HH:mm ZZZ'
