@@ -4,7 +4,6 @@ storage/cache
 storage/webassets-cache/*
 !storage/webassets-cache/.gitkeep
 maintenance
-motd
 static/js/*.min.js
 static/css/*.min.css
 .env
