@@ -65,7 +65,7 @@
             <tbody>
                 {% for server in servers %}
                     <tr onclick="window.location.href = '{{ server.link }}';" data-server-ip-and-port="{{ server.ip_and_port }}">
-                        <td>{{ macros.location(server.location) }} {{ macros.server_name(server) }}</td>
+                        <td>{{ macros.location(server.location) }} {{ macros.server_name(server, event_icon=True) }}</td>
                         <td class="{{ macros.server_slots_class(server) }}">{{ server.players.current }}</td>
                         <td>{{ server.players.max }}</td>
                         {% if request.args.get('view') == 'extended' %}
