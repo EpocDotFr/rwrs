@@ -105,18 +105,21 @@ class RwrsBotDiscoPlugin(Plugin):
     @Plugin.parser.add_argument('message')
     def on_motd_set_command(self, event, args):
         """Admin command: sets the MOTD."""
-        with open('motd', 'w', encoding='utf-8') as f:
-            f.write(args.message)
+        Variable.set_value('motd', args.message)
+
+        db.session.commit()
 
         event.msg.reply('MOTD updated.')
 
     @Plugin.command('remove', group='motd')
     def on_motd_remove_command(self, event):
         """Admin command: removes the MOTD."""
-        if not os.path.exists('motd'):
+        if not Variable.get_value('motd'):
             event.msg.reply('MOTD already removed.')
         else:
-            os.remove('motd')
+            Variable.set_value('motd', None)
+
+            db.session.commit()
 
             event.msg.reply('MOTD removed.')
 

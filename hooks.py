@@ -70,11 +70,7 @@ def get_motd():
     if request.endpoint in ('dynamic_player_image', 'dynamic_server_image'):
         return
 
-    g.MOTD = None
-
-    if os.path.exists('motd'):
-        with open('motd', 'r', encoding='utf-8') as f:
-            g.MOTD = f.read()
+    g.MOTD = Variable.get_value('motd')
 
 
 @app.before_request
