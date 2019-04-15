@@ -80,7 +80,7 @@ def get_event():
 
     g.EVENT = None
 
-    event = Variable.get_value('event')
+    event = Variable.get_event()
 
     if event:
         g.EVENT = {

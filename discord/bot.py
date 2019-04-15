@@ -129,20 +129,12 @@ class RwrsBotDiscoPlugin(Plugin):
     @Plugin.parser.add_argument('server_ip_and_port', nargs='?')
     def on_event_set_command(self, event, args):
         """Admin command: sets the next RWR event."""
-        datetime_format = app.config['EVENT_DATETIME_STORAGE_FORMAT']
-
         try:
-            arrow.get(args.datetime, datetime_format) # Just to validate
-        except Exception:
-            event.msg.reply('Invalid datetime provided (should be `{}`)'.format(datetime_format))
+            Variable.set_event(args.name, args.datetime, args.server_ip_and_port)
+        except arrow.parser.ParserError:
+            event.msg.reply('Invalid datetime provided (should be `{}`)'.format(app.config['EVENT_DATETIME_STORAGE_FORMAT']))
 
             return
-
-        Variable.set_value('event', {
-            'name': args.name,
-            'datetime': args.datetime,
-            'server_ip_and_port': args.server_ip_and_port # TODO Validate
-        })
 
         db.session.commit()
 

@@ -258,6 +258,24 @@ class Variable(db.Model):
 
         return peaks
 
+    @staticmethod
+    def set_event(name, datetime, server_ip_and_port):
+        """Sets the next RWR event."""
+        arrow.get(datetime, app.config['EVENT_DATETIME_STORAGE_FORMAT']) # Just to validate
+
+        Variable.set_value('event', {
+            'name': name,
+            'datetime': datetime,
+            'server_ip_and_port': server_ip_and_port # TODO Validate
+        })
+
+    @staticmethod
+    def get_event():
+        """Gets the next RWR event (if any)."""
+        event = Variable.get_value('event')
+
+        return event
+
     def __repr__(self):
         return 'Variable:{}'.format(self.id)
 
