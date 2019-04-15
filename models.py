@@ -274,7 +274,24 @@ class Variable(db.Model):
         """Gets the next RWR event (if any)."""
         event = Variable.get_value('event')
 
-        return event
+        if not event:
+            return None
+
+        event_datetime = arrow.get(event['datetime'], app.config['EVENT_DATETIME_STORAGE_FORMAT']).floor('minute')
+        now_in_event_timezone = arrow.now(event_datetime.tzinfo).floor('minute')
+
+        if now_in_event_timezone >= event_datetime.shift(hours=+5):
+            return None
+
+        ret = {
+            'name': event['name'],
+            'datetime': event_datetime,
+            'server': rwr.scraper.get_server_by_ip_and_port(event['server_ip_and_port']) if event['server_ip_and_port'] else None,
+            'is_ongoing': now_in_event_timezone >= event_datetime,
+            'display_server_players_count': now_in_event_timezone >= event_datetime.shift(minutes=-15)
+        }
+
+        return ret
 
     def __repr__(self):
         return 'Variable:{}'.format(self.id)

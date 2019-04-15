@@ -53,7 +53,7 @@
         {%- if g.EVENT -%}
             <div class="top-bar blue pts pbs">
                 <div class="w1140p center txtcenter small">
-                    <i class="fas fa-calendar-alt fa-lg"></i> {{ g.EVENT.name|safe }} - {{ g.EVENT.datetime.format('MMMM Do, YYYY @ h:mm A ZZZ') }}{% if g.EVENT.server %} on <a href="{{ g.EVENT.server.link }}">{{ macros.server_name(g.EVENT.server, link=False) }}</a>{% endif %}
+                    <i class="fas fa-calendar-alt fa-lg"></i> {{ 'Ongoing' if g.EVENT.is_ongoing else 'Upcoming' }} RWR event: {{ g.EVENT.name|safe }}{% if not g.EVENT.is_ongoing %} - {{ g.EVENT.datetime.format('MMMM Do, YYYY @ h:mm A ZZZ') }}{% endif %}{% if g.EVENT.server %} on <a href="{{ g.EVENT.server.link }}">{{ macros.server_name(g.EVENT.server, link=False) }}</a>{% if g.EVENT.display_server_players_count %} ({{ g.EVENT.server.players.current }}/{{ g.EVENT.server.players.max }} players){% endif %}{% endif %}
                 </div>
             </div>
         {%- endif -%}

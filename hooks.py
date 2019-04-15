@@ -78,16 +78,7 @@ def get_event():
     if request.endpoint in ('dynamic_player_image', 'dynamic_server_image'):
         return
 
-    g.EVENT = None
-
-    event = Variable.get_event()
-
-    if event:
-        g.EVENT = {
-            'name': event['name'],
-            'datetime': arrow.get(event['datetime'], app.config['EVENT_DATETIME_STORAGE_FORMAT']),
-            'server': rwr.scraper.get_server_by_ip_and_port(event['server_ip_and_port']) if event['server_ip_and_port'] else None
-        }
+    g.EVENT = Variable.get_event()
 
 
 @app.before_request
