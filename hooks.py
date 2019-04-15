@@ -85,7 +85,7 @@ def get_event():
     if event:
         g.EVENT = {
             'name': event['name'],
-            'datetime': arrow.get(event['datetime']),
+            'datetime': arrow.get(event['datetime'], app.config['EVENT_DATETIME_STORAGE_FORMAT']),
             'server': rwr.scraper.get_server_by_ip_and_port(event['server_ip_and_port']) if event['server_ip_and_port'] else None
         }
 

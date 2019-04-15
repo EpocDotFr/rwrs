@@ -129,10 +129,10 @@ class RwrsBotDiscoPlugin(Plugin):
     @Plugin.parser.add_argument('server_ip_and_port', nargs='?')
     def on_event_set_command(self, event, args):
         """Admin command: sets the next RWR event."""
-        datetime_format = 'YYYY-MM-DD HH:mm ZZZ'
+        datetime_format = app.config['EVENT_DATETIME_STORAGE_FORMAT']
 
         try:
-            args.datetime = arrow.get(args.datetime, datetime_format).floor('minute')
+            arrow.get(args.datetime, datetime_format) # Just to validate
         except Exception:
             event.msg.reply('Invalid datetime provided (should be `{}`)'.format(datetime_format))
 
@@ -140,7 +140,7 @@ class RwrsBotDiscoPlugin(Plugin):
 
         Variable.set_value('event', {
             'name': args.name,
-            'datetime': args.datetime.format(),
+            'datetime': args.datetime,
             'server_ip_and_port': args.server_ip_and_port # TODO Validate
         })
 
