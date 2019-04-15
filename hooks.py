@@ -1,9 +1,9 @@
 from flask import g, abort, render_template, make_response, request, redirect, flash, url_for
 from rwrs import app, login_manager, oid, db
 from werkzeug.exceptions import HTTPException
+from models import User, Variable
 from flask_login import login_user
 from datetime import datetime
-from models import User
 import rwr.scraper
 import helpers
 import bugsnag
@@ -70,11 +70,7 @@ def get_motd():
     if request.endpoint in ('dynamic_player_image', 'dynamic_server_image'):
         return
 
-    g.MOTD = None
-
-    if os.path.exists('motd'):
-        with open('motd', 'r', encoding='utf-8') as f:
-            g.MOTD = f.read()
+    g.MOTD = Variable.get_value('motd')
 
 
 @app.before_request

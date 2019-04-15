@@ -151,23 +151,24 @@ class Variable(db.Model):
     @value.setter
     def value(self, value):
         """Set the value an d type of this Variable."""
-        if isinstance(value, int):
-            self.type = VariableType.INTEGER
-            self._value = str(value)
-        elif isinstance(value, float):
-            self.type = VariableType.FLOAT
-            self._value = str(value)
-        elif isinstance(value, str):
+        if value and not isinstance(value, str):
+            if isinstance(value, int):
+                self.type = VariableType.INTEGER
+                self._value = str(value)
+            elif isinstance(value, float):
+                self.type = VariableType.FLOAT
+                self._value = str(value)
+            elif isinstance(value, bool):
+                self.type = VariableType.BOOL
+                self._value = str(int(value))
+            elif isinstance(value, arrow.Arrow):
+                self.type = VariableType.ARROW
+                self._value = value.format()
+            else:
+                raise ValueError('Unhandled value type')
+        else:
             self.type = VariableType.STRING
             self._value = value
-        elif isinstance(value, bool):
-            self.type = VariableType.BOOL
-            self._value = str(int(value))
-        elif isinstance(value, arrow.Arrow):
-            self.type = VariableType.ARROW
-            self._value = value.format()
-        else:
-            raise ValueError('Unhandled value type')
 
     @staticmethod
     def get_value(name):
