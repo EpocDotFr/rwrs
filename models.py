@@ -270,7 +270,7 @@ class Variable(db.Model):
         })
 
     @staticmethod
-    def get_event():
+    def get_event(with_server=True):
         """Gets the next RWR event (if any)."""
         event = Variable.get_value('event')
 
@@ -283,15 +283,12 @@ class Variable(db.Model):
         if now_in_event_timezone >= event_datetime.shift(hours=+5):
             return None
 
-        ret = {
-            'name': event['name'],
-            'datetime': event_datetime,
-            'server': rwr.scraper.get_server_by_ip_and_port(event['server_ip_and_port']) if event['server_ip_and_port'] else None,
-            'is_ongoing': now_in_event_timezone >= event_datetime,
-            'display_server_players_count': now_in_event_timezone >= event_datetime.shift(minutes=-15)
-        }
+        event['datetime'] = event_datetime
+        event['is_ongoing'] = now_in_event_timezone >= event_datetime
+        event['display_server_players_count'] = now_in_event_timezone >= event_datetime.shift(minutes=-15)
+        event['server'] = rwr.scraper.get_server_by_ip_and_port(event['server_ip_and_port']) if with_server and event['server_ip_and_port'] else None
 
-        return ret
+        return event
 
     def __repr__(self):
         return 'Variable:{}'.format(self.id)

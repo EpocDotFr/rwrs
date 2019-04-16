@@ -2,7 +2,6 @@ from sqlalchemy.util import memoized_property
 from flask import url_for, current_app
 from . import constants, utils
 from slugify import slugify
-from models import Variable
 from rwrs import app
 
 
@@ -188,12 +187,6 @@ class Server:
     @memoized_property
     def database_name(self):
         return utils.get_database_name(self.database)
-
-    @memoized_property
-    def event(self):
-        event = Variable.get_event()
-
-        return event if event and event['server'] and event['server'].ip_and_port == self.ip_and_port else None
 
     def __repr__(self):
         return 'Server:' + self.ip_and_port
