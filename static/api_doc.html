@@ -165,7 +165,12 @@ code, which contains all the RWR maps metadata stored in the JSON format.</p>
       "<span class="hljs-attribute">country_code</span>": <span class="hljs-value"><span class="hljs-string">"de"</span></span>,
       "<span class="hljs-attribute">flag_image_url</span>": <span class="hljs-value"><span class="hljs-string">"https://rwrstats.com/images/flags/DE.png"</span>
     </span>}</span>,
-    "<span class="hljs-attribute">steam_join_url</span>": <span class="hljs-value"><span class="hljs-string">"steam://rungameid/270150//server_address=178.32.58.160 server_port=1240"</span>
+    "<span class="hljs-attribute">steam_join_url</span>": <span class="hljs-value"><span class="hljs-string">"steam://rungameid/270150//server_address=178.32.58.160 server_port=1240"</span></span>,
+    "<span class="hljs-attribute">event</span>": <span class="hljs-value">{
+      "<span class="hljs-attribute">name</span>": <span class="hljs-value"><span class="hljs-string">"PvP event!"</span></span>,
+      "<span class="hljs-attribute">is_ongoing</span>": <span class="hljs-value"><span class="hljs-literal">true</span></span>,
+      "<span class="hljs-attribute">starts_at</span>": <span class="hljs-value"><span class="hljs-string">"2019-04-16T16:00:00+02:00"</span>
+    </span>}
   </span>}
 ]</code></pre><div style="height: 1px;"></div><h5>Schema</h5><pre><code>{
   "<span class="hljs-attribute">$schema</span>": <span class="hljs-value"><span class="hljs-string">"http://json-schema.org/draft-04/schema#"</span></span>,
@@ -255,6 +260,10 @@ code, which contains all the RWR maps metadata stored in the JSON format.</p>
             "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"The database name"</span>
           </span>}
         </span>}</span>,
+        "<span class="hljs-attribute">required</span>": <span class="hljs-value">[
+          <span class="hljs-string">"id"</span>,
+          <span class="hljs-string">"name"</span>
+        ]</span>,
         "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Server used database. `null` if not a ranked (official) server"</span>
       </span>}</span>,
       "<span class="hljs-attribute">map</span>": <span class="hljs-value">{
@@ -327,6 +336,32 @@ code, which contains all the RWR maps metadata stored in the JSON format.</p>
       "<span class="hljs-attribute">steam_join_url</span>": <span class="hljs-value">{
         "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
         "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"[Steam browser protocol](https://developer.valvesoftware.com/wiki/Steam_browser_protocol) URL to be used to load Running With Rifles onto the given server lobby screen"</span>
+      </span>}</span>,
+      "<span class="hljs-attribute">event</span>": <span class="hljs-value">{
+        "<span class="hljs-attribute">type</span>": <span class="hljs-value">[
+          <span class="hljs-string">"object"</span>,
+          <span class="hljs-string">"null"</span>
+        ]</span>,
+        "<span class="hljs-attribute">properties</span>": <span class="hljs-value">{
+          "<span class="hljs-attribute">name</span>": <span class="hljs-value">{
+            "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
+            "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Event name"</span>
+          </span>}</span>,
+          "<span class="hljs-attribute">is_ongoing</span>": <span class="hljs-value">{
+            "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"boolean"</span></span>,
+            "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Whether this event is ongoing or not"</span>
+          </span>}</span>,
+          "<span class="hljs-attribute">starts_at</span>": <span class="hljs-value">{
+            "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
+            "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"[ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) date when this event will start"</span>
+          </span>}
+        </span>}</span>,
+        "<span class="hljs-attribute">required</span>": <span class="hljs-value">[
+          <span class="hljs-string">"name"</span>,
+          <span class="hljs-string">"is_ongoing"</span>,
+          <span class="hljs-string">"starts_at"</span>
+        ]</span>,
+        "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Event linked to this Server. `null` if none"</span>
       </span>}
     </span>}</span>,
     "<span class="hljs-attribute">required</span>": <span class="hljs-value">[
@@ -448,6 +483,11 @@ to the <code>GET /servers</code> resource (e.g the player list).</p>
     "<span class="hljs-attribute">flag_image_url</span>": <span class="hljs-value"><span class="hljs-string">"https://rwrstats.com/images/flags/DE.png"</span>
   </span>}</span>,
   "<span class="hljs-attribute">steam_join_url</span>": <span class="hljs-value"><span class="hljs-string">"steam://rungameid/270150//server_address=178.32.58.160 server_port=1240"</span></span>,
+  "<span class="hljs-attribute">event</span>": <span class="hljs-value">{
+    "<span class="hljs-attribute">name</span>": <span class="hljs-value"><span class="hljs-string">"PvP event!"</span></span>,
+    "<span class="hljs-attribute">is_ongoing</span>": <span class="hljs-value"><span class="hljs-literal">true</span></span>,
+    "<span class="hljs-attribute">starts_at</span>": <span class="hljs-value"><span class="hljs-string">"2019-04-16T16:00:00+02:00"</span>
+  </span>}</span>,
   "<span class="hljs-attribute">version</span>": <span class="hljs-value"><span class="hljs-string">"1.70.2"</span></span>,
   "<span class="hljs-attribute">is_dedicated</span>": <span class="hljs-value"><span class="hljs-literal">true</span></span>,
   "<span class="hljs-attribute">comment</span>": <span class="hljs-value"><span class="hljs-string">"Coop campaign"</span></span>,
@@ -547,6 +587,10 @@ to the <code>GET /servers</code> resource (e.g the player list).</p>
           "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"The database name"</span>
         </span>}
       </span>}</span>,
+      "<span class="hljs-attribute">required</span>": <span class="hljs-value">[
+        <span class="hljs-string">"id"</span>,
+        <span class="hljs-string">"name"</span>
+      ]</span>,
       "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Server used database. `null` if not a ranked (official) server"</span>
     </span>}</span>,
     "<span class="hljs-attribute">map</span>": <span class="hljs-value">{
@@ -646,6 +690,10 @@ to the <code>GET /servers</code> resource (e.g the player list).</p>
                     "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"The database name"</span>
                   </span>}
                 </span>}</span>,
+                "<span class="hljs-attribute">required</span>": <span class="hljs-value">[
+                  <span class="hljs-string">"id"</span>,
+                  <span class="hljs-string">"name"</span>
+                ]</span>,
                 "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Player database. `null` if not a ranked (official) player profile"</span>
               </span>}
             </span>}</span>,
@@ -698,6 +746,32 @@ to the <code>GET /servers</code> resource (e.g the player list).</p>
       "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
       "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"[Steam browser protocol](https://developer.valvesoftware.com/wiki/Steam_browser_protocol) URL to be used to load Running With Rifles onto the given server lobby screen"</span>
     </span>}</span>,
+    "<span class="hljs-attribute">event</span>": <span class="hljs-value">{
+      "<span class="hljs-attribute">type</span>": <span class="hljs-value">[
+        <span class="hljs-string">"object"</span>,
+        <span class="hljs-string">"null"</span>
+      ]</span>,
+      "<span class="hljs-attribute">properties</span>": <span class="hljs-value">{
+        "<span class="hljs-attribute">name</span>": <span class="hljs-value">{
+          "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
+          "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Event name"</span>
+        </span>}</span>,
+        "<span class="hljs-attribute">is_ongoing</span>": <span class="hljs-value">{
+          "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"boolean"</span></span>,
+          "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Whether this event is ongoing or not"</span>
+        </span>}</span>,
+        "<span class="hljs-attribute">starts_at</span>": <span class="hljs-value">{
+          "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
+          "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"[ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) date when this event will start"</span>
+        </span>}
+      </span>}</span>,
+      "<span class="hljs-attribute">required</span>": <span class="hljs-value">[
+        <span class="hljs-string">"name"</span>,
+        <span class="hljs-string">"is_ongoing"</span>,
+        <span class="hljs-string">"starts_at"</span>
+      ]</span>,
+      "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Event linked to this Server. `null` if none"</span>
+    </span>}</span>,
     "<span class="hljs-attribute">version</span>": <span class="hljs-value">{
       "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
       "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Server game version"</span>
@@ -741,6 +815,7 @@ to the <code>GET /servers</code> resource (e.g the player list).</p>
     <span class="hljs-string">"players"</span>,
     <span class="hljs-string">"location"</span>,
     <span class="hljs-string">"steam_join_url"</span>,
+    <span class="hljs-string">"event"</span>,
     <span class="hljs-string">"version"</span>,
     <span class="hljs-string">"is_dedicated"</span>,
     <span class="hljs-string">"comment"</span>,
@@ -876,7 +951,12 @@ to the <code>GET /servers</code> resource (e.g the player list).</p>
         "<span class="hljs-attribute">country_code</span>": <span class="hljs-value"><span class="hljs-string">"de"</span></span>,
         "<span class="hljs-attribute">flag_image_url</span>": <span class="hljs-value"><span class="hljs-string">"https://rwrstats.com/images/flags/DE.png"</span>
       </span>}</span>,
-      "<span class="hljs-attribute">steam_join_url</span>": <span class="hljs-value"><span class="hljs-string">"steam://rungameid/270150//server_address=178.32.58.160 server_port=1240"</span>
+      "<span class="hljs-attribute">steam_join_url</span>": <span class="hljs-value"><span class="hljs-string">"steam://rungameid/270150//server_address=178.32.58.160 server_port=1240"</span></span>,
+      "<span class="hljs-attribute">event</span>": <span class="hljs-value">{
+        "<span class="hljs-attribute">name</span>": <span class="hljs-value"><span class="hljs-string">"PvP event!"</span></span>,
+        "<span class="hljs-attribute">is_ongoing</span>": <span class="hljs-value"><span class="hljs-literal">true</span></span>,
+        "<span class="hljs-attribute">starts_at</span>": <span class="hljs-value"><span class="hljs-string">"2019-04-16T16:00:00+02:00"</span>
+      </span>}
     </span>}</span>,
     "<span class="hljs-attribute">stats</span>": <span class="hljs-value">{
       "<span class="hljs-attribute">kills</span>": <span class="hljs-value"><span class="hljs-number">38689</span></span>,
@@ -953,6 +1033,10 @@ to the <code>GET /servers</code> resource (e.g the player list).</p>
             "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"The database name"</span>
           </span>}
         </span>}</span>,
+        "<span class="hljs-attribute">required</span>": <span class="hljs-value">[
+          <span class="hljs-string">"id"</span>,
+          <span class="hljs-string">"name"</span>
+        ]</span>,
         "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Player database. `null` if not a ranked (official) player profile"</span>
       </span>}</span>,
       "<span class="hljs-attribute">current_server</span>": <span class="hljs-value">{
@@ -1043,6 +1127,10 @@ to the <code>GET /servers</code> resource (e.g the player list).</p>
                 "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"The database name"</span>
               </span>}
             </span>}</span>,
+            "<span class="hljs-attribute">required</span>": <span class="hljs-value">[
+              <span class="hljs-string">"id"</span>,
+              <span class="hljs-string">"name"</span>
+            ]</span>,
             "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Server used database. `null` if not a ranked (official) server"</span>
           </span>}</span>,
           "<span class="hljs-attribute">map</span>": <span class="hljs-value">{
@@ -1115,6 +1203,32 @@ to the <code>GET /servers</code> resource (e.g the player list).</p>
           "<span class="hljs-attribute">steam_join_url</span>": <span class="hljs-value">{
             "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
             "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"[Steam browser protocol](https://developer.valvesoftware.com/wiki/Steam_browser_protocol) URL to be used to load Running With Rifles onto the given server lobby screen"</span>
+          </span>}</span>,
+          "<span class="hljs-attribute">event</span>": <span class="hljs-value">{
+            "<span class="hljs-attribute">type</span>": <span class="hljs-value">[
+              <span class="hljs-string">"object"</span>,
+              <span class="hljs-string">"null"</span>
+            ]</span>,
+            "<span class="hljs-attribute">properties</span>": <span class="hljs-value">{
+              "<span class="hljs-attribute">name</span>": <span class="hljs-value">{
+                "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
+                "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Event name"</span>
+              </span>}</span>,
+              "<span class="hljs-attribute">is_ongoing</span>": <span class="hljs-value">{
+                "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"boolean"</span></span>,
+                "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Whether this event is ongoing or not"</span>
+              </span>}</span>,
+              "<span class="hljs-attribute">starts_at</span>": <span class="hljs-value">{
+                "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
+                "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"[ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) date when this event will start"</span>
+              </span>}
+            </span>}</span>,
+            "<span class="hljs-attribute">required</span>": <span class="hljs-value">[
+              <span class="hljs-string">"name"</span>,
+              <span class="hljs-string">"is_ongoing"</span>,
+              <span class="hljs-string">"starts_at"</span>
+            ]</span>,
+            "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Event linked to this Server. `null` if none"</span>
           </span>}
         </span>}</span>,
         "<span class="hljs-attribute">required</span>": <span class="hljs-value">[
@@ -1382,7 +1496,12 @@ to the <code>GET /servers</code> resource (e.g the player list).</p>
       "<span class="hljs-attribute">country_code</span>": <span class="hljs-value"><span class="hljs-string">"de"</span></span>,
       "<span class="hljs-attribute">flag_image_url</span>": <span class="hljs-value"><span class="hljs-string">"https://rwrstats.com/images/flags/DE.png"</span>
     </span>}</span>,
-    "<span class="hljs-attribute">steam_join_url</span>": <span class="hljs-value"><span class="hljs-string">"steam://rungameid/270150//server_address=178.32.58.160 server_port=1240"</span>
+    "<span class="hljs-attribute">steam_join_url</span>": <span class="hljs-value"><span class="hljs-string">"steam://rungameid/270150//server_address=178.32.58.160 server_port=1240"</span></span>,
+    "<span class="hljs-attribute">event</span>": <span class="hljs-value">{
+      "<span class="hljs-attribute">name</span>": <span class="hljs-value"><span class="hljs-string">"PvP event!"</span></span>,
+      "<span class="hljs-attribute">is_ongoing</span>": <span class="hljs-value"><span class="hljs-literal">true</span></span>,
+      "<span class="hljs-attribute">starts_at</span>": <span class="hljs-value"><span class="hljs-string">"2019-04-16T16:00:00+02:00"</span>
+    </span>}
   </span>}</span>,
   "<span class="hljs-attribute">stats</span>": <span class="hljs-value">{
     "<span class="hljs-attribute">kills</span>": <span class="hljs-value"><span class="hljs-number">38689</span></span>,
@@ -1484,6 +1603,10 @@ to the <code>GET /servers</code> resource (e.g the player list).</p>
           "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"The database name"</span>
         </span>}
       </span>}</span>,
+      "<span class="hljs-attribute">required</span>": <span class="hljs-value">[
+        <span class="hljs-string">"id"</span>,
+        <span class="hljs-string">"name"</span>
+      ]</span>,
       "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Player database. `null` if not a ranked (official) player profile"</span>
     </span>}</span>,
     "<span class="hljs-attribute">current_server</span>": <span class="hljs-value">{
@@ -1574,6 +1697,10 @@ to the <code>GET /servers</code> resource (e.g the player list).</p>
               "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"The database name"</span>
             </span>}
           </span>}</span>,
+          "<span class="hljs-attribute">required</span>": <span class="hljs-value">[
+            <span class="hljs-string">"id"</span>,
+            <span class="hljs-string">"name"</span>
+          ]</span>,
           "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Server used database. `null` if not a ranked (official) server"</span>
         </span>}</span>,
         "<span class="hljs-attribute">map</span>": <span class="hljs-value">{
@@ -1646,6 +1773,32 @@ to the <code>GET /servers</code> resource (e.g the player list).</p>
         "<span class="hljs-attribute">steam_join_url</span>": <span class="hljs-value">{
           "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
           "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"[Steam browser protocol](https://developer.valvesoftware.com/wiki/Steam_browser_protocol) URL to be used to load Running With Rifles onto the given server lobby screen"</span>
+        </span>}</span>,
+        "<span class="hljs-attribute">event</span>": <span class="hljs-value">{
+          "<span class="hljs-attribute">type</span>": <span class="hljs-value">[
+            <span class="hljs-string">"object"</span>,
+            <span class="hljs-string">"null"</span>
+          ]</span>,
+          "<span class="hljs-attribute">properties</span>": <span class="hljs-value">{
+            "<span class="hljs-attribute">name</span>": <span class="hljs-value">{
+              "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
+              "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Event name"</span>
+            </span>}</span>,
+            "<span class="hljs-attribute">is_ongoing</span>": <span class="hljs-value">{
+              "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"boolean"</span></span>,
+              "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Whether this event is ongoing or not"</span>
+            </span>}</span>,
+            "<span class="hljs-attribute">starts_at</span>": <span class="hljs-value">{
+              "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"string"</span></span>,
+              "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"[ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) date when this event will start"</span>
+            </span>}
+          </span>}</span>,
+          "<span class="hljs-attribute">required</span>": <span class="hljs-value">[
+            <span class="hljs-string">"name"</span>,
+            <span class="hljs-string">"is_ongoing"</span>,
+            <span class="hljs-string">"starts_at"</span>
+          ]</span>,
+          "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Event linked to this Server. `null` if none"</span>
         </span>}
       </span>}</span>,
       "<span class="hljs-attribute">required</span>": <span class="hljs-value">[
@@ -2443,6 +2596,10 @@ to the <code>GET /servers</code> resource (e.g the player list).</p>
                 "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"The database name"</span>
               </span>}
             </span>}</span>,
+            "<span class="hljs-attribute">required</span>": <span class="hljs-value">[
+              <span class="hljs-string">"id"</span>,
+              <span class="hljs-string">"name"</span>
+            ]</span>,
             "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Player database. `null` if not a ranked (official) player profile"</span>
           </span>}
         </span>}</span>,
@@ -2627,7 +2784,7 @@ to the <code>GET /servers</code> resource (e.g the player list).</p>
     <span class="hljs-string">"message"</span>
   ]</span>,
   "<span class="hljs-attribute">additionalProperties</span>": <span class="hljs-value"><span class="hljs-literal">false</span>
-</span>}</code></pre><div style="height: 1px;"></div></div></div></div></div></section></div></div></div><p style="text-align: center;" class="text-muted">Generated by&nbsp;<a href="https://github.com/danielgtaylor/aglio" class="aglio">aglio</a>&nbsp;on 05 Apr 2019</p><script>/* eslint-env browser */
+</span>}</code></pre><div style="height: 1px;"></div></div></div></div></div></section></div></div></div><p style="text-align: center;" class="text-muted">Generated by&nbsp;<a href="https://github.com/danielgtaylor/aglio" class="aglio">aglio</a>&nbsp;on 16 Apr 2019</p><script>/* eslint-env browser */
 /* eslint quotes: [2, "single"] */
 'use strict';
 

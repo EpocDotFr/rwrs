@@ -80,6 +80,12 @@ server_players_full.update(OrderedDict([
     ('list', fields.List(fields.Nested(player_simple))), # Player usernames are replaced by objects in the API controller
 ]))
 
+event = OrderedDict([
+    ('name', fields.String),
+    ('is_ongoing', fields.Boolean),
+    ('starts_at', ArrowIsoDateTimeField(attribute='datetime')),
+])
+
 server_simple = OrderedDict([
     ('name', fields.String),
     ('ip', fields.String),
@@ -94,6 +100,7 @@ server_simple = OrderedDict([
     ('players', fields.Nested(server_players_simple)),
     ('location', fields.Nested(server_location, attribute=lambda server: server.location if server.location.country_code else None, allow_null=True)),
     ('steam_join_url', fields.String(attribute='steam_join_link')),
+    ('event', fields.Nested(event, allow_null=True)),
 ])
 
 server_full = server_simple.copy()
