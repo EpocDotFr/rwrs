@@ -36,7 +36,7 @@
 
 {% block content %}
     {% if server.event -%}
-        <div class="alert info pas mts"><i class="fas fa-calendar-alt"></i> {{ 'Ongoing' if server.event.is_ongoing else 'Upcoming' }} event on this server: <strong>{{ server.event.name|safe }}</strong>{% if not server.event.is_ongoing %} - {{ server.event.datetime.format('MMMM Do, YYYY @ h:mm A ZZZ') }}{% endif %}</div>
+        <div class="alert info pas mts"><i class="fas fa-calendar-alt"></i> {{ 'Ongoing' if server.event.is_ongoing else 'Upcoming' }} event on this server: <strong>{{ server.event.name }}</strong>{% if not server.event.is_ongoing %} - {{ server.event.datetime.format('MMMM Do, YYYY @ h:mm A ZZZ') }}{% endif %}</div>
     {%- endif %}
 
     <p class="txtcenter mbs">
