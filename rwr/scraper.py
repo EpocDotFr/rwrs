@@ -353,6 +353,8 @@ def get_all_players_with_servers_details():
             'database': server.database,
             'database_name': server.database_name,
             'link': server.link,
+            'has_event': True if server.event else False,
+            'event_is_ongoing': server.event['is_ongoing'] if server.event else False,
             'location': {
                 'city_name': server.location.city_name,
                 'country_code': server.location.country_code,

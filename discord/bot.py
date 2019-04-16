@@ -131,7 +131,7 @@ class RwrsBotDiscoPlugin(Plugin):
         """Admin command: sets the next RWR event."""
         try:
             Variable.set_event(args.name, args.datetime, args.server_ip_and_port)
-        except arrow.parser.ParserError:
+        except (arrow.parser.ParserError, ValueError):
             event.msg.reply('Invalid datetime provided (should be `{}`)'.format(app.config['EVENT_DATETIME_STORAGE_FORMAT']))
 
             return
