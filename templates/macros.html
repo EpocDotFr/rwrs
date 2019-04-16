@@ -35,7 +35,7 @@
         {% if server.is_ranked and not no_icon -%}
             {% if raw %}⭐️ {% else -%}<i class="fas fa-star txtyellow help" title="Ranked {{ server.database_name }} server"></i> {% endif %}
         {%- endif -%}
-        {% if event_icon and server.event %}<i class="fas fa-calendar-alt txtblue help" title="{{ 'Ongoing' if g.EVENT.is_ongoing else 'Upcoming' }} event on this server"></i> {% endif -%}
+        {% if event_icon and server.event %}<i class="fas fa-calendar-alt txtblue help" title="{{ 'Ongoing' if server.event.is_ongoing else 'Upcoming' }} event on this server: {{ server.event.name }}"></i> {% endif -%}
         {%- if link and server.website -%}
             <a href="{{ server.website }}">
         {%- endif -%}

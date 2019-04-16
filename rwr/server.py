@@ -1,7 +1,8 @@
 from sqlalchemy.util import memoized_property
-from flask import url_for, current_app, g
+from flask import url_for, current_app
 from . import constants, utils
 from slugify import slugify
+from models import Variable
 from rwrs import app
 
 
@@ -104,8 +105,9 @@ class Server:
 
     @memoized_property
     def name_display(self):
-        return '{}{}'.format(
+        return '{}{}{}'.format(
             '⭐️ ' if self.is_ranked else '',
+            '📅 ' if self.event else '',
             self.name
         )
 
@@ -189,7 +191,9 @@ class Server:
 
     @memoized_property
     def event(self):
-        return g.EVENT if g.EVENT and g.EVENT['server'] and g.EVENT['server'].ip_and_port == self.ip_and_port else None
+        event = Variable.get_event()
+
+        return event if event and event['server'] and event['server'].ip_and_port == self.ip_and_port else None
 
     def __repr__(self):
         return 'Server:' + self.ip_and_port
