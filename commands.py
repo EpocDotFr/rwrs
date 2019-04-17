@@ -1,5 +1,6 @@
 from rwrs import app
 import click
+import os
 
 
 @app.cli.command()
@@ -17,6 +18,11 @@ def cc():
 @app.cli.command()
 def get_players_count():
     """Store the number of players."""
+    if os.path.exists('maintenance'):
+        click.secho('Maintenance mode enabled, aborting', fg='yellow')
+
+        return
+
     from models import ServerPlayerCount, SteamPlayerCount, Variable
     from rwrs import cache, db
     import rwr.scraper
@@ -102,6 +108,11 @@ def get_players_count():
 @app.cli.command()
 def clean_players_count():
     """Delete old players count."""
+    if os.path.exists('maintenance'):
+        click.secho('Maintenance mode enabled, aborting', fg='yellow')
+
+        return
+
     from models import ServerPlayerCount, SteamPlayerCount
     from rwrs import db
 
@@ -183,6 +194,11 @@ def extract_minimaps(steamdir):
 @app.cli.command()
 def run_discord_bot():
     """Run the RWRS Discord bot."""
+    if os.path.exists('maintenance'):
+        click.secho('Maintenance mode enabled, aborting', fg='yellow')
+
+        return
+
     from discord.bot import RwrsBot
 
     click.echo('Initializing bot')
@@ -198,6 +214,11 @@ def run_discord_bot():
 @click.option('--reset', is_flag=True, help='Reset all RWR accounts and stats')
 def save_players_stats(reset):
     """Get and persist the players stats."""
+    if os.path.exists('maintenance'):
+        click.secho('Maintenance mode enabled, aborting', fg='yellow')
+
+        return
+
     from models import RwrAccount, RwrAccountType, RwrAccountStat
     from rwrs import db, cache
     import rwr.scraper
@@ -311,6 +332,11 @@ def save_players_stats(reset):
 @app.cli.command()
 def compute_promotions():
     """Compute promotions for all players."""
+    if os.path.exists('maintenance'):
+        click.secho('Maintenance mode enabled, aborting', fg='yellow')
+
+        return
+
     from models import RwrAccount, RwrAccountStat
     from rwrs import db
     import rwr.utils
