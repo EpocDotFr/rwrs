@@ -46,7 +46,8 @@ def get_players_count():
 
     current_total_players_count = steam_player_count.count
 
-    db.session.add(steam_player_count)
+    if steam_player_count.count > 0:
+        db.session.add(steam_player_count)
 
     click.echo('Getting current players on servers')
 
@@ -72,7 +73,7 @@ def get_players_count():
 
         db.session.add(server_player_count)
 
-    click.echo('Getting peaks')
+    click.echo('Saving peaks')
 
     peak_refs = {
         'total_players_peak': current_total_players_count,
