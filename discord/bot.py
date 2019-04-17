@@ -131,14 +131,16 @@ class RwrsBotDiscoPlugin(Plugin):
         """Admin command: sets the next RWR event."""
         try:
             Variable.set_event(args.name, args.datetime, args.server_ip_and_port)
+
+            db.session.commit()
+
+            cache.delete_memoized(rwr.scraper.get_servers)
+
+            event.msg.reply('Event updated.')
         except (arrow.parser.ParserError, ValueError):
             event.msg.reply('Invalid datetime provided (should be `{}`)'.format(app.config['EVENT_DATETIME_STORAGE_FORMAT']))
 
             return
-
-        db.session.commit()
-
-        event.msg.reply('Event updated.')
 
     @Plugin.command('remove', group='event')
     def on_event_remove_command(self, event):
@@ -149,6 +151,8 @@ class RwrsBotDiscoPlugin(Plugin):
             Variable.set_value('event', None)
 
             db.session.commit()
+
+            cache.delete_memoized(rwr.scraper.get_servers)
 
             event.msg.reply('Event removed.')
 
