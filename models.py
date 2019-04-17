@@ -1,6 +1,7 @@
 from sqlalchemy.util import memoized_property
 from sqlalchemy_utils import ArrowType
 from flask import url_for, current_app
+from collections import OrderedDict
 from flask_login import UserMixin
 from rwrs import db, cache, app
 from sqlalchemy import func
@@ -11,6 +12,7 @@ import helpers
 import hashlib
 import iso3166
 import arrow
+import json
 
 
 def one_week_ago():
@@ -120,6 +122,7 @@ class VariableType(Enum):
     STRING = 'STRING'
     BOOL = 'BOOL'
     ARROW = 'ARROW'
+    JSON = 'JSON'
 
 
 class Variable(db.Model):
@@ -129,7 +132,7 @@ class Variable(db.Model):
 
     name = db.Column(db.String(255), nullable=False, unique=True)
     type = db.Column(db.Enum(VariableType), nullable=False)
-    _value = db.Column('value', db.String(255))
+    _value = db.Column('value', db.Text)
 
     @property
     def value(self):
@@ -143,6 +146,8 @@ class Variable(db.Model):
                 return bool(int(self._value))
             elif self.type == VariableType.ARROW:
                 return arrow.get(self._value)
+            elif self.type == VariableType.JSON:
+                return json.loads(self._value, object_pairs_hook=OrderedDict)
             else:
                 raise ValueError('Unhandled value type')
 
@@ -164,6 +169,9 @@ class Variable(db.Model):
             elif isinstance(value, arrow.Arrow):
                 self.type = VariableType.ARROW
                 self._value = value.format()
+            elif isinstance(value, dict):
+                self.type = VariableType.JSON
+                self._value = json.dumps(value)
             else:
                 raise ValueError('Unhandled value type')
         else:
@@ -249,6 +257,38 @@ class Variable(db.Model):
                     peaks[name] = peaks[name].format('MMMM D, YYYY')
 
         return peaks
+
+    @staticmethod
+    def set_event(name, datetime, server_ip_and_port):
+        """Sets the next RWR event."""
+        arrow.get(datetime, app.config['EVENT_DATETIME_STORAGE_FORMAT']) # Just to validate
+
+        Variable.set_value('event', {
+            'name': name,
+            'datetime': datetime,
+            'server_ip_and_port': server_ip_and_port
+        })
+
+    @staticmethod
+    def get_event(with_server=True):
+        """Gets the next RWR event (if any)."""
+        event = Variable.get_value('event')
+
+        if not event:
+            return None
+
+        event_datetime = arrow.get(event['datetime'], app.config['EVENT_DATETIME_STORAGE_FORMAT']).floor('minute')
+        now_in_event_timezone = arrow.now(event_datetime.tzinfo).floor('minute')
+
+        if now_in_event_timezone >= event_datetime.shift(hours=+5):
+            return None
+
+        event['datetime'] = event_datetime
+        event['is_ongoing'] = now_in_event_timezone >= event_datetime
+        event['display_server_players_count'] = now_in_event_timezone >= event_datetime.shift(minutes=-15)
+        event['server'] = rwr.scraper.get_server_by_ip_and_port(event['server_ip_and_port']) if with_server and event['server_ip_and_port'] else None
+
+        return event
 
     def __repr__(self):
         return 'Variable:{}'.format(self.id)

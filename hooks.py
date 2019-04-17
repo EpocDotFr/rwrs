@@ -74,6 +74,14 @@ def get_motd():
 
 
 @app.before_request
+def get_event():
+    if request.endpoint in ('dynamic_player_image', 'dynamic_server_image'):
+        return
+
+    g.EVENT = Variable.get_event()
+
+
+@app.before_request
 def check_under_maintenance():
     g.UNDER_MAINTENANCE = os.path.exists('maintenance')
 

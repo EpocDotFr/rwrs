@@ -41,15 +41,23 @@
     <meta name="google-site-verification" content="58YRXAqZgsPP1fJar_ymC-4xSWtW3O2NmYwuRDzyRpg" />
 </head>
 <body itemscope itemtype="http://schema.org/WebSite">
-    {% if g.MOTD %}
+    {%- if g.MOTD -%}
         <div class="top-bar green pts pbs">
             <div class="w1140p center txtcenter small">
                 <i class="fas fa-bell fa-lg"></i> {{ g.MOTD|safe }}
             </div>
         </div>
-    {% endif %}
+    {%- endif -%}
 
-    {% if not g.UNDER_MAINTENANCE %}
+    {%- if not g.UNDER_MAINTENANCE -%}
+        {%- if g.EVENT -%}
+            <div class="top-bar blue pts pbs">
+                <div class="w1140p center txtcenter small">
+                    <i class="fas fa-calendar-alt fa-lg"></i> {{ macros.event_announcement(g.EVENT) }}
+                </div>
+            </div>
+        {%- endif -%}
+
         <div class="top-bar grey main pts pbs">
             <div class="w1140p center small">
                 <div class="content">
@@ -83,7 +91,7 @@
                 </div>
             </div>
         </div>
-    {% endif %}
+    {%- endif -%}
 
     <header class="w1140p center pts pbs">
         <div class="txtleft">

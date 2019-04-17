@@ -1,6 +1,7 @@
 from flask import current_app
 from lxml import html, etree
 from rwrs import app, cache
+from models import Variable
 from .server import Server
 from .player import Player
 from . import constants
@@ -94,6 +95,17 @@ def _get_list(value_attribute, label_attribute):
     return sorted(ret, key=lambda k: k['label'])
 
 
+def _set_server_event(servers):
+    """Assign the next RWR event to the corresponding server, if applicable."""
+    if not servers:
+        return
+
+    event = Variable.get_event(with_server=False)
+
+    for server in servers:
+        server.event = event if event and event['server_ip_and_port'] and event['server_ip_and_port'] == server.ip_and_port else None
+
+
 @cache.memoize(timeout=app.config['SERVERS_CACHE_TIMEOUT'])
 def get_servers():
     """Get and parse the list of all public RWR servers."""
@@ -106,16 +118,30 @@ def get_servers():
         servers.append(Server.load(xml_node, html_servers))
 
     _set_servers_location(servers)
+    _set_server_event(servers)
 
     return servers
 
 
-def get_server_by_ip_and_port(ip, port):
+def get_server_by_ip_and_port(*args):
     """Search for a RWR public server based on its IP and port."""
+    if len(args) == 1:
+        def server_found(*args):
+            server, ip_and_port = args
+
+            return server.ip_and_port == ip_and_port
+    elif len(args) == 2:
+        def server_found(*args):
+            server, ip, port = args
+
+            return server.ip == ip and server.port == port
+    else:
+        raise ValueError('get_server_by_ip_and_port takes either one IP:port string argument or two IP (string) and port (int) arguments')
+
     servers = get_servers()
 
     for server in servers:
-        if server.ip == ip and server.port == port:
+        if server_found(server, *args):
             return server
 
     return None
@@ -340,6 +366,9 @@ def get_all_players_with_servers_details():
             'database': server.database,
             'database_name': server.database_name,
             'link': server.link,
+            'has_event': True if server.event else False,
+            'event_is_ongoing': server.event['is_ongoing'] if server.event else False,
+            'event_name': server.event['name'] if server.event else None,
             'location': {
                 'city_name': server.location.city_name,
                 'country_code': server.location.country_code,

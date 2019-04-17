@@ -53,8 +53,8 @@ def upgrade():
     op.create_table('variables',
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('name', sa.String(length=255), nullable=False),
-    sa.Column('type', sa.Enum('INTEGER', 'FLOAT', 'STRING', 'BOOL', 'ARROW', name='variabletype'), nullable=False),
-    sa.Column('value', sa.String(length=255), nullable=True),
+    sa.Column('type', sa.Enum('INTEGER', 'FLOAT', 'STRING', 'BOOL', 'ARROW', 'JSON', name='variabletype'), nullable=False),
+    sa.Column('value', sa.Text(), nullable=True),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('name')
     )
