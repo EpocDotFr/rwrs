@@ -266,7 +266,7 @@ class Variable(db.Model):
         Variable.set_value('event', {
             'name': name,
             'datetime': datetime,
-            'server_ip_and_port': server_ip_and_port # TODO Validate
+            'server_ip_and_port': server_ip_and_port
         })
 
     @staticmethod
