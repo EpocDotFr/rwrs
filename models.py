@@ -13,6 +13,7 @@ import hashlib
 import iso3166
 import arrow
 import json
+import uuid
 
 
 def one_week_ago():
@@ -309,7 +310,7 @@ class User(db.Model, UserMixin):
     created_at = db.Column(ArrowType, default=arrow.utcnow().floor('minute'), nullable=False)
     updated_at = db.Column(ArrowType, default=arrow.utcnow().floor('minute'), onupdate=arrow.utcnow().floor('minute'), nullable=False)
     last_login_at = db.Column(ArrowType, nullable=False)
-    pat = db.Column(UUIDType)
+    pat = db.Column(UUIDType, default=uuid.uuid4())
 
     rwr_accounts = db.relationship('RwrAccount', backref='user', lazy=True, foreign_keys='RwrAccount.user_id')
 
