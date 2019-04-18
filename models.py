@@ -1,5 +1,5 @@
+from sqlalchemy_utils import ArrowType, UUIDType
 from sqlalchemy.util import memoized_property
-from sqlalchemy_utils import ArrowType
 from flask import url_for, current_app
 from collections import OrderedDict
 from flask_login import UserMixin
@@ -296,6 +296,7 @@ class Variable(db.Model):
 
 class User(db.Model, UserMixin):
     __tablename__ = 'users'
+    __table_args__ = (db.Index('pat_idx', 'pat', unique=True), )
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 
@@ -308,6 +309,7 @@ class User(db.Model, UserMixin):
     created_at = db.Column(ArrowType, default=arrow.utcnow().floor('minute'), nullable=False)
     updated_at = db.Column(ArrowType, default=arrow.utcnow().floor('minute'), onupdate=arrow.utcnow().floor('minute'), nullable=False)
     last_login_at = db.Column(ArrowType, nullable=False)
+    pat = db.Column(UUIDType)
 
     rwr_accounts = db.relationship('RwrAccount', backref='user', lazy=True, foreign_keys='RwrAccount.user_id')
 
