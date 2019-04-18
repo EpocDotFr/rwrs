@@ -84,7 +84,8 @@ app.jinja_env.filters.update(
     humanize_seconds_to_days=helpers.humanize_seconds_to_days,
     humanize_seconds_to_hours=helpers.humanize_seconds_to_hours,
     humanize_integer=helpers.humanize_integer,
-    simplified_integer=helpers.simplified_integer
+    simplified_integer=helpers.simplified_integer,
+    markdown_to_html_inline=helpers.markdown_to_html_inline
 )
 
 app.jinja_env.globals.update(
