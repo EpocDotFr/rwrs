@@ -6,6 +6,9 @@ from . import auth
 
 @auth.verify_token
 def verify_token(token):
+    if not token:
+        return False
+
     try:
         user = User.get_by_pat(token)
     except ValueError:
