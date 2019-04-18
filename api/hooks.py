@@ -1,19 +1,24 @@
 from flask_restful import abort
-from rwrs import app
+from models import User
 from flask import g
 from . import auth
 
 
 @auth.verify_token
 def verify_token(token):
-    if token in app.config['API_TOKENS']:
-        g.current_token = token
+    try:
+        user = User.get_by_pat(token)
+    except ValueError:
+        return False
 
-        return True
+    if not user:
+        return False
 
-    return False
+    g.current_user = user
+
+    return True
 
 
 @auth.error_handler
 def auth_error():
-    abort(403, message='Invalid token or token not provided')
+    abort(403, message='Invalid Personal Access Token or Personal Access Token not provided')

@@ -44,6 +44,7 @@ app.config['LIST_PAGE_SIZES'] = [15, 30, 50, 100]
 app.config['RWR_STEAM_APP_ID'] = 270150
 app.config['EVENT_DATETIME_STORAGE_FORMAT'] = 'YYYY-MM-DD HH:mm ZZZ'
 app.config['EVENT_DATETIME_DISPLAY_FORMAT'] = 'MMMM Do, YYYY @ h:mm A ZZZ'
+app.config['STATUS_PAGE_URL'] = 'https://status.rwrstats.com/'
 app.config['BUNDLE_ERRORS'] = True
 
 if app.config['ENV'] == 'production' and app.config['BUGSNAG_API_KEY']:

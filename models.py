@@ -399,6 +399,11 @@ class User(db.Model, UserMixin):
 
         return user
 
+    @staticmethod
+    def get_by_pat(pat):
+        """Get a User according its Personal Access Token."""
+        return User.query.filter(User.pat == uuid.UUID(pat)).first()
+
     @memoized_property
     def has_rwr_accounts(self):
         """Determine is this User object have at least one RwrAccount."""

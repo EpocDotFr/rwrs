@@ -19,9 +19,10 @@ def check_under_maintenance(f):
 
 
 def rate_limiter_key_func():
-    current_token = g.current_token if 'current_token' in g else ''
-
-    return '|'.join([get_ipaddr(), current_token])
+    return '|'.join([
+        get_ipaddr(),
+        '' # TODO Use current user ID
+    ])
 
 
 auth = HTTPTokenAuth(scheme='Token')
