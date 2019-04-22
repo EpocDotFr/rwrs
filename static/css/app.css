@@ -317,13 +317,22 @@ textarea {
     border: 0.1rem solid #333;
 }
 
-textarea.copypaste {
+textarea.copypaste,
+input.copypaste {
     width: 100%;
-    background-color: transparent;
     color: #fff;
-    border: none;
     font-family: Consolas, Courier, monospace;
     font-size: 1.2rem;
+}
+
+textarea.copypaste {
+    background-color: transparent;
+    border: none;
+}
+
+input.copypaste {
+    background-color: #444;
+    border-width: 0.2rem;
 }
 
 input.has_error,
