@@ -319,13 +319,13 @@ textarea {
 
 textarea.copypaste,
 input.copypaste {
-    width: 100%;
     color: #fff;
     font-family: Consolas, Courier, monospace;
     font-size: 1.2rem;
 }
 
 textarea.copypaste {
+    width: 100%;
     background-color: transparent;
     border: none;
 }

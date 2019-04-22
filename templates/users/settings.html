@@ -13,7 +13,7 @@
 
     <p>This is the token that must be used to access the <a href="{{ url_for('static', filename='/api_doc.html') }}">RWRS REST API</a>. <strong>This token is personal.</strong> Be careful when sharing with third-party applications.</p>
 
-    <div class="w300p center txtcenter mts mbs"><input type="text" readonly spellcheck="false" value="{{ current_user.pat }}" class="copypaste txtcenter" onClick="this.setSelectionRange(0, this.value.length)"></div>
+    <div class="txtcenter mts mbs"><input type="text" readonly spellcheck="false" value="{{ current_user.pat if current_user.pat else 'Click the button to generate one 👉' }}" class="w300p copypaste txtcenter" onClick="this.setSelectionRange(0, this.value.length)"> <button title="Generate a new Personal Access Token" onclick="return confirm('This will disallow all applications that are using the current token. Confirm?')"><i class="fas fa-sync"></i></button></div>
 
     <script>
         friendsFeature.all_players_with_servers_details = {{ g.all_players_with_servers_details|tojson }};
