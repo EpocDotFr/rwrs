@@ -86,6 +86,14 @@ def user_profile(user_id, slug):
     )
 
 
+@app.route('/settings')
+@login_required
+def user_settings():
+    return render_template(
+        'users/settings.html'
+    )
+
+
 @app.route('/my-friends')
 def my_friends():
     return render_template(
