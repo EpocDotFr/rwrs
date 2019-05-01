@@ -117,12 +117,16 @@ def regenerate_pat():
         status = 400
         result = {'status': 'failure', 'data': {'message': 'Invalid request.'}}
     else:
-        current_user.pat = uuid.uuid4()
+        try:
+            current_user.pat = uuid.uuid4()
 
-        db.session.add(current_user)
-        db.session.commit()
+            db.session.add(current_user)
+            db.session.commit()
 
-        result = {'status': 'success', 'data': {'new_pat': str(current_user.pat)}}
+            result = {'status': 'success', 'data': {'new_pat': str(current_user.pat)}}
+        except Exception as e:
+            status = 500
+            result = {'status': 'failure', 'data': {'message': str(e)}}
 
     return jsonify(result), status
 

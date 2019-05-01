@@ -2,9 +2,9 @@ from flask_limiter.util import get_ipaddr
 from flask_httpauth import HTTPTokenAuth
 from flask_restful import Api, abort
 from flask_limiter import Limiter
+from flask import g, request
 from functools import wraps
 from rwrs import app
-from flask import g
 
 
 def check_under_maintenance(f):
@@ -18,10 +18,27 @@ def check_under_maintenance(f):
     return decorated
 
 
+def get_current_pat():
+    """Retrieve the current PAT used in the request."""
+    auth_header = request.headers.get('Authorization')
+
+    if not auth_header:
+        return ''
+
+    auth_header_parts = auth_header.split(' ', maxsplit=1)
+
+    if not auth_header_parts or len(auth_header_parts) != 2:
+        return ''
+
+    return auth_header_parts[1]
+
+
 def rate_limiter_key_func():
+    print(get_current_pat())
+
     return '|'.join([
         get_ipaddr(),
-        '' # TODO Use current user ID
+        get_current_pat() # Cannot use g.current_user because reasons
     ])
 
 
