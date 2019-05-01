@@ -35,14 +35,16 @@ def create_or_login(resp):
 
         return redirect(url_for('sign_in'))
 
-    user = User.get_by_steam_id(steam_id, create_if_unexisting=True)
+    user, user_was_created = User.get_by_steam_id(steam_id, create_if_unexisting=True)
 
     user.username = steam_user_info['personaname']
     user.small_avatar_url = steam_user_info['avatar']
     user.large_avatar_url = steam_user_info['avatarfull']
     user.country_code = steam_user_info['loccountrycode'].lower() if 'loccountrycode' in steam_user_info and steam_user_info['loccountrycode'] else None
     user.last_login_at = arrow.utcnow().floor('minute')
-    user.is_profile_public = True if 'communityvisibilitystate' in steam_user_info and steam_user_info['communityvisibilitystate'] == 3 else False
+
+    if user_was_created:
+        user.is_profile_public = True if 'communityvisibilitystate' in steam_user_info and steam_user_info['communityvisibilitystate'] == 3 else False
 
     db.session.add(user)
     db.session.commit()

@@ -391,13 +391,16 @@ class User(db.Model, UserMixin):
     @staticmethod
     def get_by_steam_id(steam_id, create_if_unexisting=False):
         """Get a User according its Steam ID, optionally creating it if it doesn't exist."""
+        user_was_created = False
         user = User.query.filter(User.steam_id == steam_id).first()
 
         if not user and create_if_unexisting:
             user = User()
             user.steam_id = steam_id
 
-        return user
+            user_was_created = True
+
+        return user, user_was_created
 
     @staticmethod
     def get_by_pat(pat):

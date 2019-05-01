@@ -1,5 +1,5 @@
+from wtforms import StringField, SelectField, BooleanField
 from wtforms.validators import ValidationError
-from wtforms import StringField, SelectField
 from flask_login import current_user
 from flask_wtf import FlaskForm
 from models import RwrAccount
@@ -47,3 +47,11 @@ class PlayerClaimForm(FlaskForm):
             server = servers[0] # There can only be one
 
             raise ValidationError('You cannot claim this RWR account as it\'s currently connected on a ranked (official) server ({}).'.format(server.name))
+
+
+class UserGeneralSettingsForm(FlaskForm):
+    is_profile_public = BooleanField('Set my RWRS account as public', default=False)
+
+    def populate_user(self, user):
+        """Set the User attributes from this form values."""
+        user.is_profile_public = self.is_profile_public.data

@@ -86,11 +86,24 @@ def user_profile(user_id, slug):
     )
 
 
-@app.route('/settings')
+@app.route('/settings', methods=['GET', 'POST'])
 @login_required
 def user_settings():
+    form = forms.UserGeneralSettingsForm(obj=current_user)
+
+    if form.validate_on_submit():
+        form.populate_user(current_user)
+
+        db.session.add(current_user)
+        db.session.commit()
+
+        flash('Settings saved successfully.', 'success')
+
+        return redirect(url_for('user_settings'))
+
     return render_template(
-        'users/settings.html'
+        'users/settings.html',
+        form=form
     )
 
 
