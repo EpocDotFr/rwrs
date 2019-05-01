@@ -1,5 +1,5 @@
 from models import SteamPlayerCount, ServerPlayerCount, Variable, RwrAccountStat, RwrAccount
-from flask import render_template, abort, request, redirect, url_for, flash, g
+from flask import render_template, abort, request, redirect, url_for, flash, g, jsonify
 from flask_login import login_required, current_user, logout_user
 from dynamic_image import DynamicServerImage, DynamicPlayerImage
 from rwr.player import Player
@@ -11,6 +11,7 @@ import rwr.scraper
 import rwr.utils
 import arrow
 import forms
+import uuid
 
 
 ERROR_PLAYER_NOT_FOUND = 'Sorry, the player "{username}" wasn\'t found in the {database} players list. Maybe this player hasn\'t already played on a ranked server yet. If this player started to play today on a ranked server, please wait until tomorrow as stats are refreshed daily.'
@@ -105,6 +106,25 @@ def user_settings():
         'users/settings.html',
         form=form
     )
+
+
+@app.route('/settings/regenerate-pat', methods=['POST'])
+@login_required
+def regenerate_pat():
+    status = 200
+
+    if not request.is_xhr:
+        status = 400
+        result = {'status': 'failure', 'data': {'message': 'Invalid request.'}}
+    else:
+        current_user.pat = uuid.uuid4()
+
+        db.session.add(current_user)
+        db.session.commit()
+
+        result = {'status': 'success', 'data': {'new_pat': str(current_user.pat)}}
+
+    return jsonify(result), status
 
 
 @app.route('/my-friends')
