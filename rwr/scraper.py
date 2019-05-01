@@ -11,13 +11,13 @@ import requests
 
 requests = requests.Session()
 
-servers_endpoint = 'http://rwr.runningwithrifles.com/rwr_server_list/'
-players_endpoint = 'http://rwr.runningwithrifles.com/rwr_stats/'
+servers_base_url = 'http://rwr.runningwithrifles.com/rwr_server_list/'
+players_base_url = 'http://rwr.runningwithrifles.com/rwr_stats/'
 
 
-def _call(endpoint, resource, parser, params=None):
-    """Perform an HTTP GET request to the desired RWR list endpoint."""
-    url = endpoint + resource
+def _call(base_url, resource, parser, params=None):
+    """Perform an HTTP GET request to the desired RWR list base_url."""
+    url = base_url + resource
 
     headers = {
         'User-Agent': 'rwrstats.com'
@@ -109,8 +109,8 @@ def _set_server_event(servers):
 @cache.memoize(timeout=app.config['SERVERS_CACHE_TIMEOUT'])
 def get_servers():
     """Get and parse the list of all public RWR servers."""
-    xml_servers = _call(servers_endpoint, 'get_server_list.php', 'xml', params={'start': 0, 'size': 100})
-    html_servers = _call(servers_endpoint, 'view_servers.php', 'html')
+    xml_servers = _call(servers_base_url, 'get_server_list.php', 'xml', params={'start': 0, 'size': 100})
+    html_servers = _call(servers_base_url, 'view_servers.php', 'html')
 
     servers = []
 
@@ -411,7 +411,7 @@ def get_players(database, sort=constants.PlayersSort.SCORE.value, target=None, s
         'search': target
     }
 
-    html_content = _call(players_endpoint, 'view_players.php', 'html', params=params)
+    html_content = _call(players_base_url, 'view_players.php', 'html', params=params)
 
     players = []
 
@@ -437,7 +437,7 @@ def search_player_by_username(database, username, check_exist_only=False):
         'search': username
     }
 
-    html_content = _call(players_endpoint, 'view_player.php', 'html', params=params)
+    html_content = _call(players_base_url, 'view_player.php', 'html', params=params)
 
     node = html_content.xpath('(//table/tr[position() = 2])[1]')
 

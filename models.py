@@ -1,5 +1,5 @@
+from sqlalchemy_utils import ArrowType, UUIDType
 from sqlalchemy.util import memoized_property
-from sqlalchemy_utils import ArrowType
 from flask import url_for, current_app
 from collections import OrderedDict
 from flask_login import UserMixin
@@ -13,6 +13,7 @@ import hashlib
 import iso3166
 import arrow
 import json
+import uuid
 
 
 def one_week_ago():
@@ -296,6 +297,7 @@ class Variable(db.Model):
 
 class User(db.Model, UserMixin):
     __tablename__ = 'users'
+    __table_args__ = (db.Index('pat_idx', 'pat', unique=True), )
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 
@@ -308,6 +310,7 @@ class User(db.Model, UserMixin):
     created_at = db.Column(ArrowType, default=arrow.utcnow().floor('minute'), nullable=False)
     updated_at = db.Column(ArrowType, default=arrow.utcnow().floor('minute'), onupdate=arrow.utcnow().floor('minute'), nullable=False)
     last_login_at = db.Column(ArrowType, nullable=False)
+    pat = db.Column(UUIDType, default=uuid.uuid4())
 
     rwr_accounts = db.relationship('RwrAccount', backref='user', lazy=True, foreign_keys='RwrAccount.user_id')
 
@@ -388,13 +391,21 @@ class User(db.Model, UserMixin):
     @staticmethod
     def get_by_steam_id(steam_id, create_if_unexisting=False):
         """Get a User according its Steam ID, optionally creating it if it doesn't exist."""
+        user_was_created = False
         user = User.query.filter(User.steam_id == steam_id).first()
 
         if not user and create_if_unexisting:
             user = User()
             user.steam_id = steam_id
 
-        return user
+            user_was_created = True
+
+        return user, user_was_created
+
+    @staticmethod
+    def get_by_pat(pat):
+        """Get a User according its Personal Access Token."""
+        return User.query.filter(User.pat == uuid.UUID(pat)).first()
 
     @memoized_property
     def has_rwr_accounts(self):
