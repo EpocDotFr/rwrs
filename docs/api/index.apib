@@ -22,7 +22,7 @@ You are **required** to mention somewhere in your project - in a visible manner 
 All endpoints needs a valid Personal Access Token, otherwise a [403](https://httpstatuses.com/403) HTTP status code
 will be returned. Send this HTTP header in all of your HTTP requests along your Personal Access Token:
 
-```
+```http
 Authorization: Token {Your Personal Access Token}
 ```
 
@@ -69,7 +69,7 @@ The output can be different regarding the resource. Check their respective doc.
 
 Typically an input parameters validation error:
 
-```
+```json
 {
     "message": {
         "blow": "Missing required parameter in the JSON body",
@@ -82,7 +82,7 @@ In this case the `hey` and `blow` input parameters are missing.
 
 If a query string parameter is missing or invalid, it's the same output:
 
-```
+```json
 {
     "message": {
         "active": "Missing required parameter in the query string"
@@ -92,7 +92,7 @@ If a query string parameter is missing or invalid, it's the same output:
 
 May also happen in other cases like the requested resource wasn't found:
 
-```
+```json
 {
     "message": "This thing does not exists."
 }
@@ -104,7 +104,7 @@ They should not happen (exception for [503](https://httpstatuses.com/503)). If s
 
 Example:
 
-```
+```json
 {
     "message": "Error creating this thing: IndexError: out of bounds"
 }
