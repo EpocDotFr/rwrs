@@ -11,22 +11,40 @@
 {% block content %}
     <div class="grid has-gutter mts">
         <div>
-            <h2 id="general">General settings</h2>
+            <table class="mbn">
+                <tbody>
+                    <tr>
+                        <th class="txtcenter" id="general">General settings</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <form method="post" action="{{ url_for('user_settings') }}">
+                                {{ form.csrf_token }}
 
-            <form method="post" action="{{ url_for('user_settings') }}">
-                {{ form.csrf_token }}
+                                {{ macros.form_field(form.is_profile_public) }}
 
-                {{ macros.form_field(form.is_profile_public) }}
-
-                <p class="txtcenter mtm"><button type="submit">Save</button></p>
-            </form>
+                                <p class="txtcenter mtm"><button type="submit">Save</button></p>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
         <div>
-            <h2 id="pat">Personal Access Token</h2>
+            <table class="mbn">
+                <tbody>
+                    <tr>
+                        <th class="txtcenter" id="pat">Personal Access Token</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>This is the token that must be used to access the <a href="{{ url_for('static', filename='/api_doc.html') }}">RWRS REST API</a>. <strong>This token is personal.</strong> Be careful when sharing with third-party applications.</p>
 
-            <p>This is the token that must be used to access the <a href="{{ url_for('static', filename='/api_doc.html') }}">RWRS REST API</a>. <strong>This token is personal.</strong> Be careful when sharing with third-party applications.</p>
-
-            <div class="txtcenter mts"><input type="text" readonly spellcheck="false" value="{{ current_user.pat if current_user.pat else 'Click the button to generate one 👉' }}" class="w300p copypaste txtcenter" onClick="this.setSelectionRange(0, this.value.length)"> <button title="Generate a new Personal Access Token" onclick="return confirm('This will disallow all applications that are using the current token. Confirm?')"><i class="fas fa-sync"></i></button></div>
+                            <div class="txtcenter mts"><input type="text" readonly spellcheck="false" value="{{ current_user.pat if current_user.pat else 'Click the button to generate one 👉' }}" class="w300p copypaste txtcenter" onClick="this.setSelectionRange(0, this.value.length)"> <button title="Generate a new Personal Access Token" onclick="return confirm('This will disallow all applications that are using the current token. Confirm?')"><i class="fas fa-sync"></i></button></div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 
