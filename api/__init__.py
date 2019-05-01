@@ -6,6 +6,8 @@ from flask import g, request
 from functools import wraps
 from rwrs import app
 
+http_auth_scheme = 'Token'
+
 
 def check_under_maintenance(f):
     @wraps(f)
@@ -27,22 +29,20 @@ def get_current_pat():
 
     auth_header_parts = auth_header.split(' ', maxsplit=1)
 
-    if not auth_header_parts or len(auth_header_parts) != 2:
+    if not auth_header_parts or len(auth_header_parts) != 2 or auth_header_parts[0] != http_auth_scheme:
         return ''
 
-    return auth_header_parts[1]
+    return auth_header_parts[1].strip()
 
 
 def rate_limiter_key_func():
-    print(get_current_pat())
-
     return '|'.join([
         get_ipaddr(),
-        get_current_pat() # Cannot use g.current_user because reasons
+        get_current_pat() # Cannot use g.current_user because reason...
     ])
 
 
-auth = HTTPTokenAuth(scheme='Token')
+auth = HTTPTokenAuth(scheme=http_auth_scheme)
 limiter = Limiter(app, key_func=rate_limiter_key_func)
 api = Api(app, prefix='/api', catch_all_404s=True, decorators=[
     check_under_maintenance,
