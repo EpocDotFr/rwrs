@@ -29,7 +29,7 @@ def one_year_ago():
 class Measurable:
     id = db.Column(db.Integer, primary_key=True, autoincrement=True) # TODO To remove because useless and non-efficient
 
-    measured_at = db.Column(ArrowType, default=arrow.utcnow().floor('minute'), nullable=False)
+    measured_at = db.Column(ArrowType, default=lambda: arrow.utcnow().floor('minute'), nullable=False)
     count = db.Column(db.Integer, nullable=False)
 
     @staticmethod
@@ -307,10 +307,10 @@ class User(db.Model, UserMixin):
     large_avatar_url = db.Column(db.String(255))
     country_code = db.Column(db.String(2))
     is_profile_public = db.Column(db.Boolean, nullable=False, default=True)
-    created_at = db.Column(ArrowType, default=arrow.utcnow().floor('minute'), nullable=False)
-    updated_at = db.Column(ArrowType, default=arrow.utcnow().floor('minute'), onupdate=arrow.utcnow().floor('minute'), nullable=False)
+    created_at = db.Column(ArrowType, default=lambda: arrow.utcnow().floor('minute'), nullable=False)
+    updated_at = db.Column(ArrowType, default=lambda: arrow.utcnow().floor('minute'), onupdate=lambda: arrow.utcnow().floor('minute'), nullable=False)
     last_login_at = db.Column(ArrowType, nullable=False)
-    pat = db.Column(UUIDType, default=uuid.uuid4())
+    pat = db.Column(UUIDType, default=lambda: uuid.uuid4())
 
     rwr_accounts = db.relationship('RwrAccount', backref='user', lazy=True, foreign_keys='RwrAccount.user_id')
 
@@ -429,8 +429,8 @@ class RwrAccount(db.Model):
 
     type = db.Column(db.Enum(RwrAccountType), nullable=False)
     username = db.Column(db.String(16), nullable=False)
-    created_at = db.Column(ArrowType, default=arrow.utcnow().floor('minute'), nullable=False)
-    updated_at = db.Column(ArrowType, default=arrow.utcnow().floor('minute'), onupdate=arrow.utcnow().floor('minute'), nullable=False)
+    created_at = db.Column(ArrowType, default=lambda: arrow.utcnow().floor('minute'), nullable=False)
+    updated_at = db.Column(ArrowType, default=lambda: arrow.utcnow().floor('minute'), onupdate=lambda: arrow.utcnow().floor('minute'), nullable=False)
     claim_possible_until = db.Column(ArrowType)
     claimed_at = db.Column(ArrowType)
 
@@ -577,7 +577,7 @@ class RwrAccountStat(db.Model):
     throwables_thrown = db.Column(db.Integer, nullable=False)
     hash = db.Column(db.String(32), nullable=False)
     promoted_to_rank_id = db.Column(db.Integer)
-    created_at = db.Column(ArrowType, default=arrow.utcnow().floor('day'), nullable=False)
+    created_at = db.Column(ArrowType, default=lambda: arrow.utcnow().floor('day'), nullable=False)
 
     rwr_account_id = db.Column(db.Integer, db.ForeignKey('rwr_accounts.id'), nullable=False)
 
