@@ -313,6 +313,7 @@ class User(db.Model, UserMixin):
     pat = db.Column(UUIDType, default=lambda: uuid.uuid4())
 
     rwr_accounts = db.relationship('RwrAccount', backref='user', lazy=True, foreign_keys='RwrAccount.user_id')
+    friends = db.relationship('UserFriends', backref='user', lazy=True, foreign_keys='UserFriend.user_id')
 
     def get_rwr_accounts_by_type(self, type):
         """Return the RwrAccounts linked to this user, filtered by account type."""
@@ -414,6 +415,16 @@ class User(db.Model, UserMixin):
 
     def __repr__(self):
         return 'User:{}'.format(self.id)
+
+
+class UserFriend(db.Model, UserMixin):
+    __tablename__ = 'user_friends'
+    __table_args__ = (db.Index('user_id_idx', 'user_id'), )
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    username = db.Column(db.String(16), nullable=False)
 
 
 class RwrAccountType(Enum):
