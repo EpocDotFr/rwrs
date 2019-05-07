@@ -51,7 +51,8 @@ AVAILABLE_COMMANDS = OrderedDict([
     ('say', {'description': 'Makes the bot to say something', 'admin_only': True}),
     ('cc', {'description': 'Clears the RWRS cache', 'admin_only': True}),
     ('maintenance', {'description': 'Enables or disables the maintenance mode', 'admin_only': True}),
-    ('motd', {'description': 'Sets or removes the MOTD', 'admin_only': True})
+    ('motd', {'description': 'Sets or removes the MOTD', 'admin_only': True}),
+    ('event', {'description': 'Sets or removes the next RWR event', 'admin_only': True})
 ])
 
 AVAILABLE_COMMANDS_NAMES = AVAILABLE_COMMANDS.keys()

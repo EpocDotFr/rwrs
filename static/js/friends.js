@@ -330,9 +330,9 @@ friendsFeature = {
         $add_friend_link.on('click', function(e) {
             e.preventDefault();
 
-            var username = $(this).data('username');
+            var $username = $(this).data('username');
 
-            friendsFeature.addFriend(username);
+            friendsFeature.addFriend($username);
 
             $(this).addClass('is-hidden');
             $remove_friend_link.removeClass('is-hidden');
@@ -343,9 +343,9 @@ friendsFeature = {
         $remove_friend_link.on('click', function(e) {
             e.preventDefault();
 
-            var username = $(this).data('username');
+            var $username = $(this).data('username');
 
-            friendsFeature.removeFriend(username);
+            friendsFeature.removeFriend($username);
 
             $(this).addClass('is-hidden');
             $add_friend_link.removeClass('is-hidden');
@@ -377,12 +377,12 @@ friendsFeature = {
         $add_friend_links.on('click', function(e) {
             e.preventDefault();
 
-            var username = $(this).data('username');
+            var $username = $(this).data('username');
 
-            friendsFeature.addFriend(username);
+            friendsFeature.addFriend($username);
 
             $(this).addClass('is-hidden');
-            $(this).siblings('.remove-friend[data-username="' + username + '"]').removeClass('is-hidden');
+            $(this).siblings('.remove-friend[data-username="' + $username + '"]').removeClass('is-hidden');
 
             friendsFeature.initInHeader(); // Refresh the counter in the header
         });
@@ -390,12 +390,12 @@ friendsFeature = {
         $remove_friend_links.on('click', function(e) {
             e.preventDefault();
 
-            var username = $(this).data('username');
+            var $username = $(this).data('username');
 
-            friendsFeature.removeFriend(username);
+            friendsFeature.removeFriend($username);
 
             $(this).addClass('is-hidden');
-            $(this).siblings('.add-friend[data-username="' + username + '"]').removeClass('is-hidden');
+            $(this).siblings('.add-friend[data-username="' + $username + '"]').removeClass('is-hidden');
 
             friendsFeature.initInHeader(); // Refresh the counter in the header
         });

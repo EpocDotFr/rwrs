@@ -12,6 +12,7 @@ import rwr.scraper
 import rwr.utils
 import logging
 import helpers
+import arrow
 import steam
 import os
 
@@ -121,6 +122,39 @@ class RwrsBotDiscoPlugin(Plugin):
             db.session.commit()
 
             event.msg.reply('MOTD removed.')
+
+    @Plugin.command('set', parser=True, group='event')
+    @Plugin.parser.add_argument('name')
+    @Plugin.parser.add_argument('datetime')
+    @Plugin.parser.add_argument('server_ip_and_port', nargs='?')
+    def on_event_set_command(self, event, args):
+        """Admin command: sets the next RWR event."""
+        try:
+            Variable.set_event(args.name, args.datetime, args.server_ip_and_port)
+
+            db.session.commit()
+
+            cache.delete_memoized(rwr.scraper.get_servers)
+
+            event.msg.reply('Event updated.')
+        except (arrow.parser.ParserError, ValueError):
+            event.msg.reply('Invalid datetime provided (should be `{}`)'.format(app.config['EVENT_DATETIME_STORAGE_FORMAT']))
+
+            return
+
+    @Plugin.command('remove', group='event')
+    def on_event_remove_command(self, event):
+        """Admin command: removes the next RWR event."""
+        if not Variable.get_value('event'):
+            event.msg.reply('Event already removed.')
+        else:
+            Variable.set_value('event', None)
+
+            db.session.commit()
+
+            cache.delete_memoized(rwr.scraper.get_servers)
+
+            event.msg.reply('Event removed.')
 
     @Plugin.command('help', parser=True)
     @Plugin.parser.add_argument('command', nargs='?')

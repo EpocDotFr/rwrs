@@ -26,3 +26,4 @@ Flask-HTTPAuth
 Flask-Limiter
 Flask-WTF
 iso3166
+misaka

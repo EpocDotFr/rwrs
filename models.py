@@ -1,6 +1,7 @@
+from sqlalchemy_utils import ArrowType, UUIDType
 from sqlalchemy.util import memoized_property
-from sqlalchemy_utils import ArrowType
 from flask import url_for, current_app
+from collections import OrderedDict
 from flask_login import UserMixin
 from rwrs import db, cache, app
 from sqlalchemy import func
@@ -11,6 +12,8 @@ import helpers
 import hashlib
 import iso3166
 import arrow
+import json
+import uuid
 
 
 def one_week_ago():
@@ -26,7 +29,7 @@ def one_year_ago():
 class Measurable:
     id = db.Column(db.Integer, primary_key=True, autoincrement=True) # TODO To remove because useless and non-efficient
 
-    measured_at = db.Column(ArrowType, default=arrow.utcnow().floor('minute'), nullable=False)
+    measured_at = db.Column(ArrowType, default=lambda: arrow.utcnow().floor('minute'), nullable=False)
     count = db.Column(db.Integer, nullable=False)
 
     @staticmethod
@@ -120,6 +123,7 @@ class VariableType(Enum):
     STRING = 'STRING'
     BOOL = 'BOOL'
     ARROW = 'ARROW'
+    JSON = 'JSON'
 
 
 class Variable(db.Model):
@@ -129,7 +133,7 @@ class Variable(db.Model):
 
     name = db.Column(db.String(255), nullable=False, unique=True)
     type = db.Column(db.Enum(VariableType), nullable=False)
-    _value = db.Column('value', db.String(255))
+    _value = db.Column('value', db.Text)
 
     @property
     def value(self):
@@ -143,6 +147,8 @@ class Variable(db.Model):
                 return bool(int(self._value))
             elif self.type == VariableType.ARROW:
                 return arrow.get(self._value)
+            elif self.type == VariableType.JSON:
+                return json.loads(self._value, object_pairs_hook=OrderedDict)
             else:
                 raise ValueError('Unhandled value type')
 
@@ -164,6 +170,9 @@ class Variable(db.Model):
             elif isinstance(value, arrow.Arrow):
                 self.type = VariableType.ARROW
                 self._value = value.format()
+            elif isinstance(value, dict):
+                self.type = VariableType.JSON
+                self._value = json.dumps(value)
             else:
                 raise ValueError('Unhandled value type')
         else:
@@ -250,12 +259,45 @@ class Variable(db.Model):
 
         return peaks
 
+    @staticmethod
+    def set_event(name, datetime, server_ip_and_port):
+        """Sets the next RWR event."""
+        arrow.get(datetime, app.config['EVENT_DATETIME_STORAGE_FORMAT']) # Just to validate
+
+        Variable.set_value('event', {
+            'name': name,
+            'datetime': datetime,
+            'server_ip_and_port': server_ip_and_port
+        })
+
+    @staticmethod
+    def get_event(with_server=True):
+        """Gets the next RWR event (if any)."""
+        event = Variable.get_value('event')
+
+        if not event:
+            return None
+
+        event_datetime = arrow.get(event['datetime'], app.config['EVENT_DATETIME_STORAGE_FORMAT']).floor('minute')
+        now_in_event_timezone = arrow.now(event_datetime.tzinfo).floor('minute')
+
+        if now_in_event_timezone >= event_datetime.shift(hours=+5):
+            return None
+
+        event['datetime'] = event_datetime
+        event['is_ongoing'] = now_in_event_timezone >= event_datetime
+        event['display_server_players_count'] = now_in_event_timezone >= event_datetime.shift(minutes=-15)
+        event['server'] = rwr.scraper.get_server_by_ip_and_port(event['server_ip_and_port']) if with_server and event['server_ip_and_port'] else None
+
+        return event
+
     def __repr__(self):
         return 'Variable:{}'.format(self.id)
 
 
 class User(db.Model, UserMixin):
     __tablename__ = 'users'
+    __table_args__ = (db.Index('pat_idx', 'pat', unique=True), )
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 
@@ -265,9 +307,10 @@ class User(db.Model, UserMixin):
     large_avatar_url = db.Column(db.String(255))
     country_code = db.Column(db.String(2))
     is_profile_public = db.Column(db.Boolean, nullable=False, default=True)
-    created_at = db.Column(ArrowType, default=arrow.utcnow().floor('minute'), nullable=False)
-    updated_at = db.Column(ArrowType, default=arrow.utcnow().floor('minute'), onupdate=arrow.utcnow().floor('minute'), nullable=False)
+    created_at = db.Column(ArrowType, default=lambda: arrow.utcnow().floor('minute'), nullable=False)
+    updated_at = db.Column(ArrowType, default=lambda: arrow.utcnow().floor('minute'), onupdate=lambda: arrow.utcnow().floor('minute'), nullable=False)
     last_login_at = db.Column(ArrowType, nullable=False)
+    pat = db.Column(UUIDType, default=lambda: uuid.uuid4())
 
     rwr_accounts = db.relationship('RwrAccount', backref='user', lazy=True, foreign_keys='RwrAccount.user_id')
 
@@ -348,13 +391,21 @@ class User(db.Model, UserMixin):
     @staticmethod
     def get_by_steam_id(steam_id, create_if_unexisting=False):
         """Get a User according its Steam ID, optionally creating it if it doesn't exist."""
+        user_was_created = False
         user = User.query.filter(User.steam_id == steam_id).first()
 
         if not user and create_if_unexisting:
             user = User()
             user.steam_id = steam_id
 
-        return user
+            user_was_created = True
+
+        return user, user_was_created
+
+    @staticmethod
+    def get_by_pat(pat):
+        """Get a User according its Personal Access Token."""
+        return User.query.filter(User.pat == uuid.UUID(pat)).first()
 
     @memoized_property
     def has_rwr_accounts(self):
@@ -378,8 +429,8 @@ class RwrAccount(db.Model):
 
     type = db.Column(db.Enum(RwrAccountType), nullable=False)
     username = db.Column(db.String(16), nullable=False)
-    created_at = db.Column(ArrowType, default=arrow.utcnow().floor('minute'), nullable=False)
-    updated_at = db.Column(ArrowType, default=arrow.utcnow().floor('minute'), onupdate=arrow.utcnow().floor('minute'), nullable=False)
+    created_at = db.Column(ArrowType, default=lambda: arrow.utcnow().floor('minute'), nullable=False)
+    updated_at = db.Column(ArrowType, default=lambda: arrow.utcnow().floor('minute'), onupdate=lambda: arrow.utcnow().floor('minute'), nullable=False)
     claim_possible_until = db.Column(ArrowType)
     claimed_at = db.Column(ArrowType)
 
@@ -526,7 +577,7 @@ class RwrAccountStat(db.Model):
     throwables_thrown = db.Column(db.Integer, nullable=False)
     hash = db.Column(db.String(32), nullable=False)
     promoted_to_rank_id = db.Column(db.Integer)
-    created_at = db.Column(ArrowType, default=arrow.utcnow().floor('day'), nullable=False)
+    created_at = db.Column(ArrowType, default=lambda: arrow.utcnow().floor('day'), nullable=False)
 
     rwr_account_id = db.Column(db.Integer, db.ForeignKey('rwr_accounts.id'), nullable=False)
 

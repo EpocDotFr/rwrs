@@ -12,7 +12,7 @@
 
 {% set canonical_url = url_for('server_banner', ip=server.ip, port=server.port, slug=server.name_slug, _external=True) %}
 
-{% set meta_image = server.map.preview_absolute if server.map.has_preview %}
+{% set meta_image = server.map.preview_absolute if server.map.has_preview else server.map.minimap_absolute if server.map.has_minimap %}
 
 {% block content %}
     <p>Make this RWR server visible by putting this banner on your website / blog / forum. It features live information about the server, and is refreshed every 5 minutes.</p>

@@ -104,8 +104,9 @@ class Server:
 
     @memoized_property
     def name_display(self):
-        return '{}{}'.format(
+        return '{}{}{}'.format(
             '⭐️ ' if self.is_ranked else '',
+            '📅 ' if self.event else '',
             self.name
         )
 

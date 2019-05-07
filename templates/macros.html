@@ -30,12 +30,12 @@
     <img src="{{ rank.icon if icon else rank.image }}" title="{{ prefix if prefix }}{{ rank.name_display }}" class="{{ 'help' if icon }}">
 {%- endmacro %}
 
-{% macro server_name(server, link=True, raw=False, no_icon=False) -%}
+{% macro server_name(server, link=True, raw=False, no_icon=False, event_icon=False) -%}
     {% if server.name -%}
         {% if server.is_ranked and not no_icon -%}
-            {% if raw %}⭐️ {% else -%}
-                <i class="fas fa-star txtyellow help" title="Ranked {{ server.database_name }} server"></i> {% endif %}
-        {%- endif %}
+            {% if raw %}⭐️ {% else -%}<i class="fas fa-star txtyellow help" title="Ranked {{ server.database_name }} server"></i> {% endif %}
+        {%- endif -%}
+        {% if event_icon and server.event %}<i class="fas fa-calendar-alt txtblue help" title="{{ 'Ongoing' if server.event.is_ongoing else 'Upcoming' }} event on this server: {{ server.event.name }}"></i> {% endif -%}
         {%- if link and server.website -%}
             <a href="{{ server.website }}">
         {%- endif -%}
@@ -220,4 +220,8 @@
             {%- endif %}
         </div>
     </div>
+{%- endmacro %}
+
+{% macro event_announcement(event, for_server=False) -%}
+    {{ 'Ongoing' if event.is_ongoing else 'Upcoming' }} event{% if for_server %} on this server{% endif %}: <strong>{{ event.name }}</strong>{% if not event.is_ongoing %} - {{ event.datetime.format(config['EVENT_DATETIME_DISPLAY_FORMAT']) }}{% endif %}{% if not for_server and event.server %} on <a href="{{ event.server.link }}">{{ event.server.name }}</a>{% if event.display_server_players_count %} ({{ event.server.players.current }}/{{ event.server.players.max }} players){% endif %}{% endif %}
 {%- endmacro %}

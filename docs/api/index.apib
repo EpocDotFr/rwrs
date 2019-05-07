@@ -5,28 +5,30 @@ HOST: https://rwrstats.com/api
 
 Documentation about the [Running With Rifles Stats (RWRS)](https://rwrstats.com/) REST API. [About RWRS](https://rwrstats.com/about)
 
-## Access restriction
+## Getting a Personal Access Token
 
-Although this API is public, an API token is **required** to prevent abuses. [Contact me](https://rwrstats.com/feedback)
-**in private** (Discord is the preferred way) with a short message explaining what do you plan to create, the purpose of
-your project along its name.
+Although this API is public, a Personal Access Token is **required** to prevent abuses. To obtain a Personal Access
+Token:
+
+  1. Create an RWRS account by [signing in using your Steam account](https://rwrstats.com/sign-in)
+  2. Get your Personal Access Token by heading to [your settings page](https://rwrstats.com/settings#pat)
 
 ::: warning
 You are **required** to mention somewhere in your project - in a visible manner - that you're using the RWRS REST API.
 :::
 
-## Sending the API token
+## Sending the Personal Access Token
 
-All endpoints needs a valid API token, otherwise a [403](https://httpstatuses.com/403) HTTP status code will be returned.
-Send this HTTP header in all of your HTTP requests along your API token:
+All endpoints needs a valid Personal Access Token, otherwise a [403](https://httpstatuses.com/403) HTTP status code
+will be returned. Send this HTTP header in all of your HTTP requests along your Personal Access Token:
 
+```http
+Authorization: Token {Your Personal Access Token}
 ```
-Authorization: Token {token}
-```
 
-## Endpoint
+## Base URL
 
-The RWRS REST API endpoint is `https://rwrstats.com/api`.
+The RWRS REST API base URL is `https://rwrstats.com/api`.
 
 ::: note
 Using HTTPS is mandatory or you'll encounter redirections (which may not be appreciated by your HTTP client).
@@ -34,7 +36,7 @@ Using HTTPS is mandatory or you'll encounter redirections (which may not be appr
 
 ## Rate limiting
 
-To prevent abuse, all resources are rate-limited. Each IP address + API token couple is limited to **1 request per
+To prevent abuse, all resources are rate-limited. Each IP address + Personal Access Token couple is limited to **1 request per
 second**. Failing to respect this rate-limiting window will lead to a [429](https://httpstatuses.com/429) HTTP status
 code.
 
@@ -67,7 +69,7 @@ The output can be different regarding the resource. Check their respective doc.
 
 Typically an input parameters validation error:
 
-```
+```json
 {
     "message": {
         "blow": "Missing required parameter in the JSON body",
@@ -80,7 +82,7 @@ In this case the `hey` and `blow` input parameters are missing.
 
 If a query string parameter is missing or invalid, it's the same output:
 
-```
+```json
 {
     "message": {
         "active": "Missing required parameter in the query string"
@@ -90,7 +92,7 @@ If a query string parameter is missing or invalid, it's the same output:
 
 May also happen in other cases like the requested resource wasn't found:
 
-```
+```json
 {
     "message": "This thing does not exists."
 }
@@ -102,7 +104,7 @@ They should not happen (exception for [503](https://httpstatuses.com/503)). If s
 
 Example:
 
-```
+```json
 {
     "message": "Error creating this thing: IndexError: out of bounds"
 }

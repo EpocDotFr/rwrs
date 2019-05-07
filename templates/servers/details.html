@@ -35,6 +35,10 @@
 {% set meta_image = server.map.preview_absolute if server.map.has_preview else server.map.minimap_absolute if server.map.has_minimap %}
 
 {% block content %}
+    {% if server.event -%}
+        <div class="alert info pas mts"><i class="fas fa-calendar-alt"></i> {{ macros.event_announcement(server.event, for_server=True) }}</div>
+    {%- endif %}
+
     <p class="txtcenter mbs">
         {{ macros.server_join_button(server) }}
 

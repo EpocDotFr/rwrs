@@ -1,6 +1,7 @@
 from flask import current_app
 from lxml import html, etree
 from rwrs import app, cache
+from models import Variable
 from .server import Server
 from .player import Player
 from . import constants
@@ -10,13 +11,13 @@ import requests
 
 requests = requests.Session()
 
-servers_endpoint = 'http://rwr.runningwithrifles.com/rwr_server_list/'
-players_endpoint = 'http://rwr.runningwithrifles.com/rwr_stats/'
+servers_base_url = 'http://rwr.runningwithrifles.com/rwr_server_list/'
+players_base_url = 'http://rwr.runningwithrifles.com/rwr_stats/'
 
 
-def _call(endpoint, resource, parser, params=None):
-    """Perform an HTTP GET request to the desired RWR list endpoint."""
-    url = endpoint + resource
+def _call(base_url, resource, parser, params=None):
+    """Perform an HTTP GET request to the desired RWR list base_url."""
+    url = base_url + resource
 
     headers = {
         'User-Agent': 'rwrstats.com'
@@ -94,11 +95,22 @@ def _get_list(value_attribute, label_attribute):
     return sorted(ret, key=lambda k: k['label'])
 
 
+def _set_server_event(servers):
+    """Assign the next RWR event to the corresponding server, if applicable."""
+    if not servers:
+        return
+
+    event = Variable.get_event(with_server=False)
+
+    for server in servers:
+        server.event = event if event and event['server_ip_and_port'] and event['server_ip_and_port'] == server.ip_and_port else None
+
+
 @cache.memoize(timeout=app.config['SERVERS_CACHE_TIMEOUT'])
 def get_servers():
     """Get and parse the list of all public RWR servers."""
-    xml_servers = _call(servers_endpoint, 'get_server_list.php', 'xml', params={'start': 0, 'size': 100})
-    html_servers = _call(servers_endpoint, 'view_servers.php', 'html')
+    xml_servers = _call(servers_base_url, 'get_server_list.php', 'xml', params={'start': 0, 'size': 100})
+    html_servers = _call(servers_base_url, 'view_servers.php', 'html')
 
     servers = []
 
@@ -106,16 +118,30 @@ def get_servers():
         servers.append(Server.load(xml_node, html_servers))
 
     _set_servers_location(servers)
+    _set_server_event(servers)
 
     return servers
 
 
-def get_server_by_ip_and_port(ip, port):
+def get_server_by_ip_and_port(*args):
     """Search for a RWR public server based on its IP and port."""
+    if len(args) == 1:
+        def server_found(*args):
+            server, ip_and_port = args
+
+            return server.ip_and_port == ip_and_port
+    elif len(args) == 2:
+        def server_found(*args):
+            server, ip, port = args
+
+            return server.ip == ip and server.port == port
+    else:
+        raise ValueError('get_server_by_ip_and_port takes either one IP:port string argument or two IP (string) and port (int) arguments')
+
     servers = get_servers()
 
     for server in servers:
-        if server.ip == ip and server.port == port:
+        if server_found(server, *args):
             return server
 
     return None
@@ -340,6 +366,9 @@ def get_all_players_with_servers_details():
             'database': server.database,
             'database_name': server.database_name,
             'link': server.link,
+            'has_event': True if server.event else False,
+            'event_is_ongoing': server.event['is_ongoing'] if server.event else False,
+            'event_name': server.event['name'] if server.event else None,
             'location': {
                 'city_name': server.location.city_name,
                 'country_code': server.location.country_code,
@@ -382,7 +411,7 @@ def get_players(database, sort=constants.PlayersSort.SCORE.value, target=None, s
         'search': target
     }
 
-    html_content = _call(players_endpoint, 'view_players.php', 'html', params=params)
+    html_content = _call(players_base_url, 'view_players.php', 'html', params=params)
 
     players = []
 
@@ -408,7 +437,7 @@ def search_player_by_username(database, username, check_exist_only=False):
         'search': username
     }
 
-    html_content = _call(players_endpoint, 'view_player.php', 'html', params=params)
+    html_content = _call(players_base_url, 'view_player.php', 'html', params=params)
 
     node = html_content.xpath('(//table/tr[position() = 2])[1]')
 
