@@ -426,6 +426,9 @@ class UserFriend(db.Model, UserMixin):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     username = db.Column(db.String(16), nullable=False)
 
+    def __repr__(self):
+        return 'UserFriend:{}'.format(self.id)
+
 
 class RwrAccountType(Enum):
     INVASION = 'INVASION'
