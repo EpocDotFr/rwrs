@@ -1,7 +1,8 @@
 from itertools import tee, islice, chain
 from collections import OrderedDict
-from flask import request
+from flask import request, Markup
 from rwrs import app
+import misaka
 import json
 import os
 import re
@@ -173,6 +174,13 @@ def is_player_rwr_dev(player_nickname):
 
 def is_player_ranked_server_admin(player_nickname):
     return player_nickname.lower() in app.config['RANKED_SERVERS_ADMINS']
+
+
+def markdown_to_html_inline(markdown):
+    html = misaka.html(markdown, extensions=('strikethrough', 'underline'), render_flags=('escape',))
+    html = html.replace('<p>', '').replace('</p>', '').strip()
+
+    return Markup(html)
 
 
 def get_game_type_from_database(database):

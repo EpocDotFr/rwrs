@@ -2,6 +2,7 @@ from disco.types.message import MessageEmbed
 from models import RwrAccountStat
 from . import constants
 from io import BytesIO
+from rwrs import app
 import helpers
 import arrow
 import re
@@ -167,7 +168,16 @@ def create_server_message_embed(server, username_to_highlight=None):
     embed = create_base_message_embed()
 
     embed.url = server.link_absolute
-    embed.description = server.steam_join_link.replace(' ', '%20')
+    description = [server.steam_join_link.replace(' ', '%20')]
+
+    if server.event:
+        description.append(':calendar: {} event on this server: **{}**{}'.format(
+            'Ongoing' if server.event['is_ongoing'] else 'Upcoming',
+            server.event['name'],
+            ' - ' + server.event['datetime'].format(app.config['EVENT_DATETIME_DISPLAY_FORMAT']) if not server.event['is_ongoing'] else ''
+        ))
+
+    embed.description = '\n'.join(description)
 
     if server.players.list:
         if not username_to_highlight:

@@ -41,15 +41,23 @@
     <meta name="google-site-verification" content="58YRXAqZgsPP1fJar_ymC-4xSWtW3O2NmYwuRDzyRpg" />
 </head>
 <body itemscope itemtype="http://schema.org/WebSite">
-    {% if g.MOTD %}
+    {%- if g.MOTD -%}
         <div class="top-bar green pts pbs">
             <div class="w1140p center txtcenter small">
-                <i class="fas fa-bell fa-lg"></i> {{ g.MOTD|safe }}
+                <i class="fas fa-bell fa-lg"></i> {{ g.MOTD|markdown_to_html_inline }}
             </div>
         </div>
-    {% endif %}
+    {%- endif -%}
 
-    {% if not g.UNDER_MAINTENANCE %}
+    {%- if not g.UNDER_MAINTENANCE -%}
+        {%- if g.EVENT -%}
+            <div class="top-bar blue pts pbs">
+                <div class="w1140p center txtcenter small">
+                    <i class="fas fa-calendar-alt fa-lg"></i> {{ macros.event_announcement(g.EVENT) }}
+                </div>
+            </div>
+        {%- endif -%}
+
         <div class="top-bar grey main pts pbs">
             <div class="w1140p center small">
                 <div class="content">
@@ -67,13 +75,13 @@
                         </form>
 
                         {%- if current_user.is_authenticated -%}
-                            {% if current_user.small_avatar_url %}<a href="{{ current_user.link }}"><img src="{{ current_user.small_avatar_url }}" height="28" width="28" class="bordered"></a> {% endif %}<a href="{{ current_user.link }}" class="mrs"><strong>{{ current_user.username }}</strong></a>
+                            {% if current_user.small_avatar_url %}<a href="{{ current_user.link }}"><img src="{{ current_user.small_avatar_url }}" height="28" width="28" class="bordered"></a> {% endif %}<a href="{{ current_user.link }}" class="mrs"><strong>{{ current_user.username }}</strong></a><a href="{{ url_for('user_settings') }}"><i class="fas fa-cog"></i></a> <a href="{{ url_for('user_settings') }}" class="mrs">Settings</a>{%- if config['ENABLE_PLAYER_CLAIMING'] -%}<a href="{{ url_for('player_claim') }}"><i class="fas fa-user-check"></i></a> <a href="{{ url_for('player_claim') }}" class="mrs">Claim RWR account</a> {%- endif -%}
                         {%- endif -%}
 
                         <a href="{{ url_for('my_friends') }}" class="manage-friends-link is-hidden"><i class="fas fa-users"></i></a> <a href="{{ url_for('my_friends') }}" class="manage-friends-link is-hidden">My friends</a>
 
                         {%- if current_user.is_authenticated -%}
-                            {%- if config['ENABLE_PLAYER_CLAIMING'] -%}<a href="{{ url_for('player_claim') }}" class="mls"><i class="fas fa-user-check"></i></a> <a href="{{ url_for('player_claim') }}">Claim RWR account</a> {%- endif -%}<a href="{{ url_for('sign_out') }}" class="mls"><i class="fas fa-sign-out-alt"></i></a> <a href="{{ url_for('sign_out') }}">Sign out</a>
+                            <a href="{{ url_for('sign_out') }}" class="mls"><i class="fas fa-sign-out-alt"></i></a> <a href="{{ url_for('sign_out') }}">Sign out</a>
                         {%- endif -%}
 
                         {%- if config['ENABLE_SIGN_IN'] and not current_user.is_authenticated -%}
@@ -83,7 +91,7 @@
                 </div>
             </div>
         </div>
-    {% endif %}
+    {%- endif -%}
 
     <header class="w1140p center pts pbs">
         <div class="txtleft">

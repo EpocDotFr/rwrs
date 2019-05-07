@@ -55,7 +55,6 @@ More informations on the three above can be found [here](http://flask.pocoo.org/
   - `DISCORD_BOT_ADMINS` A list of Discord user IDs (snowflakes) allowed to use hidden bot commands
   - `DISCORD_BOT_GUILD_ID` A Discord guild (server) ID the bot will be allowed to listen for commands from
   - `MAX_NUM_OF_PLAYERS_TO_TRACK_STATS_FOR` How many players should RWRS track the stats for (top players storted by XP)
-  - `API_TOKENS` A set of API tokens allowed to use the API
   - `ENABLE_SIGN_IN` Enable the "Sign in via Steam" feature
   - `ENABLE_PLAYER_CLAIMING` Enable the "Claim player" feature
   - `PLAYER_CLAIM_DELAY` Maximum amount of minutes users are allowed to finalize an RWR account claim procedure
