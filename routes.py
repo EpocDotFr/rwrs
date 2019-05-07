@@ -134,7 +134,7 @@ def regenerate_pat():
 @app.route('/my-friends')
 def my_friends():
     return render_template(
-        'manage_friends.html'
+        'users/my_friends.html'
     )
 
 
