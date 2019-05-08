@@ -12,6 +12,16 @@
 {% endblock %}
 
 {% block content %}
+    {%- if not current_user.is_authenticated -%}
+        <div class="alert info pas mts">
+            <h4 class="mbs">Important notice</h4>
+            <p>The friends list evolved and now requires an RWRS account. This change has been made so you'll have access to your friends list everywhere (and not only on the web browser you saved your friends list on).</p>
+            <p>Don't worry, you didn't lost anything. All you have to do is to <a href="{{ url_for('sign_in') }}">sign-in</a> using your Steam account, then import your old friends list by going back to this page.</p>
+        </div>
+    {%- else -%}
+
+    {%- endif -%}
+
     <div id="app" v-cloak>
         <div class="mbs mts">
             <fieldset class="man">

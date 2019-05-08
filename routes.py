@@ -135,7 +135,7 @@ def regenerate_pat():
 def my_friends():
     return render_template(
         'users/friends.html'
-    )
+    ), 200 if current_user.is_authenticated else 401
 
 
 @app.route('/about')
