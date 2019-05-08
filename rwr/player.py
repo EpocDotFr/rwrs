@@ -4,7 +4,6 @@ from . import constants, utils
 from models import RwrAccount
 from rwrs import app
 import helpers
-import math
 
 
 class Player:

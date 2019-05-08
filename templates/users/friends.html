@@ -19,7 +19,39 @@
             <p>Don't worry, you didn't lost anything. All you have to do is to <a href="{{ url_for('sign_in') }}">sign-in</a> using your Steam account, then import your old friends list by going back to this page.</p>
         </div>
     {%- else -%}
-
+        <div class="grid-3 has-gutter friends-list">
+            <div class="mbs pas playing">
+                <div class="actions fr">
+                    <a href="#"><i class="fas fa-list-ol"></i></a>
+                    <a href="#"><i class="fab fa-steam-symbol"></i></a>
+                    <a href="#"><i class="fas fa-user-times"></i></a>
+                </div>
+                <div><a href="#">ABDGVGLBKHOYHRTH</a></div>
+                <div class="small"><i class="flag flag-fr"></i> <i class="fas fa-star txtyellow"></i> <a href="#">InvasionEU3</a></div>
+                <div class="small">5/24 • Vanilla • Rattlesnake Crescent</div>
+            </div>
+            <div class="mbs pas playing">
+                <div class="actions fr">
+                    <a href="#"><i class="fab fa-steam-symbol"></i></a>
+                    <a href="#"><i class="fas fa-user-times"></i></a>
+                </div>
+                <div>ABDGVGLBKHOYHRTH <i class="fas fa-hand-peace help"></i></div>
+                <div class="small"><i class="flag flag-fr"></i> <a href="#">RWTD - Outbreak Gaming - Zombie Survival Server</a></div>
+                <div class="small">5/24 • Vanilla • Rattlesnake Crescent</div>
+            </div>
+            <div class="mbs pas">
+                <div class="actions fr">
+                    <a href="#"><i class="fas fa-user-times"></i></a>
+                </div>
+                <div>ABDGVGLBKHOYHRTH</div>
+            </div>
+            <div class="mbs pas">
+                <div class="actions fr">
+                    <a href="#"><i class="fas fa-user-times"></i></a>
+                </div>
+                <div>ABDGVGLBKHOYHRTH</div>
+            </div>
+        </div>
     {%- endif -%}
 
     <div id="app" v-cloak>

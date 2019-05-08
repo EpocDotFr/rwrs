@@ -305,6 +305,70 @@ class UserFriend(db.Model):
     username = db.Column(db.String(16), nullable=False)
     created_at = db.Column(ArrowType, default=lambda: arrow.utcnow().floor('minute'), nullable=False)
 
+    @memoized_property
+    def playing_on_server(self):
+        """Return the server this friend is currently playing on."""
+        servers = rwr.scraper.get_servers()
+
+        for server in servers:
+            if not server.players.list:
+                continue
+
+            if self.username in server.players.list:
+                return server
+
+        return None
+
+    def get_link(self, absolute=False):
+        if not self.database:
+            return None
+
+        def _get_link(self, absolute):
+            params = {
+                'database': self.database,
+                'username': self.username
+            }
+
+            return url_for('player_details', **params, _external=absolute)
+
+        if current_app:
+            link = _get_link(self, absolute=absolute)
+        else:
+            with app.app_context():
+                link = _get_link(self, absolute=absolute)
+
+        return link
+
+    @memoized_property
+    def link(self):
+        """Return the link to the Player profile page of this Friend."""
+        return self.get_link()
+
+    @memoized_property
+    def link_absolute(self):
+        """Return the absolute link to the Player profile page of this Friend."""
+        return self.get_link(absolute=True)
+
+    @memoized_property
+    def database(self):
+        return self.playing_on_server.database if self.playing_on_server else None
+
+    @memoized_property
+    def is_myself(self):
+        return helpers.is_player_myself(self.username)
+
+    @memoized_property
+    def is_contributor(self):
+        return helpers.is_player_contributor(self.username)
+
+    @memoized_property
+    def is_rwr_dev(self):
+        return helpers.is_player_rwr_dev(self.username)
+
+    @memoized_property
+    def is_ranked_servers_admin(self):
+        return helpers.is_player_ranked_server_admin(self.username)
+
     def __repr__(self):
         return 'UserFriend:{}'.format(self.id)
 
@@ -427,6 +491,10 @@ class User(db.Model, UserMixin):
         """Determine is this User object have at least one RwrAccount."""
         return RwrAccount.query.with_entities(func.count('*')).filter(RwrAccount.user_id == self.id).scalar() > 0
 
+    @memoized_property
+    def number_of_playing_friends(self):
+        len([friend for friend in self.friends if friend.playing_on_server])
+
     def __repr__(self):
         return 'User:{}'.format(self.id)
 
@@ -457,7 +525,7 @@ class RwrAccount(db.Model):
     def get_link(self, absolute=False):
         def _get_link(self, absolute):
             params = {
-                'database': self.type.value.lower(),
+                'database': self.database,
                 'username': self.username
             }
 
@@ -661,7 +729,7 @@ class RwrAccountStat(db.Model):
 
     @memoized_property
     def promoted_to_rank(self):
-        return rwr.utils.get_rank_object(self.rwr_account.type.value.lower(), self.promoted_to_rank_id) if self.promoted_to_rank_id else None
+        return rwr.utils.get_rank_object(self.rwr_account.database, self.promoted_to_rank_id) if self.promoted_to_rank_id else None
 
     @memoized_property
     def score(self):
