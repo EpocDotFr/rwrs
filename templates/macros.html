@@ -30,17 +30,17 @@
     <img src="{{ rank.icon if icon else rank.image }}" title="{{ prefix if prefix }}{{ rank.name_display }}" class="{{ 'help' if icon }}">
 {%- endmacro %}
 
-{% macro server_name(server, link=True, raw=False, no_icon=False, event_icon=False) -%}
+{% macro server_name(server, link=True, raw=False, no_icon=False, event_icon=False, server_details_link=False) -%}
     {% if server.name -%}
         {% if server.is_ranked and not no_icon -%}
             {% if raw %}⭐️ {% else -%}<i class="fas fa-star txtyellow help" title="Ranked {{ server.database_name }} server"></i> {% endif %}
         {%- endif -%}
         {% if event_icon and server.event %}<i class="fas fa-calendar-alt txtblue help" title="{{ 'Ongoing' if server.event.is_ongoing else 'Upcoming' }} event on this server: {{ server.event.name }}"></i> {% endif -%}
-        {%- if link and server.website -%}
-            <a href="{{ server.website }}">
+        {%- if link and (server.website or server_details_link) -%}
+            <a href="{{ server.link if server_details_link else server.website }}">
         {%- endif -%}
             {{ server.name }}
-        {%- if link and server.website -%}
+        {%- if link and (server.website or server_details_link) -%}
             </a>
         {%- endif -%}
     {%- else -%}

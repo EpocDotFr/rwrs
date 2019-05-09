@@ -7,51 +7,39 @@
 {% block meta_description %}Manage and view your Running With Rifles (RWR) friends.{% endblock %}
 
 {% block jsfiles %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tippy.js/3.1.1/tippy.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.4.4/vue{{ '.min' if not config['DEBUG'] }}.js"></script>
-    {% assets 'js_friends' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
+    {% assets 'js_friends_popovers' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
 {% endblock %}
 
 {% block content %}
     {%- if not current_user.is_authenticated -%}
-        <div class="alert info pas mts">
-            <h4 class="mbs">Important notice</h4>
-            <p>The friends list evolved and now requires an RWRS account. This change has been made so you'll have access to your friends list everywhere (and not only on the web browser you saved your friends list on).</p>
-            <p>Don't worry, you didn't lost anything. All you have to do is to <a href="{{ url_for('sign_in') }}">sign-in</a> using your Steam account, then import your old friends list by going back to this page.</p>
+        <div class="alert info pas mtl mbl">
+            <h4 class="mbs"><i class="fas fa-info-circle"></i> Important notice</h4>
+            <p>The friends list evolved and now requires an RWRS account. This change has been made so you'll have access to your friends list everywhere (and not only on the web browser you used to save your friends).</p>
+            <p>Don't worry, you didn't lost anything. All you have to do is to <a href="{{ url_for('sign_in') }}">sign-in</a> using your Steam account, then import your old friends list into your account by going back to this page.</p>
         </div>
     {%- else -%}
-        <div class="grid-3 has-gutter friends-list">
-            <div class="mbs pas playing">
-                <div class="actions fr">
-                    <a href="#"><i class="fas fa-list-ol"></i></a>
-                    <a href="#"><i class="fab fa-steam-symbol"></i></a>
-                    <a href="#"><i class="fas fa-user-times"></i></a>
-                </div>
-                <div><a href="#">ABDGVGLBKHOYHRTH</a></div>
-                <div class="small"><i class="flag flag-fr"></i> <i class="fas fa-star txtyellow"></i> <a href="#">InvasionEU3</a></div>
-                <div class="small">5/24 players on Green Coast (Vanilla)</div>
+        {%- if current_user.ordered_friends -%}
+            <div class="grid-3 has-gutter friends-list">
+                {%- for friend in current_user.ordered_friends -%}
+                    <div class="mbs pas{{ ' playing' if friend.playing_on_server }}">
+                        <div class="actions fr">
+                            {% if friend.playing_on_server.is_ranked %}<a href="{{ url_for('players_list', database=friend.playing_on_server.database, target=friend.username) }}" title="Highlight in {{ friend.playing_on_server.database_name }} leaderboard"><i class="fas fa-list-ol"></i></a> {% endif %}
+                            {%- if friend.playing_on_server -%}{% if friend.playing_on_server.players.free > 0 %}<a href="{{ friend.playing_on_server.steam_join_link }}" title="Join this server"><i class="fab fa-steam-symbol"></i></a>{% else %}<i class="fab fa-steam-symbol txtgrey help" title="Server is full, cannot join"></i>{% endif %}{% endif %}
+                            <a href="#" title="Remove friend"><i class="fas fa-user-times"></i></a>
+                        </div>
+                        <div class="{{ 'pbs' if friend.playing_on_server }}">{{ macros.player_name(friend.username, raw=True, link=True, database=friend.database, popover_url=True) }}</div>
+                        {%- if friend.playing_on_server -%}
+                            <div class="small">{{ macros.location(friend.playing_on_server.location) }} {{ macros.server_name(friend.playing_on_server, event_icon=True, server_details_link=True) }}</div>
+                            <div class="small"><strong><span class="{{ macros.server_slots_class(friend.playing_on_server) }}">{{ friend.playing_on_server.players.current }}</span>/{{ friend.playing_on_server.players.max }}</strong> players on <strong>{{ friend.playing_on_server.map.name_display }}</strong> ({{ friend.playing_on_server.type_name }})</div>
+                        {%- endif -%}
+                    </div>
+                {%- endfor -%}
             </div>
-            <div class="mbs pas playing">
-                <div class="actions fr">
-                    <a href="#"><i class="fab fa-steam-symbol"></i></a>
-                    <a href="#"><i class="fas fa-user-times"></i></a>
-                </div>
-                <div>ABDGVGLBKHOYHRTH <i class="fas fa-hand-peace help"></i></div>
-                <div class="small"><i class="flag flag-fr"></i> <a href="#">RWTD - Outbreak Gaming - Zombie Survival Server</a></div>
-                <div class="small">5/24 players on Green Coast (Vanilla)</div>
-            </div>
-            <div class="mbs pas">
-                <div class="actions fr">
-                    <a href="#"><i class="fas fa-user-times"></i></a>
-                </div>
-                <div>ABDGVGLBKHOYHRTH</div>
-            </div>
-            <div class="mbs pas">
-                <div class="actions fr">
-                    <a href="#"><i class="fas fa-user-times"></i></a>
-                </div>
-                <div>ABDGVGLBKHOYHRTH</div>
-            </div>
-        </div>
+        {%- else -%}
+            <div class="alert info pas txtcenter"><img src="{{ url_for('static', filename='images/forever_alone.png') }}"><br />You don't have friends at this moment.</div>
+        {%- endif -%}
     {%- endif -%}
 
     <div id="app" v-cloak>
@@ -148,6 +136,8 @@
     </div>
 
     <script>
+        popoversFeature.initOnMyFriends();
+
         Vue.config.silent = {{ 'false' if config['DEBUG'] else 'true' }};
 
         friendsFeature.all_players_with_servers_details = {{ g.all_players_with_servers_details|tojson }};

@@ -354,6 +354,10 @@ class UserFriend(db.Model):
         return self.playing_on_server.database if self.playing_on_server else None
 
     @memoized_property
+    def database_name(self):
+        return rwr.utils.get_database_name(self.database)
+
+    @memoized_property
     def is_myself(self):
         return helpers.is_player_myself(self.username)
 
@@ -492,8 +496,20 @@ class User(db.Model, UserMixin):
         return RwrAccount.query.with_entities(func.count('*')).filter(RwrAccount.user_id == self.id).scalar() > 0
 
     @memoized_property
+    def ordered_friends(self):
+        """Get the Friends of this User, ordered by username. Friends that are playing are pushed to the top of the list."""
+        all_friends = UserFriend.query.filter(UserFriend.user_id == self.id).order_by(UserFriend.username.asc()).all()
+
+        ordered_friends = []
+
+        ordered_friends.extend([friend for friend in all_friends if friend.playing_on_server])
+        ordered_friends.extend([friend for friend in all_friends if not friend.playing_on_server])
+
+        return ordered_friends
+
+    @memoized_property
     def number_of_playing_friends(self):
-        len([friend for friend in self.friends if friend.playing_on_server])
+        len([friend for friend in self.ordered_friends if friend.playing_on_server])
 
     def __repr__(self):
         return 'User:{}'.format(self.id)
