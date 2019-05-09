@@ -200,7 +200,7 @@
 
 {% macro inline_form_field(field) -%}
     {%- set css_class = 'has_error ' + kwargs.pop('class', '') if field.errors -%}
-    {{ field.label() }} {{ field(class=css_class, **kwargs) }}
+    {{ field.label() if not kwargs.pop('without_label', False) }} {{ field(class=css_class, **kwargs) }}
 {%- endmacro %}
 
 {% macro form_field(field) -%}

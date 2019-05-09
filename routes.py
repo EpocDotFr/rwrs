@@ -2,9 +2,9 @@ from models import SteamPlayerCount, ServerPlayerCount, Variable, RwrAccountStat
 from flask import render_template, abort, request, redirect, url_for, flash, g, jsonify
 from flask_login import login_required, current_user, logout_user
 from dynamic_image import DynamicServerImage, DynamicPlayerImage
+from models import User, UserFriend
 from rwr.player import Player
 from rwrs import app, oid, db
-from models import User
 import rwr.constants
 import flask_openid
 import rwr.scraper
@@ -131,10 +131,27 @@ def regenerate_pat():
     return jsonify(result), status
 
 
-@app.route('/my-friends')
+@app.route('/my-friends', methods=['GET', 'POST'])
 def my_friends():
+    form = forms.UserFriendForm()
+
+    # TODO Properly handle the case case the user submits the form without being authenticated
+    if current_user.is_authenticated and form.validate_on_submit():
+        user_friend = UserFriend()
+        user_friend.user_id = current_user.id
+
+        form.populate_user_friend(user_friend)
+
+        db.session.add(user_friend)
+        db.session.commit()
+
+        flash('You have a new friend.', 'success')
+
+        return redirect(url_for('my_friends'))
+
     return render_template(
-        'users/friends.html'
+        'users/friends.html',
+        form=form
     ), 200 if current_user.is_authenticated else 401
 
 

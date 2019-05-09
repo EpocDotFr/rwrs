@@ -27,8 +27,8 @@
                             <form method="post" action="{{ url_for('player_claim') }}">
                                 {{ form.csrf_token }}
 
-                                {{ macros.form_field(form.type, class="w200p") }}
-                                {{ macros.form_field(form.username, class="w200p") }}
+                                {{ macros.form_field(form.type, class='w200p') }}
+                                {{ macros.form_field(form.username, class='w200p') }}
 
                                 <p class="txtcenter mtm"><button type="submit" class="big"><i class="fa fa-chevron-right"></i> Start!</button></p>
                             </form>

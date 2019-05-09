@@ -55,3 +55,15 @@ class UserGeneralSettingsForm(FlaskForm):
     def populate_user(self, user):
         """Set the User attributes from this form values."""
         user.is_profile_public = self.is_profile_public.data
+
+
+class UserFriendForm(FlaskForm):
+    username = StringField('Player username', [validators.DataRequired(), validators.Length(max=16)])
+
+    def validate_username(form, field):
+        if ' ' in field.data:
+            raise ValidationError('Spaces aren\'t allowed')
+
+    def populate_user_friend(self, user_friend):
+        """Set the UserFriend attributes from this form values."""
+        user_friend.username = self.username.data.upper()

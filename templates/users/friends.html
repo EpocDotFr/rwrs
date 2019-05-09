@@ -7,9 +7,10 @@
 {% block meta_description %}Manage and view your Running With Rifles (RWR) friends.{% endblock %}
 
 {% block jsfiles %}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tippy.js/3.1.1/tippy.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.4.4/vue{{ '.min' if not config['DEBUG'] }}.js"></script>
-    {% assets 'js_friends_popovers' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
+    {%- if current_user.ordered_friends -%}
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/tippy.js/3.1.1/tippy.min.js"></script>
+        {% assets 'js_popovers' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
+    {%- endif -%}
 {% endblock %}
 
 {% block content %}
@@ -20,6 +21,16 @@
             <p>Don't worry, you didn't lost anything. All you have to do is to <a href="{{ url_for('sign_in') }}">sign-in</a> using your Steam account, then import your old friends list into your account by going back to this page.</p>
         </div>
     {%- else -%}
+        <form action="{{ url_for('my_friends') }}" method="POST" class="mts mbs">
+            <fieldset class="man">
+                <legend><i class="fas fa-cogs"></i> Actions</legend>
+
+                {{ form.csrf_token }}
+
+                {{ macros.inline_form_field(form.username, class='w200p', placeholder='Type a player name', without_label=True, maxlength=16) }} <button type="submit"><i class="fas fa-user-plus"></i> Add new friend</button>
+            </fieldset>
+        </form>
+
         {%- if current_user.ordered_friends -%}
             <div class="grid-3 has-gutter friends-list">
                 {%- for friend in current_user.ordered_friends -%}
@@ -38,113 +49,15 @@
                 {%- endfor -%}
             </div>
         {%- else -%}
-            <div class="alert info pas txtcenter"><img src="{{ url_for('static', filename='images/forever_alone.png') }}"><br />You don't have friends at this moment.</div>
+            <div class="alert info pas mbs txtcenter"><img src="{{ url_for('static', filename='images/forever_alone.png') }}"><br />You don't have friends at this moment.</div>
         {%- endif -%}
-    {%- endif -%}
-
-    <div id="app" v-cloak>
-        <div class="mbs mts">
-            <fieldset class="man">
-                <legend><i class="fas fa-cogs"></i> Actions</legend>
-                <form class="inbl fl" v-on:submit.prevent="submitAddFriendForm()">
-                    <input type="text" v-model.trim="friend_to_add" placeholder="Type a player name" required> <button type="submit"><i class="fas fa-user-plus"></i> Add new friend</button>
-                </form>
-
-                <div class="inbl fr">
-                    <label><input type="checkbox" v-model="playing_only"> Only show playing friends</label>
-                </div>
-
-                <div class="clearfix"></div>
-            </fieldset>
-        </div>
-
-        <div class="table-responsive">
-            <table :class="[friendsEnriched.length > 0 ? 'striped' : '', 'mbs', 'nowrap']">
-                <thead>
-                    <tr>
-                        <th>Friend name</th>
-                        <th>Playing on server</th>
-                        <th>Current players</th>
-                        <th>Max players</th>
-                        <th>Map</th>
-                        <th>Type</th>
-                        <th>Mode</th>
-                        <th class="w100p"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="friend in friendsEnriched">
-                        <td>
-                            <a :href="'/players/' + friend.playing_on_server.database + '/' + friend.username" v-if="friend.playing_on_server && friend.playing_on_server.is_ranked">${ friend.username }</a>
-                            <template v-if="!friend.playing_on_server || !friend.playing_on_server.is_ranked">${ friend.username }</template>
-                            <img src="{{ url_for('static', filename='images/epoc.png') }}" title="Hey, I'm the creator of this website! Glad to see you're using it." class="help me" v-if="friend.username.toLowerCase() == my_username">
-                            <i class="fas fa-hand-peace help" title="This player contributed in a way or another to RWRS. Thanks to her/him!" v-else-if="inArray(friend.username.toLowerCase(), contributors)"></i>
-                            <img src="{{ url_for('static', filename='images/rwr_icon.png') }}" title="Say hi to one of the Running With Rifles developers!" class="help" v-else-if="inArray(friend.username.toLowerCase(), devs)">
-                            <i class="fas fa-balance-scale help" title="This player is admin on ranked (official) RWR servers" v-if="inArray(friend.username.toLowerCase(), rankedServersAdmins)"></i>
-                        </td>
-                        <td>
-                            <template v-if="friend.playing_on_server">
-                                <a :href="friend.playing_on_server.players.free > 0 ? friend.playing_on_server.steam_join_link : '#'" :class="['btn', friend.playing_on_server.players.free == 0 ? 'disabled' : '']" :title="friend.playing_on_server.players.free == 0 ? 'Server is full' : ''" v-if="friend.playing_on_server"><i class="fab fa-steam-symbol"></i> Join</a>
-                                <i :class="['flag', 'flag-' + friend.playing_on_server.location.country_code]" :title="(friend.playing_on_server.location.city_name ? friend.playing_on_server.location.city_name + ', ' : '') + friend.playing_on_server.location.country_name" v-if="friend.playing_on_server.location.country_code"></i>
-                                <i class="fas fa-star txtyellow help" :title="'Ranked ' + friend.playing_on_server.database_name + ' server'" v-if="friend.playing_on_server.is_ranked"></i>
-                                <i class="fas fa-calendar-alt txtblue help" :title="(friend.playing_on_server.event_is_ongoing ? 'Ongoing' : 'Upcoming') + ' event on this server: ' + friend.playing_on_server.event_name" v-if="friend.playing_on_server.has_event"></i>
-                                <a :href="friend.playing_on_server.link">${ friend.playing_on_server.name }</a>
-                            </template>
-                        </td>
-                        <td>
-                            <template v-if="friend.playing_on_server">
-                                <span :class="[(friend.playing_on_server.players.free == 1 || friend.playing_on_server.players.free == 2) ? 'txtorange' : '', friend.playing_on_server.players.free == 0 ? 'txtred' : '']">
-                                    ${ friend.playing_on_server.players.current }
-                                </span>
-                            </template>
-                        </td>
-                        <td>
-                            <template v-if="friend.playing_on_server">
-                                ${ friend.playing_on_server.players.max }
-                            </template>
-                        </td>
-                        <td>
-                            <template v-if="friend.playing_on_server">
-                                ${ friend.playing_on_server.map.name }
-                            </template>
-                        </td>
-                        <td>
-                            <template v-if="friend.playing_on_server">
-                                ${ friend.playing_on_server.type }
-                            </template>
-                        </td>
-                        <td>
-                            <template v-if="friend.playing_on_server">
-                                ${ friend.playing_on_server.mode }
-                            </template>
-                        </td>
-                        <td class="txtcenter">
-                            <a :href="'/players/' + friend.playing_on_server.database + '?target=' + friend.username" class="btn" :title="'Highlight in ' + friend.playing_on_server.database_name + ' leaderboard'" v-if="friend.playing_on_server && friend.playing_on_server.is_ranked"><i class="fas fa-list-ol"></i></a>
-                            <a href="#" class="btn" @click.prevent="removeFriend(friend.username)" :title="'Remove ' + friend.username + ' from friends list'"><i class="fas fa-user-times"></i></a>
-                        </td>
-                    </tr>
-                    <tr v-show="friendsEnriched.length == 0">
-                        <td colspan="8">
-                            <div class="alert info pas txtcenter"><img src="{{ url_for('static', filename='images/forever_alone.png') }}"><br /><span v-show="!playing_only">You don't have friends at this moment.</span><span v-show="playing_only">Nobody's playing.</span></div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
 
         {{ macros.stats_notice() }}
-    </div>
 
-    <script>
-        popoversFeature.initOnMyFriends();
-
-        Vue.config.silent = {{ 'false' if config['DEBUG'] else 'true' }};
-
-        friendsFeature.all_players_with_servers_details = {{ g.all_players_with_servers_details|tojson }};
-        friendsFeature.my_username = '{{ config['MY_USERNAME'] }}';
-        friendsFeature.contributors = {{ config['CONTRIBUTORS']|tojson }};
-        friendsFeature.devs = {{ config['DEVS']|tojson }};
-        friendsFeature.ranked_servers_admins = {{ config['RANKED_SERVERS_ADMINS']|tojson }};
-        friendsFeature.initOnMyFriends();
-    </script>
+        {%- if current_user.ordered_friends -%}
+            <script>
+                popoversFeature.initOnMyFriends();
+            </script>
+        {%- endif -%}
+    {%- endif -%}
 {% endblock %}
