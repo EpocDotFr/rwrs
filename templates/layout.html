@@ -62,7 +62,7 @@
             <div class="w1140p center small">
                 <div class="content">
                     <div class="txtleft">
-                        Right now: <abbr title="Number of people playing RWR multiplayer online" class="help">{{ g.online_players }}</abbr><span class="total-playing-friends is-hidden"> (<abbr title="Number of friends playing RWR multiplayer online" class="help txtblue">?</abbr>)</span>/<abbr title="Total number of people playing RWR" class="help">{{ g.total_players }}</abbr> players • <abbr title="Number of active (non-empty) public RWR servers" class="help">{{ g.active_servers }}</abbr>/<abbr title="Total number of public RWR servers" class="help">{{ g.total_servers }}</abbr> servers
+                        Right now: <abbr title="Number of people playing RWR multiplayer online" class="help">{{ g.online_players }}</abbr>{% if current_user.is_authenticated and current_user.number_of_playing_friends > 0 %} (<abbr title="Number of friends playing RWR multiplayer online" class="help txtblue">{{ current_user.number_of_playing_friends }}</abbr>){% endif %}/<abbr title="Total number of people playing RWR" class="help">{{ g.total_players }}</abbr> players • <abbr title="Number of active (non-empty) public RWR servers" class="help">{{ g.active_servers }}</abbr>/<abbr title="Total number of public RWR servers" class="help">{{ g.total_servers }}</abbr> servers
                     </div>
                     <div class="txtright">
                         <form method="get" action="{{ url_for('players_list_without_db') }}" itemprop="potentialAction" itemscope itemtype="http://schema.org/SearchAction" class="inbl mrs">
@@ -75,17 +75,9 @@
                         </form>
 
                         {%- if current_user.is_authenticated -%}
-                            {% if current_user.small_avatar_url %}<a href="{{ current_user.link }}"><img src="{{ current_user.small_avatar_url }}" height="28" width="28" class="bordered"></a> {% endif %}<a href="{{ current_user.link }}" class="mrs"><strong>{{ current_user.username }}</strong></a><a href="{{ url_for('user_settings') }}"><i class="fas fa-cog"></i></a> <a href="{{ url_for('user_settings') }}" class="mrs">Settings</a>{%- if config['ENABLE_PLAYER_CLAIMING'] -%}<a href="{{ url_for('player_claim') }}"><i class="fas fa-user-check"></i></a> <a href="{{ url_for('player_claim') }}" class="mrs">Claim RWR account</a> {%- endif -%}
-                        {%- endif -%}
-
-                        <a href="{{ url_for('my_friends') }}" class="manage-friends-link is-hidden"><i class="fas fa-users"></i></a> <a href="{{ url_for('my_friends') }}" class="manage-friends-link is-hidden">My friends</a>
-
-                        {%- if current_user.is_authenticated -%}
-                            <a href="{{ url_for('sign_out') }}" class="mls"><i class="fas fa-sign-out-alt"></i></a> <a href="{{ url_for('sign_out') }}">Sign out</a>
-                        {%- endif -%}
-
-                        {%- if config['ENABLE_SIGN_IN'] and not current_user.is_authenticated -%}
-                            <a href="{{ url_for('sign_in') }}" class="mls"><i class="fas fa-sign-in-alt"></i></a> <a href="{{ url_for('sign_in') }}">Sign in</a>
+                            {% if current_user.small_avatar_url %}<a href="{{ current_user.link }}"><img src="{{ current_user.small_avatar_url }}" height="28" width="28" class="bordered"></a> {% endif %}<a href="{{ current_user.link }}" class="mrs"><strong>{{ current_user.username }}</strong></a><a href="{{ url_for('user_settings') }}"><i class="fas fa-cog"></i></a> <a href="{{ url_for('user_settings') }}" class="mrs">Settings</a>{%- if config['ENABLE_PLAYER_CLAIMING'] -%}<a href="{{ url_for('player_claim') }}"><i class="fas fa-user-check"></i></a> <a href="{{ url_for('player_claim') }}" class="mrs">Claim RWR account</a> {%- endif -%}<a href="{{ url_for('my_friends') }}"><i class="fas fa-users"></i></a> <a href="{{ url_for('my_friends') }}" class="mrs">My friends</a><a href="{{ url_for('sign_out') }}"><i class="fas fa-sign-out-alt"></i></a> <a href="{{ url_for('sign_out') }}">Sign out</a>
+                        {%- elif config['ENABLE_SIGN_IN'] -%}
+                            <a href="{{ url_for('sign_in') }}"><i class="fas fa-sign-in-alt"></i></a> <a href="{{ url_for('sign_in') }}">Sign in</a>
                         {%- endif -%}
                     </div>
                 </div>
