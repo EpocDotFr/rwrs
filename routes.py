@@ -139,15 +139,11 @@ def my_friends():
         form = forms.UserFriendForm()
 
         if form.validate_on_submit():
-            user_friend = UserFriend()
-            user_friend.user_id = current_user.id
+            current_user.add_friend(form.username.data.upper())
 
-            form.populate_user_friend(user_friend)
-
-            db.session.add(user_friend)
             db.session.commit()
 
-            flash('You have a new friend.', 'success')
+            flash('You have a new friend!', 'success')
 
             return redirect(url_for('my_friends'))
 

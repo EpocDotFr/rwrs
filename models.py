@@ -355,7 +355,7 @@ class UserFriend(db.Model):
 
     @memoized_property
     def database_name(self):
-        return rwr.utils.get_database_name(self.database)
+        return rwr.utils.get_database_name(self.database) if self.database else None
 
     @memoized_property
     def is_myself(self):
@@ -510,6 +510,21 @@ class User(db.Model, UserMixin):
     @memoized_property
     def number_of_playing_friends(self):
         len([friend for friend in self.ordered_friends if friend.playing_on_server])
+
+    def add_friend(self, username):
+        """Add a friend to this User's friends list. Commiting DB operation is needed after calling this method."""
+        user_friend = UserFriend()
+        user_friend.user_id = self.id
+        user_friend.username = username
+
+        db.session.add(user_friend)
+
+    def get_friend(self, username):
+        """Return the Friend with the given username in this User's friends list."""
+        return UserFriend.query.filter(
+            UserFriend.user_id == self.id,
+            UserFriend.username == username
+        ).first()
 
     def __repr__(self):
         return 'User:{}'.format(self.id)

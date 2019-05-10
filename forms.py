@@ -61,9 +61,8 @@ class UserFriendForm(FlaskForm):
     username = StringField('Player username', [validators.DataRequired(), validators.Length(max=16)])
 
     def validate_username(form, field):
-        if ' ' in field.data:
+        if field.data.startswith(' ') or field.data.endswith(' '):
             raise ValidationError('Spaces aren\'t allowed')
 
-    def populate_user_friend(self, user_friend):
-        """Set the UserFriend attributes from this form values."""
-        user_friend.username = self.username.data.upper()
+        if current_user.get_friend(field.data):
+            raise ValidationError('{} is already present in your friends list'.format(field.data))
