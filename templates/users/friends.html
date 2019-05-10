@@ -38,7 +38,7 @@
                         <div class="actions fr">
                             {% if friend.playing_on_server.is_ranked %}<a href="{{ url_for('players_list', database=friend.playing_on_server.database, target=friend.username) }}" title="Highlight in {{ friend.playing_on_server.database_name }} leaderboard"><i class="fas fa-list-ol"></i></a> {% endif %}
                             {%- if friend.playing_on_server -%}{% if friend.playing_on_server.players.free > 0 %}<a href="{{ friend.playing_on_server.steam_join_link }}" title="Join this server"><i class="fab fa-steam-symbol"></i></a>{% else %}<i class="fab fa-steam-symbol txtgrey help" title="Server is full, cannot join"></i>{% endif %}{% endif %}
-                            <a href="#" title="Remove friend"><i class="fas fa-user-times"></i></a>
+                            <a href="{{ url_for('remove_friend', username=friend.username) }}" title="Remove friend"><i class="fas fa-user-times"></i></a>
                         </div>
                         <div class="{{ 'pbs' if friend.playing_on_server }}">{{ macros.player_name(friend.username, raw=True, link=True, database=friend.database, popover_url=True) }}</div>
                         {%- if friend.playing_on_server -%}

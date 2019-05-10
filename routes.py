@@ -153,6 +153,19 @@ def my_friends():
     ), 200 if current_user.is_authenticated else 401
 
 
+@app.route('/my-friends/remove/<username>')
+@login_required
+def remove_friend(username):
+    if current_user.remove_friend(username):
+        db.session.commit()
+
+        flash('Friend removed. Sad.', 'success')
+    else:
+        flash('Friend not found.', 'error')
+
+    return redirect(url_for('my_friends'))
+
+
 @app.route('/about')
 def about():
     return render_template(

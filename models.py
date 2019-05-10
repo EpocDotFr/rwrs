@@ -237,7 +237,7 @@ class Variable(db.Model):
         var = Variable.query.filter(Variable.name == name).first()
 
         if var:
-            db.session.remove(var)
+            db.session.delete(var)
 
     @staticmethod
     def get_peaks_for_display():
@@ -509,7 +509,8 @@ class User(db.Model, UserMixin):
 
     @memoized_property
     def number_of_playing_friends(self):
-        len([friend for friend in self.ordered_friends if friend.playing_on_server])
+        """Return the number of Friends that are playing for tihs User."""
+        return sum([1 for friend in self.ordered_friends if friend.playing_on_server])
 
     def add_friend(self, username):
         """Add a friend to this User's friends list. Commiting DB operation is needed after calling this method."""
@@ -525,6 +526,17 @@ class User(db.Model, UserMixin):
             UserFriend.user_id == self.id,
             UserFriend.username == username
         ).first()
+
+    def remove_friend(self, username):
+        """Remove the given Friend from this User's friends list. Commiting DB operation is needed after calling this method."""
+        user_friend = self.get_friend(username)
+
+        if user_friend:
+            db.session.delete(user_friend)
+
+            return True
+        else:
+            return False
 
     def __repr__(self):
         return 'User:{}'.format(self.id)
