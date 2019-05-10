@@ -1,5 +1,6 @@
 from sqlalchemy.util import memoized_property
 from flask import url_for, current_app
+from flask_login import current_user
 from . import constants, utils
 from slugify import slugify
 from rwrs import app
@@ -187,6 +188,16 @@ class Server:
     @memoized_property
     def database_name(self):
         return utils.get_database_name(self.database)
+
+    @memoized_property
+    def have_friends_from_current_user(self):
+        """Determine whether this server have friends from the current player or not."""
+        if not current_user.is_authenticated:
+            return False
+
+        for friend in current_user.ordered_friends:
+            if friend.username in self.players.list:
+                return True
 
     def __repr__(self):
         return 'Server:' + self.ip_and_port

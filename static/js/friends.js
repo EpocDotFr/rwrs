@@ -12,73 +12,13 @@ friendsFeature = {
 
         $('.manage-friends-link').removeClass('is-hidden');
 
-        this.initInHeader();
-
         return true;
     },
     /**
-     * Initialize the Friends feature in the header of all pages.
+     * Initialize the Friends feature on the My friends page.
      */
-    initInHeader: function() {
-        var $total_playing_players = $('.total-playing-friends');
-        var friends = this.getFriends();
-
-        if (friends.length == 0) {
-            $total_playing_players.addClass('is-hidden');
-
-            return;
-        }
-
-        var playing_friends = 0;
-
-        $.each(friends, function(friend_index, friend) {
-            $.each(friendsFeature.all_players_with_servers_details, function(server_index, server) {
-                if ($.inArray(friend, server.players.list) !== -1) {
-                    playing_friends += 1;
-                }
-            });
-        });
-
-        if (playing_friends == 0) {
-            $total_playing_players.addClass('is-hidden');
-
-            return;
-        }
-
-        $total_playing_players.children('abbr').text(playing_friends);
-        $total_playing_players.removeClass('is-hidden');
-    },
-    /**
-     * Initialize the Friends feature on the Servers list page.
-     */
-    initOnServersList: function() {
-        if (!this.init()) {
-            return;
-        }
-
-        var friends = this.getFriends();
-
-        if (friends.length == 0) {
-            return;
-        }
-
-        var $servers_list = $('.servers-list > tbody > tr');
-
-        $.each(this.all_players_with_servers_details, function(server_index, server) {
-            var highlight = false;
-
-            $.each(friends, function(friends_index, friend) {
-                if ($.inArray(friend, server.players.list) !== -1) {
-                    highlight = true;
-
-                    return false;
-                }
-            });
-
-            if (highlight) {
-                $servers_list.filter('[data-server-ip-and-port="' + server.ip_and_port + '"]').addClass('info');
-            }
-        });
+    initOnMyFriends: function() {
+        // TODO
     },
     /**
      * Initialize the Friends feature on the Server details page.
