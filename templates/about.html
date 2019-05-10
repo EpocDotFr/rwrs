@@ -6,10 +6,6 @@
 
 {% block meta_description %}Learn things about RWRS, its background and purposes, why it was created and who's behind.{% endblock %}
 
-{% block jsfiles %}
-    {% assets 'js_friends' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
-{% endblock %}
-
 {% set canonical_url = url_for('about', _external=True) %}
 
 {% block content %}
@@ -53,9 +49,4 @@
     </ul>
 
     <p>Did I forgot to thank you or to mention you in the credits? <a href="{{ url_for('feedback') }}">Get in touch</a>.</p>
-
-    <script>
-        friendsFeature.all_players_with_servers_details = {{ g.all_players_with_servers_details|tojson }};
-        friendsFeature.init();
-    </script>
 {% endblock %}

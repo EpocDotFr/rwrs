@@ -6,10 +6,6 @@
 
 {% block meta_description %}Found a problem or got a suggestion for RWRS? You found the right place.{% endblock %}
 
-{% block jsfiles %}
-    {% assets 'js_friends' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
-{% endblock %}
-
 {% set canonical_url = url_for('feedback', _external=True) %}
 
 {% block content %}
@@ -39,9 +35,4 @@
     </div>
 
     <p>People who contributed to RWRS in a way or another gets a special icon next to their username (you can read the list of these people <a href="{{ url_for('about') }}#thanks-to">here</a>).</p>
-
-    <script>
-        friendsFeature.all_players_with_servers_details = {{ g.all_players_with_servers_details|tojson }};
-        friendsFeature.init();
-    </script>
 {% endblock %}

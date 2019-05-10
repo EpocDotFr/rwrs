@@ -12,6 +12,7 @@ import rwr.scraper
 
 class RwrsForm(FlaskForm):
     def flash_errors(self):
+        """Create a flash error message containing this Form's errors in HTML."""
         if not self.errors:
             return
 

@@ -189,7 +189,6 @@ class Server:
     def database_name(self):
         return utils.get_database_name(self.database)
 
-    @memoized_property
     def have_friends_from_current_user(self):
         """Determine whether this server have friends from the current player or not."""
         if not current_user.is_authenticated:

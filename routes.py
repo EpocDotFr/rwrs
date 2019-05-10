@@ -155,6 +155,23 @@ def my_friends():
     ), 200 if current_user.is_authenticated else 401
 
 
+@app.route('/my-friends/add/<username>')
+@login_required
+def add_friend(username):
+    form = forms.UserFriendForm(data={'username': username}, meta={'csrf': False})
+
+    if form.validate():
+        current_user.add_friend(form.username.data.upper())
+
+        db.session.commit()
+
+        flash('You have a new friend!', 'success')
+    else:
+        flash('Invalid request.', 'error')
+
+    return redirect(request.referrer) # TODO Redirect to correct URL
+
+
 @app.route('/my-friends/remove/<username>')
 @login_required
 def remove_friend(username):
@@ -165,7 +182,7 @@ def remove_friend(username):
     else:
         flash('Friend not found.', 'error')
 
-    return redirect(url_for('my_friends'))
+    return redirect(request.referrer) # TODO Redirect to correct URL
 
 
 @app.route('/about')

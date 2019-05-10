@@ -4,10 +4,6 @@
 
 {% block meta_title %}Players › Claim RWR account{% endblock %}
 
-{% block jsfiles %}
-    {% assets 'js_friends' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
-{% endblock %}
-
 {% block content %}
     <div class="grid has-gutter mtm mbm">
         <div>
@@ -38,9 +34,4 @@
             </table>
         </div>
     </div>
-
-    <script>
-        friendsFeature.all_players_with_servers_details = {{ g.all_players_with_servers_details|tojson }};
-        friendsFeature.init();
-    </script>
 {% endblock %}

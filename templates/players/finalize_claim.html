@@ -6,7 +6,7 @@
 
 {% block jsfiles %}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/countdown/2.6.0/countdown.min.js"></script>
-    {% assets 'js_friends_player_claim' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
+    {% assets 'js_player_claim' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
 {% endblock %}
 
 {% block content %}
@@ -22,9 +22,6 @@
     </form>
 
     <script>
-        friendsFeature.all_players_with_servers_details = {{ g.all_players_with_servers_details|tojson }};
-        friendsFeature.init();
-
         playerClaimFeature.milliseconds_remaining = {{ milliseconds_remaining }};
         playerClaimFeature.init();
     </script>
