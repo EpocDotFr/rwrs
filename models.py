@@ -297,7 +297,7 @@ class Variable(db.Model):
 
 class UserFriend(db.Model):
     __tablename__ = 'user_friends'
-    __table_args__ = (db.Index('user_id_idx', 'user_id'), )
+    __table_args__ = (db.Index('user_id_idx', 'user_id'), db.Index('user_id_username_idx', 'user_id', 'username', unique=True))
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 

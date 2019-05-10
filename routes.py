@@ -133,21 +133,23 @@ def regenerate_pat():
 
 @app.route('/my-friends', methods=['GET', 'POST'])
 def my_friends():
-    form = forms.UserFriendForm()
+    form = None
 
-    # TODO Properly handle the case case the user submits the form without being authenticated
-    if current_user.is_authenticated and form.validate_on_submit():
-        user_friend = UserFriend()
-        user_friend.user_id = current_user.id
+    if current_user.is_authenticated:
+        form = forms.UserFriendForm()
 
-        form.populate_user_friend(user_friend)
+        if form.validate_on_submit():
+            user_friend = UserFriend()
+            user_friend.user_id = current_user.id
 
-        db.session.add(user_friend)
-        db.session.commit()
+            form.populate_user_friend(user_friend)
 
-        flash('You have a new friend.', 'success')
+            db.session.add(user_friend)
+            db.session.commit()
 
-        return redirect(url_for('my_friends'))
+            flash('You have a new friend.', 'success')
+
+            return redirect(url_for('my_friends'))
 
     return render_template(
         'users/friends.html',
