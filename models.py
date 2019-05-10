@@ -520,6 +520,10 @@ class User(db.Model, UserMixin):
 
         db.session.add(user_friend)
 
+    def has_friend(self, username):
+        """Determine if the given username is in the User's friends list."""
+        return username in [friend.username for friend in self.ordered_friends]
+
     def get_friend(self, username):
         """Return the Friend with the given username in this User's friends list."""
         return UserFriend.query.filter(

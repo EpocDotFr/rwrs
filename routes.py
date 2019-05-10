@@ -2,9 +2,9 @@ from models import SteamPlayerCount, ServerPlayerCount, Variable, RwrAccountStat
 from flask import render_template, abort, request, redirect, url_for, flash, g, jsonify
 from flask_login import login_required, current_user, logout_user
 from dynamic_image import DynamicServerImage, DynamicPlayerImage
-from models import User, UserFriend
 from rwr.player import Player
 from rwrs import app, oid, db
+from models import User
 import rwr.constants
 import flask_openid
 import rwr.scraper
@@ -146,6 +146,8 @@ def my_friends():
             flash('You have a new friend!', 'success')
 
             return redirect(url_for('my_friends'))
+
+        form.flash_errors()
 
     return render_template(
         'users/friends.html',

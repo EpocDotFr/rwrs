@@ -3,18 +3,6 @@
  */
 friendsFeature = {
     /**
-     * Global initialization of the feature (on all pages).
-     */
-    init: function() {
-        if (!isLocalStorageSupported()) {
-            return false;
-        }
-
-        $('.manage-friends-link').removeClass('is-hidden');
-
-        return true;
-    },
-    /**
      * Initialize the Friends feature on the My friends page.
      */
     initOnMyFriends: function() {
@@ -24,13 +12,6 @@ friendsFeature = {
      * Initialize the Friends feature on the Server details page.
      */
     initOnServerDetails: function() {
-        if (!this.init()) {
-            return;
-        }
-
-        // Enable the feature on the players list
-        $('.friends-feature').removeClass('is-hidden');
-
         var friends = this.getFriends();
 
         var $players_list = $('.players-list > tbody > tr');
@@ -51,8 +32,6 @@ friendsFeature = {
                 $a.addClass('is-hidden');
                 $remove_friend_link.removeClass('is-hidden');
                 $closest_tr.addClass('info');
-
-                friendsFeature.initInHeader(); // Refresh the counter in the header
             });
 
             $remove_friend_link.on('click', function(e) {
@@ -66,42 +45,13 @@ friendsFeature = {
                 $a.addClass('is-hidden');
                 $add_friend_link.removeClass('is-hidden');
                 $closest_tr.removeClass('info');
-
-                friendsFeature.initInHeader(); // Refresh the counter in the header
             });
-        });
-
-        $.each(this.all_players_with_servers_details, function(server_index, server) {
-            if (server.ip_and_port == friendsFeature.server_ip_and_port) {
-                $.each(server.players.list, function(player_index, player) {
-                    var highlight = false;
-
-                    if ($.inArray(player, friends) !== -1) {
-                        highlight = true;
-                    }
-
-                    var $player_tr = $players_list.filter('[data-username="' + player + '"]');
-
-                    if (highlight) {
-                        $player_tr.addClass('info');
-                        $player_tr.find('.remove-friend').removeClass('is-hidden');
-                    } else {
-                        $player_tr.find('.add-friend').removeClass('is-hidden');
-                    }
-                });
-
-                return false;
-            }
         });
     },
     /**
      * Initialize the Friends feature on the Players list page.
      */
     initOnPlayersList: function() {
-        if (!this.init()) {
-            return;
-        }
-
         var friends = this.getFriends();
 
         var $players_list = $('.players-list > tbody > tr');
@@ -126,8 +76,6 @@ friendsFeature = {
                 if (!$closest_tr.hasClass('notice')) { // Player isn't already highlighted in the leaderboard
                     $closest_tr.addClass('info');
                 }
-
-                friendsFeature.initInHeader(); // Refresh the counter in the header
             });
 
             $remove_friend_link.on('click', function(e) {
@@ -141,8 +89,6 @@ friendsFeature = {
                 $a.addClass('is-hidden');
                 $add_friend_link.removeClass('is-hidden');
                 $closest_tr.removeClass('info');
-
-                friendsFeature.initInHeader(); // Refresh the counter in the header
             });
 
             if ($.inArray(username, friends) !== -1) {
@@ -160,10 +106,6 @@ friendsFeature = {
      * Initialize the Friends feature on the Player details page.
      */
     initOnPlayerDetails: function() {
-        if (!this.init()) {
-            return;
-        }
-
         var friends = this.getFriends();
 
         var $add_friend_link = $('.add-friend');
@@ -178,8 +120,6 @@ friendsFeature = {
 
             $(this).addClass('is-hidden');
             $remove_friend_link.removeClass('is-hidden');
-
-            friendsFeature.initInHeader(); // Refresh the counter in the header
         });
 
         $remove_friend_link.on('click', function(e) {
@@ -191,8 +131,6 @@ friendsFeature = {
 
             $(this).addClass('is-hidden');
             $add_friend_link.removeClass('is-hidden');
-
-            friendsFeature.initInHeader(); // Refresh the counter in the header
         });
 
         if ($.inArray($remove_friend_link.data('username'), friends) !== -1) {
@@ -207,10 +145,6 @@ friendsFeature = {
      * Initialize the Friends feature on the Players comparison page.
      */
     initOnPlayersComparison: function() {
-        if (!this.init()) {
-            return;
-        }
-
         var friends = this.getFriends();
 
         var $add_friend_links = $('.add-friend');
@@ -225,8 +159,6 @@ friendsFeature = {
 
             $(this).addClass('is-hidden');
             $(this).siblings('.remove-friend[data-username="' + $username + '"]').removeClass('is-hidden');
-
-            friendsFeature.initInHeader(); // Refresh the counter in the header
         });
 
         $remove_friend_links.on('click', function(e) {
@@ -238,8 +170,6 @@ friendsFeature = {
 
             $(this).addClass('is-hidden');
             $(this).siblings('.add-friend[data-username="' + $username + '"]').removeClass('is-hidden');
-
-            friendsFeature.initInHeader(); // Refresh the counter in the header
         });
 
         $remove_friend_links.each(function() {
