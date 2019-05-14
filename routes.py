@@ -147,8 +147,6 @@ def my_friends():
 
             return redirect(url_for('my_friends'))
 
-        form.flash_errors()
-
     return render_template(
         'users/friends.html',
         form=form

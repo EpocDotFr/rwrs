@@ -9,8 +9,8 @@ and its Pacific DLC. Available at [rwrstats.com](https://rwrstats.com/).
 
 ## Prerequisites
 
-  - Should work on any Python 3.x version. Feel free to test with another Python version and give me feedback
-  - A modern web browser (which optionally support localStorage)
+  - Should work on any Python 3.x version
+  - A modern web browser
   - A MySQL-compatible DBMS (MySQL, MariaDB, Percona, etc)
   - (Optional, but recommended) A [uWSGI](https://uwsgi-docs.readthedocs.io/en/latest/)-capable web server
   - (Optional) Running With Rifles, if you need to extract data by using the commands below
@@ -32,7 +32,7 @@ Available configuration parameters are:
   - `SECRET_KEY` Set this to a complex random value
   - `SERVER_NAME` The IP or hostname where RWRS will be available
 
-More informations on the three above can be found [here](http://flask.pocoo.org/docs/1.0/config/#builtin-configuration-values).
+More informations on the two above can be found [here](http://flask.pocoo.org/docs/1.0/config/#builtin-configuration-values).
 
   - `DB_USERNAME` Username to access the DBMS
   - `DB_PASSWORD` Password to access the DBMS

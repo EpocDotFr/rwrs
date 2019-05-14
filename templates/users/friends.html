@@ -25,6 +25,8 @@
             <fieldset class="man">
                 <legend><i class="fas fa-cogs"></i> Actions</legend>
 
+                {{ macros.form_errors(form) }}
+
                 {{ form.csrf_token }}
 
                 {{ macros.inline_form_field(form.username, class='w200p', placeholder='Type a player name', without_label=True, maxlength=16) }} <button type="submit"><i class="fas fa-user-plus"></i> Add new friend</button>

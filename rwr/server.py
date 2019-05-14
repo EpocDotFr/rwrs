@@ -198,6 +198,8 @@ class Server:
             if friend.username in self.players.list:
                 return True
 
+        return False
+
     def __repr__(self):
         return 'Server:' + self.ip_and_port
 

@@ -509,7 +509,7 @@ class User(db.Model, UserMixin):
 
     @memoized_property
     def number_of_playing_friends(self):
-        """Return the number of Friends that are playing for tihs User."""
+        """Return the number of Friends that are playing for this User."""
         return sum([1 for friend in self.ordered_friends if friend.playing_on_server])
 
     def add_friend(self, username):
