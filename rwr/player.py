@@ -1,5 +1,6 @@
 from sqlalchemy.util import memoized_property
 from flask import url_for, current_app
+from flask_login import current_user
 from . import constants, utils
 from models import RwrAccount
 from rwrs import app
@@ -280,6 +281,13 @@ class Player:
     def user(self):
         """Return the User linked to this Player."""
         return self.rwr_account.user if self.rwr_account else None
+
+    def is_friend_with_current_user(self):
+        """Determine whether this Player is friend with the current user or not."""
+        if not current_user.is_authenticated:
+            return False
+
+        return current_user.has_friend(self.username)
 
     def __repr__(self):
         return 'Player:' + self.username

@@ -12,10 +12,6 @@
     {%- endif %}
 {%- endblock %}
 
-{% block jsfiles %}
-    {% assets 'js_friends' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
-{% endblock %}
-
 {% set canonical_url = url_for('players_list', database=request.view_args.get('database'), target=args.get('target'), _external=True) %}
 
 {% block content %}
@@ -68,12 +64,12 @@
                     <th>{{ macros.players_list_header_link('Teamkills', PlayersSort.TEAMKILLS.value, args) }}</th>
                     <th>{{ macros.players_list_header_link('Shots fired', PlayersSort.SHOTS_FIRED.value, args) }}</th>
                     <th>{{ macros.players_list_header_link('Throwables thrown', PlayersSort.THROWABLES_THROWN.value, args) }}</th>
-                    <th></th>
+                    {%- if current_user.is_authenticated %}<th></th>{% endif -%}
                 </tr>
             </thead>
             <tbody>
                 {% for player in players %}
-                    <tr{% if args.get('target') == player.username %} class="notice"{% endif %} data-username="{{ player.username }}">
+                    <tr class="{{ 'notice' if args.get('target') == player.username else 'info' if player.is_friend_with_current_user() }}">
                         <td>{{ player.leaderboard_position_display }}</td>
                         <td>{{ macros.player_name(player, link=True, show_rank=True, show_online=True) }}</td>
                         <td>{{ player.xp_display }}</td>
@@ -90,10 +86,15 @@
                         <td>{{ player.teamkills_display }}</td>
                         <td>{{ player.shots_fired_display }}</td>
                         <td>{{ player.throwables_thrown_display }}</td>
-                        <td>
-                            <a href="#" title="Add {{ player.username }} to friends list" class="btn add-friend is-hidden"><i class="fas fa-user-plus"></i></a>
-                            <a href="#" title="Remove {{ player.username }} from friends list" class="btn remove-friend is-hidden"><i class="fas fa-user-times"></i></a>
-                        </td>
+                        {%- if current_user.is_authenticated -%}
+                            <td>
+                                {% if player.is_friend_with_current_user() -%}
+                                    <a href="{{ url_for('remove_friend', username=player.username) }}" title="Remove {{ player.username }} from friends list" class="btn"><i class="fas fa-user-times"></i></a>
+                                {%- else -%}
+                                    <a href="{{ url_for('add_friend', username=player.username) }}" title="Add {{ player.username }} to friends list" class="btn"><i class="fas fa-user-plus"></i></a>
+                                {%- endif %}
+                            </td>
+                        {%- endif -%}
                     </tr>
                 {% else %}
                     <tr>
@@ -117,9 +118,4 @@
             {{ macros.players_list_next_button(players, args) }}
         </div>
     </div>
-
-    <script>
-        friendsFeature.all_players_with_servers_details = {{ g.all_players_with_servers_details|tojson }};
-        friendsFeature.initOnPlayersList();
-    </script>
 {% endblock %}

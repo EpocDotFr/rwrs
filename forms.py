@@ -63,5 +63,5 @@ class UserFriendForm(FlaskForm):
     def validate_username(form, field):
         username = field.data.upper()
 
-        if current_user.get_friend(username):
+        if current_user.has_friend(username):
             raise ValidationError('{} is already your friend'.format(username))

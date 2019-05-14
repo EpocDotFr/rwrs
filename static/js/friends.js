@@ -9,60 +9,6 @@ friendsFeature = {
         // TODO
     },
     /**
-     * Initialize the Friends feature on the Players list page.
-     */
-    initOnPlayersList: function() {
-        var friends = this.getFriends();
-
-        var $players_list = $('.players-list > tbody > tr');
-
-        $players_list.each(function() {
-            var $tr = $(this);
-            var username = $tr.data('username');
-            var $add_friend_link = $tr.find('.add-friend');
-            var $remove_friend_link = $tr.find('.remove-friend');
-
-            $add_friend_link.on('click', function(e) {
-                e.preventDefault();
-
-                var $a = $(this);
-                var $closest_tr = $a.closest('tr[data-username]');
-
-                friendsFeature.addFriend($closest_tr.data('username'));
-
-                $a.addClass('is-hidden');
-                $remove_friend_link.removeClass('is-hidden');
-
-                if (!$closest_tr.hasClass('notice')) { // Player isn't already highlighted in the leaderboard
-                    $closest_tr.addClass('info');
-                }
-            });
-
-            $remove_friend_link.on('click', function(e) {
-                e.preventDefault();
-
-                var $a = $(this);
-                var $closest_tr = $a.closest('tr[data-username]');
-
-                friendsFeature.removeFriend($closest_tr.data('username'));
-
-                $a.addClass('is-hidden');
-                $add_friend_link.removeClass('is-hidden');
-                $closest_tr.removeClass('info');
-            });
-
-            if ($.inArray(username, friends) !== -1) {
-                if (!$tr.hasClass('notice')) { // Player isn't already highlighted in the leaderboard
-                    $tr.addClass('info');
-                }
-
-                $remove_friend_link.removeClass('is-hidden');
-            } else {
-                $add_friend_link.removeClass('is-hidden');
-            }
-        });
-    },
-    /**
      * Initialize the Friends feature on the Player details page.
      */
     initOnPlayerDetails: function() {
