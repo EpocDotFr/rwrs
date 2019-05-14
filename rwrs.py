@@ -101,7 +101,8 @@ app.jinja_env.globals.update(
     PlayersSort=rwr.constants.PlayersSort,
     merge_query_string_params=helpers.merge_query_string_params,
     get_database_name=rwr.utils.get_database_name,
-    PLAYERS_LIST_DATABASES=rwr.constants.PLAYERS_LIST_DATABASES
+    PLAYERS_LIST_DATABASES=rwr.constants.PLAYERS_LIST_DATABASES,
+    generate_next_url=helpers.generate_next_url
 )
 
 

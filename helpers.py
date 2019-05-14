@@ -195,3 +195,7 @@ def check_safe_root(url):
 
 def get_next_url():
     return check_safe_root(request.args.get('next')) or check_safe_root(request.referrer) or url_for('home')
+
+
+def generate_next_url():
+    return request.full_path.rstrip('?')

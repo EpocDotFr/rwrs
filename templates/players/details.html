@@ -45,9 +45,9 @@
 
             {% if current_user.is_authenticated -%}
                 {% if player.is_friend_with_current_user() -%}
-                    <a href="{{ url_for('remove_friend', username=player.username, next=request.full_path) }}" class="btn"><i class="fas fa-user-times"></i> Remove from friends list</a>
+                    <a href="{{ url_for('remove_friend', username=player.username, next=generate_next_url()) }}" class="btn"><i class="fas fa-user-times"></i> Remove from friends list</a>
                 {%- else -%}
-                    <a href="{{ url_for('add_friend', username=player.username, next=request.full_path) }}" class="btn"><i class="fas fa-user-plus"></i> Add to friends list</a>
+                    <a href="{{ url_for('add_friend', username=player.username, next=generate_next_url()) }}" class="btn"><i class="fas fa-user-plus"></i> Add to friends list</a>
                 {%- endif %}
             {%- endif %}
         </div>
