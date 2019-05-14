@@ -1,6 +1,6 @@
+from flask import request, Markup, url_for
 from itertools import tee, islice, chain
 from collections import OrderedDict
-from flask import request, Markup
 from rwrs import app
 import misaka
 import json
@@ -181,3 +181,17 @@ def markdown_to_html_inline(markdown):
     html = html.replace('<p>', '').replace('</p>', '').strip()
 
     return Markup(html)
+
+
+def check_safe_root(url):
+    if url is None:
+        return None
+
+    if url.startswith(request.url_root) or url.startswith('/'):
+        return url
+
+    return None
+
+
+def get_next_url():
+    return check_safe_root(request.args.get('next')) or check_safe_root(request.referrer) or url_for('home')

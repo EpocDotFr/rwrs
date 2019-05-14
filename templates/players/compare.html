@@ -36,9 +36,9 @@
 
                     {% if current_user.is_authenticated -%}
                         {% if player.is_friend_with_current_user() -%}
-                            <a href="{{ url_for('remove_friend', username=player.username) }}" class="btn" title="Remove {{ player.username }} from friends list"><i class="fas fa-user-times"></i></a>
+                            <a href="{{ url_for('remove_friend', username=player.username, next=request.full_path) }}" class="btn" title="Remove {{ player.username }} from friends list"><i class="fas fa-user-times"></i></a>
                         {%- else -%}
-                            <a href="{{ url_for('add_friend', username=player.username) }}" class="btn" title="Add {{ player.username }} to friends list"><i class="fas fa-user-plus"></i></a>
+                            <a href="{{ url_for('add_friend', username=player.username, next=request.full_path) }}" class="btn" title="Add {{ player.username }} to friends list"><i class="fas fa-user-plus"></i></a>
                         {%- endif %}
                     {%- endif %}</span> {{ macros.player_name(player, link=True, show_online=True) }}
                 </th>
@@ -47,9 +47,9 @@
 
                     {% if current_user.is_authenticated -%}
                         {% if player_to_compare_with.is_friend_with_current_user() -%}
-                            <a href="{{ url_for('remove_friend', username=player_to_compare_with.username) }}" class="btn" title="Remove {{ player_to_compare_with.username }} from friends list"><i class="fas fa-user-times"></i></a>
+                            <a href="{{ url_for('remove_friend', username=player_to_compare_with.username, next=request.full_path) }}" class="btn" title="Remove {{ player_to_compare_with.username }} from friends list"><i class="fas fa-user-times"></i></a>
                         {%- else -%}
-                            <a href="{{ url_for('add_friend', username=player_to_compare_with.username) }}" class="btn" title="Add {{ player_to_compare_with.username }} to friends list"><i class="fas fa-user-plus"></i></a>
+                            <a href="{{ url_for('add_friend', username=player_to_compare_with.username, next=request.full_path) }}" class="btn" title="Add {{ player_to_compare_with.username }} to friends list"><i class="fas fa-user-plus"></i></a>
                         {%- endif %}
                     {%- endif %}</span>
                 </th>

@@ -9,6 +9,7 @@ import rwr.constants
 import flask_openid
 import rwr.scraper
 import rwr.utils
+import helpers
 import arrow
 import forms
 import uuid
@@ -167,7 +168,7 @@ def add_friend(username):
     else:
         flash('Invalid request.', 'error')
 
-    return redirect(request.referrer) # TODO Redirect to correct URL
+    return redirect(helpers.get_next_url())
 
 
 @app.route('/my-friends/remove/<username>')
@@ -180,7 +181,7 @@ def remove_friend(username):
     else:
         flash('Friend not found.', 'error')
 
-    return redirect(request.referrer) # TODO Redirect to correct URL
+    return redirect(helpers.get_next_url())
 
 
 @app.route('/about')
