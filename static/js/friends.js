@@ -9,45 +9,6 @@ friendsFeature = {
         // TODO
     },
     /**
-     * Initialize the Friends feature on the Player details page.
-     */
-    initOnPlayerDetails: function() {
-        var friends = this.getFriends();
-
-        var $add_friend_link = $('.add-friend');
-        var $remove_friend_link = $('.remove-friend');
-
-        $add_friend_link.on('click', function(e) {
-            e.preventDefault();
-
-            var $username = $(this).data('username');
-
-            friendsFeature.addFriend($username);
-
-            $(this).addClass('is-hidden');
-            $remove_friend_link.removeClass('is-hidden');
-        });
-
-        $remove_friend_link.on('click', function(e) {
-            e.preventDefault();
-
-            var $username = $(this).data('username');
-
-            friendsFeature.removeFriend($username);
-
-            $(this).addClass('is-hidden');
-            $add_friend_link.removeClass('is-hidden');
-        });
-
-        if ($.inArray($remove_friend_link.data('username'), friends) !== -1) {
-            $remove_friend_link.removeClass('is-hidden');
-        }
-
-        if ($.inArray($add_friend_link.data('username'), friends) === -1) {
-            $add_friend_link.removeClass('is-hidden');
-        }
-    },
-    /**
      * Initialize the Friends feature on the Players comparison page.
      */
     initOnPlayersComparison: function() {
