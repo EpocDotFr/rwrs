@@ -284,10 +284,7 @@ class Player:
 
     def is_friend_with_current_user(self):
         """Determine whether this Player is friend with the current user or not."""
-        if not current_user.is_authenticated:
-            return False
-
-        return current_user.has_friend(self.username)
+        return current_user.is_authenticated and current_user.has_friend(self.username)
 
     def __repr__(self):
         return 'Player:' + self.username
