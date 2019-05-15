@@ -66,12 +66,13 @@ if has_debug_toolbar_ext:
 
 assets.cache = 'storage/webassets-cache/'
 
-assets.register('js_friends', Bundle('js/common.js', 'js/friends.js', filters='jsmin', output='js/friends.min.js'))
-assets.register('js_popovers', Bundle('js/common.js', 'js/popovers.js', filters='jsmin', output='js/popover.min.js'))
-assets.register('js_charts', Bundle('js/common.js', 'js/charts.js', filters='jsmin', output='js/charts.min.js'))
-assets.register('js_charts_popovers', Bundle('js/common.js', 'js/charts.js', 'js/popovers.js', filters='jsmin', output='js/charts_popover.min.js'))
-assets.register('js_player_claim', Bundle('js/common.js', 'js/player_claim.js', filters='jsmin', output='js/player_claim.min.js'))
-assets.register('js_regenerate_pat', Bundle('js/common.js', 'js/regenerate_pat.js', filters='jsmin', output='js/regenerate_pat.min.js'))
+assets.register('js_friends', Bundle('js/friends.js', filters='jsmin', output='js/friends.min.js'))
+assets.register('js_popovers', Bundle('js/popovers.js', filters='jsmin', output='js/popovers.min.js'))
+assets.register('js_popovers_friends', Bundle('js/popovers.js', 'js/friends.js', filters='jsmin', output='js/popovers_friends.min.js'))
+assets.register('js_charts', Bundle('js/charts.js', filters='jsmin', output='js/charts.min.js'))
+assets.register('js_charts_popovers', Bundle('js/charts.js', 'js/popovers.js', filters='jsmin', output='js/charts_popovers.min.js'))
+assets.register('js_player_claim', Bundle('js/player_claim.js', filters='jsmin', output='js/player_claim.min.js'))
+assets.register('js_regenerate_pat', Bundle('js/regenerate_pat.js', filters='jsmin', output='js/regenerate_pat.min.js'))
 assets.register('css_app', Bundle('css/flags.css', 'css/app.css', filters='cssutils', output='css/app.min.css'))
 
 login_manager.session_protection = 'strong'
