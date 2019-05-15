@@ -8,7 +8,7 @@
 
 {% block jsfiles %}
     {%- if current_user.is_authenticated -%}
-        {%- if current_user.ordered_friends -%}
+        {%- if current_user.friends_ordered_by_username -%}
             <script src="https://cdnjs.cloudflare.com/ajax/libs/tippy.js/3.1.1/tippy.min.js"></script>
             {% assets 'js_popovers_friends_import' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
         {%- else -%}
@@ -37,23 +37,11 @@
             </fieldset>
         </form>
 
-        {%- if current_user.ordered_friends -%}
-            <div class="grid-3 has-gutter friends-list">
-                {%- for friend in current_user.ordered_friends -%}
-                    <div class="mbs pas{{ ' playing' if friend.playing_on_server }}">
-                        <div class="actions fr">
-                            {% if friend.playing_on_server.is_ranked %}<a href="{{ url_for('players_list', database=friend.playing_on_server.database, target=friend.username) }}" title="Highlight in {{ friend.playing_on_server.database_name }} leaderboard"><i class="fas fa-list-ol"></i></a> {% endif %}
-                            {%- if friend.playing_on_server -%}{% if friend.playing_on_server.players.free > 0 %}<a href="{{ friend.playing_on_server.steam_join_link }}" title="Join this server"><i class="fab fa-steam-symbol"></i></a>{% else %}<i class="fab fa-steam-symbol txtgrey help" title="Server is full, cannot join"></i>{% endif %}{% endif %}
-                            <a href="{{ url_for('remove_friend', username=friend.username) }}" title="Remove friend"><i class="fas fa-user-times"></i></a>
-                        </div>
-                        <div class="{{ 'pbs' if friend.playing_on_server }}">{{ macros.player_name(friend.username, raw=True, link=True, database=friend.database, popover_url=True) }}</div>
-                        {%- if friend.playing_on_server -%}
-                            <div class="small">{{ macros.location(friend.playing_on_server.location) }} {{ macros.server_name(friend.playing_on_server, event_icon=True, server_details_link=True) }}</div>
-                            <div class="small"><strong><span class="{{ macros.server_slots_class(friend.playing_on_server) }}">{{ friend.playing_on_server.players.current }}</span>/{{ friend.playing_on_server.players.max }}</strong> players on <strong>{{ friend.playing_on_server.map.name_display }}</strong> ({{ friend.playing_on_server.type_name }})</div>
-                        {%- endif -%}
-                    </div>
-                {%- endfor -%}
-            </div>
+        {%- if current_user.friends_ordered_by_username -%}
+            {% set playing_friends, non_playing_friends = current_user.friends_divided_by_status %}
+
+            {{ macros.friends_list(playing_friends)}}
+            {{ macros.friends_list(non_playing_friends)}}
         {%- else -%}
             <div class="alert info pas mbs txtcenter"><img src="{{ url_for('static', filename='images/forever_alone.png') }}"><br />You don't have friends at this moment.</div>
         {%- endif -%}
@@ -64,7 +52,7 @@
             friendsImportFeature.endpoint = '{{ url_for('import_friends') }}';
             friendsImportFeature.init();
 
-            {%- if current_user.ordered_friends -%}
+            {%- if current_user.friends_ordered_by_username -%}
                 popoversFeature.initOnMyFriends();
             {%- endif -%}
         </script>

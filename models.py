@@ -496,21 +496,24 @@ class User(db.Model, UserMixin):
         return RwrAccount.query.with_entities(func.count('*')).filter(RwrAccount.user_id == self.id).scalar() > 0
 
     @memoized_property
-    def ordered_friends(self):
-        """Get the Friends of this User, ordered by username. Friends that are playing are pushed to the top of the list."""
-        all_friends = UserFriend.query.filter(UserFriend.user_id == self.id).order_by(UserFriend.username.asc()).all()
+    def friends_ordered_by_username(self):
+        """Get the Friends of this User, ordered by username."""
+        return UserFriend.query.filter(
+            UserFriend.user_id == self.id
+        ).order_by(UserFriend.username.asc()).all()
 
-        ordered_friends = []
+    @memoized_property
+    def friends_divided_by_status(self):
+        """"Get the Friends of this User divided in two lists: playing and non-playing friends."""
+        playing_friends = [friend for friend in self.friends_ordered_by_username if friend.playing_on_server]
+        non_playing_friends = [friend for friend in self.friends_ordered_by_username if not friend.playing_on_server]
 
-        ordered_friends.extend([friend for friend in all_friends if friend.playing_on_server])
-        ordered_friends.extend([friend for friend in all_friends if not friend.playing_on_server])
-
-        return ordered_friends
+        return playing_friends, non_playing_friends
 
     @memoized_property
     def number_of_playing_friends(self):
         """Return the number of Friends that are playing for this User."""
-        return sum([1 for friend in self.ordered_friends if friend.playing_on_server])
+        return len([friend for friend in self.friends_ordered_by_username if friend.playing_on_server])
 
     def add_friend(self, username):
         """Add a friend to this User's friends list. Commiting DB operation is needed after calling this method."""
@@ -544,7 +547,7 @@ class User(db.Model, UserMixin):
 
     def has_friend(self, username):
         """Determine if the given username is in the User's friends list."""
-        return username in [friend.username for friend in self.ordered_friends]
+        return username in [friend.username for friend in self.friends_ordered_by_username]
 
     def get_friend(self, username):
         """Return the Friend with the given username in this User's friends list."""

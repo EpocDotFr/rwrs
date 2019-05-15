@@ -194,7 +194,7 @@ class Server:
         if not current_user.is_authenticated:
             return False
 
-        for friend in current_user.ordered_friends:
+        for friend in current_user.friends_ordered_by_username:
             if friend.username in self.players.list:
                 return True
 

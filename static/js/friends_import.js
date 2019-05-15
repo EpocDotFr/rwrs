@@ -78,9 +78,6 @@ friendsImportFeature = {
                 }
 
                 alert(message);
-            },
-            complete: function() {
-                // TODO
             }
         });
     }

@@ -240,6 +240,27 @@
     {%- endif -%}
 {%- endmacro %}
 
+{% macro friends_list(friends) -%}
+    {%- if friends -%}
+        <div class="grid-3 has-gutter friends-list">
+            {%- for friend in friends -%}
+                <div class="mbs pas{{ ' playing' if friend.playing_on_server }}">
+                    <div class="actions fr">
+                        {% if friend.playing_on_server.is_ranked %}<a href="{{ url_for('players_list', database=friend.playing_on_server.database, target=friend.username) }}" title="Highlight in {{ friend.playing_on_server.database_name }} leaderboard"><i class="fas fa-list-ol"></i></a> {% endif %}
+                        {%- if friend.playing_on_server -%}{% if friend.playing_on_server.players.free > 0 %}<a href="{{ friend.playing_on_server.steam_join_link }}" title="Join this server"><i class="fab fa-steam-symbol"></i></a>{% else %}<i class="fab fa-steam-symbol txtgrey help" title="Server is full, cannot join"></i>{% endif %}{% endif %}
+                        <a href="{{ url_for('remove_friend', username=friend.username) }}" title="Remove friend"><i class="fas fa-user-times"></i></a>
+                    </div>
+                    <div class="{{ 'pbs' if friend.playing_on_server }}">{{ player_name(friend.username, raw=True, link=True, database=friend.database, popover_url=True) }}</div>
+                    {%- if friend.playing_on_server -%}
+                        <div class="small">{{ location(friend.playing_on_server.location) }} {{ server_name(friend.playing_on_server, event_icon=True, server_details_link=True) }}</div>
+                        <div class="small"><strong><span class="{{ server_slots_class(friend.playing_on_server) }}">{{ friend.playing_on_server.players.current }}</span>/{{ friend.playing_on_server.players.max }}</strong> players on <strong>{{ friend.playing_on_server.map.name_display }}</strong> ({{ friend.playing_on_server.type_name }})</div>
+                    {%- endif -%}
+                </div>
+            {%- endfor -%}
+        </div>
+    {%- endif -%}
+{%- endmacro %}
+
 {% macro event_announcement(event, for_server=False) -%}
     {{ 'Ongoing' if event.is_ongoing else 'Upcoming' }} event{% if for_server %} on this server{% endif %}: <strong>{{ event.name }}</strong>{% if not event.is_ongoing %} - {{ event.datetime.format(config['EVENT_DATETIME_DISPLAY_FORMAT']) }}{% endif %}{% if not for_server and event.server %} on <a href="{{ event.server.link }}">{{ event.server.name }}</a>{% if event.display_server_players_count %} ({{ event.server.players.current }}/{{ event.server.players.max }} players){% endif %}{% endif %}
 {%- endmacro %}
