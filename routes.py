@@ -184,6 +184,28 @@ def remove_friend(username):
     return redirect(helpers.get_next_url())
 
 
+@app.route('/my-friends/import', methods=['POST'])
+@login_required
+def import_friends():
+    status = 200
+
+    if not request.is_xhr or not request.is_json:
+        status = 400
+        result = {'status': 'failure', 'data': {'message': 'Invalid request.'}}
+    else:
+        try:
+            current_user.add_friends(request.get_json())
+
+            db.session.commit()
+
+            result = {'status': 'success'}
+        except Exception as e:
+            status = 500
+            result = {'status': 'failure', 'data': {'message': str(e)}}
+
+    return jsonify(result), status
+
+
 @app.route('/about')
 def about():
     return render_template(

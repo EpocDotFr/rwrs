@@ -520,6 +520,28 @@ class User(db.Model, UserMixin):
 
         db.session.add(user_friend)
 
+    def add_friends(self, usernames):
+        """Add multiple friends to this User's friends list in one go. Commiting DB operation is needed after calling this method."""
+        existing_user_friends = UserFriend.query.filter(
+            UserFriend.user_id == self.id,
+            UserFriend.username.in_(usernames)
+        ).all()
+
+        existing_usernames = [existing_user_friend.username for existing_user_friend in existing_user_friends]
+
+        usernames = [username for username in usernames if username not in existing_usernames]
+
+        user_friends = []
+
+        for username in usernames:
+            user_friend = UserFriend()
+            user_friend.user_id = self.id
+            user_friend.username = username
+
+            user_friends.append(user_friend)
+
+        db.session.bulk_save_objects(user_friends)
+
     def has_friend(self, username):
         """Determine if the given username is in the User's friends list."""
         return username in [friend.username for friend in self.ordered_friends]

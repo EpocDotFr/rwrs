@@ -10,9 +10,9 @@
     {%- if current_user.is_authenticated -%}
         {%- if current_user.ordered_friends -%}
             <script src="https://cdnjs.cloudflare.com/ajax/libs/tippy.js/3.1.1/tippy.min.js"></script>
-            {% assets 'js_popovers_friends' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
+            {% assets 'js_popovers_friends_import' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
         {%- else -%}
-            {% assets 'js_friends' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
+            {% assets 'js_friends_import' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
         {%- endif -%}
     {%- endif -%}
 {% endblock %}
@@ -60,10 +60,13 @@
 
         {{ macros.stats_notice() }}
 
-        {%- if current_user.ordered_friends -%}
-            <script>
+        <script>
+            friendsImportFeature.endpoint = '{{ url_for('import_friends') }}';
+            friendsImportFeature.init();
+
+            {%- if current_user.ordered_friends -%}
                 popoversFeature.initOnMyFriends();
-            </script>
-        {%- endif -%}
+            {%- endif -%}
+        </script>
     {%- endif -%}
 {% endblock %}

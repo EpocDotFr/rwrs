@@ -66,9 +66,9 @@ if has_debug_toolbar_ext:
 
 assets.cache = 'storage/webassets-cache/'
 
-assets.register('js_friends', Bundle('js/friends.js', filters='jsmin', output='js/friends.min.js'))
+assets.register('js_friends_import', Bundle('js/friends_import.js', filters='jsmin', output='js/friends_import.min.js'))
 assets.register('js_popovers', Bundle('js/popovers.js', filters='jsmin', output='js/popovers.min.js'))
-assets.register('js_popovers_friends', Bundle('js/popovers.js', 'js/friends.js', filters='jsmin', output='js/popovers_friends.min.js'))
+assets.register('js_popovers_friends_import', Bundle('js/popovers.js', 'js/friends_import.js', filters='jsmin', output='js/popovers_friends_import.min.js'))
 assets.register('js_charts', Bundle('js/charts.js', filters='jsmin', output='js/charts.min.js'))
 assets.register('js_charts_popovers', Bundle('js/charts.js', 'js/popovers.js', filters='jsmin', output='js/charts_popovers.min.js'))
 assets.register('js_player_claim', Bundle('js/player_claim.js', filters='jsmin', output='js/player_claim.min.js'))
