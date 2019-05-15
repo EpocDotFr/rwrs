@@ -106,9 +106,9 @@
         <a href="{{ url_for('servers_list', **view_link_params) }}" class="btn"><i class="fas fa-{{ view_link_icon }}"></i> Use {{ view_link_text }} view</a>
     </p>
 
-    <script>
-        {%- if request.args.get('view') == 'extended' -%}
+    {%- if request.args.get('view') == 'extended' -%}
+        <script>
             popoversFeature.initOnServersList();
-        {% endif %}
-    </script>
+        </script>
+    {%- endif -%}
 {% endblock %}

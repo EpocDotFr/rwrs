@@ -21,9 +21,9 @@
 {% endblock %}
 
 {% block cssfiles %}
-    {% if server.is_dedicated %}
+    {%- if server.is_dedicated -%}
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/metrics-graphics/2.15.6/metricsgraphics.min.css">
-    {% endif %}
+    {%- endif -%}
 
     {%- if server.is_ranked -%}
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tippy.js/3.1.1/tippy.css">
