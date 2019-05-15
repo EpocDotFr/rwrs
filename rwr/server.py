@@ -189,7 +189,7 @@ class Server:
     def database_name(self):
         return utils.get_database_name(self.database)
 
-    def have_friends_from_current_user(self):
+    def has_friends_from_current_user(self):
         """Determine whether this Server have friends from the current User or not."""
         if not current_user.is_authenticated:
             return False
