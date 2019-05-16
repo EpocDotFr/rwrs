@@ -69,7 +69,7 @@
             </thead>
             <tbody>
                 {% for player in players %}
-                    <tr class="{{ 'notice' if args.get('target') == player.username else 'info' if player.is_friend_with_current_user() }}">
+                    <tr class="{{ 'notice' if args.get('target') == player.username else 'info' if current_user.is_authenticated and player.is_friend_with_user(current_user) }}">
                         <td>{{ player.leaderboard_position_display }}</td>
                         <td>{{ macros.player_name(player, link=True, show_rank=True, show_online=True) }}</td>
                         <td>{{ player.xp_display }}</td>
@@ -88,7 +88,7 @@
                         <td>{{ player.throwables_thrown_display }}</td>
                         {%- if current_user.is_authenticated -%}
                             <td>
-                                {% if player.is_friend_with_current_user() -%}
+                                {% if player.is_friend_with_user(current_user) -%}
                                     <a href="{{ url_for('remove_friend', username=player.username, next=generate_next_url()) }}" title="Remove {{ player.username }} from friends list" class="btn"><i class="fas fa-user-times"></i></a>
                                 {%- else -%}
                                     <a href="{{ url_for('add_friend', username=player.username, next=generate_next_url()) }}" title="Add {{ player.username }} to friends list" class="btn"><i class="fas fa-user-plus"></i></a>

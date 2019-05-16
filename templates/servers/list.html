@@ -62,7 +62,7 @@
             </thead>
             <tbody>
                 {% for server in servers %}
-                    <tr onclick="window.location.href = '{{ server.link }}';" class="{{ 'info' if server.has_friends_from_current_user() }}">
+                    <tr onclick="window.location.href = '{{ server.link }}';" class="{{ 'info' if current_user.is_authenticated and server.has_friends_from_user(current_user) }}">
                         <td>{{ macros.location(server.location) }} {{ macros.server_name(server, event_icon=True) }}</td>
                         <td class="{{ macros.server_slots_class(server) }}">{{ server.players.current }}</td>
                         <td>{{ server.players.max }}</td>

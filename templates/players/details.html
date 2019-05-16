@@ -44,7 +44,7 @@
             <a href="{{ url_for('players_list', database=request.view_args.get('database'), target=player.username) }}" class="btn"><i class="fas fa-list-ol"></i> Highlight in {{ player.database_name }} leaderboard</a>
 
             {% if current_user.is_authenticated -%}
-                {% if player.is_friend_with_current_user() -%}
+                {% if player.is_friend_with_user(current_user) -%}
                     <a href="{{ url_for('remove_friend', username=player.username, next=generate_next_url()) }}" class="btn"><i class="fas fa-user-times"></i> Remove from friends list</a>
                 {%- else -%}
                     <a href="{{ url_for('add_friend', username=player.username, next=generate_next_url()) }}" class="btn"><i class="fas fa-user-plus"></i> Add to friends list</a>

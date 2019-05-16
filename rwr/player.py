@@ -282,9 +282,9 @@ class Player:
         """Return the User linked to this Player."""
         return self.rwr_account.user if self.rwr_account else None
 
-    def is_friend_with_current_user(self):
-        """Determine whether this Player is friend with the current user or not."""
-        return current_user.is_authenticated and current_user.has_friend(self.username)
+    def is_friend_with_user(self, user):
+        """Determine whether this Player is friend with the given User or not."""
+        return user.has_friend(self.username)
 
     def __repr__(self):
         return 'Player:' + self.username
