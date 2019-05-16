@@ -171,10 +171,17 @@ class UserResource(Resource):
 
         return user
 
+
+class FriendsResource(Resource):
+    @marshal_with(transformers.player_simple) # TODO Use correct transformer
+    def get(self):
+        return g.current_user.friends_ordered_by_username
+
 api.add_resource(ServersResource, '/servers')
 api.add_resource(ServerResource, '/servers/<ip>:<int:port>')
 api.add_resource(PlayersResource, '/players/<any({}):database>'.format(rwr.constants.VALID_DATABASES_STRING_LIST))
 api.add_resource(PlayerResource, '/players/<any({}):database>/<username>'.format(rwr.constants.VALID_DATABASES_STRING_LIST))
 api.add_resource(PlayerStatsHistoryResource, '/players/<any({}):database>/<username>/stats-history'.format(rwr.constants.VALID_DATABASES_STRING_LIST))
+api.add_resource(FriendsResource, '/friends')
 api.add_resource(UserResource, '/users/<int:user_id>')
 api.add_resource(LiveCountersResource, '/live-counters')

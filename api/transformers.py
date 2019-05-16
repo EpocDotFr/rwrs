@@ -88,7 +88,7 @@ event = OrderedDict([
     ('starts_at', ArrowIsoDateTimeField(attribute='datetime')),
 ])
 
-server_simple = OrderedDict([
+server_base = OrderedDict([
     ('name', fields.String),
     ('ip', fields.String),
     ('port', fields.Integer),
@@ -103,13 +103,14 @@ server_simple = OrderedDict([
     ('location', fields.Nested(server_location, attribute=lambda server: server.location if server.location.country_code else None, allow_null=True)),
     ('steam_join_url', fields.String(attribute='steam_join_link')),
     ('event', fields.Nested(event, allow_null=True)),
-    ('has_friends', fields.Boolean), # Added in the API controller
 ])
 
-server_full = server_simple.copy()
+server_simple = server_base.copy()
+server_simple.update(OrderedDict([
+    ('has_friends', fields.Boolean), # Added in the API controller
+]))
 
-del server_full['has_friends']
-
+server_full = server_base.copy()
 server_full.update(OrderedDict([
     ('version', fields.String),
     ('is_dedicated', fields.Boolean),
@@ -161,7 +162,7 @@ player_stats_history.update(OrderedDict([
 player_list = player_simple.copy()
 player_list.update(OrderedDict([
     ('position', fields.Integer(attribute='leaderboard_position')),
-    ('current_server', fields.Nested(server_simple, attribute='playing_on_server', allow_null=True)),
+    ('current_server', fields.Nested(server_base, attribute='playing_on_server', allow_null=True)),
     ('stats', fields.Nested(player_stats, attribute=lambda player: player)),
     ('current_rank', fields.Nested(player_rank, attribute='rank')),
 ]))
