@@ -41,7 +41,7 @@
 
   + `list` (array[Player Simple Object], fixed-type, required) - List of current players
 
-### Server Simple Object
+### Server Base Object
 
   + `name`: `InvasionEU2` (required) - Server name
   + `ip`: `31.186.250.67` (required) - Server IP address
@@ -59,7 +59,11 @@
   + `steam_join_url`: `steam://rungameid/270150//server_address=178.32.58.160 server_port=1240` (required) - [Steam browser protocol](https://developer.valvesoftware.com/wiki/Steam_browser_protocol) URL to be used to load Running With Rifles onto the given server lobby screen
   + `event` (Event Object, nullable) - Event linked to this Server. `null` if none
 
-### Server Full Object (Server Simple Object)
+### Server Simple Object (Server Base Object)
+
+  + `has_friends`: `true` (boolean, required) - Whether there's friends from the current user playing on this server
+
+### Server Full Object (Server Base Object)
 
   + `map` (Server Map Full Object, required) - Server map
   + `version`: `1.70.2` (required) - Server game version

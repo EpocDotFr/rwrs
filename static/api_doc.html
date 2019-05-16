@@ -177,7 +177,8 @@ code, which contains all the RWR maps metadata stored in the JSON format.</p>
       "<span class="hljs-attribute">name</span>": <span class="hljs-value"><span class="hljs-string">"PvP event!"</span></span>,
       "<span class="hljs-attribute">is_ongoing</span>": <span class="hljs-value"><span class="hljs-literal">true</span></span>,
       "<span class="hljs-attribute">starts_at</span>": <span class="hljs-value"><span class="hljs-string">"2019-04-16T16:00:00+02:00"</span>
-    </span>}
+    </span>}</span>,
+    "<span class="hljs-attribute">has_friends</span>": <span class="hljs-value"><span class="hljs-literal">true</span>
   </span>}
 ]</code></pre><div style="height: 1px;"></div><h5>Schema</h5><pre><code>{
   "<span class="hljs-attribute">$schema</span>": <span class="hljs-value"><span class="hljs-string">"http://json-schema.org/draft-04/schema#"</span></span>,
@@ -369,6 +370,10 @@ code, which contains all the RWR maps metadata stored in the JSON format.</p>
           <span class="hljs-string">"starts_at"</span>
         ]</span>,
         "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Event linked to this Server. `null` if none"</span>
+      </span>}</span>,
+      "<span class="hljs-attribute">has_friends</span>": <span class="hljs-value">{
+        "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"boolean"</span></span>,
+        "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Whether there's friends from the current user playing on this server"</span>
       </span>}
     </span>}</span>,
     "<span class="hljs-attribute">required</span>": <span class="hljs-value">[
@@ -380,7 +385,8 @@ code, which contains all the RWR maps metadata stored in the JSON format.</p>
       <span class="hljs-string">"type"</span>,
       <span class="hljs-string">"map"</span>,
       <span class="hljs-string">"players"</span>,
-      <span class="hljs-string">"steam_join_url"</span>
+      <span class="hljs-string">"steam_join_url"</span>,
+      <span class="hljs-string">"has_friends"</span>
     ]
   </span>}
 </span>}</code></pre><div style="height: 1px;"></div></div></div><div class="title"><strong>Response&nbsp;&nbsp;<code>400</code></strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><div class="description"><p>One or more arguments are (is) invalid. Check the error message(s) for more information.</p>
@@ -477,6 +483,7 @@ to the <code>GET /servers</code> resource (e.g the player list).</p>
         "<span class="hljs-attribute">is_contributor</span>": <span class="hljs-value"><span class="hljs-literal">false</span></span>,
         "<span class="hljs-attribute">is_rwr_dev</span>": <span class="hljs-value"><span class="hljs-literal">false</span></span>,
         "<span class="hljs-attribute">is_ranked_servers_admin</span>": <span class="hljs-value"><span class="hljs-literal">false</span></span>,
+        "<span class="hljs-attribute">is_friend</span>": <span class="hljs-value"><span class="hljs-literal">true</span></span>,
         "<span class="hljs-attribute">database</span>": <span class="hljs-value">{
           "<span class="hljs-attribute">id</span>": <span class="hljs-value"><span class="hljs-string">"invasion"</span></span>,
           "<span class="hljs-attribute">name</span>": <span class="hljs-value"><span class="hljs-string">"Invasion"</span>
@@ -682,6 +689,10 @@ to the <code>GET /servers</code> resource (e.g the player list).</p>
                 "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"boolean"</span></span>,
                 "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Whether this player is admin on ranked (official) servers"</span>
               </span>}</span>,
+              "<span class="hljs-attribute">is_friend</span>": <span class="hljs-value">{
+                "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"boolean"</span></span>,
+                "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Whether this player is friend with the current user"</span>
+              </span>}</span>,
               "<span class="hljs-attribute">database</span>": <span class="hljs-value">{
                 "<span class="hljs-attribute">type</span>": <span class="hljs-value">[
                   <span class="hljs-string">"object"</span>,
@@ -709,7 +720,8 @@ to the <code>GET /servers</code> resource (e.g the player list).</p>
               <span class="hljs-string">"is_rwrs_creator"</span>,
               <span class="hljs-string">"is_contributor"</span>,
               <span class="hljs-string">"is_rwr_dev"</span>,
-              <span class="hljs-string">"is_ranked_servers_admin"</span>
+              <span class="hljs-string">"is_ranked_servers_admin"</span>,
+              <span class="hljs-string">"is_friend"</span>
             ]
           </span>}</span>,
           "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"List of current players"</span>
@@ -921,6 +933,7 @@ to the <code>GET /servers</code> resource (e.g the player list).</p>
     "<span class="hljs-attribute">is_contributor</span>": <span class="hljs-value"><span class="hljs-literal">false</span></span>,
     "<span class="hljs-attribute">is_rwr_dev</span>": <span class="hljs-value"><span class="hljs-literal">false</span></span>,
     "<span class="hljs-attribute">is_ranked_servers_admin</span>": <span class="hljs-value"><span class="hljs-literal">false</span></span>,
+    "<span class="hljs-attribute">is_friend</span>": <span class="hljs-value"><span class="hljs-literal">true</span></span>,
     "<span class="hljs-attribute">database</span>": <span class="hljs-value">{
       "<span class="hljs-attribute">id</span>": <span class="hljs-value"><span class="hljs-string">"invasion"</span></span>,
       "<span class="hljs-attribute">name</span>": <span class="hljs-value"><span class="hljs-string">"Invasion"</span>
@@ -963,7 +976,8 @@ to the <code>GET /servers</code> resource (e.g the player list).</p>
         "<span class="hljs-attribute">name</span>": <span class="hljs-value"><span class="hljs-string">"PvP event!"</span></span>,
         "<span class="hljs-attribute">is_ongoing</span>": <span class="hljs-value"><span class="hljs-literal">true</span></span>,
         "<span class="hljs-attribute">starts_at</span>": <span class="hljs-value"><span class="hljs-string">"2019-04-16T16:00:00+02:00"</span>
-      </span>}
+      </span>}</span>,
+      "<span class="hljs-attribute">has_friends</span>": <span class="hljs-value"><span class="hljs-literal">true</span>
     </span>}</span>,
     "<span class="hljs-attribute">stats</span>": <span class="hljs-value">{
       "<span class="hljs-attribute">kills</span>": <span class="hljs-value"><span class="hljs-number">38689</span></span>,
@@ -1024,6 +1038,10 @@ to the <code>GET /servers</code> resource (e.g the player list).</p>
       "<span class="hljs-attribute">is_ranked_servers_admin</span>": <span class="hljs-value">{
         "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"boolean"</span></span>,
         "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Whether this player is admin on ranked (official) servers"</span>
+      </span>}</span>,
+      "<span class="hljs-attribute">is_friend</span>": <span class="hljs-value">{
+        "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"boolean"</span></span>,
+        "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Whether this player is friend with the current user"</span>
       </span>}</span>,
       "<span class="hljs-attribute">database</span>": <span class="hljs-value">{
         "<span class="hljs-attribute">type</span>": <span class="hljs-value">[
@@ -1236,6 +1254,10 @@ to the <code>GET /servers</code> resource (e.g the player list).</p>
               <span class="hljs-string">"starts_at"</span>
             ]</span>,
             "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Event linked to this Server. `null` if none"</span>
+          </span>}</span>,
+          "<span class="hljs-attribute">has_friends</span>": <span class="hljs-value">{
+            "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"boolean"</span></span>,
+            "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Whether there's friends from the current user playing on this server"</span>
           </span>}
         </span>}</span>,
         "<span class="hljs-attribute">required</span>": <span class="hljs-value">[
@@ -1247,7 +1269,8 @@ to the <code>GET /servers</code> resource (e.g the player list).</p>
           <span class="hljs-string">"type"</span>,
           <span class="hljs-string">"map"</span>,
           <span class="hljs-string">"players"</span>,
-          <span class="hljs-string">"steam_join_url"</span>
+          <span class="hljs-string">"steam_join_url"</span>,
+          <span class="hljs-string">"has_friends"</span>
         ]</span>,
         "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Server on which the player is currently playing"</span>
       </span>}</span>,
@@ -1381,6 +1404,7 @@ to the <code>GET /servers</code> resource (e.g the player list).</p>
       <span class="hljs-string">"is_contributor"</span>,
       <span class="hljs-string">"is_rwr_dev"</span>,
       <span class="hljs-string">"is_ranked_servers_admin"</span>,
+      <span class="hljs-string">"is_friend"</span>,
       <span class="hljs-string">"stats"</span>,
       <span class="hljs-string">"current_rank"</span>,
       <span class="hljs-string">"position"</span>
@@ -1466,6 +1490,7 @@ to the <code>GET /servers</code> resource (e.g the player list).</p>
   "<span class="hljs-attribute">is_contributor</span>": <span class="hljs-value"><span class="hljs-literal">false</span></span>,
   "<span class="hljs-attribute">is_rwr_dev</span>": <span class="hljs-value"><span class="hljs-literal">false</span></span>,
   "<span class="hljs-attribute">is_ranked_servers_admin</span>": <span class="hljs-value"><span class="hljs-literal">false</span></span>,
+  "<span class="hljs-attribute">is_friend</span>": <span class="hljs-value"><span class="hljs-literal">true</span></span>,
   "<span class="hljs-attribute">database</span>": <span class="hljs-value">{
     "<span class="hljs-attribute">id</span>": <span class="hljs-value"><span class="hljs-string">"invasion"</span></span>,
     "<span class="hljs-attribute">name</span>": <span class="hljs-value"><span class="hljs-string">"Invasion"</span>
@@ -1508,7 +1533,8 @@ to the <code>GET /servers</code> resource (e.g the player list).</p>
       "<span class="hljs-attribute">name</span>": <span class="hljs-value"><span class="hljs-string">"PvP event!"</span></span>,
       "<span class="hljs-attribute">is_ongoing</span>": <span class="hljs-value"><span class="hljs-literal">true</span></span>,
       "<span class="hljs-attribute">starts_at</span>": <span class="hljs-value"><span class="hljs-string">"2019-04-16T16:00:00+02:00"</span>
-    </span>}
+    </span>}</span>,
+    "<span class="hljs-attribute">has_friends</span>": <span class="hljs-value"><span class="hljs-literal">true</span>
   </span>}</span>,
   "<span class="hljs-attribute">stats</span>": <span class="hljs-value">{
     "<span class="hljs-attribute">kills</span>": <span class="hljs-value"><span class="hljs-number">38689</span></span>,
@@ -1594,6 +1620,10 @@ to the <code>GET /servers</code> resource (e.g the player list).</p>
     "<span class="hljs-attribute">is_ranked_servers_admin</span>": <span class="hljs-value">{
       "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"boolean"</span></span>,
       "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Whether this player is admin on ranked (official) servers"</span>
+    </span>}</span>,
+    "<span class="hljs-attribute">is_friend</span>": <span class="hljs-value">{
+      "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"boolean"</span></span>,
+      "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Whether this player is friend with the current user"</span>
     </span>}</span>,
     "<span class="hljs-attribute">database</span>": <span class="hljs-value">{
       "<span class="hljs-attribute">type</span>": <span class="hljs-value">[
@@ -1806,6 +1836,10 @@ to the <code>GET /servers</code> resource (e.g the player list).</p>
             <span class="hljs-string">"starts_at"</span>
           ]</span>,
           "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Event linked to this Server. `null` if none"</span>
+        </span>}</span>,
+        "<span class="hljs-attribute">has_friends</span>": <span class="hljs-value">{
+          "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"boolean"</span></span>,
+          "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Whether there's friends from the current user playing on this server"</span>
         </span>}
       </span>}</span>,
       "<span class="hljs-attribute">required</span>": <span class="hljs-value">[
@@ -1817,7 +1851,8 @@ to the <code>GET /servers</code> resource (e.g the player list).</p>
         <span class="hljs-string">"type"</span>,
         <span class="hljs-string">"map"</span>,
         <span class="hljs-string">"players"</span>,
-        <span class="hljs-string">"steam_join_url"</span>
+        <span class="hljs-string">"steam_join_url"</span>,
+        <span class="hljs-string">"has_friends"</span>
       ]</span>,
       "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Server on which the player is currently playing"</span>
     </span>}</span>,
@@ -2113,6 +2148,7 @@ to the <code>GET /servers</code> resource (e.g the player list).</p>
     <span class="hljs-string">"is_contributor"</span>,
     <span class="hljs-string">"is_rwr_dev"</span>,
     <span class="hljs-string">"is_ranked_servers_admin"</span>,
+    <span class="hljs-string">"is_friend"</span>,
     <span class="hljs-string">"database"</span>,
     <span class="hljs-string">"current_server"</span>,
     <span class="hljs-string">"stats"</span>,
@@ -2479,6 +2515,7 @@ to the <code>GET /servers</code> resource (e.g the player list).</p>
       "<span class="hljs-attribute">is_contributor</span>": <span class="hljs-value"><span class="hljs-literal">false</span></span>,
       "<span class="hljs-attribute">is_rwr_dev</span>": <span class="hljs-value"><span class="hljs-literal">false</span></span>,
       "<span class="hljs-attribute">is_ranked_servers_admin</span>": <span class="hljs-value"><span class="hljs-literal">false</span></span>,
+      "<span class="hljs-attribute">is_friend</span>": <span class="hljs-value"><span class="hljs-literal">true</span></span>,
       "<span class="hljs-attribute">database</span>": <span class="hljs-value">{
         "<span class="hljs-attribute">id</span>": <span class="hljs-value"><span class="hljs-string">"invasion"</span></span>,
         "<span class="hljs-attribute">name</span>": <span class="hljs-value"><span class="hljs-string">"Invasion"</span>
@@ -2588,6 +2625,10 @@ to the <code>GET /servers</code> resource (e.g the player list).</p>
             "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"boolean"</span></span>,
             "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Whether this player is admin on ranked (official) servers"</span>
           </span>}</span>,
+          "<span class="hljs-attribute">is_friend</span>": <span class="hljs-value">{
+            "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"boolean"</span></span>,
+            "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Whether this player is friend with the current user"</span>
+          </span>}</span>,
           "<span class="hljs-attribute">database</span>": <span class="hljs-value">{
             "<span class="hljs-attribute">type</span>": <span class="hljs-value">[
               <span class="hljs-string">"object"</span>,
@@ -2615,7 +2656,8 @@ to the <code>GET /servers</code> resource (e.g the player list).</p>
           <span class="hljs-string">"is_rwrs_creator"</span>,
           <span class="hljs-string">"is_contributor"</span>,
           <span class="hljs-string">"is_rwr_dev"</span>,
-          <span class="hljs-string">"is_ranked_servers_admin"</span>
+          <span class="hljs-string">"is_ranked_servers_admin"</span>,
+          <span class="hljs-string">"is_friend"</span>
         ]
       </span>}</span>,
       "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"List of linked RWR accounts"</span>
@@ -2707,7 +2749,8 @@ to the <code>GET /servers</code> resource (e.g the player list).</p>
 <h4>Example URI</h4><div class="definition"><span class="method get">GET</span>&nbsp;<span class="uri"><span class="hostname">https://rwrstats.com/api</span>/live-counters</span></div><div class="title"><strong>Request</strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Authorization</span>: <span class="hljs-string">Token {Your Personal Access Token}</span></code></pre><div style="height: 1px;"></div></div></div><div class="title"><strong>Response&nbsp;&nbsp;<code>200</code></strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Content-Type</span>: <span class="hljs-string">application/json</span></code></pre><div style="height: 1px;"></div><h5>Body</h5><pre><code>{
   "<span class="hljs-attribute">players</span>": <span class="hljs-value">{
     "<span class="hljs-attribute">total</span>": <span class="hljs-value"><span class="hljs-number">85</span></span>,
-    "<span class="hljs-attribute">online</span>": <span class="hljs-value"><span class="hljs-number">32</span>
+    "<span class="hljs-attribute">online</span>": <span class="hljs-value"><span class="hljs-number">32</span></span>,
+    "<span class="hljs-attribute">friends_online</span>": <span class="hljs-value"><span class="hljs-number">12</span>
   </span>}</span>,
   "<span class="hljs-attribute">servers</span>": <span class="hljs-value">{
     "<span class="hljs-attribute">total</span>": <span class="hljs-value"><span class="hljs-number">22</span></span>,
@@ -2727,11 +2770,16 @@ to the <code>GET /servers</code> resource (e.g the player list).</p>
         "<span class="hljs-attribute">online</span>": <span class="hljs-value">{
           "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"number"</span></span>,
           "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Number of people playing RWR multiplayer online"</span>
+        </span>}</span>,
+        "<span class="hljs-attribute">friends_online</span>": <span class="hljs-value">{
+          "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"number"</span></span>,
+          "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Number of current user's friends playing RWR multiplayer online"</span>
         </span>}
       </span>}</span>,
       "<span class="hljs-attribute">required</span>": <span class="hljs-value">[
         <span class="hljs-string">"total"</span>,
-        <span class="hljs-string">"online"</span>
+        <span class="hljs-string">"online"</span>,
+        <span class="hljs-string">"friends_online"</span>
       ]</span>,
       "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Player counts"</span>
     </span>}</span>,
