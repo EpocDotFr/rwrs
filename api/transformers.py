@@ -15,6 +15,7 @@ live_counters = OrderedDict([
     ('players', fields.Nested(OrderedDict([
         ('total', fields.Integer),
         ('online', fields.Integer),
+        ('friends_online', fields.Integer),
     ]))),
     ('servers', fields.Nested(OrderedDict([
         ('total', fields.Integer),
@@ -34,6 +35,7 @@ player_simple = OrderedDict([
     ('is_contributor', fields.Boolean),
     ('is_rwr_dev', fields.Boolean),
     ('is_ranked_servers_admin', fields.Boolean),
+    ('is_friend', fields.Boolean), # Added in the API controller
     ('database', fields.Nested(database, attribute=lambda player: player if player.database else None, allow_null=True)),
 ])
 
@@ -101,9 +103,13 @@ server_simple = OrderedDict([
     ('location', fields.Nested(server_location, attribute=lambda server: server.location if server.location.country_code else None, allow_null=True)),
     ('steam_join_url', fields.String(attribute='steam_join_link')),
     ('event', fields.Nested(event, allow_null=True)),
+    ('has_friends', fields.Boolean), # Added in the API controller
 ])
 
 server_full = server_simple.copy()
+
+del server_full['has_friends']
+
 server_full.update(OrderedDict([
     ('version', fields.String),
     ('is_dedicated', fields.Boolean),

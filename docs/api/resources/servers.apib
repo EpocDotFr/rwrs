@@ -6,7 +6,7 @@ A Server represent a public multiplayer Running With Rifles game.
 
 + Parameters
   + `location`: `continent:eu` (optional)
-      Servers country or continent of residence. This criteria format is either:
+      Servers country or continent of residence. This criterion format is either:
 
         - A concatenation of a **location type** and a **location code**, separated by a colon, OR
         - Just a **country code** OR
@@ -121,8 +121,8 @@ A Server represent a public multiplayer Running With Rifles game.
 
 ### Get the list of Servers [GET]
 
-Return the list of Servers. The list may be optionally filtered by one or more criteria. The criteria is taken into
-account **only** if it is present in the query string.
+Return the list of Servers. The list may be optionally filtered by several criteria. These last are taken into account
+**only** if it they are present in the query string.
 
 ::: note
 #### Server-side caching

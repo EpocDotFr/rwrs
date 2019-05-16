@@ -29,6 +29,9 @@ class ServersResource(Resource):
         else:
             servers = rwr.scraper.get_servers()
 
+        for server in servers:
+            server.has_friends = server.has_friends_from_user(g.current_user)
+
         return servers
 
 
@@ -43,7 +46,8 @@ class ServerResource(Resource):
             is_rwr_dev=helpers.is_player_rwr_dev(player_username),
             is_ranked_servers_admin=helpers.is_player_ranked_server_admin(player_username),
             database=server.database,
-            database_name=server.database_name
+            database_name=server.database_name,
+            is_friend=g.current_user.has_friend(player_username)
         ) for player_username in server.players.list]
 
     @marshal_with(transformers.server_full)
@@ -78,6 +82,7 @@ class PlayersResource(Resource):
 
         for player in players:
             player.set_playing_on_server(servers)
+            player.is_friend = player.is_friend_with_user(g.current_user)
 
         return players
 
@@ -115,6 +120,7 @@ class PlayerResource(Resource):
         servers = rwr.scraper.get_servers()
 
         player.set_playing_on_server(servers)
+        player.is_friend = player.is_friend_with_user(g.current_user)
 
         return player
 
@@ -145,7 +151,8 @@ class LiveCountersResource(Resource):
         return SimpleNamespace(
             players=SimpleNamespace(
                 total=g.total_players,
-                online=g.online_players
+                online=g.online_players,
+                friends_online=g.current_user.number_of_playing_friends
             ),
             servers=SimpleNamespace(
                 total=g.total_servers,
