@@ -4,6 +4,7 @@ from . import api, transformers, validators
 from types import SimpleNamespace
 from rwr.player import Player
 from flask import url_for, g
+from rwrs import db
 import rwr.constants
 import rwr.scraper
 import helpers
@@ -176,6 +177,21 @@ class FriendsResource(Resource):
     @marshal_with(transformers.player_simple) # TODO Use correct transformer
     def get(self):
         return g.current_user.friends_ordered_by_username
+
+    @marshal_with(transformers.player_simple) # TODO Use correct transformer
+    def post(self):
+        args = validators.add_friend.parse_args()
+
+        username = args['username'].upper()
+
+        if g.current_user.has_friend(username):
+            abort(400, message='{} is already your friend'.format(username))
+
+        user_friend = g.current_user.add_friend(username)
+
+        db.session.commit()
+
+        return user_friend
 
 api.add_resource(ServersResource, '/servers')
 api.add_resource(ServerResource, '/servers/<ip>:<int:port>')

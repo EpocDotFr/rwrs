@@ -523,6 +523,8 @@ class User(db.Model, UserMixin):
 
         db.session.add(user_friend)
 
+        return user_friend
+
     def add_friends(self, usernames):
         """Add multiple friends to this User's friends list in one go. Commiting DB operation is needed after calling this method."""
         existing_user_friends = UserFriend.query.filter(
@@ -544,6 +546,8 @@ class User(db.Model, UserMixin):
             user_friends.append(user_friend)
 
         db.session.bulk_save_objects(user_friends)
+
+        return user_friends
 
     def has_friend(self, username):
         """Determine if the given username is in the User's friends list."""
