@@ -122,6 +122,18 @@ server_full.update(OrderedDict([
     ('banner_image_url', fields.String(attribute='banner_absolute'))
 ]))
 
+friend = OrderedDict([ # TODO Refactor
+    ('username', fields.String),
+    ('url', fields.String(attribute='link_absolute')),
+    ('is_rwrs_creator', fields.Boolean(attribute='is_myself')),
+    ('is_contributor', fields.Boolean),
+    ('is_rwr_dev', fields.Boolean),
+    ('is_ranked_servers_admin', fields.Boolean),
+    ('friend_since', ArrowIsoDateTimeField(attribute='created_at')),
+    ('database', fields.Nested(database, attribute=lambda friend: friend if friend.database else None, allow_null=True)),
+    ('current_server', fields.Nested(server_base, attribute='playing_on_server', allow_null=True)),
+])
+
 player_stats = OrderedDict([
     ('kills', fields.Integer),
     ('deaths', fields.Integer),

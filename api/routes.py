@@ -174,11 +174,11 @@ class UserResource(Resource):
 
 
 class FriendsResource(Resource):
-    @marshal_with(transformers.player_simple) # TODO Use correct transformer
+    @marshal_with(transformers.friend)
     def get(self):
         return g.current_user.friends_ordered_by_username
 
-    @marshal_with(transformers.player_simple) # TODO Use correct transformer
+    @marshal_with(transformers.friend)
     def post(self):
         args = validators.add_friend.parse_args()
 
