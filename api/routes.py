@@ -189,7 +189,17 @@ class FriendsResource(Resource):
 
         db.session.commit()
 
-        return user_friend
+        return user_friend, 201
+
+
+class FriendResource(Resource):
+    def delete(self, username):
+        if g.current_user.remove_friend(username):
+            db.session.commit()
+
+            return '', 204
+        else:
+            abort(404, message='{} is not your friend'.format(username))
 
 api.add_resource(ServersResource, '/servers')
 api.add_resource(ServerResource, '/servers/<ip>:<int:port>')
@@ -197,5 +207,6 @@ api.add_resource(PlayersResource, '/players/<any({}):database>'.format(rwr.const
 api.add_resource(PlayerResource, '/players/<any({}):database>/<username>'.format(rwr.constants.VALID_DATABASES_STRING_LIST))
 api.add_resource(PlayerStatsHistoryResource, '/players/<any({}):database>/<username>/stats-history'.format(rwr.constants.VALID_DATABASES_STRING_LIST))
 api.add_resource(FriendsResource, '/friends')
+api.add_resource(FriendResource, '/friends/<username>')
 api.add_resource(UserResource, '/users/<int:user_id>')
 api.add_resource(LiveCountersResource, '/live-counters')
