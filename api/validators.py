@@ -34,6 +34,14 @@ def arrow_date(value):
 
     return value
 
+
+def username(value):
+    if len(value) > 16:
+        raise ValueError('Username cannot exceed 16 characters')
+
+    return value.upper()
+
+
 maps_choices = ['any']
 maps_choices.extend(rwr.constants.VALID_MAPS)
 
@@ -69,4 +77,4 @@ get_player_stats_history = limit_parser.copy()
 get_player_stats_history.add_argument('page', location='args', type=inputs.positive, default=1)
 
 add_friend = reqparse.RequestParser()
-add_friend.add_argument('username', required=True, location='json') # TODO Restrict to max 16 chars
+add_friend.add_argument('username', required=True, location='json', type=username)

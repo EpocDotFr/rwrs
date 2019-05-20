@@ -182,12 +182,10 @@ class FriendsResource(Resource):
     def post(self):
         args = validators.add_friend.parse_args()
 
-        username = args['username'].upper()
+        if g.current_user.has_friend(args['username']):
+            abort(412, message='{} is already your friend'.format(args['username']))
 
-        if g.current_user.has_friend(username):
-            abort(400, message='{} is already your friend'.format(username))
-
-        user_friend = g.current_user.add_friend(username)
+        user_friend = g.current_user.add_friend(args['username'])
 
         db.session.commit()
 
