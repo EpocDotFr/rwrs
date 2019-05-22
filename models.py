@@ -534,7 +534,7 @@ class User(db.Model, UserMixin):
 
         existing_usernames = [existing_user_friend.username for existing_user_friend in existing_user_friends]
 
-        usernames = [username for username in usernames if username not in existing_usernames]
+        usernames = [username.upper() for username in usernames if username not in existing_usernames]
 
         user_friends = []
 

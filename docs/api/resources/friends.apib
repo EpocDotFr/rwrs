@@ -16,7 +16,7 @@ Return the list of Friends for the current user, ordered by username.
 
 + Response 200 (application/json)
 
-    + Attributes (array[Player List Object], fixed-type)
+    + Attributes (array[Friend Object], fixed-type)
 
 + Response 403 (application/json)
 
@@ -48,7 +48,7 @@ Add the given player to the current user's friends list.
 
 + Response 201 (application/json)
 
-    + Attributes (Player Full Object, fixed-type)
+    + Attributes (Friend Object, fixed-type)
 
 + Response 400 (application/json)
 

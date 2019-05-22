@@ -14,4 +14,5 @@ aglio \
     -o static/api_doc.html \
     --theme-variables docs/api/aglio-rwrs-theme.less \
     --theme-full-width \
+    --no-theme-condense \
     "$@"
