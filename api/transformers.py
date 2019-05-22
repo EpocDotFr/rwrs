@@ -15,6 +15,7 @@ live_counters = OrderedDict([
     ('players', fields.Nested(OrderedDict([
         ('total', fields.Integer),
         ('online', fields.Integer),
+        ('friends_online', fields.Integer),
     ]))),
     ('servers', fields.Nested(OrderedDict([
         ('total', fields.Integer),
@@ -27,7 +28,7 @@ database = OrderedDict([
     ('name', fields.String(attribute='database_name')),
 ])
 
-player_simple = OrderedDict([
+player_base = OrderedDict([
     ('username', fields.String),
     ('url', fields.String(attribute='link_absolute')),
     ('is_rwrs_creator', fields.Boolean(attribute='is_myself')),
@@ -36,6 +37,11 @@ player_simple = OrderedDict([
     ('is_ranked_servers_admin', fields.Boolean),
     ('database', fields.Nested(database, attribute=lambda player: player if player.database else None, allow_null=True)),
 ])
+
+player_simple = player_base.copy()
+player_simple.update(OrderedDict([
+    ('is_friend', fields.Boolean), # Added in the API controller
+]))
 
 server_map_simple = OrderedDict([
     ('id', fields.String),
@@ -86,7 +92,7 @@ event = OrderedDict([
     ('starts_at', ArrowIsoDateTimeField(attribute='datetime')),
 ])
 
-server_simple = OrderedDict([
+server_base = OrderedDict([
     ('name', fields.String),
     ('ip', fields.String),
     ('port', fields.Integer),
@@ -103,7 +109,12 @@ server_simple = OrderedDict([
     ('event', fields.Nested(event, allow_null=True)),
 ])
 
-server_full = server_simple.copy()
+server_simple = server_base.copy()
+server_simple.update(OrderedDict([
+    ('has_friends', fields.Boolean), # Added in the API controller
+]))
+
+server_full = server_base.copy()
 server_full.update(OrderedDict([
     ('version', fields.String),
     ('is_dedicated', fields.Boolean),
@@ -152,10 +163,22 @@ player_stats_history.update(OrderedDict([
     ('promoted_to_rank', fields.Nested(player_rank, allow_null=True)),
 ]))
 
-player_list = player_simple.copy()
+player_advanced = player_simple.copy()
+player_advanced.update(OrderedDict([
+    ('current_server', fields.Nested(server_base, attribute='playing_on_server', allow_null=True)),
+]))
+
+friend = player_advanced.copy()
+
+del friend['is_friend']
+
+friend.update(OrderedDict([
+    ('friend_since', ArrowIsoDateTimeField(attribute='created_at')),
+]))
+
+player_list = player_advanced.copy()
 player_list.update(OrderedDict([
     ('position', fields.Integer(attribute='leaderboard_position')),
-    ('current_server', fields.Nested(server_simple, attribute='playing_on_server', allow_null=True)),
     ('stats', fields.Nested(player_stats, attribute=lambda player: player)),
     ('current_rank', fields.Nested(player_rank, attribute='rank')),
 ]))

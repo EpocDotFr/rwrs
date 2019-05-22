@@ -4,10 +4,6 @@
 
 {% block meta_title %}Players › Claim RWR account{% endblock %}
 
-{% block jsfiles %}
-    {% assets 'js_friends' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
-{% endblock %}
-
 {% block content %}
     <div class="grid has-gutter mtm mbm">
         <div>
@@ -27,8 +23,8 @@
                             <form method="post" action="{{ url_for('player_claim') }}">
                                 {{ form.csrf_token }}
 
-                                {{ macros.form_field(form.type, class="w200p") }}
-                                {{ macros.form_field(form.username, class="w200p") }}
+                                {{ macros.form_field(form.type, class='w200p') }}
+                                {{ macros.form_field(form.username, class='w200p') }}
 
                                 <p class="txtcenter mtm"><button type="submit" class="big"><i class="fa fa-chevron-right"></i> Start!</button></p>
                             </form>
@@ -38,9 +34,4 @@
             </table>
         </div>
     </div>
-
-    <script>
-        friendsFeature.all_players_with_servers_details = {{ g.all_players_with_servers_details|tojson }};
-        friendsFeature.init();
-    </script>
 {% endblock %}

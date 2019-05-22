@@ -1,0 +1,60 @@
+{% extends 'layout.html' %}
+
+{% block page_title %}<h1><i class="fas fa-users"></i> My friends</h1>{% endblock %}
+
+{% block meta_title %}My friends{% endblock %}
+
+{% block meta_description %}Manage and view your Running With Rifles (RWR) friends.{% endblock %}
+
+{% block jsfiles %}
+    {%- if current_user.is_authenticated -%}
+        {%- if current_user.friends_ordered_by_username -%}
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/tippy.js/3.1.1/tippy.min.js"></script>
+            {% assets 'js_popovers_friends_import' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
+        {%- else -%}
+            {% assets 'js_friends_import' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
+        {%- endif -%}
+    {%- endif -%}
+{% endblock %}
+
+{% block content %}
+    {%- if not current_user.is_authenticated -%}
+        <div class="alert info pas mtl mbl">
+            <h4 class="mbs"><i class="fas fa-info-circle"></i> Important notice</h4>
+            <p>The friends list evolved and now requires an RWRS account. This change has been made so you'll have access to your friends list everywhere (and not only on the web browser you used to save your friends).</p>
+            <p>Don't worry, you didn't lost anything. All you have to do is to <a href="{{ url_for('sign_in') }}">sign-in</a> using your Steam account, then go back to this page. Your friends will be automatically imported into your account.</p>
+        </div>
+    {%- else -%}
+        <form action="{{ url_for('my_friends') }}" method="POST" class="mts mbs">
+            <fieldset class="man">
+                <legend><i class="fas fa-cogs"></i> Actions</legend>
+
+                {{ macros.form_errors(form) }}
+
+                {{ form.csrf_token }}
+
+                {{ macros.inline_form_field(form.username, class='w200p', placeholder='Type a player name', without_label=True, maxlength=16) }} <button type="submit"><i class="fas fa-user-plus"></i> Add new friend</button>
+            </fieldset>
+        </form>
+
+        {%- if current_user.friends_ordered_by_username -%}
+            {% set playing_friends, non_playing_friends = current_user.friends_divided_by_status %}
+
+            {{ macros.friends_list(playing_friends)}}
+            {{ macros.friends_list(non_playing_friends)}}
+        {%- else -%}
+            <div class="alert info pas mbs txtcenter"><img src="{{ url_for('static', filename='images/forever_alone.png') }}"><br />You don't have friends at this moment.</div>
+        {%- endif -%}
+
+        {{ macros.stats_notice() }}
+
+        <script>
+            friendsImportFeature.endpoint = '{{ url_for('import_friends') }}';
+            friendsImportFeature.init();
+
+            {%- if current_user.friends_ordered_by_username -%}
+                popoversFeature.initOnMyFriends();
+            {%- endif -%}
+        </script>
+    {%- endif -%}
+{% endblock %}

@@ -4,6 +4,7 @@ from . import api, transformers, validators
 from types import SimpleNamespace
 from rwr.player import Player
 from flask import url_for, g
+from rwrs import db
 import rwr.constants
 import rwr.scraper
 import helpers
@@ -29,6 +30,9 @@ class ServersResource(Resource):
         else:
             servers = rwr.scraper.get_servers()
 
+        for server in servers:
+            server.has_friends = server.has_friends_from_user(g.current_user)
+
         return servers
 
 
@@ -43,7 +47,8 @@ class ServerResource(Resource):
             is_rwr_dev=helpers.is_player_rwr_dev(player_username),
             is_ranked_servers_admin=helpers.is_player_ranked_server_admin(player_username),
             database=server.database,
-            database_name=server.database_name
+            database_name=server.database_name,
+            is_friend=g.current_user.has_friend(player_username)
         ) for player_username in server.players.list]
 
     @marshal_with(transformers.server_full)
@@ -78,6 +83,7 @@ class PlayersResource(Resource):
 
         for player in players:
             player.set_playing_on_server(servers)
+            player.is_friend = player.is_friend_with_user(g.current_user)
 
         return players
 
@@ -115,6 +121,7 @@ class PlayerResource(Resource):
         servers = rwr.scraper.get_servers()
 
         player.set_playing_on_server(servers)
+        player.is_friend = player.is_friend_with_user(g.current_user)
 
         return player
 
@@ -145,7 +152,8 @@ class LiveCountersResource(Resource):
         return SimpleNamespace(
             players=SimpleNamespace(
                 total=g.total_players,
-                online=g.online_players
+                online=g.online_players,
+                friends_online=g.current_user.number_of_playing_friends
             ),
             servers=SimpleNamespace(
                 total=g.total_servers,
@@ -164,10 +172,41 @@ class UserResource(Resource):
 
         return user
 
+
+class FriendsResource(Resource):
+    @marshal_with(transformers.friend)
+    def get(self):
+        return g.current_user.friends_ordered_by_username
+
+    @marshal_with(transformers.friend)
+    def post(self):
+        args = validators.add_friend.parse_args()
+
+        if g.current_user.has_friend(args['username']):
+            abort(412, message='{} is already your friend'.format(args['username']))
+
+        user_friend = g.current_user.add_friend(args['username'])
+
+        db.session.commit()
+
+        return user_friend, 201
+
+
+class FriendResource(Resource):
+    def delete(self, username):
+        if g.current_user.remove_friend(username):
+            db.session.commit()
+
+            return '', 204
+        else:
+            abort(404, message='{} is not your friend'.format(username))
+
 api.add_resource(ServersResource, '/servers')
 api.add_resource(ServerResource, '/servers/<ip>:<int:port>')
 api.add_resource(PlayersResource, '/players/<any({}):database>'.format(rwr.constants.VALID_DATABASES_STRING_LIST))
 api.add_resource(PlayerResource, '/players/<any({}):database>/<username>'.format(rwr.constants.VALID_DATABASES_STRING_LIST))
 api.add_resource(PlayerStatsHistoryResource, '/players/<any({}):database>/<username>/stats-history'.format(rwr.constants.VALID_DATABASES_STRING_LIST))
+api.add_resource(FriendsResource, '/friends')
+api.add_resource(FriendResource, '/friends/<username>')
 api.add_resource(UserResource, '/users/<int:user_id>')
 api.add_resource(LiveCountersResource, '/live-counters')

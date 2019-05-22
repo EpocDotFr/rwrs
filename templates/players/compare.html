@@ -11,7 +11,6 @@
 {% block jsfiles %}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.6.1/pikaday.min.js"></script>
-    {% assets 'js_friends' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
 {% endblock %}
 
 {% block cssfiles %}
@@ -34,13 +33,25 @@
                 <th class="w200p"></th>
                 <th class="txtcenter no-bold" colspan="2"><span class="fl">
                     <a href="{{ url_for('players_list', database=request.view_args.get('database'), target=player.username) }}" class="btn" title="Highlight {{ player.username }} in {{ player.database_name }} leaderboard"><i class="fas fa-list-ol"></i></a>
-                    <a href="#" class="btn add-friend is-hidden" title="Add {{ player.username }} to friends list" data-username="{{ player.username }}"><i class="fas fa-user-plus"></i></a>
-                    <a href="#" class="btn remove-friend is-hidden" title="Remove {{ player.username }} from friends list" data-username="{{ player.username }}"><i class="fas fa-user-times"></i></a></span> {{ macros.player_name(player, link=True, show_online=True) }}
+
+                    {% if current_user.is_authenticated -%}
+                        {% if player.is_friend_with_user(current_user) -%}
+                            <a href="{{ url_for('remove_friend', username=player.username, next=generate_next_url()) }}" class="btn" title="Remove {{ player.username }} from friends list"><i class="fas fa-user-times"></i></a>
+                        {%- else -%}
+                            <a href="{{ url_for('add_friend', username=player.username, next=generate_next_url()) }}" class="btn" title="Add {{ player.username }} to friends list"><i class="fas fa-user-plus"></i></a>
+                        {%- endif %}
+                    {%- endif %}</span> {{ macros.player_name(player, link=True, show_online=True) }}
                 </th>
                 <th class="txtcenter no-bold" colspan="2">{{ macros.player_name(player_to_compare_with, link=True, show_online=True) }} <span class="fr">
                     <a href="{{ url_for('players_list', database=request.view_args.get('database'), target=player_to_compare_with.username) }}" class="btn" title="Highlight {{ player_to_compare_with.username }} in {{ player_to_compare_with.database_name }} leaderboard"><i class="fas fa-list-ol"></i></a>
-                    <a href="#" class="btn add-friend is-hidden" title="Add {{ player_to_compare_with.username }} to friends list" data-username="{{ player_to_compare_with.username }}"><i class="fas fa-user-plus"></i></a>
-                    <a href="#" class="btn remove-friend is-hidden" title="Remove {{ player_to_compare_with.username }} from friends list" data-username="{{ player_to_compare_with.username }}"><i class="fas fa-user-times"></i></a></span>
+
+                    {% if current_user.is_authenticated -%}
+                        {% if player_to_compare_with.is_friend_with_user(current_user) -%}
+                            <a href="{{ url_for('remove_friend', username=player_to_compare_with.username, next=generate_next_url()) }}" class="btn" title="Remove {{ player_to_compare_with.username }} from friends list"><i class="fas fa-user-times"></i></a>
+                        {%- else -%}
+                            <a href="{{ url_for('add_friend', username=player_to_compare_with.username, next=generate_next_url()) }}" class="btn" title="Add {{ player_to_compare_with.username }} to friends list"><i class="fas fa-user-plus"></i></a>
+                        {%- endif %}
+                    {%- endif %}</span>
                 </th>
             </tr>
         </thead>
@@ -160,9 +171,6 @@
     {{ macros.stats_notice() }}
 
     <script>
-        friendsFeature.all_players_with_servers_details = {{ g.all_players_with_servers_details|tojson }};
-        friendsFeature.initOnPlayersComparison();
-
         // Date picker
         var players_compare_date_input = $('#players_compare_date');
         var players_compare_date_value_input = $('#players_compare_date_value');

@@ -9,6 +9,7 @@ import rwr.constants
 import flask_openid
 import rwr.scraper
 import rwr.utils
+import helpers
 import arrow
 import forms
 import uuid
@@ -131,11 +132,78 @@ def regenerate_pat():
     return jsonify(result), status
 
 
-@app.route('/my-friends')
+@app.route('/my-friends', methods=['GET', 'POST'])
 def my_friends():
+    form = None
+
+    if current_user.is_authenticated:
+        form = forms.UserFriendForm()
+
+        if form.validate_on_submit():
+            current_user.add_friend(form.username.data.upper())
+
+            db.session.commit()
+
+            flash('You have a new friend!', 'success')
+
+            return redirect(url_for('my_friends'))
+
     return render_template(
-        'manage_friends.html'
-    )
+        'users/friends.html',
+        form=form
+    ), 200 if current_user.is_authenticated else 401
+
+
+@app.route('/my-friends/add/<username>')
+@login_required
+def add_friend(username):
+    form = forms.UserFriendForm(data={'username': username}, meta={'csrf': False})
+
+    if form.validate():
+        current_user.add_friend(form.username.data.upper())
+
+        db.session.commit()
+
+        flash('You have a new friend!', 'success')
+    else:
+        flash('Invalid request.', 'error')
+
+    return redirect(helpers.get_next_url())
+
+
+@app.route('/my-friends/remove/<username>')
+@login_required
+def remove_friend(username):
+    if current_user.remove_friend(username):
+        db.session.commit()
+
+        flash('Friend removed. Sad.', 'success')
+    else:
+        flash('Friend not found.', 'error')
+
+    return redirect(helpers.get_next_url())
+
+
+@app.route('/my-friends/import', methods=['POST'])
+@login_required
+def import_friends():
+    status = 200
+
+    if not request.is_xhr or not request.is_json:
+        status = 400
+        result = {'status': 'failure', 'data': {'message': 'Invalid request.'}}
+    else:
+        try:
+            current_user.add_friends(request.get_json())
+
+            db.session.commit()
+
+            result = {'status': 'success'}
+        except Exception as e:
+            status = 500
+            result = {'status': 'failure', 'data': {'message': str(e)}}
+
+    return jsonify(result), status
 
 
 @app.route('/about')

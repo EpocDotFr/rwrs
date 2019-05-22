@@ -7,7 +7,7 @@
 {% block jsfiles %}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.13.0/d3.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/metrics-graphics/2.15.6/metricsgraphics.min.js"></script>
-    {% assets 'js_friends_charts' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
+    {% assets 'js_charts' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
 {% endblock %}
 
 {% block cssfiles %}
@@ -62,9 +62,6 @@
     </div>
 
     <script>
-        friendsFeature.all_players_with_servers_details = {{ g.all_players_with_servers_details|tojson }};
-        friendsFeature.init();
-
         chartsFeature.players_data = {{ players_data|tojson }};
         chartsFeature.servers_data = {{ servers_data|tojson }};
         chartsFeature.initOnHome();
