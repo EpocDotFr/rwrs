@@ -140,20 +140,14 @@
         </div>
     </footer>
 
-    {% if config['GAUGES_SITE_ID'] and g.INCLUDE_WEB_ANALYTICS %}
-        <script type="text/javascript">
-          var _gauges = _gauges || [];
-          (function() {
-            var t   = document.createElement('script');
-            t.type  = 'text/javascript';
-            t.async = true;
-            t.id    = 'gauges-tracker';
-            t.setAttribute('data-site-id', '{{ config['GAUGES_SITE_ID'] }}');
-            t.setAttribute('data-track-path', 'https://track.gaug.es/track.gif');
-            t.src = 'https://d36ee2fcip1434.cloudfront.net/track.js';
-            var s = document.getElementsByTagName('script')[0];
-            s.parentNode.insertBefore(t, s);
-          })();
+    {% if config['GA_TRACKING_ID'] and g.INCLUDE_WEB_ANALYTICS %}
+        <script async src="https://www.googletagmanager.com/gtag/js?id={{ config['GA_TRACKING_ID'] }}"></script>
+        <script>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+
+          gtag('config', '{{ config['GA_TRACKING_ID'] }}');
         </script>
     {% endif %}
 </body>
