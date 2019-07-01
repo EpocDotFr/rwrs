@@ -6,10 +6,6 @@
 
 {% block meta_description %}Sign in into RWRS and access additional features.{% endblock %}
 
-{% block jsfiles %}
-    {% assets 'js_friends' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
-{% endblock %}
-
 {% set canonical_url = url_for('sign_in', _external=True) %}
 
 {% block content %}
@@ -32,9 +28,4 @@
             <p class="small txtgrey">RWRS will not be aware of your credentials.<br>Cookies will be used to keep your session active.<br>RWRS will fetch publicly available data from your Steam profile.<br>RWRS will take into account whether your Steam profile is public or private.</p>
         </div>
     </div>
-
-    <script>
-        friendsFeature.all_players_with_servers_details = {{ g.all_players_with_servers_details|tojson }};
-        friendsFeature.init();
-    </script>
 {% endblock %}

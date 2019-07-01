@@ -30,17 +30,17 @@
     <img src="{{ rank.icon if icon else rank.image }}" title="{{ prefix if prefix }}{{ rank.name_display }}" class="{{ 'help' if icon }}">
 {%- endmacro %}
 
-{% macro server_name(server, link=True, raw=False, no_icon=False, event_icon=False) -%}
+{% macro server_name(server, link=True, raw=False, no_icon=False, event_icon=False, server_details_link=False) -%}
     {% if server.name -%}
         {% if server.is_ranked and not no_icon -%}
             {% if raw %}⭐️ {% else -%}<i class="fas fa-star txtyellow help" title="Ranked {{ server.database_name }} server"></i> {% endif %}
         {%- endif -%}
         {% if event_icon and server.event %}<i class="fas fa-calendar-alt txtblue help" title="{{ 'Ongoing' if server.event.is_ongoing else 'Upcoming' }} event on this server: {{ server.event.name }}"></i> {% endif -%}
-        {%- if link and server.website -%}
-            <a href="{{ server.website }}">
+        {%- if link and (server.website or server_details_link) -%}
+            <a href="{{ server.link if server_details_link else server.website }}">
         {%- endif -%}
             {{ server.name }}
-        {%- if link and server.website -%}
+        {%- if link and (server.website or server_details_link) -%}
             </a>
         {%- endif -%}
     {%- else -%}
@@ -200,7 +200,7 @@
 
 {% macro inline_form_field(field) -%}
     {%- set css_class = 'has_error ' + kwargs.pop('class', '') if field.errors -%}
-    {{ field.label() }} {{ field(class=css_class, **kwargs) }}
+    {{ field.label() if not kwargs.pop('without_label', False) }} {{ field(class=css_class, **kwargs) }}
 {%- endmacro %}
 
 {% macro form_field(field) -%}
@@ -220,6 +220,45 @@
             {%- endif %}
         </div>
     </div>
+{%- endmacro %}
+
+{% macro form_errors(form) -%}
+    {%- if form.errors -%}
+        <div class="alert error pas mbs">
+            <h4 class="mbs">Not so fast!</h4>
+
+            <ul>
+                {%- for field, errors in form.errors.items() -%}
+                    <li>{{ form[field].label.text }}<ul>
+                        {%- for error in errors -%}
+                            <li>{{ error|safe }}</li>
+                        {%- endfor -%}
+                    </ul></li>
+                {%- endfor -%}
+            </ul>
+        </div>
+    {%- endif -%}
+{%- endmacro %}
+
+{% macro friends_list(friends) -%}
+    {%- if friends -%}
+        <div class="grid-3 has-gutter friends-list">
+            {%- for friend in friends -%}
+                <div class="mbs pas{{ ' playing' if friend.playing_on_server }}">
+                    <div class="actions fr">
+                        {% if friend.playing_on_server.is_ranked %}<a href="{{ url_for('players_list', database=friend.playing_on_server.database, target=friend.username) }}" title="Highlight in {{ friend.playing_on_server.database_name }} leaderboard"><i class="fas fa-list-ol"></i></a> {% endif %}
+                        {%- if friend.playing_on_server -%}{% if friend.playing_on_server.players.free > 0 %}<a href="{{ friend.playing_on_server.steam_join_link }}" title="Join this server"><i class="fab fa-steam-symbol"></i></a>{% else %}<i class="fab fa-steam-symbol txtgrey help" title="Server is full, cannot join"></i>{% endif %}{% endif %}
+                        <a href="{{ url_for('remove_friend', username=friend.username) }}" title="Remove friend"><i class="fas fa-user-times"></i></a>
+                    </div>
+                    <div class="{{ 'pbs' if friend.playing_on_server }}">{{ player_name(friend.username, raw=True, link=True, database=friend.database, popover_url=True) }}</div>
+                    {%- if friend.playing_on_server -%}
+                        <div class="small">{{ location(friend.playing_on_server.location) }} {{ server_name(friend.playing_on_server, event_icon=True, server_details_link=True) }}</div>
+                        <div class="small"><strong><span class="{{ server_slots_class(friend.playing_on_server) }}">{{ friend.playing_on_server.players.current }}</span>/{{ friend.playing_on_server.players.max }}</strong> players on <strong>{{ friend.playing_on_server.map.name_display }}</strong> ({{ friend.playing_on_server.type_name }})</div>
+                    {%- endif -%}
+                </div>
+            {%- endfor -%}
+        </div>
+    {%- endif -%}
 {%- endmacro %}
 
 {% macro event_announcement(event, for_server=False) -%}

@@ -25,7 +25,7 @@
   + `image_url`: `https://rwrstats.com/images/ranks/us/14.png` (required) - Rank image URL. 64x64 pixels
   + `icon_url`: `https://rwrstats.com/images/ranks/us/14_icon.png` (required) - Small rank image URL. 20x20 pixels
 
-### Player Simple Object
+### Player Base Object
 
   + `username`: `EPOCDOTFR` (required) - Player username
   + `url`: `https://rwrstats.com/players/invasion/EPOCDOTFR` (nullable) - RWRS player profile page URL. `null` if the player isn't a ranked profile
@@ -36,9 +36,16 @@
   + `is_ranked_servers_admin`: `false` (boolean, required) - Whether this player is admin on ranked (official) servers
   + `database` (Database Object, nullable) - Player database. `null` if not a ranked (official) player profile
 
-### Player Advanced Object (Player Simple Object)
+### Player Simple Object (Player Base Object)
 
-  + `current_server` (Server Simple Object, nullable) - Server on which the player is currently playing
+  + `is_friend`: `true` (boolean, required) - Whether this player is friend with the current user
+
+### Player Intermediate Object (Player Simple Object)
+
+  + `current_server` (Server Base Object, nullable) - Server on which the player is currently playing
+
+### Player Advanced Object (Player Intermediate Object)
+
   + `stats` (Player Stats Object, required) - Player statistics
   + `current_rank` (Player Rank Object, required) - Player current rank
 
@@ -64,3 +71,8 @@
   + `signature_image_url`: `https://rwrstats.com/images/players/EPOCDOTFR-invasion.png` (nullable) - Player signature image URL. 387x108 pixels
   + `promoted_to_rank` (Player Rank Object, nullable) - If not `null`: rank this player has been promoted to (stats history mode only)
   + `owner` (User Simple Object, nullable) - The RWRS user that owns this RWR account or `null` if this player wasn't claimed by anyone or if the RWRS user has defined its profile as private
+
+### Friend Object (Player Base Object)
+
+  + `current_server` (Server Base Object, nullable) - Server on which the player is currently playing
+  + `friend_since`: `2019-02-22T10:46:00+00:00` (required) - [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) date / time since the current user is friend with this player

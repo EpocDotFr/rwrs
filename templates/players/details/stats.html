@@ -8,14 +8,12 @@
         <td class="big txtcenter">{{ macros.rank_image(player.rank) }} {{ player.rank.name }}{% if player.rank.alternative_name %}<br /><small class="txtgrey">({{ player.rank.alternative_name }})</small>{% endif %}</td>
         <td class="txtcenter">
             {% if player.playing_on_server %}
-                <div>{{ macros.location(player.playing_on_server.location) }} {{ macros.server_name(player.playing_on_server, event_icon=True) }}</div>
+                <div>{{ macros.location(player.playing_on_server.location) }} {{ macros.server_name(player.playing_on_server, event_icon=True, server_details_link=True) }}</div>
                 <div>
                     <strong><span class="{{ macros.server_slots_class(player.playing_on_server) }}">{{ player.playing_on_server.players.current }}</span>/{{ player.playing_on_server.players.max }}</strong> players on <strong>{{ player.playing_on_server.map.name_display }}</strong> ({{ player.playing_on_server.type_name }})
                 </div>
                 <div class="mts">
                     {{ macros.server_join_button(player.playing_on_server) }}
-
-                    <a href="{{ player.playing_on_server.link }}" class="btn"><i class="fas fa-eye"></i> Details</a>
                 </div>
             {% else %}
                 Nope.
@@ -96,8 +94,3 @@
 </p>
 
 {{ macros.stats_notice() }}
-
-<script>
-    friendsFeature.all_players_with_servers_details = {{ g.all_players_with_servers_details|tojson }};
-    friendsFeature.initOnPlayerDetails();
-</script>

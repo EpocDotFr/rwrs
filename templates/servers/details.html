@@ -12,18 +12,18 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/metrics-graphics/2.15.6/metricsgraphics.min.js"></script>
     {% endif %}
 
-    {% if not server.is_dedicated and not server.is_ranked %}
-        {% assets 'js_friends' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
-    {% elif server.is_dedicated and not server.is_ranked %}
-        {% assets 'js_friends_charts' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
+    {% if server.is_dedicated and not server.is_ranked %}
+        {% assets 'js_charts' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
     {% elif server.is_ranked %}
         <script src="https://cdnjs.cloudflare.com/ajax/libs/tippy.js/3.1.1/tippy.min.js"></script>
-        {% assets 'js_friends_charts_popovers' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
+        {% assets 'js_charts_popovers' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
     {% endif %}
 {% endblock %}
 
 {% block cssfiles %}
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/metrics-graphics/2.15.6/metricsgraphics.min.css">
+    {%- if server.is_dedicated -%}
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/metrics-graphics/2.15.6/metricsgraphics.min.css">
+    {%- endif -%}
 
     {%- if server.is_ranked -%}
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tippy.js/3.1.1/tippy.css">
@@ -98,18 +98,23 @@
                 </thead>
                 <tbody>
                     {% for player in server.players.list %}
-                        <tr data-username="{{ player }}">
+                        <tr class="{{ 'info' if current_user.is_authenticated and current_user.has_friend(player) }}">
                             <td>
-                                <div class="actions fr">
-                                    {% if server.is_ranked %}
-                                        <a href="{{ url_for('players_list', database=server.database, target=player) }}" title="Highlight in {{ server.database_name }} leaderboard"><i class="fas fa-list-ol"></i></a>
-                                    {% endif %}
+                                {% if server.is_ranked or current_user.is_authenticated -%}
+                                    <div class="actions fr">
+                                        {% if server.is_ranked -%}
+                                            <a href="{{ url_for('players_list', database=server.database, target=player) }}" title="Highlight in {{ server.database_name }} leaderboard"><i class="fas fa-list-ol"></i></a>
+                                        {%- endif %}
 
-                                    <span class="friends-feature is-hidden">
-                                        <a href="#" title="Add {{ player }} to friends list" class="add-friend is-hidden"><i class="fas fa-user-plus"></i></a>
-                                        <a href="#" title="Remove {{ player }} from friends list" class="remove-friend is-hidden"><i class="fas fa-user-times"></i></a>
-                                    </span>
-                                </div>
+                                        {% if current_user.is_authenticated -%}
+                                            {% if current_user.has_friend(player) -%}
+                                                <a href="{{ url_for('remove_friend', username=player, next=generate_next_url()) }}" title="Remove {{ player }} from friends list"><i class="fas fa-user-times"></i></a>
+                                            {%- else -%}
+                                                <a href="{{ url_for('add_friend', username=player, next=generate_next_url()) }}" title="Add {{ player }} to friends list"><i class="fas fa-user-plus"></i></a>
+                                            {%- endif %}
+                                        {%- endif %}
+                                    </div>
+                                {%- endif %}
 
                                 {{ macros.player_name(player, raw=True, link=True, database=server.database, popover_url=True) }}
                             </td>
@@ -169,18 +174,16 @@
         </div>
     </div>
 
-    <script>
-        friendsFeature.all_players_with_servers_details = {{ g.all_players_with_servers_details|tojson }};
-        friendsFeature.server_ip_and_port = '{{ server.ip_and_port }}';
-        friendsFeature.initOnServerDetails();
+    {%- if server.is_dedicated or server.is_ranked -%}
+        <script>
+            {%- if server.is_dedicated -%}
+                chartsFeature.server_players_data = {{ server_players_data|tojson }};
+                chartsFeature.initOnServerDetails();
+            {%- endif -%}
 
-        {%- if server.is_dedicated -%}
-            chartsFeature.server_players_data = {{ server_players_data|tojson }};
-            chartsFeature.initOnServerDetails();
-        {%- endif -%}
-
-        {%- if server.is_ranked -%}
-            popoversFeature.initOnServerDetails();
-        {%- endif -%}
-    </script>
+            {%- if server.is_ranked -%}
+                popoversFeature.initOnServerDetails();
+            {%- endif -%}
+        </script>
+    {%- endif -%}
 {% endblock %}

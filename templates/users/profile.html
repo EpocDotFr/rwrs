@@ -8,7 +8,7 @@
 
 {% block jsfiles %}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tippy.js/3.1.1/tippy.min.js"></script>
-    {% assets 'js_friends_popovers' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
+    {% assets 'js_popovers' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
 {% endblock %}
 
 {% block cssfiles %}
@@ -75,9 +75,6 @@
     </div>
 
     <script>
-        friendsFeature.all_players_with_servers_details = {{ g.all_players_with_servers_details|tojson }};
-        friendsFeature.init();
-
         popoversFeature.initOnUserProfile();
     </script>
 {% endblock %}

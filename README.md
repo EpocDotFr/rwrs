@@ -9,8 +9,8 @@ and its Pacific DLC. Available at [rwrstats.com](https://rwrstats.com/).
 
 ## Prerequisites
 
-  - Should work on any Python 3.x version. Feel free to test with another Python version and give me feedback
-  - A modern web browser (which optionally support localStorage)
+  - Should work on any Python 3.x version
+  - A modern web browser
   - A MySQL-compatible DBMS (MySQL, MariaDB, Percona, etc)
   - (Optional, but recommended) A [uWSGI](https://uwsgi-docs.readthedocs.io/en/latest/)-capable web server
   - (Optional) Running With Rifles, if you need to extract data by using the commands below
@@ -32,7 +32,7 @@ Available configuration parameters are:
   - `SECRET_KEY` Set this to a complex random value
   - `SERVER_NAME` The IP or hostname where RWRS will be available
 
-More informations on the three above can be found [here](http://flask.pocoo.org/docs/1.0/config/#builtin-configuration-values).
+More informations on the two above can be found [here](http://flask.pocoo.org/docs/1.0/config/#builtin-configuration-values).
 
   - `DB_USERNAME` Username to access the DBMS
   - `DB_PASSWORD` Password to access the DBMS
@@ -40,7 +40,7 @@ More informations on the three above can be found [here](http://flask.pocoo.org/
   - `DB_HOST` Host of the DBMS
   - `DB_PORT` Port of the DBMS
   - `DB_NAME` Name of the database to use
-  - `GAUGES_SITE_ID` A [Gauges](https://gaug.es/) site ID used to track visits on RWRS (optional)
+  - `GA_TRACKING_ID` A Google Analytics tracking ID used to track visits on RWRS (optional)
   - `BUGSNAG_API_KEY` A [Bugsnag](https://www.bugsnag.com/) API key so that unhandled exceptions are automatically sent to Bugsnag in production env (optional)
   - `CACHE_THRESHOLD` The maximum number of items the cache will store before it starts deleting some (see [here](https://pythonhosted.org/Flask-Cache/#configuring-flask-cache) for more configuration parameters related to Flask-Cache)
   - `SERVERS_CACHE_TIMEOUT` Cache duration of the servers list (in seconds)

@@ -6,10 +6,6 @@
 
 {% block meta_description %}Get a banner to include in your website / blog / forum for the{{ ' ranked ' + server.database_name if server.is_ranked else ' dedicated' if server.is_dedicated }} Running With Rifles (RWR) server named {{ macros.server_name(server, link=False, no_icon=True) }}{% if server.location.country_code %} hosted in {{ server.location.text }}{% endif %}.{% endblock %}
 
-{% block jsfiles %}
-    {% assets 'js_friends' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
-{% endblock %}
-
 {% set canonical_url = url_for('server_banner', ip=server.ip, port=server.port, slug=server.name_slug, _external=True) %}
 
 {% set meta_image = server.map.preview_absolute if server.map.has_preview else server.map.minimap_absolute if server.map.has_minimap %}
@@ -39,9 +35,4 @@
     <p class="txtcenter">
         <a href="{{ server.link }}" class="btn"><i class="fas fa-chevron-left"></i> Back to the server details</a>
     </p>
-
-    <script>
-        friendsFeature.all_players_with_servers_details = {{ g.all_players_with_servers_details|tojson }};
-        friendsFeature.init();
-    </script>
 {% endblock %}

@@ -100,8 +100,6 @@ def get_counts():
 
     steamworks_api_client = steam.SteamworksApiClient(app.config['STEAM_API_KEY'])
 
-    g.all_players_with_servers_details = rwr.scraper.get_all_players_with_servers_details()
-
     online_players, active_servers, total_servers = rwr.scraper.get_counters()
 
     g.total_players = steamworks_api_client.get_current_players_count_for_app(app.config['RWR_STEAM_APP_ID'])

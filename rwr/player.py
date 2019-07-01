@@ -1,10 +1,10 @@
 from sqlalchemy.util import memoized_property
 from flask import url_for, current_app
+from flask_login import current_user
 from . import constants, utils
 from models import RwrAccount
 from rwrs import app
 import helpers
-import math
 
 
 class Player:
@@ -281,6 +281,10 @@ class Player:
     def user(self):
         """Return the User linked to this Player."""
         return self.rwr_account.user if self.rwr_account else None
+
+    def is_friend_with_user(self, user):
+        """Determine whether this Player is friend with the given User or not."""
+        return user.has_friend(self.username)
 
     def __repr__(self):
         return 'Player:' + self.username
