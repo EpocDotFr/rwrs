@@ -28,7 +28,7 @@ class RwrsBotDiscoPlugin(Plugin):
 
     @Plugin.route('/ping')
     def status_check_route(self):
-        return 'pong'
+        return 'maintenance' if os.path.exists('maintenance') else 'pong'
 
     @Plugin.pre_command()
     def check_guild(self, func, event, args, kwargs):
