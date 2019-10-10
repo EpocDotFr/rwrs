@@ -8,14 +8,22 @@ set -e # Makes any subsequent failing commands to exit the script immediately
 
 TYPE=${1:-fast}
 
+if [ -f maintenance ]; then
+    MAINTENANCE_ALREADY_ENABLED=true
+else
+    MAINTENANCE_ALREADY_ENABLED=false
+fi
+
 echo "## Initializing ($TYPE update)"
 
 . venv/bin/activate
 export FLASK_APP=rwrs.py
 
-echo "## Enabling maintenance mode"
+if [ "$MAINTENANCE_ALREADY_ENABLED" = false ]; then
+    echo "## Enabling maintenance mode"
 
-touch maintenance
+    touch maintenance
+fi
 
 echo "## Pulling latest code version"
 
@@ -42,6 +50,8 @@ chown -R www-data:www-data ./
 
 supervisorctl restart rwrstats.com discordbot.rwrstats.com
 
-echo "## Disabling maintenance mode"
+if [ "$MAINTENANCE_ALREADY_ENABLED" = false ]; then
+    echo "## Disabling maintenance mode"
 
-rm maintenance
+    rm maintenance
+fi

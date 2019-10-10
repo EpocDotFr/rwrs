@@ -93,7 +93,7 @@
 
     <header class="w1140p center pts pbs">
         <div class="txtleft">
-            <a href="{{ url_for('home') }}"><img src="{{ url_for('static', filename='images/logo_light.png') }}" title="Running With Rifles Stats logo"></a>
+            <a href="{{ url_for('home') }}" itemprop="url"><img src="{{ url_for('static', filename='images/logo_light.png') }}" title="Running With Rifles Stats logo"></a>
         </div>
         {% if not g.UNDER_MAINTENANCE %}
             <nav class="txtright">
