@@ -1,0 +1,195 @@
+/*
+ * Aglio RWRS theme
+ *
+ * Refs:
+ * - https://github.com/danielgtaylor/aglio
+ */
+
+/* Page-wide variables */
+@font-size: 15px;
+
+@base-font: 15px -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
+@title-font: 28px -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
+@code-font: consolas,courier,monospace;
+
+/* Basic page-wide colors */
+@background-color: #3f3f3f;
+@text-color: #fff;
+
+@link-color: #A4CF17;;
+@right-link-color: @link-color;
+
+@heading-text-color: @text-color;
+
+@table-row-background-color: #444;
+@table-border-color: #333;
+
+/* Nav and right panel */
+@nav-hover-border-color: @link-color;
+@nav-hover-background-color: #4b4b4b;
+@nav-background-color: #fbfbfb;
+@nav-border-color: #333;
+
+/* Notes and warnings */
+@note-text-color: #fff;
+@note-background-color: #3b618d;
+@note-border-color: #3985b6;
+@note-title-text-color: lighten(@note-border-color, 25%);
+
+@warning-text-color: #fff;
+@warning-background-color: #692c2c;
+@warning-border-color: #8d3535;
+@warning-title-text-color: lighten(@warning-border-color, 25%);
+
+/* Resource groups */
+@group-padding: @padding;
+@group-header-margin: -@padding -@padding @padding -@padding;
+@group-background-color: @background-color;
+@group-title-background-color: contrast(@background-color,
+                                        darken(@background-color, 5%),
+                                        lighten(@background-color, 5%));
+@group-border-color: contrast(@background-color,
+                              darken(@background-color, 15%),
+                              lighten(@background-color, 15%));
+@group-text-color: contrast(@group-background-color);
+
+/* HTTP method-specific colors */
+
+/* HTTP GET */
+@get-color: darken(@link-color, 6.5%);
+@get-background-color: #d9edf7;
+@get-text-color: contrast(@get-background-color);
+@get-badge-text-color: darken(@get-background-color, 25%);
+@get-border-color: darken(spin(@get-background-color, -10), 7%);
+
+/* HTTP HEAD */
+@head-color: @get-color;
+@head-background-color: @get-background-color;
+@head-text-color: @get-text-color;
+@head-badge-text-color: @get-badge-text-color;
+@head-border-color: @get-border-color;
+
+/* HTTP OPTIONS */
+@options-color: @get-color;
+@options-background-color: @get-background-color;
+@options-text-color: @get-text-color;
+@options-badge-text-color: @get-badge-text-color;
+@options-border-color: @get-border-color;
+
+/* HTTP PUT */
+@put-color: darken(#f0ad4e, 8%);
+@put-background-color: #fcf8e3;
+@put-text-color: contrast(@put-background-color);
+@put-badge-text-color: darken(@put-background-color, 25%);
+@put-border-color: darken(spin(@put-background-color, -10), 5%);
+
+/* HTTP PATCH */
+@patch-color: @put-color;
+@patch-background-color: @put-background-color;
+@patch-text-color: @put-text-color;
+@patch-badge-text-color: @put-badge-text-color;
+@patch-border-color: @put-border-color;
+
+/* HTTP POST */
+@post-color: #5cb85c;
+@post-background-color: #dff0d8;
+@post-text-color: contrast(@post-background-color);
+@post-badge-text-color: darken(@post-background-color, 25%);
+@post-border-color: darken(spin(@post-background-color, -10), 5%);
+
+/* HTTP DELETE */
+@delete-color: #d9534f;
+@delete-background-color: #f2dede;
+@delete-text-color: contrast(@delete-background-color);
+@delete-badge-text-color: darken(@delete-background-color, 25%);
+@delete-border-color: darken(spin(@delete-background-color, -10), 5%);
+
+/* Code colors */
+@inline-code-background-color: #2f302b;
+@inline-code-text-color: @text-color;
+
+@code-block-text-color: @text-color;
+@code-block-background-color: #23241f;
+
+@right-code-block-text-color: @text-color;
+@right-code-block-background-color: #2f302b;
+
+/* Highlight.js Theme */
+.hljs {
+  background: #23241f;
+}
+
+.hljs,
+.hljs-tag,
+.hljs-subst {
+  color: #f8f8f2;
+}
+
+.hljs-strong,
+.hljs-emphasis {
+  color: #a8a8a2;
+}
+
+.hljs-bullet,
+.hljs-quote,
+.hljs-number,
+.hljs-regexp,
+.hljs-literal,
+.hljs-link {
+  color: #ae81ff;
+}
+
+.hljs-code,
+.hljs-title,
+.hljs-section,
+.hljs-selector-class {
+  color: #a6e22e;
+}
+
+.hljs-strong {
+  font-weight: bold;
+}
+
+.hljs-emphasis {
+  font-style: italic;
+}
+
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-name,
+.hljs-attr {
+  color: #f92672;
+}
+
+.hljs-symbol,
+.hljs-attribute {
+  color: #66d9ef;
+}
+
+.hljs-params,
+.hljs-class .hljs-title {
+  color: #f8f8f2;
+}
+
+.hljs-string,
+.hljs-type,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-selector-id,
+.hljs-selector-attr,
+.hljs-selector-pseudo,
+.hljs-addition,
+.hljs-variable,
+.hljs-template-variable {
+  color: #e6db74;
+}
+
+.hljs-comment,
+.hljs-deletion,
+.hljs-meta {
+  color: #75715e;
+}
+
+.hljs-value {
+    color: #fff;
+}

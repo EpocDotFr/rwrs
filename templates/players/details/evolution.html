@@ -24,9 +24,6 @@
 {{ macros.stats_notice() }}
 
 <script>
-    friendsFeature.all_players_with_servers_details = {{ g.all_players_with_servers_details|tojson }};
-    friendsFeature.initOnPlayerDetails();
-
     chartsFeature.player_evolution_data = {{ player_evolution_data|tojson }};
     chartsFeature.initOnPlayerEvolution();
 </script>

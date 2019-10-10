@@ -34,6 +34,14 @@ def arrow_date(value):
 
     return value
 
+
+def username(value):
+    if len(value) > 16:
+        raise ValueError('Username cannot exceed 16 characters')
+
+    return value.upper()
+
+
 maps_choices = ['any']
 maps_choices.extend(rwr.constants.VALID_MAPS)
 
@@ -59,7 +67,7 @@ get_servers_list.add_argument('limit', location='args', type=inputs.positive)
 
 get_players_list = limit_parser.copy()
 get_players_list.add_argument('sort', location='args', choices=rwr.constants.VALID_PLAYERS_SORTS, default=rwr.constants.PlayersSort.SCORE.value)
-get_players_list.add_argument('target', location='args', default=None)
+get_players_list.add_argument('target', location='args')
 get_players_list.add_argument('start', location='args', type=inputs.natural, default=0)
 
 get_one_player = reqparse.RequestParser()
@@ -67,3 +75,6 @@ get_one_player.add_argument('date', location='args', type=arrow_date)
 
 get_player_stats_history = limit_parser.copy()
 get_player_stats_history.add_argument('page', location='args', type=inputs.positive, default=1)
+
+add_friend = reqparse.RequestParser()
+add_friend.add_argument('username', required=True, location='json', type=username)

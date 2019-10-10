@@ -12,6 +12,7 @@ set -e # Makes any subsequent failing commands to exit the script immediately
 aglio \
     -i docs/api/index.apib \
     -o static/api_doc.html \
-    --theme-variables slate \
+    --theme-variables docs/api/aglio-rwrs-theme.less \
     --theme-full-width \
+    --no-theme-condense \
     "$@"

@@ -415,6 +415,21 @@ def save_ranked_servers_admins():
 
     admins = [item.get('value') for item in admins_xml.iterchildren('item')]
 
+    click.echo('Retrieving moderators list')
+
+    try:
+        response = requests.get('http://rwr.runningwithrifles.com/shared/moderators.xml')
+
+        response.raise_for_status()
+
+        moderators_xml = etree.fromstring(response.text)
+    except Exception as e:
+        click.secho(str(e), fg='red')
+
+        return
+
+    admins.extend([item.get('value') for item in moderators_xml.iterchildren('item')])
+
     click.echo('Saving to {}'.format(app.config['RANKED_SERVERS_ADMINS_FILE']))
 
     helpers.save_json(app.config['RANKED_SERVERS_ADMINS_FILE'], admins)

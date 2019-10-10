@@ -1,0 +1,110 @@
+# Group Friends
+
+A Friend is an online multiplayer Running With Rifles account which is existing in the current user's friends list.
+
+## Friends [/friends]
+
+### Get the Friends list [GET]
+
+Return the list of Friends for the current user, ordered by username.
+
++ Request
+
+    + Headers
+
+            Authorization: Token {Your Personal Access Token}
+
++ Response 200 (application/json)
+
+    + Attributes (array[Friend Object], fixed-type)
+
++ Response 403 (application/json)
+
+    Invalid Personal Access Token or Personal Access Token not provided.
+
+    + Attributes (Error Response, fixed-type)
+
++ Response 503 (application/json)
+
+    Maintenance in progress.
+
+    + Attributes (Error Response, fixed-type)
+
+### Add a new Friend [POST]
+
+Add the given player to the current user's friends list.
+
++ Request (application/json)
+
+    + Headers
+
+            Authorization: Token {Your Personal Access Token}
+
+    + Body
+
+            {
+                "username": "EPOCDOTFR"
+            }
+
++ Response 201 (application/json)
+
+    + Attributes (Friend Object, fixed-type)
+
++ Response 400 (application/json)
+
+    One or more arguments are (is) invalid. Check the error message(s) for more information.
+
+    + Attributes (Error Response, fixed-type)
+
++ Response 403 (application/json)
+
+    Invalid Personal Access Token or Personal Access Token not provided.
+
+    + Attributes (Error Response, fixed-type)
+
++ Response 412 (application/json)
+
+    The given player is already friend with the current user.
+
+    + Attributes (Error Response, fixed-type)
+
++ Response 503 (application/json)
+
+    Maintenance in progress.
+
+    + Attributes (Error Response, fixed-type)
+
+## Friend [/friends/{username}]
+
++ Parameters
+    + username: `EPOCDOTFR` - The player username.
+
+### Remove a Friend [DELETE]
+
+Remove the given player from the current user's friends list.
+
++ Request
+
+    + Headers
+
+            Authorization: Token {Your Personal Access Token}
+
++ Response 204 (application/json)
+
++ Response 403 (application/json)
+
+    Invalid Personal Access Token or Personal Access Token not provided.
+
+    + Attributes (Error Response, fixed-type)
+
++ Response 404 (application/json)
+
+    The given player isn't friend with the current user.
+
+    + Attributes (Error Response, fixed-type)
+
++ Response 503 (application/json)
+
+    Maintenance in progress.
+
+    + Attributes (Error Response, fixed-type)

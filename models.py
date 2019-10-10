@@ -237,7 +237,7 @@ class Variable(db.Model):
         var = Variable.query.filter(Variable.name == name).first()
 
         if var:
-            db.session.remove(var)
+            db.session.delete(var)
 
     @staticmethod
     def get_peaks_for_display():
@@ -295,6 +295,88 @@ class Variable(db.Model):
         return 'Variable:{}'.format(self.id)
 
 
+class UserFriend(db.Model):
+    __tablename__ = 'user_friends'
+    __table_args__ = (db.Index('user_id_idx', 'user_id'), db.Index('user_id_username_idx', 'user_id', 'username', unique=True))
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    username = db.Column(db.String(16), nullable=False)
+    created_at = db.Column(ArrowType, default=lambda: arrow.utcnow().floor('minute'), nullable=False)
+
+    @memoized_property
+    def playing_on_server(self):
+        """Return the server this friend is currently playing on."""
+        servers = rwr.scraper.get_servers()
+
+        for server in servers:
+            if not server.players.list:
+                continue
+
+            if self.username in server.players.list:
+                return server
+
+        return None
+
+    def get_link(self, absolute=False):
+        if not self.database:
+            return None
+
+        def _get_link(self, absolute):
+            params = {
+                'database': self.database,
+                'username': self.username
+            }
+
+            return url_for('player_details', **params, _external=absolute)
+
+        if current_app:
+            link = _get_link(self, absolute=absolute)
+        else:
+            with app.app_context():
+                link = _get_link(self, absolute=absolute)
+
+        return link
+
+    @memoized_property
+    def link(self):
+        """Return the link to the Player profile page of this Friend."""
+        return self.get_link()
+
+    @memoized_property
+    def link_absolute(self):
+        """Return the absolute link to the Player profile page of this Friend."""
+        return self.get_link(absolute=True)
+
+    @memoized_property
+    def database(self):
+        return self.playing_on_server.database if self.playing_on_server else None
+
+    @memoized_property
+    def database_name(self):
+        return rwr.utils.get_database_name(self.database) if self.database else None
+
+    @memoized_property
+    def is_myself(self):
+        return helpers.is_player_myself(self.username)
+
+    @memoized_property
+    def is_contributor(self):
+        return helpers.is_player_contributor(self.username)
+
+    @memoized_property
+    def is_rwr_dev(self):
+        return helpers.is_player_rwr_dev(self.username)
+
+    @memoized_property
+    def is_ranked_servers_admin(self):
+        return helpers.is_player_ranked_server_admin(self.username)
+
+    def __repr__(self):
+        return 'UserFriend:{}'.format(self.id)
+
+
 class User(db.Model, UserMixin):
     __tablename__ = 'users'
     __table_args__ = (db.Index('pat_idx', 'pat', unique=True), )
@@ -313,6 +395,7 @@ class User(db.Model, UserMixin):
     pat = db.Column(UUIDType, default=lambda: uuid.uuid4())
 
     rwr_accounts = db.relationship('RwrAccount', backref='user', lazy=True, foreign_keys='RwrAccount.user_id')
+    friends = db.relationship('UserFriend', backref='user', lazy=True, foreign_keys='UserFriend.user_id')
 
     def get_rwr_accounts_by_type(self, type):
         """Return the RwrAccounts linked to this user, filtered by account type."""
@@ -411,6 +494,82 @@ class User(db.Model, UserMixin):
     def has_rwr_accounts(self):
         """Determine is this User object have at least one RwrAccount."""
         return RwrAccount.query.with_entities(func.count('*')).filter(RwrAccount.user_id == self.id).scalar() > 0
+
+    @memoized_property
+    def friends_ordered_by_username(self):
+        """Get the Friends of this User, ordered by username."""
+        return UserFriend.query.filter(
+            UserFriend.user_id == self.id
+        ).order_by(UserFriend.username.asc()).all()
+
+    @memoized_property
+    def friends_divided_by_status(self):
+        """"Get the Friends of this User divided in two lists: playing and non-playing friends."""
+        playing_friends = [friend for friend in self.friends_ordered_by_username if friend.playing_on_server]
+        non_playing_friends = [friend for friend in self.friends_ordered_by_username if not friend.playing_on_server]
+
+        return playing_friends, non_playing_friends
+
+    @memoized_property
+    def number_of_playing_friends(self):
+        """Return the number of Friends that are playing for this User."""
+        return len([friend for friend in self.friends_ordered_by_username if friend.playing_on_server])
+
+    def add_friend(self, username):
+        """Add a friend to this User's friends list. Commiting DB operation is needed after calling this method."""
+        user_friend = UserFriend()
+        user_friend.user_id = self.id
+        user_friend.username = username
+
+        db.session.add(user_friend)
+
+        return user_friend
+
+    def add_friends(self, usernames):
+        """Add multiple friends to this User's friends list in one go. Commiting DB operation is needed after calling this method."""
+        existing_user_friends = UserFriend.query.filter(
+            UserFriend.user_id == self.id,
+            UserFriend.username.in_(usernames)
+        ).all()
+
+        existing_usernames = [existing_user_friend.username for existing_user_friend in existing_user_friends]
+
+        usernames = [username.upper() for username in usernames if username not in existing_usernames]
+
+        user_friends = []
+
+        for username in usernames:
+            user_friend = UserFriend()
+            user_friend.user_id = self.id
+            user_friend.username = username
+
+            user_friends.append(user_friend)
+
+        db.session.bulk_save_objects(user_friends)
+
+        return user_friends
+
+    def has_friend(self, username):
+        """Determine if the given username is in the User's friends list."""
+        return username in [friend.username for friend in self.friends_ordered_by_username]
+
+    def get_friend(self, username):
+        """Return the Friend with the given username in this User's friends list."""
+        return UserFriend.query.filter(
+            UserFriend.user_id == self.id,
+            UserFriend.username == username
+        ).first()
+
+    def remove_friend(self, username):
+        """Remove the given Friend from this User's friends list. Commiting DB operation is needed after calling this method."""
+        user_friend = self.get_friend(username)
+
+        if user_friend:
+            db.session.delete(user_friend)
+
+            return True
+        else:
+            return False
 
     def __repr__(self):
         return 'User:{}'.format(self.id)
@@ -570,7 +729,7 @@ class RwrAccount(db.Model):
     def get_link(self, absolute=False):
         def _get_link(self, absolute):
             params = {
-                'database': self.type.value.lower(),
+                'database': self.database,
                 'username': self.username
             }
 
@@ -774,7 +933,7 @@ class RwrAccountStat(db.Model):
 
     @memoized_property
     def promoted_to_rank(self):
-        return rwr.utils.get_rank_object(self.rwr_account.type.value.lower(), self.promoted_to_rank_id) if self.promoted_to_rank_id else None
+        return rwr.utils.get_rank_object(self.rwr_account.database, self.promoted_to_rank_id) if self.promoted_to_rank_id else None
 
     @memoized_property
     def score(self):

@@ -1,6 +1,6 @@
+from flask import request, Markup, url_for
 from itertools import tee, islice, chain
 from collections import OrderedDict
-from flask import request, Markup
 from rwrs import app
 import misaka
 import json
@@ -181,6 +181,27 @@ def markdown_to_html_inline(markdown):
     html = html.replace('<p>', '').replace('</p>', '').strip()
 
     return Markup(html)
+
+
+def check_safe_root(url):
+    """Return the given URL if it looks OK to redirect to."""
+    if url is None:
+        return None
+
+    if url.startswith(request.url_root) or url.startswith('/'):
+        return url
+
+    return None
+
+
+def get_next_url():
+    """Get the URL to redirect the user to."""
+    return check_safe_root(request.args.get('next')) or check_safe_root(request.referrer) or url_for('home')
+
+
+def generate_next_url():
+    """Return the full path of the current URL, minus the ending question mark."""
+    return request.full_path.rstrip('?')
 
 
 def get_game_type_from_database(database):

@@ -345,50 +345,6 @@ def get_counters():
     return (online_players, active_servers, total_servers)
 
 
-def get_all_players_with_servers_details():
-    """Get all the players usernames along details about the servers they are playing on."""
-    servers = get_servers()
-
-    ret = []
-
-    for server in servers:
-        if not server.players.list:
-            continue
-
-        ret.append({
-            'ip_and_port': server.ip_and_port,
-            'name': server.name,
-            'website': server.website,
-            'is_ranked': server.is_ranked,
-            'steam_join_link': server.steam_join_link,
-            'type': server.type_name,
-            'mode': server.mode_name,
-            'database': server.database,
-            'database_name': server.database_name,
-            'link': server.link,
-            'has_event': True if server.event else False,
-            'event_is_ongoing': server.event['is_ongoing'] if server.event else False,
-            'event_name': server.event['name'] if server.event else None,
-            'location': {
-                'city_name': server.location.city_name,
-                'country_code': server.location.country_code,
-                'country_name': server.location.country_name
-            },
-            'map': {
-                'id': server.map.id,
-                'name': server.map.name_display
-            },
-            'players': {
-                'current': server.players.current,
-                'max': server.players.max,
-                'free': server.players.free,
-                'list': server.players.list
-            }
-        })
-
-    return ret
-
-
 @cache.memoize(timeout=app.config['PLAYERS_CACHE_TIMEOUT'])
 def get_players(database, sort=constants.PlayersSort.SCORE.value, target=None, start=0, limit=app.config['LIST_PAGE_SIZES'][0]):
     """Get and parse a list of RWR players."""

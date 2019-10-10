@@ -28,6 +28,12 @@ popoversFeature = {
         this.initPlayerPopover($('.rwr-accounts-list a[data-popover-url]').get());
     },
     /**
+     * Initialize the Ajax "player" popover on the My Friends page.
+     */
+    initOnMyFriends: function() {
+        this.initPlayerPopover($('.friends-list a[data-popover-url]').get());
+    },
+    /**
      * Initialize an Ajax "player" popover on a set of elements.
      */
     initPlayerPopover: function(elements) {

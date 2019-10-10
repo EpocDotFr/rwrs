@@ -68,12 +68,13 @@ if has_debug_toolbar_ext:
 
 assets.cache = 'storage/webassets-cache/'
 
-assets.register('js_friends', Bundle('js/common.js', 'js/friends.js', filters='jsmin', output='js/friends.min.js'))
-assets.register('js_friends_popovers', Bundle('js/common.js', 'js/friends.js', 'js/popovers.js', filters='jsmin', output='js/friends_popover.min.js'))
-assets.register('js_friends_regenerate_pat', Bundle('js/common.js', 'js/friends.js', 'js/regenerate_pat.js', filters='jsmin', output='js/friends_regenerate_pat.min.js'))
-assets.register('js_friends_charts', Bundle('js/common.js', 'js/friends.js', 'js/charts.js', filters='jsmin', output='js/friends_charts.min.js'))
-assets.register('js_friends_charts_popovers', Bundle('js/common.js', 'js/friends.js', 'js/charts.js', 'js/popovers.js', filters='jsmin', output='js/friends_charts_popover.min.js'))
-assets.register('js_friends_player_claim', Bundle('js/common.js', 'js/friends.js', 'js/player_claim.js', filters='jsmin', output='js/friends_player_claim.min.js'))
+assets.register('js_friends_import', Bundle('js/friends_import.js', filters='jsmin', output='js/friends_import.min.js'))
+assets.register('js_popovers', Bundle('js/popovers.js', filters='jsmin', output='js/popovers.min.js'))
+assets.register('js_popovers_friends_import', Bundle('js/popovers.js', 'js/friends_import.js', filters='jsmin', output='js/popovers_friends_import.min.js'))
+assets.register('js_charts', Bundle('js/charts.js', filters='jsmin', output='js/charts.min.js'))
+assets.register('js_charts_popovers', Bundle('js/charts.js', 'js/popovers.js', filters='jsmin', output='js/charts_popovers.min.js'))
+assets.register('js_player_claim', Bundle('js/player_claim.js', filters='jsmin', output='js/player_claim.min.js'))
+assets.register('js_regenerate_pat', Bundle('js/regenerate_pat.js', filters='jsmin', output='js/regenerate_pat.min.js'))
 assets.register('css_app', Bundle('css/flags.css', 'css/app.css', filters='cssutils', output='css/app.min.css'))
 
 login_manager.session_protection = 'strong'
@@ -103,7 +104,8 @@ app.jinja_env.globals.update(
     PlayersSort=rwr.constants.PlayersSort,
     merge_query_string_params=helpers.merge_query_string_params,
     get_database_name=rwr.utils.get_database_name,
-    PLAYERS_LIST_DATABASES=rwr.constants.PLAYERS_LIST_DATABASES
+    PLAYERS_LIST_DATABASES=rwr.constants.PLAYERS_LIST_DATABASES,
+    generate_next_url=helpers.generate_next_url
 )
 
 
