@@ -1,6 +1,8 @@
 {% extends 'layout.html' %}
 
-{% block page_title %}<i class="fas fa-user"></i> Players › {{ macros.database_name() }}{% if args.get('target') %} (highlighting {{ macros.player_name(args.get('target'), raw=True) }}){% endif %}{% endblock %}
+{% set page_icon = 'fas fa-user' %}
+
+{% block page_title %}Players › {{ macros.database_name() }}{% if args.get('target') %} (highlighting {{ macros.player_name(args.get('target'), raw=True) }}){% endif %}{% endblock %}
 
 {% block meta_title %}Players › {{ macros.database_name() }}{% if args.get('target') %} (highlighting {{ args.get('target') }}){% endif %}{% endblock %}
 

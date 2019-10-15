@@ -1,6 +1,8 @@
 {% extends 'layout.html' %}
 
-{% block page_title %}<i class="fas fa-user"></i> Players › {{ player.database_name }} › {{ player.username }} vs {{ player_to_compare_with.username }}{% endblock %}
+{% set page_icon = 'fas fa-user' %}
+
+{% block page_title %}Players › {{ player.database_name }} › {{ player.username }} vs {{ player_to_compare_with.username }}{% endblock %}
 
 {% block meta_title %}Players › {{ player.database_name }} › {{ player.username }} vs {{ player_to_compare_with.username }}{% endblock %}
 

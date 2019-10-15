@@ -1,6 +1,8 @@
 {% extends 'layout.html' %}
 
-{% block page_title %}<i class="fas fa-server"></i> Servers › {{ macros.server_name(server, link=False) }}{% endblock %}
+{% set page_icon = 'fas fa-server' %}
+
+{% block page_title %}Servers › {{ macros.server_name(server, link=False) }}{% endblock %}
 
 {% block meta_title %}Servers › {{ macros.server_name(server, link=False, raw=True) }}{% endblock %}
 

@@ -1,6 +1,8 @@
 {% extends 'layout.html' %}
 
-{% block page_title %}<i class="fas fa-user-circle"></i> Users › {{ user.username }}{% endblock %}
+{% set page_icon = 'fas fa-user-circle' %}
+
+{% block page_title %}Users › {{ user.username }}{% endblock %}
 
 {% block meta_title %}Users › {{ user.username }}{% endblock %}
 

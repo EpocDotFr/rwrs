@@ -108,7 +108,7 @@
 
     <div class="page pts pbs">
         <div class="{{ 'w1140p center' if g.LAYOUT == 'normal' else 'mls mrs' }}">
-            <h1>{% block page_title %}{% endblock %}</h1>
+            <h1>{% if page_icon %}<i class="{{ page_icon }}"></i>{% endif %} {% block page_title %}{% endblock %}</h1>
 
             {% with flash_messages = get_flashed_messages(with_categories=true) %}
               {% if flash_messages %}
