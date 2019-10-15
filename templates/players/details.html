@@ -2,7 +2,7 @@
 
 {% set page_icon = 'fas fa-user' %}
 
-{% block page_title %}Players › {{ player.database_name }} › {{ macros.player_name(player) }}{% if request.view_args.get('tab') == 'stats-history' %} › Statistics history{% elif request.view_args.get('tab') == 'evolution' %} › Evolution{% elif request.view_args.get('tab') == 'signature' %} › Signature{% endif %}{% endblock %}
+{% block html_title %}Players › {{ player.database_name }} › {{ macros.player_name(player) }}{% if request.view_args.get('tab') == 'stats-history' %} › Statistics history{% elif request.view_args.get('tab') == 'evolution' %} › Evolution{% elif request.view_args.get('tab') == 'signature' %} › Signature{% endif %}{% endblock %}
 
 {% block meta_title %}Players › {{ player.database_name }} › {{ player.username }}{% if request.view_args.get('tab') == 'stats-history' %} › Statistics history{% elif request.view_args.get('tab') == 'evolution' %} › Evolution{% elif request.view_args.get('tab') == 'signature' %} › Signature{% endif %}{% endblock %}
 

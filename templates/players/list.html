@@ -2,7 +2,7 @@
 
 {% set page_icon = 'fas fa-user' %}
 
-{% block page_title %}Players › {{ macros.database_name() }}{% if args.get('target') %} (highlighting {{ macros.player_name(args.get('target'), raw=True) }}){% endif %}{% endblock %}
+{% block html_title %}Players › {{ macros.database_name() }}{% if args.get('target') %} (highlighting {{ macros.player_name(args.get('target'), raw=True) }}){% endif %}{% endblock %}
 
 {% block meta_title %}Players › {{ macros.database_name() }}{% if args.get('target') %} (highlighting {{ args.get('target') }}){% endif %}{% endblock %}
 

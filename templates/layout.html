@@ -97,7 +97,7 @@
         </div>
         {% if not g.UNDER_MAINTENANCE %}
             <nav class="txtright">
-                <ul class="unstyled inbl">
+                <ul class="unstyled">
                     <li class="inbl"><a href="{{ url_for('players_list', database='invasion') }}" class="btn {{ 'active' if request.path.startswith('/players') and request.view_args.get('database') == 'invasion' }}"><i class="fas fa-user"></i> Players: Invasion</a></li>
                     <li class="inbl"><a href="{{ url_for('players_list', database='pacific') }}" class="btn {{ 'active' if request.path.startswith('/players') and request.view_args.get('database') == 'pacific' }}"><i class="fas fa-user"></i> Players: Pacific</a></li>
                     <li class="inbl"><a href="{{ url_for('servers_list') }}" class="btn {{ 'active' if request.path.startswith('/servers') }}"><i class="fas fa-server"></i> Servers</a></li>
@@ -108,7 +108,19 @@
 
     <div class="page pts pbs">
         <div class="{{ 'w1140p center' if g.LAYOUT == 'normal' else 'mls mrs' }}">
-            <h1>{% if page_icon %}<i class="{{ page_icon }}"></i>{% endif %} {% block page_title %}{% endblock %}</h1>
+            <ul itemscope itemtype="https://schema.org/BreadcrumbList" class="unstyled small">
+                <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" class="inbl">
+                    <a itemprop="item" href="https://example.com/books"><span itemprop="name">Books</span></a>
+                    <meta itemprop="position" content="1" />
+                </li>
+                ›
+                <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" class="inbl">
+                    <span itemprop="name">Award winners</span>
+                    <meta itemprop="position" content="2" />
+                </li>
+            </ul>
+
+            <h1>{% if page_icon %}<i class="{{ page_icon }}"></i>{% endif %} {% block html_title %}{% endblock %}</h1>
 
             {% with flash_messages = get_flashed_messages(with_categories=true) %}
               {% if flash_messages %}
