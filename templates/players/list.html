@@ -1,10 +1,11 @@
 {% extends 'layout.html' %}
+{%- import 'macros.html' as macros -%}
 
 {% set page_icon = 'fas fa-user' %}
 
-{% block html_title %}Players › {{ macros.database_name() }}{% if args.get('target') %} (highlighting {{ macros.player_name(args.get('target'), raw=True) }}){% endif %}{% endblock %}
+{% set html_title = 'Players › ' + macros.database_name() + (' (highlighting ' + macros.player_name(args.get('target'), raw=True) + ')' if args.get('target') else '') %}
 
-{% block meta_title %}Players › {{ macros.database_name() }}{% if args.get('target') %} (highlighting {{ args.get('target') }}){% endif %}{% endblock %}
+{% set meta_title = 'Players › ' + macros.database_name() + (' (highlighting ' + args.get('target') + ')' if args.get('target') else '') %}
 
 {% block meta_description -%}
     {% if args.get('target') -%}

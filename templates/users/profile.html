@@ -2,9 +2,7 @@
 
 {% set page_icon = 'fas fa-user-circle' %}
 
-{% block html_title %}Users › {{ user.username }}{% endblock %}
-
-{% block meta_title %}Users › {{ user.username }}{% endblock %}
+{% set title = 'Users › ' + user.username %}
 
 {% block meta_description %}{{ user.username }} profile on RWRS.{% endblock %}
 

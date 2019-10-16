@@ -2,9 +2,7 @@
 
 {% set page_icon = 'fas fa-user' %}
 
-{% block html_title %}{{ player.username }} vs {{ player_to_compare_with.username }}{% endblock %}
-
-{% block meta_title %}{{ player.username }} vs {{ player_to_compare_with.username }}{% endblock %}
+{% set title = player.username + ' vs ' + player_to_compare_with.username %}
 
 {% set breadcrumb = (
     (None, 'Players'),

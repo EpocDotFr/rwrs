@@ -1,10 +1,11 @@
 {% extends 'layout.html' %}
+{%- import 'macros.html' as macros -%}
 
 {% set page_icon = 'fas fa-user' %}
 
-{% block html_title %}Players › {{ player.database_name }} › {{ macros.player_name(player) }}{% if request.view_args.get('tab') == 'stats-history' %} › Statistics history{% elif request.view_args.get('tab') == 'evolution' %} › Evolution{% elif request.view_args.get('tab') == 'signature' %} › Signature{% endif %}{% endblock %}
+{% set html_title = 'Players › ' + player.database_name + ' › ' + macros.player_name(player) + (' › Statistics history' if request.view_args.get('tab') == 'stats-history' else ' › Evolution' if request.view_args.get('tab') == 'evolution' else ' › Signature' if request.view_args.get('tab') == 'signature' else '') %}
 
-{% block meta_title %}Players › {{ player.database_name }} › {{ player.username }}{% if request.view_args.get('tab') == 'stats-history' %} › Statistics history{% elif request.view_args.get('tab') == 'evolution' %} › Evolution{% elif request.view_args.get('tab') == 'signature' %} › Signature{% endif %}{% endblock %}
+{% set meta_title = 'Players › ' + player.database_name + ' › ' + player.username + (' › Statistics history' if request.view_args.get('tab') == 'stats-history' else ' › Evolution' if request.view_args.get('tab') == 'evolution' else ' › Signature' if request.view_args.get('tab') == 'signature' else '') %}
 
 {% block meta_description -%}
     {%- if request.view_args.get('tab') == 'stats-history' -%}

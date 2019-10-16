@@ -2,9 +2,7 @@
 
 {% set page_icon = 'fas fa-cog' %}
 
-{% block html_title %}Settings{% endblock %}
-
-{% block meta_title %}Settings{% endblock %}
+{% set title = 'Settings' %}
 
 {% block jsfiles %}
     {% assets 'js_regenerate_pat' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}

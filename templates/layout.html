@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
 
-    <title>{% block meta_title %}{% endblock %}{% if self.meta_title() | trim %} • {% endif %}Running With Rifles Stats (RWRS)</title>
+    <title>{{ meta_title or title }}{% if meta_title | trim or title | trim %} • {% endif %}Running With Rifles Stats (RWRS)</title>
 
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,7 +13,7 @@
     <meta property="og:type" content="website">
     {% if canonical_url %}<meta property="og:url" content="{{ canonical_url }}">{% endif %}
     <meta property="og:site_name" content="Running With Rifles Stats (RWRS)">
-    <meta property="og:title" content="{{ self.meta_title() }}">
+    <meta property="og:title" content="{{ meta_title or title }}">
     <meta property="og:description" content="{{ self.meta_description() }}">
     <meta property="og:image" content="{{ meta_image if meta_image else url_for('static', filename='images/icon_round_dark_256.png', _external=True) }}">
 
@@ -110,7 +110,7 @@
         <div class="{{ 'w1140p center' if g.LAYOUT == 'normal' else 'mls mrs' }}">
             {%- if breadcrumb -%}{{ macros.render_breadcrumb(breadcrumb) }}{%- endif -%}
 
-            <h1>{% if page_icon %}<i class="{{ page_icon }}"></i>{% endif %} {% block html_title %}{% endblock %}</h1>
+            <h1>{% if page_icon %}<i class="{{ page_icon }}"></i>{% endif %} {{ html_title or title }}</h1>
 
             {% with flash_messages = get_flashed_messages(with_categories=true) %}
               {% if flash_messages %}

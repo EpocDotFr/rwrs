@@ -1,10 +1,11 @@
 {% extends 'layout.html' %}
+{%- import 'macros.html' as macros -%}
 
 {% set page_icon = 'fas fa-server' %}
 
-{% block html_title %}Servers › {{ macros.server_name(server, link=False) }}{% endblock %}
+{% set html_title = 'Servers › ' + macros.server_name(server, link=False) %}
 
-{% block meta_title %}Servers › {{ macros.server_name(server, link=False, raw=True) }}{% endblock %}
+{% set meta_title = 'Servers › ' + macros.server_name(server, link=False, raw=True) %}
 
 {% block meta_description %}Details about the{{ ' ranked ' + server.database_name if server.is_ranked else ' dedicated' if server.is_dedicated }} Running With Rifles (RWR) server named {{ macros.server_name(server, link=False, no_icon=True) }}{% if server.location.country_code %} hosted in {{ server.location.text }}{% endif %}.{% endblock %}
 
