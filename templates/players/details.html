@@ -3,9 +3,15 @@
 
 {% set page_icon = 'fas fa-user' %}
 
-{% set html_title = 'Players › ' + player.database_name + ' › ' + macros.player_name(player) + (' › Statistics history' if request.view_args.get('tab') == 'stats-history' else ' › Evolution' if request.view_args.get('tab') == 'evolution' else ' › Signature' if request.view_args.get('tab') == 'signature' else '') %}
+{% set html_title = macros.player_name(player) %}
 
-{% set meta_title = 'Players › ' + player.database_name + ' › ' + player.username + (' › Statistics history' if request.view_args.get('tab') == 'stats-history' else ' › Evolution' if request.view_args.get('tab') == 'evolution' else ' › Signature' if request.view_args.get('tab') == 'signature' else '') %}
+{% set meta_title = player.username %}
+
+{% set breadcrumb = (
+    (url_for('players_list', database=request.view_args.get('database')), player.database_name + ' players'),
+    (url_for('player_details', database=request.view_args.get('database'), username=player.username), macros.player_name(player)),
+    ('Statistics history' if request.view_args.get('tab') == 'stats-history' else 'Evolution' if request.view_args.get('tab') == 'evolution' else 'Signature' if request.view_args.get('tab') == 'signature' else 'Statistics')
+) %}
 
 {% block meta_description -%}
     {%- if request.view_args.get('tab') == 'stats-history' -%}
