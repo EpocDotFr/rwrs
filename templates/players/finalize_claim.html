@@ -2,7 +2,12 @@
 
 {% set page_icon = 'fas fa-user-check' %}
 
-{% set title = 'Players › Claim RWR account › Finalize' %}
+{% set title = 'Finalize claim of ' + rwr_account.username %}
+
+{% set breadcrumb = (
+    (url_for('player_claim'), 'Claim RWR account'),
+    ('Finalize'),
+) %}
 
 {% block jsfiles %}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/countdown/2.6.0/countdown.min.js"></script>
