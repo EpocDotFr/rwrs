@@ -1,7 +1,5 @@
-from lxml import html, etree
 from rwrs import app, cache
 import requests
-import arrow
 
 
 class SteamworksApiClient:
