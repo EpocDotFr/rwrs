@@ -1,6 +1,5 @@
 from sqlalchemy.util import memoized_property
 from flask import url_for, current_app
-from flask_login import current_user
 from . import constants, utils
 from slugify import slugify
 from rwrs import app
