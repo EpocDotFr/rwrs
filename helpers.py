@@ -188,7 +188,7 @@ def check_safe_root(url):
     if url is None:
         return None
 
-    if url.startswith(request.url_root) or url.startswith('/'):
+    if url.startswith((request.url_root, '/')):
         return url
 
     return None
