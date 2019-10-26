@@ -3,7 +3,7 @@ Flask-Caching
 Flask-SQLAlchemy
 Flask-Migrate
 Flask-Assets
-PyMySQL
+mysqlclient
 simplejson
 Flask-Login
 Flask-OpenID

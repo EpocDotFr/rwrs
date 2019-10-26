@@ -111,7 +111,7 @@ def simplified_integer(integer):
 
 def build_database_uri():
     """Return the database connection string."""
-    uri = 'mysql+pymysql://{username}:{password}@'
+    uri = 'mysql+mysqldb://{username}:{password}@'
 
     params = {
         'username': app.config['DB_USERNAME'],
