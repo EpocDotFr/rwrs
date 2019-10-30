@@ -195,11 +195,6 @@ def extract_minimaps(steamdir):
 @app.cli.command()
 def run_discord_bot():
     """Run the RWRS Discord bot."""
-    if os.path.exists('maintenance'):
-        click.secho('Maintenance mode enabled, aborting', fg='yellow')
-
-        return
-
     from discord.bot import RwrsBot
 
     click.echo('Initializing bot')

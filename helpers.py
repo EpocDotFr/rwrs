@@ -111,7 +111,7 @@ def simplified_integer(integer):
 
 def build_database_uri():
     """Return the database connection string."""
-    uri = 'mysql+pymysql://{username}:{password}@'
+    uri = 'mysql+mysqldb://{username}:{password}@'
 
     params = {
         'username': app.config['DB_USERNAME'],
@@ -188,7 +188,7 @@ def check_safe_root(url):
     if url is None:
         return None
 
-    if url.startswith(request.url_root) or url.startswith('/'):
+    if url.startswith((request.url_root, '/')):
         return url
 
     return None
