@@ -25,8 +25,8 @@ def get_players_count():
 
     from models import ServerPlayerCount, SteamPlayerCount, Variable
     from rwrs import cache, db
+    import steam_helpers
     import rwr.scraper
-    import steam
     import arrow
 
     click.echo('Clearing cache')
@@ -34,15 +34,13 @@ def get_players_count():
     cache.delete_memoized(rwr.scraper.get_servers)
     cache.delete_memoized(ServerPlayerCount.server_players_data)
     cache.delete_memoized(ServerPlayerCount.servers_data)
-    cache.delete_memoized(steam.SteamworksApiClient.get_current_players_count_for_app)
+    cache.delete_memoized(steam_helpers.get_current_players_count_for_app)
     cache.delete_memoized(SteamPlayerCount.players_data)
 
     click.echo('Getting current players on Steam')
 
-    steamworks_api_client = steam.SteamworksApiClient(app.config['STEAM_API_KEY'])
-
     steam_player_count = SteamPlayerCount()
-    steam_player_count.count = steamworks_api_client.get_current_players_count_for_app(app.config['RWR_STEAM_APP_ID'])
+    steam_player_count.count = steam_helpers.get_current_players_count_for_app(app.config['RWR_STEAM_APP_ID'])
 
     current_total_players_count = steam_player_count.count
 
