@@ -8,12 +8,12 @@ from . import constants, utils
 from tabulate import tabulate
 from rwr.player import Player
 from gevent import monkey
+import steam_helpers
 import rwr.scraper
 import rwr.utils
 import logging
 import helpers
 import arrow
-import steam
 import os
 
 monkey.patch_all()
@@ -21,11 +21,6 @@ monkey.patch_all()
 
 class RwrsBotDiscoPlugin(Plugin):
     """The RWRS Disco Bot plugin."""
-    def load(self, ctx):
-        super(RwrsBotDiscoPlugin, self).load(ctx)
-
-        self.steamworks_api_client = steam.SteamworksApiClient(app.config['STEAM_API_KEY'])
-
     @Plugin.route('/ping')
     def status_check_route(self):
         return 'maintenance' if os.path.exists('maintenance') else 'pong'
@@ -334,7 +329,7 @@ class RwrsBotDiscoPlugin(Plugin):
             '  - Active servers peak: **{active_servers_peak_count}** ({active_servers_peak_date})'
         ]
 
-        total_players = self.steamworks_api_client.get_current_players_count_for_app(app.config['RWR_STEAM_APP_ID'])
+        total_players = steam_helpers.get_current_players_count_for_app(app.config['RWR_STEAM_APP_ID'])
         online_players, active_servers, total_servers = rwr.scraper.get_counters()
 
         peaks = Variable.get_peaks_for_display()
