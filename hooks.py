@@ -4,10 +4,9 @@ from werkzeug.exceptions import HTTPException
 from models import User, Variable
 from flask_login import login_user
 from datetime import datetime
+import steam_helpers
 import rwr.scraper
-import helpers
 import bugsnag
-import steam
 import arrow
 import os
 
@@ -19,12 +18,10 @@ def load_user(user_id):
 
 @oid.after_login
 def create_or_login(resp):
-    steam_id = helpers.parse_steam_id_from_identity_url(resp.identity_url)
-
-    steamworks_api_client = steam.SteamworksApiClient(app.config['STEAM_API_KEY'])
+    steam_id = steam_helpers.parse_steam_id_from_identity_url(resp.identity_url)
 
     try:
-        steam_user_info = steamworks_api_client.get_user_summaries(steam_id)
+        steam_user_info = steam_helpers.get_user_summaries(steam_id)
 
         if not steam_user_info:
             raise Exception('Unable to get Steam user info for Steam ID {}'.format(steam_id))
@@ -98,11 +95,9 @@ def get_counts():
     if request.endpoint in ('dynamic_player_image', 'dynamic_server_image'):
         return
 
-    steamworks_api_client = steam.SteamworksApiClient(app.config['STEAM_API_KEY'])
-
     online_players, active_servers, total_servers = rwr.scraper.get_counters()
 
-    g.total_players = steamworks_api_client.get_current_players_count_for_app(app.config['RWR_STEAM_APP_ID'])
+    g.total_players = steam_helpers.get_current_players_count_for_app(app.config['RWR_STEAM_APP_ID'])
     g.online_players = online_players
     g.active_servers = active_servers
     g.total_servers = total_servers
