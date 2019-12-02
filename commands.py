@@ -368,7 +368,7 @@ def compute_promotions():
 
 @app.cli.command()
 def save_ranked_servers_mods():
-    """Retrieve and save the ranked servers mods."""
+    """Retrieve and save the ranked servers moderator."""
     from lxml import etree
     import requests
     import helpers

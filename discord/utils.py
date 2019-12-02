@@ -35,7 +35,7 @@ def create_player_message_embed(player, description_addendum=None):
         description.append(':hammer_and_wrench: Say hi to one of the Running With Rifles developers!')
 
     if player.is_ranked_servers_mod:
-        description.append(':scales: Ranked (official) servers mod')
+        description.append(':scales: Ranked (official) servers moderator')
 
     if description_addendum:
         description.append(description_addendum)

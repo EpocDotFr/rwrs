@@ -183,7 +183,7 @@ bash scripts/api_doc_generator.sh
 flask save-players-stats [--reset]
 ```
 
-### Retrieve and save the ranked servers mods
+### Retrieve and save the ranked servers moderators
 
 ```
 flask save-ranked-servers-mods
