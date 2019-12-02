@@ -370,8 +370,8 @@ class UserFriend(db.Model):
         return helpers.is_player_rwr_dev(self.username)
 
     @memoized_property
-    def is_ranked_servers_admin(self):
-        return helpers.is_player_ranked_server_admin(self.username)
+    def is_ranked_servers_mod(self):
+        return helpers.is_player_ranked_server_mod(self.username)
 
     def __repr__(self):
         return 'UserFriend:{}'.format(self.id)
@@ -643,8 +643,8 @@ class RwrAccount(db.Model):
         return helpers.is_player_rwr_dev(self.username)
 
     @memoized_property
-    def is_ranked_servers_admin(self):
-        return helpers.is_player_ranked_server_admin(self.username)
+    def is_ranked_servers_mod(self):
+        return helpers.is_player_ranked_server_mod(self.username)
 
     @memoized_property
     def database(self):
