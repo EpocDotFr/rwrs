@@ -386,7 +386,7 @@ def save_ranked_servers_mods():
 
         return
 
-    admins = [item.get('value') for item in admins_xml.iterchildren('item')]
+    mods = [item.get('value') for item in admins_xml.iterchildren('item')]
 
     click.echo('Retrieving moderators list')
 
@@ -401,10 +401,10 @@ def save_ranked_servers_mods():
 
         return
 
-    admins.extend([item.get('value') for item in moderators_xml.iterchildren('item')])
+    mods.extend([item.get('value') for item in moderators_xml.iterchildren('item')])
 
     click.echo('Saving to {}'.format(app.config['RANKED_SERVERS_MODS_FILE']))
 
-    helpers.save_json(app.config['RANKED_SERVERS_MODS_FILE'], admins)
+    helpers.save_json(app.config['RANKED_SERVERS_MODS_FILE'], mods)
 
     click.secho('Done', fg='green')
