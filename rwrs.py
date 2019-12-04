@@ -36,7 +36,7 @@ app.config['MINIMAPS_IMAGES_DIR'] = 'static/images/maps/minimap'
 app.config['MAPS_PREVIEW_IMAGES_DIR'] = 'static/images/maps/preview'
 app.config['MAPS_DATA_FILE'] = 'storage/data/maps.json'
 app.config['GEOIP_DATABASE_FILE'] = 'storage/data/GeoLite2-City.mmdb'
-app.config['RANKED_SERVERS_ADMINS_FILE'] = 'storage/data/ranked_servers_admins.json'
+app.config['RANKED_SERVERS_MODS_FILE'] = 'storage/data/ranked_servers_mods.json'
 app.config['MY_USERNAME'] = 'epocdotfr'
 app.config['CONTRIBUTORS'] = ['street veteran', 'mastock', 'dio', 'jatimatik', 'mellcor', 'teratai', 'harrified', 'mr. bang', 'dogtato', 'stesmith', 'korgorr', 'foxtrod']
 app.config['DEVS'] = ['jackmayol', 'pasik', 'pasik2', 'tremozl', 'the soldier', '577']
@@ -81,7 +81,7 @@ login_manager.login_message_category = 'info'
 import rwr.constants
 import rwr.utils
 
-app.config['RANKED_SERVERS_ADMINS'] = helpers.load_json(app.config['RANKED_SERVERS_ADMINS_FILE'])
+app.config['RANKED_SERVERS_MODS'] = helpers.load_json(app.config['RANKED_SERVERS_MODS_FILE'])
 
 app.jinja_env.filters.update(
     humanize_seconds_to_days=helpers.humanize_seconds_to_days,

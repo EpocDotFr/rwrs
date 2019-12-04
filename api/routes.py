@@ -45,7 +45,7 @@ class ServerResource(Resource):
             is_myself=helpers.is_player_myself(player_username),
             is_contributor=helpers.is_player_contributor(player_username),
             is_rwr_dev=helpers.is_player_rwr_dev(player_username),
-            is_ranked_servers_admin=helpers.is_player_ranked_server_admin(player_username),
+            is_ranked_servers_mod=helpers.is_player_ranked_server_mod(player_username),
             database=server.database,
             database_name=server.database_name,
             is_friend=g.current_user.has_friend(player_username)

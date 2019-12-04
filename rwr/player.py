@@ -115,15 +115,15 @@ class Player:
         return helpers.is_player_rwr_dev(self.username)
 
     @memoized_property
-    def is_ranked_servers_admin(self):
-        return helpers.is_player_ranked_server_admin(self.username)
+    def is_ranked_servers_mod(self):
+        return helpers.is_player_ranked_server_mod(self.username)
 
     @memoized_property
     def username_display(self):
         return '{}{}{}'.format(
             self.username,
             ' :wave:' if self.is_myself else ' :v:️' if self.is_contributor else ' :tools:' if self.is_rwr_dev else '',
-            ' :scales:' if self.is_ranked_servers_admin else ''
+            ' :scales:' if self.is_ranked_servers_mod else ''
         )
 
     @memoized_property
