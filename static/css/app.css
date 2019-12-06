@@ -67,6 +67,18 @@ img.bordered {
     color: inherit;
 }
 
+.breadcrumb li {
+    padding-right: 0.5rem;
+}
+
+.breadcrumb li:before {
+    content: "›";
+}
+
+.breadcrumb li:first-child::before {
+    content: "";
+}
+
 /************************************************************************
  * Tippy RWRS theme (players) */
 

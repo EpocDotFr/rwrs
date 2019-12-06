@@ -266,14 +266,14 @@
 {%- endmacro %}
 
 {% macro render_breadcrumb(breadcrumb_items) -%}
-    <ul itemscope itemtype="https://schema.org/BreadcrumbList" class="unstyled small">
+    <ul itemscope itemtype="https://schema.org/BreadcrumbList" class="unstyled small breadcrumb">
         {%- for item in breadcrumb_items -%}
             {%- set url, label = item if item | length == 2 else (None, item) -%}
 
             <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" class="inbl">
                 {% if url %}<a itemprop="item" href="{{ url }}">{% endif %}<span itemprop="name">{{ label }}</span>{% if url %}</a>{% endif %}
                 <meta itemprop="position" content="{{ loop.index }}" />
-            </li>{% if not loop.last %} › {% endif %}
+            </li>
         {%- endfor -%}
     </ul>
 {%- endmacro %}
