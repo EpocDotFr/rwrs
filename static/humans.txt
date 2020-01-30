@@ -29,9 +29,9 @@
                        `-oooo/:.`
                          `.`
 
-               Maxime "Epoc". G.
+               Maxime "Epoc" G.
 
-                https://epoc.fr
+               https://epoc.fr
 
   This website and some of its data is open-source:
          https://github.com/EpocDotFr/rwrs
