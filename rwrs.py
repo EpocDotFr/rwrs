@@ -38,7 +38,7 @@ app.config['ITEMS_IMAGES_DIR'] = 'static/images/items'
 app.config['MAPS_DATA_FILE'] = 'storage/data/maps.json'
 app.config['ITEMS_DATA_FILE'] = 'storage/data/items.json'
 app.config['GEOIP_DATABASE_FILE'] = 'storage/data/GeoLite2-City.mmdb'
-app.config['RANKED_SERVERS_ADMINS_FILE'] = 'storage/data/ranked_servers_admins.json'
+app.config['RANKED_SERVERS_MODS_FILE'] = 'storage/data/ranked_servers_mods.json'
 app.config['MY_USERNAME'] = 'epocdotfr'
 app.config['CONTRIBUTORS'] = ['street veteran', 'mastock', 'dio', 'jatimatik', 'mellcor', 'teratai', 'harrified', 'mr. bang', 'dogtato', 'stesmith', 'korgorr', 'foxtrod']
 app.config['DEVS'] = ['jackmayol', 'pasik', 'pasik2', 'tremozl', 'the soldier', '577']
@@ -48,6 +48,7 @@ app.config['EVENT_DATETIME_STORAGE_FORMAT'] = 'YYYY-MM-DD HH:mm ZZZ'
 app.config['EVENT_DATETIME_DISPLAY_FORMAT'] = 'MMMM Do, YYYY @ h:mm A ZZZ'
 app.config['STATUS_PAGE_URL'] = 'https://status.rwrstats.com/'
 app.config['BUNDLE_ERRORS'] = True
+app.config['SESSION_PROTECTION'] = 'basic'
 
 if app.config['ENV'] == 'production' and app.config['BUGSNAG_API_KEY']:
     bugsnag.configure(
@@ -77,13 +78,12 @@ assets.register('js_player_claim', Bundle('js/player_claim.js', filters='jsmin',
 assets.register('js_regenerate_pat', Bundle('js/regenerate_pat.js', filters='jsmin', output='js/regenerate_pat.min.js'))
 assets.register('css_app', Bundle('css/flags.css', 'css/app.css', filters='cssutils', output='css/app.min.css'))
 
-login_manager.session_protection = 'strong'
 login_manager.login_message_category = 'info'
 
 import rwr.constants
 import rwr.utils
 
-app.config['RANKED_SERVERS_ADMINS'] = helpers.load_json(app.config['RANKED_SERVERS_ADMINS_FILE'])
+app.config['RANKED_SERVERS_MODS'] = helpers.load_json(app.config['RANKED_SERVERS_MODS_FILE'])
 
 app.jinja_env.filters.update(
     humanize_seconds_to_days=helpers.humanize_seconds_to_days,

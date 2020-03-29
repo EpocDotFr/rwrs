@@ -198,7 +198,7 @@ class DynamicPlayerImage(DynamicImage):
         self._draw_text((7, 0), self.player.username, font=big_font)
 
         # Player icon
-        if self.player.is_myself or self.player.is_contributor or self.player.is_rwr_dev or self.player.is_ranked_servers_admin:
+        if self.player.is_myself or self.player.is_contributor or self.player.is_rwr_dev or self.player.is_ranked_servers_mod:
             x, _ = self.image_draw.textsize(self.player.username, font=big_font)
 
             if self.player.is_myself:
@@ -226,12 +226,12 @@ class DynamicPlayerImage(DynamicImage):
 
                 x += rwr_icon_image.width
 
-            if self.player.is_ranked_servers_admin:
-                admin_image = Image.open('static/images/dynamic_images/admin.png').convert('RGBA')
+            if self.player.is_ranked_servers_mod:
+                mod_image = Image.open('static/images/dynamic_images/mod.png').convert('RGBA')
 
                 x += 5 if self.player.is_rwr_dev or self.player.is_contributor else 12
 
-                self._paste(admin_image, (x, 6))
+                self._paste(mod_image, (x, 6))
 
         # Rank name
         self._draw_text((7, 22), self.player.rank.name, font=small_font)

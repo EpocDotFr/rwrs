@@ -3,7 +3,7 @@ Flask-Caching
 Flask-SQLAlchemy
 Flask-Migrate
 Flask-Assets
-PyMySQL
+mysqlclient
 simplejson
 Flask-Login
 Flask-OpenID
@@ -27,3 +27,4 @@ Flask-Limiter
 Flask-WTF
 iso3166
 misaka
+steam

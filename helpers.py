@@ -5,9 +5,6 @@ from rwrs import app
 import misaka
 import json
 import os
-import re
-
-_steam_identity_url_regex = re.compile('steamcommunity.com/openid/id/([0-9]+)$')
 
 
 def humanize_seconds_to_days(seconds):
@@ -111,7 +108,7 @@ def simplified_integer(integer):
 
 def build_database_uri():
     """Return the database connection string."""
-    uri = 'mysql+pymysql://{username}:{password}@'
+    uri = 'mysql+mysqldb://{username}:{password}@'
 
     params = {
         'username': app.config['DB_USERNAME'],
@@ -150,16 +147,6 @@ def previous_and_next(some_iterable):
     return zip(prevs, items, nexts)
 
 
-def parse_steam_id_from_identity_url(identity_url):
-    """Extract the Steam ID from a Steam identity URL."""
-    match = _steam_identity_url_regex.search(identity_url)
-
-    if match:
-        return match.group(1)
-
-    return None
-
-
 def is_player_myself(player_nickname):
     return player_nickname.lower() == app.config['MY_USERNAME']
 
@@ -172,8 +159,8 @@ def is_player_rwr_dev(player_nickname):
     return player_nickname.lower() in app.config['DEVS']
 
 
-def is_player_ranked_server_admin(player_nickname):
-    return player_nickname.lower() in app.config['RANKED_SERVERS_ADMINS']
+def is_player_ranked_server_mod(player_nickname):
+    return player_nickname.lower() in app.config['RANKED_SERVERS_MODS']
 
 
 def markdown_to_html_inline(markdown):
@@ -188,7 +175,7 @@ def check_safe_root(url):
     if url is None:
         return None
 
-    if url.startswith(request.url_root) or url.startswith('/'):
+    if url.startswith((request.url_root, '/')):
         return url
 
     return None

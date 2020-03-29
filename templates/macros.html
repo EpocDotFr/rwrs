@@ -22,7 +22,7 @@
     {%- elif username_lower in config['CONTRIBUTORS'] %} <i class="fas fa-hand-peace help" title="This player contributed in a way or another to RWRS. Thanks to her/him!"></i>
     {%- elif username_lower in config['DEVS'] %} <img src="{{ url_for('static', filename='images/rwr_icon.png') }}" title="Say hi to one of the Running With Rifles developers!" class="help">
     {%- endif -%}
-    {%- if username_lower in config['RANKED_SERVERS_ADMINS'] %} <i class="fas fa-balance-scale help" title="Ranked (official) servers admin"></i>
+    {%- if username_lower in config['RANKED_SERVERS_MODS'] %} <i class="fas fa-balance-scale help" title="Ranked (official) servers moderator"></i>
     {%- endif %}
 {%- endmacro %}
 
