@@ -25,8 +25,8 @@ def get_players_count():
 
     from models import ServerPlayerCount, SteamPlayerCount, Variable
     from rwrs import cache, db
+    import steam_helpers
     import rwr.scraper
-    import steam
     import arrow
 
     click.echo('Clearing cache')
@@ -34,15 +34,13 @@ def get_players_count():
     cache.delete_memoized(rwr.scraper.get_servers)
     cache.delete_memoized(ServerPlayerCount.server_players_data)
     cache.delete_memoized(ServerPlayerCount.servers_data)
-    cache.delete_memoized(steam.SteamworksApiClient.get_current_players_count_for_app)
+    cache.delete_memoized(steam_helpers.get_current_players_count_for_app)
     cache.delete_memoized(SteamPlayerCount.players_data)
 
     click.echo('Getting current players on Steam')
 
-    steamworks_api_client = steam.SteamworksApiClient(app.config['STEAM_API_KEY'])
-
     steam_player_count = SteamPlayerCount()
-    steam_player_count.count = steamworks_api_client.get_current_players_count_for_app(app.config['RWR_STEAM_APP_ID'])
+    steam_player_count.count = steam_helpers.get_current_players_count_for_app(app.config['RWR_STEAM_APP_ID'])
 
     current_total_players_count = steam_player_count.count
 
@@ -215,11 +213,6 @@ def extract_minimaps(steamdir):
 @app.cli.command()
 def run_discord_bot():
     """Run the RWRS Discord bot."""
-    if os.path.exists('maintenance'):
-        click.secho('Maintenance mode enabled, aborting', fg='yellow')
-
-        return
-
     from discord.bot import RwrsBot
 
     click.echo('Initializing bot')
@@ -394,8 +387,8 @@ def compute_promotions():
 
 
 @app.cli.command()
-def save_ranked_servers_admins():
-    """Retrieve and save the ranked servers admins."""
+def save_ranked_servers_mods():
+    """Retrieve and save the ranked servers moderator."""
     from lxml import etree
     import requests
     import helpers
@@ -413,7 +406,7 @@ def save_ranked_servers_admins():
 
         return
 
-    admins = [item.get('value') for item in admins_xml.iterchildren('item')]
+    mods = [item.get('value') for item in admins_xml.iterchildren('item')]
 
     click.echo('Retrieving moderators list')
 
@@ -428,10 +421,10 @@ def save_ranked_servers_admins():
 
         return
 
-    admins.extend([item.get('value') for item in moderators_xml.iterchildren('item')])
+    mods.extend([item.get('value') for item in moderators_xml.iterchildren('item')])
 
-    click.echo('Saving to {}'.format(app.config['RANKED_SERVERS_ADMINS_FILE']))
+    click.echo('Saving to {}'.format(app.config['RANKED_SERVERS_MODS_FILE']))
 
-    helpers.save_json(app.config['RANKED_SERVERS_ADMINS_FILE'], admins)
+    helpers.save_json(app.config['RANKED_SERVERS_MODS_FILE'], mods)
 
     click.secho('Done', fg='green')
