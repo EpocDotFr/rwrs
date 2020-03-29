@@ -29,7 +29,7 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/brands.css" crossorigin="anonymous">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/fontawesome.css" crossorigin="anonymous">
 
-    <link rel="stylesheet" href="https://cdn.rawgit.com/alsacreations/KNACSS/6.1.2/css/knacss.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/alsacreations/KNACSS@6.1.2/css/knacss.css">
     {% block cssfiles %} {% endblock %}
     {% assets 'css_app' %}<link rel="stylesheet" href="{{ ASSET_URL }}">{% endassets %}
 
@@ -66,7 +66,7 @@
                     </div>
                     <div class="txtright">
                         <form method="get" action="{{ url_for('players_list_without_db') }}" itemprop="potentialAction" itemscope itemtype="http://schema.org/SearchAction" class="inbl mrs">
-                            <meta itemprop="target" content="{{ url_for('players_list_without_db') }}?username={username}&amp;database=invasion"/>
+                            <meta itemprop="target" content="{{ url_for('players_list_without_db', _external=True) }}?username={username}&amp;database=invasion"/>
 
                             <input type="text" name="username" placeholder="Type a player name" itemprop="query-input" required class="w200p">
                             <label><input type="radio" name="database" value="invasion" checked required> {{ macros.database_name('invasion') }}</label>
@@ -93,7 +93,7 @@
 
     <header class="w1140p center pts pbs">
         <div class="txtleft">
-            <a href="{{ url_for('home') }}" itemprop="url"><img src="{{ url_for('static', filename='images/logo_light.png') }}" title="Running With Rifles Stats logo"></a>
+            <a href="{{ url_for('home', _external=True) }}" itemprop="url"><img src="{{ url_for('static', filename='images/logo_light.png') }}" title="Running With Rifles Stats logo"></a>
         </div>
         {% if not g.UNDER_MAINTENANCE %}
             <nav class="txtright">
