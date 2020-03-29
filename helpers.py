@@ -189,3 +189,7 @@ def get_next_url():
 def generate_next_url():
     """Return the full path of the current URL, minus the ending question mark."""
     return request.full_path.rstrip('?')
+
+
+def get_game_type_from_database(database):
+    return 'vanilla' if database == 'invasion' else database

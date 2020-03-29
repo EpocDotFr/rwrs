@@ -575,6 +575,133 @@ class User(db.Model, UserMixin):
         return 'User:{}'.format(self.id)
 
 
+class MarketAdStatus(Enum):
+    ACTIVE = 'ACTIVE'
+    CONCLUDED = 'CONCLUDED'
+    CANCELLED = 'CANCELLED'
+
+
+class MarketAd(db.Model):
+    __tablename__ = 'market_ads'
+    __table_args__ = (
+        db.Index('status_idx', 'status'),
+        db.Index('rwr_account_id_idx', 'rwr_account_id'),
+        db.Index('created_at_idx', 'created_at'),
+    )
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+
+    item_id = db.Column(db.String(100), nullable=False)
+    unit_price = db.Column(db.Integer, nullable=False)
+    quantity = db.Column(db.Integer, nullable=False, default=1)
+    status = db.Column(db.Enum(MarketAdStatus), nullable=False, default=MarketAdStatus.ACTIVE)
+    created_at = db.Column(ArrowType, default=arrow.utcnow().floor('minute'), nullable=False)
+    updated_at = db.Column(ArrowType, default=arrow.utcnow().floor('minute'), onupdate=arrow.utcnow().floor('minute'), nullable=False)
+
+    rwr_account_id = db.Column(db.Integer, db.ForeignKey('rwr_accounts.id'), nullable=False)
+
+    @memoized_property
+    def total_price(self):
+        return self.quantity * self.unit_price
+
+    @memoized_property
+    def total_price_display(self):
+        return helpers.humanize_integer(self.total_price)
+
+    @memoized_property
+    def unit_price_display(self):
+        return helpers.humanize_integer(self.unit_price)
+
+    @memoized_property
+    def is_free(self):
+        return self.total_price == 0
+
+    def get_link(self, absolute=False):
+        def _get_link(self, absolute):
+            return url_for('market_ad_details', ad_id=self.id, _external=absolute)
+
+        if current_app:
+            link = _get_link(self, absolute=absolute)
+        else:
+            with app.app_context():
+                link = _get_link(self, absolute=absolute)
+
+        return link
+
+    @memoized_property
+    def link(self):
+        """Return the link to this MarketAd page."""
+        return self.get_link()
+
+    @memoized_property
+    def link_absolute(self):
+        """Return the absolute link to this MarketAd page."""
+        return self.get_link(absolute=True)
+
+    def get_image_url(self, absolute=False):
+        def _get_image_url(self, absolute):
+            params = {
+                'game_type': self.database_game_type,
+                'item_id': self.item_id
+            }
+
+            image_url = 'images/items/{game_type}/{item_id}.png'.format(**params)
+
+            return url_for('static', filename=image_url, _external=absolute)
+
+        if current_app:
+            link = _get_image_url(self, absolute=absolute)
+        else:
+            with app.app_context():
+                link = _get_image_url(self, absolute=absolute)
+
+        return link
+
+    @memoized_property
+    def image_url(self):
+        """Return the URL to this MarketAd image."""
+        return self.get_image_url()
+
+    @memoized_property
+    def image_url_absolute(self):
+        """Return the absolute URL to this MarketAd image."""
+        return self.get_image_url(absolute=True)
+
+    @memoized_property
+    def database(self):
+        return self.rwr_account.type.value.lower()
+
+    @memoized_property
+    def database_game_type(self):
+        return helpers.get_game_type_from_database(self.database)
+
+    @memoized_property
+    def item_name(self):
+        return rwr.utils.get_item_name(self.database_game_type, self.item_id)
+
+    @staticmethod
+    def get_list(status=MarketAdStatus.ACTIVE, page=None, limit=None):
+        q = MarketAd.query.filter(
+            MarketAd.status == status
+        )
+
+        q = q.order_by(MarketAd.created_at.desc())
+
+        if page:
+            return q.paginate(
+                page=page,
+                per_page=limit,
+                error_out=False
+            )
+        elif limit:
+            q = q.limit(limit)
+
+        return q.all()
+
+    def __repr__(self):
+        return 'MarketAd:{}'.format(self.id)
+
+
 class RwrAccountType(Enum):
     INVASION = 'INVASION'
     PACIFIC = 'PACIFIC'
@@ -597,6 +724,7 @@ class RwrAccount(db.Model):
     claim_initiated_by_user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
     stats = db.relationship('RwrAccountStat', backref='rwr_account', lazy=True)
+    market_ads = db.relationship('MarketAd', backref='rwr_account', lazy=True)
 
     def get_link(self, absolute=False):
         def _get_link(self, absolute):

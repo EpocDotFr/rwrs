@@ -2,9 +2,9 @@ from models import SteamPlayerCount, ServerPlayerCount, Variable, RwrAccountStat
 from flask import render_template, abort, request, redirect, url_for, flash, g, jsonify
 from flask_login import login_required, current_user, logout_user
 from dynamic_image import DynamicServerImage, DynamicPlayerImage
+from models import User, MarketAd
 from rwr.player import Player
 from rwrs import app, oid, db
-from models import User
 import rwr.constants
 import flask_openid
 import rwr.scraper
@@ -608,3 +608,40 @@ def server_banner(ip, port, slug=None):
 @app.route('/images/servers/<ip>-<int:port>.png')
 def dynamic_server_image(ip, port):
     return DynamicServerImage.create(ip, port)
+
+
+@app.route('/market')
+def market_home():
+    limit = request.args.get('limit', 12, type=int)
+
+    if limit > 12:
+        limit = 12
+
+    ads = MarketAd.get_list(
+        page=request.args.get('page', 1, type=int),
+        limit=limit
+    )
+
+    return render_template(
+        'market/home.html',
+        ads=ads
+    )
+
+
+@app.route('/market/place-ad', methods=['GET', 'POST'])
+@login_required
+def market_place_ad():
+    return 'TODO'
+
+
+@app.route('/market/<int:ad_id>')
+def market_ad_details(ad_id):
+    ad = MarketAd.query.get(ad_id)
+
+    if not ad:
+        abort(404)
+
+    return render_template(
+        'market/details.html',
+        ad=ad
+    )

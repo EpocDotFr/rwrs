@@ -10,6 +10,8 @@ VALID_MAPS = list(set([map_id for mps in MAPS.values() for map_id in mps.keys()]
 
 RANKS = helpers.load_json(app.config['RANKS_DATA_FILE'])
 
+ITEMS = helpers.load_json(app.config['ITEMS_DATA_FILE'])
+
 SERVER_MODES = {
     'COOP': {'short': 'Coop.', 'long': 'Cooperation'},
     'DOM': {'short': 'Dom.', 'long': 'Dominance'},
