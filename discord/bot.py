@@ -34,9 +34,6 @@ class RwrsBotDiscoPlugin(Plugin):
         if app.config['ENV'] == 'development' and not event.msg.guild: # PM on development env: cancel
             return None
 
-        if event.msg.guild and event.msg.guild.id != app.config['DISCORD_BOT_GUILD_ID']: # Message not sent from the right guild
-            return None
-
         return event
 
     @Plugin.pre_command()
