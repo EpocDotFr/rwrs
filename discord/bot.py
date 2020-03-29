@@ -34,9 +34,6 @@ class RwrsBotDiscoPlugin(Plugin):
         if app.config['ENV'] == 'development' and not event.msg.guild: # PM on development env: cancel
             return None
 
-        if event.msg.guild and event.msg.guild.id != app.config['DISCORD_BOT_GUILD_ID']: # Message not sent from the right guild
-            return None
-
         return event
 
     @Plugin.pre_command()
@@ -71,10 +68,11 @@ class RwrsBotDiscoPlugin(Plugin):
         event.msg.reply('Cache cleared.')
 
     @Plugin.command('say', parser=True)
+    @Plugin.parser.add_argument('channel_id', type=int)
     @Plugin.parser.add_argument('message')
     def on_say_command(self, event, args):
-        """Admin command: makes the bot to say something."""
-        self.client.api.channels_messages_create(app.config['DISCORD_BOT_CHANNEL_ID'], args.message)
+        """Admin command: makes the bot to say something in the given channel ID."""
+        self.client.api.channels_messages_create(args.channel_id, args.message)
 
     @Plugin.command('enable', group='maintenance')
     def on_maintenance_enable_command(self, event):
