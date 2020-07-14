@@ -45,6 +45,7 @@ app.config['RWR_STEAM_APP_ID'] = 270150
 app.config['EVENT_DATETIME_STORAGE_FORMAT'] = 'YYYY-MM-DD HH:mm ZZZ'
 app.config['EVENT_DATETIME_DISPLAY_FORMAT'] = 'MMMM Do, YYYY @ h:mm A ZZZ'
 app.config['STATUS_PAGE_URL'] = 'https://status.rwrstats.com/'
+app.config['DISCORD_SERVER_URL'] = 'https://discord.gg/osumiagames'
 app.config['BUNDLE_ERRORS'] = True
 app.config['SESSION_PROTECTION'] = 'basic'
 
