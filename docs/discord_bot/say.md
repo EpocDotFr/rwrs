@@ -1,9 +1,8 @@
-:information_source:️ `@rwrs say message`
+:information_source:️ `@rwrs say channel_id message`
 
 _{short_description}_
 
-The message will be sent in the RWRS channel.
-
 **Parameters:**
 
+- `channel_id`: required. The Discord channel ID the bot should post his message to
 - `message`: required. The message the bot will send
