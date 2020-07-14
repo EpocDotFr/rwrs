@@ -3,7 +3,7 @@
 <img src="static/images/icon_round_dark_256.png" style="max-width: 150px" align="right">
 
 Players statistics, servers list and more for the [Running With Rifles](http://www.runningwithrifles.com/wp/) (RWR) game
-and its Pacific DLC. Available at [rwrstats.com](https://rwrstats.com/).
+as well as its Pacific and Edelweiss DLCs. Available at [rwrstats.com](https://rwrstats.com/).
 
 > Your everyday RWR companion tool!
 

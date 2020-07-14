@@ -24,7 +24,7 @@ SERVER_TYPES = OrderedDict([
     ('vanilla', 'Vanilla'),
     ('vanilla.winter', 'Vanilla'),
     ('pvp', 'Vanilla'),
-    ('pacific', 'RWR: PACIFIC'),
+    ('pacific', 'RWR: WWII DLCs'),
     ('man_vs_world_mp', 'Man vs World (MP)'),
     ('Running_with_the_Dead', 'Running with the Dead'),
     ('overlord_defense', 'Overlord Defense'),
@@ -37,7 +37,7 @@ VALID_SERVER_TYPES = SERVER_TYPES.keys()
 
 PLAYERS_LIST_DATABASES = OrderedDict([
     ('invasion', {'name': 'Invasion', 'ranks_country': 'us', 'realm': 'official_invasion'}),
-    ('pacific', {'name': 'Pacific', 'ranks_country': app.config['PACIFIC_PLAYERS_RANKS_COUNTRY'], 'realm': 'official_pacific'})
+    ('pacific', {'name': 'Pacific and Edelweiss', 'ranks_country': app.config['PACIFIC_PLAYERS_RANKS_COUNTRY'], 'realm': 'official_pacific'})
 ])
 
 VALID_DATABASES = PLAYERS_LIST_DATABASES.keys()

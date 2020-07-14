@@ -2,7 +2,7 @@
 
 _{short_description}_
 
-The list can be optionally filtered by the game type (Pacific DLC, Running with the Dead mod, etc) using the `type` parameter, and if the list should only contain ranked (official) servers (`--ranked` option).
+The list can be optionally filtered by the game type (Pacific and Edelweiss DLCs, Running with the Dead mod, etc) using the `type` parameter, and if the list should only contain ranked (official) servers (`--ranked` option).
 
 **Parameters:**
 
