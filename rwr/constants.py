@@ -24,7 +24,7 @@ SERVER_TYPES = OrderedDict([
     ('vanilla', 'Vanilla'),
     ('vanilla.winter', 'Vanilla'),
     ('pvp', 'Vanilla'),
-    ('pacific', 'RWR: WWII DLCs'),
+    ('pacific', 'RWR: PACIFIC and EDELWEISS'),
     ('man_vs_world_mp', 'Man vs World (MP)'),
     ('Running_with_the_Dead', 'Running with the Dead'),
     ('overlord_defense', 'Overlord Defense'),
