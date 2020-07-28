@@ -114,20 +114,16 @@ def user_settings():
 def regenerate_pat():
     status = 200
 
-    if not request.is_xhr:
-        status = 400
-        result = {'status': 'failure', 'data': {'message': 'Invalid request.'}}
-    else:
-        try:
-            current_user.pat = uuid.uuid4()
+    try:
+        current_user.pat = uuid.uuid4()
 
-            db.session.add(current_user)
-            db.session.commit()
+        db.session.add(current_user)
+        db.session.commit()
 
-            result = {'status': 'success', 'data': {'new_pat': str(current_user.pat)}}
-        except Exception as e:
-            status = 500
-            result = {'status': 'failure', 'data': {'message': str(e)}}
+        result = {'status': 'success', 'data': {'new_pat': str(current_user.pat)}}
+    except Exception as e:
+        status = 500
+        result = {'status': 'failure', 'data': {'message': str(e)}}
 
     return jsonify(result), status
 
@@ -189,7 +185,7 @@ def remove_friend(username):
 def import_friends():
     status = 200
 
-    if not request.is_xhr or not request.is_json:
+    if not request.is_json:
         status = 400
         result = {'status': 'failure', 'data': {'message': 'Invalid request.'}}
     else:
