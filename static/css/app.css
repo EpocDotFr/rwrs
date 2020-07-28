@@ -264,7 +264,6 @@ img.bordered {
 
 header {
     display: table;
-    width: 100%;
 }
 
 header > * {

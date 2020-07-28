@@ -266,7 +266,7 @@
 {%- endmacro %}
 
 {% macro render_breadcrumb(breadcrumb_items) -%}
-    <ul itemscope itemtype="https://schema.org/BreadcrumbList" class="unstyled small breadcrumb">
+    <ul itemscope itemtype="https://schema.org/BreadcrumbList" class="unstyled small breadcrumb w1140p center mtn mbs">
         {%- for item in breadcrumb_items -%}
             {%- set url, label = item if item | length == 2 else (None, item) -%}
 
