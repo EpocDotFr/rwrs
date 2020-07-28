@@ -34,12 +34,12 @@ Available configuration parameters are:
 
 More informations on the two above can be found [here](http://flask.pocoo.org/docs/1.0/config/#builtin-configuration-values).
 
-  - `DB_USERNAME` Username to access the DBMS
-  - `DB_PASSWORD` Password to access the DBMS
-  - `DB_UNIX_SOCKET` If set, `DB_HOST` and `DB_PORT` will be ignored in favor of using this Unix socket to communicate with the DBMS
-  - `DB_HOST` Host of the DBMS
-  - `DB_PORT` Port of the DBMS
-  - `DB_NAME` Name of the database to use
+  - `DB_USERNAME` Username to access the DBMS (production env only)
+  - `DB_PASSWORD` Password to access the DBMS (production env only)
+  - `DB_UNIX_SOCKET` If set, `DB_HOST` and `DB_PORT` will be ignored in favor of using this Unix socket to communicate with the DBMS (production env only)
+  - `DB_HOST` Host of the DBMS (production env only)
+  - `DB_PORT` Port of the DBMS (production env only)
+  - `DB_NAME` Name of the database to use (production env only)
   - `GA_TRACKING_ID` A Google Analytics tracking ID used to track visits on RWRS (optional)
   - `BUGSNAG_API_KEY` A [Bugsnag](https://www.bugsnag.com/) API key so that unhandled exceptions are automatically sent to Bugsnag in production env (optional)
   - `CACHE_THRESHOLD` The maximum number of items the cache will store before it starts deleting some (see [here](https://pythonhosted.org/Flask-Cache/#configuring-flask-cache) for more configuration parameters related to Flask-Cache)
