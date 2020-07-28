@@ -1,8 +1,16 @@
 {% extends 'layout.html' %}
+{%- import 'macros.html' as macros -%}
 
-{% block page_title %}<h1><i class="fas fa-server"></i> Servers › {{ macros.server_name(server, link=False) }} › Banner</h1>{% endblock %}
+{% set page_icon = 'fas fa-server' %}
 
-{% block meta_title %}Servers › {{ macros.server_name(server, link=False, raw=True) }} › Banner{% endblock %}
+{% set html_title = macros.server_name(server, link=False) %}
+
+{% set meta_title =  macros.server_name(server, link=False, raw=True) %}
+
+{% set breadcrumb = (
+    (url_for('servers_list'), 'Servers'),
+    ('Banner')
+) %}
 
 {% block meta_description %}Get a banner to include in your website / blog / forum for the{{ ' ranked ' + server.database_name if server.is_ranked else ' dedicated' if server.is_dedicated }} Running With Rifles (RWR) server named {{ macros.server_name(server, link=False, no_icon=True) }}{% if server.location.country_code %} hosted in {{ server.location.text }}{% endif %}.{% endblock %}
 

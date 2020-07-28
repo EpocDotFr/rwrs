@@ -1,8 +1,8 @@
 {% extends 'layout.html' %}
 
-{% block page_title %}<h1><i class="fas fa-user-circle"></i> Users › {{ user.username }}</h1>{% endblock %}
+{% set page_icon = 'fas fa-user-circle' %}
 
-{% block meta_title %}Users › {{ user.username }}{% endblock %}
+{% set title = user.username + ' profile' %}
 
 {% block meta_description %}{{ user.username }} profile on RWRS.{% endblock %}
 

@@ -1,8 +1,8 @@
 {% extends 'layout.html' %}
 
-{% block page_title %}<h1><i class="fas fa-question"></i> Not found</h1>{% endblock %}
+{% set page_icon = 'fas fa-question' %}
 
-{% block meta_title %}Not found{% endblock %}
+{% set title = 'Not found' %}
 
 {% block content %}
     <p class="alert error pas">Sorry, there's nothing here.</p>

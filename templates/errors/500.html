@@ -1,8 +1,8 @@
 {% extends 'layout.html' %}
 
-{% block page_title %}<h1><i class="fas fa-exclamation-triangle"></i> Server error</h1>{% endblock %}
+{% set page_icon = 'fas fa-exclamation-triangle' %}
 
-{% block meta_title %}Server error{% endblock %}
+{% set title = 'Server error' %}
 
 {% block content %}
     <p class="alert error pas">Whoops, a server error occured! Please retry. If the error persists, please <a href="{{ url_for('feedback') }}">get in touch</a>.</p>

@@ -1,8 +1,16 @@
 {% extends 'layout.html' %}
+{%- import 'macros.html' as macros -%}
 
-{% block page_title %}<h1><i class="fas fa-user"></i> Players › {{ player.database_name }} › {{ macros.player_name(player) }}{% if request.view_args.get('tab') == 'stats-history' %} › Statistics history{% elif request.view_args.get('tab') == 'evolution' %} › Evolution{% elif request.view_args.get('tab') == 'signature' %} › Signature{% endif %}</h1>{% endblock %}
+{% set page_icon = 'fas fa-user' %}
 
-{% block meta_title %}Players › {{ player.database_name }} › {{ player.username }}{% if request.view_args.get('tab') == 'stats-history' %} › Statistics history{% elif request.view_args.get('tab') == 'evolution' %} › Evolution{% elif request.view_args.get('tab') == 'signature' %} › Signature{% endif %}{% endblock %}
+{% set html_title = macros.player_name(player) %}
+
+{% set meta_title = player.username %}
+
+{% set breadcrumb = (
+    (url_for('players_list', database=request.view_args.get('database')), player.database_name + ' players'),
+    ('Statistics history' if request.view_args.get('tab') == 'stats-history' else 'Evolution' if request.view_args.get('tab') == 'evolution' else 'Signature' if request.view_args.get('tab') == 'signature' else 'Statistics')
+) %}
 
 {% block meta_description -%}
     {%- if request.view_args.get('tab') == 'stats-history' -%}
