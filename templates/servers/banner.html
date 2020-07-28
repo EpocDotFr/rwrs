@@ -3,13 +3,12 @@
 
 {% set page_icon = 'fas fa-server' %}
 
-{% set html_title = macros.server_name(server, link=False) + ' banner' %}
+{% set html_title = macros.server_name(server, link=False) %}
 
-{% set meta_title =  macros.server_name(server, link=False, raw=True) + ' banner' %}
+{% set meta_title =  macros.server_name(server, link=False, raw=True) %}
 
 {% set breadcrumb = (
     (url_for('servers_list'), 'Servers'),
-    (server.link, macros.server_name(server, link=False)),
     ('Banner')
 ) %}
 

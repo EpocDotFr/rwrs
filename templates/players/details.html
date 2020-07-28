@@ -9,7 +9,6 @@
 
 {% set breadcrumb = (
     (url_for('players_list', database=request.view_args.get('database')), player.database_name + ' players'),
-    (url_for('player_details', database=request.view_args.get('database'), username=player.username), macros.player_name(player)),
     ('Statistics history' if request.view_args.get('tab') == 'stats-history' else 'Evolution' if request.view_args.get('tab') == 'evolution' else 'Signature' if request.view_args.get('tab') == 'signature' else 'Statistics')
 ) %}
 

@@ -2,7 +2,7 @@
 
 {% set page_icon = 'fas fa-user-check' %}
 
-{% set title = 'Finalize claim of ' + rwr_account.username %}
+{% set title = rwr_account.username %}
 
 {% set breadcrumb = (
     (url_for('player_claim'), 'Claim RWR account'),
