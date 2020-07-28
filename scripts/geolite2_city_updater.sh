@@ -10,8 +10,15 @@
 
 set -e # Makes any subsequent failing commands to exit the script immediately
 
+LICENSE_KEY=${1}
+
+if [ "$LICENSE_KEY" = "" ]; then
+    echo "Missing license key"
+    exit
+fi
+
 DATA_DIR="storage/data"
-REMOTE_DB_FILE="http://geolite.maxmind.com/download/geoip/database/GeoLite2-City.tar.gz"
+REMOTE_DB_FILE="https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-City&license_key=$LICENSE_KEY&suffix=tar.gz"
 OUTPUT_FILE="$DATA_DIR/GeoLite2-City.tar.gz"
 
 echo "## Downloading and decompressing archive"
