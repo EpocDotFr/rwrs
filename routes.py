@@ -150,7 +150,7 @@ def my_friends():
     ), 200 if current_user.is_authenticated else 401
 
 
-@app.route('/my-friends/add/<username>')
+@app.route('/my-friends/add/<path:username>')
 @login_required
 def add_friend(username):
     form = forms.UserFriendForm(data={'username': username}, meta={'csrf': False})
@@ -167,7 +167,7 @@ def add_friend(username):
     return redirect(helpers.get_next_url())
 
 
-@app.route('/my-friends/remove/<username>')
+@app.route('/my-friends/remove/<path:username>')
 @login_required
 def remove_friend(username):
     if current_user.remove_friend(username):
@@ -353,13 +353,13 @@ def players_list(database):
     )
 
 
-@app.route('/players/<username>')
+@app.route('/players/<path:username>')
 def player_details_without_db(username):
     return redirect(url_for('player_details', database='invasion', username=username), code=301)
 
 
-@app.route('/players/<any({}):database>/<username>'.format(rwr.constants.VALID_DATABASES_STRING_LIST))
-@app.route('/players/<any({}):database>/<username>/<any(evolution,"stats-history",signature):tab>'.format(rwr.constants.VALID_DATABASES_STRING_LIST))
+@app.route('/players/<any({}):database>/<path:username>'.format(rwr.constants.VALID_DATABASES_STRING_LIST))
+@app.route('/players/<any({}):database>/<path:username>/<any(evolution,"stats-history",signature):tab>'.format(rwr.constants.VALID_DATABASES_STRING_LIST))
 def player_details(database, username, tab=None):
     player = rwr.scraper.search_player_by_username(database, username)
 
@@ -403,12 +403,12 @@ def player_details(database, username, tab=None):
     )
 
 
-@app.route('/images/players/<username>-<any({}):database>.png'.format(rwr.constants.VALID_DATABASES_STRING_LIST))
+@app.route('/images/players/<path:username>-<any({}):database>.png'.format(rwr.constants.VALID_DATABASES_STRING_LIST))
 def dynamic_player_image(username, database):
     return DynamicPlayerImage.create(database, username)
 
 
-@app.route('/popover/players/<any({}):database>/<username>'.format(rwr.constants.VALID_DATABASES_STRING_LIST))
+@app.route('/popover/players/<any({}):database>/<path:username>'.format(rwr.constants.VALID_DATABASES_STRING_LIST))
 def player_popover(database, username):
     player = rwr.scraper.search_player_by_username(database, username)
 
@@ -418,8 +418,8 @@ def player_popover(database, username):
     )
 
 
-@app.route('/players/<username>/compare')
-@app.route('/players/<username>/compare/<username_to_compare_with>')
+@app.route('/players/<path:username>/compare')
+@app.route('/players/<path:username>/compare/<username_to_compare_with>')
 def players_compare_without_db(username, username_to_compare_with=None):
     if not username_to_compare_with and request.args.get('username_to_compare_with'):
         username_to_compare_with = request.args.get('username_to_compare_with').strip()
@@ -427,9 +427,9 @@ def players_compare_without_db(username, username_to_compare_with=None):
     return redirect(url_for('players_compare', database='invasion', username=username, username_to_compare_with=username_to_compare_with), code=301)
 
 
-@app.route('/players/<any({}):database>/<username>/compare'.format(rwr.constants.VALID_DATABASES_STRING_LIST))
-@app.route('/players/<any({}):database>/<username>/compare/<username_to_compare_with>'.format(rwr.constants.VALID_DATABASES_STRING_LIST))
-@app.route('/players/<any({}):database>/<username>/compare/<username_to_compare_with>/<date>'.format(rwr.constants.VALID_DATABASES_STRING_LIST))
+@app.route('/players/<any({}):database>/<path:username>/compare'.format(rwr.constants.VALID_DATABASES_STRING_LIST))
+@app.route('/players/<any({}):database>/<path:username>/compare/<username_to_compare_with>'.format(rwr.constants.VALID_DATABASES_STRING_LIST))
+@app.route('/players/<any({}):database>/<path:username>/compare/<username_to_compare_with>/<date>'.format(rwr.constants.VALID_DATABASES_STRING_LIST))
 def players_compare(database, username, username_to_compare_with=None, date=None):
     # Redirect to a SEO-friendly URL if the username_to_compare_with or date query parameters are detected
     if (not username_to_compare_with and request.args.get('username_to_compare_with')) or (not date and request.args.get('date')):
