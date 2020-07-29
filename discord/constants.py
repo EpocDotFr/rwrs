@@ -53,6 +53,7 @@ AVAILABLE_COMMANDS = OrderedDict([
     ('maintenance', {'description': 'Enables or disables the maintenance mode', 'admin_only': True}),
     ('motd', {'description': 'Sets or removes the MOTD', 'admin_only': True}),
     ('event', {'description': 'Sets or removes the next RWR event', 'admin_only': True})
+    ('user', {'description': 'Performs actions on a specific user', 'admin_only': True})
 ])
 
 AVAILABLE_COMMANDS_NAMES = AVAILABLE_COMMANDS.keys()
