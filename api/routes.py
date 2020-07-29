@@ -1,6 +1,6 @@
 from flask_restful import Resource, marshal_with, abort
 from models import RwrAccount, RwrAccountStat, User
-from . import api, transformers, validators
+from . import api, transformers, validators, auth
 from types import SimpleNamespace
 from rwr.player import Player
 from flask import url_for, g
@@ -31,7 +31,7 @@ class ServersResource(Resource):
             servers = rwr.scraper.get_servers()
 
         for server in servers:
-            server.has_friends = server.has_friends_from_user(g.current_user)
+            server.has_friends = server.has_friends_from_user(auth.current_user())
 
         return servers
 
@@ -48,7 +48,7 @@ class ServerResource(Resource):
             is_ranked_servers_mod=helpers.is_player_ranked_server_mod(player_username),
             database=server.database,
             database_name=server.database_name,
-            is_friend=g.current_user.has_friend(player_username)
+            is_friend=auth.current_user().has_friend(player_username)
         ) for player_username in server.players.list]
 
     @marshal_with(transformers.server_full)
@@ -83,7 +83,7 @@ class PlayersResource(Resource):
 
         for player in players:
             player.set_playing_on_server(servers)
-            player.is_friend = player.is_friend_with_user(g.current_user)
+            player.is_friend = player.is_friend_with_user(auth.current_user())
 
         return players
 
@@ -121,7 +121,7 @@ class PlayerResource(Resource):
         servers = rwr.scraper.get_servers()
 
         player.set_playing_on_server(servers)
-        player.is_friend = player.is_friend_with_user(g.current_user)
+        player.is_friend = player.is_friend_with_user(auth.current_user())
 
         return player
 
@@ -153,7 +153,7 @@ class LiveCountersResource(Resource):
             players=SimpleNamespace(
                 total=g.total_players,
                 online=g.online_players,
-                friends_online=g.current_user.number_of_playing_friends
+                friends_online=auth.current_user().number_of_playing_friends
             ),
             servers=SimpleNamespace(
                 total=g.total_servers,
@@ -176,16 +176,16 @@ class UserResource(Resource):
 class FriendsResource(Resource):
     @marshal_with(transformers.friend)
     def get(self):
-        return g.current_user.friends_ordered_by_username
+        return auth.current_user().friends_ordered_by_username
 
     @marshal_with(transformers.friend)
     def post(self):
         args = validators.add_friend.parse_args()
 
-        if g.current_user.has_friend(args['username']):
+        if auth.current_user().has_friend(args['username']):
             abort(412, message='{} is already your friend'.format(args['username']))
 
-        user_friend = g.current_user.add_friend(args['username'])
+        user_friend = auth.current_user().add_friend(args['username'])
 
         db.session.commit()
 
@@ -194,7 +194,7 @@ class FriendsResource(Resource):
 
 class FriendResource(Resource):
     def delete(self, username):
-        if g.current_user.remove_friend(username):
+        if auth.current_user().remove_friend(username):
             db.session.commit()
 
             return '', 204
