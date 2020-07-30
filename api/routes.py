@@ -4,13 +4,29 @@ from . import api, transformers, validators, auth
 from types import SimpleNamespace
 from rwr.player import Player
 from flask import url_for, g
+from functools import wraps
 from rwrs import db
 import rwr.constants
 import rwr.scraper
 import helpers
 
 
-class ServersResource(Resource):
+def check_pat(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        if auth.current_user().is_forbidden_to_access_api:
+            abort(423, message='You have been forbidden to access the RWRS REST API.')
+
+        return f(*args, **kwargs)
+
+    return decorated
+
+
+class BaseResource(Resource):
+    method_decorators = [check_pat]
+
+
+class ServersResource(BaseResource):
     @staticmethod
     def replace_true_by_yes(dct, key):
         if key in dct and dct[key] is True:
@@ -36,7 +52,7 @@ class ServersResource(Resource):
         return servers
 
 
-class ServerResource(Resource):
+class ServerResource(BaseResource):
     @staticmethod
     def replace_players_usernames_by_objects(server):
         server.players.list = [SimpleNamespace(
@@ -63,7 +79,7 @@ class ServerResource(Resource):
         return server
 
 
-class PlayersResource(Resource):
+class PlayersResource(BaseResource):
     @marshal_with(transformers.player_list)
     def get(self, database):
         args = validators.get_players_list.parse_args()
@@ -88,7 +104,7 @@ class PlayersResource(Resource):
         return players
 
 
-class PlayerResource(Resource):
+class PlayerResource(BaseResource):
     @marshal_with(transformers.player_full)
     def get(self, database, username):
         args = validators.get_one_player.parse_args()
@@ -126,7 +142,7 @@ class PlayerResource(Resource):
         return player
 
 
-class PlayerStatsHistoryResource(Resource):
+class PlayerStatsHistoryResource(BaseResource):
     @marshal_with(transformers.player_stats_history)
     def get(self, database, username):
         args = validators.get_player_stats_history.parse_args()
@@ -146,7 +162,7 @@ class PlayerStatsHistoryResource(Resource):
         ).items
 
 
-class LiveCountersResource(Resource):
+class LiveCountersResource(BaseResource):
     @marshal_with(transformers.live_counters)
     def get(self):
         return SimpleNamespace(
@@ -162,7 +178,7 @@ class LiveCountersResource(Resource):
         )
 
 
-class UserResource(Resource):
+class UserResource(BaseResource):
     @marshal_with(transformers.user_full)
     def get(self, user_id):
         user = User.query.get(user_id)
@@ -173,7 +189,7 @@ class UserResource(Resource):
         return user
 
 
-class FriendsResource(Resource):
+class FriendsResource(BaseResource):
     @marshal_with(transformers.friend)
     def get(self):
         return auth.current_user().friends_ordered_by_username
@@ -192,7 +208,7 @@ class FriendsResource(Resource):
         return user_friend, 201
 
 
-class FriendResource(Resource):
+class FriendResource(BaseResource):
     def delete(self, username):
         if auth.current_user().remove_friend(username):
             db.session.commit()

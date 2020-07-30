@@ -38,7 +38,7 @@ def get_current_pat():
 def rate_limiter_key_func():
     return '|'.join([
         get_ipaddr(),
-        get_current_pat() # Cannot use auth.current_user() because login_required is invoked in the future
+        get_current_pat()
     ])
 
 
