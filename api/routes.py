@@ -1,16 +1,32 @@
 from flask_restful import Resource, marshal_with, abort
 from models import RwrAccount, RwrAccountStat, User
-from . import api, transformers, validators
+from . import api, transformers, validators, auth
 from types import SimpleNamespace
 from rwr.player import Player
 from flask import url_for, g
+from functools import wraps
 from rwrs import db
 import rwr.constants
 import rwr.scraper
 import helpers
 
 
-class ServersResource(Resource):
+def check_pat(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        if auth.current_user().is_forbidden_to_access_api:
+            abort(423, message='You have been forbidden to access the RWRS REST API.')
+
+        return f(*args, **kwargs)
+
+    return decorated
+
+
+class BaseResource(Resource):
+    method_decorators = [check_pat]
+
+
+class ServersResource(BaseResource):
     @staticmethod
     def replace_true_by_yes(dct, key):
         if key in dct and dct[key] is True:
@@ -31,12 +47,12 @@ class ServersResource(Resource):
             servers = rwr.scraper.get_servers()
 
         for server in servers:
-            server.has_friends = server.has_friends_from_user(g.current_user)
+            server.has_friends = server.has_friends_from_user(auth.current_user())
 
         return servers
 
 
-class ServerResource(Resource):
+class ServerResource(BaseResource):
     @staticmethod
     def replace_players_usernames_by_objects(server):
         server.players.list = [SimpleNamespace(
@@ -48,7 +64,7 @@ class ServerResource(Resource):
             is_ranked_servers_mod=helpers.is_player_ranked_server_mod(player_username),
             database=server.database,
             database_name=server.database_name,
-            is_friend=g.current_user.has_friend(player_username)
+            is_friend=auth.current_user().has_friend(player_username)
         ) for player_username in server.players.list]
 
     @marshal_with(transformers.server_full)
@@ -63,7 +79,7 @@ class ServerResource(Resource):
         return server
 
 
-class PlayersResource(Resource):
+class PlayersResource(BaseResource):
     @marshal_with(transformers.player_list)
     def get(self, database):
         args = validators.get_players_list.parse_args()
@@ -83,12 +99,12 @@ class PlayersResource(Resource):
 
         for player in players:
             player.set_playing_on_server(servers)
-            player.is_friend = player.is_friend_with_user(g.current_user)
+            player.is_friend = player.is_friend_with_user(auth.current_user())
 
         return players
 
 
-class PlayerResource(Resource):
+class PlayerResource(BaseResource):
     @marshal_with(transformers.player_full)
     def get(self, database, username):
         args = validators.get_one_player.parse_args()
@@ -121,12 +137,12 @@ class PlayerResource(Resource):
         servers = rwr.scraper.get_servers()
 
         player.set_playing_on_server(servers)
-        player.is_friend = player.is_friend_with_user(g.current_user)
+        player.is_friend = player.is_friend_with_user(auth.current_user())
 
         return player
 
 
-class PlayerStatsHistoryResource(Resource):
+class PlayerStatsHistoryResource(BaseResource):
     @marshal_with(transformers.player_stats_history)
     def get(self, database, username):
         args = validators.get_player_stats_history.parse_args()
@@ -146,14 +162,14 @@ class PlayerStatsHistoryResource(Resource):
         ).items
 
 
-class LiveCountersResource(Resource):
+class LiveCountersResource(BaseResource):
     @marshal_with(transformers.live_counters)
     def get(self):
         return SimpleNamespace(
             players=SimpleNamespace(
                 total=g.total_players,
                 online=g.online_players,
-                friends_online=g.current_user.number_of_playing_friends
+                friends_online=auth.current_user().number_of_playing_friends
             ),
             servers=SimpleNamespace(
                 total=g.total_servers,
@@ -162,7 +178,7 @@ class LiveCountersResource(Resource):
         )
 
 
-class UserResource(Resource):
+class UserResource(BaseResource):
     @marshal_with(transformers.user_full)
     def get(self, user_id):
         user = User.query.get(user_id)
@@ -173,28 +189,28 @@ class UserResource(Resource):
         return user
 
 
-class FriendsResource(Resource):
+class FriendsResource(BaseResource):
     @marshal_with(transformers.friend)
     def get(self):
-        return g.current_user.friends_ordered_by_username
+        return auth.current_user().friends_ordered_by_username
 
     @marshal_with(transformers.friend)
     def post(self):
         args = validators.add_friend.parse_args()
 
-        if g.current_user.has_friend(args['username']):
+        if auth.current_user().has_friend(args['username']):
             abort(412, message='{} is already your friend'.format(args['username']))
 
-        user_friend = g.current_user.add_friend(args['username'])
+        user_friend = auth.current_user().add_friend(args['username'])
 
         db.session.commit()
 
         return user_friend, 201
 
 
-class FriendResource(Resource):
+class FriendResource(BaseResource):
     def delete(self, username):
-        if g.current_user.remove_friend(username):
+        if auth.current_user().remove_friend(username):
             db.session.commit()
 
             return '', 204
@@ -204,9 +220,9 @@ class FriendResource(Resource):
 api.add_resource(ServersResource, '/servers')
 api.add_resource(ServerResource, '/servers/<ip>:<int:port>')
 api.add_resource(PlayersResource, '/players/<any({}):database>'.format(rwr.constants.VALID_DATABASES_STRING_LIST))
-api.add_resource(PlayerResource, '/players/<any({}):database>/<username>'.format(rwr.constants.VALID_DATABASES_STRING_LIST))
-api.add_resource(PlayerStatsHistoryResource, '/players/<any({}):database>/<username>/stats-history'.format(rwr.constants.VALID_DATABASES_STRING_LIST))
+api.add_resource(PlayerResource, '/players/<any({}):database>/<path:username>'.format(rwr.constants.VALID_DATABASES_STRING_LIST))
+api.add_resource(PlayerStatsHistoryResource, '/players/<any({}):database>/<path:username>/stats-history'.format(rwr.constants.VALID_DATABASES_STRING_LIST))
 api.add_resource(FriendsResource, '/friends')
-api.add_resource(FriendResource, '/friends/<username>')
+api.add_resource(FriendResource, '/friends/<path:username>')
 api.add_resource(UserResource, '/users/<int:user_id>')
 api.add_resource(LiveCountersResource, '/live-counters')

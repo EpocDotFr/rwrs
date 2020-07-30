@@ -5,6 +5,15 @@ HOST: https://rwrstats.com/api
 
 Documentation about the [Running With Rifles Stats (RWRS)](https://rwrstats.com/) REST API. [About RWRS](https://rwrstats.com/about)
 
+::: note
+The RWRS REST API is provided "as is", without warranty of any kind, express or implied.
+:::
+
+::: warning
+You are **required** to mention somewhere in your project - in a visible manner - that you're using the RWRS REST API.
+Not doing so may lead to a ban from using the API.
+:::
+
 ## Getting a Personal Access Token
 
 Although this API is public, a Personal Access Token is **required** to prevent abuses. To obtain a Personal Access
@@ -12,10 +21,6 @@ Token:
 
   1. Create an RWRS account by [signing in using your Steam account](https://rwrstats.com/sign-in)
   2. Get your Personal Access Token by heading to [your settings page](https://rwrstats.com/settings#pat)
-
-::: warning
-You are **required** to mention somewhere in your project - in a visible manner - that you're using the RWRS REST API.
-:::
 
 ## Sending the Personal Access Token
 
@@ -40,6 +45,11 @@ To prevent abuse, all resources are rate-limited. Each IP address + Personal Acc
 second**. Failing to respect this rate-limiting window will lead to a [429](https://httpstatuses.com/429) HTTP status
 code.
 
+## Ban
+
+I reserve myself the right to ban from using the API anyone who might use it in an abusive fashion. In such cases,
+all requests will return a [423](https://httpstatuses.com/423) HTTP status code.
+
 ## Cache
 
 Some resources are subject to server-side caching (i.e you'll not necessarily get the most up-to-date data from the
@@ -50,7 +60,7 @@ server). Check their respective documentation for more information.
 The HTTP response status code must be used to check if the sent request was successfully handled or not:
 
   - `2xx` Everything is OK. The response body will contain whatever the resource provide (check its doc)
-  - `4xx` The client made a mistake in its request, typically it's an input parameter validation error
+  - `4xx` Something is wrong on the client side (e.g an input parameter validation error)
   - `5xx` There were a server error
 
 ::: note
@@ -90,7 +100,7 @@ If a query string parameter is missing or invalid, it's the same output:
 }
 ```
 
-May also happen in other cases like the requested resource wasn't found:
+May also happen in other cases, e.g when the requested resource wasn't found:
 
 ```json
 {

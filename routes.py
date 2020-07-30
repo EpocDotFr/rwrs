@@ -114,16 +114,20 @@ def user_settings():
 def regenerate_pat():
     status = 200
 
-    try:
-        current_user.pat = uuid.uuid4()
+    if current_user.is_forbidden_to_access_api:
+        status = 400
+        result = {'status': 'failure', 'data': {'message': 'You have been forbidden to access the RWRS REST API.'}}
+    else:
+        try:
+            current_user.pat = uuid.uuid4()
 
-        db.session.add(current_user)
-        db.session.commit()
+            db.session.add(current_user)
+            db.session.commit()
 
-        result = {'status': 'success', 'data': {'new_pat': str(current_user.pat)}}
-    except Exception as e:
-        status = 500
-        result = {'status': 'failure', 'data': {'message': str(e)}}
+            result = {'status': 'success', 'data': {'new_pat': str(current_user.pat)}}
+        except Exception as e:
+            status = 500
+            result = {'status': 'failure', 'data': {'message': str(e)}}
 
     return jsonify(result), status
 

@@ -1,4 +1,4 @@
-from models import Variable, RwrAccount, RwrAccountStat
+from models import Variable, RwrAccount, RwrAccountStat, User
 from disco.types.user import GameType, Game, Status
 from disco.client import Client, ClientConfig
 from disco.util.logging import setup_logging
@@ -115,6 +115,48 @@ class RwrsBotDiscoPlugin(Plugin):
             db.session.commit()
 
             event.msg.reply('MOTD removed.')
+
+    @Plugin.command('api-ban', parser=True, group='user')
+    @Plugin.parser.add_argument('user_id')
+    def on_user_api_ban_command(self, event, args):
+        """Admin command: ban a user from using the API."""
+        user = User.query.get(args.user_id)
+
+        if not user:
+            event.msg.reply('User not found.')
+        elif user.is_forbidden_to_access_api:
+            event.msg.reply('{} is already banned from using the API.')
+        else:
+            try:
+                user.is_forbidden_to_access_api = True
+
+                db.session.add(user)
+                db.session.commit()
+
+                event.msg.reply('{} has been successfully banned from using the API.'.format(user.username))
+            except Exception as e:
+                event.msg.reply('Error banning {}: {}'.format(user.username, e))
+
+    @Plugin.command('api-unban', parser=True, group='user')
+    @Plugin.parser.add_argument('user_id')
+    def on_user_api_unban_command(self, event, args):
+        """Admin command: allow a user to use the API."""
+        user = User.query.get(args.user_id)
+
+        if not user:
+            event.msg.reply('User not found.')
+        elif not user.is_forbidden_to_access_api:
+            event.msg.reply('{} is already able to use the API.')
+        else:
+            try:
+                user.is_forbidden_to_access_api = False
+
+                db.session.add(user)
+                db.session.commit()
+
+                event.msg.reply('{} is now able to use the API.'.format(user.username))
+            except Exception as e:
+                event.msg.reply('Error unbanning {}: {}'.format(user.username, e))
 
     @Plugin.command('set', parser=True, group='event')
     @Plugin.parser.add_argument('name')
