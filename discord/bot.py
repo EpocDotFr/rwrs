@@ -125,7 +125,7 @@ class RwrsBotDiscoPlugin(Plugin):
         if not user:
             event.msg.reply('User not found.')
         elif user.is_forbidden_to_access_api:
-            event.msg.reply('{} is already banned from using the API.')
+            event.msg.reply('{} is already banned from using the API.'.format(user.username))
         else:
             try:
                 user.is_forbidden_to_access_api = True
@@ -146,7 +146,7 @@ class RwrsBotDiscoPlugin(Plugin):
         if not user:
             event.msg.reply('User not found.')
         elif not user.is_forbidden_to_access_api:
-            event.msg.reply('{} is already able to use the API.')
+            event.msg.reply('{} is already able to use the API.'.format(user.username))
         else:
             try:
                 user.is_forbidden_to_access_api = False
