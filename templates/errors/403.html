@@ -1,8 +1,8 @@
 {% extends 'layout.html' %}
 
-{% block page_title %}<h1><i class="fas fa-minus-circle"></i> Forbidden</h1>{% endblock %}
+{% set page_icon = 'fas fa-minus-circle' %}
 
-{% block meta_title %}Forbidden{% endblock %}
+{% set title = 'Forbidden' %}
 
 {% block content %}
     <p class="alert error pas">Access to this resource is forbidden.</p>

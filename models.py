@@ -393,6 +393,7 @@ class User(db.Model, UserMixin):
     updated_at = db.Column(ArrowType, default=lambda: arrow.utcnow().floor('minute'), onupdate=lambda: arrow.utcnow().floor('minute'), nullable=False)
     last_login_at = db.Column(ArrowType, nullable=False)
     pat = db.Column(UUIDType, default=lambda: uuid.uuid4())
+    is_forbidden_to_access_api = db.Column(db.Boolean, nullable=False, default=False)
 
     rwr_accounts = db.relationship('RwrAccount', backref='user', lazy=True, foreign_keys='RwrAccount.user_id')
     friends = db.relationship('UserFriend', backref='user', lazy=True, foreign_keys='UserFriend.user_id')

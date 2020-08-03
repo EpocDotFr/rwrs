@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
 
-    <title>{% block meta_title %}{% endblock %}{% if self.meta_title() | trim %} • {% endif %}Running With Rifles Stats (RWRS)</title>
+    <title>{{ meta_title or title }}{% if meta_title | trim or title | trim %} • {% endif %}Running With Rifles Stats (RWRS)</title>
 
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,7 +13,7 @@
     <meta property="og:type" content="website">
     {% if canonical_url %}<meta property="og:url" content="{{ canonical_url }}">{% endif %}
     <meta property="og:site_name" content="Running With Rifles Stats (RWRS)">
-    <meta property="og:title" content="{{ self.meta_title() }}">
+    <meta property="og:title" content="{{ meta_title or title }}">
     <meta property="og:description" content="{{ self.meta_description() }}">
     <meta property="og:image" content="{{ meta_image if meta_image else url_for('static', filename='images/icon_round_dark_256.png', _external=True) }}">
 
@@ -97,7 +97,7 @@
         </div>
         {% if not g.UNDER_MAINTENANCE %}
             <nav class="txtright">
-                <ul class="unstyled inbl">
+                <ul class="unstyled">
                     <li class="inbl"><a href="{{ url_for('players_list', database='invasion') }}" class="btn {{ 'active' if request.path.startswith('/players') and request.view_args.get('database') == 'invasion' }}"><i class="fas fa-user"></i> Players: Invasion</a></li>
                     <li class="inbl"><a href="{{ url_for('players_list', database='pacific') }}" class="btn {{ 'active' if request.path.startswith('/players') and request.view_args.get('database') == 'pacific' }}"><i class="fas fa-user"></i> Players: Pacific and Edelweiss</a></li>
                     <li class="inbl"><a href="{{ url_for('servers_list') }}" class="btn {{ 'active' if request.path.startswith('/servers') }}"><i class="fas fa-server"></i> Servers</a></li>
@@ -106,9 +106,11 @@
         {% endif %}
     </header>
 
+    {%- if breadcrumb -%}{{ macros.render_breadcrumb(breadcrumb) }}{%- endif -%}
+
     <div class="page pts pbs">
         <div class="{{ 'w1140p center' if g.LAYOUT == 'normal' else 'mls mrs' }}">
-            {% block page_title %}{% endblock %}
+            <h1>{% if page_icon %}<i class="{{ page_icon }}"></i>{% endif %} {{ html_title or title }}</h1>
 
             {% with flash_messages = get_flashed_messages(with_categories=true) %}
               {% if flash_messages %}

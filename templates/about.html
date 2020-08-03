@@ -1,8 +1,8 @@
 {% extends 'layout.html' %}
 
-{% block page_title %}<h1><i class="fas fa-info-circle"></i> About</h1>{% endblock %}
+{% set page_icon = 'fas fa-info-circle' %}
 
-{% block meta_title %}About{% endblock %}
+{% set title = 'About' %}
 
 {% block meta_description %}Learn things about RWRS, its background and purposes, why it was created and who's behind.{% endblock %}
 
@@ -52,5 +52,5 @@
 
     <h2>Legal</h2>
 
-    <p>rwrstats.com and the affiliated Discord bot are provided "as is", without warranty of any kind, express or implied, including but not limited to the warranties of merchantability, fitness for a particular purpose and noninfringement. In no event shall the authors or copyright holders be liable for any claim, damages or other liability, whether in an action of contract, tort or otherwise, arising from, out of or in connection with the software or the use or other dealings in the software.</p>
+    <p>rwrstats.com, the affiliated Discord bot and the RWRS REST API are provided "as is", without warranty of any kind, express or implied.</p>
 {% endblock %}

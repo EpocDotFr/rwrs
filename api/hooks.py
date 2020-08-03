@@ -1,6 +1,5 @@
 from flask_restful import abort
 from models import User
-from flask import g
 from . import auth
 
 
@@ -17,9 +16,7 @@ def verify_token(token):
     if not user:
         return False
 
-    g.current_user = user
-
-    return True
+    return user
 
 
 @auth.error_handler
