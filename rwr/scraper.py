@@ -4,6 +4,7 @@ from rwrs import app, cache
 from models import Variable
 from .server import Server
 from .player import Player
+from html import unescape
 from . import constants
 import geoip2.database
 import geoip2.errors
@@ -28,9 +29,9 @@ def _call(base_url, resource, parser, params=None):
     response.raise_for_status()
 
     if parser == 'html':
-        return html.fromstring(response.text)
+        return html.fromstring(unescape(response.text))
     elif parser == 'xml':
-        return etree.fromstring(response.text)
+        return etree.fromstring(unescape(response.text))
     else:
         raise ValueError('Invalid parser')
 
