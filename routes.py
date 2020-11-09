@@ -357,11 +357,6 @@ def players_list(database):
     )
 
 
-@app.route('/players/<path:username>')
-def player_details_without_db(username):
-    return redirect(url_for('player_details', database='invasion', username=username), code=301)
-
-
 @app.route('/players/<any({}):database>/<path:username>'.format(rwr.constants.VALID_DATABASES_STRING_LIST))
 @app.route('/players/<any({}):database>/<path:username>/<any(evolution,"stats-history",signature):tab>'.format(rwr.constants.VALID_DATABASES_STRING_LIST))
 def player_details(database, username, tab=None):
@@ -422,18 +417,9 @@ def player_popover(database, username):
     )
 
 
-@app.route('/players/<path:username>/compare')
-@app.route('/players/<path:username>/compare/<username_to_compare_with>')
-def players_compare_without_db(username, username_to_compare_with=None):
-    if not username_to_compare_with and request.args.get('username_to_compare_with'):
-        username_to_compare_with = request.args.get('username_to_compare_with').strip()
-
-    return redirect(url_for('players_compare', database='invasion', username=username, username_to_compare_with=username_to_compare_with), code=301)
-
-
 @app.route('/players/<any({}):database>/<path:username>/compare'.format(rwr.constants.VALID_DATABASES_STRING_LIST))
-@app.route('/players/<any({}):database>/<path:username>/compare/<username_to_compare_with>'.format(rwr.constants.VALID_DATABASES_STRING_LIST))
-@app.route('/players/<any({}):database>/<path:username>/compare/<username_to_compare_with>/<date>'.format(rwr.constants.VALID_DATABASES_STRING_LIST))
+@app.route('/players/<any({}):database>/<path:username>/compare/<path:username_to_compare_with>'.format(rwr.constants.VALID_DATABASES_STRING_LIST))
+@app.route('/players/<any({}):database>/<path:username>/compare/<path:username_to_compare_with>/<date>'.format(rwr.constants.VALID_DATABASES_STRING_LIST))
 def players_compare(database, username, username_to_compare_with=None, date=None):
     # Redirect to a SEO-friendly URL if the username_to_compare_with or date query parameters are detected
     if (not username_to_compare_with and request.args.get('username_to_compare_with')) or (not date and request.args.get('date')):
