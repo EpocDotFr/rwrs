@@ -27,11 +27,19 @@ SERVER_TYPES = OrderedDict([
     ('pacific', 'RWR: PACIFIC'),
     ('edelweiss', 'RWR: EDELWEISS'),
     ('man_vs_world_mp', 'Man vs World (MP)'),
+    ('man_vs_zombies_mp', 'Man vs Zombies (MP)'),
     ('Running_with_the_Dead', 'Running with the Dead'),
     ('overlord_defense', 'Overlord Defense'),
     ('lab_defense', 'Lab Defense'),
     ('lab_def_koth', 'Lab Defense KOTH'),
-    ('viper', 'Viper')
+    ('viper', 'Viper'),
+    ('casus_belli_05', 'Casus Belli'),
+    ('Running_in_the_Bug_War', 'Running in the Bug War'),
+    ('soldiers_at_war_heavy', 'Soldiers at War (Heavy)'),
+    ('SUPERHOT', 'SUPERHOT'),
+    ('superhotrailroad', 'SUPERHOT'),
+    ('snd', 'Search and Destroy'),
+    ('running_from_exterminatus', 'Running from Exterminatus'),
 ])
 
 VALID_SERVER_TYPES = SERVER_TYPES.keys()
