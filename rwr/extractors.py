@@ -9,7 +9,7 @@ import math
 import os
 
 
-VALID_GAME_TYPES = ['vanilla', 'pacific']
+VALID_GAME_TYPES = ['vanilla', 'pacific', 'edelweiss']
 INVALID_GAME_TYPES = ['teddy_hunt', 'minimodes', 'man_vs_world']
 INVALID_MAPS = ['lobby']
 
@@ -144,7 +144,12 @@ class RanksExtractor(BaseExtractor):
             { # In Pacific, US factions are the same as the Vanilla ones, so only parse IJA ranks
                 'country': 'jp',
                 'path': os.path.join(self.packages_dir, 'pacific', 'factions', 'ija.xml'),
-                'game_type': 'pacific'
+                'game_type': 'ww2_base'
+            },
+            { # In Edelweiss, Allies factions are the same as the VAnilla ones, so only parse Axis ranks
+                'country': 'de',
+                'path': os.path.join(self.packages_dir, 'edelweiss', 'factions', 'axis.xml'),
+                'game_type': 'ww2_base'
             }
         ]
 
