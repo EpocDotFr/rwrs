@@ -21,7 +21,7 @@
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" />
 
     <link rel="search" type="application/opensearchdescription+xml" href="{{ url_for('static', filename='opensearch_invasion.xml') }}" title="RWRS Invasion player search">
-    <link rel="search" type="application/opensearchdescription+xml" href="{{ url_for('static', filename='opensearch_pacific.xml') }}" title="RWRS Pacific and Edelweiss player search">
+    <link rel="search" type="application/opensearchdescription+xml" href="{{ url_for('static', filename='opensearch_pacific.xml') }}" title="RWRS WW2 DLCs player search">
 
     <link rel="author" href="{{ url_for('static', filename='humans.txt') }}" />
 
@@ -136,7 +136,7 @@
                 <p class="mtn">All Running With Rifles assets © 2015 - {{ current_year }} Osumia Games.<br />This site not affiliated with Osumia Games.</p>
             </div>
             <div class="txtright">
-                <p class="mtn"><a href="http://www.runningwithrifles.com/" title="RWR website"><i class="fas fa-globe-americas fa-2x fa-fw"></i></a> <a href="https://runningwithrifles.gamepedia.com/Running_with_Rifles_Wiki" title="RWR wiki"><i class="fas fa-book-open fa-2x fa-fw"></i></a> <a href="http://steamcommunity.com/app/{{ config['RWR_STEAM_APP_ID'] }}" title="RWR on Steam"><i class="fab fa-steam-symbol fa-2x fa-fw"></i></a> <a href="https://www.reddit.com/r/Runningwithrifles/" title="RWR on Reddit"><i class="fab fa-reddit-alien fa-2x fa-fw"></i></a> <a href="https://twitter.com/osumiagames" title="RWR on Twitter"><i class="fab fa-twitter fa-2x fa-fw"></i></a> <a href="{{ config['DISCORD_SERVER_URL'] }}" title="RWR on Discord"><img src="https://discordapp.com/api/guilds/671837736210268201/widget.png?style=shield"></a></p>
+                <p class="mtn"><a href="http://www.runningwithrifles.com/" title="RWR website"><i class="fas fa-globe-americas fa-2x fa-fw"></i></a> <a href="https://runningwithrifles.gamepedia.com/Running_with_Rifles_Wiki" title="RWR wiki"><i class="fas fa-book-open fa-2x fa-fw"></i></a> <a href="http://steamcommunity.com/app/{{ config['RWR_STEAM_APP_ID'] }}" title="RWR on Steam"><i class="fab fa-steam-symbol fa-2x fa-fw"></i></a> <a href="https://www.reddit.com/r/Runningwithrifles/" title="RWR on Reddit"><i class="fab fa-reddit-alien fa-2x fa-fw"></i></a> <a href="https://twitter.com/osumiagames" title="RWR on Twitter"><i class="fab fa-twitter fa-2x fa-fw"></i></a> <a href="{{ config['DISCORD_SERVER_URL'] }}" title="RWR on Discord"><img src="https://discordapp.com/api/guilds/181119538664964097/widget.png?style=shield"></a></p>
                 <p class="mbs"><a href="{{ url_for('about') }}">About</a> • <a href="{{ url_for('feedback') }}">Feedback</a> • <a href="{{ url_for('static', filename='/api_doc.html') }}">API</a> • <a href="{{ config['STATUS_PAGE_URL'] }}">Status</a></p>
             </div>
         </div>

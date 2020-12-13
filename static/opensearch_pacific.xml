@@ -1,6 +1,6 @@
 <OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/" xmlns:moz="http://www.mozilla.org/2006/browser/search/">
-	<ShortName>RWRS Pacific and Edelweiss player search</ShortName>
-	<Description>RWRS Pacific and Edelweiss player search</Description>
+	<ShortName>RWRS WW2 DLCs player search</ShortName>
+	<Description>RWRS WW2 DLCs player search</Description>
 	<InputEncoding>UTF-8</InputEncoding>
 	<Image width="16" height="16" type="image/x-icon">https://rwrstats.com/favicon.ico</Image>
 	<Url type="text/html" method="get" template="https://rwrstats.com/players?username={searchTerms}&amp;database=pacific"/>
