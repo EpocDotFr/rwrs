@@ -1,4 +1,4 @@
-from steam import WebAPI as SteamAPIClient
+from steam.webapi import WebAPI as SteamAPIClient
 from rwrs import app, cache
 import re
 
