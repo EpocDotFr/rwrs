@@ -109,7 +109,7 @@ def _set_server_event(servers):
 @cache.memoize(timeout=app.config['SERVERS_CACHE_TIMEOUT'])
 def get_servers():
     """Get and parse the list of all public RWR servers."""
-    xml_servers = _call(servers_base_url, 'get_server_list.php', 'xml', params={'start': 0, 'size': 200})
+    xml_servers = _call(servers_base_url, 'get_server_list.php', 'xml', params={'start': 0, 'size': 100})
     html_servers = _call(servers_base_url, 'view_servers.php', 'html')
 
     servers = []
