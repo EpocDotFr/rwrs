@@ -210,3 +210,357 @@ class RanksExtractor(BaseExtractor):
                 os.makedirs(new_rank_image_dir)
 
             new_rank_image.save(os.path.join(new_rank_image_dir, image_size['name'](rank_id) + '.png'), optimize=True)
+
+
+class ItemsExtractor(BaseExtractor):
+    """Extract items data and images from RWR."""
+    images_size = (270, 80)
+    do_not_rotate_images_for = [
+        # Vanilla
+        'tti',
+        # Pacific
+        'binoculars',
+        'medikit',
+        'morphine'
+    ]
+
+    def extract(self):
+        """Actually run the extraction process."""
+        data = OrderedDict()
+
+        for game_type in VALID_GAME_TYPES:
+            click.echo(game_type)
+
+            data[game_type] = OrderedDict()
+
+            self._extract_weapons(game_type, data[game_type])
+            self._extract_throwables(game_type, data[game_type])
+            self._extract_carry_items(game_type, data[game_type])
+
+        helpers.save_json(app.config['ITEMS_DATA_FILE'], data)
+
+    def _extract_weapons(self, game_type, data):
+        """Extract weapons data and images from RWR ."""
+        from PIL import Image
+
+        click.echo('  Extracting weapons')
+
+        weapons_directory = os.path.join(self.packages_dir, game_type, 'weapons')
+        all_weapons_file = os.path.join(weapons_directory, 'all_weapons.xml')
+
+        all_weapons_xml = etree.parse(all_weapons_file)
+        all_weapons_xml_root = all_weapons_xml.getroot()
+
+        for weapon_node in all_weapons_xml_root.iterchildren('weapon'):
+            weapon_file_name = weapon_node.get('file')
+            weapon_file = os.path.join(weapons_directory, weapon_file_name)
+
+            if not os.path.isfile(weapon_file) and game_type != 'vanilla': # Try to use weapon inherited from Vanilla
+                weapon_file = os.path.join(self.packages_dir, 'vanilla', 'weapons', weapon_file_name)
+
+                if not os.path.isfile(weapon_file): # Abort as there's nothing we can do
+                    click.secho('    No applicable file found for {}'.format(weapon_file), fg='yellow')
+
+                    continue
+
+            click.echo('    ' + weapon_file)
+
+            weapon_id = os.path.splitext(os.path.basename(weapon_file_name))[0]
+
+            weapon_xml = etree.parse(weapon_file)
+            weapon_xml_root = weapon_xml.getroot()
+
+            specification_node = weapon_xml_root.find('specification')
+
+            if specification_node is None:
+                click.secho('      specification node not found', fg='yellow')
+
+                continue
+
+            weapon_slot = specification_node.get('slot')
+
+            if weapon_slot:
+                weapon_slot = int(weapon_slot)
+
+                if weapon_slot == 0:
+                    weapon_slot = 'primary'
+                elif weapon_slot == 1:
+                    weapon_slot = 'secondary'
+                elif weapon_slot == 2:
+                    click.secho('      Static / mounted weapon', fg='yellow')
+
+                    continue
+            else:
+                weapon_slot = 'primary'
+
+            commonness_node = weapon_xml_root.find('commonness')
+
+            if commonness_node is not None and (not commonness_node.get('can_respawn_with') or (commonness_node.get('can_respawn_with') and int(commonness_node.get('can_respawn_with')) == 1)):
+                click.secho('      Not a rare weapon', fg='yellow')
+
+                continue
+
+            hud_icon_node = weapon_xml_root.find('hud_icon')
+
+            if hud_icon_node is None:
+                click.secho('      hud_icon node not found', fg='yellow')
+
+                continue
+
+            if not specification_node.get('name'):
+                click.secho('      No name set', fg='yellow')
+
+                continue
+
+            if not hud_icon_node.get('filename'):
+                click.secho('      No HUD icon set', fg='yellow')
+
+                continue
+
+            weapon_name = specification_node.get('name')
+
+            inventory_node = weapon_xml_root.find('inventory')
+            weapon_price = int(float(inventory_node.get('price'))) if inventory_node is not None else 0
+
+            if weapon_slot not in data:
+                data[weapon_slot] = OrderedDict()
+
+            data[weapon_slot][weapon_id] = OrderedDict([
+                ('name', weapon_name),
+                ('price', weapon_price)
+            ])
+
+            weapon_image_file_name = hud_icon_node.get('filename')
+            weapon_image_file = os.path.join(self.packages_dir, game_type, 'textures', weapon_image_file_name)
+
+            if not os.path.isfile(weapon_image_file) and game_type != 'vanilla': # Try to use weapon image inherited from Vanilla
+                weapon_image_file = os.path.join(self.packages_dir, 'vanilla', 'textures', weapon_image_file_name)
+
+                if not os.path.isfile(weapon_image_file):
+                    click.secho('      No applicable image found for {}'.format(weapon_file), fg='yellow')
+
+                    continue
+
+            weapon_image = Image.open(weapon_image_file)
+
+            # Only get the actual content of the image
+            weapon_image = weapon_image.crop(weapon_image.convert('RGBa').getbbox())
+
+            if not weapon_id.endswith('_resource') and weapon_id not in self.do_not_rotate_images_for:
+                weapon_image = weapon_image.transpose(Image.ROTATE_270)
+
+            weapon_image.thumbnail(self.images_size, Image.LANCZOS)
+
+            output_dir = os.path.join(app.config['ITEMS_IMAGES_DIR'], game_type, weapon_slot)
+
+            if not os.path.isdir(output_dir):
+                os.makedirs(output_dir)
+
+            weapon_image.save(os.path.join(output_dir, weapon_id + '.png'), optimize=True)
+
+    def _extract_throwables(self, game_type, data):
+        """Extract throwable data and images from RWR ."""
+        from PIL import Image
+
+        click.echo('  Extracting throwables')
+
+        weapons_directory = os.path.join(self.packages_dir, game_type, 'weapons')
+        all_throwables_file = os.path.join(weapons_directory, 'all_throwables.xml')
+
+        all_throwables_xml = etree.parse(all_throwables_file)
+        all_throwables_xml_root = all_throwables_xml.getroot()
+
+        for throwable_node in all_throwables_xml_root.iterchildren('projectile'):
+            throwable_file_name = throwable_node.get('file')
+            throwable_file = os.path.join(weapons_directory, throwable_file_name)
+
+            if not os.path.isfile(throwable_file) and game_type != 'vanilla': # Try to use throwable inherited from Vanilla
+                throwable_file = os.path.join(self.packages_dir, 'vanilla', 'weapons', throwable_file_name)
+
+                if not os.path.isfile(throwable_file): # Abort as there's nothing we can do
+                    click.secho('    No applicable file found for {}'.format(throwable_file), fg='yellow')
+
+                    continue
+
+            click.echo('    ' + throwable_file)
+
+            throwable_id = os.path.splitext(os.path.basename(throwable_file_name))[0]
+
+            throwable_xml = etree.parse(throwable_file)
+            throwable_xml_root = throwable_xml.getroot()
+
+            throwable_slot = throwable_xml_root.get('slot')
+
+            if throwable_slot:
+                throwable_slot = int(throwable_slot)
+
+                if throwable_slot != 0:
+                    click.secho('      System projectile', fg='yellow')
+
+                    continue
+
+            commonness_node = throwable_xml_root.find('commonness')
+
+            if commonness_node is not None and (not commonness_node.get('can_respawn_with') or (commonness_node.get('can_respawn_with') and int(commonness_node.get('can_respawn_with')) == 1)):
+                click.secho('      Not a rare throwable', fg='yellow')
+
+                continue
+
+            hud_icon_node = throwable_xml_root.find('hud_icon')
+
+            if hud_icon_node is None:
+                click.secho('      hud_icon node not found', fg='yellow')
+
+                continue
+
+            if not throwable_xml_root.get('name'):
+                click.secho('      No name set', fg='yellow')
+
+                continue
+
+            if not hud_icon_node.get('filename'):
+                click.secho('      No HUD icon set', fg='yellow')
+
+                continue
+
+            throwable_name = throwable_xml_root.get('name')
+
+            inventory_node = throwable_xml_root.find('inventory')
+            throwable_price = int(float(inventory_node.get('price'))) if inventory_node is not None else 0
+
+            if 'throwables' not in data:
+                data['throwables'] = OrderedDict()
+
+            data['throwables'][throwable_id] = OrderedDict([
+                ('name', throwable_name),
+                ('price', throwable_price)
+            ])
+
+            throwable_image_file_name = hud_icon_node.get('filename')
+            throwable_image_file = os.path.join(self.packages_dir, game_type, 'textures', throwable_image_file_name)
+
+            if not os.path.isfile(throwable_image_file) and game_type != 'vanilla': # Try to use throwable image inherited from Vanilla
+                throwable_image_file = os.path.join(self.packages_dir, 'vanilla', 'textures', throwable_image_file_name)
+
+                if not os.path.isfile(throwable_image_file):
+                    click.secho('      No applicable image found for {}'.format(throwable_file), fg='yellow')
+
+                    continue
+
+            throwable_image = Image.open(throwable_image_file)
+
+            # Only get the actual content of the image
+            throwable_image = throwable_image.crop(throwable_image.convert('RGBa').getbbox())
+            throwable_image.thumbnail(self.images_size, Image.LANCZOS)
+
+            output_dir = os.path.join(app.config['ITEMS_IMAGES_DIR'], game_type, 'throwables')
+
+            if not os.path.isdir(output_dir):
+                os.makedirs(output_dir)
+
+            throwable_image.save(os.path.join(output_dir, throwable_id + '.png'), optimize=True)
+
+    def _extract_carry_items(self, game_type, data):
+        """Extract carry items data and images from RWR ."""
+        from PIL import Image
+
+        click.echo('  Extracting carry items')
+
+        carry_items_directory = os.path.join(self.packages_dir, game_type, 'items')
+        all_carry_items_file = os.path.join(carry_items_directory, 'all_carry_items.xml')
+
+        all_carry_items_xml = etree.parse(all_carry_items_file)
+        all_carry_items_xml_root = all_carry_items_xml.getroot()
+
+        for carry_item_node in all_carry_items_xml_root.iterchildren('carry_item'):
+            carry_item_file_name = carry_item_node.get('file')
+            carry_item_file = os.path.join(carry_items_directory, carry_item_file_name)
+
+            if not os.path.isfile(carry_item_file) and game_type != 'vanilla': # Try to use carry item inherited from Vanilla
+                carry_item_file = os.path.join(self.packages_dir, 'vanilla', 'items', carry_item_file_name)
+
+                if not os.path.isfile(carry_item_file): # Abort as there's nothing we can do
+                    click.secho('    No applicable file found for {}'.format(carry_item_file), fg='yellow')
+
+                    continue
+
+            click.echo('    ' + carry_item_file)
+
+            carry_item_id = os.path.splitext(os.path.basename(carry_item_file_name))[0]
+
+            carry_item_xml = etree.parse(carry_item_file)
+            carry_item_xml_root = carry_item_xml.getroot()
+
+            carry_item_slot = carry_item_xml_root.get('slot')
+
+            if carry_item_slot:
+                carry_item_slot = int(carry_item_slot)
+
+                if carry_item_slot == 0:
+                    carry_item_slot = 'valuable'
+                elif carry_item_slot == 1:
+                    carry_item_slot = 'wearable'
+            else:
+                carry_item_slot = 'valuable'
+
+            commonness_node = carry_item_xml_root.find('commonness')
+
+            # FIXME can_respawn_with is defined in base_valuable.carry_item
+            if commonness_node is not None and (not commonness_node.get('can_respawn_with') or (commonness_node.get('can_respawn_with') and int(commonness_node.get('can_respawn_with')) == 1)):
+                click.secho('      Not a rare carry item', fg='yellow')
+
+                continue
+
+            hud_icon_node = carry_item_xml_root.find('hud_icon')
+
+            if hud_icon_node is None:
+                click.secho('      hud_icon node not found', fg='yellow')
+
+                continue
+
+            if not carry_item_xml_root.get('name'):
+                click.secho('      No name set', fg='yellow')
+
+                continue
+
+            if not hud_icon_node.get('filename'):
+                click.secho('      No HUD icon set', fg='yellow')
+
+                continue
+
+            carry_item_name = carry_item_xml_root.get('name')
+
+            inventory_node = carry_item_xml_root.find('inventory')
+            carry_item_price = int(float(inventory_node.get('price'))) if inventory_node is not None else 0
+
+            if carry_item_slot not in data:
+                data[carry_item_slot] = OrderedDict()
+
+            data[carry_item_slot][carry_item_id] = OrderedDict([
+                ('name', carry_item_name),
+                ('price', carry_item_price)
+            ])
+
+            carry_item_image_file_name = hud_icon_node.get('filename')
+            carry_item_image_file = os.path.join(self.packages_dir, game_type, 'textures', carry_item_image_file_name)
+
+            if not os.path.isfile(carry_item_image_file) and game_type != 'vanilla': # Try to use carry item image inherited from Vanilla
+                carry_item_image_file = os.path.join(self.packages_dir, 'vanilla', 'textures', carry_item_image_file_name)
+
+                if not os.path.isfile(carry_item_image_file):
+                    click.secho('      No applicable image found for {}'.format(carry_item_file), fg='yellow')
+
+                    continue
+
+            carry_item_image = Image.open(carry_item_image_file)
+
+            # Only get the actual content of the image
+            carry_item_image = carry_item_image.crop(carry_item_image.convert('RGBa').getbbox())
+            carry_item_image.thumbnail(self.images_size, Image.LANCZOS)
+
+            output_dir = os.path.join(app.config['ITEMS_IMAGES_DIR'], game_type, carry_item_slot)
+
+            if not os.path.isdir(output_dir):
+                os.makedirs(output_dir)
+
+            carry_item_image.save(os.path.join(output_dir, carry_item_id + '.png'), optimize=True)
