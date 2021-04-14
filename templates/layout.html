@@ -109,7 +109,7 @@
     {%- if breadcrumb -%}{{ macros.render_breadcrumb(breadcrumb) }}{%- endif -%}
 
     <div class="page pts pbs">
-        <div class="{{ 'w1140p center' if g.LAYOUT == 'normal' else 'mls mrs' }}">
+        <main class="{{ 'w1140p center' if g.LAYOUT == 'normal' else 'mls mrs' }}">
             <h1>{% if page_icon %}<i class="{{ page_icon }}"></i>{% endif %} {{ html_title or title }}</h1>
 
             {% with flash_messages = get_flashed_messages(with_categories=true) %}
@@ -121,7 +121,7 @@
             {% endwith %}
 
             {% block content %} {% endblock %}
-        </div>
+        </main>
     </div>
 
     <footer class="w1140p center small pts pbs" itemscope itemtype="http://schema.org/Organization">
