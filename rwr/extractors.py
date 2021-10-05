@@ -116,7 +116,11 @@ class MapsDataExtractor(BaseExtractor):
 
     def _parse_map_data(self, map_infos):
         """Parse a map's semicolon-separated data and return its dict representation as key-value pairs."""
-        return {entry[0]: entry[1] for entry in [[kv.strip() for kv in param.strip().split('=', maxsplit=1)] for param in filter(None, map_infos.strip().split(';'))]}
+        map_infos = map_infos.replace('\r', '').replace('\n', '')
+        entries = [entry.strip().rstrip(';') for entry in filter(None, map_infos.strip().split(';')) if not entry.lstrip().startswith('#')]
+        key_value_pairs = [[key_value_pair.strip() for key_value_pair in entry.split('=', maxsplit=1)] for entry in entries]
+
+        return {key_value_pair[0]: key_value_pair[1] for key_value_pair in key_value_pairs}
 
 
 class RanksExtractor(BaseExtractor):
