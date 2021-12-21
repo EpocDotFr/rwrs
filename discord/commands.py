@@ -1,6 +1,6 @@
 from flask_discord_interactions import Message, Permission
 from rwrs import discord_interactions, cache, db
-from models import Variable
+from models import Variable, User
 from . import constants
 import os
 
@@ -103,7 +103,22 @@ def user_api_ban(
     ctx,
     user_id: int
 ):
-    return Message('TODO', ephemeral=True)
+    user = User.query.get(user_id)
+
+    if not user:
+        return Message('User not found.', ephemeral=True)
+    elif user.is_forbidden_to_access_api:
+        return Message('{} is already banned from using the API.'.format(user.username), ephemeral=True)
+    else:
+        try:
+            user.is_forbidden_to_access_api = True
+
+            db.session.add(user)
+            db.session.commit()
+
+            return Message('{} has been successfully banned from using the API.'.format(user.username), ephemeral=True)
+        except Exception as e:
+            return Message('Error banning {}: {}'.format(user.username, e), ephemeral=True)
 
 
 @user_api_command_subgroup.command(
@@ -117,7 +132,22 @@ def user_api_unban(
     ctx,
     user_id: int
 ):
-    return Message('TODO', ephemeral=True)
+    user = User.query.get(user_id)
+
+    if not user:
+        return Message('User not found.', ephemeral=True)
+    elif not user.is_forbidden_to_access_api:
+        return Message('{} is already able to use the API.'.format(user.username), ephemeral=True)
+    else:
+        try:
+            user.is_forbidden_to_access_api = False
+
+            db.session.add(user)
+            db.session.commit()
+
+            return Message('{} is now able to use the API.'.format(user.username), ephemeral=True)
+        except Exception as e:
+            return Message('Error unbanning {}: {}'.format(user.username, e), ephemeral=True)
 
 
 @event_command_group.command(
