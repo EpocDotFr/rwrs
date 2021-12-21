@@ -1,6 +1,8 @@
 from flask_discord_interactions import Message, Permission
-from rwrs import discord_interactions, cache
+from rwrs import discord_interactions, cache, db
+from models import Variable
 from . import constants
+import os
 
 maintenance_command_group = discord_interactions.command_group('maintenance')
 motd_command_group = discord_interactions.command_group('motd')
@@ -32,7 +34,12 @@ def cc(
 def maintenance_enable(
     ctx
 ):
-    return Message('TODO', ephemeral=True)
+    if os.path.exists('maintenance'):
+        return Message('Maintenance mode already enabled.', ephemeral=True)
+    else:
+        open('maintenance', 'a').close()
+
+        return Message('Maintenance mode enabled.', ephemeral=True)
 
 
 @maintenance_command_group.command(
@@ -42,7 +49,12 @@ def maintenance_enable(
 def maintenance_disable(
     ctx
 ):
-    return Message('TODO', ephemeral=True)
+    if not os.path.exists('maintenance'):
+        return Message('Maintenance mode already disabled.', ephemeral=True)
+    else:
+        os.remove('maintenance')
+
+        return Message('Maintenance mode disabled.', ephemeral=True)
 
 
 @motd_command_group.command(
@@ -56,7 +68,11 @@ def motd_set(
     ctx,
     message: str
 ):
-    return Message('TODO', ephemeral=True)
+    Variable.set_value('motd', message)
+
+    db.session.commit()
+
+    return Message('MOTD updated.', ephemeral=True)
 
 
 @motd_command_group.command(
@@ -66,7 +82,14 @@ def motd_set(
 def motd_remove(
     ctx
 ):
-    return Message('TODO', ephemeral=True)
+    if not Variable.get_value('motd'):
+        return Message('MOTD already removed.', ephemeral=True)
+    else:
+        Variable.set_value('motd', None)
+
+        db.session.commit()
+
+        return Message('MOTD removed.', ephemeral=True)
 
 
 @user_api_command_subgroup.command(
