@@ -1,7 +1,9 @@
 from flask_discord_interactions import Message, Permission
-from rwrs import discord_interactions, cache, db
+from rwrs import app, discord_interactions, cache, db
 from models import Variable, User
 from . import constants
+import rwr.scraper
+import arrow
 import os
 
 maintenance_command_group = discord_interactions.command_group('maintenance')
@@ -164,7 +166,16 @@ def event_set(
     datetime: str,
     server_ip_and_port: str = None
 ):
-    return Message('TODO', ephemeral=True)
+    try:
+        Variable.set_event(name, datetime, server_ip_and_port)
+
+        db.session.commit()
+
+        cache.delete_memoized(rwr.scraper.get_servers)
+
+        return Message('Event updated.', ephemeral=True)
+    except (arrow.parser.ParserError, ValueError):
+        return Message('Invalid datetime provided (should be `{}`)'.format(app.config['EVENT_DATETIME_STORAGE_FORMAT']), ephemeral=True)
 
 
 @event_command_group.command(
@@ -174,7 +185,16 @@ def event_set(
 def event_remove(
     ctx
 ):
-    return Message('TODO', ephemeral=True)
+    if not Variable.get_value('event'):
+        return Message('Event already removed.', ephemeral=True)
+    else:
+        Variable.set_value('event', None)
+
+        db.session.commit()
+
+        cache.delete_memoized(rwr.scraper.get_servers)
+
+        return Message('Event removed.', ephemeral=True)
 
 
 @discord_interactions.command(
