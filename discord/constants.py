@@ -2,20 +2,11 @@ from enum import Enum
 import rwr.constants
 import helpers
 
-PLAYERS_LIMIT = 24
-SERVERS_LIMIT = 10
-
-Databases = Enum('Databases', {d: d for d in rwr.constants.VALID_DATABASES})
-
 EVOLUTION_TYPES = {
     'ratio': {'name': 'K/D ratio', 'column': 'kd_ratio'},
     'score': {'name': 'score', 'column': 'score'},
     'position': {'name': 'position (by XP)', 'column': 'leaderboard_position'},
 }
-
-EvolutionTypes = Enum('EvolutionTypes', {d: d for d in EVOLUTION_TYPES.keys()})
-
-ServerTypes = Enum('ServerTypes', {d: d for d in rwr.constants.VALID_SERVER_TYPES})
 
 PLAYER_SORTS = {
     'score': {'name': 'score', 'value': rwr.constants.PlayersSort.SCORE.value, 'getter': lambda player: player.score_display},
@@ -34,4 +25,12 @@ PLAYER_SORTS = {
     'targets': {'name': 'targets destroyed', 'value': rwr.constants.PlayersSort.TARGETS_DESTROYED.value, 'getter': lambda player: player.targets_destroyed_display},
 }
 
-PlayerSorts = Enum('PlayerSorts', {d: d for d in PLAYER_SORTS.keys()})
+DATABASE_CHOICES = Enum('DATABASE_CHOICES', {d: d for d in rwr.constants.VALID_DATABASES})
+EVOLUTION_TYPE_CHOICES = Enum('EVOLUTION_TYPE_CHOICES', {d: d for d in EVOLUTION_TYPES.keys()})
+SERVER_TYPE_CHOICES = Enum('SERVER_TYPE_CHOICES', {d: d for d in rwr.constants.VALID_SERVER_TYPES})
+PLAYER_SORT_CHOICES = Enum('PLAYER_SORT_CHOICES', {d: d for d in PLAYER_SORTS.keys()})
+
+DEFAULT_DATABASE = DATABASE_CHOICES.invasion
+DEFAULT_PLAYER_SORT = PLAYER_SORT_CHOICES.score
+PLAYERS_LIMIT = 24
+SERVERS_LIMIT = 10
