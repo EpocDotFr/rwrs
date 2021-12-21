@@ -1,4 +1,4 @@
-from flask_limiter.util import get_ipaddr
+from flask_limiter.util import get_remote_address
 from flask_httpauth import HTTPTokenAuth
 from flask_restful import Api, abort
 from flask_limiter import Limiter
@@ -37,7 +37,7 @@ def get_current_pat():
 
 def rate_limiter_key_func():
     return '|'.join([
-        get_ipaddr(),
+        get_remote_address(),
         get_current_pat()
     ])
 
