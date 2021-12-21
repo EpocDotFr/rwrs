@@ -5,6 +5,7 @@ try:
 except ImportError:
     has_debug_toolbar_ext = False
 
+from flask_discord_interactions import DiscordInteractions
 from flask_assets import Environment, Bundle
 from bugsnag.flask import handle_exceptions
 from flask_sqlalchemy import SQLAlchemy
@@ -62,6 +63,7 @@ cache = Cache(app)
 assets = Environment(app)
 login_manager = LoginManager(app)
 oid = OpenID(app)
+discord_interactions = DiscordInteractions(app)
 
 if has_debug_toolbar_ext:
     toolbar = DebugToolbarExtension(app)
@@ -78,6 +80,8 @@ assets.register('js_regenerate_pat', Bundle('js/regenerate_pat.js', filters='jsm
 assets.register('css_app', Bundle('css/flags.css', 'css/app.css', filters='cssutils', output='css/app.min.css'))
 
 login_manager.login_message_category = 'info'
+
+discord_interactions.set_route('/discord-interactions')
 
 import rwr.constants
 import rwr.utils
@@ -115,5 +119,6 @@ app.jinja_env.globals.update(
 import models
 import routes
 import commands
+import discord.commands
 import hooks
 import api

@@ -16,6 +16,18 @@ def cc():
 
 
 @app.cli.command()
+def update_discord_commands():
+    """Update Discord commands."""
+    from rwrs import discord_interactions
+
+    click.echo('Updating Discord commands...')
+
+    discord_interactions.update_commands(guild_id=app.config['DISCORD_TESTING_GUILD'])
+
+    click.secho('Done', fg='green')
+
+
+@app.cli.command()
 def get_players_count():
     """Store the number of players."""
     if os.path.exists('maintenance'):
