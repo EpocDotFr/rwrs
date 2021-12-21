@@ -1,7 +1,7 @@
+from models import Variable, User, RwrAccount, RwrAccountStat, Player
 from flask_discord_interactions import Message, Permission
 from rwrs import app, discord_interactions, cache, db
-from models import Variable, User
-from . import constants
+from . import constants, utils, embeds
 import rwr.scraper
 import arrow
 import os
@@ -226,7 +226,76 @@ def stats(
     database: constants.DATABASE_CHOICES = constants.DEFAULT_DATABASE,
     date: str = None
 ):
-    return 'TODO'
+    username = utils.prepare_username(username)
+    database = database.value # 'Cause it's an Enum
+
+    if date: # Stats history lookup mode
+        try:
+            date = utils.parse_date(date)
+        except Exception:
+            return Message(
+                '\n'.join([
+                    'Invalid date provided. Allowed values / formats:',
+                    '  - `yesterday`',
+                    '  - `1 day ago` / `{{number}} days ago`',
+                    '  - `1 week ago` / `{{number}} weeks ago`',
+                    '  - `1 month ago` / `{{number}} months ago`',
+                    '  - `1 year ago` / `{{number}} years ago`',
+                    '  - `{{month name}} {{day number}}`',
+                    '  - `{{month name}} {{day number}} {{year}}`',
+                    '  - `{{month name}} {{day number}}, {{year}}`',
+                    '  - `{{year}}-{{month number}}-{{day number}}`',
+                    '  - `{{day number}}/{{month number}}/{{year}}`',
+                ]),
+                ephemeral=True
+            )
+
+        player_exist = rwr.scraper.search_player_by_username(database, username, check_exist_only=True)
+
+        if not player_exist:
+            return 'Sorry dude, this player don\'t exist :confused:'
+
+        rwr_account = RwrAccount.get_by_type_and_username(database, username)
+
+        if not rwr_account:
+            return 'Sorry my friend, stats history isn\'t recorded for this player :confused: He/she must be part of the {} {} most experienced players.'.format(
+                rwr.utils.get_database_name(database),
+                app.config['MAX_NUM_OF_PLAYERS_TO_TRACK_STATS_FOR']
+            )
+
+        rwr_account_stat = RwrAccountStat.get_stats_for_date(rwr_account.id, date)
+
+        if not rwr_account_stat:
+            return 'No stats were found for the given date :confused: Are you sure he/she is part of the {} {} most experienced players?'.format(
+                rwr.utils.get_database_name(database),
+                app.config['MAX_NUM_OF_PLAYERS_TO_TRACK_STATS_FOR']
+            )
+
+        rwr_account_stat.rwr_account = rwr_account # Setting the RwrAccount relation now to prevent lazy loading issue (also preventing one extra DB query)
+
+        player = Player.craft(rwr_account, rwr_account_stat)
+
+        description_addendum = ':up: Promoted that day to ' + rwr_account_stat.promoted_to_rank.name_display if rwr_account_stat.promoted_to_rank else None
+    else: # Live data mode
+        player = rwr.scraper.search_player_by_username(database, username)
+
+        if not player:
+            return 'Sorry dude, this player don\'t exist :confused:'
+
+        description_addendum = None
+
+    servers = rwr.scraper.get_servers()
+
+    player.set_playing_on_server(servers)
+
+    return Message(
+        'Here\'s stats for **{}** on **{}** ranked servers{}:'.format(
+            player.username_display,
+            player.database_name,
+            ' for **' + date.format('MMMM D, YYYY') + '**' if date else ''
+        ),
+        embed=embeds.create_player_message_embed(player, description_addendum=description_addendum)
+    )
 
 
 @discord_interactions.command(
