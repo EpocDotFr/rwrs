@@ -5,6 +5,7 @@ from . import constants
 maintenance_command_group = discord_interactions.command_group('maintenance')
 motd_command_group = discord_interactions.command_group('motd')
 user_command_group = discord_interactions.command_group('user')
+user_api_command_subgroup = user_command_group.subgroup('api')
 event_command_group = discord_interactions.command_group('event')
 
 
@@ -68,8 +69,8 @@ def motd_remove(
     return Message('TODO', ephemeral=True)
 
 
-@user_command_group.command(
-    'api-ban',
+@user_api_command_subgroup.command(
+    'ban',
     'Ban a user from using the API',
     annotations={
         'user_id': 'An RWRS user ID'
@@ -82,8 +83,8 @@ def user_api_ban(
     return Message('TODO', ephemeral=True)
 
 
-@user_command_group.command(
-    'api-unban',
+@user_api_command_subgroup.command(
+    'unban',
     'Unban a user from using the API',
     annotations={
         'user_id': 'An RWRS user ID'
