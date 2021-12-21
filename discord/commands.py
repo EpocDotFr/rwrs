@@ -1,3 +1,4 @@
+from flask_discord_interactions import Message, Permission
 from rwrs import discord_interactions, cache
 from . import constants
 
@@ -9,14 +10,18 @@ event_command_group = discord_interactions.command_group('event')
 
 @discord_interactions.command(
     'cc',
-    'Clears RWRS cache'
+    'Clears RWRS cache',
+    default_permission=False,
+    permissions=[
+        Permission(user=constants.MY_DISCORD_ID)
+    ]
 )
 def cc(
     ctx
 ):
     cache.clear()
 
-    return 'Cache cleared.'
+    return Message('Cache cleared.', ephemeral=True)
 
 
 @maintenance_command_group.command(
@@ -26,7 +31,7 @@ def cc(
 def maintenance_enable(
     ctx
 ):
-    return 'TODO'
+    return Message('TODO', ephemeral=True)
 
 
 @maintenance_command_group.command(
@@ -36,7 +41,7 @@ def maintenance_enable(
 def maintenance_disable(
     ctx
 ):
-    return 'TODO'
+    return Message('TODO', ephemeral=True)
 
 
 @motd_command_group.command(
@@ -50,7 +55,7 @@ def motd_set(
     ctx,
     message: str
 ):
-    return 'TODO'
+    return Message('TODO', ephemeral=True)
 
 
 @motd_command_group.command(
@@ -60,7 +65,7 @@ def motd_set(
 def motd_remove(
     ctx
 ):
-    return 'TODO'
+    return Message('TODO', ephemeral=True)
 
 
 @user_command_group.command(
@@ -74,7 +79,7 @@ def user_api_ban(
     ctx,
     user_id: int
 ):
-    return 'TODO'
+    return Message('TODO', ephemeral=True)
 
 
 @user_command_group.command(
@@ -88,7 +93,7 @@ def user_api_unban(
     ctx,
     user_id: int
 ):
-    return 'TODO'
+    return Message('TODO', ephemeral=True)
 
 
 @event_command_group.command(
@@ -105,7 +110,7 @@ def event_set(
     datetime: str,
     server_ip_and_port: str = None
 ):
-    return 'TODO'
+    return Message('TODO', ephemeral=True)
 
 
 @event_command_group.command(
@@ -115,7 +120,7 @@ def event_set(
 def event_remove(
     ctx
 ):
-    return 'TODO'
+    return Message('TODO', ephemeral=True)
 
 
 @discord_interactions.command(
