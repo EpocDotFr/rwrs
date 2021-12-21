@@ -49,9 +49,6 @@ More informations on the two above can be found [here](http://flask.pocoo.org/do
   - `STEAM_PLAYERS_CACHE_TIMEOUT` Cache duration of the total number of players (in seconds)
   - `STEAM_API_KEY` A [Steam API](https://steamcommunity.com/dev) key
   - `PACIFIC_PLAYERS_RANKS_COUNTRY` Ranks image / name to show for the Pacific players stats (`us`, `jp`)
-  - `MY_DISCORD_ID` My Discord user ID (snowflake)
-  - `DISCORD_BOT_TOKEN` Authentication token used by the RWRS Discord bot
-  - `DISCORD_BOT_ADMINS` A list of Discord user IDs (snowflakes) allowed to use hidden bot commands
   - `MAX_NUM_OF_PLAYERS_TO_TRACK_STATS_FOR` How many players should RWRS track the stats for (top players storted by XP)
   - `ENABLE_SIGN_IN` Enable the "Sign in via Steam" feature
   - `ENABLE_PLAYER_CLAIMING` Enable the "claim player" feature
@@ -143,12 +140,6 @@ flask get-players-count
 
 ```
 flask db upgrade
-```
-
-### Running the RWRS Discord bot
-
-```
-flask run-discord-bot
 ```
 
 ### Updating the MaxMind GeoLite2 City database

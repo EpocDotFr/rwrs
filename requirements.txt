@@ -16,7 +16,6 @@ arrow
 SQLAlchemy
 python-slugify
 sqlalchemy-utils
-disco-py[performance]==0.0.14rc1
 tabulate
 matplotlib
 bugsnag[flask]

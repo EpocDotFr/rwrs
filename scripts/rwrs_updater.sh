@@ -48,7 +48,7 @@ echo "## Restarting services"
 
 chown -R www-data:www-data ./
 
-supervisorctl restart rwrstats.com discordbot.rwrstats.com
+supervisorctl restart rwrstats.com
 
 if [ "$MAINTENANCE_ALREADY_ENABLED" = false ]; then
     echo "## Disabling maintenance mode"

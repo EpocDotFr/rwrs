@@ -191,20 +191,6 @@ def extract_minimaps(steamdir):
 
 
 @app.cli.command()
-def run_discord_bot():
-    """Run the RWRS Discord bot."""
-    from discord.bot import RwrsBot
-
-    click.echo('Initializing bot')
-
-    rwrs_discord_bot = RwrsBot()
-
-    click.echo('Running bot')
-
-    rwrs_discord_bot.run()
-
-
-@app.cli.command()
 @click.option('--reset', is_flag=True, help='Reset all RWR accounts and stats')
 def save_players_stats(reset):
     """Get and persist the players stats."""
