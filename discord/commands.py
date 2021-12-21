@@ -1,5 +1,4 @@
-from flask_discord_interactions import Channel
-from rwrs import discord_interactions
+from rwrs import discord_interactions, cache
 from . import constants
 
 maintenance_command_group = discord_interactions.command_group('maintenance')
@@ -15,19 +14,9 @@ event_command_group = discord_interactions.command_group('event')
 def cc(
     ctx
 ):
-    return 'TODO'
+    cache.clear()
 
-
-@discord_interactions.command(
-    'say',
-    'Makes the bot to say something'
-)
-def say(
-    ctx,
-    channel: Channel,
-    message: str
-):
-    return 'TODO'
+    return 'Cache cleared.'
 
 
 @maintenance_command_group.command(
