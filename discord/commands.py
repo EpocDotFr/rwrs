@@ -3,6 +3,7 @@ from flask_discord_interactions import Message, Permission
 from rwrs import app, cache, db, discord_interactions
 from . import constants, utils, embeds
 from rwr.player import Player
+import steam_helpers
 import rwr.scraper
 import arrow
 import os
@@ -369,7 +370,34 @@ def server(
 def now(
     ctx
 ):
-    return 'TODO'
+    answer = [
+        'There\'s currently **{total_players}** player{total_players_plural} in total. **{online_players}** of them {online_players_plural} playing multiplayer online.',
+        'There\'s also **{total_servers}** online multiplayer servers, **{active_servers}** of which {active_servers_plural} active :wink:',
+        '',
+        'Talking about these numbers, here\'s some peaks:',
+        '',
+        '  - Total players peak: **{total_players_peak_count}** ({total_players_peak_date})',
+        '  - Online players peak: **{online_players_peak_count}** ({online_players_peak_date})',
+        '  - Online servers peak: **{online_servers_peak_count}** ({online_servers_peak_date})',
+        '  - Active servers peak: **{active_servers_peak_count}** ({active_servers_peak_date})'
+    ]
+
+    total_players = steam_helpers.get_current_players_count_for_app(app.config['RWR_STEAM_APP_ID'])
+    online_players, active_servers, total_servers = rwr.scraper.get_counters()
+
+    peaks = Variable.get_peaks_for_display()
+
+    return '\n'.join(answer).format(
+        total_players=total_players,
+        total_players_plural='s' if total_players > 1 else '',
+        online_players=online_players,
+        online_players_plural='are' if online_players > 1 else 'is',
+        total_servers=total_servers,
+        total_servers_plural='s' if total_servers > 1 else '',
+        active_servers=active_servers,
+        active_servers_plural='are' if active_servers > 1 else 'is',
+        **peaks
+    )
 
 
 @discord_interactions.command(
