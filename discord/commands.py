@@ -9,11 +9,39 @@ import rwr.scraper
 import arrow
 import os
 
-maintenance_command_group = discord_interactions.command_group('maintenance')
-motd_command_group = discord_interactions.command_group('motd')
-user_command_group = discord_interactions.command_group('user')
+maintenance_command_group = discord_interactions.command_group(
+    'maintenance',
+    default_permission=False,
+    permissions=[
+        Permission(user=constants.MY_DISCORD_ID)
+    ]
+)
+
+motd_command_group = discord_interactions.command_group(
+    'motd',
+    default_permission=False,
+    permissions=[
+        Permission(user=constants.MY_DISCORD_ID)
+    ]
+)
+
+user_command_group = discord_interactions.command_group(
+    'user',
+    default_permission=False,
+    permissions=[
+        Permission(user=constants.MY_DISCORD_ID)
+    ]
+)
+
 user_api_command_subgroup = user_command_group.subgroup('api')
-event_command_group = discord_interactions.command_group('event')
+
+event_command_group = discord_interactions.command_group(
+    'event',
+    default_permission=False,
+    permissions=[
+        Permission(user=constants.MY_DISCORD_ID)
+    ]
+)
 
 
 @discord_interactions.command(
