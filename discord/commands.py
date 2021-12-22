@@ -1,4 +1,5 @@
 from models import Variable, User, RwrAccount, RwrAccountStat
+from flask_discord_interactions.models.embed import Field
 from flask_discord_interactions import Message, Permission
 from rwrs import app, cache, db, discord_interactions
 from . import constants, utils, embeds
@@ -225,7 +226,7 @@ def info(
 def stats(
     ctx,
     username: str,
-    database: constants.DATABASE_CHOICES = constants.DEFAULT_DATABASE,
+    database: constants.DATABASE_CHOICES = constants.DEFAULT_DATABASE.value,
     date: str = None
 ):
     username = utils.prepare_username(username)
@@ -311,7 +312,7 @@ def evolution(
     ctx,
     username: str,
     type: constants.EVOLUTION_TYPE_CHOICES,
-    database: constants.DATABASE_CHOICES = constants.DEFAULT_DATABASE
+    database: constants.DATABASE_CHOICES = constants.DEFAULT_DATABASE.value
 ):
     return 'TODO'
 
@@ -460,10 +461,34 @@ def servers(
 )
 def top(
     ctx,
-    sort: constants.PLAYER_SORT_CHOICES = constants.DEFAULT_PLAYER_SORT,
-    database: constants.DATABASE_CHOICES = constants.DEFAULT_DATABASE
+    sort: constants.PLAYER_SORT_CHOICES = constants.DEFAULT_PLAYER_SORT.value,
+    database: constants.DATABASE_CHOICES = constants.DEFAULT_DATABASE.value
 ):
-    return 'TODO'
+    embed = embeds.create_base_message_embed()
+
+    embed.fields = []
+
+    players = rwr.scraper.get_players(
+        database,
+        limit=constants.PLAYERS_LIMIT,
+        sort=constants.PLAYER_SORTS[sort]['value']
+    )
+
+    for player in players:
+        embed.fields.append(Field(
+            '#{} {}'.format(player.leaderboard_position_display, player.username_display),
+            constants.PLAYER_SORTS[sort]['getter'](player),
+            inline=True
+        ))
+
+    return Message(
+        'Everyone! The top {} **{}** players, ordered by {} :clap:'.format(
+            constants.PLAYERS_LIMIT,
+            rwr.utils.get_database_name(database),
+            constants.PLAYER_SORTS[sort]['name']
+        ),
+        embed=embed
+    )
 
 
 @discord_interactions.command(
@@ -478,8 +503,8 @@ def top(
 def pos(
     ctx,
     username: str,
-    sort: constants.PLAYER_SORT_CHOICES = constants.DEFAULT_PLAYER_SORT,
-    database: constants.DATABASE_CHOICES = constants.DEFAULT_DATABASE
+    sort: constants.PLAYER_SORT_CHOICES = constants.DEFAULT_PLAYER_SORT.value,
+    database: constants.DATABASE_CHOICES = constants.DEFAULT_DATABASE.value
 ):
     return 'TODO'
 
@@ -498,7 +523,7 @@ def compare(
     ctx,
     source_username: str,
     target_username: str,
-    database: constants.DATABASE_CHOICES = constants.DEFAULT_DATABASE,
+    database: constants.DATABASE_CHOICES = constants.DEFAULT_DATABASE.value,
     date: str = None
 ):
     return 'TODO'
