@@ -1,7 +1,8 @@
-from models import Variable, User, RwrAccount, RwrAccountStat, Player
+from models import Variable, User, RwrAccount, RwrAccountStat
 from flask_discord_interactions import Message, Permission
-from rwrs import app, discord_interactions, cache, db
+from rwrs import app, cache, db, discord_interactions
 from . import constants, utils, embeds
+from rwr.player import Player
 import rwr.scraper
 import arrow
 import os

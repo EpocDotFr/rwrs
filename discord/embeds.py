@@ -1,4 +1,4 @@
-from flask_discord_interactions.embed import Media, Field, Footer
+from flask_discord_interactions.models.embed import Media, Field, Footer
 from flask_discord_interactions import Embed
 from . import constants
 import helpers
