@@ -229,7 +229,6 @@ def stats(
     date: str = None
 ):
     username = utils.prepare_username(username)
-    database = database.value # 'Cause it's an Enum
 
     if date: # Stats history lookup mode
         try:
@@ -412,7 +411,43 @@ def servers(
     type: constants.SERVER_TYPE_CHOICES = None,
     ranked_only: bool = False
 ):
-    return 'TODO'
+    servers = rwr.scraper.filter_servers(
+        limit=constants.SERVERS_LIMIT,
+        not_empty='yes',
+        not_full='yes',
+        ranked='yes' if ranked_only else None,
+        type=type if type else 'any'
+    )
+
+    if not servers:
+        return 'Well, looks like no servers are matching your request :disappointed:'
+
+    filters = []
+
+    if ranked_only:
+        filters.append('ranked')
+
+    if type:
+        filters.append(rwr.constants.SERVER_TYPES[type])
+
+    filters_string = ', ' + ', '.join(filters) if filters else ''
+
+    response = [
+        'Here, the first {} currently active{} servers with room:\n'.format(constants.SERVERS_LIMIT, filters_string)
+    ]
+
+    for server in servers:
+        response.append('{flag}`{current_players}/{max_players}` **{name}** ({type} • {map})\n{url}\n'.format(
+            flag=':flag_' + server.location.country_code + ': ' if server.location.country_code else '',
+            current_players=server.players.current,
+            max_players=server.players.max,
+            name=server.name_display,
+            type=server.type_name,
+            map=server.map.name_display,
+            url=server.steam_join_link.replace(' ', '%20')
+        ))
+
+    return '\n'.join(response)
 
 
 @discord_interactions.command(
