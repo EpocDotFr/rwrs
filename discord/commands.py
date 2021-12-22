@@ -351,7 +351,15 @@ def server(
     ctx,
     name: str
 ):
-    return 'TODO'
+    server = rwr.scraper.get_server_by_name(name)
+
+    if not server:
+        return 'Sorry mate, I didn\'t find this server :disappointed:'
+
+    return Message(
+        'Here\'s information about **{}**:'.format(server.name),
+        embed=embeds.create_server_message_embed(server)
+    )
 
 
 @discord_interactions.command(
