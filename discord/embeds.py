@@ -1,5 +1,5 @@
 from flask_discord_interactions.models.embed import Media, Field, Footer
-from flask_discord_interactions import Embed
+from flask_discord_interactions.models import Embed
 from . import constants
 import helpers
 
@@ -30,9 +30,11 @@ def create_player_message_embed(player, description_addendum=None):
 
     embed.thumbnail = Media(player.rank.image_absolute)
 
+    embed.fields = []
+
     embed.fields.append(Field(
-        name='Current rank',
-        value='{}\n{}{} XP'.format(
+        'Current rank',
+        '{}\n{}{} XP'.format(
             player.rank.name,
             '(' + player.rank.alternative_name + ')\n' if player.rank.alternative_name else '',
             player.xp_display
@@ -41,8 +43,8 @@ def create_player_message_embed(player, description_addendum=None):
     ))
 
     embed.fields.append(Field(
-        name='Next rank',
-        value='{}\n{}{} XP'.format(
+        'Next rank',
+        '{}\n{}{} XP'.format(
             player.next_rank.name,
             '(' + player.next_rank.alternative_name + ')\n' if player.next_rank.alternative_name else '',
             helpers.humanize_integer(player.next_rank.xp)
@@ -52,93 +54,93 @@ def create_player_message_embed(player, description_addendum=None):
 
     if player.next_rank:
         embed.fields.append(Field(
-            name='Next rank progression',
-            value='{}% - {} XP remaining'.format(
+            'Next rank progression',
+            '{}% - {} XP remaining'.format(
                 player.xp_percent_completion_to_next_rank,
                 helpers.humanize_integer(player.xp_to_next_rank)
             )
         ))
 
     embed.fields.append(Field(
-        name='Kills',
-        value=player.kills_display,
+        'Kills',
+        player.kills_display,
         inline=True
     ))
 
     embed.fields.append(Field(
-        name='Deaths',
-        value=player.deaths_display,
+        'Deaths',
+        player.deaths_display,
         inline=True
     ))
 
     embed.fields.append(Field(
-        name='K/D ratio',
-        value=player.kd_ratio,
+        'K/D ratio',
+        str(player.kd_ratio),
         inline=True
     ))
 
     embed.fields.append(Field(
-        name='Score',
-        value=player.score_display,
+        'Score',
+        player.score_display,
         inline=True
     ))
 
     embed.fields.append(Field(
-        name='Time played',
-        value=helpers.humanize_seconds_to_hours(player.time_played) + ' (' + helpers.humanize_seconds_to_days(player.time_played) + ')' if player.display_time_played_in_days else helpers.humanize_seconds_to_hours(player.time_played),
+        'Time played',
+        helpers.humanize_seconds_to_hours(player.time_played) + ' (' + helpers.humanize_seconds_to_days(player.time_played) + ')' if player.display_time_played_in_days else helpers.humanize_seconds_to_hours(player.time_played),
         inline=True
     ))
 
     embed.fields.append(Field(
-        name='Kill streak',
-        value=player.longest_kill_streak_display,
+        'Kill streak',
+        player.longest_kill_streak_display,
         inline=True
     ))
 
     embed.fields.append(Field(
-        name='Teamkills',
-        value=player.teamkills_display,
-        inline=True
-    ))
-
-    embed.fields.append(
-        name='Heals',
-        value=player.soldiers_healed_display,
-        inline=True
-    )
-
-    embed.fields.append(Field(
-        name='Shots fired',
-        value=player.shots_fired_display,
+        'Teamkills',
+        player.teamkills_display,
         inline=True
     ))
 
     embed.fields.append(Field(
-        name='Distance moved',
-        value='{}km'.format(player.distance_moved),
+        'Heals',
+        player.soldiers_healed_display,
         inline=True
     ))
 
     embed.fields.append(Field(
-        name='Throwables thrown',
-        value=player.throwables_thrown_display,
+        'Shots fired',
+        player.shots_fired_display,
         inline=True
     ))
 
     embed.fields.append(Field(
-        name='Vehicles destroyed',
-        value=player.vehicles_destroyed_display,
+        'Distance moved',
+        '{}km'.format(player.distance_moved),
         inline=True
     ))
 
     embed.fields.append(Field(
-        name='Targets destroyed',
-        value=player.targets_destroyed_display,
+        'Throwables thrown',
+        player.throwables_thrown_display,
+        inline=True
+    ))
+
+    embed.fields.append(Field(
+        'Vehicles destroyed',
+        player.vehicles_destroyed_display,
+        inline=True
+    ))
+
+    embed.fields.append(Field(
+        'Targets destroyed',
+        player.targets_destroyed_display,
         inline=True
     ))
 
     if player.playing_on_server:
-        embed.footer = Footer(text='🖱 Playing on {} ({})'.format(
+        embed.footer = Footer('🖱 Playing on {} ({})'.format(
             player.playing_on_server.name_display,
             player.playing_on_server.summary
         ))
