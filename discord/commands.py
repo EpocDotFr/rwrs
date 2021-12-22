@@ -327,7 +327,17 @@ def whereis(
     ctx,
     username: str
 ):
-    return 'TODO'
+    username = utils.prepare_username(username)
+
+    real_username, server = rwr.scraper.get_current_server_of_player(username)
+
+    if not server:
+        return 'Nah, this player isn\'t currently playing online :disappointed:'
+
+    return Message(
+        'I found **{}** playing on **{}**:'.format(real_username, server.name),
+        embed=embeds.create_server_message_embed(server, username_to_highlight=real_username)
+    )
 
 
 @discord_interactions.command(

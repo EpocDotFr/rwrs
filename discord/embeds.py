@@ -1,6 +1,7 @@
 from flask_discord_interactions.models.embed import Media, Field, Footer
 from flask_discord_interactions.models import Embed
 from . import constants
+from rwrs import app
 import helpers
 
 
@@ -144,6 +145,81 @@ def create_player_message_embed(player, description_addendum=None):
             player.playing_on_server.name_display,
             player.playing_on_server.summary
         ))
+
+    return embed
+
+
+def create_server_message_embed(server, username_to_highlight=None):
+    """Create a RWRS server rich Discord message."""
+    embed = create_base_message_embed()
+
+    embed.url = server.link_absolute
+
+    description = [server.steam_join_link.replace(' ', '%20')]
+
+    if server.event:
+        description.append(':calendar: {} event on this server: **{}**{}'.format(
+            'Ongoing' if server.event['is_ongoing'] else 'Upcoming',
+            server.event['name'],
+            ' - ' + server.event['datetime'].format(app.config['EVENT_DATETIME_DISPLAY_FORMAT']) if not server.event['is_ongoing'] else ''
+        ))
+
+    embed.description = '\n'.join(description)
+
+    embed.fields = []
+
+    if server.players.list:
+        if not username_to_highlight:
+            players_list = server.players.list
+        else:
+            players_list = ['**{}**'.format(username) if username == username_to_highlight else username for username in server.players.list]
+
+        embed.fields.append(Field(
+            'Players list',
+            ', '.join(players_list)
+        ))
+
+    if server.map.has_preview:
+        embed.image = Media(server.map.preview_absolute)
+    elif server.map.has_minimap:
+        embed.image = Media(server.map.minimap_absolute)
+
+    embed.fields.append(Field(
+        'Players count',
+        '{}/{}'.format(server.players.current, server.players.max),
+        inline=True
+    ))
+
+    embed.fields.append(Field(
+        'Map',
+        server.map.name_display,
+        inline=True
+    ))
+
+    embed.fields.append(Field(
+        'Type',
+        server.type_name,
+        inline=True
+    ))
+
+    embed.fields.append(Field(
+        'Mode',
+        server.mode_name,
+        inline=True
+    ))
+
+    if server.location.country_code:
+        embed.fields.append(Field(
+            'Location',
+            ':flag_{}: {}'.format(
+                server.location.country_code,
+                server.location.text
+            ),
+            inline=True
+        ))
+
+    if server.is_ranked:
+        embed.footer = Footer('⭐️ Ranked {} server'.format(server.database_name))
 
     return embed
 
