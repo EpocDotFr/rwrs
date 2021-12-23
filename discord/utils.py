@@ -1,3 +1,4 @@
+from . import constants
 import arrow
 import re
 
@@ -63,3 +64,19 @@ def parse_date(date):
         ret = ret.replace(year=now.year)
 
     return ret
+
+
+def permissions(names):
+    return [permission for name, permission in constants.PERMISSIONS.items() if name in names]
+
+
+def admin_permissions():
+    return permissions([
+        'myself',
+    ])
+
+
+def event_manager_permissions():
+    return admin_permissions().extend([
+        'jackmayol',
+    ])

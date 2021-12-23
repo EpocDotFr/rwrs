@@ -1,7 +1,7 @@
 from models import Variable, User, RwrAccount, RwrAccountStat
 from flask_discord_interactions.models.embed import Field
-from flask_discord_interactions import Message, Permission
 from rwrs import app, cache, db, discord_interactions
+from flask_discord_interactions import Message
 from . import constants, utils, embeds
 from rwr.player import Player
 import steam_helpers
@@ -12,25 +12,19 @@ import os
 maintenance_command_group = discord_interactions.command_group(
     'maintenance',
     default_permission=False,
-    permissions=[
-        Permission(user=constants.MY_DISCORD_ID)
-    ]
+    permissions=utils.admin_permissions()
 )
 
 motd_command_group = discord_interactions.command_group(
     'motd',
     default_permission=False,
-    permissions=[
-        Permission(user=constants.MY_DISCORD_ID)
-    ]
+    permissions=utils.admin_permissions()
 )
 
 user_command_group = discord_interactions.command_group(
     'user',
     default_permission=False,
-    permissions=[
-        Permission(user=constants.MY_DISCORD_ID)
-    ]
+    permissions=utils.admin_permissions()
 )
 
 user_api_command_subgroup = user_command_group.subgroup('api')
@@ -38,9 +32,7 @@ user_api_command_subgroup = user_command_group.subgroup('api')
 event_command_group = discord_interactions.command_group(
     'event',
     default_permission=False,
-    permissions=[
-        Permission(user=constants.MY_DISCORD_ID)
-    ]
+    permissions=utils.event_manager_permissions()
 )
 
 
@@ -48,9 +40,7 @@ event_command_group = discord_interactions.command_group(
     'cc',
     'Clears RWRS cache',
     default_permission=False,
-    permissions=[
-        Permission(user=constants.MY_DISCORD_ID)
-    ]
+    permissions=utils.admin_permissions()
 )
 def cc(
     ctx
