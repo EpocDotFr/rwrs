@@ -53,6 +53,10 @@ More informations on the two above can be found [here](http://flask.pocoo.org/do
   - `ENABLE_SIGN_IN` Enable the "Sign in via Steam" feature
   - `ENABLE_PLAYER_CLAIMING` Enable the "claim player" feature
   - `PLAYER_CLAIM_DELAY` Maximum amount of minutes users are allowed to finalize an RWR account claim procedure
+  - `DISCORD_CLIENT_ID` A Discord client ID
+  - `DISCORD_PUBLIC_KEY` A Discord app public key
+  - `DISCORD_CLIENT_SECRET` A Discord client secret
+  - `DISCORD_TESTING_GUILD` A Discord guild ID where to register commands into, for testing purposes (defaults to None)
 
 I'll let you search yourself about how to configure a web server along uWSGI.
 
@@ -112,6 +116,12 @@ This command requires the game to be installed.
 
 ```
 flask cc
+```
+
+### Updating commands in Discord
+
+```
+flask update-discord-commands
 ```
 
 ### Clearing old graphs data
