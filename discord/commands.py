@@ -120,8 +120,8 @@ def motd_remove(
             db.session.commit()
 
             return Message('MOTD removed.', ephemeral=True)
-    except Exception as e:
-        return Message('Error removing MOTD: {}'.format(e), ephemeral=True)
+        except Exception as e:
+            return Message('Error removing MOTD: {}'.format(e), ephemeral=True)
 
 
 @user_api_command_subgroup.command(
@@ -186,7 +186,7 @@ def user_api_unban(
     'set',
     'Sets next RWR event',
     annotations={
-        'datetime': 'Format: YYYY-MM-DD HH:mm ZZZ',
+        'datetime': 'Format: {}'.format(app.config['EVENT_DATETIME_STORAGE_FORMAT']),
         'server_ip_and_port': 'Format: {ip}:{port}'
     }
 )
@@ -292,7 +292,7 @@ def stats(
         rwr_account = RwrAccount.get_by_type_and_username(database, username)
 
         if not rwr_account:
-            return 'Sorry my friend, stats history isn\'t recorded for this player :confused: He/she must be part of the {} {} most experienced players.'.format(
+            return 'Sorry, stats history isn\'t recorded for this player :confused: He/she must be part of the {} {} most experienced players.'.format(
                 rwr.utils.get_database_name(database),
                 app.config['MAX_NUM_OF_PLAYERS_TO_TRACK_STATS_FOR']
             )
@@ -387,7 +387,7 @@ def server(
     server = rwr.scraper.get_server_by_name(name)
 
     if not server:
-        return 'Sorry mate, I didn\'t find this server :disappointed:'
+        return 'Sorry, I didn\'t find this server :disappointed:'
 
     return Message(
         'Here\'s information about **{}**:'.format(server.name),
@@ -453,7 +453,7 @@ def servers(
     )
 
     if not servers:
-        return 'Well, looks like no servers are matching your request :disappointed:'
+        return 'Looks like no servers are matching your request :disappointed:'
 
     filters = []
 
@@ -625,7 +625,7 @@ def compare(
         source_rwr_account = RwrAccount.get_by_type_and_username(database, source_username)
 
         if not source_rwr_account:
-            return 'Sorry my friend, stats history isn\'t recorded for {} :confused: He/she must be part of the {} {} most experienced players.'.format(
+            return 'Sorry, stats history isn\'t recorded for {} :confused: He/she must be part of the {} {} most experienced players.'.format(
                 source_username,
                 rwr.utils.get_database_name(database),
                 app.config['MAX_NUM_OF_PLAYERS_TO_TRACK_STATS_FOR']
@@ -650,7 +650,7 @@ def compare(
         target_rwr_account = RwrAccount.get_by_type_and_username(database, target_username)
 
         if not target_rwr_account:
-            return 'Sorry my friend, stats history isn\'t recorded for {} :confused: He/she must be part of the {} {} most experienced players.'.format(
+            return 'Sorry, stats history isn\'t recorded for {} :confused: He/she must be part of the {} {} most experienced players.'.format(
                 target_username,
                 rwr.utils.get_database_name(database),
                 app.config['MAX_NUM_OF_PLAYERS_TO_TRACK_STATS_FOR']
@@ -675,7 +675,7 @@ def compare(
         target_player = rwr.scraper.search_player_by_username(database, target_username)
 
         if not target_player:
-            return 'Nah, I cannot find **{}** :confused:'.format(target_username)
+            return 'Sorry, I cannot find **{}** :confused:'.format(target_username)
 
     table_data = [
         [
