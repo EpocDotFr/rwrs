@@ -6,6 +6,7 @@ from . import constants, utils, embeds
 from rwr.player import Player
 import steam_helpers
 import rwr.scraper
+import rwr.utils
 import arrow
 import os
 
@@ -273,7 +274,7 @@ def stats(
         player_exist = rwr.scraper.search_player_by_username(database, username, check_exist_only=True)
 
         if not player_exist:
-            return 'Sorry dude, this player don\'t exist :confused:'
+            return 'Sorry, this player don\'t exist :confused:'
 
         rwr_account = RwrAccount.get_by_type_and_username(database, username)
 
@@ -300,7 +301,7 @@ def stats(
         player = rwr.scraper.search_player_by_username(database, username)
 
         if not player:
-            return 'Sorry dude, this player don\'t exist :confused:'
+            return 'Sorry, this player don\'t exist :confused:'
 
         description_addendum = None
 
@@ -524,7 +525,42 @@ def pos(
     sort: constants.PLAYER_SORT_CHOICES = constants.DEFAULT_PLAYER_SORT.value,
     database: constants.DATABASE_CHOICES = constants.DEFAULT_DATABASE.value
 ):
-    return 'TODO'
+    username = utils.prepare_username(username)
+
+    players = rwr.scraper.get_players(
+        database,
+        limit=constants.PLAYERS_LIMIT,
+        target=username,
+        sort=constants.PLAYER_SORTS[sort]['value']
+    )
+
+    if not players:
+        return 'Sorry, this player don\'t exist :confused:'
+
+    embed = embeds.create_base_message_embed()
+
+    embed.fields = []
+
+    username_display = ''
+
+    for player in players:
+        if player.username == username:
+            username_display = player.username_display
+
+        embed.fields.append(Field(
+            '{}#{} {}'.format('➡️ ' if player.username == username else '', player.leaderboard_position, player.username_display),
+            constants.PLAYER_SORTS[sort]['getter'](player),
+            inline=True
+        ))
+
+    return Message(
+        'Here\'s the position of **{}** on the **{}** leaderboard, ordered by {}:'.format(
+            username_display,
+            rwr.utils.get_database_name(database),
+            constants.PLAYER_SORTS[sort]['name']
+        ),
+        embed=embed
+    )
 
 
 @discord_interactions.command(

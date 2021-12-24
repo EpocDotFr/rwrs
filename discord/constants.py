@@ -36,8 +36,9 @@ DEFAULT_PLAYER_SORT = PLAYER_SORT_CHOICES.score
 PLAYERS_LIMIT = 24
 SERVERS_LIMIT = 10
 EMBED_COLOR = 10800919 # The well-known primary RWRS color #A4CF17, in the decimal format
+MY_DISCORD_ID = '66543750725246976'
 
 PERMISSIONS = {
-    'myself': Permission(user='66543750725246976'),
+    'myself': Permission(user=MY_DISCORD_ID),
     'jackmayol': Permission(user='103941716133818368'),
 }
