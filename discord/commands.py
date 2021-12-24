@@ -2,12 +2,13 @@ from models import Variable, User, RwrAccount, RwrAccountStat
 from flask_discord_interactions.models.embed import Field
 from rwrs import app, cache, db, discord_interactions
 from flask_discord_interactions import Message
-from . import constants, utils, embeds
+from . import constants, utils, embeds, charts
 from tabulate import tabulate
 from rwr.player import Player
 import steam_helpers
 import rwr.scraper
 import rwr.utils
+import threading
 import helpers
 import arrow
 import os
@@ -346,7 +347,40 @@ def evolution(
     type: constants.EVOLUTION_TYPE_CHOICES,
     database: constants.DATABASE_CHOICES = constants.DEFAULT_DATABASE.value
 ):
-    return 'TODO'
+    def do_evolution(username, type, database):
+        username = utils.prepare_username(username)
+
+        player = rwr.scraper.search_player_by_username(database, username)
+
+        if not player:
+            ctx.send('Sorry, this player don\'t exist :confused:')
+
+        if not player.rwr_account:
+            ctx.send('Sorry, evolution is not available for this player :confused: He/she must be part of the {} {} most experienced players.'.format(
+                rwr.utils.get_database_name(database),
+                app.config['MAX_NUM_OF_PLAYERS_TO_TRACK_STATS_FOR']
+            ))
+
+        evolution_chart = charts.create_evolution_chart(
+            player.rwr_account,
+            constants.EVOLUTION_TYPES[type]['column'],
+            'Past year {} evolution for {}\n({} ranked servers, {} is better)'.format(
+                constants.EVOLUTION_TYPES[type]['name'],
+                player.username,
+                player.database_name,
+                'lower' if type == 'position' else 'higher'
+            )
+        )
+
+        ctx.send(Message(
+            'Here ya go:',
+            file=('evolution.png', evolution_chart, 'image/png')
+        ))
+
+    thread = threading.Thread(target=do_evolution, args=(username, type, database))
+    thread.start()
+
+    return Message(deferred=True)
 
 
 @discord_interactions.command(
