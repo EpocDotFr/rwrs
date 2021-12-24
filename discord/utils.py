@@ -77,6 +77,6 @@ def admin_permissions():
 
 
 def event_manager_permissions():
-    return admin_permissions().extend(permissions([
+    return admin_permissions() + permissions([
         'jackmayol',
-    ]))
+    ])
