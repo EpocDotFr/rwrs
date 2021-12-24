@@ -10,8 +10,6 @@ import bugsnag
 import arrow
 import os
 
-EXCLUDED_BEFORE_REQUEST_MIDDLEWARE = ('dynamic_player_image', 'dynamic_server_image', 'interactions')
-
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -56,46 +54,28 @@ def create_or_login(resp):
 
 
 @app.before_request
-def define_globals():
-    g.UNDER_MAINTENANCE = False
-
-    if request.endpoint in EXCLUDED_BEFORE_REQUEST_MIDDLEWARE:
+def before_request():
+    if request.endpoint == 'static':
         return
 
-    g.INCLUDE_WEB_ANALYTICS = not app.config['DEBUG']
-    g.LAYOUT = 'normal'
+    g.UNDER_MAINTENANCE = os.path.exists('maintenance')
 
+    if request.endpoint in ('dynamic_player_image', 'dynamic_server_image'):
+        return
 
-@app.before_request
-def get_motd():
-    if request.endpoint in EXCLUDED_BEFORE_REQUEST_MIDDLEWARE:
+    if request.path in ('/discord-interactions',):
         return
 
     g.MOTD = Variable.get_value('motd')
+    g.INCLUDE_WEB_ANALYTICS = not app.config['DEBUG']
+    g.LAYOUT = 'normal'
 
+    if g.UNDER_MAINTENANCE:
+        abort(503)
 
-@app.before_request
-def get_event():
-    if request.endpoint in EXCLUDED_BEFORE_REQUEST_MIDDLEWARE:
         return
 
     g.EVENT = Variable.get_event()
-
-
-@app.before_request
-def check_under_maintenance():
-    g.UNDER_MAINTENANCE = os.path.exists('maintenance')
-
-    if request.endpoint in EXCLUDED_BEFORE_REQUEST_MIDDLEWARE or not g.UNDER_MAINTENANCE:
-        return
-
-    abort(503)
-
-
-@app.before_request
-def get_counts():
-    if request.endpoint in EXCLUDED_BEFORE_REQUEST_MIDDLEWARE:
-        return
 
     online_players, active_servers, total_servers = rwr.scraper.get_counters()
 

@@ -5,6 +5,7 @@ from flask_discord_interactions import Message
 from . import constants, utils, embeds, charts
 from tabulate import tabulate
 from rwr.player import Player
+from flask import g
 import steam_helpers
 import rwr.scraper
 import rwr.utils
@@ -61,7 +62,7 @@ def cc(
 def maintenance_enable(
     ctx
 ):
-    if os.path.exists('maintenance'):
+    if g.UNDER_MAINTENANCE:
         return Message('Maintenance mode already enabled.', ephemeral=True)
     else:
         open('maintenance', 'a').close()
@@ -76,7 +77,7 @@ def maintenance_enable(
 def maintenance_disable(
     ctx
 ):
-    if not os.path.exists('maintenance'):
+    if not g.UNDER_MAINTENANCE:
         return Message('Maintenance mode already disabled.', ephemeral=True)
     else:
         os.remove('maintenance')
