@@ -225,9 +225,7 @@ def create_server_message_embed(server, username_to_highlight=None):
 
 
 def create_base_message_embed():
-    """Create a rich Discord message."""
-    embed = Embed()
-
-    embed.color = constants.EMBED_COLOR
-
-    return embed
+    """Create a base rich Discord message."""
+    return Embed(
+        color=constants.EMBED_COLOR
+    )
