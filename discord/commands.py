@@ -94,11 +94,14 @@ def motd_set(
     ctx,
     message: str
 ):
-    Variable.set_value('motd', message)
+    try:
+        Variable.set_value('motd', message)
 
-    db.session.commit()
+        db.session.commit()
 
-    return Message('MOTD updated.', ephemeral=True)
+        return Message('MOTD updated.', ephemeral=True)
+    except Exception as e:
+        return Message('Error updating MOTD: {}'.format(e), ephemeral=True)
 
 
 @motd_command_group.command(
@@ -111,11 +114,14 @@ def motd_remove(
     if not Variable.get_value('motd'):
         return Message('MOTD already removed.', ephemeral=True)
     else:
-        Variable.set_value('motd', None)
+        try:
+            Variable.set_value('motd', None)
 
-        db.session.commit()
+            db.session.commit()
 
-        return Message('MOTD removed.', ephemeral=True)
+            return Message('MOTD removed.', ephemeral=True)
+    except Exception as e:
+        return Message('Error removing MOTD: {}'.format(e), ephemeral=True)
 
 
 @user_api_command_subgroup.command(
@@ -200,6 +206,8 @@ def event_set(
         return Message('Event updated.', ephemeral=True)
     except (arrow.parser.ParserError, ValueError):
         return Message('Invalid datetime provided (should be `{}`)'.format(app.config['EVENT_DATETIME_STORAGE_FORMAT']), ephemeral=True)
+    except Exception as e:
+        return Message('Error setting event: {}'.format(e), ephemeral=True)
 
 
 @event_command_group.command(
@@ -212,13 +220,16 @@ def event_remove(
     if not Variable.get_value('event'):
         return Message('Event already removed.', ephemeral=True)
     else:
-        Variable.set_value('event', None)
+        try:
+            Variable.set_value('event', None)
 
-        db.session.commit()
+            db.session.commit()
 
-        cache.delete_memoized(rwr.scraper.get_servers)
+            cache.delete_memoized(rwr.scraper.get_servers)
 
-        return Message('Event removed.', ephemeral=True)
+            return Message('Event removed.', ephemeral=True)
+        except Exception as e:
+            return Message('Error removing event: {}'.format(e), ephemeral=True)
 
 
 @discord_interactions.command(
