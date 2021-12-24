@@ -356,11 +356,15 @@ def evolution(
         if not player:
             ctx.send('Sorry, this player don\'t exist :confused:')
 
+            return
+
         if not player.rwr_account:
             ctx.send('Sorry, evolution is not available for this player :confused: He/she must be part of the {} {} most experienced players.'.format(
                 rwr.utils.get_database_name(database),
                 app.config['MAX_NUM_OF_PLAYERS_TO_TRACK_STATS_FOR']
             ))
+
+            return
 
         evolution_chart = charts.create_evolution_chart(
             player.rwr_account,
