@@ -3,10 +3,12 @@ from flask_discord_interactions.models.embed import Field
 from rwrs import app, cache, db, discord_interactions
 from flask_discord_interactions import Message
 from . import constants, utils, embeds
+from tabulate import tabulate
 from rwr.player import Player
 import steam_helpers
 import rwr.scraper
 import rwr.utils
+import helpers
 import arrow
 import os
 
@@ -580,4 +582,122 @@ def compare(
     database: constants.DATABASE_CHOICES = constants.DEFAULT_DATABASE.value,
     date: str = None
 ):
-    return 'TODO'
+    source_username = utils.prepare_username(source_username)
+    target_username = utils.prepare_username(target_username)
+
+    if date: # Stats history lookup mode
+        try:
+            date = utils.parse_date(date)
+        except Exception:
+            return Message(
+                '\n'.join([
+                    'Invalid date provided. Allowed values / formats:',
+                    '  - `yesterday`',
+                    '  - `1 day ago` / `{{number}} days ago`',
+                    '  - `1 week ago` / `{{number}} weeks ago`',
+                    '  - `1 month ago` / `{{number}} months ago`',
+                    '  - `1 year ago` / `{{number}} years ago`',
+                    '  - `{{month name}} {{day number}}`',
+                    '  - `{{month name}} {{day number}} {{year}}`',
+                    '  - `{{month name}} {{day number}}, {{year}}`',
+                    '  - `{{year}}-{{month number}}-{{day number}}`',
+                    '  - `{{day number}}/{{month number}}/{{year}}`',
+                ]),
+                ephemeral=True
+            )
+
+        source_player_exist = rwr.scraper.search_player_by_username(database, source_username, check_exist_only=True)
+
+        if not source_player_exist:
+            return 'Sorry, I cannot find **{}** :confused:'.format(source_username)
+
+        source_rwr_account = RwrAccount.get_by_type_and_username(database, source_username)
+
+        if not source_rwr_account:
+            return 'Sorry my friend, stats history isn\'t recorded for {} :confused: He/she must be part of the {} {} most experienced players.'.format(
+                source_username,
+                rwr.utils.get_database_name(database),
+                app.config['MAX_NUM_OF_PLAYERS_TO_TRACK_STATS_FOR']
+            )
+
+        source_rwr_account_stat = RwrAccountStat.get_stats_for_date(source_rwr_account.id, date)
+
+        if not source_rwr_account_stat:
+            return 'No stats were found for the given date for {} :confused: Are you sure he/she is/was part of the {} {} most experienced players?'.format(
+                source_username,
+                rwr.utils.get_database_name(database),
+                app.config['MAX_NUM_OF_PLAYERS_TO_TRACK_STATS_FOR']
+            )
+
+        source_player = Player.craft(source_rwr_account, source_rwr_account_stat)
+
+        target_player_exist = rwr.scraper.search_player_by_username(database, target_username, check_exist_only=True)
+
+        if not target_player_exist:
+            return 'Sorry, I cannot find **{}** :confused:'.format(target_username)
+
+        target_rwr_account = RwrAccount.get_by_type_and_username(database, target_username)
+
+        if not target_rwr_account:
+            return 'Sorry my friend, stats history isn\'t recorded for {} :confused: He/she must be part of the {} {} most experienced players.'.format(
+                target_username,
+                rwr.utils.get_database_name(database),
+                app.config['MAX_NUM_OF_PLAYERS_TO_TRACK_STATS_FOR']
+            )
+
+        target_rwr_account_stat = RwrAccountStat.get_stats_for_date(target_rwr_account.id, date)
+
+        if not target_rwr_account_stat:
+            return 'No stats were found for the given date for {} :confused: Are you sure he/she is/was part of the {} {} most experienced players?'.format(
+                target_username,
+                rwr.utils.get_database_name(database),
+                app.config['MAX_NUM_OF_PLAYERS_TO_TRACK_STATS_FOR']
+            )
+
+        target_player = Player.craft(target_rwr_account, target_rwr_account_stat)
+    else: # Live data mode
+        source_player = rwr.scraper.search_player_by_username(database, source_username)
+
+        if not source_player:
+            return 'Sorry, I cannot find **{}** :confused:'.format(source_username)
+
+        target_player = rwr.scraper.search_player_by_username(database, target_username)
+
+        if not target_player:
+            return 'Nah, I cannot find **{}** :confused:'.format(target_username)
+
+    table_data = [
+        [
+            'Rank',
+            source_player.rank.name + '\n(' + source_player.rank.alternative_name + ')' if source_player.rank.alternative_name else source_player.rank.name,
+            utils.compare_values(source_player, target_player, lambda player: player.rank.id),
+            target_player.rank.name + '\n(' + target_player.rank.alternative_name + ')' if target_player.rank.alternative_name else target_player.rank.name
+        ],
+        ['XP', source_player.xp_display, utils.compare_values(source_player, target_player, lambda player: player.xp), target_player.xp_display],
+        ['Kills', source_player.kills_display, utils.compare_values(source_player, target_player, lambda player: player.kills), target_player.kills_display],
+        ['Deaths', source_player.deaths_display, utils.compare_values(source_player, target_player, lambda player: player.deaths), target_player.deaths_display],
+        ['K/D ratio', source_player.kd_ratio, utils.compare_values(source_player, target_player, lambda player: player.kd_ratio), target_player.kd_ratio],
+        ['Score', source_player.score_display, utils.compare_values(source_player, target_player, lambda player: player.score), target_player.score_display],
+        ['Time played', helpers.humanize_seconds_to_hours(source_player.time_played), utils.compare_values(source_player, target_player, lambda player: player.time_played), helpers.humanize_seconds_to_hours(target_player.time_played)],
+        ['Kill streak', source_player.longest_kill_streak_display, utils.compare_values(source_player, target_player, lambda player: player.longest_kill_streak), target_player.longest_kill_streak_display],
+        ['Teamkills', source_player.teamkills_display, utils.compare_values(source_player, target_player, lambda player: player.teamkills), target_player.teamkills_display],
+        ['Heals', source_player.soldiers_healed_display, utils.compare_values(source_player, target_player, lambda player: player.soldiers_healed), target_player.soldiers_healed_display],
+        ['Shots fired', source_player.shots_fired_display, utils.compare_values(source_player, target_player, lambda player: player.shots_fired), target_player.shots_fired_display],
+        ['Distance moved', '{}km'.format(source_player.distance_moved), utils.compare_values(source_player, target_player, lambda player: player.distance_moved), '{}km'.format(target_player.distance_moved)],
+        ['Throwables thrown', source_player.throwables_thrown_display, utils.compare_values(source_player, target_player, lambda player: player.throwables_thrown), target_player.throwables_thrown_display],
+        ['Vehicles destroyed', source_player.vehicles_destroyed_display, utils.compare_values(source_player, target_player, lambda player: player.vehicles_destroyed), target_player.vehicles_destroyed_display],
+        ['Targets destroyed', source_player.targets_destroyed_display, utils.compare_values(source_player, target_player, lambda player: player.targets_destroyed), target_player.targets_destroyed_display]
+    ]
+
+    table_headers = ['', source_player.username, 'vs', target_player.username]
+
+    table = tabulate(table_data, headers=table_headers, tablefmt='presto')
+
+    return 'Who {} the biggest between **{}** and **{}** on the **{}** leaderboard{}?\n```\n{}\n```'.format(
+        'had' if date else 'has',
+        source_player.username_display,
+        target_player.username_display,
+        rwr.utils.get_database_name(database),
+        ' for **' + date.format('MMMM D, YYYY') + '**' if date else '',
+        table
+    )
