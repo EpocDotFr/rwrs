@@ -113,7 +113,7 @@ def motd_set(
 def motd_remove(
     ctx
 ):
-    if not Variable.get_value('motd'):
+    if not g.MOTD:
         return Message('MOTD already removed.', ephemeral=True)
     else:
         try:
@@ -219,7 +219,7 @@ def event_set(
 def event_remove(
     ctx
 ):
-    if not Variable.get_value('event'):
+    if not g.EVENT:
         return Message('Event already removed.', ephemeral=True)
     else:
         try:

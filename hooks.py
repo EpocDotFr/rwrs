@@ -63,10 +63,12 @@ def before_request():
     if request.endpoint in ('dynamic_player_image', 'dynamic_server_image'):
         return
 
+    g.MOTD = Variable.get_value('motd')
+    g.EVENT = Variable.get_event()
+
     if request.path in ('/discord-interactions',):
         return
 
-    g.MOTD = Variable.get_value('motd')
     g.INCLUDE_WEB_ANALYTICS = not app.config['DEBUG']
     g.LAYOUT = 'normal'
 
@@ -74,8 +76,6 @@ def before_request():
         abort(503)
 
         return
-
-    g.EVENT = Variable.get_event()
 
     online_players, active_servers, total_servers = rwr.scraper.get_counters()
 
