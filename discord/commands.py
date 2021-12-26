@@ -47,6 +47,7 @@ event_command_group = discord_interactions.command_group(
     default_permission=False,
     permissions=utils.admin_permissions()
 )
+@utils.check_maintenance
 def cc(
     ctx
 ):
@@ -59,6 +60,7 @@ def cc(
     'enable',
     'Enables maintenance mode'
 )
+@utils.check_maintenance
 def maintenance_enable(
     ctx
 ):
@@ -74,6 +76,7 @@ def maintenance_enable(
     'disable',
     'Disables maintenance mode'
 )
+@utils.check_maintenance
 def maintenance_disable(
     ctx
 ):
@@ -92,6 +95,7 @@ def maintenance_disable(
         'message': 'Markdown is supported'
     }
 )
+@utils.check_maintenance
 def motd_set(
     ctx,
     message: str
@@ -110,6 +114,7 @@ def motd_set(
     'remove',
     'Removes MOTD'
 )
+@utils.check_maintenance
 def motd_remove(
     ctx
 ):
@@ -133,6 +138,7 @@ def motd_remove(
         'user_id': 'An RWRS user ID'
     }
 )
+@utils.check_maintenance
 def user_api_ban(
     ctx,
     user_id: int
@@ -162,6 +168,7 @@ def user_api_ban(
         'user_id': 'An RWRS user ID'
     }
 )
+@utils.check_maintenance
 def user_api_unban(
     ctx,
     user_id: int
@@ -192,6 +199,7 @@ def user_api_unban(
         'server_ip_and_port': 'Format: {ip}:{port}'
     }
 )
+@utils.check_maintenance
 def event_set(
     ctx,
     name: str,
@@ -216,6 +224,7 @@ def event_set(
     'remove',
     'Removes next RWR event'
 )
+@utils.check_maintenance
 def event_remove(
     ctx
 ):
@@ -238,6 +247,7 @@ def event_remove(
     'info',
     'Displays information about the bot'
 )
+@utils.check_maintenance
 def info(
     ctx
 ):
@@ -257,6 +267,7 @@ def info(
         'date': 'Get stats for given date (defaults to current)'
     }
 )
+@utils.check_maintenance
 def stats(
     ctx,
     username: str,
@@ -342,6 +353,7 @@ def stats(
         'database': 'Official (ranked) server type to get data from (defaults to {})'.format(constants.DEFAULT_DATABASE.value)
     }
 )
+@utils.check_maintenance
 def evolution(
     ctx,
     username: str,
@@ -395,6 +407,7 @@ def evolution(
         'username': 'A RWR username (may be partial)'
     }
 )
+@utils.check_maintenance
 def whereis(
     ctx,
     username: str
@@ -419,6 +432,7 @@ def whereis(
         'username': 'A server name (may be partial)'
     }
 )
+@utils.check_maintenance
 def server(
     ctx,
     name: str
@@ -438,6 +452,7 @@ def server(
     'now',
     'Displays numbers about the current players and servers'
 )
+@utils.check_maintenance
 def now(
     ctx
 ):
@@ -478,6 +493,7 @@ def now(
         'ranked_only': 'Only return ranked (official) servers'
     }
 )
+@utils.check_maintenance
 def servers(
     ctx,
     type: constants.SERVER_TYPE_CHOICES = None,
@@ -530,6 +546,7 @@ def servers(
         'database': 'Official (ranked) server type to get data from (defaults to {})'.format(constants.DEFAULT_DATABASE.value)
     }
 )
+@utils.check_maintenance
 def top(
     ctx,
     sort: constants.PLAYER_SORT_CHOICES = constants.DEFAULT_PLAYER_SORT.value,
@@ -571,6 +588,7 @@ def top(
         'database': 'Official (ranked) server type to get data from (defaults to {})'.format(constants.DEFAULT_DATABASE.value)
     }
 )
+@utils.check_maintenance
 def pos(
     ctx,
     username: str,
@@ -625,6 +643,7 @@ def pos(
         'date': 'Get stats for given date (defaults to current)'
     }
 )
+@utils.check_maintenance
 def compare(
     ctx,
     source_username: str,

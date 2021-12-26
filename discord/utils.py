@@ -1,4 +1,7 @@
+from flask_discord_interactions import Message
+from functools import wraps
 from . import constants
+from flask import g
 import arrow
 import re
 
@@ -96,3 +99,25 @@ def event_manager_permissions():
     return admin_permissions() + permissions([
         'jackmayol',
     ])
+
+
+def has_permissions(user, permissions):
+    for permission in permissions:
+        if ((permission.type == 1 and permission.id in user.roles) or (permission.type == 2 and permission.id == user.id)) and permission.permission:
+            return True
+
+    return False
+
+
+def check_maintenance(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        if args:
+            ctx = args[0]
+
+            if g.UNDER_MAINTENANCE and not has_permissions(ctx.author, admin_permissions()):
+                return Message(':wrench: RWRS is under ongoing maintenance! Please try again later.', ephemeral=True)
+
+        return func(*args, **kwargs)
+
+    return wrapper
