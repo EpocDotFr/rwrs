@@ -5,6 +5,27 @@ import helpers
 
 matplotlib.use('Agg')
 
+TEXT_COLOR = '#ffffff'
+BG_COLOR_PRIMARY = '#3f3f3f'
+BG_COLOR_SECONDARY = '#444444'
+BORDER_COLOR = '#333333'
+PRIMARY_COLOR = '#A4CF17'
+SECONDARY_COLOR = '#44b2f8'
+
+matplotlib.rcParams.update({
+    'text.color': TEXT_COLOR,
+    'xtick.labelcolor': TEXT_COLOR,
+    'ytick.labelcolor': TEXT_COLOR,
+    'axes.labelcolor': TEXT_COLOR,
+
+    'figure.facecolor': BG_COLOR_PRIMARY,
+
+    'axes.facecolor': BG_COLOR_SECONDARY,
+
+    'axes.edgecolor': BORDER_COLOR,
+    'grid.color': BORDER_COLOR,
+})
+
 from matplotlib.dates import date2num
 import matplotlib.ticker as ticker
 import matplotlib.dates as mdates
@@ -32,7 +53,9 @@ def create_evolution_chart(rwr_account, column, title):
     ax.plot_date(
         [date2num(data['t'].datetime) for data in player_evolution_data],
         [data['v'] for data in player_evolution_data],
-        'g-'
+        color=PRIMARY_COLOR,
+        linestyle='-',
+        marker=''
     )
 
     for data in player_evolution_data:
@@ -41,8 +64,8 @@ def create_evolution_chart(rwr_account, column, title):
 
         date = date2num(data['t'].datetime)
 
-        ax.axvline(date, color='b', linestyle=':')
-        ax.text(date, data['v'], data['ptr'], rotation=90, bbox={'color': 'white'})
+        ax.axvline(date, color=SECONDARY_COLOR, linestyle=':')
+        ax.text(date, data['v'], data['ptr'], rotation=90, color=TEXT_COLOR)
 
     ax.autoscale_view()
 
