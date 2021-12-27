@@ -1,4 +1,3 @@
-from flask_discord_interactions import Message
 from functools import wraps
 from . import constants
 from flask import g
@@ -116,7 +115,7 @@ def check_maintenance(func):
             ctx = args[0]
 
             if g.UNDER_MAINTENANCE and not has_permissions(ctx.author, admin_permissions()):
-                return Message(':wrench: RWRS is under ongoing maintenance! Please try again later.', ephemeral=True)
+                return ':wrench: RWRS is under ongoing maintenance! Please try again later.'
 
         return func(*args, **kwargs)
 

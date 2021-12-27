@@ -49,6 +49,7 @@ app.config['STATUS_PAGE_URL'] = 'https://stats.uptimerobot.com/Z0PkQf9YY'
 app.config['DISCORD_SERVER_URL'] = 'https://discord.gg/runningwithrifles'
 app.config['BUNDLE_ERRORS'] = True
 app.config['SESSION_PROTECTION'] = 'basic'
+app.config['DISCORD_INTERACTIONS_PATH'] = '/discord-interactions'
 
 if app.config['ENV'] == 'production' and app.config['BUGSNAG_API_KEY']:
     bugsnag.configure(
@@ -81,7 +82,7 @@ assets.register('css_app', Bundle('css/flags.css', 'css/app.css', filters='cssut
 
 login_manager.login_message_category = 'info'
 
-discord_interactions.set_route('/discord-interactions')
+discord_interactions.set_route(app.config['DISCORD_INTERACTIONS_PATH'])
 
 import rwr.constants
 import rwr.utils

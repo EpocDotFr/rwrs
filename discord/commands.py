@@ -1,8 +1,8 @@
 from models import Variable, User, RwrAccount, RwrAccountStat
+from . import constants, utils, embeds, charts, components
 from flask_discord_interactions.models.embed import Field
 from rwrs import app, cache, db, discord_interactions
 from flask_discord_interactions import Message
-from . import constants, utils, embeds, charts
 from tabulate import tabulate
 from rwr.player import Player
 from flask import g
@@ -341,7 +341,8 @@ def stats(
             player.database_name,
             ' for **' + date.format('MMMM D, YYYY') + '**' if date else ''
         ),
-        embed=embeds.create_player_message_embed(player, description_addendum=description_addendum)
+        embed=embeds.create_player_message_embed(player, description_addendum=description_addendum),
+        components=components.create_player_components(player)
     )
 
 
@@ -389,9 +390,13 @@ def evolution(
             )
         )
 
+        with app.app_context():
+            cpnts = components.create_player_components(player, tab='evolution')
+
         ctx.send(Message(
             'Here ya go:',
-            file=('evolution.png', evolution_chart, 'image/png')
+            file=('evolution.png', evolution_chart, 'image/png'),
+            components=cpnts
         ))
 
     thread = threading.Thread(target=do_evolution, args=(username, type, database))
@@ -421,7 +426,8 @@ def whereis(
 
     return Message(
         'I found **{}** playing on **{}**:'.format(real_username, server.name),
-        embed=embeds.create_server_message_embed(server, username_to_highlight=real_username)
+        embed=embeds.create_server_message_embed(server, username_to_highlight=real_username),
+        components=components.create_server_components(server)
     )
 
 
@@ -444,7 +450,8 @@ def server(
 
     return Message(
         'Here\'s information about **{}**:'.format(server.name),
-        embed=embeds.create_server_message_embed(server)
+        embed=embeds.create_server_message_embed(server),
+        components=components.create_server_components(server)
     )
 
 
@@ -535,7 +542,10 @@ def servers(
             url=server.steam_join_link.replace(' ', '%20')
         ))
 
-    return '\n'.join(response)
+    return Message(
+        '\n'.join(response),
+        components=components.create_servers_components(type, ranked_only)
+    )
 
 
 @discord_interactions.command(
@@ -556,10 +566,12 @@ def top(
 
     embed.fields = []
 
+    sort_value = constants.PLAYER_SORTS[sort]['value']
+
     players = rwr.scraper.get_players(
         database,
         limit=constants.PLAYERS_LIMIT,
-        sort=constants.PLAYER_SORTS[sort]['value']
+        sort=sort_value
     )
 
     for player in players:
@@ -575,7 +587,8 @@ def top(
             rwr.utils.get_database_name(database),
             constants.PLAYER_SORTS[sort]['name']
         ),
-        embed=embed
+        embed=embed,
+        components=components.create_players_components(database, sort=sort_value)
     )
 
 
@@ -597,11 +610,13 @@ def pos(
 ):
     username = utils.prepare_username(username)
 
+    sort_value = constants.PLAYER_SORTS[sort]['value']
+
     players = rwr.scraper.get_players(
         database,
         limit=constants.PLAYERS_LIMIT,
         target=username,
-        sort=constants.PLAYER_SORTS[sort]['value']
+        sort=sort_value
     )
 
     if not players:
@@ -629,7 +644,8 @@ def pos(
             rwr.utils.get_database_name(database),
             constants.PLAYER_SORTS[sort]['name']
         ),
-        embed=embed
+        embed=embed,
+        components=components.create_players_components(database, sort=sort_value, target=username)
     )
 
 
@@ -762,11 +778,14 @@ def compare(
 
     table = tabulate(table_data, headers=table_headers, tablefmt='presto')
 
-    return 'Who {} the biggest between **{}** and **{}** on the **{}** leaderboard{}?\n```\n{}\n```'.format(
-        'had' if date else 'has',
-        source_player.username_display,
-        target_player.username_display,
-        rwr.utils.get_database_name(database),
-        ' for **' + date.format('MMMM D, YYYY') + '**' if date else '',
-        table
+    return Message(
+        'Who {} the biggest between **{}** and **{}** on the **{}** leaderboard{}?\n```\n{}\n```'.format(
+            'had' if date else 'has',
+            source_player.username_display,
+            target_player.username_display,
+            rwr.utils.get_database_name(database),
+            ' for **' + date.format('MMMM D, YYYY') + '**' if date else '',
+            table
+        ),
+        components=components.create_players_comparison_components(database, source_player, target_player)
     )

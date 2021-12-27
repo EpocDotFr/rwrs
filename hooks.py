@@ -66,7 +66,7 @@ def before_request():
     g.MOTD = Variable.get_value('motd')
     g.EVENT = Variable.get_event()
 
-    if request.path in ('/discord-interactions',):
+    if request.path == app.config['DISCORD_INTERACTIONS_PATH']:
         return
 
     g.INCLUDE_WEB_ANALYTICS = not app.config['DEBUG']
