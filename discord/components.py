@@ -52,7 +52,10 @@ def create_server_components(server):
 
 
 def create_servers_components(type, ranked_only):
-    params = {}
+    params = {
+        'not_empty': 'yes',
+        'not_full': 'yes',
+    }
 
     if type:
         params['type'] = type

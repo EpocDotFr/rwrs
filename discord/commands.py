@@ -784,7 +784,7 @@ def compare(
             source_player.username_display,
             target_player.username_display,
             rwr.utils.get_database_name(database),
-            ' for **' + date.format('MMMM D, YYYY') + '**' if date else '',
+            ' on **' + date.format('MMMM D, YYYY') + '**' if date else '',
             table
         ),
         components=components.create_players_comparison_components(database, source_player, target_player)
