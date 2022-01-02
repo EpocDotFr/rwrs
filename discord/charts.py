@@ -1,4 +1,5 @@
 from models import RwrAccountStat
+from . import constants
 from io import BytesIO
 from PIL import Image
 import matplotlib
@@ -6,25 +7,18 @@ import helpers
 
 matplotlib.use('Agg')
 
-TEXT_COLOR = '#ffffff'
-BG_COLOR_PRIMARY = '#3f3f3f'
-BG_COLOR_SECONDARY = '#444444'
-BORDER_COLOR = '#333333'
-PRIMARY_COLOR = '#A4CF17'
-SECONDARY_COLOR = '#44b2f8'
-
 matplotlib.rcParams.update({
-    'text.color': TEXT_COLOR,
-    'xtick.labelcolor': TEXT_COLOR,
-    'ytick.labelcolor': TEXT_COLOR,
-    'axes.labelcolor': TEXT_COLOR,
+    'text.color': constants.TEXT_COLOR,
+    'xtick.labelcolor': constants.TEXT_COLOR,
+    'ytick.labelcolor': constants.TEXT_COLOR,
+    'axes.labelcolor': constants.TEXT_COLOR,
 
-    'figure.facecolor': BG_COLOR_PRIMARY,
+    'figure.facecolor': constants.BG_COLOR_PRIMARY,
 
-    'axes.facecolor': BG_COLOR_SECONDARY,
+    'axes.facecolor': constants.BG_COLOR_SECONDARY,
 
-    'axes.edgecolor': BORDER_COLOR,
-    'grid.color': BORDER_COLOR,
+    'axes.edgecolor': constants.BORDER_COLOR,
+    'grid.color': constants.BORDER_COLOR,
 })
 
 from matplotlib.dates import date2num
@@ -54,7 +48,7 @@ def create_evolution_chart(rwr_account, column, title):
     ax.plot_date(
         [date2num(data['t'].datetime) for data in player_evolution_data],
         [data['v'] for data in player_evolution_data],
-        color=PRIMARY_COLOR,
+        color=constants.PRIMARY_COLOR,
         linestyle='-',
         marker=''
     )
@@ -65,8 +59,8 @@ def create_evolution_chart(rwr_account, column, title):
 
         date = date2num(data['t'].datetime)
 
-        ax.axvline(date, color=SECONDARY_COLOR, linestyle=':')
-        ax.text(date, data['v'], data['ptr'], rotation=90, color=TEXT_COLOR)
+        ax.axvline(date, color=constants.SECONDARY_COLOR, linestyle=':')
+        ax.text(date, data['v'], data['ptr'], rotation=90, color=constants.TEXT_COLOR)
 
     ax.autoscale_view()
 

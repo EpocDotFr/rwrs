@@ -2,9 +2,6 @@ from functools import wraps
 from . import constants
 from flask import g
 import arrow
-import re
-
-_time_ago_regex = re.compile(r'(?P<days_ago>\d+) day(?:s?) ago|(?P<weeks_ago>\d+) week(?:s?) ago|(?P<months_ago>\d+) month(?:s?) ago|(?P<years_ago>\d+) year(?:s?) ago')
 
 
 def prepare_username(username):
@@ -24,7 +21,7 @@ def parse_date(date):
     if date == 'yesterday':
         return now.shift(days=-1)
 
-    time_ago_match = _time_ago_regex.match(date)
+    time_ago_match = constants.TIME_AGO_REGEX.match(date)
 
     if time_ago_match:
         time_ago = time_ago_match.groupdict()
@@ -41,26 +38,7 @@ def parse_date(date):
         if time_ago['years_ago']:
             return now.shift(years=-int(time_ago['years_ago']))
 
-    allowed_formats = [
-        'MMM D YYYY',
-        'MMM DD YYYY',
-        'MMM D, YYYY',
-        'MMM DD, YYYY',
-        'MMM D',
-        'MMM DD',
-        'MMMM D YYYY',
-        'MMMM DD YYYY',
-        'MMMM D, YYYY',
-        'MMMM DD, YYYY',
-        'MMMM D',
-        'MMMM DD',
-        'DD/MM/YYYY',
-        'D/M/YYYY',
-        'YYYY-M-D',
-        'YYYY-MM-DD'
-    ]
-
-    ret = arrow.get(date, allowed_formats)
+    ret = arrow.get(date, constants.DATE_FORMATS)
 
     if ret.year == 1:
         ret = ret.replace(year=now.year)

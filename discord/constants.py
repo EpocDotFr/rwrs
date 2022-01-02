@@ -2,6 +2,7 @@ from flask_discord_interactions import Permission
 from enum import Enum
 import rwr.constants
 import helpers
+import re
 
 EVOLUTION_TYPES = {
     'ratio': {'name': 'K/D ratio', 'column': 'kd_ratio'},
@@ -42,3 +43,31 @@ PERMISSIONS = {
     'myself': Permission(user=MY_DISCORD_ID),
     'jackmayol': Permission(user='103941716133818368'),
 }
+
+TIME_AGO_REGEX = re.compile(r'(?P<days_ago>\d+) day(?:s?) ago|(?P<weeks_ago>\d+) week(?:s?) ago|(?P<months_ago>\d+) month(?:s?) ago|(?P<years_ago>\d+) year(?:s?) ago')
+
+TEXT_COLOR = '#ffffff'
+BG_COLOR_PRIMARY = '#3f3f3f'
+BG_COLOR_SECONDARY = '#444444'
+BORDER_COLOR = '#333333'
+PRIMARY_COLOR = '#A4CF17'
+SECONDARY_COLOR = '#44b2f8'
+
+DATE_FORMATS = [
+    'MMM D YYYY',
+    'MMM DD YYYY',
+    'MMM D, YYYY',
+    'MMM DD, YYYY',
+    'MMM D',
+    'MMM DD',
+    'MMMM D YYYY',
+    'MMMM DD YYYY',
+    'MMMM D, YYYY',
+    'MMMM DD, YYYY',
+    'MMMM D',
+    'MMMM DD',
+    'DD/MM/YYYY',
+    'D/M/YYYY',
+    'YYYY-M-D',
+    'YYYY-MM-DD'
+]
