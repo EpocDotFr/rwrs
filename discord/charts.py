@@ -1,5 +1,6 @@
 from models import RwrAccountStat
 from io import BytesIO
+from PIL import Image
 import matplotlib
 import helpers
 
@@ -72,6 +73,21 @@ def create_evolution_chart(rwr_account, column, title):
     ax.grid(True, which='both')
 
     fig.tight_layout()
+
+    fig_midwidth = int((fig.get_figwidth() * fig.dpi) / 2)
+    fig_midheight = int((fig.get_figheight() * fig.dpi) / 2)
+
+    logo = Image.open('static/images/logo_light.png')
+
+    logo_midwidth = int(logo.width / 2)
+    logo_midheight = int(logo.height / 2)
+
+    fig.figimage(
+        logo,
+        xo=fig_midwidth - logo_midwidth,
+        yo=fig_midheight - logo_midheight,
+        alpha=0.1
+    )
 
     fig.savefig(evolution_chart, format='png')
 
