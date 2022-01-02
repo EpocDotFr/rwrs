@@ -494,6 +494,47 @@ def now(
 
 
 @discord_interactions.command(
+    'agenda',
+    'Displays upcoming or ongoing RWR event'
+)
+@utils.check_maintenance
+def agenda(
+    ctx
+):
+    if not g.EVENT:
+        return 'Sorry, there is no upcoming or ongoing event at this time :disappointed:'
+
+    cpnts = None
+    embed = None
+
+    answer = [
+        'There is an {} event'.format('ongoing' if g.EVENT['is_ongoing'] else 'upcoming'),
+        ' named **{}**'.format(g.EVENT['name']),
+    ]
+
+    if not g.EVENT['is_ongoing']:
+        answer.append(' scheduled for **{}**'.format(
+            g.EVENT['datetime'].format(app.config['EVENT_DATETIME_DISPLAY_FORMAT'])
+        ))
+
+    if g.EVENT['server']:
+        answer.append(' {} on this server:'.format(
+            'happening' if g.EVENT['is_ongoing'] else 'that will happen'
+        ))
+
+        embed = embeds.create_server_message_embed(g.EVENT['server'], advertise_event=False)
+        cpnts = components.create_server_components(g.EVENT['server'])
+    else:
+        answer.append('.')
+
+    return Message(
+        ''.join(answer),
+        embed=embed,
+        components=cpnts
+    )
+
+
+@discord_interactions.command(
     'servers',
     'Displays first {} currently active servers with room'.format(constants.SERVERS_LIMIT),
     annotations={

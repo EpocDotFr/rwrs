@@ -149,7 +149,7 @@ def create_player_message_embed(player, description_addendum=None):
     return embed
 
 
-def create_server_message_embed(server, username_to_highlight=None):
+def create_server_message_embed(server, username_to_highlight=None, advertise_event=True):
     """Create a RWRS server rich Discord message."""
     embed = create_base_message_embed()
 
@@ -157,7 +157,7 @@ def create_server_message_embed(server, username_to_highlight=None):
 
     description = [server.steam_join_link.replace(' ', '%20')]
 
-    if server.event:
+    if advertise_event and server.event:
         description.append(':calendar: {} event on this server: **{}**{}'.format(
             'Ongoing' if server.event['is_ongoing'] else 'Upcoming',
             server.event['name'],
