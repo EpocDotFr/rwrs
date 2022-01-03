@@ -53,7 +53,17 @@ app.config['DISCORD_INTERACTIONS_PATH'] = '/discord-interactions'
 
 if app.config['ENV'] == 'production' and app.config['BUGSNAG_API_KEY']:
     bugsnag.configure(
-        api_key=app.config['BUGSNAG_API_KEY']
+        api_key=app.config['BUGSNAG_API_KEY'],
+        ignore_classes=[
+            'werkzeug.exceptions.BadRequest',
+            'werkzeug.exceptions.Unauthorized',
+            'werkzeug.exceptions.Forbidden',
+            'werkzeug.exceptions.NotFound',
+            'werkzeug.exceptions.MethodNotAllowed',
+            'werkzeug.exceptions.TooManyRequests',
+            'werkzeug.exceptions.PreconditionFailed',
+            'werkzeug.exceptions.Locked',
+        ]
     )
 
     handle_exceptions(app)
