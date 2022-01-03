@@ -133,25 +133,23 @@ def regenerate_pat():
 
 
 @app.route('/my-friends', methods=['GET', 'POST'])
+@login_required
 def my_friends():
-    form = None
+    form = forms.UserFriendForm()
 
-    if current_user.is_authenticated:
-        form = forms.UserFriendForm()
+    if form.validate_on_submit():
+        current_user.add_friend(form.username.data.upper())
 
-        if form.validate_on_submit():
-            current_user.add_friend(form.username.data.upper())
+        db.session.commit()
 
-            db.session.commit()
+        flash('You have a new friend!', 'success')
 
-            flash('You have a new friend!', 'success')
-
-            return redirect(url_for('my_friends'))
+        return redirect(url_for('my_friends'))
 
     return render_template(
         'users/friends.html',
         form=form
-    ), 200 if current_user.is_authenticated else 401
+    )
 
 
 @app.route('/my-friends/add/<path:username>')
@@ -182,28 +180,6 @@ def remove_friend(username):
         flash('Friend not found.', 'error')
 
     return redirect(helpers.get_next_url())
-
-
-@app.route('/my-friends/import', methods=['POST'])
-@login_required
-def import_friends():
-    status = 200
-
-    if not request.is_json:
-        status = 400
-        result = {'status': 'failure', 'data': {'message': 'Invalid request.'}}
-    else:
-        try:
-            current_user.add_friends(request.get_json())
-
-            db.session.commit()
-
-            result = {'status': 'success'}
-        except Exception as e:
-            status = 500
-            result = {'status': 'failure', 'data': {'message': str(e)}}
-
-    return jsonify(result), status
 
 
 @app.route('/about')
