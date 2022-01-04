@@ -76,9 +76,9 @@
                             <td>{{ server.version }}</td>
                             <td>{{ server.comment if server.comment }}</td>
                             <td>
-                                {% for player in server.players.list %}
+                                {%- for player in server.players.list -%}
                                     {{ macros.player_name(player, raw=True, link=True, database=server.database, popover_url=True) }}{{ ', ' if not loop.last }}
-                                {% endfor %}
+                                {%- endfor -%}
                             </td>
                         {% endif %}
                         <td class="txtcenter">

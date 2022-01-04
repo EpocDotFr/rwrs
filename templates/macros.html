@@ -13,7 +13,7 @@
 
     {%- if make_link %} <a href="{{ url_for('player_details', database=database, username=username) }}"{% if link and popover_url %} data-popover-url="{{ url_for('player_popover', database=database, username=username) }}"{% endif %}>
     {%- endif -%}
-        {{ username }}
+        <span class="keep-spaces">{{ username }}</span>
     {%- if make_link -%}
         </a>
     {%- endif -%}

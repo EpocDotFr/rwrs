@@ -85,7 +85,7 @@ class Server:
             players_node = html_server_node[11]
 
             if players_node.text:
-                ret.players.list = [player_name.strip() for player_name in players_node.text.split(',')]
+                ret.players.list = players_node.text.split(', ')
                 ret.players.list.sort()
 
         if current_app:

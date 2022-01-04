@@ -212,7 +212,7 @@ def players_list_without_db():
     username = request.args.get('username')
 
     if username:
-        username = username.strip().upper()
+        username = username.upper()
 
         # Redirect to a SEO-friendly URL if the username query parameter is detected
         return redirect(url_for('player_details', database=database, username=username), code=301)
@@ -400,7 +400,7 @@ def players_compare(database, username, username_to_compare_with=None, date=None
     # Redirect to a SEO-friendly URL if the username_to_compare_with or date query parameters are detected
     if (not username_to_compare_with and request.args.get('username_to_compare_with')) or (not date and request.args.get('date')):
         if not username_to_compare_with:
-            username_to_compare_with = request.args.get('username_to_compare_with').strip()
+            username_to_compare_with = request.args.get('username_to_compare_with')
 
         if not date:
             date = request.args.get('date')
