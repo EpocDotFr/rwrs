@@ -29,7 +29,7 @@ Return the User corresponding to the given RWRS user ID.
 
 + Response 404 (application/json)
 
-    The User wasn't found, or its profile is set as private.
+    The User wasn't found, or its profile is set as private and is not requested by the same user the Personal Access Token is linked to.
 
     + Attributes (Error Response, fixed-type)
 

@@ -183,7 +183,7 @@ class UserResource(BaseResource):
     def get(self, user_id):
         user = User.query.get(user_id)
 
-        if not user or not user.is_profile_public:
+        if not user or (not user.is_profile_public and user.id != auth.current_user().id):
             abort(404, message='User not found')
 
         return user
