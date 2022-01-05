@@ -21,21 +21,28 @@
 
 {% set canonical_url = url_for('servers_list', _external=True) %}
 
+{% set view_link_params = merge_query_string_params({'view': None if request.args.get('view') == 'extended' else 'extended'}) %}
+{% set view_link_icon = 'compress' if request.args.get('view') == 'extended' else 'expand' %}
+{% set view_link_text = 'normal' if request.args.get('view') == 'extended' else 'extended' %}
+
 {% block content %}
-    <form action="{{ url_for('servers_list') }}" method="GET" class="mts mbs {{ 'w1140p center' if request.args.get('view') == 'extended' }}">
+    <form action="{{ url_for('servers_list') }}" method="GET" class="mts mbs txtcenter {{ 'w1140p center' if request.args.get('view') == 'extended' }}">
         <fieldset class="man">
             <legend><i class="fas fa-filter"></i> Filters</legend>
 
-            {{ macros.select('location', '(Any location)', locations, class='w150p') }}
-            {{ macros.select('map', '(Any map)', maps, class='w200p') }}
-            {{ macros.select('type', '(Any type)', types, class='w150p') }}
-            {{ macros.select('mode', '(Any mode)', modes, class='w150p') }}
+            {{ macros.select('location', '(Any location)', locations) }}
+            {{ macros.select('map', '(Any map)', maps) }}
+            {{ macros.select('type', '(Any type)', types,) }}
+            {{ macros.select('mode', '(Any mode)', modes) }}
             {{ macros.checkbox('dedicated', 'Dedicated') }}
             {{ macros.checkbox('ranked', 'Ranked') }}
             {{ macros.checkbox('not_empty', 'Not empty') }}
             {{ macros.checkbox('not_full', 'Not full') }}
 
-            <button type="submit" class="fr"><i class="fas fa-check"></i> Apply</button>
+            <p>
+                <button type="submit" class="mrm"><i class="fas fa-check"></i> Apply filters</button>
+                <a href="{{ url_for('servers_list', **view_link_params) }}" class="btn"><i class="fas fa-{{ view_link_icon }}"></i> Switch to {{ view_link_text }} view</a>
+            </p>
         </fieldset>
     </form>
 
@@ -97,14 +104,6 @@
             </tbody>
         </table>
     </div>
-
-    {% set view_link_params = merge_query_string_params({'view': None if request.args.get('view') == 'extended' else 'extended'}) %}
-    {% set view_link_icon = 'compress' if request.args.get('view') == 'extended' else 'expand' %}
-    {% set view_link_text = 'normal' if request.args.get('view') == 'extended' else 'extended' %}
-
-    <p class="txtcenter">
-        <a href="{{ url_for('servers_list', **view_link_params) }}" class="btn"><i class="fas fa-{{ view_link_icon }}"></i> Use {{ view_link_text }} view</a>
-    </p>
 
     {%- if request.args.get('view') == 'extended' -%}
         <script>
