@@ -9,23 +9,23 @@ class Server:
     database = None
 
     @classmethod
-    def load(cls, xml_node, html_servers):
-        """Load a server data from an XML and the HTML code of the servers list page."""
+    def load(cls, server_node):
+        """Load a server data from an XML node from the servers list page."""
         ret = cls()
 
-        name_node = xml_node.find('name')
-        address_node = xml_node.find('address')
-        port_node = xml_node.find('port')
-        map_id_node = xml_node.find('map_id')
-        bots_node = xml_node.find('bots')
-        current_players_node = xml_node.find('current_players')
-        version_node = xml_node.find('version')
-        dedicated_node = xml_node.find('dedicated')
-        comment_node = xml_node.find('comment')
-        url_node = xml_node.find('url')
-        max_players_node = xml_node.find('max_players')
-        mode_node = xml_node.find('mode')
-        realm_node = xml_node.find('realm')
+        name_node = server_node.find('name')
+        address_node = server_node.find('address')
+        port_node = server_node.find('port')
+        map_id_node = server_node.find('map_id')
+        bots_node = server_node.find('bots')
+        current_players_node = server_node.find('current_players')
+        version_node = server_node.find('version')
+        dedicated_node = server_node.find('dedicated')
+        comment_node = server_node.find('comment')
+        url_node = server_node.find('url')
+        max_players_node = server_node.find('max_players')
+        mode_node = server_node.find('mode')
+        realm_node = server_node.find('realm')
 
         ret.name = name_node.text.strip() if name_node.text else 'N/A'
         ret.ip = address_node.text
@@ -77,16 +77,8 @@ class Server:
 
         ret.location = ServerLocation()
 
-        html_server_node = html_servers.xpath('(//table/tr[(td[3] = \'{ip}\') and (td[4] = \'{port}\')])[1]'.format(ip=ret.ip, port=ret.port))
-
-        if html_server_node:
-            html_server_node = html_server_node[0]
-
-            players_node = html_server_node[11]
-
-            if players_node.text:
-                ret.players.list = players_node.text.split(', ')
-                ret.players.list.sort()
+        ret.players.list = [player_node.text for player_node in server_node.findall('player') if player_node.text is not None]
+        ret.players.list.sort()
 
         if current_app:
             ret.set_links()

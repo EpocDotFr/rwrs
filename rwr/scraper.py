@@ -110,15 +110,14 @@ def _set_server_event(servers):
 
 
 @cache.memoize(timeout=app.config['SERVERS_CACHE_TIMEOUT'])
-def get_servers():
+def get_servers(start=0, size=100):
     """Get and parse the list of all public RWR servers."""
-    xml_servers = _call(servers_base_url, 'get_server_list.php', 'xml', params={'start': 0, 'size': 100}, decode_entities=True)
-    html_servers = _call(servers_base_url, 'view_servers.php', 'html')
+    xml_content = _call(servers_base_url, 'get_server_list.php', 'xml', params={'start': start, 'size': size, 'names': 1}, decode_entities=True)
 
     servers = []
 
-    for xml_node in xml_servers.xpath('/result/server'):
-        servers.append(Server.load(xml_node, html_servers))
+    for server_node in xml_content.xpath('/result/server'):
+        servers.append(Server.load(server_node))
 
     _set_servers_location(servers)
     _set_server_event(servers)
