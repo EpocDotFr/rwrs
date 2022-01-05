@@ -110,19 +110,31 @@ def _set_server_event(servers):
 
 
 @cache.memoize(timeout=app.config['SERVERS_CACHE_TIMEOUT'])
-def get_servers(start=0, size=100):
+def get_servers():
     """Get and parse the list of all public RWR servers."""
-    xml_content = _call(servers_base_url, 'get_server_list.php', 'xml', params={'start': start, 'size': size, 'names': 1}, decode_entities=True)
+    all_servers = []
+    start = 0
+    size = 100
 
-    servers = []
+    while True:
+        xml_content = _call(servers_base_url, 'get_server_list.php', 'xml', params={'start': start, 'size': size, 'names': 1}, decode_entities=True)
 
-    for server_node in xml_content.xpath('/result/server'):
-        servers.append(Server.load(server_node))
+        servers = [Server.load(server_node) for server_node in xml_content.xpath('/result/server')]
 
-    _set_servers_location(servers)
-    _set_server_event(servers)
+        if not servers:
+            break
 
-    return servers
+        all_servers.extend(servers)
+
+        if len(servers) < size:
+            break
+
+        start += size
+
+    _set_servers_location(all_servers)
+    _set_server_event(all_servers)
+
+    return all_servers
 
 
 def get_server_by_ip_and_port(*args):
@@ -371,10 +383,7 @@ def get_players(database, sort=constants.PlayersSort.SCORE.value, target=None, s
 
     html_content = _call(players_base_url, 'view_players.php', 'html', params=params)
 
-    players = []
-
-    for node in html_content.xpath('//table/tr[position() > 1]'):
-        players.append(Player.load(database, node))
+    players = [Player.load(database, node) for node in html_content.xpath('//table/tr[position() > 1]')]
 
     if target and target not in [player.username for player in players]:
         return []
