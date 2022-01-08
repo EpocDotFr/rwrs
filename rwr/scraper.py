@@ -126,7 +126,7 @@ def get_servers():
 
         all_servers.extend(servers)
 
-        if len(servers) < size:
+        if servers[-1].is_last:
             break
 
         start += size

@@ -80,6 +80,8 @@ class Server:
         ret.players.list = [player_node.text for player_node in server_node.findall('player') if player_node.text is not None]
         ret.players.list.sort()
 
+        ret.is_last = server_node.get('last') is not None
+
         if current_app:
             ret.set_links()
             ret.set_images()
