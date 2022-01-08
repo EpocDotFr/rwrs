@@ -4,7 +4,6 @@ from rwrs import app, cache
 from models import Variable
 from .server import Server
 from .player import Player
-from html import unescape
 from . import constants
 import geoip2.database
 import geoip2.errors
@@ -16,7 +15,7 @@ servers_base_url = 'http://rwr.runningwithrifles.com/rwr_server_list/'
 players_base_url = 'http://rwr.runningwithrifles.com/rwr_stats/'
 
 
-def _call(base_url, resource, parser, params=None, decode_entities=False):
+def _call(base_url, resource, parser, params=None):
     """Perform an HTTP GET request to the desired RWR list base_url."""
     url = base_url + resource
 
@@ -28,12 +27,10 @@ def _call(base_url, resource, parser, params=None, decode_entities=False):
 
     response.raise_for_status()
 
-    response_text = unescape(response.text) if decode_entities else response.text
-
     if parser == 'html':
-        return html.fromstring(response_text)
+        return html.fromstring(response.text)
     elif parser == 'xml':
-        return etree.fromstring(response_text)
+        return etree.fromstring(response.text)
     else:
         raise ValueError('Invalid parser')
 
@@ -117,7 +114,7 @@ def get_servers():
     size = 100
 
     while True:
-        xml_content = _call(servers_base_url, 'get_server_list.php', 'xml', params={'start': start, 'size': size, 'names': 1}, decode_entities=True)
+        xml_content = _call(servers_base_url, 'get_server_list.php', 'xml', params={'start': start, 'size': size, 'names': 1})
 
         servers = [Server.load(server_node) for server_node in xml_content.xpath('/result/server')]
 
