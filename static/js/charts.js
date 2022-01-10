@@ -3,6 +3,7 @@
  */
 chartsFeature = {
     defaultChartOptions: {
+        chart_type: 'line',
         show_tooltips: false,
         x_accessor: 't',
         y_accessor: 'v',
@@ -12,18 +13,21 @@ chartsFeature = {
         x_extended_ticks: true,
         utc_time: true,
         full_width: true,
-        top: 20,
+        top: 15,
         bottom: 35,
-        left: 35,
-        right: 25,
-        buffer: 0
+        left: 40,
+        right: 10,
+        buffer: 0,
+        interpolate: d3.curveMonotoneX
     },
     missingDataChartOptions: {
         chart_type: 'missing-data',
-        top: 0,
-        bottom: 10,
-        left: 10,
-        right: 15
+        full_width: true,
+        top: 15,
+        bottom: 35,
+        left: 40,
+        right: 10,
+        buffer: 0
     },
     /**
      * Initialize the charts on the Player's Evolution page.
@@ -44,7 +48,6 @@ chartsFeature = {
                 x_mouseover: '%b %e, %Y ',
                 min_y_from_data: true,
                 data: this.player_evolution_data.ratio,
-                top: 30,
                 markers: this.getPromotionMarkers(this.player_evolution_data.ratio)
             });
         }
@@ -64,7 +67,6 @@ chartsFeature = {
                 x_mouseover: '%b %e, %Y ',
                 min_y_from_data: true,
                 data: this.player_evolution_data.score,
-                top: 30,
                 markers: this.getPromotionMarkers(this.player_evolution_data.score)
             });
         }
@@ -84,7 +86,6 @@ chartsFeature = {
                 x_mouseover: '%b %e, %Y ',
                 min_y_from_data: true,
                 data: this.player_evolution_data.position,
-                top: 30,
                 markers: this.getPromotionMarkers(this.player_evolution_data.position)
             });
         }
