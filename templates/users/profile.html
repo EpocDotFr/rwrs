@@ -7,12 +7,12 @@
 {% block meta_description %}{{ user.username }} profile on RWRS.{% endblock %}
 
 {% block jsfiles %}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tippy.js/3.1.1/tippy.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tippy.js/3.1.3/tippy.min.js"></script>
     {% assets 'js_popovers' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
 {% endblock %}
 
 {% block cssfiles %}
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tippy.js/3.1.1/tippy.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tippy.js/3.1.3/tippy.css">
 {% endblock %}
 
 {% set canonical_url = user.link_absolute %}
