@@ -33,9 +33,9 @@ class Measurable:
     count = db.Column(db.Integer, nullable=False)
 
     @staticmethod
-    def transform_data(rows, format='YYYY-MM-DDTHH:mm:ss'):
+    def transform_data(rows, format='YYYY-MM-DDTHH:mm:ss', value=lambda v: int(v)):
         """Given a list of date => number, convert the date to a string format."""
-        return [{'t': row[0].format(format), 'v': row[1]} for row in rows]
+        return [{'t': row[0].format(format), 'v': value(row[1])} for row in rows]
 
 
 class ServerPlayerCount(db.Model, Measurable):
