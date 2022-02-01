@@ -77,7 +77,7 @@ class Server:
 
         ret.location = ServerLocation()
 
-        ret.players.list = [player_node.text for player_node in server_node.findall('player') if player_node.text is not None]
+        ret.players.list = [player_node.text for player_node in server_node.findall('player') if player_node.text]
         ret.players.list.sort()
 
         ret.is_last = server_node.get('last') is not None
