@@ -39,6 +39,10 @@
             {{ macros.checkbox('not_empty', 'Not empty') }}
             {{ macros.checkbox('not_full', 'Not full') }}
 
+            {% if 'view' in request.args -%}
+                <input type="hidden" name="view" value="{{ request.args.get('view') }}">
+            {%- endif %}
+
             <p>
                 <button type="submit" class="mrm"><i class="fas fa-check"></i> Apply filters</button>
                 <a href="{{ url_for('servers_list', **view_link_params) }}" class="btn"><i class="fas fa-{{ view_link_icon }}"></i> Switch to {{ view_link_text }} view</a>
