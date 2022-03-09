@@ -64,14 +64,14 @@ img.bordered {
     border: 0.2rem solid #333;
 }
 
-.claimed-icon {
+.owned-icon {
     color: #44b2f8;
 }
 
-.claimed-icon a,
-.claimed-icon a:visited,
-.claimed-icon a:hover,
-.claimed-icon a:focus {
+.owned-icon a,
+.owned-icon a:visited,
+.owned-icon a:hover,
+.owned-icon a:focus {
     color: inherit;
 }
 

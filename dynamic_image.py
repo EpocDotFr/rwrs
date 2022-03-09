@@ -242,11 +242,11 @@ class DynamicPlayerImage(DynamicImage):
 
         self._draw_text((self.image.width - database_name_w - 4, 1), database_name, font=normal_font)
 
-        # Claimed icon
+        # Owned icon
         if self.player.user:
-            claimed_image = Image.open('static/images/dynamic_images/claimed.png').convert('RGBA')
+            owned_image = Image.open('static/images/dynamic_images/owned.png').convert('RGBA')
 
-            self._paste(claimed_image, (self.image.width - claimed_image.width - 4, 22))
+            self._paste(owned_image, (self.image.width - owned_image.width - 4, 22))
 
     def _do_create_body(self):
         """Creates the body (main area) of the dynamic player image."""

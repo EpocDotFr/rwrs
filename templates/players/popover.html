@@ -12,20 +12,8 @@
             <div class="grid has-gutter">
                 <div><small>{{ player.rank.name }}{% if player.rank.alternative_name %} <span class="txtgrey">({{ player.rank.alternative_name }})</span>{% endif %}</small></div>
                 {%- if player.user -%}
-                    {%- set claimed_icon_link = None -%}
-
-                    {%- if current_user.is_authenticated and current_user.id == player.user.id -%}
-                        {%- set claimed_icon_title = 'You already claimed this account.' -%}
-                        {%- set claimed_icon_link = player.user.link -%}
-                    {%- elif not player.user.is_profile_public -%}
-                        {%- set claimed_icon_title = 'This account was claimed by someone who wants to be anonymous.' -%}
-                    {%- else -%}
-                        {%- set claimed_icon_title = 'This account was claimed by ' + player.user.username + '.' -%}
-                        {%- set claimed_icon_link = player.user.link -%}
-                    {%- endif -%}
-
                     <div class="txtright">
-                        <span class="claimed-icon" title="{{ claimed_icon_title }}">{% if claimed_icon_link %}<a href="{{ claimed_icon_link }}">{% endif %}<i class="fa fa-user-check"></i>{% if claimed_icon_link %}</a>{% endif %}</span>
+                        <span class="owned-icon"><i class="fa fa-running"></i></span>
                     </div>
                 {%- endif -%}
             </div>
