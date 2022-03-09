@@ -1,9 +1,3 @@
-### User Country Object
-
-  + `name`: `France` (required) - User country name
-  + `code`: `fr` (required) - [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) user country code
-  + `flag_image_url`: `https://rwrstats.com/images/flags/FR.png` (required) - Image URL of the user country. 24x24 pixels
-
 ### User Simple Object
 
   + `id`: `56` (number, required) - RWRS user ID
@@ -17,5 +11,4 @@
 ### User Full Object (User Simple Object)
 
   + `registered_at`: `2019-02-22T10:46:00+00:00` (required) - [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) date / time when user registered on RWRS
-  + `country` (User Country Object, nullable) - If not `null`: user country (as provided by Steam)
   + `accounts` (array[Player Intermediate Object], fixed-type) - List of linked RWR accounts
