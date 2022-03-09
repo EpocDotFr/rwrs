@@ -11,7 +11,7 @@
             </div>
             <div class="grid has-gutter">
                 <div><small>{{ player.rank.name }}{% if player.rank.alternative_name %} <span class="txtgrey">({{ player.rank.alternative_name }})</span>{% endif %}</small></div>
-                {%- if config['ENABLE_PLAYER_CLAIMING'] and player.user -%}
+                {%- if player.user -%}
                     {%- set claimed_icon_link = None -%}
 
                     {%- if current_user.is_authenticated and current_user.id == player.user.id -%}

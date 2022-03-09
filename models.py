@@ -591,11 +591,8 @@ class RwrAccount(db.Model):
     username = db.Column(db.String(16), nullable=False)
     created_at = db.Column(ArrowType, default=lambda: arrow.utcnow().floor('minute'), nullable=False)
     updated_at = db.Column(ArrowType, default=lambda: arrow.utcnow().floor('minute'), onupdate=lambda: arrow.utcnow().floor('minute'), nullable=False)
-    claim_possible_until = db.Column(ArrowType)
-    claimed_at = db.Column(ArrowType)
 
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    claim_initiated_by_user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
     stats = db.relationship('RwrAccountStat', backref='rwr_account', lazy=True)
 
@@ -681,32 +678,6 @@ class RwrAccount(db.Model):
             rwr_account.username = username
 
         return rwr_account
-
-    def init_claim(self, user_id):
-        """Initialize the claim procedure for this RwrAccount."""
-        self.claim_initiated_by_user_id = user_id
-        self.claim_possible_until = arrow.utcnow().floor('second').shift(minutes=+app.config['PLAYER_CLAIM_DELAY'])
-
-    def reset_claim(self):
-        """Reset the claim procedure for this RwrAccount."""
-        self.claim_initiated_by_user_id = None
-        self.claim_possible_until = None
-
-    def claim(self, user_id):
-        """Make a User claim this RwrAccount."""
-        self.user_id = user_id
-        self.claimed_at = arrow.utcnow().floor('minute')
-
-        self.reset_claim()
-
-    def has_claim_expired(self):
-        """Determine if this RwrAccount claim period has expired."""
-        if arrow.utcnow() >= self.claim_possible_until:
-            self.reset_claim()
-
-            return True
-
-        return False
 
     def __repr__(self):
         return 'RwrAccount:{}'.format(self.id)

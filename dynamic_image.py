@@ -1,7 +1,6 @@
 from PIL import Image, ImageDraw, ImageFont
 from flask import make_response, g
 from io import BytesIO
-from rwrs import app
 import rwr.scraper
 import rwr.utils
 import helpers
@@ -244,7 +243,7 @@ class DynamicPlayerImage(DynamicImage):
         self._draw_text((self.image.width - database_name_w - 4, 1), database_name, font=normal_font)
 
         # Claimed icon
-        if app.config['ENABLE_PLAYER_CLAIMING'] and self.player.user:
+        if self.player.user:
             claimed_image = Image.open('static/images/dynamic_images/claimed.png').convert('RGBA')
 
             self._paste(claimed_image, (self.image.width - claimed_image.width - 4, 22))

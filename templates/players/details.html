@@ -71,7 +71,7 @@
                 <li class="inbl prs {{ 'active' if request.view_args.get('tab') == 'evolution' }}"><a href="{{ url_for('player_details', database=request.view_args.get('database'), username=player.username, tab='evolution') }}" class="inbl pas"><i class="fas fa-chart-line"></i> Evolution</a></li>
             {%- endif %}
             <li class="inbl prs {{ 'active' if request.view_args.get('tab') == 'signature' }}"><a href="{{ url_for('player_details', database=request.view_args.get('database'), username=player.username, tab='signature') }}" class="inbl pas"><i class="fas fa-image"></i> Signature</a></li>
-            {%- if config['ENABLE_PLAYER_CLAIMING'] and player.user -%}
+            {%- player.user -%}
                 {%- set claimed_icon_link = None -%}
 
                 {%- if current_user.is_authenticated and current_user.id == player.user.id -%}
