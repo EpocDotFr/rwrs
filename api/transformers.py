@@ -193,8 +193,6 @@ user_simple = OrderedDict([
     ('id', fields.Integer),
     ('username', fields.String),
     ('url', fields.String(attribute='link_absolute')),
-    ('steam_id', fields.Integer),
-    ('steam_profile_url', fields.String),
     ('small_avatar_url', fields.String),
     ('large_avatar_url', fields.String),
 ])
