@@ -30,23 +30,28 @@
         <fieldset class="man">
             <legend><i class="fas fa-filter"></i> Filters</legend>
 
-            {{ macros.select('location', '(Any location)', locations) }}
-            {{ macros.select('map', '(Any map)', maps) }}
-            {{ macros.select('type', '(Any type)', types,) }}
-            {{ macros.select('mode', '(Any mode)', modes) }}
-            {{ macros.checkbox('dedicated', 'Dedicated') }}
-            {{ macros.checkbox('ranked', 'Ranked') }}
-            {{ macros.checkbox('not_empty', 'Not empty') }}
-            {{ macros.checkbox('not_full', 'Not full') }}
+            <div>
+                {{ macros.select('location', '(Any location)', locations) }}
+                {{ macros.select('map', '(Any map)', maps) }}
+                {{ macros.select('type', '(Any type)', types,) }}
+                {{ macros.select('mode', '(Any mode)', modes) }}
+            </div>
+
+            <div class="mts">
+                {{ macros.checkbox('dedicated', 'Dedicated') }}
+                {{ macros.checkbox('ranked', 'Ranked') }}
+                {{ macros.checkbox('not_empty', 'Not empty') }}
+                {{ macros.checkbox('not_full', 'Not full') }}
+            </div>
 
             {% if 'view' in request.args -%}
                 <input type="hidden" name="view" value="{{ request.args.get('view') }}">
             {%- endif %}
 
-            <p>
+            <div class="mts">
                 <button type="submit" class="mrm"><i class="fas fa-check"></i> Apply filters</button>
                 <a href="{{ url_for('servers_list', **view_link_params) }}" class="btn"><i class="fas fa-{{ view_link_icon }}"></i> Switch to {{ view_link_text }} view</a>
-            </p>
+            </div>
         </fieldset>
     </form>
 
