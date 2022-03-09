@@ -1,3 +1,4 @@
+from steam.steamid import SteamID
 from flask import current_app
 from lxml import html, etree
 from rwrs import app, cache
@@ -384,6 +385,29 @@ def get_players(database, sort=constants.PlayersSort.SCORE.value, target=None, s
 
     if target and target not in [player.username for player in players]:
         return []
+
+    return players
+
+
+@cache.memoize(timeout=app.config['PLAYERS_CACHE_TIMEOUT'])
+def get_players_by_steam_id(steam_id):
+    """Get the list of RWR usernames linked to a given Steam ID. Both Invasion and WWII DLCs databases are queried."""
+    steam_id_parsed = SteamID(steam_id)
+    players = {}
+
+    for database in constants.VALID_DATABASES:
+        params = {
+            'db': database,
+            'key': 'sid',
+            'value': steam_id_parsed.as_32
+        }
+
+        html_content = _call(app.config['RWR_ACCOUNTS_BY_STEAM_ID_ENDPOINT'], '', 'html', params=params)
+
+        cells = html_content.xpath('//table/tr[position() > 1]/td[position() = 2]')
+
+        if cells:
+            players[database] = [cell.text.strip('\'') for cell in cells if cell.text]
 
     return players
 

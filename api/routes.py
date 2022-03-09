@@ -115,7 +115,7 @@ class PlayerResource(BaseResource):
             if not player_exist:
                 abort(404, message='Player not found')
 
-            rwr_account = RwrAccount.get_by_type_and_username(database, username)
+            rwr_account = RwrAccount.get_one_by_type_and_username(database, username)
 
             if not rwr_account:
                 abort(412, message='Stats history unavailable for this player')

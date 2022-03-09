@@ -356,7 +356,7 @@ def players_compare(database, username, username_to_compare_with=None, date=None
 
             return redirect(url_for('players_list', database=database))
 
-        rwr_account = RwrAccount.get_by_type_and_username(database, username)
+        rwr_account = RwrAccount.get_one_by_type_and_username(database, username)
 
         if not rwr_account:
             flash(ERROR_NO_RWR_ACCOUNT.format(username=username, database=database_name, max_players=app.config['MAX_NUM_OF_PLAYERS_TO_TRACK_STATS_FOR']), 'error')
@@ -379,7 +379,7 @@ def players_compare(database, username, username_to_compare_with=None, date=None
 
             return redirect(url_for('player_details', database=database, username=username))
 
-        player_to_compare_with_rwr_account = RwrAccount.get_by_type_and_username(database, username_to_compare_with)
+        player_to_compare_with_rwr_account = RwrAccount.get_one_by_type_and_username(database, username_to_compare_with)
 
         if not player_to_compare_with_rwr_account:
             flash(ERROR_NO_RWR_ACCOUNT.format(username=username_to_compare_with, database=database_name, max_players=app.config['MAX_NUM_OF_PLAYERS_TO_TRACK_STATS_FOR']), 'error')

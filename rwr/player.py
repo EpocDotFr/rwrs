@@ -262,7 +262,7 @@ class Player:
     def rwr_account(self):
         """Return the RwrAccount associated to this Player."""
         if not self._rwr_account:
-            self._rwr_account = RwrAccount.get_by_type_and_username(self.database, self.username)
+            self._rwr_account = RwrAccount.get_one_by_type_and_username(self.database, self.username)
 
         return self._rwr_account
 

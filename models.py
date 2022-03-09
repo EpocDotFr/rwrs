@@ -396,6 +396,32 @@ class User(db.Model, UserMixin):
     rwr_accounts = db.relationship('RwrAccount', backref='user', lazy=True, foreign_keys='RwrAccount.user_id')
     friends = db.relationship('UserFriend', backref='user', lazy=True, foreign_keys='UserFriend.user_id')
 
+    def sync_rwr_accounts(self):
+        """Synchronize all RWR accounts owned by this user with the ranked (official) players list."""
+        if not app.config['RWR_ACCOUNTS_BY_STEAM_ID_ENDPOINT']:
+            return
+
+        players = rwr.scraper.get_players_by_steam_id(self.steam_id)
+
+        if not players:
+            return
+
+        for database, usernames in players.items():
+            scraper_rwr_accounts = RwrAccount.get_many_by_type_and_usernames(database, usernames, create_if_unexisting=True)
+
+            for scraper_rwr_account in scraper_rwr_accounts:
+                scraper_rwr_account.user_id = self.id
+
+                db.session.add(scraper_rwr_account)
+
+            for user_rwr_account in self.rwr_accounts:
+                if user_rwr_account.username in usernames:
+                    continue
+
+                user_rwr_account.user_id = None
+
+                db.session.add(scraper_rwr_account)
+
     def get_rwr_accounts_by_type(self, type):
         """Return the RwrAccounts linked to this user, filtered by account type."""
         return [rwr_account for rwr_account in self.rwr_accounts if rwr_account.type == RwrAccountType(type.upper())]
@@ -622,7 +648,7 @@ class RwrAccount(db.Model):
         return RwrAccountStat.query.with_entities(func.count('*')).filter(RwrAccountStat.rwr_account_id == self.id).scalar() > 0
 
     @staticmethod
-    def get_by_type_and_username(type, username, create_if_unexisting=False):
+    def get_one_by_type_and_username(type, username, create_if_unexisting=False):
         """Return an RwrAccount given its type and username, optionally creating it if it doesn't exist."""
         type = RwrAccountType(type.upper())
 
@@ -637,6 +663,31 @@ class RwrAccount(db.Model):
             rwr_account.username = username
 
         return rwr_account
+
+    @staticmethod
+    def get_many_by_type_and_usernames(type, usernames, create_if_unexisting=False):
+        """Return all RwrAccount matching the given type and usernames, optionally creating them if they doesn't exist."""
+        type = RwrAccountType(type.upper())
+
+        rwr_accounts = RwrAccount.query.filter(
+            RwrAccount.type == type,
+            RwrAccount.username.in_(usernames)
+        ).all()
+
+        if create_if_unexisting:
+            rwr_accounts_usernames = [rwr_account.username for rwr_account in rwr_accounts]
+
+            for username in usernames:
+                if username in rwr_accounts_usernames:
+                    continue
+
+                rwr_account = RwrAccount()
+                rwr_account.type = type
+                rwr_account.username = username
+
+                rwr_accounts.append(rwr_account)
+
+        return rwr_accounts
 
     def __repr__(self):
         return 'RwrAccount:{}'.format(self.id)

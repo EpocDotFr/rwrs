@@ -302,7 +302,7 @@ def stats(
         if not player_exist:
             return 'Sorry, this player don\'t exist :confused:'
 
-        rwr_account = RwrAccount.get_by_type_and_username(database, username)
+        rwr_account = RwrAccount.get_one_by_type_and_username(database, username)
 
         if not rwr_account:
             return 'Sorry, stats history isn\'t recorded for this player :confused: He/she must be part of the {} {} most experienced players.'.format(
@@ -737,7 +737,7 @@ def compare(
         if not source_player_exist:
             return 'Sorry, I cannot find **{}** :confused:'.format(source_username)
 
-        source_rwr_account = RwrAccount.get_by_type_and_username(database, source_username)
+        source_rwr_account = RwrAccount.get_one_by_type_and_username(database, source_username)
 
         if not source_rwr_account:
             return 'Sorry, stats history isn\'t recorded for {} :confused: He/she must be part of the {} {} most experienced players.'.format(
@@ -762,7 +762,7 @@ def compare(
         if not target_player_exist:
             return 'Sorry, I cannot find **{}** :confused:'.format(target_username)
 
-        target_rwr_account = RwrAccount.get_by_type_and_username(database, target_username)
+        target_rwr_account = RwrAccount.get_one_by_type_and_username(database, target_username)
 
         if not target_rwr_account:
             return 'Sorry, stats history isn\'t recorded for {} :confused: He/she must be part of the {} {} most experienced players.'.format(

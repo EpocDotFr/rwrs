@@ -42,6 +42,16 @@ def create_or_login(resp):
     if user_was_created:
         user.is_profile_public = True if 'communityvisibilitystate' in steam_user_info and steam_user_info['communityvisibilitystate'] == 3 else False
 
+    try:
+        user.sync_rwr_accounts()
+    except Exception as e:
+        raise e
+        bugsnag.notify(e)
+
+        flash('An error occured while syncing your RWR accounts. Please try again.', 'error')
+
+        return redirect(url_for('sign_in'))
+
     db.session.add(user)
     db.session.commit()
 
