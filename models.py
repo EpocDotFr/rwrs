@@ -410,7 +410,10 @@ class User(db.Model, UserMixin):
             scraper_rwr_accounts = RwrAccount.get_many_by_type_and_usernames(database, usernames, create_if_unexisting=True)
 
             for scraper_rwr_account in scraper_rwr_accounts:
-                scraper_rwr_account.user_id = self.id
+                if scraper_rwr_account.user_id == self.id:
+                    continue
+
+                scraper_rwr_account.user = self
 
                 db.session.add(scraper_rwr_account)
 
@@ -418,9 +421,9 @@ class User(db.Model, UserMixin):
                 if user_rwr_account.username in usernames:
                     continue
 
-                user_rwr_account.user_id = None
+                user_rwr_account.user = None
 
-                db.session.add(scraper_rwr_account)
+                db.session.add(user_rwr_account)
 
     def get_rwr_accounts_by_type(self, type):
         """Return the RwrAccounts linked to this user, filtered by account type."""
@@ -504,7 +507,7 @@ class User(db.Model, UserMixin):
     def add_friend(self, username):
         """Add a friend to this User's friends list. Commiting DB operation is needed after calling this method."""
         user_friend = UserFriend()
-        user_friend.user_id = self.id
+        user_friend.user = self
         user_friend.username = username
 
         db.session.add(user_friend)
@@ -526,7 +529,7 @@ class User(db.Model, UserMixin):
 
         for username in usernames:
             user_friend = UserFriend()
-            user_friend.user_id = self.id
+            user_friend.user = self
             user_friend.username = username
 
             user_friends.append(user_friend)
