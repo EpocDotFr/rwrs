@@ -10,6 +10,7 @@ from enum import Enum
 import rwr.utils
 import helpers
 import hashlib
+import iso3166
 import arrow
 import json
 import uuid
@@ -386,6 +387,7 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(80), nullable=False)
     small_avatar_url = db.Column(db.String(255))
     large_avatar_url = db.Column(db.String(255))
+    country_code = db.Column(db.String(2))
     is_profile_public = db.Column(db.Boolean, nullable=False, default=True)
     created_at = db.Column(ArrowType, default=lambda: arrow.utcnow().floor('minute'), nullable=False)
     updated_at = db.Column(ArrowType, default=lambda: arrow.utcnow().floor('minute'), onupdate=lambda: arrow.utcnow().floor('minute'), nullable=False)
@@ -429,6 +431,10 @@ class User(db.Model, UserMixin):
         """Return the RwrAccounts linked to this user, filtered by account type."""
         return [rwr_account for rwr_account in self.rwr_accounts if rwr_account.type == RwrAccountType(type.upper())]
 
+    @memoized_property
+    def country_name(self):
+        return iso3166.countries_by_alpha2.get(self.country_code.upper()).name if self.country_code else ''
+
     def get_link(self, absolute=False):
         def _get_link(self, absolute):
             params = {
@@ -456,9 +462,44 @@ class User(db.Model, UserMixin):
         """Return the absolute link to this User profile page."""
         return self.get_link(absolute=True)
 
+    def get_country_flag(self, absolute=False):
+        if not self.country_code:
+            return None
+
+        def _get_country_flag(self, absolute):
+            params = {
+                'country_code': self.country_code.upper(),
+            }
+
+            flag_url = 'images/flags/{country_code}.png'.format(**params)
+
+            return url_for('static', filename=flag_url, _external=absolute)
+
+        if current_app:
+            link = _get_country_flag(self, absolute=absolute)
+        else:
+            with app.app_context():
+                link = _get_country_flag(self, absolute=absolute)
+
+        return link
+
+    @memoized_property
+    def country_flag(self):
+        """Return the URL to this User country flag image."""
+        return self.get_country_flag()
+
+    @memoized_property
+    def country_flag_absolute(self):
+        """Return the absolute URL to this User country flag image."""
+        return self.get_country_flag(absolute=True)
+
     @memoized_property
     def slug(self):
         return slugify(self.username)
+
+    @memoized_property
+    def steam_profile_url(self):
+        return 'https://steamcommunity.com/profiles/{}'.format(self.steam_id)
 
     @staticmethod
     def get_by_steam_id(steam_id, create_if_unexisting=False):

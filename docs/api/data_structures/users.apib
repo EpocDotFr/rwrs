@@ -1,8 +1,16 @@
+### User Country Object
+
+  + `name`: `France` (required) - User country name
+  + `code`: `fr` (required) - [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) user country code
+  + `flag_image_url`: `https://rwrstats.com/images/flags/FR.png` (required) - Image URL of the user country. 24x24 pixels
+
 ### User Simple Object
 
   + `id`: `56` (number, required) - RWRS user ID
   + `username`: `Epoc` (required) - The user nickname (as provided by Steam)
   + `url`: `https://rwrstats.com/users/56/epoc` (required) - RWRS user profile page URL
+  + `steam_id`: `76561198051750940` (number, required) - SteamID64 of this user
+  + `steam_profile_url`: `https://steamcommunity.com/profiles/76561198051750940` (required) - URL to this Steam user profile page
   + `small_avatar_url`: `https://steamcdn-a.akamaihd.net/steamcommunity/public/images/avatars/18/18a19ee73965fb3b92f39db8a307df80f5624122.jpg` (nullable) - User small avatar (as provided by Steam). 32x32 pixels
     + Default: `null`
   + `large_avatar_url`: `https://steamcdn-a.akamaihd.net/steamcommunity/public/images/avatars/18/18a19ee73965fb3b92f39db8a307df80f5624122_full.jpg` (nullable) - User large avatar (as provided by Steam). 184x184 pixels
@@ -11,4 +19,5 @@
 ### User Full Object (User Simple Object)
 
   + `registered_at`: `2019-02-22T10:46:00+00:00` (required) - [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) date / time when user registered on RWRS
+  + `country` (User Country Object, nullable) - If not `null`: user country (as provided by Steam)
   + `accounts` (array[Player Intermediate Object], fixed-type) - List of linked RWR accounts

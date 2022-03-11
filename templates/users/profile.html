@@ -32,10 +32,18 @@
                         <td class="txtcenter"><img src="{{ user.large_avatar_url }}" title="{{ user.username }}'s avatar"></td>
                     </tr>
                 {%- endif -%}
+                {%- if user.country_code -%}
+                <tr>
+                    <td class="txtcenter"><i class="flag flag-{{ user.country_code }}" title="{{ user.country_name }}"></i> {{ user.country_name }}</td>
+                </tr>
+                {%- endif -%}
                 <tr>
                     <td class="txtcenter">Registered {{ user.created_at.humanize() }}</td>
                 </tr>
             </table>
+            <div class="txtcenter pts">
+                <a href="{{ user.steam_profile_url }}" class="btn"><i class="fas fa-external-link-alt"></i> Steam profile</a>
+            </div>
         </div>
         <div class="four-fifth">
             <div class="grid has-gutter">
