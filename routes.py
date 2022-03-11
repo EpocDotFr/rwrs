@@ -82,6 +82,9 @@ def user_profile(user_id, slug):
     if not user.is_profile_public and ((current_user.is_authenticated and user.id != current_user.id) or not current_user.is_authenticated):
         abort(404)
 
+    if not slug or slug != user.slug:
+        return redirect(user.link, code=301)
+
     return render_template(
         'users/profile.html',
         user=user
@@ -459,7 +462,7 @@ def server_details(ip, port, slug=None):
 
         return redirect(url_for('servers_list'))
 
-    if not slug:
+    if not slug or slug != server.name_slug:
         return redirect(server.link, code=301)
 
     server_players_data = ServerPlayerCount.server_players_data(ip, port) if server.is_dedicated else None
@@ -481,7 +484,7 @@ def server_banner(ip, port, slug=None):
 
         return redirect(url_for('servers_list'))
 
-    if not slug:
+    if not slug or slug != server.name_slug:
         return redirect(url_for('server_banner', ip=server.ip, port=server.port, slug=server.name_slug), code=301)
 
     if not server.is_dedicated:
