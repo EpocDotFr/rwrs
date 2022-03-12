@@ -48,7 +48,6 @@ def create_or_login(resp):
     try:
         user.sync_rwr_accounts()
     except Exception as e:
-        raise e
         bugsnag.notify(e)
 
         flash('An error occured while syncing your RWR accounts. Please try again.', 'error')
