@@ -20,8 +20,12 @@
 {% set meta_image = user.large_avatar_url if user.large_avatar_url else user.small_avatar_url if user.small_avatar_url %}
 
 {% block content %}
-    {%- if current_user.is_authenticated and user.id == current_user.id and not current_user.is_profile_public -%}
-        <div class="alert info pas mtm"><i class="fas fa-lock"></i> Your RWRS account is set as private. To change this, head to <a href="{{ url_for('user_settings') }}#general">your settings page</a>.</div>
+    {%- if current_user.is_authenticated and user.id == current_user.id -%}
+        {%- set privacy_icon = 'lock-open' if current_user.is_profile_public else 'lock' -%}
+        {%- set privacy_label = 'public' if current_user.is_profile_public else 'private' -%}
+        {%- set privacy_label_inverse = 'private' if current_user.is_profile_public else 'public' -%}
+
+        <div class="alert info pas mtm"><i class="fas fa-{{ privacy_icon }}"></i> Your RWRS account is set as <strong>{{ privacy_label }}</strong>. To make it {{ privacy_label_inverse }}, head to <a href="{{ url_for('user_settings') }}#general">your settings page</a>.</div>
     {%- endif -%}
 
     <div class="grid has-gutter mtm">
