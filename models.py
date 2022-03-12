@@ -409,17 +409,18 @@ class User(db.Model, UserMixin):
             return
 
         for database, usernames in players.items():
-            scraper_rwr_accounts = RwrAccount.get_many_by_type_and_usernames(database, usernames, create_if_unexisting=True)
+            if usernames:
+                scraper_rwr_accounts = RwrAccount.get_many_by_type_and_usernames(database, usernames, create_if_unexisting=True)
 
-            for scraper_rwr_account in scraper_rwr_accounts:
-                if scraper_rwr_account.user_id == self.id:
-                    continue
+                for scraper_rwr_account in scraper_rwr_accounts:
+                    if scraper_rwr_account.user_id == self.id:
+                        continue
 
-                scraper_rwr_account.user = self
+                    scraper_rwr_account.user = self
 
-                db.session.add(scraper_rwr_account)
+                    db.session.add(scraper_rwr_account)
 
-            for user_rwr_account in self.rwr_accounts:
+            for user_rwr_account in self.get_rwr_accounts_by_type(database):
                 if user_rwr_account.username in usernames:
                     continue
 

@@ -406,8 +406,7 @@ def get_players_by_steam_id(steam_id):
 
         cells = html_content.xpath('//table/tr[position() > 1]/td[position() = 2]')
 
-        if cells:
-            players[database] = [cell.text.strip('\'') for cell in cells if cell.text]
+        players[database] = [cell.text.strip('\'') for cell in cells if cell.text]
 
     return players
 
