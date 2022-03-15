@@ -16,13 +16,20 @@ servers_base_url = 'http://rwr.runningwithrifles.com/rwr_server_list/'
 players_base_url = 'http://rwr.runningwithrifles.com/rwr_stats/'
 
 
-def _call(url, parser, params=None, auth=None):
+def _call(url, parser, params=None, auth=None, verify=True):
     """Perform an HTTP GET request to the desired RWR list base_url."""
     headers = {
         'User-Agent': 'rwrstats.com'
     }
 
-    response = requests.get(url, params=params, auth=auth, headers=headers, timeout=5)
+    response = requests.get(
+        url,
+        params=params,
+        auth=auth,
+        headers=headers,
+        verify=verify,
+        timeout=5
+    )
 
     response.raise_for_status()
 
@@ -418,7 +425,8 @@ def get_players_by_steam_id(steam_id):
             app.config['RWR_ACCOUNTS_BY_STEAM_ID_ENDPOINT'],
             'html',
             params=params,
-            auth=app.config['RWR_ACCOUNTS_BY_STEAM_ID_CREDENTIALS']
+            auth=app.config['RWR_ACCOUNTS_BY_STEAM_ID_CREDENTIALS'],
+            verify=False
         )
 
         cells = html_content.xpath('//table/tr[position() > 1]/td[position() = 2]')
