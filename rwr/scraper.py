@@ -16,15 +16,13 @@ servers_base_url = 'http://rwr.runningwithrifles.com/rwr_server_list/'
 players_base_url = 'http://rwr.runningwithrifles.com/rwr_stats/'
 
 
-def _call(base_url, resource, parser, params=None):
+def _call(url, parser, params=None, auth=None):
     """Perform an HTTP GET request to the desired RWR list base_url."""
-    url = base_url + resource
-
     headers = {
         'User-Agent': 'rwrstats.com'
     }
 
-    response = requests.get(url, params=params, headers=headers, timeout=5)
+    response = requests.get(url, params=params, auth=auth, headers=headers, timeout=5)
 
     response.raise_for_status()
 
@@ -115,7 +113,17 @@ def get_servers():
     size = 100
 
     while True:
-        xml_content = _call(servers_base_url, 'get_server_list.php', 'xml', params={'start': start, 'size': size, 'names': 1})
+        params = {
+            'start': start,
+            'size': size,
+            'names': 1
+        }
+
+        xml_content = _call(
+            servers_base_url + 'get_server_list.php',
+            'xml',
+            params=params
+        )
 
         servers = [Server.load(server_node) for server_node in xml_content.xpath('/result/server')]
 
@@ -379,7 +387,11 @@ def get_players(database, sort=constants.PlayersSort.SCORE.value, target=None, s
         'search': target
     }
 
-    html_content = _call(players_base_url, 'view_players.php', 'html', params=params)
+    html_content = _call(
+        players_base_url + 'view_players.php',
+        'html',
+        params=params
+    )
 
     players = [Player.load(database, node) for node in html_content.xpath('//table/tr[position() > 1]')]
 
@@ -402,7 +414,12 @@ def get_players_by_steam_id(steam_id):
             'value': steam_id_parsed.as_32
         }
 
-        html_content = _call(app.config['RWR_ACCOUNTS_BY_STEAM_ID_ENDPOINT'], '', 'html', params=params)
+        html_content = _call(
+            app.config['RWR_ACCOUNTS_BY_STEAM_ID_ENDPOINT'],
+            'html',
+            params=params,
+            auth=app.config['RWR_ACCOUNTS_BY_STEAM_ID_CREDENTIALS']
+        )
 
         cells = html_content.xpath('//table/tr[position() > 1]/td[position() = 2]')
 
@@ -424,7 +441,11 @@ def search_player_by_username(database, username, check_exist_only=False):
         'search': username
     }
 
-    html_content = _call(players_base_url, 'view_player.php', 'html', params=params)
+    html_content = _call(
+        players_base_url + 'view_player.php',
+        'html',
+        params=params
+    )
 
     node = html_content.xpath('(//table/tr[position() = 2])[1]')
 
