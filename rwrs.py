@@ -63,6 +63,7 @@ if app.config['ENV'] == 'production' and app.config['BUGSNAG_API_KEY']:
             'werkzeug.exceptions.TooManyRequests',
             'werkzeug.exceptions.PreconditionFailed',
             'werkzeug.exceptions.Locked',
+            'werkzeug.exceptions.ServiceUnavailable',
         ]
     )
 
