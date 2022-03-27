@@ -63,7 +63,15 @@
                             <tbody>
                                 {%- for rwr_account in rwr_accounts_by_type -%}
                                     <tr>
-                                        <td><a href="{{ rwr_account.link }}">{{ macros.player_name(rwr_account.username, raw=True, link=True, database=database, popover_url=True) }}</a></td>
+                                        <td>
+                                            {%- if user.id == current_user.id -%}
+                                                <div class="actions fr">
+                                                    <span class="txtred"><a href="{{ url_for('delete_rwr_account', rwr_account_id=rwr_account.id) }}" title="Delete this RWR account"><i class="fas fa-trash"></i></a></span>
+                                                </div>
+                                            {%- endif -%}
+
+                                            {{ macros.player_name(rwr_account.username, raw=True, link=True, database=database, popover_url=True) }}
+                                        </td>
                                     </tr>
                                 {%- else -%}
                                     <tr>
