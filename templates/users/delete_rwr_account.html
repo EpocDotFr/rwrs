@@ -1,0 +1,22 @@
+{% extends 'layout.html' %}
+
+{% set page_icon = 'fas fa-trash' %}
+
+{% set title = 'Delete ' + rwr_account.username %}
+
+{% block content %}
+    <p class="txtred big"><strong>Unexpected bad things will happen if you don't read this!</strong></p>
+
+    <p>You are about to <strong>permanently delete</strong> your <strong>{{ rwr_account.type_display }}</strong> RWR account <strong>{{ rwr_account.username }}</strong>.</p>
+
+    <p>This RWR account will be <strong>permanently deleted</strong> on both RWRS <strong>and</strong> game servers. This action <strong>cannot</strong> be undone. Once you delete an account, there is no going back. Please be certain.</p>
+
+    <p>Type <strong>{{ rwr_account.username }}</strong> to confirm:</p>
+
+    <form method="post" action="{{ url_for('delete_rwr_account', rwr_account_id=rwr_account.id) }}" class="mtm mbm txtcenter">
+        <fieldset class="man pam">
+            <p></p>
+            <p><button type="submit" class="big">I understand the consequences, delete this account</button></p>
+        </fieldset>
+    </form>
+{% endblock %}

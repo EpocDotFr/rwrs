@@ -4,8 +4,6 @@
 
 {% set title = 'My friends' %}
 
-{% block meta_description %}Manage and view your Running With Rifles (RWR) friends.{% endblock %}
-
 {% block jsfiles %}
     {%- if current_user.friends_ordered_by_username -%}
         <script src="https://cdnjs.cloudflare.com/ajax/libs/tippy.js/3.1.3/tippy.min.js"></script>
