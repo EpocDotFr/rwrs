@@ -9,6 +9,7 @@ import rwr.constants
 import flask_openid
 import rwr.scraper
 import rwr.utils
+import bugsnag
 import helpers
 import arrow
 import forms
@@ -185,7 +186,7 @@ def remove_friend(username):
     return redirect(helpers.get_next_url())
 
 
-@app.route('/my-rwr-accounts/delete/<int:rwr_account_id>')
+@app.route('/my-rwr-accounts/delete/<int:rwr_account_id>', methods=['GET', 'POST'])
 @login_required
 def delete_rwr_account(rwr_account_id):
     rwr_account = RwrAccount.query.get(rwr_account_id)
@@ -193,16 +194,26 @@ def delete_rwr_account(rwr_account_id):
     if not rwr_account or rwr_account.user_id != current_user.id:
         abort(404)
 
-    # if True:
-    #     flash('Friend removed. Sad.', 'success')
-    # else:
-    #     flash('Friend not found.', 'error')
+    form = forms.RwrAccountDeleteForm(rwr_account.username)
 
-    # return redirect(helpers.get_next_url())
+    if form.validate_on_submit():
+        try:
+            # rwr_account.delete() TODO
+
+            flash('RWR account successfully deleted.', 'success')
+
+            return redirect(current_user.link)
+        except Exception as e:
+            bugsnag.notify(e)
+
+            flash('Error deleting RWR account. Please try again.', 'error')
+
+            return redirect(url_for('delete_rwr_account', rwr_account_id=rwr_account_id))
 
     return render_template(
         'users/delete_rwr_account.html',
-        rwr_account=rwr_account
+        rwr_account=rwr_account,
+        form=form
     )
 
 
