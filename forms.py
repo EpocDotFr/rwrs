@@ -21,3 +21,16 @@ class UserFriendForm(FlaskForm):
 
         if current_user.has_friend(username):
             raise ValidationError('{} is already your friend'.format(username))
+
+
+class RwrAccountDeleteForm(FlaskForm):
+    username_confirmation = StringField('Player name confirmation', [validators.DataRequired(), validators.Length(max=16)])
+
+    def __init__(self, target_username):
+        super(RwrAccountDeleteForm).__init__()
+
+        self.target_username = target_username
+
+    def validate_username_confirmation(form, field):
+        if field.data != self.target_username:
+            raise ValidationError('Incorrect username')

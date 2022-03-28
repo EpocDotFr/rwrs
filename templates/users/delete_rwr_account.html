@@ -1,22 +1,30 @@
 {% extends 'layout.html' %}
+{%- import 'macros.html' as macros -%}
 
 {% set page_icon = 'fas fa-trash' %}
 
-{% set title = 'Delete ' + rwr_account.username %}
+{% set html_title = 'Delete ' + macros.player_name(rwr_account.username, raw=True, database=rwr_account.database) %}
+
+{% set meta_title = 'Delete ' + rwr_account.username %}
 
 {% block content %}
-    <p class="txtred big"><strong>Unexpected bad things will happen if you don't read this!</strong></p>
+    <p class="txtred big u-bold">Unexpected bad things will happen if you don't read this!</p>
 
-    <p>You are about to <strong>permanently delete</strong> your <strong>{{ rwr_account.type_display }}</strong> RWR account <strong>{{ rwr_account.username }}</strong>.</p>
+    <p>You are about to <strong>permanently delete</strong> your <strong>{{ rwr_account.type_display }}</strong> RWR account <strong class="keep-spaces">{{ rwr_account.username }}</strong>.</p>
 
-    <p>This RWR account will be <strong>permanently deleted</strong> on both RWRS <strong>and</strong> game servers. This action <strong>cannot</strong> be undone. Once you delete an account, there is no going back. Please be certain.</p>
+    <p>It will be <strong>deleted forever</strong> not only from RWRS <strong><u>but also from ranked (official) {{ rwr_account.type_display }} game servers</u></strong>.</p>
 
-    <p>Type <strong>{{ rwr_account.username }}</strong> to confirm:</p>
+    <p>This action <strong>cannot</strong> be undone. Once you delete an account, there is no going back.</p>
 
-    <form method="post" action="{{ url_for('delete_rwr_account', rwr_account_id=rwr_account.id) }}" class="mtm mbm txtcenter">
-        <fieldset class="man pam">
-            <p></p>
-            <p><button type="submit" class="big">I understand the consequences, delete this account</button></p>
+    <p>Type <strong class="keep-spaces">{{ rwr_account.username }}</strong> to confirm:</p>
+
+    <form method="post" action="{{ url_for('delete_rwr_account', rwr_account_id=rwr_account.id) }}">
+        {{ form.csrf_token }}
+
+        <fieldset class="pam">
+            {{ macros.form_field(form.username_confirmation) }}
+
+            <p class="mtm txtcenter"><button type="submit">I understand the consequences, delete this account</button></p>
         </fieldset>
     </form>
 {% endblock %}

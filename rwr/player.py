@@ -68,7 +68,7 @@ class Player:
 
         ret.rwr_account = rwr_account
 
-        ret.database = rwr_account.type.value.lower()
+        ret.database = rwr_account.database
 
         ret.username = rwr_account.username.encode('iso-8859-1').decode('utf-8')
 
