@@ -18,7 +18,7 @@
 
     <p>Type <strong class="keep-spaces">{{ rwr_account.username }}</strong> to confirm:</p>
 
-    <form method="post" action="{{ url_for('delete_rwr_account', rwr_account_id=rwr_account.id) }}">
+    <form method="post" action="{{ url_for('delete_rwr_account', rwr_account_id=rwr_account.id) }}" class="mts">
         {{ form.csrf_token }}
 
         <fieldset class="pam">
