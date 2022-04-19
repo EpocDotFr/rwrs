@@ -231,7 +231,7 @@ def get_all_servers_locations():
 def get_all_servers_types():
     """Return the type of all of the servers."""
     return _get_list(
-        lambda server: server.type if server.type not in ['vanilla.winter', 'pvp'] else False,
+        lambda server: server.type if server.type not in ['vanilla.winter', 'vanilla.desert', 'pvp'] else False,
         lambda server: server.type_name
     )
 

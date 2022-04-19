@@ -23,6 +23,7 @@ VALID_SERVER_MODES = SERVER_MODES.keys()
 SERVER_TYPES = OrderedDict([
     ('vanilla', 'Vanilla'),
     ('vanilla.winter', 'Vanilla'),
+    ('vanilla.desert', 'Vanilla'),
     ('pvp', 'Vanilla'),
     ('pacific', 'RWR: PACIFIC'),
     ('edelweiss', 'RWR: EDELWEISS'),
