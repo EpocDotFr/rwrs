@@ -744,7 +744,6 @@ class RwrAccount(db.Model):
         rwr.scraper.delete_player(self.database, self.username)
 
         db.session.delete(self)
-        db.session.commit()
 
     def __repr__(self):
         return 'RwrAccount:{}'.format(self.id)

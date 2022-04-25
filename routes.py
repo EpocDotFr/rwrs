@@ -200,6 +200,8 @@ def delete_rwr_account(rwr_account_id):
         try:
             rwr_account.delete()
 
+            db.session.commit()
+
             flash('RWR account successfully deleted.', 'success')
 
             return redirect(current_user.link)
