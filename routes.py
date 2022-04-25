@@ -191,7 +191,7 @@ def remove_friend(username):
 def delete_rwr_account(rwr_account_id):
     rwr_account = RwrAccount.query.get(rwr_account_id)
 
-    if not rwr_account or rwr_account.user_id != current_user.id:
+    if not rwr_account or not current_user.owns_rwr_account(rwr_account):
         abort(404)
 
     form = forms.RwrAccountDeleteForm(rwr_account.username)

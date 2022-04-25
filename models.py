@@ -602,6 +602,10 @@ class User(db.Model, UserMixin):
         else:
             return False
 
+    def owns_rwr_account(self, rwr_account):
+        """Determine if the given RWR account is owned by this user, without making DB queries."""
+        return self.id == rwr_account.user_id
+
     def __repr__(self):
         return 'User:{}'.format(self.id)
 
