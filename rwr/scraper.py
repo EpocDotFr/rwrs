@@ -16,7 +16,7 @@ servers_base_url = 'http://rwr.runningwithrifles.com/rwr_server_list/'
 players_base_url = 'http://rwr.runningwithrifles.com/rwr_stats/'
 
 
-def _call(url, parser, params=None, auth=None, verify=True):
+def _call(url, parser=None, params=None, auth=None, verify=True):
     """Perform an HTTP GET request to the desired RWR list base_url."""
     headers = {
         'User-Agent': 'rwrstats.com'
@@ -37,8 +37,6 @@ def _call(url, parser, params=None, auth=None, verify=True):
         return html.fromstring(response.text)
     elif parser == 'xml':
         return etree.fromstring(response.text)
-    else:
-        raise ValueError('Invalid parser')
 
 
 def _set_servers_location(servers):
@@ -128,7 +126,7 @@ def get_servers():
 
         xml_content = _call(
             servers_base_url + 'get_server_list.php',
-            'xml',
+            parser='xml',
             params=params
         )
 
@@ -396,7 +394,7 @@ def get_players(database, sort=constants.PlayersSort.SCORE.value, target=None, s
 
     html_content = _call(
         players_base_url + 'view_players.php',
-        'html',
+        parser='html',
         params=params
     )
 
@@ -423,9 +421,9 @@ def get_players_by_steam_id(steam_id):
 
         html_content = _call(
             app.config['RWR_ACCOUNTS_BY_STEAM_ID_ENDPOINT'],
-            'html',
+            parser='html',
             params=params,
-            auth=app.config['RWR_ACCOUNTS_BY_STEAM_ID_CREDENTIALS'],
+            auth=app.config['RWR_ACCOUNTS_ENDPOINTS_CREDENTIALS'],
             verify=False
         )
 
@@ -434,6 +432,24 @@ def get_players_by_steam_id(steam_id):
         players[database] = [cell.text.strip('\'') for cell in cells if cell.text]
 
     return players
+
+
+def delete_player(database, username):
+    """Delete a given RWR player from the official servers."""
+    if database not in constants.VALID_DATABASES:
+        raise ValueError('database is invalid')
+
+    params = {
+        'db': database,
+        'search': username
+    }
+
+    _call(
+        app.config['RWR_ACCOUNTS_DELETE_ENDPOINT'],
+        params=params,
+        auth=app.config['RWR_ACCOUNTS_ENDPOINTS_CREDENTIALS'],
+        verify=False
+    )
 
 
 @cache.memoize(timeout=app.config['PLAYERS_CACHE_TIMEOUT'])
@@ -451,7 +467,7 @@ def search_player_by_username(database, username, check_exist_only=False):
 
     html_content = _call(
         players_base_url + 'view_player.php',
-        'html',
+        parser='html',
         params=params
     )
 

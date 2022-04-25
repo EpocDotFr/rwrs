@@ -33,4 +33,4 @@ class RwrAccountDeleteForm(FlaskForm):
 
     def validate_username_confirmation(form, field):
         if field.data != form.target_username:
-            raise ValidationError('Incorrect username')
+            raise ValidationError('Typed username does not match')

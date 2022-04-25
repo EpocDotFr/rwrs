@@ -7,6 +7,7 @@ from rwrs import db, cache, app
 from sqlalchemy import func
 from slugify import slugify
 from enum import Enum
+import rwr.scraper
 import rwr.utils
 import helpers
 import hashlib
@@ -737,6 +738,13 @@ class RwrAccount(db.Model):
                 rwr_accounts.append(rwr_account)
 
         return rwr_accounts
+
+    def delete(self):
+        """Delete this RWR account, both in RWRS and on the official servers."""
+        rwr.scraper.delete_player(self.database, self.username)
+
+        db.session.delete(self)
+        db.session.commit()
 
     def __repr__(self):
         return 'RwrAccount:{}'.format(self.id)

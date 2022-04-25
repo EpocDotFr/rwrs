@@ -198,7 +198,7 @@ def delete_rwr_account(rwr_account_id):
 
     if form.validate_on_submit():
         try:
-            # rwr_account.delete() TODO
+            rwr_account.delete()
 
             flash('RWR account successfully deleted.', 'success')
 
