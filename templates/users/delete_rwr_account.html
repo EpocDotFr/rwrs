@@ -13,6 +13,8 @@
 
         <p>You are about to <strong>permanently delete</strong> your <strong>{{ rwr_account.type_display }}</strong> RWR account <strong class="keep-spaces">{{ rwr_account.username }}</strong>.</p>
 
+        <p>It has been played for <strong>{{ player.time_played|humanize_seconds_to_hours }}</strong> and has <strong>{{ player.xp_display }} XP</strong>.</p>
+
         <p>It will be <strong>deleted forever</strong> not only from RWRS <strong><u>but also from ranked (official) {{ rwr_account.type_display }} game servers</u></strong>.</p>
 
         <p>This action <strong>cannot</strong> be undone. Once you delete an account, there is no going back.</p>

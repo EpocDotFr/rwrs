@@ -196,6 +196,16 @@ def delete_rwr_account(rwr_account_id):
 
     form = forms.RwrAccountDeleteForm(rwr_account.username)
 
+    player = rwr.scraper.search_player_by_username(rwr_account.database, rwr_account.username)
+
+    if not player:
+        flash(
+            'Player "{username}" wasn\'t found in the {database} players list'.format(username=rwr_account.username, database=rwr_account.database_name),
+            'error'
+        )
+
+        return redirect(current_user.link)
+
     if form.validate_on_submit():
         try:
             rwr_account.delete()
@@ -215,6 +225,7 @@ def delete_rwr_account(rwr_account_id):
     return render_template(
         'users/delete_rwr_account.html',
         rwr_account=rwr_account,
+        player=player,
         form=form
     )
 
