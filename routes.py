@@ -194,8 +194,6 @@ def delete_rwr_account(rwr_account_id):
     if not rwr_account or not current_user.owns_rwr_account(rwr_account):
         abort(404)
 
-    form = forms.RwrAccountDeleteForm(rwr_account.username)
-
     player = rwr.scraper.search_player_by_username(rwr_account.database, rwr_account.username)
 
     if not player:
@@ -205,6 +203,8 @@ def delete_rwr_account(rwr_account_id):
         )
 
         return redirect(current_user.link)
+
+    form = forms.RwrAccountDeleteForm(rwr_account.username)
 
     if form.validate_on_submit():
         try:

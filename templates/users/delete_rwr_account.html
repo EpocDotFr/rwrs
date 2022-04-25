@@ -13,7 +13,7 @@
 
         <p>You are about to <strong>permanently delete</strong> your <strong>{{ rwr_account.type_display }}</strong> RWR account <strong class="keep-spaces">{{ rwr_account.username }}</strong>.</p>
 
-        <p>It has been played for <strong>{{ player.time_played|humanize_seconds_to_hours }}</strong> and has <strong>{{ player.xp_display }} XP</strong>.</p>
+        <p>It has been played for <strong class="{{ 'txtred' if player.time_played >= 300 }}">{{ player.time_played|humanize_seconds_to_hours }}</strong> and has <strong class="{{ 'txtred' if player.xp >= 2000 }}">{{ player.xp_display }} XP</strong>.</p>
 
         <p>It will be <strong>deleted forever</strong> not only from RWRS <strong><u>but also from ranked (official) {{ rwr_account.type_display }} game servers</u></strong>.</p>
 
@@ -28,7 +28,7 @@
         <fieldset class="pam">
             {{ macros.form_field(form.username_confirmation) }}
 
-            <p class="mtm txtcenter"><button type="submit">I understand the consequences, delete this account</button></p>
+            <p class="mtm txtcenter"><a href="{{ current_user.link }}" class="btn">Cancel</a> <button type="submit">I understand the consequences, delete this account</button></p>
         </fieldset>
     </form>
 {% endblock %}
