@@ -7,7 +7,6 @@ from rwrs import db, cache, app
 from sqlalchemy import func
 from slugify import slugify
 from enum import Enum
-import rwr.scraper
 import rwr.utils
 import helpers
 import hashlib
