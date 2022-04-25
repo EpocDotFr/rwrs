@@ -27,7 +27,7 @@ class RwrAccountDeleteForm(FlaskForm):
     username_confirmation = StringField('Player name confirmation', [validators.DataRequired(), validators.Length(max=16)])
 
     def __init__(self, target_username):
-        super(RwrAccountDeleteForm).__init__()
+        super().__init__()
 
         self.target_username = target_username
 
