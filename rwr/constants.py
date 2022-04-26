@@ -47,8 +47,7 @@ VALID_SERVER_TYPES = SERVER_TYPES.keys()
 
 PLAYERS_LIST_DATABASES = OrderedDict([
     ('invasion', {'name': 'Invasion', 'ranks_country': 'us', 'realm': 'official_invasion'}),
-    ('pacific', {'name': 'WW2 DLCs', 'ranks_country': app.config['PACIFIC_PLAYERS_RANKS_COUNTRY'], 'realm': 'official_pacific'}) # TODO Remove later
-    # ('pacific', {'name': 'WW2 DLCs', 'ranks_country': 'us', 'realm': 'official_ww2'}) TODO Uncomment later
+    ('pacific', {'name': 'WW2 DLCs', 'ranks_country': app.config['PACIFIC_PLAYERS_RANKS_COUNTRY'], 'realm': 'official_pacific'})
 ])
 
 VALID_DATABASES = PLAYERS_LIST_DATABASES.keys()

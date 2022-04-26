@@ -434,22 +434,22 @@ def get_players_by_steam_id(steam_id):
     return players
 
 
-def delete_player(database, username):
+def delete_player(realm, hash):
     """Delete a given RWR player from the official servers."""
-    if database not in constants.VALID_DATABASES:
-        raise ValueError('database is invalid')
-
     params = {
-        'db': database,
-        'search': username
+        'realm': realm,
+        'hash': hash
     }
 
-    _call(
+    xml_content = _call(
         app.config['RWR_ACCOUNTS_DELETE_ENDPOINT'],
+        parser='xml',
         params=params,
         auth=app.config['RWR_ACCOUNTS_ENDPOINTS_CREDENTIALS'],
         verify=False
     )
+
+    return dict(xml_content.attrib)
 
 
 @cache.memoize(timeout=app.config['PLAYERS_CACHE_TIMEOUT'])

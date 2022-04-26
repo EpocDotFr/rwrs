@@ -696,6 +696,21 @@ class RwrAccount(db.Model):
         """Determine is this RwrAccount object have at least one RwrAccountStat."""
         return RwrAccountStat.query.with_entities(func.count('*')).filter(RwrAccountStat.rwr_account_id == self.id).scalar() > 0
 
+    @memoized_property
+    def hash(self):
+        """Return the hashed representation of this account's username."""
+        ret = 5381
+
+        for x in self.username:
+            ret = (((ret << 5) + ret) + ord(x)) & 0xFFFFFFFF
+
+        return ret
+
+    @memoized_property
+    def realm(self):
+        """Return the official server realm this account is owned by."""
+        return rwr.constants.PLAYERS_LIST_DATABASES[self.database]['realm']
+
     @staticmethod
     def get_one_by_type_and_username(type, username, create_if_unexisting=False):
         """Return an RwrAccount given its type and username, optionally creating it if it doesn't exist."""
@@ -740,7 +755,10 @@ class RwrAccount(db.Model):
 
     def delete(self):
         """Delete this RWR account, both in RWRS and on the official servers."""
-        rwr.scraper.delete_player(self.database, self.username)
+        result = rwr.scraper.delete_player(self.realm, self.hash)
+
+        if 'ok' not in result or result['ok'] != '1':
+            raise Exception('Failed deletion response for {}@{}: {}'.format(self.hash, self.realm, result))
 
         db.session.delete(self)
 

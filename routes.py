@@ -198,7 +198,7 @@ def delete_rwr_account(rwr_account_id):
 
     if not player:
         flash(
-            'Player "{username}" wasn\'t found in the {database} players list'.format(username=rwr_account.username, database=rwr_account.database_name),
+            'Player "{username}" wasn\'t found in the {database} players list.'.format(username=rwr_account.username, database=rwr_account.database_name),
             'error'
         )
 
