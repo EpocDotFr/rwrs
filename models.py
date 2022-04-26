@@ -764,6 +764,8 @@ class RwrAccount(db.Model):
         cache.delete_memoized(rwr.scraper.search_player_by_username, self.database, self.username, check_exist_only=False)
         cache.delete_memoized(rwr.scraper.search_player_by_username, self.database, self.username, check_exist_only=True)
 
+        RwrAccountStat.query.filter_by(rwr_account_id=self.id).delete()
+
         db.session.delete(self)
 
     def __repr__(self):
