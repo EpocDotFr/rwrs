@@ -70,7 +70,7 @@
                                                 </div>
                                             {%- endif -%}
 
-                                            {{ macros.player_name(rwr_account.username, raw=True, link=True, database=database, popover_url=True) }}{% if rwr_account.pending_delete %} <i class="fas fa-times help" title="This account is pending deletion"></i>{% endif -%}
+                                            {{ macros.player_name(rwr_account.username, raw=True, link=True, database=database, popover_url=True) }}{% if user.id == current_user.id and rwr_account.pending_delete %} <i class="fas fa-times help" title="This account is pending deletion"></i>{% endif -%}
                                         </td>
                                     </tr>
                                 {%- else -%}
