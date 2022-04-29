@@ -754,20 +754,20 @@ class RwrAccount(db.Model):
 
         return rwr_accounts
 
-    def delete(self):
-        """Delete this RWR account, both in RWRS and on the official servers."""
-        result = rwr.scraper.delete_player(self.realm, self.hash)
-
-        if 'ok' not in result or result['ok'] != '1':
-            raise Exception('Failed deletion response for {}@{}: {}'.format(self.hash, self.realm, result))
-
-        cache.delete_memoized(rwr.scraper.get_players_by_steam_id, self.user.steam_id)
-        cache.delete_memoized(rwr.scraper.search_player_by_username, self.database, self.username, check_exist_only=False)
-        cache.delete_memoized(rwr.scraper.search_player_by_username, self.database, self.username, check_exist_only=True)
-
-        RwrAccountStat.query.filter_by(rwr_account_id=self.id).delete()
-
-        db.session.delete(self)
+    # def delete(self):
+    #     """Delete this RWR account, both in RWRS and on the official servers."""
+    #     result = rwr.scraper.delete_player(self.realm, self.hash)
+    #
+    #     if 'ok' not in result or result['ok'] != '1':
+    #         raise Exception('Failed deletion response for {}@{}: {}'.format(self.hash, self.realm, result))
+    #
+    #     cache.delete_memoized(rwr.scraper.get_players_by_steam_id, self.user.steam_id)
+    #     cache.delete_memoized(rwr.scraper.search_player_by_username, self.database, self.username, check_exist_only=False)
+    #     cache.delete_memoized(rwr.scraper.search_player_by_username, self.database, self.username, check_exist_only=True)
+    #
+    #     RwrAccountStat.query.filter_by(rwr_account_id=self.id).delete()
+    #
+    #     db.session.delete(self)
 
     def __repr__(self):
         return 'RwrAccount:{}'.format(self.id)

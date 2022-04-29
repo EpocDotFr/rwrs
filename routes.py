@@ -208,8 +208,14 @@ def delete_rwr_account(rwr_account_id):
 
     if form.validate_on_submit():
         try:
-            rwr_account.delete()
+            result = rwr.scraper.delete_player(rwr_account.realm, rwr_account.hash)
 
+            if 'ok' not in result or result['ok'] != '1':
+                raise Exception('Failed deletion response for {}@{}: {}'.format(rwr_account.hash, rwr_account.realm, result))
+
+            rwr_account.pending_delete = True
+
+            db.session.add(rwr_account)
             db.session.commit()
 
             flash('RWR account successfully deleted.', 'success')
