@@ -403,8 +403,6 @@ class User(db.Model, UserMixin):
         if not app.config['RWR_ACCOUNTS_BY_STEAM_ID_ENDPOINT']:
             return
 
-        cache.delete_memoized(rwr.scraper.get_players_by_steam_id, self.steam_id)
-
         players = rwr.scraper.get_players_by_steam_id(self.steam_id)
 
         if not players:

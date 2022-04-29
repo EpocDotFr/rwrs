@@ -332,7 +332,7 @@ def delete_rwr_accounts_pending_deletion():
 
     click.echo('Fetching accounts...')
 
-    rwr_account_ids = [r[0]for r in RwrAccount.query.with_entities(RwrAccount.id).filter(RwrAccount.pending_delete.is_(True)).all()]
+    rwr_account_ids = [r[0] for r in RwrAccount.query.with_entities(RwrAccount.id).filter(RwrAccount.pending_delete.is_(True)).all()]
 
     click.echo('Deleting accounts...')
 
