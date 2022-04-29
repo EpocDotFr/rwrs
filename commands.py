@@ -325,6 +325,27 @@ def save_players_stats(reset):
 
 @app.cli.command()
 @check_maintenance
+def delete_rwr_accounts_pending_deletion():
+    """Delete RWR accounts which are pending deletion."""
+    from models import RwrAccount, RwrAccountStat
+    from rwrs import db
+
+    click.echo('Fetching accounts...')
+
+    rwr_account_ids = [r[0]for r in RwrAccount.query.with_entities(RwrAccount.id).filter(RwrAccount.pending_delete.is_(True)).all()]
+
+    click.echo('Deleting accounts...')
+
+    RwrAccountStat.query.filter(RwrAccountStat.rwr_account_id.in_(rwr_account_ids)).delete()
+    RwrAccount.query.filter(RwrAccount.id.in_(rwr_account_ids)).delete()
+
+    db.session.commit()
+
+    click.secho('Done', fg='green')
+
+
+@app.cli.command()
+@check_maintenance
 def compute_promotions():
     """Compute promotions for all players."""
     from models import RwrAccount, RwrAccountStat
