@@ -406,7 +406,6 @@ def get_players(database, sort=constants.PlayersSort.SCORE.value, target=None, s
     return players
 
 
-@cache.memoize(timeout=app.config['PLAYERS_CACHE_TIMEOUT'])
 def get_players_by_steam_id(steam_id):
     """Get the list of RWR usernames linked to a given Steam ID. Both Invasion and WWII DLCs databases are queried."""
     steam_id_parsed = SteamID(steam_id)

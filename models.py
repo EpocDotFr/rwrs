@@ -424,9 +424,9 @@ class User(db.Model, UserMixin):
                 if user_rwr_account.username in usernames:
                     continue
 
-                user_rwr_account.user = None
+                RwrAccountStat.query.filter(RwrAccountStat.rwr_account_id == user_rwr_account.id).delete()
 
-                db.session.add(user_rwr_account)
+                db.session.delete(user_rwr_account)
 
     def get_rwr_accounts_by_type(self, type):
         """Return the RwrAccounts linked to this user, filtered by account type."""
