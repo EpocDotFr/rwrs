@@ -191,7 +191,7 @@ def remove_friend(username):
 def delete_rwr_account(rwr_account_id):
     rwr_account = RwrAccount.query.get(rwr_account_id)
 
-    if not rwr_account or not current_user.owns_rwr_account(rwr_account):
+    if not rwr_account or not current_user.owns_rwr_account(rwr_account) or rwr_account.pending_delete:
         abort(404)
 
     player = rwr.scraper.search_player_by_username(rwr_account.database, rwr_account.username)

@@ -64,13 +64,13 @@
                                 {%- for rwr_account in rwr_accounts_by_type -%}
                                     <tr>
                                         <td>
-                                            {%- if user.id == current_user.id -%}
+                                            {%- if user.id == current_user.id and not rwr_account.pending_delete -%}
                                                 <div class="actions fr">
                                                     <span class="txtred"><a href="{{ url_for('delete_rwr_account', rwr_account_id=rwr_account.id) }}" title="Delete this RWR account"><i class="fas fa-trash"></i></a></span>
                                                 </div>
                                             {%- endif -%}
 
-                                            {{ macros.player_name(rwr_account.username, raw=True, link=True, database=database, popover_url=True) }}
+                                            {{ macros.player_name(rwr_account.username, raw=True, link=True, database=database, popover_url=True) }}{% if rwr_account.pending_delete %} <i class="fas fa-times help" title="This account is pending deletion"></i>{% endif -%}
                                         </td>
                                     </tr>
                                 {%- else -%}
