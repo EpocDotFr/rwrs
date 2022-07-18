@@ -4,6 +4,7 @@ Flask-SQLAlchemy
 Flask-Migrate
 Flask-Assets
 Flask-Discord-Interactions
+Flask-Admin
 mysqlclient
 simplejson
 Flask-Login

@@ -13,6 +13,7 @@ from flask_login import LoginManager
 from flask_migrate import Migrate
 from flask_openid import OpenID
 from flask_caching import Cache
+from flask_admin import Admin
 from flask import Flask
 import bugsnag
 import math
@@ -76,6 +77,7 @@ assets = Environment(app)
 login_manager = LoginManager(app)
 oid = OpenID(app)
 discord_interactions = DiscordInteractions(app)
+admin = Admin(app, name='RWRS Admin', template_mode='bootstrap4', url='/manage')
 
 if has_debug_toolbar_ext:
     toolbar = DebugToolbarExtension(app)
@@ -131,3 +133,4 @@ import commands
 import discord.commands
 import hooks
 import api
+import admin
