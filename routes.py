@@ -263,6 +263,10 @@ def api_home():
 @app.route('/players')
 def players_list_without_db():
     database = request.args.get('database', 'invasion')
+
+    if database not in rwr.constants.VALID_DATABASES:
+        database = 'invasion'
+
     username = request.args.get('username')
 
     if username:
@@ -276,28 +280,35 @@ def players_list_without_db():
 
 @app.route('/players/<any({}):database>'.format(rwr.constants.VALID_DATABASES_STRING_LIST))
 def players_list(database):
-    args = request.args.to_dict()
+    sort = request.args.get('sort', rwr.constants.PlayersSort.SCORE.value)
 
-    args['sort'] = args.get('sort', rwr.constants.PlayersSort.SCORE.value)
+    try:
+        rwr.constants.PlayersSort(sort)
+    except ValueError:
+        sort = rwr.constants.PlayersSort.SCORE.value
 
-    if not args.get('limit') or int(args.get('limit')) > app.config['LIST_PAGE_SIZES'][-1]:
-        args['limit'] = app.config['LIST_PAGE_SIZES'][0]
-    else:
-        args['limit'] = int(args.get('limit'))
+    target = request.args.get('target')
 
-    if args.get('target'):
-        args['target'] = args.get('target').upper()
+    if target:
+        target = target.upper()
+
+    start = request.args.get('start', 0, type=int)
+
+    limit = request.args.get('limit', app.config['LIST_PAGE_SIZES'][0], type=int)
+
+    if not limit or limit > app.config['LIST_PAGE_SIZES'][-1]:
+        limit = app.config['LIST_PAGE_SIZES'][0]
 
     players = rwr.scraper.get_players(
         database,
-        sort=args['sort'],
-        target=args['target'] if args.get('target') else None,
-        start=int(args['start']) if args.get('start') else 0,
-        limit=args['limit']
+        sort=sort,
+        target=target,
+        start=start,
+        limit=limit
     )
 
-    if args.get('target') and not players:
-        flash(ERROR_PLAYER_NOT_FOUND.format(username=args.get('target'), database=rwr.utils.get_database_name(database)), 'error')
+    if target and not players:
+        flash(ERROR_PLAYER_NOT_FOUND.format(username=target, database=rwr.utils.get_database_name(database)), 'error')
 
         return redirect(url_for('players_list', database=database))
 
@@ -307,6 +318,13 @@ def players_list(database):
         player.set_playing_on_server(servers)
 
     g.LAYOUT = 'large'
+
+    args = {
+        'sort': sort,
+        'target': target,
+        'start': start,
+        'limit': limit,
+    }
 
     return render_template(
         'players/list.html',
@@ -339,7 +357,7 @@ def player_details(database, username, tab=None):
         if tab == 'stats-history':
             g.LAYOUT = 'large'
 
-            per_page = request.args.get('limit', type=int)
+            per_page = request.args.get('limit', app.config['LIST_PAGE_SIZES'][0], type=int)
 
             if not per_page or per_page > app.config['LIST_PAGE_SIZES'][-1]:
                 per_page = app.config['LIST_PAGE_SIZES'][0]
