@@ -14,12 +14,16 @@
 {%- endblock %}
 
 {% block jsfiles %}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.6.1/pikaday.min.js"></script>
+    {% if player.has_stats and player_to_compare_with.has_stats %}
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.6.1/pikaday.min.js"></script>
+    {% endif %}
 {% endblock %}
 
 {% block cssfiles %}
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.6.1/css/pikaday.min.css">
+    {% if player.has_stats and player_to_compare_with.has_stats %}
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.6.1/css/pikaday.min.css">
+    {% endif %}
 {% endblock %}
 
 {% set canonical_url = url_for('players_compare', database=request.view_args.get('database'), username=player.username, username_to_compare_with=player_to_compare_with.username, date=date.format('YYYY-MM-DD') if date, _external=True) %}
@@ -175,25 +179,27 @@
 
     {{ macros.stats_notice() }}
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Date picker
-            var players_compare_date_input = $('#players_compare_date');
-            var players_compare_date_value_input = $('#players_compare_date_value');
+    {% if player.has_stats and player_to_compare_with.has_stats %}
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // Date picker
+                var players_compare_date_input = document.querySelector('#players_compare_date');
+                var players_compare_date_value_input = document.querySelector('#players_compare_date_value');
 
-            var players_compare_datepicker = new Pikaday({
-                field: players_compare_date_input.get(0),
-                format: 'MMMM D, YYYY',
-                minDate: moment('2017-09-30').toDate(), // Date when rwrtrack started recording stats
-                maxDate: moment().subtract(1, 'day').toDate(),
-                onSelect: function () {
-                    players_compare_date_value_input.val(this.getMoment().format('YYYY-MM-DD'));
+                var players_compare_datepicker = new Pikaday({
+                    field: players_compare_date_input,
+                    format: 'MMMM D, YYYY',
+                    minDate: moment('2017-09-30').toDate(), // Date when rwrtrack started recording stats
+                    maxDate: moment().subtract(1, 'day').toDate(),
+                    onSelect: function () {
+                        players_compare_date_value_input.value = this.getMoment().format('YYYY-MM-DD');
+                    }
+                });
+
+                if (players_compare_date_value_input.value) {
+                    players_compare_datepicker.setMoment(moment(players_compare_date_value_input.value));
                 }
             });
-
-            if (players_compare_date_value_input.val()) {
-                players_compare_datepicker.setMoment(moment(players_compare_date_value_input.val()));
-            }
-        });
-    </script>
+        </script>
+    {% endif %}
 {% endblock %}
