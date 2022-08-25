@@ -406,12 +406,15 @@ def get_players(database, sort=constants.PlayersSort.SCORE.value, target=None, s
     return players
 
 
-def get_players_by_steam_id(steam_id):
+def get_players_by_steam_id(steam_id, only_this_database=None):
     """Get the list of RWR usernames linked to a given Steam ID. Both Invasion and WWII DLCs databases are queried."""
     steam_id_parsed = SteamID(steam_id)
     players = {}
 
     for database in constants.VALID_DATABASES:
+        if only_this_database and database != only_this_database:
+            continue
+
         params = {
             'db': database,
             'key': 'sid',

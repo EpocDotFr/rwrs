@@ -86,9 +86,12 @@ def user_profile(user_id, slug):
     if not slug or slug != user.slug:
         return redirect(user.link, code=301)
 
+    sync_rwr_accounts_endpoints = {database: url_for('sync_rwr_accounts', database=database) for database in rwr.constants.VALID_DATABASES}
+
     return render_template(
         'users/profile.html',
-        user=user
+        user=user,
+        sync_rwr_accounts_endpoints=sync_rwr_accounts_endpoints
     )
 
 
@@ -184,6 +187,28 @@ def remove_friend(username):
         flash('Friend not found.', 'error')
 
     return redirect(helpers.get_next_url())
+
+
+@app.route('/my-rwr-accounts/sync/<any({}):database>'.format(rwr.constants.VALID_DATABASES_STRING_LIST), methods=['POST'])
+@login_required
+def sync_rwr_accounts(database):
+    status = 200
+
+    try:
+        current_user.sync_rwr_accounts(database)
+
+        db.session.commit()
+
+        result = {'status': 'success', 'data': {}}
+
+        flash('{} RWR accounts successfully sync\'ed.'.format(rwr.utils.get_database_name(database)), 'success')
+    except Exception as e:
+        bugsnag.notify(e)
+
+        status = 500
+        result = {'status': 'failure', 'data': {'message': str(e)}}
+
+    return jsonify(result), status
 
 
 @app.route('/my-rwr-accounts/delete/<int:rwr_account_id>', methods=['GET', 'POST'])

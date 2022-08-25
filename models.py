@@ -398,12 +398,12 @@ class User(db.Model, UserMixin):
     rwr_accounts = db.relationship('RwrAccount', backref='user', lazy=True, foreign_keys='RwrAccount.user_id')
     friends = db.relationship('UserFriend', backref='user', lazy=True, foreign_keys='UserFriend.user_id')
 
-    def sync_rwr_accounts(self):
+    def sync_rwr_accounts(self, only_this_database=None):
         """Synchronize all RWR accounts owned by this user with the ranked (official) players list."""
         if not app.config['RWR_ACCOUNTS_BY_STEAM_ID_ENDPOINT']:
             return
 
-        players = rwr.scraper.get_players_by_steam_id(self.steam_id)
+        players = rwr.scraper.get_players_by_steam_id(self.steam_id, only_this_database)
 
         if not players:
             return

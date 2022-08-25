@@ -8,7 +8,11 @@
 
 {% block jsfiles %}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tippy.js/3.1.3/tippy.min.js"></script>
-    {% assets 'js_popovers' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
+    {%- if current_user.is_authenticated and user.id == current_user.id -%}
+        {% assets 'js_popovers_rwr_accounts_sync' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
+    {%- else -%}
+        {% assets 'js_popovers' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
+    {%- endif -%}
 {% endblock %}
 
 {% block cssfiles %}
@@ -95,6 +99,11 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             popoversFeature.initOnUserProfile();
+
+            {%- if current_user.is_authenticated and user.id == current_user.id -%}
+                rwrAccountsSync.endpoints = {{ sync_rwr_accounts_endpoints|tojson }};
+                rwrAccountsSync.init();
+            {%- endif -%}
         });
     </script>
 {% endblock %}

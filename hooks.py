@@ -47,14 +47,14 @@ def create_or_login(resp):
 
     try:
         user.sync_rwr_accounts()
+
+        db.session.commit()
     except Exception as e:
         bugsnag.notify(e)
 
         flash('An error occured while syncing your RWR accounts. Please try again.', 'error')
 
         return redirect(url_for('sign_in'))
-
-    db.session.commit()
 
     login_user(user, remember=True)
 
