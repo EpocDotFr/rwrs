@@ -116,7 +116,9 @@
 
     {%- if request.args.get('view') == 'extended' -%}
         <script>
-            popoversFeature.initOnServersList();
+            document.addEventListener('DOMContentLoaded', function() {
+                popoversFeature.initOnServersList();
+            });
         </script>
     {%- endif -%}
 {% endblock %}

@@ -55,7 +55,9 @@
     </div>
 
     <script>
-        regeneratePat.endpoint = '{{ url_for('regenerate_pat') }}';
-        regeneratePat.init();
+        document.addEventListener('DOMContentLoaded', function() {
+            regeneratePat.endpoint = '{{ url_for('regenerate_pat') }}';
+            regeneratePat.init();
+        });
     </script>
 {% endblock %}

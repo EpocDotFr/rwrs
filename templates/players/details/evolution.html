@@ -24,6 +24,8 @@
 {{ macros.stats_notice() }}
 
 <script>
-    chartsFeature.player_evolution_data = {{ player_evolution_data|tojson }};
-    chartsFeature.initOnPlayerEvolution();
+    document.addEventListener('DOMContentLoaded', function() {
+        chartsFeature.player_evolution_data = {{ player_evolution_data|tojson }};
+        chartsFeature.initOnPlayerEvolution();
+    });
 </script>

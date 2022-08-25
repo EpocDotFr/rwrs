@@ -62,8 +62,10 @@
     </div>
 
     <script>
-        chartsFeature.players_data = {{ players_data|tojson }};
-        chartsFeature.servers_data = {{ servers_data|tojson }};
-        chartsFeature.initOnHome();
+        document.addEventListener('DOMContentLoaded', function() {
+            chartsFeature.players_data = {{ players_data|tojson }};
+            chartsFeature.servers_data = {{ servers_data|tojson }};
+            chartsFeature.initOnHome();
+        });
     </script>
 {% endblock %}

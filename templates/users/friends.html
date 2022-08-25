@@ -43,7 +43,9 @@
 
     <script>
         {%- if current_user.friends_ordered_by_username -%}
-            popoversFeature.initOnMyFriends();
+            document.addEventListener('DOMContentLoaded', function() {
+                popoversFeature.initOnMyFriends();
+            });
         {%- endif -%}
     </script>
 {% endblock %}

@@ -184,14 +184,16 @@
 
     {%- if server.is_dedicated or server.is_ranked -%}
         <script>
-            {%- if server.is_dedicated -%}
-                chartsFeature.server_players_data = {{ server_players_data|tojson }};
-                chartsFeature.initOnServerDetails();
-            {%- endif -%}
+            document.addEventListener('DOMContentLoaded', function() {
+                {%- if server.is_dedicated -%}
+                    chartsFeature.server_players_data = {{ server_players_data|tojson }};
+                    chartsFeature.initOnServerDetails();
+                {%- endif -%}
 
-            {%- if server.is_ranked -%}
-                popoversFeature.initOnServerDetails();
-            {%- endif -%}
+                {%- if server.is_ranked -%}
+                    popoversFeature.initOnServerDetails();
+                {%- endif -%}
+            });
         </script>
     {%- endif -%}
 {% endblock %}
