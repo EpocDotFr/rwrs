@@ -15,11 +15,11 @@ rwrAccountDeletion = {
         this.$rwr_account_deletion_form.on('submit', function(e) {
             if (submitting) {
                 e.preventDefault();
+            } else {
+                self.$rwr_account_deletion_form_submit.prop('disabled', true);
+
+                submitting = true;
             }
-
-            self.$rwr_account_deletion_form_submit.prop('disabled', true);
-
-            submitting = true;
         });
     }
 };

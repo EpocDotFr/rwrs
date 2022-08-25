@@ -90,7 +90,7 @@
 
             {%- if current_user.is_authenticated and user.id == current_user.id -%}
                 <div class="small txtcenter txtgrey">
-                    Don't see one of your accounts? Try to sync them using the appropriate <i class="fas fa-sync"></i> button.<br>Still not visible? Try again tomorrow, as newly-created accounts may only be sync'ed the day after.<br>Doesn't work? Please get in touch on Discord.
+                    Don't see one of your accounts? Try to sync them using the appropriate <i class="fas fa-sync"></i> button.<br>Still not visible? Try again tomorrow, as newly-created accounts may only be sync'ed the day after.<br>Doesn't work at all? Please <a href="{{ url_for('feedback') }}">get in touch</a>.
                 </div>
             {%- endif -%}
         </div>
