@@ -57,14 +57,14 @@
                         <table class="mbs {{ 'striped' if rwr_accounts_by_type }} rwr-accounts-list">
                             <thead>
                                 <tr>
-                                    <th>RWR {{ database_info.name }} accounts</th>
+                                    <th>{{ database_info.name }} RWR accounts{% if current_user.is_authenticated and user.id == current_user.id %} <button class="btn sync-rwr-accounts" data-database="{{ database }}" title="Sync your {{ database_info.name }} RWR accounts now"><i class="fas fa-sync"></i></button>{% endif %}</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {%- for rwr_account in rwr_accounts_by_type -%}
                                     <tr>
                                         <td>
-                                            {%- if user.id == current_user.id and not rwr_account.pending_delete -%}
+                                            {%- if current_user.is_authenticated and user.id == current_user.id and not rwr_account.pending_delete -%}
                                                 <div class="actions fr">
                                                     <span class="txtred"><a href="{{ url_for('delete_rwr_account', rwr_account_id=rwr_account.id) }}" title="Delete this RWR account"><i class="fas fa-trash"></i></a></span>
                                                 </div>
