@@ -7,6 +7,10 @@
 
 {% set meta_title = 'Delete ' + rwr_account.username %}
 
+{% block jsfiles %}
+    {% assets 'js_rwr_account_deletion' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
+{% endblock %}
+
 {% block content %}
     <div class="txtcenter mts mbs">
         <p class="txtred big u-bold">Unexpected bad things will happen if you don't read this!</p>
@@ -22,13 +26,19 @@
         <p>Type <strong class="keep-spaces">{{ rwr_account.username }}</strong> to confirm:</p>
     </div>
 
-    <form method="post" action="{{ url_for('delete_rwr_account', rwr_account_id=rwr_account.id) }}">
+    <form method="post" action="{{ url_for('delete_rwr_account', rwr_account_id=rwr_account.id) }}" id="rwr-account-deletion-form">
         {{ form.csrf_token }}
 
         <fieldset class="pam">
             {{ macros.form_field(form.username_confirmation) }}
 
-            <p class="mtm txtcenter"><a href="{{ current_user.link }}" class="btn">Cancel</a> <button type="submit">I understand the consequences, delete this account</button></p>
+            <p class="mtm txtcenter"><a href="{{ current_user.link }}" class="btn">Cancel</a> <button type="submit" id="rwr-account-deletion-form-submit">I understand the consequences, delete this account</button></p>
         </fieldset>
     </form>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            rwrAccountDeletion.init();
+        });
+    </script>
 {% endblock %}
