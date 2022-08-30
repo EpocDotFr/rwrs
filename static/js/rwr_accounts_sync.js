@@ -29,13 +29,13 @@ rwrAccountsSync = {
             headers: {
                 'Content-Type': 'application/json',
             }
-        }).then(function (response) {
+        }).then(function(response) {
             if (response.ok) {
                 return response.json();
             } else {
                 return Promise.reject(response);
             }
-        }).then(function (response) {
+        }).then(function(response) {
             if (response.status != 'success') {
                 alert(response.data.message);
             } else {
@@ -43,7 +43,7 @@ rwrAccountsSync = {
             }
 
             button.disabled = false;
-        }).catch(function (error) {
+        }).catch(function(error) {
             alert(error);
 
             button.disabled = false;

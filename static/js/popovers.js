@@ -59,17 +59,17 @@ popoversFeature = {
         optionsToUse.onShow = function(tip) {
             fetch(tip.reference.dataset.popoverUrl, {
                 method: 'GET'
-            }).then(function (response) {
+            }).then(function(response) {
                 if (response.ok) {
                     return response.text();
                 } else {
                     return Promise.reject(response);
                 }
-            }).then(function (response) {
+            }).then(function(response) {
                 if (tip.state.isVisible) {
                     tip.setContent(response);
                 }
-            }).catch(function (error) {
+            }).catch(function(error) {
                 tip.setContent('Error fetching popover content.');
             });
         };

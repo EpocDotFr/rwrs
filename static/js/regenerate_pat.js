@@ -32,13 +32,13 @@ regeneratePat = {
             headers: {
                 'Content-Type': 'application/json',
             }
-        }).then(function (response) {
+        }).then(function(response) {
             if (response.ok) {
                 return response.json();
             } else {
                 return Promise.reject(response);
             }
-        }).then(function (response) {
+        }).then(function(response) {
             if (response.status != 'success') {
                 alert(response.data.message);
             } else {
@@ -46,7 +46,7 @@ regeneratePat = {
             }
 
             self.$regenerate_pat_button.disabled = false;
-        }).catch(function (error) {
+        }).catch(function(error) {
             alert(error);
 
             self.$regenerate_pat_button.disabled = false;

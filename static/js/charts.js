@@ -202,6 +202,8 @@ chartsFeature = {
                 't': item.t,
                 'label': item.ptr
             };
+        }).filter(function(item) {
+            return !!item;
         });
     }
 };
