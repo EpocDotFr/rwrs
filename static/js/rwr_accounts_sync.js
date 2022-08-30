@@ -8,11 +8,11 @@ rwrAccountsSync = {
     init: function() {
         var self = this;
 
-        this.$sync_rwr_accounts_buttons = $('button.sync-rwr-accounts');
+        this.$sync_rwr_accounts_buttons = document.querySelectorAll('button.sync-rwr-accounts');
 
-        this.$sync_rwr_accounts_buttons.each(function() {
-            $(this).on('click', function() {
-                self.sync($(this));
+        this.$sync_rwr_accounts_buttons.forEach(function(el) {
+            el.addEventListener('click', function() {
+                self.sync(this);
             });
         });
     },
@@ -20,9 +20,9 @@ rwrAccountsSync = {
      * Actually sync RWR accounts.
      */
    sync: function(button) {
-        button.prop('disabled', true);
+        button.disabled = true;
 
-        var database = button.data('database');
+        var database = button.dataset.database;
 
         $.ajax({
             type: 'POST',
@@ -46,7 +46,7 @@ rwrAccountsSync = {
                 alert(message);
             },
             complete: function() {
-                button.prop('disabled', false);
+                button.disabled = false;
             }
         });
     }

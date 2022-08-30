@@ -183,21 +183,21 @@
         <script>
             document.addEventListener('DOMContentLoaded', function() {
                 // Date picker
-                var players_compare_date_input = $('#players_compare_date');
-                var players_compare_date_value_input = $('#players_compare_date_value');
+                var players_compare_date_input = document.querySelector('#players_compare_date');
+                var players_compare_date_value_input = document.querySelector('#players_compare_date_value');
 
                 var players_compare_datepicker = new Pikaday({
-                    field: players_compare_date_input.get(0),
+                    field: players_compare_date_input,
                     format: 'MMMM D, YYYY',
                     minDate: moment('2017-09-30').toDate(), // Date when rwrtrack started recording stats
                     maxDate: moment().subtract(1, 'day').toDate(),
                     onSelect: function () {
-                        players_compare_date_value_input.val(this.getMoment().format('YYYY-MM-DD'));
+                        players_compare_date_value_input.value = this.getMoment().format('YYYY-MM-DD');
                     }
                 });
 
-                if (players_compare_date_value_input.val()) {
-                    players_compare_datepicker.setMoment(moment(players_compare_date_value_input.val()));
+                if (players_compare_date_value_input.value) {
+                    players_compare_datepicker.setMoment(moment(players_compare_date_value_input.value));
                 }
             });
         </script>

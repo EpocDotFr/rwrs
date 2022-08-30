@@ -9,14 +9,14 @@ rwrAccountDeletion = {
         var self = this;
         var submitting = false;
 
-        this.$rwr_account_deletion_form = $('form#rwr-account-deletion-form');
-        this.$rwr_account_deletion_form_submit = $('button#rwr-account-deletion-form-submit');
+        this.$rwr_account_deletion_form = document.querySelector('form#rwr-account-deletion-form');
+        this.$rwr_account_deletion_form_submit = document.querySelector('button#rwr-account-deletion-form-submit');
 
-        this.$rwr_account_deletion_form.on('submit', function(e) {
+        this.$rwr_account_deletion_form.addEventListener('submit', function(e) {
             if (submitting) {
                 e.preventDefault();
             } else {
-                self.$rwr_account_deletion_form_submit.prop('disabled', true);
+                self.$rwr_account_deletion_form_submit.disabled = true;
 
                 submitting = true;
             }
