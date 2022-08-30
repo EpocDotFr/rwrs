@@ -24,30 +24,29 @@ rwrAccountsSync = {
 
         var database = button.dataset.database;
 
-        $.ajax({
-            type: 'POST',
-            url: this.endpoints[database],
-            contentType: 'application/json',
-            success: function(response, status, xhr) {
-                if (response.status != 'success') {
-                    alert(response.data.message);
-                } else {
-                    window.location.href = window.location.href;
-                }
-            },
-            error: function(xhr, errorType, error) {
-                try {
-                    var response = JSON.parse(xhr.responseText);
-                    message = response.data.message;
-                } catch (e) {
-                    message = error;
-                }
-
-                alert(message);
-            },
-            complete: function() {
-                button.disabled = false;
+        fetch(this.endpoints[database], {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
             }
+        }).then(function (response) {
+            if (response.ok) {
+                return response.json();
+            } else {
+                return Promise.reject(response);
+            }
+        }).then(function (response) {
+            if (response.status != 'success') {
+                button.disabled = false;
+
+                alert(response.data.message);
+            } else {
+                window.location.href = window.location.href;
+            }
+        }).catch(function (error) {
+            button.disabled = false;
+
+            alert(error);
         });
     }
 };
