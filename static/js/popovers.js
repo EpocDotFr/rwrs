@@ -50,31 +50,34 @@ popoversFeature = {
     initPopover: function(elements, options) {
         var self = this;
 
-        var options = $.extend({}, self.defaultPopoverOptions, options, true);
+        var optionsToUse = {};
 
-        options.content = self.initialContent;
+        Object.assign(optionsToUse, self.defaultPopoverOptions, options);
 
-        options.onShow = function(tip) {
-            $.ajax({
-                type: 'GET',
-                url: document.querySelector(tip.reference).dataset.popoverUrl,
-                dataType: 'html',
-                cache: false,
-                success: function(response, status, xhr) {
-                    if (tip.state.isVisible) {
-                        tip.setContent(response);
-                    }
-                },
-                error: function(xhr, errorType, error) {
-                    tip.setContent('Error fetching popover content.');
+        optionsToUse.content = self.initialContent;
+
+        optionsToUse.onShow = function(tip) {
+            fetch(tip.reference.dataset.popoverUrl, {
+                method: 'GET'
+            }).then(function (response) {
+                if (response.ok) {
+                    return response.text();
+                } else {
+                    return Promise.reject(response);
                 }
+            }).then(function (response) {
+                if (tip.state.isVisible) {
+                    tip.setContent(response);
+                }
+            }).catch(function (error) {
+                tip.setContent('Error fetching popover content.');
             });
         };
 
-        options.onHidden = function(tip) {
+        optionsToUse.onHidden = function(tip) {
             tip.setContent(self.initialContent);
         };
 
-        return tippy(elements, options);
+        return tippy(elements, optionsToUse);
     }
 };

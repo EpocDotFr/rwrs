@@ -27,30 +27,29 @@ regeneratePat = {
     regeneratePat: function() {
         var self = this;
 
-        $.ajax({
-            type: 'POST',
-            url: self.endpoint,
-            contentType: 'application/json',
-            success: function(response, status, xhr) {
-                if (response.status != 'success') {
-                    alert(response.data.message);
-                } else {
-                    self.$pat_input.value = response.data.new_pat;
-                }
-            },
-            error: function(xhr, errorType, error) {
-                try {
-                    var response = JSON.parse(xhr.responseText);
-                    message = response.data.message;
-                } catch (e) {
-                    message = error;
-                }
-
-                alert(message);
-            },
-            complete: function() {
-                self.$regenerate_pat_button.disabled = false;
+        fetch(this.endpoint, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
             }
-        });
+        }).then(function (response) {
+            if (response.ok) {
+                return response.json();
+            } else {
+                return Promise.reject(response);
+            }
+        }).then(function (response) {
+            if (response.status != 'success') {
+                alert(response.data.message);
+            } else {
+                self.$pat_input.value = response.data.new_pat;
+            }
+
+            self.$regenerate_pat_button.disabled = false;
+        }).catch(function (error) {
+            alert(error);
+
+            self.$regenerate_pat_button.disabled = false;
+       });
     }
 };

@@ -37,16 +37,16 @@ rwrAccountsSync = {
             }
         }).then(function (response) {
             if (response.status != 'success') {
-                button.disabled = false;
-
                 alert(response.data.message);
             } else {
                 window.location.href = window.location.href;
             }
-        }).catch(function (error) {
-            button.disabled = false;
 
+            button.disabled = false;
+        }).catch(function (error) {
             alert(error);
+
+            button.disabled = false;
         });
     }
 };

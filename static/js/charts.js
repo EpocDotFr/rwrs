@@ -162,13 +162,21 @@ chartsFeature = {
      * Initialize a chart with the given options.
      */
     createChart: function(options) {
-        MG.data_graphic($.extend({}, this.defaultChartOptions, options, true));
+        var optionsToUse = {};
+
+        Object.assign(optionsToUse, this.defaultChartOptions, options);
+
+        MG.data_graphic(optionsToUse);
     },
     /**
      * Initialize a "missing data" chart with the given options.
      */
     createMissingDataChart: function(options) {
-        this.createChart($.extend({}, this.missingDataChartOptions, options, true));
+        var optionsToUse = {};
+
+        Object.assign(optionsToUse, this.missingDataChartOptions, options);
+
+        this.createChart(optionsToUse);
     },
     /**
      * Converts dates in a list of objects.
@@ -177,7 +185,7 @@ chartsFeature = {
         var format = typeof format !== 'undefined' ? format : '%Y-%m-%dT%H:%M:%S';
         var to_date_object = d3.utcParse(format);
 
-        $.each(data, function(key, item) {
+        data.forEach(function(item) {
             item.t = to_date_object(item.t);
         });
     },
@@ -185,7 +193,7 @@ chartsFeature = {
      * Get the markers which will represent when the player has been promoted.
      */
     getPromotionMarkers: function(data) {
-        return $.map(data, function(item) {
+        return data.map(function(item) {
             if (!item.ptr) {
                 return null;
             }
