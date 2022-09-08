@@ -6,7 +6,8 @@ from rwrs import app
 
 
 class Server:
-    database = None
+    def __init__(self):
+        self.database = None
 
     @classmethod
     def load(cls, server_node):
@@ -195,9 +196,10 @@ class Server:
 
 
 class ServerMap:
-    name = None
-    has_minimap = False
-    has_preview = False
+    def __init__(self):
+        self.name = None
+        self.has_minimap = False
+        self.has_preview = False
 
     def __repr__(self):
         return 'ServerMap:' + self.id
@@ -228,19 +230,21 @@ class ServerMap:
 
 
 class ServerPlayers:
-    current = 0
-    max = 0
-    free = 0
-    list = []
+    def __init__(self):
+        self.current = 0
+        self.max = 0
+        self.free = 0
+        self.list = []
 
 
 class ServerLocation:
-    city_name = None
-    country_code = None
-    country_name = None
-    continent_code = None
-    continent_name = None
-    text = None
+    def __init__(self):
+        self.city_name = None
+        self.country_code = None
+        self.country_name = None
+        self.continent_code = None
+        self.continent_name = None
+        self.text = None
 
     def set_flags(self):
         if not self.country_code:

@@ -7,8 +7,9 @@ import helpers
 
 
 class Player:
-    playing_on_server = None
-    _rwr_account = None
+    def __init__(self):
+        self.playing_on_server = None
+        self._rwr_account = None
 
     @classmethod
     def load(cls, database, node, alternative=False):
@@ -286,9 +287,10 @@ class Player:
 
 
 class PlayerRank:
-    id = None
-    name = None
-    xp = 0
+    def __init__(self):
+        self.id = None
+        self.name = None
+        self.xp = 0
 
     def __repr__(self):
         return 'PlayerRank:' + self.id
