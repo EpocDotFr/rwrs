@@ -48,7 +48,6 @@ More informations on the two above can be found [here](http://flask.pocoo.org/do
   - `GRAPHS_DATA_CACHE_TIMEOUT` Cache duration of the graphs data, both the players and the servers ones (in seconds)
   - `STEAM_PLAYERS_CACHE_TIMEOUT` Cache duration of the total number of players (in seconds)
   - `STEAM_API_KEY` A [Steam API](https://steamcommunity.com/dev) key
-  - `PACIFIC_PLAYERS_RANKS_COUNTRY` Ranks image / name to show for the Pacific players stats (`us`, `jp`)
   - `MAX_NUM_OF_PLAYERS_TO_TRACK_STATS_FOR` How many players should RWRS track the stats for (top players storted by XP)
   - `DISCORD_CLIENT_ID` A Discord client ID
   - `DISCORD_PUBLIC_KEY` A Discord app public key
