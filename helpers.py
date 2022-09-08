@@ -4,7 +4,6 @@ from collections import OrderedDict
 from rwrs import app
 import misaka
 import json
-import os
 
 
 def humanize_seconds_to_days(seconds):
@@ -76,9 +75,6 @@ def merge_query_string_params(params):
 
 def load_json(file):
     """Load a JSON file."""
-    if not os.path.isfile(file):
-        raise FileNotFoundError('The {} file does not exists'.format(file))
-
     with open(file, 'r', encoding='utf-8') as f:
         return json.load(f, object_pairs_hook=OrderedDict)
 

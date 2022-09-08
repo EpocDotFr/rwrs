@@ -1,6 +1,7 @@
 from collections import OrderedDict
 from lxml import etree
 from glob import glob
+from PIL import Image
 from rwrs import app
 from . import utils
 import helpers
@@ -35,8 +36,6 @@ class MinimapsImageExtractor(BaseExtractor):
 
     def extract(self):
         """Actually run the extraction process."""
-        from PIL import Image
-
         minimaps_paths = []
 
         minimaps_paths.extend(glob(os.path.join(self.packages_dir, '*', 'maps', '*', 'map.png'))) # Maps in RWR game directory
@@ -138,33 +137,23 @@ class RanksExtractor(BaseExtractor):
 
     def extract(self):
         """Actually run the extraction process."""
-        # Only handle official ranks
-        ranks_files_paths = [
-            { # In Vanilla, ranks from all factions are the same, inspired from the US Army
-                'country': 'us',
-                'path': os.path.join(self.packages_dir, 'vanilla', 'factions', 'brown.xml'),
-                'game_type': 'vanilla'
-            },
-            { # In Pacific, US factions are the same as the Vanilla ones, so only parse IJA ranks
-                'country': 'jp',
-                'path': os.path.join(self.packages_dir, 'pacific', 'factions', 'ija.xml'),
-                'game_type': 'ww2_base'
-            },
-            { # In Edelweiss, Allies factions are the same as the VAnilla ones, so only parse Axis ranks
-                'country': 'de',
-                'path': os.path.join(self.packages_dir, 'edelweiss', 'factions', 'axis.xml'),
-                'game_type': 'ww2_base'
-            }
-        ]
+        ranks_files_paths = {
+            # In Vanilla, ranks from all factions are the same, so only parse Green's ones
+            'invasion': os.path.join(self.packages_dir, 'vanilla', 'factions', 'green.xml'),
+
+            # In WWII DLCs, ranks differs between factions, but we want to align with Vanilla's ones, so only parse
+            # Pacific/USMC's ones as images/names are the same except there's more ranks in Vanilla
+            'pacific': os.path.join(self.packages_dir, 'pacific', 'factions', 'usmc.xml')
+        }
 
         data = OrderedDict()
 
-        for ranks_file_path in ranks_files_paths:
-            click.echo(ranks_file_path['country'])
+        for database, ranks_file_path in ranks_files_paths.items():
+            click.echo(database)
 
-            data[ranks_file_path['country']] = OrderedDict()
+            data[database] = OrderedDict()
 
-            faction_xml = etree.parse(ranks_file_path['path'])
+            faction_xml = etree.parse(ranks_file_path)
             faction_xml_root = faction_xml.getroot()
 
             i = 0
@@ -172,31 +161,29 @@ class RanksExtractor(BaseExtractor):
             for rank_node in faction_xml_root.iterchildren('rank'):
                 rank_name = rank_node.get('name')
 
-                click.echo(rank_name)
+                click.echo(' ' + rank_name)
 
-                data[ranks_file_path['country']][i] = OrderedDict([
+                data[database][i] = OrderedDict([
                     ('name', rank_name),
                     ('xp', int(float(rank_node.get('xp')) * 10000))
                 ])
 
-                self._extract_images(i, ranks_file_path['game_type'], ranks_file_path['country'], rank_node.find('hud_icon').get('filename'))
+                # Only extract rank images for invasion as images are the same used by WWII DLCs
+                if database == 'invasion':
+                    self._extract_images(i, rank_node.find('hud_icon').get('filename'))
 
                 i += 1
 
         helpers.save_json(app.config['RANKS_DATA_FILE'], data)
 
-    def _extract_images(self, rank_id, game_type, country, filename):
-        from PIL import Image
-
-        rank_image = Image.open(os.path.join(self.packages_dir, game_type, 'textures', filename))
+    def _extract_images(self, rank_id, filename):
+        rank_image = Image.open(os.path.join(self.packages_dir, 'vanilla', 'textures', filename))
 
         # Only get the actual content of the image
         rank_image = rank_image.crop(rank_image.convert('RGBa').getbbox())
 
         # Generate the desired images
         for image_size in self.images_sizes:
-            click.echo(image_size['size'])
-
             desired_size_image = rank_image.copy()
             desired_size_image.thumbnail(image_size['size'], Image.LANCZOS)
 
@@ -208,7 +195,7 @@ class RanksExtractor(BaseExtractor):
             new_rank_image = Image.new('RGBA', image_size['size'])
             new_rank_image.paste(desired_size_image, paste_pos)
 
-            new_rank_image_dir = os.path.join(app.config['RANKS_IMAGES_DIR'], country)
+            new_rank_image_dir = app.config['RANKS_IMAGES_DIR']
 
             if not os.path.isdir(new_rank_image_dir):
                 os.makedirs(new_rank_image_dir)
