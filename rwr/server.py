@@ -6,9 +6,6 @@ from rwrs import app
 
 
 class Server:
-    def __init__(self):
-        self.database = None
-
     @classmethod
     def load(cls, server_node):
         """Load a server data from an XML node from the servers list page."""
