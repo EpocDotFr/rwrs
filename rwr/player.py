@@ -288,7 +288,6 @@ class Player:
 class PlayerRank:
     id = None
     name = None
-    alternative_name = None
     xp = 0
 
     def __repr__(self):
@@ -296,10 +295,7 @@ class PlayerRank:
 
     @memoized_property
     def name_display(self):
-        return '{}{}'.format(
-            self.name,
-            ' (' + self.alternative_name + ')' if self.alternative_name else ''
-        )
+        return self.name
 
     def set_images_and_icons(self):
         """Set the relative and absolute URLs to the images and icon of this rank."""

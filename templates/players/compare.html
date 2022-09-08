@@ -67,10 +67,10 @@
         <tbody>
             <tr>
                 <th>Rank</th>
-                <td class="txtcenter">{{ macros.rank_image(player.rank, icon=True) }} {{ player.rank.name }}{% if player.rank.alternative_name %} <small class="txtgrey">({{ player.rank.alternative_name }})</small>{% endif %}</td>
+                <td class="txtcenter">{{ macros.rank_image(player.rank, icon=True) }} {{ player.rank.name }}</td>
                 <td class="txtcenter w50p">{{ macros.compare_ranks(player, player_to_compare_with) }}</td>
                 <td class="txtcenter w50p">{{ macros.compare_ranks(player_to_compare_with, player) }}</td>
-                <td class="txtcenter">{{ macros.rank_image(player_to_compare_with.rank, icon=True) }} {{ player_to_compare_with.rank.name }}{% if player_to_compare_with.rank.alternative_name %} <small class="txtgrey">({{ player_to_compare_with.rank.alternative_name }})</small>{% endif %}</td>
+                <td class="txtcenter">{{ macros.rank_image(player_to_compare_with.rank, icon=True) }} {{ player_to_compare_with.rank.name }}</td>
             </tr>
             <tr>
                 <th>XP</th>

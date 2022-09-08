@@ -151,7 +151,6 @@ player_stats_list.update(OrderedDict([
 player_rank = OrderedDict([
     ('id', fields.Integer),
     ('name', fields.String),
-    ('alternative_name', fields.String),
     ('required_xp', fields.Integer(attribute='xp')),
     ('image_url', fields.String(attribute='image_absolute')),
     ('icon_url', fields.String(attribute='icon_absolute')),

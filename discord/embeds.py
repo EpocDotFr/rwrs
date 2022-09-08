@@ -35,9 +35,8 @@ def create_player_message_embed(player, description_addendum=None):
 
     embed.fields.append(Field(
         'Current rank',
-        '{}\n{}{} XP'.format(
+        '{}\n{} XP'.format(
             player.rank.name,
-            '(' + player.rank.alternative_name + ')\n' if player.rank.alternative_name else '',
             player.xp_display
         ),
         inline=True
@@ -45,9 +44,8 @@ def create_player_message_embed(player, description_addendum=None):
 
     embed.fields.append(Field(
         'Next rank',
-        '{}\n{}{} XP'.format(
+        '{}\n{} XP'.format(
             player.next_rank.name,
-            '(' + player.next_rank.alternative_name + ')\n' if player.next_rank.alternative_name else '',
             helpers.humanize_integer(player.next_rank.xp)
         ) if player.next_rank else 'Highest possible\nrank reached',
         inline=True

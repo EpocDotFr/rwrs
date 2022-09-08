@@ -795,9 +795,9 @@ def compare(
     table_data = [
         [
             'Rank',
-            source_player.rank.name + '\n(' + source_player.rank.alternative_name + ')' if source_player.rank.alternative_name else source_player.rank.name,
+            source_player.rank.name,
             utils.compare_values(source_player, target_player, lambda player: player.rank.id),
-            target_player.rank.name + '\n(' + target_player.rank.alternative_name + ')' if target_player.rank.alternative_name else target_player.rank.name
+            target_player.rank.name
         ],
         ['XP', source_player.xp_display, utils.compare_values(source_player, target_player, lambda player: player.xp), target_player.xp_display],
         ['Kills', source_player.kills_display, utils.compare_values(source_player, target_player, lambda player: player.kills), target_player.kills_display],
