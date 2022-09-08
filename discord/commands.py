@@ -228,7 +228,7 @@ def event_set(
 def event_remove(
     ctx
 ):
-    if not g.EVENT:
+    if not Variable.get_value('event'):
         return Message('Event already removed.', ephemeral=True)
     else:
         try:
