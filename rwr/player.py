@@ -222,11 +222,7 @@ class Player:
         if self.rank.id is None:
             return None
 
-        ranks_country = constants.PLAYERS_LIST_DATABASES[self.database]['ranks_country']
-        rank_ids = [int(rank_id) for rank_id in constants.RANKS[ranks_country].keys()]
-
-        if self.database == 'pacific' and ranks_country == 'us': # The President rank for USMC isn't available in Pacific
-            rank_ids = rank_ids[:-1]
+        rank_ids = [int(rank_id) for rank_id in constants.RANKS[self.database].keys()]
 
         highest_rank_id = max(rank_ids)
 
@@ -305,15 +301,14 @@ class PlayerRank:
             ' (' + self.alternative_name + ')' if self.alternative_name else ''
         )
 
-    def set_images_and_icons(self, database):
+    def set_images_and_icons(self):
         """Set the relative and absolute URLs to the images and icon of this rank."""
         params = {
-            'ranks_country': constants.PLAYERS_LIST_DATABASES[database]['ranks_country'],
             'rank_id': self.id
         }
 
-        image_url = 'images/ranks/{ranks_country}/{rank_id}.png'.format(**params)
-        icon_url = 'images/ranks/{ranks_country}/{rank_id}_icon.png'.format(**params)
+        image_url = 'images/ranks/{rank_id}.png'.format(**params)
+        icon_url = 'images/ranks/{rank_id}_icon.png'.format(**params)
 
         self.image = url_for('static', filename=image_url)
         self.image_absolute = url_for('static', filename=image_url, _external=True)

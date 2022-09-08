@@ -59,10 +59,9 @@ def parse_map_path(map_path):
 
 
 def get_rank_from_xp(database, xp):
-    ranks_country = constants.PLAYERS_LIST_DATABASES[database]['ranks_country']
-    ranks = constants.RANKS[ranks_country]
+    current_rank_id = None
 
-    for rank_id, rank in ranks.items():
+    for rank_id, rank in constants.RANKS[database].items():
         if rank['xp'] > xp:
             break
 
@@ -75,8 +74,7 @@ def get_rank_object(database, rank_id):
     """Return a new PlayerRank object given a rank ID."""
     ret = PlayerRank()
 
-    ranks_country = constants.PLAYERS_LIST_DATABASES[database]['ranks_country']
-    ranks = constants.RANKS[ranks_country]
+    ranks = constants.RANKS[database]
 
     if str(rank_id) not in ranks:
         return ret
@@ -85,13 +83,10 @@ def get_rank_object(database, rank_id):
     ret.name = ranks[str(rank_id)]['name']
     ret.xp = ranks[str(rank_id)]['xp']
 
-    if ranks_country == 'jp' and str(rank_id) in constants.RANKS['us']:
-        ret.alternative_name = constants.RANKS['us'][str(rank_id)]['name']
-
     if current_app:
-        ret.set_images_and_icons(database)
+        ret.set_images_and_icons()
     else:
         with app.app_context():
-            ret.set_images_and_icons(database)
+            ret.set_images_and_icons()
 
     return ret

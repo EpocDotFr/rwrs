@@ -46,8 +46,8 @@ SERVER_TYPES = OrderedDict([
 VALID_SERVER_TYPES = SERVER_TYPES.keys()
 
 PLAYERS_LIST_DATABASES = OrderedDict([
-    ('invasion', {'name': 'Invasion', 'ranks_country': 'us', 'realm': 'official_invasion'}),
-    ('pacific', {'name': 'WW2 DLCs', 'ranks_country': 'us', 'realm': 'official_pacific'})
+    ('invasion', {'name': 'Invasion', 'realm': 'official_invasion'}),
+    ('pacific', {'name': 'WW2 DLCs', 'realm': 'official_pacific'})
 ])
 
 VALID_DATABASES = PLAYERS_LIST_DATABASES.keys()
