@@ -283,7 +283,6 @@ def save_players_stats(reset):
             for player in players:
                 rwr_account_stat = RwrAccountStat()
 
-                rwr_account_stat.leaderboard_position = player.leaderboard_position
                 rwr_account_stat.xp = player.xp
                 rwr_account_stat.kills = player.kills
                 rwr_account_stat.deaths = player.deaths

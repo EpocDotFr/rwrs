@@ -36,7 +36,6 @@
         <thead>
             <tr>
                 <th class="w200p">Date</th>
-                <th>Position<br /><small>(by XP)</small></th>
                 <th>XP</th>
                 <th>Kills</th>
                 <th>Deaths</th>
@@ -57,7 +56,6 @@
             {% for stat in stats.items %}
                 <tr{% if stat.promoted_to_rank %} class="notice"{% endif %}>
                     <td>{{ stat.created_at.format('MMMM D, YYYY') }}{% if stat.promoted_to_rank %} {{ macros.rank_image(stat.promoted_to_rank, icon=True, prefix='Promoted that day to ') }}{% endif %}</td>
-                    <td>{{ stat.leaderboard_position_display }}</td>
                     <td>{{ stat.xp_display }}</td>
                     <td>{{ stat.kills_display }}</td>
                     <td>{{ stat.deaths_display }}</td>

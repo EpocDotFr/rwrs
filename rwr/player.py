@@ -73,7 +73,6 @@ class Player:
 
         ret.username = rwr_account.username.encode('iso-8859-1').decode('utf-8')
 
-        ret.leaderboard_position = rwr_account_stat.leaderboard_position
         ret.kills = rwr_account_stat.kills
         ret.deaths = rwr_account_stat.deaths
         ret.score = rwr_account_stat.score

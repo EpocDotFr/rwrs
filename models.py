@@ -773,7 +773,6 @@ class RwrAccountStat(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 
-    leaderboard_position = db.Column(db.Integer, nullable=False)
     xp = db.Column(db.Integer, nullable=False)
     kills = db.Column(db.Integer, nullable=False)
     deaths = db.Column(db.Integer, nullable=False)
@@ -795,7 +794,6 @@ class RwrAccountStat(db.Model):
     def compute_hash(self):
         """Compute the hash corresponding to the data of this RwrAccountStat."""
         data = [
-            self.leaderboard_position,
             self.xp,
             self.kills,
             self.deaths,
@@ -850,7 +848,6 @@ class RwrAccountStat(db.Model):
             return {
                 'ratio': RwrAccountStat.transform_data(rwr_account_stats, 'kd_ratio'),
                 'score': RwrAccountStat.transform_data(rwr_account_stats, 'score'),
-                'position': RwrAccountStat.transform_data(rwr_account_stats, 'leaderboard_position')
             }
         else:
             return RwrAccountStat.transform_data(rwr_account_stats, column, format=None)
@@ -866,10 +863,6 @@ class RwrAccountStat(db.Model):
     @memoized_property
     def kd_ratio(self):
         return round(self.kills / self.deaths, 2) if self.deaths > 0 else 0.00
-
-    @memoized_property
-    def leaderboard_position_display(self):
-        return helpers.humanize_integer(self.leaderboard_position)
 
     @memoized_property
     def xp_display(self):
