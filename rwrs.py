@@ -30,14 +30,14 @@ import helpers
 app.config['SQLALCHEMY_DATABASE_URI'] = helpers.build_database_uri()
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['CACHE_TYPE'] = 'filesystem'
-app.config['CACHE_DIR'] = 'storage/cache'
+app.config['CACHE_DIR'] = 'instance/cache'
 app.config['RANKS_IMAGES_DIR'] = 'static/images/ranks'
-app.config['RANKS_DATA_FILE'] = 'storage/data/ranks.json'
+app.config['RANKS_DATA_FILE'] = 'data/ranks.json'
 app.config['MINIMAPS_IMAGES_DIR'] = 'static/images/maps/minimap'
 app.config['MAPS_PREVIEW_IMAGES_DIR'] = 'static/images/maps/preview'
-app.config['MAPS_DATA_FILE'] = 'storage/data/maps.json'
-app.config['GEOIP_DATABASE_FILE'] = 'storage/data/GeoLite2-City.mmdb'
-app.config['RANKED_SERVERS_MODS_FILE'] = 'storage/data/ranked_servers_mods.json'
+app.config['MAPS_DATA_FILE'] = 'data/maps.json'
+app.config['GEOIP_DATABASE_FILE'] = 'instance/GeoLite2-City.mmdb'
+app.config['RANKED_SERVERS_MODS_FILE'] = 'data/ranked_servers_mods.json'
 app.config['MY_USERNAME'] = 'epocdotfr'
 app.config['CONTRIBUTORS'] = ['street veteran', 'mastock', 'dio', 'jatimatik', 'mellcor', 'teratai', 'harrified', 'mr. bang', 'dogtato', 'stesmith', 'korgorr', 'foxtrod', 'moorsey100', 'moorsey the owl', 'kilroy (7kb/s)']
 app.config['DEVS'] = ['jackmayol', 'pasik', 'pasik2', 'tremozl', 'the soldier', '577', 'unit g17']
@@ -80,7 +80,7 @@ discord_interactions = DiscordInteractions(app)
 if has_debug_toolbar_ext:
     toolbar = DebugToolbarExtension(app)
 
-assets.cache = 'storage/webassets-cache/'
+assets.cache = 'instance/webassets-cache/'
 
 assets.register('js_popovers', Bundle('js/popovers.js', filters='jsmin', output='js/popovers.min.js'))
 assets.register('js_popovers_rwr_accounts_sync', Bundle('js/popovers.js', 'js/rwr_accounts_sync.js', filters='jsmin', output='js/popovers_rwr_accounts_sync.min.js'))

@@ -105,7 +105,7 @@ def simplified_integer(integer):
 def build_database_uri():
     """Return the database connection string."""
     if app.config['DEBUG']:
-        return 'sqlite:///storage/data/db.sqlite'
+        return 'sqlite:///db.sqlite'
 
     uri = 'mysql+mysqldb://{username}:{password}@'
 
