@@ -51,7 +51,7 @@ app.config['BUNDLE_ERRORS'] = True
 app.config['SESSION_PROTECTION'] = 'basic'
 app.config['DISCORD_INTERACTIONS_PATH'] = '/discord-interactions'
 
-if app.config['ENV'] == 'production' and app.config['BUGSNAG_API_KEY']:
+if not app.config['DEBUG'] and app.config['BUGSNAG_API_KEY']:
     bugsnag.configure(
         api_key=app.config['BUGSNAG_API_KEY'],
         ignore_classes=[
