@@ -4,6 +4,7 @@ from collections import OrderedDict
 from rwrs import app
 import misaka
 import json
+import os
 
 
 def humanize_seconds_to_days(seconds):
@@ -105,7 +106,7 @@ def simplified_integer(integer):
 def build_database_uri():
     """Return the database connection string."""
     if app.config['DEBUG']:
-        return 'sqlite:///db.sqlite'
+        return 'sqlite:///{}'.format(os.path.join(app.instance_path, 'db.sqlite'))
 
     uri = 'mysql+mysqldb://{username}:{password}@'
 
