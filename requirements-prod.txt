@@ -1,0 +1,3 @@
+-r requirements.txt
+bugsnag[flask]==4.2.1
+mysqlclient==2.1.1
