@@ -38,6 +38,13 @@ A Server represent a public multiplayer Running With Rifles game.
         - A country and a continent: `country:fr+continent:na`
         - Two countries: `country:fr+country:de`
 
+      ::: note
+      **Don't forget to URL-encode values given to this criterion!**
+
+      Possible values and examples are shown above unencoded for clarity purpose, but you **must** URL-encode these so
+      it's properly parsed by the server, e.g the last example would be `country%3Afr%2Bcountry%3Ade`.
+      :::
+
       + Default: `any`
   + `map`: `map10` (enum[string], optional)
       Servers map ID.
