@@ -27,7 +27,7 @@ import helpers
 
 app.config['SQLALCHEMY_DATABASE_URI'] = helpers.build_database_uri()
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['CACHE_TYPE'] = 'filesystem'
+app.config['CACHE_TYPE'] = 'FileSystemCache'
 app.config['CACHE_DIR'] = 'instance/cache'
 app.config['RANKS_IMAGES_DIR'] = 'static/images/ranks'
 app.config['RANKS_DATA_FILE'] = 'data/ranks.json'
