@@ -9,7 +9,8 @@ A Server represent a public multiplayer Running With Rifles game.
       Servers country or continent of residence. This criterion format is either:
 
         - A concatenation of a **location type** and a **location code**, separated by a colon, OR
-        - Just a **country code** OR
+        - Just a **country code**, OR
+        - A list of any of the two above, separated by a `+`, OR
         - `any`
 
       Available **location types** are:
@@ -29,61 +30,21 @@ A Server represent a public multiplayer Running With Rifles game.
 
       **Country code** must conform to [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2).
 
+      Examples:
+
+        - A continent: `continent:eu`
+        - A country: `country:fr`
+        - Two continents: `continent:eu+continent:na`
+        - A country and a continent: `country:fr+continent:na`
+        - Two countries: `country:fr+country:de`
+
       + Default: `any`
   + `map`: `map10` (enum[string], optional)
       Servers map ID.
 
-      See also [this file](https://github.com/EpocDotFr/rwrs/blob/master/storage/data/maps.json), part of the RWRS source
-      code, which contains all the RWR maps metadata stored in the JSON format.
+      See [this file](https://github.com/EpocDotFr/rwrs/blob/master/storage/data/maps.json), part of the RWRS source code,
+      for a complete list of allowed map IDs.
 
-      + Members
-          + `any`
-          + `def_dday`
-          + `def_lab`
-          + `def_lab_koth`
-          + `edelweiss1`
-          + `edelweiss2`
-          + `edelweiss3`
-          + `edelweiss4`
-          + `edelweiss5`
-          + `edelweiss6`
-          + `edelweiss7`
-          + `edelweiss7_undead`
-          + `edelweiss8`
-          + `island1`
-          + `island2`
-          + `island3`
-          + `island4`
-          + `island5`
-          + `island6`
-          + `island7`
-          + `island8`
-          + `island9`
-          + `lobby_2p`
-          + `map1`
-          + `map10`
-          + `map11`
-          + `map12`
-          + `map13`
-          + `map13_2`
-          + `map14`
-          + `map15`
-          + `map16`
-          + `map17`
-          + `map18`
-          + `map1_2`
-          + `map2`
-          + `map3`
-          + `map4`
-          + `map5`
-          + `map6`
-          + `map7`
-          + `map8`
-          + `map8_2`
-          + `map9`
-          + `pvp1`
-          + `rwd_map1`
-          + `viper`
       + Default: `any`
   + `type`: `vanilla` (enum[string], optional) - Servers type (used mod or DLC).
       + Members
@@ -97,6 +58,7 @@ A Server represent a public multiplayer Running With Rifles game.
           + `man_vs_world_mp`
           + `man_vs_zombies_mp`
           + `Running_with_the_Dead`
+          + `ww2_undead`
           + `overlord_defense`
           + `lab_defense`
           + `lab_def_koth`

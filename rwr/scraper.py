@@ -308,18 +308,23 @@ def filter_servers(**filters):
             return False
 
         if location != 'any':
-            if ':' in location:
-                location_type, location_code = location.split(':', maxsplit=1)
-            else:
-                location_type = 'country'
-                location_code = location
+            location_list = location.split(' ')
+            location_list_matches = []
 
-            if location_type == 'continent':
-                if location_code != server.location.continent_code:
-                    return False
-            elif location_type == 'country':
-                if location_code != server.location.country_code:
-                    return False
+            for location_in_list in location_list:
+                if ':' in location_in_list:
+                    location_type, location_code = location_in_list.split(':', maxsplit=1)
+                else:
+                    location_type = 'country'
+                    location_code = location_in_list
+
+                if location_type == 'continent':
+                    location_list_matches.append(location_code == server.location.continent_code)
+                elif location_type == 'country':
+                    location_list_matches.append(location_code == server.location.country_code)
+
+            if True not in location_list_matches:
+                return False
 
         if map != 'any' and map != server.map.id:
             return False
