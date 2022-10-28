@@ -6,9 +6,11 @@ from flask_login import login_user
 from datetime import datetime
 import steam_helpers
 import rwr.scraper
-import bugsnag
 import arrow
 import os
+
+if not app.config['DEBUG']:
+    import bugsnag
 
 
 @login_manager.user_loader
@@ -26,7 +28,8 @@ def create_or_login(resp):
         if not steam_user_info:
             raise Exception('Unable to get Steam user info for Steam ID {}'.format(steam_id))
     except Exception as e:
-        bugsnag.notify(e)
+        if not app.config['DEBUG']:
+            bugsnag.notify(e)
 
         flash('An error occured while fetching your Steam account information. Please try again.', 'error')
 
@@ -50,7 +53,8 @@ def create_or_login(resp):
 
         db.session.commit()
     except Exception as e:
-        bugsnag.notify(e)
+        if not app.config['DEBUG']:
+            bugsnag.notify(e)
 
         flash('An error occured while syncing your RWR accounts. Please try again.', 'error')
 

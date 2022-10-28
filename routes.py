@@ -9,12 +9,13 @@ import rwr.constants
 import flask_openid
 import rwr.scraper
 import rwr.utils
-import bugsnag
 import helpers
 import arrow
 import forms
 import uuid
 
+if not app.config['DEBUG']:
+    import bugsnag
 
 ERROR_PLAYER_NOT_FOUND = 'Sorry, the player "{username}" wasn\'t found in the {database} players list. Maybe this player hasn\'t already played on a ranked server yet. If this player started to play today on a ranked server, please wait until tomorrow as stats are refreshed daily.'
 ERROR_NO_RWR_ACCOUNT = 'Sorry, stats history isn\'t recorded for {username}. He/she must be part of the {database} {max_players} most experienced players.'
@@ -203,7 +204,8 @@ def sync_rwr_accounts(database):
 
         flash('{} RWR accounts successfully sync\'ed.'.format(rwr.utils.get_database_name(database)), 'success')
     except Exception as e:
-        bugsnag.notify(e)
+        if not app.config['DEBUG']:
+            bugsnag.notify(e)
 
         status = 500
         result = {'status': 'failure', 'data': {'message': str(e)}}
@@ -247,7 +249,8 @@ def delete_rwr_account(rwr_account_id):
 
             return redirect(current_user.link)
         except Exception as e:
-            bugsnag.notify(e)
+            if not app.config['DEBUG']:
+                bugsnag.notify(e)
 
             flash('Error deleting RWR account. Please try again.', 'error')
 

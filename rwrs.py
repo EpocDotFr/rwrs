@@ -7,14 +7,12 @@ except ImportError:
 
 from flask_discord_interactions import DiscordInteractions
 from flask_assets import Environment, Bundle
-from bugsnag.flask import handle_exceptions
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_migrate import Migrate
 from flask_openid import OpenID
 from flask_caching import Cache
 from flask import Flask
-import bugsnag
 import math
 
 
@@ -52,6 +50,9 @@ app.config['SESSION_PROTECTION'] = 'basic'
 app.config['DISCORD_INTERACTIONS_PATH'] = '/discord-interactions'
 
 if not app.config['DEBUG'] and app.config['BUGSNAG_API_KEY']:
+    from bugsnag.flask import handle_exceptions
+    import bugsnag
+
     bugsnag.configure(
         api_key=app.config['BUGSNAG_API_KEY'],
         ignore_classes=[
