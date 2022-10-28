@@ -9,7 +9,7 @@ A Server represent a public multiplayer Running With Rifles game.
       Servers country or continent of residence. This criterion format is either:
 
         - A concatenation of a **location type** and a **location code**, separated by a colon, OR
-        - Just a **country code**, OR
+        - A single **country code**, OR
         - A list of any of the two above, separated by a `+`, OR
         - `any`
 
@@ -34,14 +34,17 @@ A Server represent a public multiplayer Running With Rifles game.
 
         - A continent: `continent:eu`
         - A country: `country:fr`
+        - A country: `de`
         - Two continents: `continent:eu+continent:na`
-        - A country and a continent: `country:fr+continent:na`
         - Two countries: `country:fr+country:de`
+        - Two countries: `jp+country:cn`
+        - A country and a continent: `fr+continent:na`
+        - A country and a continent: `country:fr+continent:na`
 
       ::: note
       **Don't forget to URL-encode values given to this criterion!**
 
-      Possible values and examples are shown above unencoded for clarity purpose, but you **must** URL-encode these so
+      Possible values and examples are shown unencoded for clarity purpose, but you **must** URL-encode these so
       it's properly parsed by the server, e.g the last example would be `country%3Afr%2Bcountry%3Ade`.
       :::
 
@@ -53,7 +56,25 @@ A Server represent a public multiplayer Running With Rifles game.
       for a complete list of allowed map IDs.
 
       + Default: `any`
-  + `type`: `vanilla` (enum[string], optional) - Servers type (used mod or DLC).
+  + `type`: `vanilla` (enum[string], optional)
+      Servers type (used mod or DLC). This criterion format is either:
+
+        - A single type, OR
+        - A list of types, separated by a `+`, OR
+        - `any`
+
+      Examples:
+
+        - Single type: `pacific`
+        - Two types: `pacific+edelweiss`
+
+      ::: note
+      **Don't forget to URL-encode values given to this criterion!**
+
+      Possible values and examples are shown unencoded for clarity purpose, but you **must** URL-encode these so
+      it's properly parsed by the server, e.g the last example would be `country%3Afr%2Bcountry%3Ade`.
+      :::
+
       + Members
           + `any`
           + `vanilla`

@@ -236,10 +236,18 @@ def get_all_servers_locations():
 
 def get_all_servers_types():
     """Return the type of all of the servers."""
-    return _get_list(
+    ret = _get_list(
         lambda server: server.type if server.type not in ['vanilla.winter', 'vanilla.desert', 'pvp'] else False,
         lambda server: server.type_name
     )
+
+    # Extra server type filters
+    ret.append({
+        'value': 'pacific+edelweiss',
+        'label': 'RWR: WWII DLCs'
+    })
+
+    return ret
 
 
 def get_all_servers_modes():
@@ -338,12 +346,17 @@ def filter_servers(**filters):
             return False
 
         if type != 'any':
-            if type.startswith('vanilla'):
-                if not server.type.startswith('vanilla') and server.type != 'pvp':
-                    return False
-            else:
-                if type != server.type:
-                    return False
+            type_list = type.split('+')
+            type_list_matches = []
+
+            for type_in_list in type_list:
+                if type_in_list.startswith('vanilla'):
+                    type_list_matches.append(server.type.startswith('vanilla'))
+                else:
+                    type_list_matches.append(type_in_list == server.type)
+
+            if True not in type_list_matches:
+                return False
 
         if mode != 'any' and mode != server.mode:
             return False
