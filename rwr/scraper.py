@@ -223,7 +223,15 @@ def get_all_servers_locations():
 
         ret.append(group)
 
-    return sorted(ret, key=lambda k: k['label'])
+    ret = sorted(ret, key=lambda k: k['label'])
+
+    # Extra location filters
+    ret.append({
+        'value': 'continent:eu+continent:na',
+        'label': 'Europe + North America'
+    })
+
+    return ret
 
 
 def get_all_servers_types():
@@ -308,7 +316,7 @@ def filter_servers(**filters):
             return False
 
         if location != 'any':
-            location_list = location.split(' ')
+            location_list = location.split('+')
             location_list_matches = []
 
             for location_in_list in location_list:
