@@ -30,6 +30,7 @@ SERVER_TYPES = OrderedDict([
     ('man_vs_world_mp', 'Man vs World (MP)'),
     ('man_vs_zombies_mp', 'Man vs Zombies (MP)'),
     ('Running_with_the_Dead', 'Running with the Dead'),
+    ('ww2_undead', 'WWII: Undead'),
     ('overlord_defense', 'Overlord Defense'),
     ('lab_defense', 'Lab Defense'),
     ('lab_def_koth', 'Lab Defense KOTH'),
