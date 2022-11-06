@@ -9,9 +9,6 @@ import rwr.scraper
 import arrow
 import os
 
-if not app.config['DEBUG']:
-    import bugsnag
-
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -27,9 +24,13 @@ def create_or_login(resp):
 
         if not steam_user_info:
             raise Exception('Unable to get Steam user info for Steam ID {}'.format(steam_id))
-    except Exception as e:
-        if not app.config['DEBUG']:
-            bugsnag.notify(e)
+    except Exception:
+        app.logger.exception()
+
+        if not app.config['DEBUG'] and app.config['SENTRY_DSN']:
+            import sentry_sdk
+
+            sentry_sdk.capture_exception()
 
         flash('An error occured while fetching your Steam account information. Please try again.', 'error')
 
@@ -52,9 +53,13 @@ def create_or_login(resp):
         user.sync_rwr_accounts()
 
         db.session.commit()
-    except Exception as e:
-        if not app.config['DEBUG']:
-            bugsnag.notify(e)
+    except Exception:
+        app.logger.exception()
+
+        if not app.config['DEBUG'] and app.config['SENTRY_DSN']:
+            import sentry_sdk
+
+            sentry_sdk.capture_exception()
 
         flash('An error occured while syncing your RWR accounts. Please try again.', 'error')
 

@@ -49,26 +49,17 @@ app.config['BUNDLE_ERRORS'] = True
 app.config['SESSION_PROTECTION'] = 'basic'
 app.config['DISCORD_INTERACTIONS_PATH'] = '/discord-interactions'
 
-if not app.config['DEBUG'] and app.config['BUGSNAG_API_KEY']:
-    from bugsnag.flask import handle_exceptions
-    import bugsnag
+if not app.config['DEBUG'] and app.config['SENTRY_DSN']:
+    from sentry_sdk.integrations.flask import FlaskIntegration
+    import sentry_sdk
 
-    bugsnag.configure(
-        api_key=app.config['BUGSNAG_API_KEY'],
-        ignore_classes=[
-            'werkzeug.exceptions.BadRequest',
-            'werkzeug.exceptions.Unauthorized',
-            'werkzeug.exceptions.Forbidden',
-            'werkzeug.exceptions.NotFound',
-            'werkzeug.exceptions.MethodNotAllowed',
-            'werkzeug.exceptions.TooManyRequests',
-            'werkzeug.exceptions.PreconditionFailed',
-            'werkzeug.exceptions.Locked',
-            'werkzeug.exceptions.ServiceUnavailable',
-        ]
+    sentry_sdk.init(
+        dsn=app.config['SENTRY_DSN'],
+        integrations=[
+            FlaskIntegration(),
+        ],
+        traces_sample_rate=app.config['SENTRY_TRACES_SAMPLE_RATE']
     )
-
-    handle_exceptions(app)
 
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)

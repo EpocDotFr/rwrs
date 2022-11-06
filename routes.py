@@ -14,9 +14,6 @@ import arrow
 import forms
 import uuid
 
-if not app.config['DEBUG']:
-    import bugsnag
-
 ERROR_PLAYER_NOT_FOUND = 'Sorry, the player "{username}" wasn\'t found in the {database} players list. Maybe this player hasn\'t already played on a ranked server yet. If this player started to play today on a ranked server, please wait until tomorrow as stats are refreshed daily.'
 ERROR_NO_RWR_ACCOUNT = 'Sorry, stats history isn\'t recorded for {username}. He/she must be part of the {database} {max_players} most experienced players.'
 ERROR_NO_RWR_ACCOUNT_STATS = 'No stats were found for the given date for {username}. Are you sure he/she is/was part of the {database} {max_players} most experienced players?'
@@ -204,8 +201,12 @@ def sync_rwr_accounts(database):
 
         flash('{} RWR accounts successfully sync\'ed.'.format(rwr.utils.get_database_name(database)), 'success')
     except Exception as e:
-        if not app.config['DEBUG']:
-            bugsnag.notify(e)
+        app.logger.exception()
+
+        if not app.config['DEBUG'] and app.config['SENTRY_DSN']:
+            import sentry_sdk
+
+            sentry_sdk.capture_exception()
 
         status = 500
         result = {'status': 'failure', 'data': {'message': str(e)}}
@@ -248,9 +249,13 @@ def delete_rwr_account(rwr_account_id):
             flash('RWR account successfully deleted.', 'success')
 
             return redirect(current_user.link)
-        except Exception as e:
-            if not app.config['DEBUG']:
-                bugsnag.notify(e)
+        except Exception:
+            app.logger.exception()
+
+            if not app.config['DEBUG'] and app.config['SENTRY_DSN']:
+                import sentry_sdk
+
+                sentry_sdk.capture_exception()
 
             flash('Error deleting RWR account. Please try again.', 'error')
 
