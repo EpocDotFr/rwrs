@@ -13,11 +13,7 @@ if [ -f .flaskenv ]; then
 fi
 
 # Activate Python env
-if [ -f venv/bin/activate ]; then
-    . venv/bin/activate
-else
-    . venv/Scripts/activate
-fi
+. venv/bin/activate
 
 # Determine if we should enable maintenance mode
 if [ -f maintenance ]; then
