@@ -121,7 +121,8 @@ def get_servers():
         params = {
             'start': start,
             'size': size,
-            'names': 1
+            'names': 1,
+            'cdata': 1
         }
 
         xml_content = _call(
