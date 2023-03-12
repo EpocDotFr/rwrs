@@ -1,10 +1,3 @@
-try:
-    from flask_debugtoolbar import DebugToolbarExtension
-
-    has_debug_toolbar_ext = True
-except ImportError:
-    has_debug_toolbar_ext = False
-
 from flask_discord_interactions import DiscordInteractions
 from flask_assets import Environment, Bundle
 from flask_sqlalchemy import SQLAlchemy
@@ -17,11 +10,34 @@ import math
 
 
 # -----------------------------------------------------------
-# Boot
+# App bootstrap
 
 
 app = Flask(__name__, static_url_path='')
 app.config.from_pyfile('config.py')
+
+# -----------------------------------------------------------
+# Debugging-related behaviours
+
+if app.config['DEBUG']:
+    import logging
+
+    logging.basicConfig(level=logging.DEBUG)
+else:
+    if app.config['SENTRY_DSN']:
+        try:
+            from sentry_sdk.integrations.flask import FlaskIntegration
+            import sentry_sdk
+
+            sentry_sdk.init(
+                dsn=app.config['SENTRY_DSN'],
+                integrations=[
+                    FlaskIntegration(),
+                ],
+                traces_sample_rate=app.config['SENTRY_TRACES_SAMPLE_RATE']
+            )
+        except ImportError:
+            pass
 
 import helpers
 
@@ -48,31 +64,40 @@ app.config['DISCORD_SERVER_URL'] = 'https://discord.gg/runningwithrifles'
 app.config['BUNDLE_ERRORS'] = True
 app.config['SESSION_PROTECTION'] = 'basic'
 app.config['DISCORD_INTERACTIONS_PATH'] = '/discord-interactions'
+app.config['RANKED_SERVERS_MODS'] = helpers.load_json(app.config['RANKED_SERVERS_MODS_FILE'])
+app.config['ASSETS_CACHE'] = 'instance/webassets-cache'
 
-if not app.config['DEBUG'] and app.config['SENTRY_DSN']:
-    from sentry_sdk.integrations.flask import FlaskIntegration
-    import sentry_sdk
+# -----------------------------------------------------------
+# Flask extensions initialization and configuration
 
-    sentry_sdk.init(
-        dsn=app.config['SENTRY_DSN'],
-        integrations=[
-            FlaskIntegration(),
-        ],
-        traces_sample_rate=app.config['SENTRY_TRACES_SAMPLE_RATE']
-    )
+# Flask-DebugToolbar
+if app.config['DEBUG']:
+    try:
+        from flask_debugtoolbar import DebugToolbarExtension
 
+        debug_toolbar = DebugToolbarExtension(app)
+    except ImportError:
+        pass
+
+# Flask-HTMLMIN
+try:
+    from flask_htmlmin import HTMLMIN
+
+    htmlmin = HTMLMIN(app)
+except ImportError:
+    pass
+
+# Flask-SQLAlchemy
 db = SQLAlchemy(app)
+
+# Flask-Migrate
 migrate = Migrate(app, db)
+
+# Flask-Caching
 cache = Cache(app)
+
+# Flask-Assets
 assets = Environment(app)
-login_manager = LoginManager(app)
-oid = OpenID(app)
-discord_interactions = DiscordInteractions(app)
-
-if has_debug_toolbar_ext:
-    toolbar = DebugToolbarExtension(app)
-
-assets.cache = 'instance/webassets-cache/'
 
 assets.register('js_popovers', Bundle('js/popovers.js', filters='jsmin', output='js/popovers.min.js'))
 assets.register('js_popovers_rwr_accounts_sync', Bundle('js/popovers.js', 'js/rwr_accounts_sync.js', filters='jsmin', output='js/popovers_rwr_accounts_sync.min.js'))
@@ -82,14 +107,22 @@ assets.register('js_regenerate_pat', Bundle('js/regenerate_pat.js', filters='jsm
 assets.register('js_rwr_account_deletion', Bundle('js/rwr_account_deletion.js', filters='jsmin', output='js/rwr_account_deletion.min.js'))
 assets.register('css_app', Bundle('css/flags.css', 'css/app.css', filters='cssutils', output='css/app.min.css'))
 
+# Flask-Login
+login_manager = LoginManager(app)
 login_manager.login_message_category = 'info'
 
+# Flask-OpenID
+oid = OpenID(app)
+
+# Flask-Discord-Interactions
+discord_interactions = DiscordInteractions(app)
 discord_interactions.set_route(app.config['DISCORD_INTERACTIONS_PATH'])
+
+# -----------------------------------------------------------
+# Jinja alterations
 
 import rwr.constants
 import rwr.utils
-
-app.config['RANKED_SERVERS_MODS'] = helpers.load_json(app.config['RANKED_SERVERS_MODS_FILE'])
 
 app.jinja_env.filters.update(
     humanize_seconds_to_days=helpers.humanize_seconds_to_days,
@@ -116,7 +149,7 @@ app.jinja_env.globals.update(
 
 
 # -----------------------------------------------------------
-# After-init imports
+# After-bootstrap imports
 
 
 import models
