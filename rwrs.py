@@ -23,21 +23,20 @@ if app.config['DEBUG']:
     import logging
 
     logging.basicConfig(level=logging.DEBUG)
-else:
-    if app.config['SENTRY_DSN']:
-        try:
-            from sentry_sdk.integrations.flask import FlaskIntegration
-            import sentry_sdk
+elif app.config['SENTRY_DSN']:
+    try:
+        from sentry_sdk.integrations.flask import FlaskIntegration
+        import sentry_sdk
 
-            sentry_sdk.init(
-                dsn=app.config['SENTRY_DSN'],
-                integrations=[
-                    FlaskIntegration(),
-                ],
-                traces_sample_rate=app.config['SENTRY_TRACES_SAMPLE_RATE']
-            )
-        except ImportError:
-            pass
+        sentry_sdk.init(
+            dsn=app.config['SENTRY_DSN'],
+            integrations=[
+                FlaskIntegration(),
+            ],
+            traces_sample_rate=app.config['SENTRY_TRACES_SAMPLE_RATE']
+        )
+    except ImportError:
+        pass
 
 import helpers
 
