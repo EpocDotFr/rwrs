@@ -106,7 +106,7 @@ class MapsDataExtractor(BaseExtractor):
                 data[server_type] = OrderedDict()
 
             data[server_type][map_id] = OrderedDict([
-                ('name', map_infos['name'].replace('Pacific: ', '').replace('Edelweiss: ', '').title()),
+                ('name', map_infos['name'].replace('Pacific: ', '').replace('Edelweiss: ', '').replace('WW2: ', '').title()),
                 ('has_minimap', os.path.isfile(os.path.join(app.config['MINIMAPS_IMAGES_DIR'], server_type, map_id + '.png'))),
                 ('has_preview', os.path.isfile(os.path.join(app.config['MAPS_PREVIEW_IMAGES_DIR'], server_type, map_id + '.png')))
             ])
