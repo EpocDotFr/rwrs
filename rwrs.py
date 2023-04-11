@@ -5,6 +5,7 @@ from flask_login import LoginManager
 from flask_migrate import Migrate
 from flask_openid import OpenID
 from flask_caching import Cache
+from flask_admin import Admin
 from flask import Flask
 import math
 
@@ -117,6 +118,9 @@ oid = OpenID(app)
 discord_interactions = DiscordInteractions(app)
 discord_interactions.set_route(app.config['DISCORD_INTERACTIONS_PATH'])
 
+# Flask-Admin
+admin = Admin(app, name='RWRS Admin', template_mode='bootstrap4', url='/manage')
+
 # -----------------------------------------------------------
 # Jinja alterations
 
@@ -157,3 +161,4 @@ import commands
 import discord.commands
 import hooks
 import api
+import admin
