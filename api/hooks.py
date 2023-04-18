@@ -1,6 +1,8 @@
 from flask_restful import abort
 from models import User
+from rwrs import db
 from . import auth
+import arrow
 
 
 @auth.verify_token
@@ -15,6 +17,11 @@ def verify_token(token):
 
     if not user:
         return False
+
+    user.api_last_called_at = arrow.utcnow().floor('second')
+
+    db.session.add(user)
+    db.session.commit()
 
     return user
 
