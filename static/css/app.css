@@ -233,7 +233,7 @@ img.bordered {
  * Text colors */
 
 .txtred {
-    color: #f64242;
+    color: #f64242 !important;
 }
 
 .txtred a,
@@ -244,27 +244,27 @@ img.bordered {
 }
 
 .txtorange {
-    color: #f9b53a;
+    color: #f9b53a !important;
 }
 
 .txtgreen {
-    color: #3dcf53;
+    color: #3dcf53 !important;
 }
 
 .txtgrey {
-    color: #BBB;
+    color: #BBB !important;
 }
 
 .txtyellow {
-    color: #f5ea22;
+    color: #f5ea22 !important;
 }
 
 .txtblue {
-    color: #44b2f8;
+    color: #44b2f8 !important;
 }
 
 .txtaltgreen {
-    color: #A4CF17;
+    color: #A4CF17 !important;
 }
 
 /************************************************************************

@@ -1,12 +1,13 @@
 from flask_discord_interactions import DiscordInteractions
+from flask_login import LoginManager, current_user
+from flask_admin.contrib.sqla import ModelView
+from flask_admin import Admin, AdminIndexView
 from flask_assets import Environment, Bundle
+from flask import Flask, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager
 from flask_migrate import Migrate
 from flask_openid import OpenID
 from flask_caching import Cache
-from flask_admin import Admin
-from flask import Flask
 import math
 
 
@@ -119,7 +120,22 @@ discord_interactions = DiscordInteractions(app)
 discord_interactions.set_route(app.config['DISCORD_INTERACTIONS_PATH'])
 
 # Flask-Admin
-admin = Admin(app, name='RWRS Admin', template_mode='bootstrap4', url='/manage')
+class RestrictedView:
+    def is_accessible(self):
+        return current_user.is_authenticated and current_user.is_rwrs_admin
+
+    def inaccessible_callback(self, name, **kwargs):
+        return redirect(url_for('home'))
+
+
+class RestrictedAdminIndexView(RestrictedView, AdminIndexView):
+    pass
+
+class RestrictedModelView(RestrictedView, ModelView):
+    pass
+
+admin = Admin(app, name='RWRS Admin', template_mode='bootstrap4', url='/manage',
+              index_view=RestrictedAdminIndexView(url='/manage'))
 
 # -----------------------------------------------------------
 # Jinja alterations
@@ -161,4 +177,11 @@ import commands
 import discord.commands
 import hooks
 import api
-import admin
+
+# Flask-Admin
+
+admin.add_view(RestrictedModelView(models.RwrAccount, db.session, name='RWR Accounts', url='rwr-accounts'))
+admin.add_view(RestrictedModelView(models.RwrAccountStat, db.session, name='RWR Accounts Stats', url='rwr-accounts-stats'))
+admin.add_view(RestrictedModelView(models.User, db.session, name='Users', url='users'))
+admin.add_view(RestrictedModelView(models.UserFriend, db.session, name='Users Friends', url='users-friends'))
+admin.add_view(RestrictedModelView(models.Variable, db.session, name='Variables', url='variables'))
