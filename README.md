@@ -78,7 +78,7 @@ You'll probably have to hack with this application to make it work with one of t
 
 ### Extracting ranks data and images
 
-The Flask command `flask extract-ranks` is used to extract and save all ranks data to a JSON file located at `storage/data/ranks.json`.
+The Flask command `flask extract-ranks` is used to extract and save all ranks data to a JSON file located at `data/ranks.json`.
 It also retrieve, process (the actual images content isn't centered) and save all the RWR ranks images. They are saved
 at `static/images/ranks/{country}/{rank ID}.png` and `static/images/ranks/{country}/{rank ID}_icon.png`.
 
@@ -89,7 +89,7 @@ This command requires the game to be installed.
 
 ### Extracting maps data
 
-The Flask command `flask extract-maps-data` is used to extract and save all maps data to a JSON file located at `storage/data/maps.json`.
+The Flask command `flask extract-maps-data` is used to extract and save all maps data to a JSON file located at `data/maps.json`.
 
 ```
 flask extract-maps-data --steamdir="{path to the Steam root directory}"
