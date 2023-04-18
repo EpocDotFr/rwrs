@@ -3,11 +3,11 @@ from flask_login import LoginManager, current_user
 from flask_admin.contrib.sqla import ModelView
 from flask_admin import Admin, AdminIndexView
 from flask_assets import Environment, Bundle
-from flask import Flask, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_openid import OpenID
 from flask_caching import Cache
+from flask import Flask, abort
 import math
 
 
@@ -125,7 +125,7 @@ class RestrictedView:
         return current_user.is_authenticated and current_user.is_rwrs_admin
 
     def inaccessible_callback(self, name, **kwargs):
-        return redirect(url_for('home'))
+        return abort(404)
 
 
 class RestrictedAdminIndexView(RestrictedView, AdminIndexView):
