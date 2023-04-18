@@ -125,7 +125,7 @@ class RestrictedView:
         return current_user.is_authenticated and current_user.is_rwrs_admin
 
     def inaccessible_callback(self, name, **kwargs):
-        return abort(404)
+        abort(404)
 
 
 class RestrictedAdminIndexView(RestrictedView, AdminIndexView):
