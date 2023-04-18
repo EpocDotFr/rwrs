@@ -434,6 +434,10 @@ class User(db.Model, UserMixin):
         return [rwr_account for rwr_account in self.rwr_accounts if rwr_account.type == RwrAccountType(type.upper())]
 
     @memoized_property
+    def is_rwrs_admin(self):
+        return self.steam_id in app.config['ADMINS']
+
+    @memoized_property
     def country_name(self):
         return iso3166.countries_by_alpha2.get(self.country_code.upper()).name if self.country_code else ''
 
