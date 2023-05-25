@@ -6,7 +6,7 @@ import re
 
 
 _time_regex = re.compile(r'(?:(?P<h>\d+)h(?:\s+)?)?(?:(?P<m>\d+)m(?:in)?(?:\s+)?)?(?:(?P<s>\d+)s)?')
-_map_path_regex = re.compile(r'/(?P<server_type>.[^/]+)/maps/(?P<map_id>.+)$')
+_map_path_regex = re.compile(r'[/\\](?P<server_type>.[^/]+)[/\\]maps[/\\](?P<map_id>.+)$')
 
 
 def get_mode_name(mode, short=True):
