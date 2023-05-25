@@ -2,4 +2,3 @@
 mysqlclient==2.1.1
 uwsgi==2.0.21
 sentry-sdk[flask]==1.19.1
-Flask-HTMLmin==2.2.1
