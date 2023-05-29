@@ -362,42 +362,42 @@ def evolution(
     database: constants.DATABASE_CHOICES = constants.DEFAULT_DATABASE.value
 ):
     def do_evolution(username, type, database):
-        username = utils.prepare_username(username)
-
-        player = rwr.scraper.search_player_by_username(database, username)
-
-        if not player:
-            ctx.send('Sorry, this player don\'t exist :confused:')
-
-            return
-
-        if not player.rwr_account:
-            ctx.send('Sorry, evolution is not available for this player :confused: He/she must be part of the {} {} most experienced players.'.format(
-                rwr.utils.get_database_name(database),
-                app.config['MAX_NUM_OF_PLAYERS_TO_TRACK_STATS_FOR']
-            ))
-
-            return
-
-        evolution_chart = charts.create_evolution_chart(
-            player.rwr_account,
-            constants.EVOLUTION_TYPES[type]['column'],
-            'Past year {} evolution for {}\n({} ranked servers, {} is better)'.format(
-                constants.EVOLUTION_TYPES[type]['name'],
-                player.username,
-                player.database_name,
-                'lower' if type == 'position' else 'higher'
-            )
-        )
-
         with app.app_context():
+            username = utils.prepare_username(username)
+
+            player = rwr.scraper.search_player_by_username(database, username)
+
+            if not player:
+                ctx.send('Sorry, this player don\'t exist :confused:')
+
+                return
+
+            if not player.rwr_account:
+                ctx.send('Sorry, evolution is not available for this player :confused: He/she must be part of the {} {} most experienced players.'.format(
+                    rwr.utils.get_database_name(database),
+                    app.config['MAX_NUM_OF_PLAYERS_TO_TRACK_STATS_FOR']
+                ))
+
+                return
+
+            evolution_chart = charts.create_evolution_chart(
+                player.rwr_account,
+                constants.EVOLUTION_TYPES[type]['column'],
+                'Past year {} evolution for {}\n({} ranked servers, {} is better)'.format(
+                    constants.EVOLUTION_TYPES[type]['name'],
+                    player.username,
+                    player.database_name,
+                    'lower' if type == 'position' else 'higher'
+                )
+            )
+
             cpnts = components.create_player_components(player, tab='evolution')
 
-        ctx.send(Message(
-            'Here ya go:',
-            file=('evolution.png', evolution_chart, 'image/png'),
-            components=cpnts
-        ))
+            ctx.send(Message(
+                'Here ya go:',
+                file=('evolution.png', evolution_chart, 'image/png'),
+                components=cpnts
+            ))
 
     thread = threading.Thread(target=do_evolution, args=(username, type, database))
     thread.start()
