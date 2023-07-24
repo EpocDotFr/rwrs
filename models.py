@@ -834,7 +834,7 @@ class RwrAccountStat(db.Model):
     @staticmethod
     @cache.memoize(timeout=app.config['GRAPHS_DATA_CACHE_TIMEOUT'])
     def get_stats_for_column(rwr_account, column=None):
-        """Return the player's score, K/D ratio and/or leaderboard position evolution data for the past year."""
+        """Return the player's score, K/D ratio evolution data for the past year."""
         rwr_account_stats = RwrAccountStat.query.filter(
             RwrAccountStat.rwr_account_id == rwr_account.id,
             RwrAccountStat.created_at >= one_year_ago()
