@@ -42,6 +42,24 @@ def update_discord_commands():
 
 
 @app.cli.command()
+def recompute_hashes():
+    """Recompute all stats history hashes."""
+    from models import RwrAccountStat
+    from rwrs import db
+
+    click.echo('Recomputing all stats history hashes...')
+
+    for rwr_account_stat in RwrAccountStat.query.yield_per(200):
+        rwr_account_stat.compute_hash()
+
+        db.session.add(rwr_account_stat)
+
+    db.session.commit()
+
+    click.secho('Done', fg='green')
+
+
+@app.cli.command()
 @check_maintenance
 def get_players_count():
     """Store the number of players."""
@@ -222,7 +240,6 @@ def save_players_stats(reset):
     if reset and click.confirm('Are you sure to reset all RWR accounts and stats?'):
         RwrAccountStat.query.delete()
         RwrAccount.query.delete()
-        db.session.commit()
 
     players_sort = rwr.constants.PlayersSort.XP.value
     players_count = app.config['MAX_NUM_OF_PLAYERS_TO_TRACK_STATS_FOR']
@@ -275,7 +292,7 @@ def save_players_stats(reset):
 
                 db.session.add(rwr_account)
 
-            db.session.commit()
+            db.session.flush()
 
             # Create all the RwrAccountStat objects for each players
             all_rwr_accounts_stat = []
@@ -317,7 +334,9 @@ def save_players_stats(reset):
 
             # Finally save stats for all eligible players
             db.session.bulk_save_objects(all_rwr_accounts_stat)
-            db.session.commit()
+            db.session.flush()
+
+    db.session.commit()
 
     click.secho('Done', fg='green')
 
@@ -358,9 +377,8 @@ def compute_promotions():
     click.echo('Resetting all already-computed promotions...')
 
     RwrAccountStat.query.update({RwrAccountStat.promoted_to_rank_id: None})
-    db.session.commit()
 
-    for rwr_account in RwrAccount.query.yield_per(100).all():
+    for rwr_account in RwrAccount.query.yield_per(100):
         database = rwr_account.type.value.lower()
 
         click.echo('{} / {}'.format(database, rwr_account.username))
@@ -377,7 +395,8 @@ def compute_promotions():
             current_rwr_account_stat.promoted_to_rank_id = current_rank.id if current_rank.id != previous_rank.id else None
 
         db.session.bulk_save_objects(rwr_account_stats)
-        db.session.commit()
+
+    db.session.commit()
 
     click.secho('Done', fg='green')
 
