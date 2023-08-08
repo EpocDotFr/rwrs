@@ -64,6 +64,8 @@ def recompute_hashes():
         db.session.bulk_save_objects(rwr_account_stats)
         db.session.flush()
 
+        del rwr_account_stats
+
         offset += limit
 
     db.session.commit()
