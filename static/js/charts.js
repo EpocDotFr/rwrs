@@ -70,25 +70,6 @@ chartsFeature = {
                 markers: this.getPromotionMarkers(this.player_evolution_data.score)
             });
         }
-
-        // Leaderboard position (by XP)
-        if (this.player_evolution_data.position.length == 0) {
-            // If there's no data to display, create a "missing data" chart
-            this.createMissingDataChart({
-                target: '#position-chart'
-            });
-        } else {
-            this.convertDates(this.player_evolution_data.position, '%Y-%m-%d');
-
-            this.createChart({
-                target: '#position-chart',
-                color: '#A4CF17',
-                x_mouseover: '%b %e, %Y ',
-                min_y_from_data: true,
-                data: this.player_evolution_data.position,
-                markers: this.getPromotionMarkers(this.player_evolution_data.position)
-            });
-        }
     },
     /**
      * Initialize the Players charts on the Server details page.

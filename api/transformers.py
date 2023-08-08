@@ -143,11 +143,6 @@ player_stats = OrderedDict([
     ('xp', fields.Integer),
 ])
 
-player_stats_list = player_stats.copy()
-player_stats_list.update(OrderedDict([
-    ('position', fields.Integer(attribute='leaderboard_position')),
-]))
-
 player_rank = OrderedDict([
     ('id', fields.Integer),
     ('name', fields.String),
@@ -156,7 +151,7 @@ player_rank = OrderedDict([
     ('icon_url', fields.String(attribute='icon_absolute')),
 ])
 
-player_stats_history = player_stats_list.copy()
+player_stats_history = player_stats.copy()
 player_stats_history.update(OrderedDict([
     ('date', ArrowIsoDateField(attribute='created_at')),
     ('promoted_to_rank', fields.Nested(player_rank, allow_null=True)),
