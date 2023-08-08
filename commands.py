@@ -49,20 +49,22 @@ def recompute_hashes():
 
     click.echo('Recomputing all stats history hashes...')
 
-    size = 200
-    count = 0
+    limit = 200
+    offset = 0
 
-    for rwr_account_stat in RwrAccountStat.query.yield_per(size):
-        rwr_account_stat.compute_hash()
+    while True:
+        rwr_account_stats = RwrAccountStat.query.limit(limit).offset(offset).all()
 
-        db.session.add(rwr_account_stat)
+        if not rwr_account_stats:
+            break
 
-        if count == size:
-            db.session.flush()
+        for rwr_account_stat in rwr_account_stats:
+            rwr_account_stat.compute_hash()
 
-            count = 0
-        else:
-            count += 1
+        db.session.bulk_save_objects(rwr_account_stats)
+        db.session.flush()
+
+        offset += limit
 
     db.session.commit()
 
