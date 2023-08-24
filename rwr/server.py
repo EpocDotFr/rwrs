@@ -128,8 +128,12 @@ class Server:
         return utils.get_mode_name(self.mode, False)
 
     @memoized_property
+    def is_official(self):
+        return self.realm in constants.OFFICIAL_SERVERS_REALMS
+
+    @memoized_property
     def is_ranked(self):
-        return self.realm in [database['realm'] for _, database in constants.PLAYERS_LIST_DATABASES.items()]
+        return self.realm in constants.RANKED_SERVERS_REALMS
 
     @memoized_property
     def steam_join_link(self):

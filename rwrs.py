@@ -52,7 +52,7 @@ app.config['MINIMAPS_IMAGES_DIR'] = 'static/images/maps/minimap'
 app.config['MAPS_PREVIEW_IMAGES_DIR'] = 'static/images/maps/preview'
 app.config['MAPS_DATA_FILE'] = 'data/maps.json'
 app.config['GEOIP_DATABASE_FILE'] = 'instance/GeoLite2-City.mmdb'
-app.config['RANKED_SERVERS_MODS_FILE'] = 'data/ranked_servers_mods.json'
+app.config['OFFICIAL_SERVERS_MODS_FILE'] = 'data/official_servers_mods.json'
 app.config['MY_USERNAME'] = 'epocdotfr'
 app.config['CONTRIBUTORS'] = ['street veteran', 'mastock', 'dio', 'jatimatik', 'mellcor', 'teratai', 'harrified', 'mr. bang', 'dogtato', 'stesmith', 'korgorr', 'foxtrod', 'moorsey100', 'moorsey the owl', 'kilroy (7kb/s)']
 app.config['DEVS'] = ['jackmayol', 'pasik', 'pasik2', 'tremozl', 'the soldier', '577', 'unit g17']
@@ -65,7 +65,7 @@ app.config['DISCORD_SERVER_URL'] = 'https://discord.gg/runningwithrifles'
 app.config['BUNDLE_ERRORS'] = True
 app.config['SESSION_PROTECTION'] = 'basic'
 app.config['DISCORD_INTERACTIONS_PATH'] = '/discord-interactions'
-app.config['RANKED_SERVERS_MODS'] = helpers.load_json(app.config['RANKED_SERVERS_MODS_FILE'])
+app.config['OFFICIAL_SERVERS_MODS'] = helpers.load_json(app.config['OFFICIAL_SERVERS_MODS_FILE'])
 app.config['ASSETS_CACHE'] = 'instance/webassets-cache'
 
 # -----------------------------------------------------------

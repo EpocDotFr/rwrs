@@ -177,10 +177,10 @@ bash scripts/api_doc_generator.sh
 flask save-players-stats [--reset]
 ```
 
-### Retrieve and save the ranked servers moderators
+### Retrieve and save the official servers moderators
 
 ```
-flask save-ranked-servers-mods
+flask save-official-servers-mods
 ```
 
 ### Import rwrtrack data
