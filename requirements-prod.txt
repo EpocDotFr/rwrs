@@ -1,4 +1,4 @@
 -r requirements.txt
 mysqlclient==2.1.1
-uwsgi==2.0.21
+uwsgi==2.0.22
 sentry-sdk[flask]==1.24.0
