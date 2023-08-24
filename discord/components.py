@@ -51,7 +51,7 @@ def create_server_components(server):
     )
 
 
-def create_servers_components(type, ranked_only):
+def create_servers_components(type, official_only):
     params = {
         'not_empty': 'yes',
         'not_full': 'yes',
@@ -60,8 +60,8 @@ def create_servers_components(type, ranked_only):
     if type:
         params['type'] = type
 
-    if ranked_only:
-        params['ranked'] = 'yes'
+    if official_only:
+        params['official'] = 'yes'
 
     return create_single_button_with_link_component(
         url_for('servers_list', **params, _external=True),

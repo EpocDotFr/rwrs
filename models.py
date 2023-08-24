@@ -400,7 +400,7 @@ class User(db.Model, UserMixin):
     friends = db.relationship('UserFriend', backref='user', lazy=True, foreign_keys='UserFriend.user_id')
 
     def sync_rwr_accounts(self, only_this_database=None):
-        """Synchronize all RWR accounts owned by this user with the ranked (official) players list."""
+        """Synchronize all RWR accounts owned by this user with the ranked players list."""
         if not app.config['RWR_ACCOUNTS_BY_STEAM_ID_ENDPOINT']:
             return
 

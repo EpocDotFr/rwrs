@@ -365,7 +365,7 @@ def filter_servers(**filters):
         if dedicated == 'yes' and not server.is_dedicated:
             return False
 
-        if ranked == 'yes' and not server.is_ranked:
+        if ranked == 'yes' and not server.is_ranked: # TODO
             return False
 
         if not_empty == 'yes' and server.players.current == 0:

@@ -538,20 +538,20 @@ def agenda(
     'servers',
     'Displays first {} currently active servers with room'.format(constants.SERVERS_LIMIT),
     annotations={
-        'ranked_only': 'Only return ranked (official) servers'
+        'official_only': 'Only return official servers'
     }
 )
 @utils.check_maintenance
 def servers(
     ctx,
     type: constants.SERVER_TYPE_CHOICES = None,
-    ranked_only: bool = False
+    official_only: bool = False
 ):
     servers = rwr.scraper.filter_servers(
         limit=constants.SERVERS_LIMIT,
         not_empty='yes',
         not_full='yes',
-        ranked='yes' if ranked_only else None,
+        official='yes' if official_only else None,
         type=type if type else 'any'
     )
 
@@ -560,8 +560,8 @@ def servers(
 
     filters = []
 
-    if ranked_only:
-        filters.append('ranked')
+    if official_only:
+        filters.append('official')
 
     if type:
         filters.append(rwr.constants.SERVER_TYPES[type])
@@ -585,7 +585,7 @@ def servers(
 
     return Message(
         '\n'.join(response),
-        components=components.create_servers_components(type, ranked_only)
+        components=components.create_servers_components(type, official_only)
     )
 
 
