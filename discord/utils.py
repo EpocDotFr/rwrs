@@ -72,12 +72,6 @@ def admin_permissions():
     ])
 
 
-def event_manager_permissions():
-    return admin_permissions() + permissions([
-        'jackmayol',
-    ])
-
-
 def has_permissions(user, permissions):
     for permission in permissions:
         if ((permission.type == 1 and permission.id in user.roles) or (permission.type == 2 and permission.id == user.id)) and permission.permission:

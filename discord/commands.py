@@ -14,39 +14,17 @@ import helpers
 import arrow
 import os
 
-maintenance_command_group = discord_interactions.command_group(
-    'maintenance',
-    default_permission=False,
-    permissions=utils.admin_permissions()
-)
-
-motd_command_group = discord_interactions.command_group(
-    'motd',
-    default_permission=False,
-    permissions=utils.admin_permissions()
-)
-
-user_command_group = discord_interactions.command_group(
-    'user',
-    default_permission=False,
-    permissions=utils.admin_permissions()
-)
-
-user_api_command_subgroup = user_command_group.subgroup('api')
-
-event_command_group = discord_interactions.command_group(
-    'event',
-    default_permission=False,
-    permissions=utils.event_manager_permissions()
-)
+maintenance_command_group = discord_interactions.command_group('maintenance', 'Prevent/reestablish access to the RWRS ecosystem') # admin
+motd_command_group = discord_interactions.command_group('motd', 'Set/remove the announcement displayed at the top on the website') # admin
+user_command_group = discord_interactions.command_group('user', 'Manage RWRS users') # admin
+user_api_command_subgroup = user_command_group.subgroup('api', 'Manage API-related features')
+event_command_group = discord_interactions.command_group('event', 'Manage events displayed on the RWRS ecosystem') # event_manager
 
 
 @discord_interactions.command(
     'cc',
-    'Clears RWRS cache',
-    default_permission=False,
-    permissions=utils.admin_permissions()
-)
+    'Clear the RWRS cache'
+) # admin
 @utils.check_maintenance
 def cc(
     ctx
