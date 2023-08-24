@@ -146,6 +146,11 @@ def get_servers():
     _set_servers_location(all_servers)
     _set_server_event(all_servers)
 
+    all_servers.sort(
+        key=lambda s: s.players.current,
+        reverse=True
+    )
+
     return all_servers
 
 
