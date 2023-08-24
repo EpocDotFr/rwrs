@@ -217,7 +217,7 @@ def create_server_message_embed(server, username_to_highlight=None, advertise_ev
         ))
 
     if server.is_official:
-        embed.footer = Footer('⭐️ Official {} server'.format(server.database_name))
+        embed.footer = Footer('⭐️ Official server')
 
     return embed
 

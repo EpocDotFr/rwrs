@@ -33,7 +33,7 @@
 {% macro server_name(server, link=True, raw=False, no_icon=False, event_icon=False, server_details_link=False) -%}
     {% if server.name -%}
         {% if server.is_official and not no_icon -%}
-            {% if raw %}⭐️ {% else -%}<i class="fas fa-star txtyellow help" title="Official {{ server.database_name }} server"></i> {% endif %}
+            {% if raw %}⭐️ {% else -%}<i class="fas fa-star txtyellow help" title="Official server"></i> {% endif %}
         {%- endif -%}
         {% if event_icon and server.event %}<i class="fas fa-calendar-alt txtblue help" title="{{ 'Ongoing' if server.event.is_ongoing else 'Upcoming' }} event on this server: {{ server.event.name }}"></i> {% endif -%}
         {%- if link and (server.website or server_details_link) -%}
