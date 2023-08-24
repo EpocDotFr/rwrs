@@ -43,7 +43,7 @@ def rate_limiter_key_func():
 
 
 auth = HTTPTokenAuth(scheme=http_auth_scheme)
-limiter = Limiter(app, key_func=rate_limiter_key_func)
+limiter = Limiter(rate_limiter_key_func, app=app)
 api = Api(app, prefix='/api', catch_all_404s=True, decorators=[
     check_under_maintenance,
     auth.login_required,

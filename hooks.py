@@ -25,7 +25,7 @@ def create_or_login(resp):
         if not steam_user_info:
             raise Exception('Unable to get Steam user info for Steam ID {}'.format(steam_id))
     except Exception:
-        app.logger.exception()
+        app.logger.exception(f'Error fetching Steam account information #{steam_id}')
 
         if not app.config['DEBUG'] and app.config['SENTRY_DSN']:
             import sentry_sdk
@@ -54,7 +54,7 @@ def create_or_login(resp):
 
         db.session.commit()
     except Exception:
-        app.logger.exception()
+        app.logger.exception(f'Error syncing RWR accounts for user #{user.id} on login')
 
         if not app.config['DEBUG'] and app.config['SENTRY_DSN']:
             import sentry_sdk

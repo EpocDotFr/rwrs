@@ -106,6 +106,7 @@ class DynamicServerImage(DynamicImage):
                 self._do_create_header()
                 self._do_create_body()
         except:
+            raise
             self.status = 500
             self.do_create_error('Internal server error: please try again later.')
 
@@ -184,6 +185,7 @@ class DynamicPlayerImage(DynamicImage):
                 self._do_create_header()
                 self._do_create_body()
         except:
+            raise
             self.status = 500
             self.do_create_error('Internal server error: please try again later.')
 
@@ -198,7 +200,7 @@ class DynamicPlayerImage(DynamicImage):
 
         # Player icon
         if self.player.is_myself or self.player.is_contributor or self.player.is_rwr_dev or self.player.is_official_servers_mod:
-            x, _ = self.image_draw.textsize(self.player.username, font=big_font)
+            x = int(self.image_draw.textlength(self.player.username, font=big_font))
 
             if self.player.is_myself:
                 epoc_image = Image.open('static/images/epoc.png').convert('RGBA')
@@ -238,7 +240,7 @@ class DynamicPlayerImage(DynamicImage):
         # Database name
         database_name = '{} profile'.format(self.player.database_name)
 
-        database_name_w, _ = self.image_draw.textsize(database_name, font=normal_font)
+        database_name_w = int(self.image_draw.textlength(database_name, font=normal_font))
 
         self._draw_text((self.image.width - database_name_w - 4, 1), database_name, font=normal_font)
 

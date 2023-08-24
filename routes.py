@@ -201,7 +201,7 @@ def sync_rwr_accounts(database):
 
         flash('{} RWR accounts successfully sync\'ed.'.format(rwr.utils.get_database_name(database)), 'success')
     except Exception as e:
-        app.logger.exception()
+        app.logger.exception(f'Error syncing RWR accounts for user #{current_user.id} on demand')
 
         if not app.config['DEBUG'] and app.config['SENTRY_DSN']:
             import sentry_sdk
@@ -250,7 +250,7 @@ def delete_rwr_account(rwr_account_id):
 
             return redirect(current_user.link)
         except Exception:
-            app.logger.exception()
+            app.logger.exception(f'Error deleting RWR account #{rwr_account.id}')
 
             if not app.config['DEBUG'] and app.config['SENTRY_DSN']:
                 import sentry_sdk
