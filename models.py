@@ -370,8 +370,8 @@ class UserFriend(db.Model):
         return helpers.is_player_rwr_dev(self.username)
 
     @memoized_property
-    def is_ranked_servers_mod(self):
-        return helpers.is_player_ranked_server_mod(self.username)
+    def is_official_servers_mod(self):
+        return helpers.is_player_official_server_mod(self.username)
 
     def __repr__(self):
         return 'UserFriend:{}'.format(self.id)
@@ -400,7 +400,7 @@ class User(db.Model, UserMixin):
     friends = db.relationship('UserFriend', backref='user', lazy=True, foreign_keys='UserFriend.user_id')
 
     def sync_rwr_accounts(self, only_this_database=None):
-        """Synchronize all RWR accounts owned by this user with the ranked (official) players list."""
+        """Synchronize all RWR accounts owned by this user with the official players list."""
         if not app.config['RWR_ACCOUNTS_BY_STEAM_ID_ENDPOINT']:
             return
 
@@ -681,8 +681,8 @@ class RwrAccount(db.Model):
         return helpers.is_player_rwr_dev(self.username)
 
     @memoized_property
-    def is_ranked_servers_mod(self):
-        return helpers.is_player_ranked_server_mod(self.username)
+    def is_official_servers_mod(self):
+        return helpers.is_player_official_server_mod(self.username)
 
     @memoized_property
     def database(self):

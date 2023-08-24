@@ -419,8 +419,8 @@ def compute_promotions():
 
 
 @app.cli.command()
-def save_ranked_servers_mods():
-    """Retrieve and save the ranked servers moderator."""
+def save_official_servers_mods():
+    """Retrieve and save the official servers moderator."""
     from lxml import etree
     import requests
     import helpers
@@ -455,8 +455,8 @@ def save_ranked_servers_mods():
 
     mods.extend([item.get('value') for item in moderators_xml.iterchildren('item')])
 
-    click.echo('Saving to {}'.format(app.config['RANKED_SERVERS_MODS_FILE']))
+    click.echo('Saving to {}'.format(app.config['OFFICIAL_SERVERS_MODS_FILE']))
 
-    helpers.save_json(app.config['RANKED_SERVERS_MODS_FILE'], mods)
+    helpers.save_json(app.config['OFFICIAL_SERVERS_MODS_FILE'], mods)
 
     click.secho('Done', fg='green')

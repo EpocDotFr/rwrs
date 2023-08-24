@@ -34,7 +34,7 @@ player_base = OrderedDict([
     ('is_rwrs_creator', fields.Boolean(attribute='is_myself')),
     ('is_contributor', fields.Boolean),
     ('is_rwr_dev', fields.Boolean),
-    ('is_ranked_servers_mod', fields.Boolean),
+    ('is_official_servers_mod', fields.Boolean),
     ('database', fields.Nested(database, attribute=lambda player: player if player.database else None, allow_null=True)),
 ])
 
@@ -97,6 +97,7 @@ server_base = OrderedDict([
     ('ip', fields.String),
     ('port', fields.Integer),
     ('is_ranked', fields.Boolean),
+    ('is_official', fields.Boolean),
     ('website_url', fields.String(attribute='website')),
     ('url', fields.String(attribute='link_absolute')),
     ('type', fields.Nested(server_type, attribute=lambda server: server)),

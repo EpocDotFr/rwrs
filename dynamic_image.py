@@ -125,11 +125,11 @@ class DynamicServerImage(DynamicImage):
 
             x += 29
 
-        # Ranked server indicator
-        if self.server.is_ranked:
-            ranked_server_image = Image.open('static/images/dynamic_images/ranked_server.png').convert('RGBA')
+        # Official server indicator
+        if self.server.is_official:
+            official_server_image = Image.open('static/images/dynamic_images/official_server.png').convert('RGBA')
 
-            self._paste(ranked_server_image, (x, 8))
+            self._paste(official_server_image, (x, 8))
 
             x += 23
 
@@ -197,7 +197,7 @@ class DynamicPlayerImage(DynamicImage):
         self._draw_text((7, 0), self.player.username, font=big_font)
 
         # Player icon
-        if self.player.is_myself or self.player.is_contributor or self.player.is_rwr_dev or self.player.is_ranked_servers_mod:
+        if self.player.is_myself or self.player.is_contributor or self.player.is_rwr_dev or self.player.is_official_servers_mod:
             x, _ = self.image_draw.textsize(self.player.username, font=big_font)
 
             if self.player.is_myself:
@@ -225,7 +225,7 @@ class DynamicPlayerImage(DynamicImage):
 
                 x += rwr_icon_image.width
 
-            if self.player.is_ranked_servers_mod:
+            if self.player.is_official_servers_mod:
                 mod_image = Image.open('static/images/dynamic_images/mod.png').convert('RGBA')
 
                 x += 5 if self.player.is_rwr_dev or self.player.is_contributor else 12

@@ -97,7 +97,7 @@ class Server:
     @memoized_property
     def name_display(self):
         return '{}{}{}'.format(
-            '⭐️ ' if self.is_ranked else '',
+            '⭐️ ' if self.is_official else '',
             '📅 ' if self.event else '',
             self.name
         )
@@ -128,8 +128,12 @@ class Server:
         return utils.get_mode_name(self.mode, False)
 
     @memoized_property
+    def is_official(self):
+        return self.realm in constants.OFFICIAL_SERVERS_REALMS
+
+    @memoized_property
     def is_ranked(self):
-        return self.realm in [database['realm'] for _, database in constants.PLAYERS_LIST_DATABASES.items()]
+        return self.realm in constants.RANKED_SERVERS_REALMS
 
     @memoized_property
     def steam_join_link(self):

@@ -55,6 +55,13 @@ PLAYERS_LIST_DATABASES = OrderedDict([
 VALID_DATABASES = PLAYERS_LIST_DATABASES.keys()
 VALID_DATABASES_STRING_LIST = ','.join(VALID_DATABASES)
 
+RANKED_SERVERS_REALMS = [database['realm'] for database in PLAYERS_LIST_DATABASES.values()]
+
+OFFICIAL_SERVERS_REALMS =RANKED_SERVERS_REALMS.copy()
+OFFICIAL_SERVERS_REALMS.extend([
+    'official_dominance',
+])
+
 
 class PlayersSort(Enum):
     USERNAME = 'username'

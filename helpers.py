@@ -159,8 +159,8 @@ def is_player_rwr_dev(player_nickname):
     return player_nickname.lower() in app.config['DEVS']
 
 
-def is_player_ranked_server_mod(player_nickname):
-    return player_nickname.lower() in app.config['RANKED_SERVERS_MODS']
+def is_player_official_server_mod(player_nickname):
+    return player_nickname.lower() in app.config['OFFICIAL_SERVERS_MODS']
 
 
 def markdown_to_html_inline(markdown):

@@ -263,7 +263,7 @@ def info(
     'Displays stats about a given player',
     annotations={
         'username': 'A full RWR username',
-        'database': 'Official (ranked) server type to get data from (defaults to {})'.format(constants.DEFAULT_DATABASE.value),
+        'database': 'Official server type to get data from (defaults to {})'.format(constants.DEFAULT_DATABASE.value),
         'date': 'Get stats for given date (defaults to current)'
     }
 )
@@ -336,7 +336,7 @@ def stats(
     player.set_playing_on_server(servers)
 
     return Message(
-        'Here\'s stats for **{}** on **{}** ranked servers{}:'.format(
+        'Here\'s stats for **{}** on **{}** official servers{}:'.format(
             player.username_display,
             player.database_name,
             ' for **' + date.format('MMMM D, YYYY') + '**' if date else ''
@@ -351,7 +351,7 @@ def stats(
     'Displays evolution of specified stat',
     annotations={
         'username': 'A full RWR username',
-        'database': 'Official (ranked) server type to get data from (defaults to {})'.format(constants.DEFAULT_DATABASE.value)
+        'database': 'Official server type to get data from (defaults to {})'.format(constants.DEFAULT_DATABASE.value)
     }
 )
 @utils.check_maintenance
@@ -383,7 +383,7 @@ def evolution(
             evolution_chart = charts.create_evolution_chart(
                 player.rwr_account,
                 constants.EVOLUTION_TYPES[type]['column'],
-                'Past year {} evolution for {}\n({} ranked servers, {} is better)'.format(
+                'Past year {} evolution for {}\n({} official servers, {} is better)'.format(
                     constants.EVOLUTION_TYPES[type]['name'],
                     player.username,
                     player.database_name,
@@ -538,20 +538,20 @@ def agenda(
     'servers',
     'Displays first {} currently active servers with room'.format(constants.SERVERS_LIMIT),
     annotations={
-        'ranked_only': 'Only return ranked (official) servers'
+        'official_only': 'Only return official servers'
     }
 )
 @utils.check_maintenance
 def servers(
     ctx,
     type: constants.SERVER_TYPE_CHOICES = None,
-    ranked_only: bool = False
+    official_only: bool = False
 ):
     servers = rwr.scraper.filter_servers(
         limit=constants.SERVERS_LIMIT,
         not_empty='yes',
         not_full='yes',
-        ranked='yes' if ranked_only else None,
+        official='yes' if official_only else None,
         type=type if type else 'any'
     )
 
@@ -560,8 +560,8 @@ def servers(
 
     filters = []
 
-    if ranked_only:
-        filters.append('ranked')
+    if official_only:
+        filters.append('official')
 
     if type:
         filters.append(rwr.constants.SERVER_TYPES[type])
@@ -585,7 +585,7 @@ def servers(
 
     return Message(
         '\n'.join(response),
-        components=components.create_servers_components(type, ranked_only)
+        components=components.create_servers_components(type, official_only)
     )
 
 
@@ -594,7 +594,7 @@ def servers(
     'Displays the top {} players'.format(constants.PLAYERS_LIMIT),
     annotations={
         'sort': 'Defaults to {}'.format(constants.DEFAULT_PLAYER_SORT.value),
-        'database': 'Official (ranked) server type to get data from (defaults to {})'.format(constants.DEFAULT_DATABASE.value)
+        'database': 'Official server type to get data from (defaults to {})'.format(constants.DEFAULT_DATABASE.value)
     }
 )
 @utils.check_maintenance
@@ -639,7 +639,7 @@ def top(
     annotations={
         'username': 'A full RWR username',
         'sort': 'Defaults to {}'.format(constants.DEFAULT_PLAYER_SORT.value),
-        'database': 'Official (ranked) server type to get data from (defaults to {})'.format(constants.DEFAULT_DATABASE.value)
+        'database': 'Official server type to get data from (defaults to {})'.format(constants.DEFAULT_DATABASE.value)
     }
 )
 @utils.check_maintenance
@@ -696,7 +696,7 @@ def pos(
     annotations={
         'source_username': 'A full RWR username',
         'target_username': 'A full RWR username',
-        'database': 'Official (ranked) server type to get data from (defaults to {})'.format(constants.DEFAULT_DATABASE.value),
+        'database': 'Official server type to get data from (defaults to {})'.format(constants.DEFAULT_DATABASE.value),
         'date': 'Get stats for given date (defaults to current)'
     }
 )

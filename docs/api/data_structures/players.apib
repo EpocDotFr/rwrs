@@ -27,13 +27,13 @@
 ### Player Base Object
 
   + `username`: `EPOCDOTFR` (required) - Player username
-  + `url`: `https://rwrstats.com/players/invasion/EPOCDOTFR` (nullable) - RWRS player profile page URL. `null` if the player isn't a ranked profile
+  + `url`: `https://rwrstats.com/players/invasion/EPOCDOTFR` (nullable) - RWRS player profile page URL. `null` if the player isn't an official Invasion or WW2 DLCs profile
     + Default: `null`
   + `is_rwrs_creator`: `true` (boolean, required) - Whether this player is the creator of RWRS
   + `is_contributor`: `false` (boolean, required) - Whether this player contributed in a way or another to RWRS
   + `is_rwr_dev`: `false` (boolean, required) - Whether this player is one of the RWR developers
-  + `is_ranked_servers_mod`: `false` (boolean, required) - Whether this player is moderator on ranked (official) servers
-  + `database` (Database Object, nullable) - Player database. `null` if not a ranked (official) player profile
+  + `is_official_servers_mod`: `false` (boolean, required) - Whether this player is moderator on official servers
+  + `database` (Database Object, nullable) - Player database. `null` if not an official Invasion or WW2 DLCs player profile
 
 ### Player Simple Object (Player Base Object)
 

@@ -9,9 +9,9 @@
 
 {% block meta_description -%}
     {% if args.get('target') -%}
-        Position of {{ args.get('target') }} on the {{ macros.database_name() }} Running With Rifles (RWR) servers leaderboard.
+        Position of {{ args.get('target') }} on the Running With Rifles (RWR) {{ macros.database_name() }} official servers leaderboard.
     {%- else -%}
-        Leaderboard for ranked {{ macros.database_name() }} Running With Rifles (RWR) servers.
+        Leaderboard for official Running With Rifles (RWR) {{ macros.database_name() }} official servers.
     {%- endif %}
 {%- endblock %}
 

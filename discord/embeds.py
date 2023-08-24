@@ -20,8 +20,8 @@ def create_player_message_embed(player, description_addendum=None):
     elif player.is_rwr_dev:
         description.append(':hammer_and_wrench: Say hi to one of the Running With Rifles developers!')
 
-    if player.is_ranked_servers_mod:
-        description.append(':scales: Ranked (official) servers moderator')
+    if player.is_official_servers_mod:
+        description.append(':scales: Official servers moderator')
 
     if description_addendum:
         description.append(description_addendum)
@@ -216,8 +216,8 @@ def create_server_message_embed(server, username_to_highlight=None, advertise_ev
             inline=True
         ))
 
-    if server.is_ranked:
-        embed.footer = Footer('⭐️ Ranked {} server'.format(server.database_name))
+    if server.is_official:
+        embed.footer = Footer('⭐️ Official server')
 
     return embed
 
