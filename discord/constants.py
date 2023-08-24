@@ -40,7 +40,6 @@ MY_DISCORD_ID = '66543750725246976'
 
 PERMISSIONS = {
     'myself': Permission(user=MY_DISCORD_ID),
-    'jackmayol': Permission(user='103941716133818368'),
 }
 
 TIME_AGO_REGEX = re.compile(r'(?P<days_ago>\d+) day(?:s?) ago|(?P<weeks_ago>\d+) week(?:s?) ago|(?P<months_ago>\d+) month(?:s?) ago|(?P<years_ago>\d+) year(?:s?) ago')
