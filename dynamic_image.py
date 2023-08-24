@@ -106,7 +106,6 @@ class DynamicServerImage(DynamicImage):
                 self._do_create_header()
                 self._do_create_body()
         except:
-            raise
             self.status = 500
             self.do_create_error('Internal server error: please try again later.')
 
@@ -185,7 +184,6 @@ class DynamicPlayerImage(DynamicImage):
                 self._do_create_header()
                 self._do_create_body()
         except:
-            raise
             self.status = 500
             self.do_create_error('Internal server error: please try again later.')
 
