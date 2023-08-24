@@ -312,7 +312,7 @@ def filter_servers(**filters):
         type = filters.get('type', 'any')
         mode = filters.get('mode', 'any')
         dedicated = filters.get('dedicated')
-        ranked = filters.get('ranked')
+        official = filters.get('official')
         not_empty = filters.get('not_empty')
         not_full = filters.get('not_full')
         database = filters.get('database')
@@ -365,7 +365,7 @@ def filter_servers(**filters):
         if dedicated == 'yes' and not server.is_dedicated:
             return False
 
-        if ranked == 'yes' and not server.is_ranked: # TODO
+        if official == 'yes' and not server.is_official:
             return False
 
         if not_empty == 'yes' and server.players.current == 0:

@@ -12,7 +12,7 @@
     ('Details'),
 ) %}
 
-{% block meta_description %}Details about the{{ ' ranked ' + server.database_name if server.is_ranked else ' dedicated' if server.is_dedicated }} Running With Rifles (RWR) server named {{ macros.server_name(server, link=False, no_icon=True) }}{% if server.location.country_code %} hosted in {{ server.location.text }}{% endif %}.{% endblock %}
+{% block meta_description %}Details about the{{ ' official' if server.is_official else ' dedicated' if server.is_dedicated }} Running With Rifles (RWR) server named {{ macros.server_name(server, link=False, no_icon=True) }}{% if server.location.country_code %} hosted in {{ server.location.text }}{% endif %}.{% endblock %}
 
 {% block jsfiles %}
     {% if server.is_dedicated %}

@@ -14,13 +14,13 @@
 
 {% block meta_description -%}
     {%- if request.view_args.get('tab') == 'stats-history' -%}
-        Statistics history of {{ player.username }} on Running With Rifles (RWR) {{ player.database_name }} ranked servers.
+        Statistics history of {{ player.username }} on official Running With Rifles (RWR) {{ player.database_name }} servers.
     {%- elif request.view_args.get('tab') == 'evolution' -%}
-        Charts about the stats evolution of {{ player.username }} on Running With Rifles (RWR) {{ player.database_name }} ranked servers.
+        Charts about the stats evolution of {{ player.username }} on official Running With Rifles (RWR) {{ player.database_name }} servers.
     {%- elif request.view_args.get('tab') == 'signature' -%}
-        Get a signature to include in your website / blog / forum for {{ player.username }} on Running With Rifles (RWR) {{ player.database_name }} ranked servers.
+        Get a signature to include in your website / blog / forum for {{ player.username }} on official Running With Rifles (RWR) {{ player.database_name }} servers.
     {%- else -%}
-        Player statistics of {{ player.username }} on Running With Rifles (RWR) {{ player.database_name }} ranked servers.
+        Player statistics of {{ player.username }} on official Running With Rifles (RWR) {{ player.database_name }} servers.
     {%- endif -%}
 {%- endblock %}
 

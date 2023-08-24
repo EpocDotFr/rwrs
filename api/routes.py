@@ -38,7 +38,7 @@ class ServersResource(BaseResource):
 
         if args:
             ServersResource.replace_true_by_yes(args, 'dedicated')
-            ServersResource.replace_true_by_yes(args, 'ranked')
+            ServersResource.replace_true_by_yes(args, 'official')
             ServersResource.replace_true_by_yes(args, 'not_empty')
             ServersResource.replace_true_by_yes(args, 'not_full')
 

@@ -97,6 +97,7 @@ server_base = OrderedDict([
     ('ip', fields.String),
     ('port', fields.Integer),
     ('is_ranked', fields.Boolean),
+    ('is_official', fields.Boolean),
     ('website_url', fields.String(attribute='website')),
     ('url', fields.String(attribute='link_absolute')),
     ('type', fields.Nested(server_type, attribute=lambda server: server)),

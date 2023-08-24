@@ -60,7 +60,7 @@ get_servers_list.add_argument('map', location='args', choices=maps_choices, defa
 get_servers_list.add_argument('type', location='args', choices=types_choices, default='any')
 get_servers_list.add_argument('mode', location='args', choices=modes_choices, default='any')
 get_servers_list.add_argument('dedicated', location='args', type=inputs.boolean)
-get_servers_list.add_argument('ranked', location='args', type=inputs.boolean)
+get_servers_list.add_argument('official', location='args', type=inputs.boolean)
 get_servers_list.add_argument('not_empty', location='args', type=inputs.boolean)
 get_servers_list.add_argument('not_full', location='args', type=inputs.boolean)
 get_servers_list.add_argument('limit', location='args', type=inputs.positive)
