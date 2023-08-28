@@ -1,7 +1,7 @@
 Flask==2.3.3
 Flask-Caching==2.0.2
-Flask-SQLAlchemy==3.0.5
-Flask-Migrate==4.0.4
+Flask-SQLAlchemy==2.5.1
+Flask-Migrate==3.1.0
 Flask-Assets==2.0
 Flask-Discord-Interactions==2.1.2
 simplejson==3.19.1
