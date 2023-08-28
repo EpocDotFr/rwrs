@@ -1,5 +1,6 @@
 from flask_discord_interactions import Permission
 from enum import Enum
+from rwrs import app
 import rwr.constants
 import helpers
 import re
@@ -36,10 +37,9 @@ DEFAULT_PLAYER_SORT = PLAYER_SORT_CHOICES.score
 PLAYERS_LIMIT = 24
 SERVERS_LIMIT = 10
 EMBED_COLOR = 10800919 # The well-known primary RWRS color #A4CF17, in the decimal format
-MY_DISCORD_ID = '66543750725246976'
 
 PERMISSIONS = {
-    'myself': Permission(user=MY_DISCORD_ID),
+    'myself': Permission(user=app.config['MY_DISCORD_ID']),
 }
 
 TIME_AGO_REGEX = re.compile(r'(?P<days_ago>\d+) day(?:s?) ago|(?P<weeks_ago>\d+) week(?:s?) ago|(?P<months_ago>\d+) month(?:s?) ago|(?P<years_ago>\d+) year(?:s?) ago')

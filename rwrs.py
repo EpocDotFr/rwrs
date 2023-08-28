@@ -65,6 +65,7 @@ app.config['DISCORD_SERVER_URL'] = 'https://discord.gg/runningwithrifles'
 app.config['BUNDLE_ERRORS'] = True
 app.config['SESSION_PROTECTION'] = 'basic'
 app.config['DISCORD_INTERACTIONS_PATH'] = '/discord-interactions'
+app.config['MY_DISCORD_ID'] = '66543750725246976'
 app.config['OFFICIAL_SERVERS_MODS'] = helpers.load_json(app.config['OFFICIAL_SERVERS_MODS_FILE'])
 app.config['ASSETS_CACHE'] = 'instance/webassets-cache'
 
