@@ -42,20 +42,31 @@ def update_discord_commands():
 
 
 @app.cli.command()
-def recompute_hashes():
+@click.option('--offset', type=int, default=0)
+def recompute_hashes(offset):
     """Recompute all stats history hashes."""
     from models import RwrAccountStat
+    from sqlalchemy import func
     from rwrs import db
 
     click.echo('Recomputing all stats history hashes...')
 
     limit = 200
-    offset = 0
+    total = RwrAccountStat.query.with_entities(func.count(RwrAccountStat.id)).scalar()
 
     while True:
+        if offset >= total:
+            click.echo('Reached end of the list')
+
+            break
+
+        click.echo(f'Offset {offset}/{total}')
+
         rwr_account_stats = RwrAccountStat.query.limit(limit).offset(offset).all()
 
         if not rwr_account_stats:
+            click.echo('No more stats to process')
+
             break
 
         for rwr_account_stat in rwr_account_stats:
