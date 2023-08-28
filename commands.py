@@ -42,8 +42,9 @@ def update_discord_commands():
 
 
 @app.cli.command()
-@click.option('--offset', type=int, default=0)
-def recompute_hashes(offset):
+@click.option('--starting-id', type=int, default=0)
+@click.option('--limit', type=int, default=200)
+def recompute_hashes(starting_id, limit):
     """Recompute all stats history hashes."""
     from models import RwrAccountStat
     from sqlalchemy import func
@@ -51,18 +52,21 @@ def recompute_hashes(offset):
 
     click.echo('Recomputing all stats history hashes...')
 
-    limit = 200
-    total = RwrAccountStat.query.with_entities(func.count(RwrAccountStat.id)).scalar()
+    current_id = starting_id
+    total = RwrAccountStat.query.with_entities(func.count('*')).filter(RwrAccountStat.id > current_id).order_by(RwrAccountStat.id.asc()).scalar()
+    processed = 0
 
     while True:
-        if offset >= total:
+        if processed >= total:
             click.echo('Reached end of the list')
 
             break
 
-        click.echo(f'Offset {offset}/{total}')
+        percentage = ((processed * 100) / total) / 100
 
-        rwr_account_stats = RwrAccountStat.query.limit(limit).offset(offset).all()
+        click.echo(f'#{current_id} ({total} / {percentage:.2%})')
+
+        rwr_account_stats = RwrAccountStat.query.filter(RwrAccountStat.id > current_id).order_by(RwrAccountStat.id.asc()).limit(limit).all()
 
         if not rwr_account_stats:
             click.echo('No more stats to process')
@@ -75,9 +79,11 @@ def recompute_hashes(offset):
         db.session.bulk_save_objects(rwr_account_stats)
         db.session.flush()
 
+        current_id = rwr_account_stats[-1].id
+
         del rwr_account_stats
 
-        offset += limit
+        processed += limit
 
     db.session.commit()
 
