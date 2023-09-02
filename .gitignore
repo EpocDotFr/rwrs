@@ -1,4 +1,3 @@
-config.py
 instance/*.mmdb
 instance/*.sqlite
 instance/cache/*

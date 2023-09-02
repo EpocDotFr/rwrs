@@ -1,10 +1,8 @@
 from flask import request, Markup, url_for
 from itertools import tee, islice, chain
 from collections import OrderedDict
-from app import app
 import misaka
 import json
-import os
 
 
 def humanize_seconds_to_days(seconds):
@@ -103,42 +101,6 @@ def simplified_integer(integer):
     return '{}{}'.format('{:f}'.format(integer).rstrip('0').rstrip('.'), ['', 'K', 'M', 'B', 'T'][magnitude])
 
 
-def build_database_uri():
-    """Return the database connection string."""
-    if app.config['DEBUG']:
-        return 'sqlite:///{}'.format(os.path.join(app.instance_path, 'db.sqlite'))
-
-    uri = 'mysql+mysqldb://{username}:{password}@'
-
-    params = {
-        'username': app.config['DB_USERNAME'],
-        'password': app.config['DB_PASSWORD']
-    }
-
-    if not app.config['DB_UNIX_SOCKET']:
-        uri += '{host}:{port}'
-
-        params.update({
-            'host': app.config['DB_HOST'],
-            'port': app.config['DB_PORT']
-        })
-
-    uri += '/{dbname}'
-
-    params.update({
-        'dbname': app.config['DB_NAME']
-    })
-
-    if app.config['DB_UNIX_SOCKET']:
-        uri += '?unix_socket={unix_socket}'
-
-        params.update({
-            'unix_socket': app.config['DB_UNIX_SOCKET']
-        })
-
-    return uri.format(**params)
-
-
 def previous_and_next(some_iterable):
     prevs, items, nexts = tee(some_iterable, 3)
     prevs = chain([None], prevs)
@@ -148,18 +110,26 @@ def previous_and_next(some_iterable):
 
 
 def is_player_myself(player_nickname):
+    from app import app
+
     return player_nickname.lower() == app.config['MY_USERNAME']
 
 
 def is_player_contributor(player_nickname):
+    from app import app
+
     return player_nickname.lower() in app.config['CONTRIBUTORS']
 
 
 def is_player_rwr_dev(player_nickname):
+    from app import app
+
     return player_nickname.lower() in app.config['DEVS']
 
 
 def is_player_official_server_mod(player_nickname):
+    from app import app
+
     return player_nickname.lower() in app.config['OFFICIAL_SERVERS_MODS']
 
 

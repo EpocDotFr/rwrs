@@ -11,6 +11,7 @@ from flask_openid import OpenID
 from flask_caching import Cache
 from datetime import datetime
 from environs import Env
+import helpers
 import arrow
 import math
 import os
@@ -22,7 +23,96 @@ env = Env()
 env.read_env()
 
 app = Flask(__name__, static_url_path='')
-app.config.from_pyfile('config.py') # TODO
+
+app.config.update(
+    # Default config values that may be overwritten by environment values
+    SECRET_KEY=env.str('SECRET_KEY'),
+    SERVER_NAME=env.str('SERVER_NAME', default='localhost:8080'),
+    PREFERRED_URL_SCHEME=env.str('PREFERRED_URL_SCHEME', default='http'),
+
+    SENTRY_DSN=env.str('SENTRY_DSN', default=None),
+    SENTRY_TRACES_SAMPLE_RATE=env.float('SENTRY_TRACES_SAMPLE_RATE', default=None),
+
+    CACHE_TYPE=env.str('CACHE_TYPE', default='FileSystemCache'),
+    CACHE_DIR=env.str('CACHE_DIR', default='instance/cache'),
+
+    ASSETS_CACHE=env.str('ASSETS_CACHE', default='instance/webassets-cache'),
+
+    DEBUG_TB_INTERCEPT_REDIRECTS=env.bool('DEBUG_TB_INTERCEPT_REDIRECTS', False),
+
+    MINIFY_HTML=env.bool('MINIFY_HTML', default=False),
+
+    COMPRESS_REGISTER=env.bool('COMPRESS_REGISTER', default=False),
+    COMPRESS_MIN_SIZE=env.int('COMPRESS_MIN_SIZE', 512),
+
+    SQLALCHEMY_DATABASE_URI=env.str('SQLALCHEMY_DATABASE_URI', default='sqlite:///instance/db.sqlite'),
+
+    DB_USERNAME=env.str('DB_USERNAME', default='root'),
+    DB_PASSWORD=env.str('DB_PASSWORD', default=''),
+    DB_UNIX_SOCKET=env.str('DB_UNIX_SOCKET', default=None),
+    DB_HOST=env.str('DB_HOST', default='localhost'),
+    DB_PORT=env.int('DB_PORT', default=3306),
+    DB_NAME=env.str('DB_NAME', default='rwrs'),
+
+    GA_TRACKING_ID=env.str('GA_TRACKING_ID', default=None),
+
+    SERVERS_CACHE_TIMEOUT=env.int('SERVERS_CACHE_TIMEOUT', default=60),
+    PLAYERS_CACHE_TIMEOUT=env.int('PLAYERS_CACHE_TIMEOUT', default=60 * 60),
+    GRAPHS_DATA_CACHE_TIMEOUT=env.int('GRAPHS_DATA_CACHE_TIMEOUT', default=60 * 15),
+    STEAM_PLAYERS_CACHE_TIMEOUT=env.int('STEAM_PLAYERS_CACHE_TIMEOUT', default=60),
+
+    STEAM_API_KEY=env.str('STEAM_API_KEY'),
+
+    MAX_NUM_OF_PLAYERS_TO_TRACK_STATS_FOR=env.int('MAX_NUM_OF_PLAYERS_TO_TRACK_STATS_FOR', default=5000),
+
+    DISCORD_CLIENT_ID=env.str('DISCORD_CLIENT_ID'),
+    DISCORD_PUBLIC_KEY=env.str('DISCORD_PUBLIC_KEY'),
+    DISCORD_CLIENT_SECRET=env.str('DISCORD_CLIENT_SECRET'),
+    DISCORD_TESTING_GUILD=env.str('DISCORD_TESTING_GUILD', default=None),
+
+    RWR_ACCOUNTS_ENDPOINTS_CREDENTIALS=env.list('RWR_ACCOUNTS_ENDPOINTS_CREDENTIALS', ['username', 'password']),
+
+    RWR_ACCOUNTS_BY_STEAM_ID_ENDPOINT=env.str('RWR_ACCOUNTS_BY_STEAM_ID_ENDPOINT', default=None),
+    RWR_ACCOUNTS_DELETE_ENDPOINT=env.str('RWR_ACCOUNTS_DELETE_ENDPOINT', default=None),
+
+    ADMINS=env.list('ADMINS', default=[]),
+
+    # Config values that cannot be overwritten
+    CACHE_THRESHOLD=10000,
+    SQLALCHEMY_TRACK_MODIFICATIONS=False,
+    BUNDLE_ERRORS=True,
+    SESSION_PROTECTION='basic',
+
+    RANKS_IMAGES_DIR='static/images/ranks',
+    RANKS_DATA_FILE='data/ranks.json',
+
+    MINIMAPS_IMAGES_DIR='static/images/maps/minimap',
+    MAPS_PREVIEW_IMAGES_DIR='static/images/maps/preview',
+    MAPS_DATA_FILE= 'data/maps.json',
+
+    GEOIP_DATABASE_FILE='instance/GeoLite2-City.mmdb',
+
+    OFFICIAL_SERVERS_MODS_FILE='data/official_servers_mods.json',
+
+    MY_USERNAME='epocdotfr',
+    CONTRIBUTORS=['street veteran', 'mastock', 'dio', 'jatimatik', 'mellcor', 'teratai', 'harrified', 'mr. bang',
+                  'dogtato', 'stesmith', 'korgorr', 'foxtrod', 'moorsey100', 'moorsey the owl', 'kilroy (7kb/s)'],
+    DEVS=['jackmayol', 'pasik', 'pasik2', 'tremozl', 'the soldier', '577', 'unit g17'],
+
+    LIST_PAGE_SIZES=[15, 30, 50, 100],
+    RWR_STEAM_APP_ID=270150,
+
+    EVENT_DATETIME_STORAGE_FORMAT='YYYY-MM-DD HH:mm ZZZ',
+    EVENT_DATETIME_DISPLAY_FORMAT='MMMM Do, YYYY @ h:mm A ZZZ',
+
+    STATUS_PAGE_URL='https://stats.uptimerobot.com/Z0PkQf9YY',
+
+    DISCORD_SERVER_URL='https://discord.gg/runningwithrifles',
+    DISCORD_INTERACTIONS_PATH='/discord-interactions',
+    MY_DISCORD_ID='66543750725246976',
+)
+
+app.config['OFFICIAL_SERVERS_MODS'] = helpers.load_json(app.config['OFFICIAL_SERVERS_MODS_FILE'])
 
 # -----------------------------------------------------------
 # Debugging-related behaviours
@@ -45,36 +135,6 @@ elif app.config['SENTRY_DSN']:
         )
     except ImportError:
         pass
-
-import helpers
-
-app.config['SQLALCHEMY_DATABASE_URI'] = helpers.build_database_uri()
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['CACHE_TYPE'] = 'FileSystemCache'
-app.config['CACHE_DIR'] = 'instance/cache'
-app.config['CACHE_THRESHOLD'] = 10000
-app.config['RANKS_IMAGES_DIR'] = 'static/images/ranks'
-app.config['RANKS_DATA_FILE'] = 'data/ranks.json'
-app.config['MINIMAPS_IMAGES_DIR'] = 'static/images/maps/minimap'
-app.config['MAPS_PREVIEW_IMAGES_DIR'] = 'static/images/maps/preview'
-app.config['MAPS_DATA_FILE'] = 'data/maps.json'
-app.config['GEOIP_DATABASE_FILE'] = 'instance/GeoLite2-City.mmdb'
-app.config['OFFICIAL_SERVERS_MODS_FILE'] = 'data/official_servers_mods.json'
-app.config['MY_USERNAME'] = 'epocdotfr'
-app.config['CONTRIBUTORS'] = ['street veteran', 'mastock', 'dio', 'jatimatik', 'mellcor', 'teratai', 'harrified', 'mr. bang', 'dogtato', 'stesmith', 'korgorr', 'foxtrod', 'moorsey100', 'moorsey the owl', 'kilroy (7kb/s)']
-app.config['DEVS'] = ['jackmayol', 'pasik', 'pasik2', 'tremozl', 'the soldier', '577', 'unit g17']
-app.config['LIST_PAGE_SIZES'] = [15, 30, 50, 100]
-app.config['RWR_STEAM_APP_ID'] = 270150
-app.config['EVENT_DATETIME_STORAGE_FORMAT'] = 'YYYY-MM-DD HH:mm ZZZ'
-app.config['EVENT_DATETIME_DISPLAY_FORMAT'] = 'MMMM Do, YYYY @ h:mm A ZZZ'
-app.config['STATUS_PAGE_URL'] = 'https://stats.uptimerobot.com/Z0PkQf9YY'
-app.config['DISCORD_SERVER_URL'] = 'https://discord.gg/runningwithrifles'
-app.config['BUNDLE_ERRORS'] = True
-app.config['SESSION_PROTECTION'] = 'basic'
-app.config['DISCORD_INTERACTIONS_PATH'] = '/discord-interactions'
-app.config['MY_DISCORD_ID'] = '66543750725246976'
-app.config['OFFICIAL_SERVERS_MODS'] = helpers.load_json(app.config['OFFICIAL_SERVERS_MODS_FILE'])
-app.config['ASSETS_CACHE'] = 'instance/webassets-cache'
 
 # -----------------------------------------------------------
 # Flask extensions initialization and configuration
