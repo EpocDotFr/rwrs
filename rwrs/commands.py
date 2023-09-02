@@ -36,7 +36,7 @@ def update_discord_commands():
 
     click.echo('Updating Discord commands...')
 
-    discord_interactions.update_commands(guild_id=app.config['DISCORD_TESTING_GUILD'])
+    discord_interactions.update_commands(guild_id=app.config['DISCORD_GUILD'])
 
     click.secho('Done', fg='green')
 

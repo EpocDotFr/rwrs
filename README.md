@@ -51,7 +51,7 @@ More informations on the two above can be found [here](http://flask.pocoo.org/do
   - `DISCORD_CLIENT_ID` A Discord client ID
   - `DISCORD_PUBLIC_KEY` A Discord app public key
   - `DISCORD_CLIENT_SECRET` A Discord client secret
-  - `DISCORD_TESTING_GUILD` A Discord guild ID where to register commands into, for testing purposes (defaults to None)
+  - `DISCORD_GUILD` A Discord guild ID where to register commands into
 
 I'll let you search yourself about how to configure a web server along uWSGI.
 
