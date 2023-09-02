@@ -1,5 +1,5 @@
 from flask_restful import Resource, marshal_with, abort
-from models import RwrAccount, RwrAccountStat, User
+from rwrs.models import RwrAccount, RwrAccountStat, User
 from . import api, transformers, validators, auth
 from types import SimpleNamespace
 from rwr.player import Player
@@ -8,7 +8,7 @@ from functools import wraps
 from app import db
 import rwr.constants
 import rwr.scraper
-import helpers
+from rwrs import helpers
 
 
 def check_pat(f):

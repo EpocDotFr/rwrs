@@ -1,8 +1,7 @@
 from collections import OrderedDict
 from enum import Enum
 from app import app
-import helpers
-
+from rwrs import helpers
 
 MAPS = helpers.load_json(app.config['MAPS_DATA_FILE'])
 

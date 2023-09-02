@@ -2,7 +2,7 @@ from steam.steamid import SteamID
 from flask import current_app
 from lxml import html, etree
 from app import app, cache
-from models import Variable
+from rwrs.models import Variable
 from .server import Server
 from .player import Player
 from . import constants

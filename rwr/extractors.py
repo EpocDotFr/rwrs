@@ -4,7 +4,7 @@ from glob import glob
 from PIL import Image
 from app import app
 from . import utils
-import helpers
+from rwrs import helpers
 import click
 import math
 import os

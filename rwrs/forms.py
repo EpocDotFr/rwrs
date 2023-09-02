@@ -1,8 +1,8 @@
 from wtforms.validators import ValidationError
 from wtforms import StringField, BooleanField
+import wtforms.validators as validators
 from flask_login import current_user
 from flask_wtf import FlaskForm
-import wtforms.validators as validators
 
 
 class UserGeneralSettingsForm(FlaskForm):

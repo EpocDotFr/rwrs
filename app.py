@@ -11,7 +11,7 @@ from flask_openid import OpenID
 from flask_caching import Cache
 from datetime import datetime
 from environs import Env
-import helpers
+from rwrs import helpers
 import arrow
 import math
 import os
@@ -192,7 +192,7 @@ login_manager.login_message_category = 'info'
 
 @login_manager.user_loader
 def load_user(user_id):
-    from models import User
+    from rwrs.models import User
 
     return User.query.get(user_id)
 
@@ -202,8 +202,8 @@ oid = OpenID(app)
 
 @oid.after_login
 def create_or_login(resp):
-    from steam_helpers import parse_steam_id_from_identity_url, get_user_summaries
-    from models import User
+    from rwrs.steam_helpers import parse_steam_id_from_identity_url, get_user_summaries
+    from rwrs.models import User
 
     steam_id = parse_steam_id_from_identity_url(resp.identity_url)
 
@@ -285,8 +285,8 @@ admin = Admin(app, name='RWRS Admin', template_mode='bootstrap4', url='/manage',
 
 @app.before_request
 def before_request():
-    from steam_helpers import get_current_players_count_for_app
-    from models import Variable
+    from rwrs.steam_helpers import get_current_players_count_for_app
+    from rwrs.models import Variable
     import rwr.scraper
 
     if request.endpoint == 'static':
@@ -364,16 +364,14 @@ def http_error_handler(e):
 # -----------------------------------------------------------
 # After-bootstrap imports
 
-import models
-import routes
-import commands
+import rwrs.models
+import rwrs.routes
+import rwrs.commands
 import discord.commands
 import api
 
-# Flask-Admin
-
-admin.add_view(RestrictedModelView(models.RwrAccount, db.session, name='RWR Accounts', url='rwr-accounts'))
-admin.add_view(RestrictedModelView(models.RwrAccountStat, db.session, name='RWR Accounts Stats', url='rwr-accounts-stats'))
-admin.add_view(RestrictedModelView(models.User, db.session, name='Users', url='users'))
-admin.add_view(RestrictedModelView(models.UserFriend, db.session, name='Users Friends', url='users-friends'))
-admin.add_view(RestrictedModelView(models.Variable, db.session, name='Variables', url='variables'))
+admin.add_view(RestrictedModelView(rwrs.models.RwrAccount, db.session, name='RWR Accounts', url='rwr-accounts'))
+admin.add_view(RestrictedModelView(rwrs.models.RwrAccountStat, db.session, name='RWR Accounts Stats', url='rwr-accounts-stats'))
+admin.add_view(RestrictedModelView(rwrs.models.User, db.session, name='Users', url='users'))
+admin.add_view(RestrictedModelView(rwrs.models.UserFriend, db.session, name='Users Friends', url='users-friends'))
+admin.add_view(RestrictedModelView(rwrs.models.Variable, db.session, name='Variables', url='variables'))

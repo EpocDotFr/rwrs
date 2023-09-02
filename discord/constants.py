@@ -2,7 +2,7 @@ from flask_discord_interactions import Permission
 from enum import Enum
 from app import app
 import rwr.constants
-import helpers
+from rwrs import helpers
 import re
 
 EVOLUTION_TYPES = {

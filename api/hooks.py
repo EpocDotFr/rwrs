@@ -1,5 +1,5 @@
 from flask_restful import abort
-from models import User
+from rwrs.models import User
 from app import db
 from . import auth
 import arrow

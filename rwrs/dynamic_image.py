@@ -1,9 +1,9 @@
 from PIL import Image, ImageDraw, ImageFont
 from flask import make_response, g
+from rwrs import helpers
 from io import BytesIO
 import rwr.scraper
 import rwr.utils
-import helpers
 import arrow
 
 
@@ -127,7 +127,7 @@ class DynamicServerImage(DynamicImage):
 
         # Official server indicator
         if self.server.is_official:
-            official_server_image = Image.open('static/images/dynamic_images/official_server.png').convert('RGBA')
+            official_server_image = Image.open('../static/images/dynamic_images/official_server.png').convert('RGBA')
 
             self._paste(official_server_image, (x, 8))
 
@@ -201,7 +201,7 @@ class DynamicPlayerImage(DynamicImage):
             x = int(self.image_draw.textlength(self.player.username, font=big_font))
 
             if self.player.is_myself:
-                epoc_image = Image.open('static/images/epoc.png').convert('RGBA')
+                epoc_image = Image.open('../static/images/epoc.png').convert('RGBA')
 
                 x += 10
 
@@ -209,7 +209,7 @@ class DynamicPlayerImage(DynamicImage):
 
                 x += epoc_image.width
             elif self.player.is_contributor:
-                contributor_image = Image.open('static/images/dynamic_images/contributor.png').convert('RGBA')
+                contributor_image = Image.open('../static/images/dynamic_images/contributor.png').convert('RGBA')
 
                 x += 10
 
@@ -217,7 +217,7 @@ class DynamicPlayerImage(DynamicImage):
 
                 x += contributor_image.width
             elif self.player.is_rwr_dev:
-                rwr_icon_image = Image.open('static/images/rwr_icon.png').convert('RGBA')
+                rwr_icon_image = Image.open('../static/images/rwr_icon.png').convert('RGBA')
 
                 x += 10
 
@@ -226,7 +226,7 @@ class DynamicPlayerImage(DynamicImage):
                 x += rwr_icon_image.width
 
             if self.player.is_official_servers_mod:
-                mod_image = Image.open('static/images/dynamic_images/mod.png').convert('RGBA')
+                mod_image = Image.open('../static/images/dynamic_images/mod.png').convert('RGBA')
 
                 x += 5 if self.player.is_rwr_dev or self.player.is_contributor else 12
 
@@ -244,7 +244,7 @@ class DynamicPlayerImage(DynamicImage):
 
         # Owned icon
         if self.player.user:
-            owned_image = Image.open('static/images/dynamic_images/owned.png').convert('RGBA')
+            owned_image = Image.open('../static/images/dynamic_images/owned.png').convert('RGBA')
 
             self._paste(owned_image, (self.image.width - owned_image.width - 4, 22))
 

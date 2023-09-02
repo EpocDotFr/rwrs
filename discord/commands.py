@@ -1,4 +1,4 @@
-from models import Variable, User, RwrAccount, RwrAccountStat
+from rwrs.models import Variable, User, RwrAccount, RwrAccountStat
 from . import constants, utils, embeds, charts, components
 from flask_discord_interactions.models.embed import Field
 from app import app, cache, db, discord_interactions
@@ -6,11 +6,10 @@ from flask_discord_interactions import Message
 from tabulate import tabulate
 from rwr.player import Player
 from flask import g
-import steam_helpers
 import rwr.scraper
 import rwr.utils
 import threading
-import helpers
+from rwrs import helpers, steam_helpers
 import arrow
 import os
 
