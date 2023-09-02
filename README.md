@@ -32,7 +32,7 @@ Available configuration parameters are:
   - `SECRET_KEY` Set this to a complex random value
   - `SERVER_NAME` The IP or hostname where RWRS will be available
 
-More informations on the two above can be found [here](http://flask.pocoo.org/docs/1.0/config/#builtin-configuration-values).
+More information on the two above can be found [here](http://flask.pocoo.org/docs/1.0/config/#builtin-configuration-values).
 
   - `GA_TRACKING_ID` A Google Analytics tracking ID used to track visits on RWRS (optional)
   - `CACHE_THRESHOLD` The maximum number of items the cache will store before it starts deleting some (see [here](https://pythonhosted.org/Flask-Cache/#configuring-flask-cache) for more configuration parameters related to Flask-Cache)
