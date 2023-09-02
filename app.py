@@ -8,15 +8,17 @@ from flask_migrate import Migrate
 from flask_openid import OpenID
 from flask_caching import Cache
 from flask import Flask, abort
+from environs import Env
 import math
-
 
 # -----------------------------------------------------------
 # App bootstrap
 
+env = Env()
+env.read_env()
 
 app = Flask(__name__, static_url_path='')
-app.config.from_pyfile('config.py')
+app.config.from_pyfile('config.py') # TODO
 
 # -----------------------------------------------------------
 # Debugging-related behaviours
