@@ -1,5 +1,5 @@
 from flask_restful import reqparse, inputs
-from rwrs import app
+from app import app
 import rwr.constants
 import iso3166
 import arrow

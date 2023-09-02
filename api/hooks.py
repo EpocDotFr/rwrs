@@ -1,6 +1,6 @@
 from flask_restful import abort
 from models import User
-from rwrs import db
+from app import db
 from . import auth
 import arrow
 

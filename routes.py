@@ -3,7 +3,7 @@ from flask import render_template, abort, request, redirect, url_for, flash, g, 
 from flask_login import login_required, current_user, logout_user
 from dynamic_image import DynamicServerImage, DynamicPlayerImage
 from rwr.player import Player
-from rwrs import app, oid, db
+from app import app, oid, db
 from models import User
 import rwr.constants
 import flask_openid

@@ -4,7 +4,7 @@ from flask_restful import Api, abort
 from flask_limiter import Limiter
 from flask import g, request
 from functools import wraps
-from rwrs import app
+from app import app
 
 http_auth_scheme = 'Token'
 

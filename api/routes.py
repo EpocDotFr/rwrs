@@ -5,7 +5,7 @@ from types import SimpleNamespace
 from rwr.player import Player
 from flask import url_for, g
 from functools import wraps
-from rwrs import db
+from app import db
 import rwr.constants
 import rwr.scraper
 import helpers

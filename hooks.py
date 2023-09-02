@@ -1,5 +1,5 @@
 from flask import g, abort, render_template, make_response, request, redirect, flash, url_for
-from rwrs import app, login_manager, oid, db
+from app import app, login_manager, oid, db
 from werkzeug.exceptions import HTTPException
 from models import User, Variable
 from flask_login import login_user

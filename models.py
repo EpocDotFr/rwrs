@@ -3,7 +3,7 @@ from sqlalchemy.util import memoized_property
 from flask import url_for, current_app
 from collections import OrderedDict
 from flask_login import UserMixin
-from rwrs import db, cache, app
+from app import db, cache, app
 from sqlalchemy import func
 from slugify import slugify
 from enum import Enum

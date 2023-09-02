@@ -1,6 +1,6 @@
 from collections import OrderedDict
 from enum import Enum
-from rwrs import app
+from app import app
 import helpers
 
 

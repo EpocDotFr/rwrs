@@ -1,7 +1,7 @@
 from flask import request, Markup, url_for
 from itertools import tee, islice, chain
 from collections import OrderedDict
-from rwrs import app
+from app import app
 import misaka
 import json
 import os

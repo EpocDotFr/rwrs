@@ -2,7 +2,7 @@ from collections import OrderedDict
 from lxml import etree
 from glob import glob
 from PIL import Image
-from rwrs import app
+from app import app
 from . import utils
 import helpers
 import click
