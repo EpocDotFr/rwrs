@@ -47,13 +47,6 @@ app.config.update(
 
     SQLALCHEMY_DATABASE_URI=env.str('SQLALCHEMY_DATABASE_URI', default='sqlite:///instance/db.sqlite'),
 
-    DB_USERNAME=env.str('DB_USERNAME', default='root'),
-    DB_PASSWORD=env.str('DB_PASSWORD', default=''),
-    DB_UNIX_SOCKET=env.str('DB_UNIX_SOCKET', default=None),
-    DB_HOST=env.str('DB_HOST', default='localhost'),
-    DB_PORT=env.int('DB_PORT', default=3306),
-    DB_NAME=env.str('DB_NAME', default='rwrs'),
-
     GA_TRACKING_ID=env.str('GA_TRACKING_ID', default=None),
 
     SERVERS_CACHE_TIMEOUT=env.int('SERVERS_CACHE_TIMEOUT', default=60),
