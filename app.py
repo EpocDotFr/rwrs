@@ -1,15 +1,19 @@
+from flask import Flask, redirect, flash, url_for, request, g, abort, render_template
+from flask_login import LoginManager, current_user, login_user
 from flask_discord_interactions import DiscordInteractions
-from flask_login import LoginManager, current_user
 from flask_admin.contrib.sqla import ModelView
 from flask_admin import Admin, AdminIndexView
+from werkzeug.exceptions import HTTPException
 from flask_assets import Environment, Bundle
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_openid import OpenID
 from flask_caching import Cache
-from flask import Flask, abort
+from datetime import datetime
 from environs import Env
+import arrow
 import math
+import os
 
 # -----------------------------------------------------------
 # App bootstrap
@@ -84,6 +88,14 @@ if app.config['DEBUG']:
     except ImportError:
         pass
 
+# Flask-Compress
+try:
+    from flask_compress import Compress
+
+    compress = Compress(app)
+except ImportError:
+    pass
+
 # Flask-HTMLmin
 try:
     from flask_htmlmin import HTMLMIN
@@ -91,6 +103,18 @@ try:
     htmlmin = HTMLMIN(app)
 except ImportError:
     pass
+
+# Flask-Assets
+assets = Environment(app)
+assets.append_path('assets')
+
+assets.register('js_popovers', Bundle('js/popovers.js', filters='jsmin', output='js/popovers.min.js'))
+assets.register('js_popovers_rwr_accounts_sync', Bundle('js/popovers.js', 'js/rwr_accounts_sync.js', filters='jsmin', output='js/popovers_rwr_accounts_sync.min.js'))
+assets.register('js_charts', Bundle('js/charts.js', filters='jsmin', output='js/charts.min.js'))
+assets.register('js_charts_popovers', Bundle('js/charts.js', 'js/popovers.js', filters='jsmin', output='js/charts_popovers.min.js'))
+assets.register('js_regenerate_pat', Bundle('js/regenerate_pat.js', filters='jsmin', output='js/regenerate_pat.min.js'))
+assets.register('js_rwr_account_deletion', Bundle('js/rwr_account_deletion.js', filters='jsmin', output='js/rwr_account_deletion.min.js'))
+assets.register('css_app', Bundle('css/flags.css', 'css/app.css', filters='cssutils', output='css/app.min.css'))
 
 # Flask-SQLAlchemy
 db = SQLAlchemy(app)
@@ -101,23 +125,79 @@ migrate = Migrate(app, db)
 # Flask-Caching
 cache = Cache(app)
 
-# Flask-Assets
-assets = Environment(app)
-
-assets.register('js_popovers', Bundle('js/popovers.js', filters='jsmin', output='js/popovers.min.js'))
-assets.register('js_popovers_rwr_accounts_sync', Bundle('js/popovers.js', 'js/rwr_accounts_sync.js', filters='jsmin', output='js/popovers_rwr_accounts_sync.min.js'))
-assets.register('js_charts', Bundle('js/charts.js', filters='jsmin', output='js/charts.min.js'))
-assets.register('js_charts_popovers', Bundle('js/charts.js', 'js/popovers.js', filters='jsmin', output='js/charts_popovers.min.js'))
-assets.register('js_regenerate_pat', Bundle('js/regenerate_pat.js', filters='jsmin', output='js/regenerate_pat.min.js'))
-assets.register('js_rwr_account_deletion', Bundle('js/rwr_account_deletion.js', filters='jsmin', output='js/rwr_account_deletion.min.js'))
-assets.register('css_app', Bundle('css/flags.css', 'css/app.css', filters='cssutils', output='css/app.min.css'))
-
 # Flask-Login
 login_manager = LoginManager(app)
 login_manager.login_message_category = 'info'
 
+
+@login_manager.user_loader
+def load_user(user_id):
+    from models import User
+
+    return User.query.get(user_id)
+
 # Flask-OpenID
 oid = OpenID(app)
+
+
+@oid.after_login
+def create_or_login(resp):
+    from steam_helpers import parse_steam_id_from_identity_url, get_user_summaries
+    from models import User
+
+    steam_id = parse_steam_id_from_identity_url(resp.identity_url)
+
+    try:
+        steam_user_info = get_user_summaries(steam_id)
+
+        if not steam_user_info:
+            raise Exception('Unable to get Steam user info for Steam ID {}'.format(steam_id))
+    except Exception:
+        app.logger.exception(f'Error fetching Steam account information #{steam_id}')
+
+        if not app.config['DEBUG'] and app.config['SENTRY_DSN']:
+            import sentry_sdk
+
+            sentry_sdk.capture_exception()
+
+        flash('An error occured while fetching your Steam account information. Please try again.', 'error')
+
+        return redirect(url_for('sign_in'))
+
+    user, user_was_created = User.get_by_steam_id(steam_id, create_if_unexisting=True)
+
+    user.username = steam_user_info['personaname']
+    user.small_avatar_url = steam_user_info['avatar']
+    user.large_avatar_url = steam_user_info['avatarfull']
+    user.country_code = steam_user_info['loccountrycode'].lower() if 'loccountrycode' in steam_user_info and steam_user_info['loccountrycode'] else None
+    user.last_login_at = arrow.utcnow().floor('minute')
+
+    if user_was_created:
+        user.is_profile_public = True if 'communityvisibilitystate' in steam_user_info and steam_user_info['communityvisibilitystate'] == 3 else False
+
+    db.session.add(user)
+
+    try:
+        user.sync_rwr_accounts()
+
+        db.session.commit()
+    except Exception:
+        app.logger.exception(f'Error syncing RWR accounts for user #{user.id} on login')
+
+        if not app.config['DEBUG'] and app.config['SENTRY_DSN']:
+            import sentry_sdk
+
+            sentry_sdk.capture_exception()
+
+        flash('An error occured while syncing your RWR accounts. Please try again.', 'error')
+
+        return redirect(url_for('sign_in'))
+
+    login_user(user, remember=True)
+
+    flash('Welcome, {}!'.format(user.username), 'success')
+
+    return redirect(url_for('home'))
 
 # Flask-Discord-Interactions
 discord_interactions = DiscordInteractions(app)
@@ -138,8 +218,52 @@ class RestrictedAdminIndexView(RestrictedView, AdminIndexView):
 class RestrictedModelView(RestrictedView, ModelView):
     pass
 
-admin = Admin(app, name='RWRS Admin', template_mode='bootstrap4', url='/manage',
-              index_view=RestrictedAdminIndexView(url='/manage'))
+admin = Admin(app, name='RWRS Admin', template_mode='bootstrap4', url='/manage', index_view=RestrictedAdminIndexView(url='/manage'))
+
+# -----------------------------------------------------------
+# Pre-request hooks
+
+@app.before_request
+def before_request():
+    from steam_helpers import get_current_players_count_for_app
+    from models import Variable
+    import rwr.scraper
+
+    if request.endpoint == 'static':
+        return
+
+    g.UNDER_MAINTENANCE = os.path.exists('maintenance')
+
+    if request.endpoint in ('dynamic_player_image', 'dynamic_server_image'):
+        return
+
+    g.MOTD = Variable.get_value('motd')
+    g.EVENT = Variable.get_event()
+
+    if request.path == app.config['DISCORD_INTERACTIONS_PATH']:
+        return
+
+    g.INCLUDE_WEB_ANALYTICS = not app.config['DEBUG']
+    g.LAYOUT = 'normal'
+
+    if g.UNDER_MAINTENANCE:
+        abort(503)
+
+    online_players, active_servers, total_servers = rwr.scraper.get_counters()
+
+    g.total_players = get_current_players_count_for_app(app.config['RWR_STEAM_APP_ID'])
+    g.online_players = online_players
+    g.active_servers = active_servers
+    g.total_servers = total_servers
+
+# -----------------------------------------------------------
+# Context processors
+
+@app.context_processor
+def context_processor():
+    return {
+        'current_year': datetime.now().year,
+    }
 
 # -----------------------------------------------------------
 # Jinja alterations
@@ -170,16 +294,20 @@ app.jinja_env.globals.update(
     generate_next_url=helpers.generate_next_url
 )
 
+# -----------------------------------------------------------
+# Error pages
+
+@app.errorhandler(HTTPException)
+def http_error_handler(e):
+    return render_template(f'errors/{e.code}.html'), e.code
 
 # -----------------------------------------------------------
 # After-bootstrap imports
-
 
 import models
 import routes
 import commands
 import discord.commands
-import hooks
 import api
 
 # Flask-Admin
