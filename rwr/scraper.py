@@ -1,8 +1,8 @@
 from steam.steamid import SteamID
+from rwrs.models import Variable
 from flask import current_app
 from lxml import html, etree
 from app import app, cache
-from rwrs.models import Variable
 from .server import Server
 from .player import Player
 from . import constants

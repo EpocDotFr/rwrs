@@ -1,9 +1,9 @@
 from sqlalchemy.util import memoized_property
 from flask import url_for, current_app
-from . import constants, utils
 from rwrs.models import RwrAccount
-from app import app
+from . import constants, utils
 from rwrs import helpers
+from app import app
 
 
 class Player:
