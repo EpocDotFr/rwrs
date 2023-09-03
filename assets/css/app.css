@@ -513,28 +513,28 @@ select {
     color: inherit;
 }
 
-.top-bar.yellow {
-    background-color: #e9b700;
-    color: #000;
-    border-bottom: 0.1rem solid #ffcd15;
+.top-bar.success {
+    background-color: #415d33;
+    color: #FFF;
+    border-bottom: 0.1rem solid #507a47;
 }
 
-.top-bar.blue {
+.top-bar.error {
+    background-color: #692c2c;
+    color: #FFF;
+    border-bottom: 0.1rem solid #8d3535;
+}
+
+.top-bar.info {
     background-color: #3b618d;
     color: #FFF;
     border-bottom: 0.1rem solid #3985b6;
 }
 
-.top-bar.grey {
+.top-bar.main {
     background-color: #3f3f3f;
     color: #FFF;
     border-bottom: 0.1rem solid #514f4f;
-}
-
-.top-bar.green {
-    background-color: #7da109;
-    color: #FFF;
-    border-bottom: 0.1rem solid #9cc321;
 }
 
 .top-bar.main .content {

@@ -4,6 +4,7 @@ instance/cache/*
 instance/webassets-cache/*
 !instance/webassets-cache/.gitkeep
 maintenance
+motd
 static/css/*.min.css
 static/js/*.min.js
 venv

@@ -9,9 +9,9 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_openid import OpenID
 from flask_caching import Cache
+from rwrs import helpers, motd
 from datetime import datetime
 from environs import Env
-from rwrs import helpers
 import arrow
 import math
 import os
@@ -290,7 +290,7 @@ def before_request():
     if request.endpoint in ('dynamic_player_image', 'dynamic_server_image'):
         return
 
-    g.MOTD = Variable.get_value('motd')
+    g.MOTD = motd.get()
     g.EVENT = Variable.get_event()
 
     if request.path == app.config['DISCORD_INTERACTIONS_PATH']:
@@ -375,8 +375,13 @@ def http_error_handler(e):
     elif isinstance(e, ServiceUnavailable):
         page_icon = 'fas fa-wrench'
         title = 'Maintenance in progress'
-        text = 'RWRS is under ongoing maintenance! Please check back later.'
-        type = 'info'
+
+        if g.MOTD:
+            text = helpers.markdown_to_html_inline(g.MOTD.message)
+            type = g.MOTD.type
+        else:
+            text = 'RWRS is under ongoing maintenance! Please check back later.'
+            type = 'info'
     else:
         page_icon = 'fas fa-exclamation-triangle'
         title = e.name

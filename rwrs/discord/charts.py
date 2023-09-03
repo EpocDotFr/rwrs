@@ -1,9 +1,9 @@
 from rwrs.models import RwrAccountStat
+from rwrs import helpers
 from . import constants
 from io import BytesIO
 from PIL import Image
 import matplotlib
-from rwrs import helpers
 
 matplotlib.use('Agg')
 
