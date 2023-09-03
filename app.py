@@ -1,9 +1,9 @@
-from flask import Flask, redirect, flash, url_for, request, g, abort, render_template
+from werkzeug.exceptions import HTTPException, Unauthorized, Forbidden, NotFound, InternalServerError, ServiceUnavailable
+from flask import Flask, redirect, flash, url_for, request, g, abort, render_template, Markup
 from flask_login import LoginManager, current_user, login_user
 from flask_discord_interactions import DiscordInteractions
 from flask_admin.contrib.sqla import ModelView
 from flask_admin import Admin, AdminIndexView
-from werkzeug.exceptions import HTTPException
 from flask_assets import Environment, Bundle
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
@@ -352,7 +352,44 @@ app.jinja_env.globals.update(
 
 @app.errorhandler(HTTPException)
 def http_error_handler(e):
-    return render_template(f'errors/{e.code}.html'), e.code
+    if isinstance(e, Unauthorized):
+        page_icon = 'fas fa-minus-circle'
+        title = 'Unauthorized'
+        text = 'It seems you\'re not authorized to go here.'
+        type = 'error'
+    elif isinstance(e, Forbidden):
+        page_icon = 'fas fa-minus-circle'
+        title = 'Forbidden'
+        text = 'Access to this resource is forbidden.'
+        type = 'error'
+    elif isinstance(e, NotFound):
+        page_icon = 'fas fa-question'
+        title = 'Not found'
+        text = 'Sorry, there\'s nothing here.'
+        type = 'info'
+    elif isinstance(e, InternalServerError):
+        page_icon = 'fas fa-exclamation-triangle'
+        title = 'Server error'
+        text = Markup('Whoops, a server error occurred! Please retry. If the error persists, please <a href="{}">get in touch</a>.'.format(url_for('feedback')))
+        type = 'error'
+    elif isinstance(e, ServiceUnavailable):
+        page_icon = 'fas fa-wrench'
+        title = 'Maintenance in progress'
+        text = 'RWRS is under ongoing maintenance! Please check back later.'
+        type = 'info'
+    else:
+        page_icon = 'fas fa-exclamation-triangle'
+        title = e.name
+        text = e.description
+        type = 'error'
+
+    return render_template(
+        'error.html',
+        page_icon=page_icon,
+        title=title,
+        text=text,
+        type=type,
+    ), e.code
 
 # -----------------------------------------------------------
 # After-bootstrap imports
