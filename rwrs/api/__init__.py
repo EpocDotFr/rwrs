@@ -3,8 +3,10 @@ from flask_httpauth import HTTPTokenAuth
 from flask_restful import Api, abort
 from flask_limiter import Limiter
 from flask import g, request
+from rwrs.models import User
 from functools import wraps
-from app import app
+from app import app, db
+import arrow
 
 http_auth_scheme = 'Token'
 
@@ -50,4 +52,31 @@ api = Api(app, prefix='/api', catch_all_404s=True, decorators=[
     limiter.limit('1/second', error_message='You reached the limit of one request per second')
 ])
 
-from . import routes, hooks
+
+@auth.verify_token
+def verify_token(token):
+    if not token:
+        return False
+
+    try:
+        user = User.get_by_pat(token)
+    except ValueError:
+        return False
+
+    if not user:
+        return False
+
+    user.api_last_called_at = arrow.utcnow().floor('second')
+
+    db.session.add(user)
+    db.session.commit()
+
+    return user
+
+
+@auth.error_handler
+def auth_error():
+    abort(403, message='Invalid Personal Access Token or Personal Access Token not provided')
+
+
+from . import routes

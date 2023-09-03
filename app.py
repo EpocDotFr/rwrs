@@ -360,8 +360,8 @@ def http_error_handler(e):
 import rwrs.models
 import rwrs.routes
 import rwrs.commands
-import discord.commands
-import api
+import rwrs.discord.commands
+import rwrs.api
 
 admin.add_view(RestrictedModelView(rwrs.models.RwrAccount, db.session, name='RWR Accounts', url='rwr-accounts'))
 admin.add_view(RestrictedModelView(rwrs.models.RwrAccountStat, db.session, name='RWR Accounts Stats', url='rwr-accounts-stats'))

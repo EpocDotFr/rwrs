@@ -229,7 +229,7 @@ def info(
     ctx
 ):
     return '\n'.join([
-        ':information_source: Hi! I was created by <@{}> around the beginning of March 2018.'.format(constants.MY_DISCORD_ID),
+        ':information_source: Hi! I was created by <@{}> around the beginning of March 2018.'.format(app.config['MY_DISCORD_ID']),
         'Like the RWRS website, my brain is powered by the Python programming language. More info: https://rwrstats.com/about',
         'P.S. You look beautiful today.'
     ])
