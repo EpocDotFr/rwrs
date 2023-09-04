@@ -374,13 +374,14 @@ def http_error_handler(e):
         type = 'error'
     elif isinstance(e, ServiceUnavailable):
         page_icon = 'fas fa-wrench'
-        title = 'Maintenance in progress'
+        title = 'Unavailable'
+        text = Markup('Sorry, RWRS is temporarily unavailable.<br><br>{}<br><br>Please check back later!')
 
         if g.MOTD:
-            text = helpers.markdown_to_html_inline(g.MOTD.message)
+            text = text.format(helpers.markdown_to_html_inline(g.MOTD.message))
             type = g.MOTD.type
         else:
-            text = 'RWRS is under ongoing maintenance! Please check back later.'
+            text = text.format('There is an ongoing maintenance.')
             type = 'info'
     else:
         page_icon = 'fas fa-exclamation-triangle'
