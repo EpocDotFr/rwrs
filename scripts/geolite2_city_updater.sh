@@ -46,4 +46,3 @@ mv "$OUTPUT_DIR/GeoLite2-City_"*"/GeoLite2-City.mmdb" $OUTPUT_DIR
 echo "Cleaning temporary directories"
 
 rm -r "$OUTPUT_DIR/GeoLite2-City_"*
-chown www-data:www-data "$OUTPUT_DIR/"*".mmdb"

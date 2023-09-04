@@ -34,12 +34,17 @@ git pull
 
 echo "Restarting site"
 
-chown -R www-data:www-data ./
+status=$(curl --basic --user "${ALWAYSDATA_API_TOKEN} account=${ALWAYSDATA_ACCOUNT_NAME}:" --data '' --request POST --silent --output /dev/null --write-out '%{http_code}' "https://api.alwaysdata.com/v1/site/${ALWAYSDATA_SITE_ID}/restart/")
 
-supervisorctl restart rwrstats.com
+if [ "$status" = 204 ];
+then
+    echo "Success"
 
-if [ "$MAINTENANCE_ALREADY_ENABLED" = false ]; then
-    echo "Disabling maintenance mode"
+    if [ "$MAINTENANCE_ALREADY_ENABLED" = false ]; then
+        echo "Disabling maintenance mode"
 
-    rm maintenance
+        rm maintenance
+    fi
+else
+    echo "Error occured while restarting site"
 fi
