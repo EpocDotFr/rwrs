@@ -282,12 +282,12 @@ def before_request():
     from rwrs.models import Variable
     import rwr.scraper
 
-    if request.endpoint == 'static':
+    if request.endpoint and request.endpoint.startswith(('static', 'debugtoolbar', '_debug_toolbar')):
         return
 
     g.UNDER_MAINTENANCE = os.path.exists('maintenance')
 
-    if request.endpoint in ('dynamic_player_image', 'dynamic_server_image'):
+    if request.endpoint and request.endpoint in ('dynamic_player_image', 'dynamic_server_image'):
         return
 
     g.MOTD = motd.get()
