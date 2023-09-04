@@ -1,17 +1,16 @@
-from models import SteamPlayerCount, ServerPlayerCount, Variable, RwrAccountStat, RwrAccount
+from rwrs.models import SteamPlayerCount, ServerPlayerCount, Variable, RwrAccountStat, RwrAccount
 from flask import render_template, abort, request, redirect, url_for, flash, g, jsonify
+from rwrs.dynamic_image import DynamicServerImage, DynamicPlayerImage
 from flask_login import login_required, current_user, logout_user
-from dynamic_image import DynamicServerImage, DynamicPlayerImage
+from rwrs import forms, helpers
 from rwr.player import Player
-from rwrs import app, oid, db
-from models import User
+from app import app, oid, db
+from rwrs.models import User
 import rwr.constants
 import flask_openid
 import rwr.scraper
 import rwr.utils
-import helpers
 import arrow
-import forms
 import uuid
 
 ERROR_PLAYER_NOT_FOUND = 'Sorry, the player "{username}" wasn\'t found in the {database} players list. Maybe this player hasn\'t already played on an official Invasion or WW2 DLCs server yet. If this player started to play today on an official Invasion or WW2 DLCs server, please wait until tomorrow as stats are refreshed daily.'

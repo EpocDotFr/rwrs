@@ -1,5 +1,5 @@
 from steam.webapi import WebAPI as SteamAPIClient
-from rwrs import app, cache
+from app import app, cache
 import re
 
 steam_api_client = SteamAPIClient(app.config['STEAM_API_KEY'])

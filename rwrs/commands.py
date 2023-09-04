@@ -1,5 +1,5 @@
 from functools import wraps
-from rwrs import app
+from app import app
 import click
 import os
 
@@ -20,7 +20,7 @@ def check_maintenance(func):
 @app.cli.command()
 def cc():
     """Clear the cache."""
-    from rwrs import cache
+    from app import cache
 
     click.echo('Clearing cache')
 
@@ -32,11 +32,11 @@ def cc():
 @app.cli.command()
 def update_discord_commands():
     """Update Discord commands."""
-    from rwrs import discord_interactions
+    from app import discord_interactions
 
     click.echo('Updating Discord commands...')
 
-    discord_interactions.update_commands(guild_id=app.config['DISCORD_TESTING_GUILD'])
+    discord_interactions.update_commands(guild_id=app.config['DISCORD_GUILD'])
 
     click.secho('Done', fg='green')
 
@@ -48,7 +48,7 @@ def recompute_hashes(starting_id, limit):
     """Recompute all stats history hashes."""
     from models import RwrAccountStat
     from sqlalchemy import func
-    from rwrs import db
+    from app import db
 
     click.echo('Recomputing all stats history hashes...')
 
@@ -95,7 +95,7 @@ def recompute_hashes(starting_id, limit):
 def get_players_count():
     """Store the number of players."""
     from models import ServerPlayerCount, SteamPlayerCount, Variable
-    from rwrs import cache, db
+    from app import cache, db
     import steam_helpers
     import rwr.scraper
     import arrow
@@ -180,7 +180,7 @@ def get_players_count():
 def clean_players_count():
     """Delete old players count."""
     from models import ServerPlayerCount, SteamPlayerCount
-    from rwrs import db
+    from app import db
 
     click.echo('Deleting old data')
 
@@ -263,7 +263,7 @@ def extract_minimaps(steamdir):
 def save_players_stats(reset):
     """Get and persist the players stats."""
     from models import RwrAccount, RwrAccountType, RwrAccountStat
-    from rwrs import db, cache
+    from app import db, cache
     import rwr.scraper
     import rwr.utils
     import arrow
@@ -378,7 +378,7 @@ def save_players_stats(reset):
 def delete_rwr_accounts_pending_deletion():
     """Delete RWR accounts which are pending deletion."""
     from models import RwrAccount, RwrAccountStat
-    from rwrs import db
+    from app import db
 
     click.echo('Fetching accounts...')
 
@@ -399,7 +399,7 @@ def delete_rwr_accounts_pending_deletion():
 def compute_promotions():
     """Compute promotions for all players."""
     from models import RwrAccount, RwrAccountStat
-    from rwrs import db
+    from app import db
     import rwr.utils
     import helpers
 

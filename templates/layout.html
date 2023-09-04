@@ -40,24 +40,24 @@
     <meta name="google-site-verification" content="58YRXAqZgsPP1fJar_ymC-4xSWtW3O2NmYwuRDzyRpg" />
 </head>
 <body itemscope itemtype="http://schema.org/WebSite">
-    {%- if g.MOTD -%}
-        <div class="top-bar green pts pbs">
+    {%- if g.MOTD and not g.UNDER_MAINTENANCE -%}
+        <div class="top-bar {{ g.MOTD.type }} pts pbs">
             <div class="w1140p center txtcenter small">
-                <i class="fas fa-bell fa-lg"></i> {{ g.MOTD|markdown_to_html_inline }}
+                <i class="fas fa-bullhorn"></i> {{ g.MOTD.message|markdown_to_html_inline }}
             </div>
         </div>
     {%- endif -%}
 
     {%- if not g.UNDER_MAINTENANCE -%}
         {%- if g.EVENT -%}
-            <div class="top-bar blue pts pbs">
+            <div class="top-bar info pts pbs">
                 <div class="w1140p center txtcenter small">
-                    <i class="fas fa-calendar-alt fa-lg"></i> {{ macros.event_announcement(g.EVENT) }}
+                    <i class="fas fa-calendar-alt"></i> {{ macros.event_announcement(g.EVENT) }}
                 </div>
             </div>
         {%- endif -%}
 
-        <div class="top-bar grey main pts pbs">
+        <div class="top-bar main pts pbs">
             <div class="w1140p center small">
                 <div class="content">
                     <div class="txtleft">
@@ -85,7 +85,7 @@
     {%- endif -%}
 
     <header class="w1140p center pts pbs">
-        <div class="txtleft">
+        <div class="{{ 'txtcenter' if g.UNDER_MAINTENANCE else 'txtleft' }}">
             <a href="{{ url_for('home', _external=True) }}" itemprop="url"><img src="{{ url_for('static', filename='images/logo_light.png') }}" title="Running With Rifles Stats logo"></a>
         </div>
         {% if not g.UNDER_MAINTENANCE %}
@@ -130,7 +130,10 @@
             </div>
             <div class="txtright">
                 <p class="mtn"><a href="http://www.runningwithrifles.com/" title="RWR website"><i class="fas fa-globe-americas fa-2x fa-fw"></i></a> <a href="https://runningwithrifles.gamepedia.com/Running_with_Rifles_Wiki" title="RWR wiki"><i class="fas fa-book-open fa-2x fa-fw"></i></a> <a href="http://steamcommunity.com/app/{{ config['RWR_STEAM_APP_ID'] }}" title="RWR on Steam"><i class="fab fa-steam-symbol fa-2x fa-fw"></i></a> <a href="https://www.reddit.com/r/Runningwithrifles/" title="RWR on Reddit"><i class="fab fa-reddit-alien fa-2x fa-fw"></i></a> <a href="https://twitter.com/osumiagames" title="RWR on Twitter"><i class="fab fa-twitter fa-2x fa-fw"></i></a> <a href="{{ config['DISCORD_SERVER_URL'] }}" title="RWR on Discord"><img src="https://discordapp.com/api/guilds/181119538664964097/widget.png?style=shield"></a></p>
-                <p class="mbs"><a href="{{ url_for('about') }}">About</a> • <a href="{{ url_for('feedback') }}">Feedback</a> • <a href="{{ url_for('static', filename='/api_doc.html') }}">API</a> • <a href="{{ config['STATUS_PAGE_URL'] }}">Status</a></p>
+
+                {% if not g.UNDER_MAINTENANCE %}
+                    <p class="mbs"><a href="{{ url_for('about') }}">About</a> • <a href="{{ url_for('feedback') }}">Feedback</a> • <a href="{{ url_for('static', filename='/api_doc.html') }}">API</a> • <a href="{{ config['STATUS_PAGE_URL'] }}">Status</a></p>
+                {% endif %}
             </div>
         </div>
     </footer>

@@ -2,7 +2,7 @@ from sqlalchemy.util import memoized_property
 from flask import url_for, current_app
 from . import constants, utils
 from slugify import slugify
-from rwrs import app
+from app import app
 
 
 class Server:

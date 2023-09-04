@@ -1,16 +1,15 @@
-from models import Variable, User, RwrAccount, RwrAccountStat
+from rwrs.models import Variable, User, RwrAccount, RwrAccountStat
 from . import constants, utils, embeds, charts, components
 from flask_discord_interactions.models.embed import Field
-from rwrs import app, cache, db, discord_interactions
+from app import app, cache, db, discord_interactions
 from flask_discord_interactions import Message
+from rwrs import helpers, steam_helpers, motd
 from tabulate import tabulate
 from rwr.player import Player
 from flask import g
-import steam_helpers
 import rwr.scraper
 import rwr.utils
 import threading
-import helpers
 import arrow
 import os
 
@@ -76,12 +75,11 @@ def maintenance_disable(
 @utils.check_maintenance
 def motd_set(
     ctx,
+    type: motd.Types,
     message: str
 ):
     try:
-        Variable.set_value('motd', message)
-
-        db.session.commit()
+        motd.set(type, message)
 
         return Message('MOTD updated.', ephemeral=True)
     except Exception as e:
@@ -96,17 +94,14 @@ def motd_set(
 def motd_remove(
     ctx
 ):
-    if not g.MOTD:
-        return Message('MOTD already removed.', ephemeral=True)
-    else:
-        try:
-            Variable.set_value('motd', None)
-
-            db.session.commit()
-
+    try:
+        if motd.remove():
             return Message('MOTD removed.', ephemeral=True)
-        except Exception as e:
-            return Message('Error removing MOTD: {}'.format(e), ephemeral=True)
+        else:
+            return Message('MOTD already removed.', ephemeral=True)
+
+    except Exception as e:
+        return Message('Error removing MOTD: {}'.format(e), ephemeral=True)
 
 
 @user_api_command_subgroup.command(
@@ -230,7 +225,7 @@ def info(
     ctx
 ):
     return '\n'.join([
-        ':information_source: Hi! I was created by <@{}> around the beginning of March 2018.'.format(constants.MY_DISCORD_ID),
+        ':information_source: Hi! I was created by <@{}> around the beginning of March 2018.'.format(app.config['MY_DISCORD_ID']),
         'Like the RWRS website, my brain is powered by the Python programming language. More info: https://rwrstats.com/about',
         'P.S. You look beautiful today.'
     ])
