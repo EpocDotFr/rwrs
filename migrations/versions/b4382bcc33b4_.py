@@ -24,7 +24,7 @@ def upgrade():
     sa.Column('user_id', sa.Integer(), nullable=True),
     sa.Column('username', sa.String(length=16), nullable=False),
     sa.Column('created_at', sqlalchemy_utils.types.arrow.ArrowType(), nullable=False),
-    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
+    sa.ForeignKeyConstraint(('user_id',), ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index('user_id_idx', 'user_friends', ['user_id'], unique=False)
