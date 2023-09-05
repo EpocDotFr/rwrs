@@ -95,8 +95,8 @@ def recompute_hashes(starting_id, limit):
 def get_players_count():
     """Store the number of players."""
     from rwrs.models import ServerPlayerCount, SteamPlayerCount, Variable
+    from rwrs import steam_helpers
     from app import cache, db
-    import steam_helpers
     import rwr.scraper
     import arrow
 
@@ -400,9 +400,9 @@ def delete_rwr_accounts_pending_deletion():
 def compute_promotions():
     """Compute promotions for all players."""
     from rwrs.models import RwrAccount, RwrAccountStat
+    from rwrs import helpers
     from app import db
     import rwr.utils
-    import helpers
 
     if not click.confirm('This will reset all already-computed promotions prior computing. Proceed?'):
         return
@@ -439,9 +439,9 @@ def compute_promotions():
 @app.cli.command()
 def save_official_servers_mods():
     """Retrieve and save the official servers moderator."""
+    from rwrs import helpers
     from lxml import etree
     import requests
-    import helpers
 
     click.echo('Retrieving admins list')
 
