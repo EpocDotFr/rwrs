@@ -1,6 +1,6 @@
-from .player import PlayerRank
+from rwr.player import PlayerRank
 from flask import current_app
-from . import constants
+from rwr import constants
 from app import app
 import re
 

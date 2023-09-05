@@ -1,6 +1,6 @@
 from rwrs.models import RwrAccount, RwrAccountStat, User
 from flask_restful import Resource, marshal_with, abort
-from . import api, transformers, validators, auth
+from rwrs.api import api, transformers, validators, auth
 from types import SimpleNamespace
 from rwr.player import Player
 from flask import url_for, g

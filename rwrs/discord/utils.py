@@ -1,5 +1,5 @@
+from rwrs.discord import constants
 from functools import wraps
-from . import constants
 from flask import g
 import arrow
 

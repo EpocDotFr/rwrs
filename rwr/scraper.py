@@ -1,11 +1,11 @@
 from steam.steamid import SteamID
 from rwrs.models import Variable
 from flask import current_app
+from rwr.server import Server
+from rwr.player import Player
 from lxml import html, etree
 from app import app, cache
-from .server import Server
-from .player import Player
-from . import constants
+from rwr import constants
 import geoip2.database
 import geoip2.errors
 import requests

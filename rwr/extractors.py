@@ -2,9 +2,9 @@ from collections import OrderedDict
 from rwrs import helpers
 from lxml import etree
 from glob import glob
+from rwr import utils
 from PIL import Image
 from app import app
-from . import utils
 import click
 import math
 import os

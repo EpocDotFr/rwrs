@@ -46,7 +46,7 @@ def update_discord_commands():
 @click.option('--limit', type=int, default=200)
 def recompute_hashes(starting_id, limit):
     """Recompute all stats history hashes."""
-    from models import RwrAccountStat
+    from rwrs.models import RwrAccountStat
     from sqlalchemy import func
     from app import db
 
@@ -94,7 +94,7 @@ def recompute_hashes(starting_id, limit):
 @check_maintenance
 def get_players_count():
     """Store the number of players."""
-    from models import ServerPlayerCount, SteamPlayerCount, Variable
+    from rwrs.models import ServerPlayerCount, SteamPlayerCount, Variable
     from app import cache, db
     import steam_helpers
     import rwr.scraper
@@ -179,7 +179,7 @@ def get_players_count():
 @check_maintenance
 def clean_players_count():
     """Delete old players count."""
-    from models import ServerPlayerCount, SteamPlayerCount
+    from rwrs.models import ServerPlayerCount, SteamPlayerCount
     from app import db
 
     click.echo('Deleting old data')
@@ -262,8 +262,9 @@ def extract_minimaps(steamdir):
 @check_maintenance
 def save_players_stats(reset):
     """Get and persist the players stats."""
-    from models import RwrAccount, RwrAccountType, RwrAccountStat
+    from rwrs.models import RwrAccount, RwrAccountType, RwrAccountStat
     from app import db, cache
+    import rwr.constants
     import rwr.scraper
     import rwr.utils
     import arrow
@@ -377,7 +378,7 @@ def save_players_stats(reset):
 @check_maintenance
 def delete_rwr_accounts_pending_deletion():
     """Delete RWR accounts which are pending deletion."""
-    from models import RwrAccount, RwrAccountStat
+    from rwrs.models import RwrAccount, RwrAccountStat
     from app import db
 
     click.echo('Fetching accounts...')
@@ -398,7 +399,7 @@ def delete_rwr_accounts_pending_deletion():
 @check_maintenance
 def compute_promotions():
     """Compute promotions for all players."""
-    from models import RwrAccount, RwrAccountStat
+    from rwrs.models import RwrAccount, RwrAccountStat
     from app import db
     import rwr.utils
     import helpers

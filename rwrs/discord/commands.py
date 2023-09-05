@@ -1,5 +1,5 @@
+from rwrs.discord import constants, utils, embeds, charts, components
 from rwrs.models import Variable, User, RwrAccount, RwrAccountStat
-from . import constants, utils, embeds, charts, components
 from flask_discord_interactions.models.embed import Field
 from app import app, cache, db, discord_interactions
 from flask_discord_interactions import Message

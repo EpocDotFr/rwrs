@@ -1,7 +1,7 @@
 from sqlalchemy.util import memoized_property
 from flask import url_for, current_app
 from rwrs.models import RwrAccount
-from . import constants, utils
+from rwr import constants, utils
 from rwrs import helpers
 from app import app
 

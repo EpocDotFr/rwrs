@@ -1,7 +1,7 @@
 from flask_discord_interactions.models.embed import Media, Field, Footer
 from flask_discord_interactions.models import Embed
+from rwrs.discord import constants
 from rwrs import helpers
-from . import constants
 from app import app
 
 
