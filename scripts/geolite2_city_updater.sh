@@ -10,32 +10,40 @@
 
 set -e # Makes any subsequent failing commands to exit the script immediately
 
-LICENSE_KEY=${1}
+echo "Loading env variables from dotenv files"
 
-if [ "$LICENSE_KEY" = "" ]; then
+if [ -f .env ]; then
+    export $(cat .env | xargs)
+fi
+
+if [ -f .flaskenv ]; then
+    export $(cat .flaskenv | xargs)
+fi
+
+if [ "$GEOIP_LICENSE_KEY" = "" ]; then
     echo "Missing license key"
     exit
 fi
 
 OUTPUT_DIR="instance"
-REMOTE_DB_FILE="https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-City&license_key=$LICENSE_KEY&suffix=tar.gz"
+REMOTE_DB_FILE="https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-City&license_key=$GEOIP_LICENSE_KEY&suffix=tar.gz"
 OUTPUT_FILE="$OUTPUT_DIR/GeoLite2-City.tar.gz"
 
-echo "## Downloading and decompressing archive"
+echo "Downloading and decompressing archive"
 
 curl -o $OUTPUT_FILE -sS $REMOTE_DB_FILE
 tar -xzf $OUTPUT_FILE -C $OUTPUT_DIR
 rm $OUTPUT_FILE
 
-echo "## Removing old version"
+echo "Removing old version"
 
 rm -f "$OUTPUT_DIR/"*".mmdb"
 
-echo "## Applying new version"
+echo "Applying new version"
 
 mv "$OUTPUT_DIR/GeoLite2-City_"*"/GeoLite2-City.mmdb" $OUTPUT_DIR
 
-echo "## Cleaning temporary directories"
+echo "Cleaning temporary directories"
 
 rm -r "$OUTPUT_DIR/GeoLite2-City_"*
 chown www-data:www-data "$OUTPUT_DIR/"*".mmdb"
