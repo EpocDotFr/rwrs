@@ -259,7 +259,7 @@ def extract_minimaps(steamdir):
 
 @app.cli.command()
 @click.option('--reset', is_flag=True, help='Reset all RWR accounts and stats')
-@check_maintenance
+# @check_maintenance
 def save_players_stats(reset):
     """Get and persist the players stats."""
     from rwrs.models import RwrAccount, RwrAccountType, RwrAccountStat
