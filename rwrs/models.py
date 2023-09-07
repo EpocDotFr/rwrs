@@ -767,8 +767,7 @@ class RwrAccountStat(db.Model):
     __tablename__ = 'rwr_account_stats'
     __table_args__ = (
         db.Index('rwr_account_id_idx', 'rwr_account_id'),
-        db.Index('created_at_idx', 'created_at'),
-        db.Index('hash_idx', 'hash')
+        db.Index('created_at_idx', 'created_at')
     )
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
