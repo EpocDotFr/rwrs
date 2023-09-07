@@ -259,8 +259,9 @@ def extract_minimaps(steamdir):
 
 @app.cli.command()
 @click.option('--reset', is_flag=True, help='Reset all RWR accounts and stats')
-# @check_maintenance
-def save_players_stats(reset):
+@click.option('--create-accounts-only', is_flag=True, help='Only create RWR accounts if they do not exist')
+@check_maintenance
+def save_players_stats(reset, create_accounts_only):
     """Get and persist the players stats."""
     from rwrs.models import RwrAccount, RwrAccountType, RwrAccountStat
     from app import db, cache
@@ -318,56 +319,59 @@ def save_players_stats(reset):
                     rwr_account.type = rwr_account_type
 
                     rwr_accounts_by_username[player.username] = rwr_account
-                else:
+
+                    db.session.add(rwr_account)
+                elif not create_accounts_only:
                     rwr_account = rwr_accounts_by_username[player.username]
 
                     rwr_account.updated_at = arrow.utcnow().floor('minute')
 
-                db.session.add(rwr_account)
+                    db.session.add(rwr_account)
 
             db.session.flush()
 
             # Create all the RwrAccountStat objects for each players
-            all_rwr_accounts_stat = []
+            if not create_accounts_only:
+                all_rwr_accounts_stat = []
 
-            for player in players:
-                rwr_account_stat = RwrAccountStat()
+                for player in players:
+                    rwr_account_stat = RwrAccountStat()
 
-                rwr_account_stat.xp = player.xp
-                rwr_account_stat.kills = player.kills
-                rwr_account_stat.deaths = player.deaths
-                rwr_account_stat.time_played = player.time_played
-                rwr_account_stat.longest_kill_streak = player.longest_kill_streak
-                rwr_account_stat.targets_destroyed = player.targets_destroyed
-                rwr_account_stat.vehicles_destroyed = player.vehicles_destroyed
-                rwr_account_stat.soldiers_healed = player.soldiers_healed
-                rwr_account_stat.teamkills = player.teamkills
-                rwr_account_stat.distance_moved = player.distance_moved
-                rwr_account_stat.shots_fired = player.shots_fired
-                rwr_account_stat.throwables_thrown = player.throwables_thrown
-                rwr_account_stat.rwr_account_id = rwr_accounts_by_username[player.username].id
+                    rwr_account_stat.xp = player.xp
+                    rwr_account_stat.kills = player.kills
+                    rwr_account_stat.deaths = player.deaths
+                    rwr_account_stat.time_played = player.time_played
+                    rwr_account_stat.longest_kill_streak = player.longest_kill_streak
+                    rwr_account_stat.targets_destroyed = player.targets_destroyed
+                    rwr_account_stat.vehicles_destroyed = player.vehicles_destroyed
+                    rwr_account_stat.soldiers_healed = player.soldiers_healed
+                    rwr_account_stat.teamkills = player.teamkills
+                    rwr_account_stat.distance_moved = player.distance_moved
+                    rwr_account_stat.shots_fired = player.shots_fired
+                    rwr_account_stat.throwables_thrown = player.throwables_thrown
+                    rwr_account_stat.rwr_account_id = rwr_accounts_by_username[player.username].id
 
-                rwr_account_stat.compute_hash()
+                    rwr_account_stat.compute_hash()
 
-                # Get the latest RwrAccountStat object saved for this RwrAccount
-                already_existing_rwr_account_stat = RwrAccountStat.query.filter(
-                    RwrAccountStat.rwr_account_id == rwr_account_stat.rwr_account_id
-                ).order_by(RwrAccountStat.created_at.desc()).first()
+                    # Get the latest RwrAccountStat object saved for this RwrAccount
+                    already_existing_rwr_account_stat = RwrAccountStat.query.filter(
+                        RwrAccountStat.rwr_account_id == rwr_account_stat.rwr_account_id
+                    ).order_by(RwrAccountStat.created_at.desc()).first()
 
-                # Check if the player has been promoted
-                if already_existing_rwr_account_stat:
-                    previous_rank = rwr.utils.get_rank_from_xp(database, already_existing_rwr_account_stat.xp)
-                    current_rank = rwr.utils.get_rank_from_xp(database, rwr_account_stat.xp)
+                    # Check if the player has been promoted
+                    if already_existing_rwr_account_stat:
+                        previous_rank = rwr.utils.get_rank_from_xp(database, already_existing_rwr_account_stat.xp)
+                        current_rank = rwr.utils.get_rank_from_xp(database, rwr_account_stat.xp)
 
-                    rwr_account_stat.promoted_to_rank_id = current_rank.id if current_rank.id != previous_rank.id else None
+                        rwr_account_stat.promoted_to_rank_id = current_rank.id if current_rank.id != previous_rank.id else None
 
-                # Check if the latest RwrAccountStats data is not the same
-                if not already_existing_rwr_account_stat or rwr_account_stat.promoted_to_rank_id or already_existing_rwr_account_stat.hash != rwr_account_stat.hash:
-                    all_rwr_accounts_stat.append(rwr_account_stat)
+                    # Check if the latest RwrAccountStats data is not the same
+                    if not already_existing_rwr_account_stat or rwr_account_stat.promoted_to_rank_id or already_existing_rwr_account_stat.hash != rwr_account_stat.hash:
+                        all_rwr_accounts_stat.append(rwr_account_stat)
 
-            # Finally save stats for all eligible players
-            db.session.bulk_save_objects(all_rwr_accounts_stat)
-            db.session.flush()
+                # Finally save stats for all eligible players
+                db.session.bulk_save_objects(all_rwr_accounts_stat)
+                db.session.flush()
 
     db.session.commit()
 
