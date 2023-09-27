@@ -294,7 +294,6 @@ def before_request():
     if request.path == app.config['DISCORD_INTERACTIONS_PATH']:
         return
 
-    g.INCLUDE_WEB_ANALYTICS = not app.config['DEBUG']
     g.LAYOUT = 'normal'
 
     if g.UNDER_MAINTENANCE:
