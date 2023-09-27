@@ -47,8 +47,6 @@ app.config.update(
 
     SQLALCHEMY_DATABASE_URI=env.str('SQLALCHEMY_DATABASE_URI', default='sqlite:///instance/db.sqlite'),
 
-    GA_TRACKING_ID=env.str('GA_TRACKING_ID', default=None),
-
     SERVERS_CACHE_TIMEOUT=env.int('SERVERS_CACHE_TIMEOUT', default=60),
     PLAYERS_CACHE_TIMEOUT=env.int('PLAYERS_CACHE_TIMEOUT', default=60),
     GRAPHS_DATA_CACHE_TIMEOUT=env.int('GRAPHS_DATA_CACHE_TIMEOUT', default=60),

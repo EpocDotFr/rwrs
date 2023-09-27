@@ -137,16 +137,5 @@
             </div>
         </div>
     </footer>
-
-    {% if config['GA_TRACKING_ID'] and g.INCLUDE_WEB_ANALYTICS %}
-        <script async src="https://www.googletagmanager.com/gtag/js?id={{ config['GA_TRACKING_ID'] }}"></script>
-        <script>
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-
-            gtag('config', '{{ config['GA_TRACKING_ID'] }}');
-        </script>
-    {% endif %}
 </body>
 </html>
