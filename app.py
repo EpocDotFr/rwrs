@@ -22,7 +22,7 @@ import os
 env = Env()
 env.read_env()
 
-app = Flask(__name__, static_url_path='')
+app = Flask(__name__)
 
 app.config.update(
     # Default config values that may be overwritten by environment values

@@ -5,16 +5,16 @@
 
 ### Server Map Full Object (Server Map Simple Object)
 
-  + `preview_image_url`: `https://rwrstats.com/images/maps/preview/vanilla/map10.png` (nullable) - Map preview image URL (ingame screenshot). `null` if none available. Size may vary
+  + `preview_image_url`: `https://rwrstats.com/static/images/maps/preview/vanilla/map10.png` (nullable) - Map preview image URL (ingame screenshot). `null` if none available. Size may vary
     + Default: `null`
-  + `minimap_image_url`: `https://rwrstats.com/images/maps/minimap/vanilla/map10.png` (nullable) - Mapview image URL. `null` if none available. 2048x2048 pixels
+  + `minimap_image_url`: `https://rwrstats.com/static/images/maps/minimap/vanilla/map10.png` (nullable) - Mapview image URL. `null` if none available. 2048x2048 pixels
     + Default: `null`
 
 ### Server Location Object
 
   + `name`: `Frankfurt am Main, Germany` (required) - City name (if available) + country name of the server location
   + `country_code`: `de` (required) - [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country code of the server location
-  + `flag_image_url`: `https://rwrstats.com/images/flags/DE.png` (required) - Image URL of the server country location. 24x24 pixels
+  + `flag_image_url`: `https://rwrstats.com/static/images/flags/DE.png` (required) - Image URL of the server country location. 24x24 pixels
 
 ### Server Type Object
 
@@ -74,5 +74,5 @@
   + `bots`: `104` (number, required) - Number of current bots
   + `mode` (Server Mode Full Object, nullable) - Server mode. `null` if unknown
   + `players` (Server Players Full Object, required) - Server players
-  + `banner_image_url`: `https://rwrstats.com/images/servers/106.14.208.129-1234.png` (nullable) - Server banner image URL. Only available for dedicated servers. 485x95 pixels
+  + `banner_image_url`: `https://rwrstats.com/static/images/servers/106.14.208.129-1234.png` (nullable) - Server banner image URL. Only available for dedicated servers. 485x95 pixels
     + Default: `null`
