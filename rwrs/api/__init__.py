@@ -46,7 +46,7 @@ def rate_limiter_key_func():
 
 auth = HTTPTokenAuth(scheme=http_auth_scheme)
 limiter = Limiter(rate_limiter_key_func, app=app)
-api = Api(app, prefix='/api', catch_all_404s=True, decorators=[
+api = Api(app, prefix='/api', decorators=[
     check_under_maintenance,
     auth.login_required,
     limiter.limit('1/second', error_message='You reached the limit of one request per second')
