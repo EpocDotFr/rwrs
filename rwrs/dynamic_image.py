@@ -267,7 +267,7 @@ class DynamicPlayerImage(DynamicImage):
     def _do_create_body(self):
         """Creates the body (main area) of the dynamic player image."""
         # Rank image
-        rank_image = Image.open('static' + self.player.rank.image).convert('RGBA')
+        rank_image = Image.open(self.player.rank.image.lstrip('/')).convert('RGBA')
 
         self._paste(rank_image, (3, 42))
 
