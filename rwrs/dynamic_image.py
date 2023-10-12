@@ -2,6 +2,7 @@ from PIL import Image, ImageDraw, ImageFont
 from flask import make_response, g
 from rwrs import helpers
 from io import BytesIO
+from app import app
 import rwr.scraper
 import rwr.utils
 import arrow
@@ -106,6 +107,13 @@ class DynamicServerImage(DynamicImage):
                 self._do_create_header()
                 self._do_create_body()
         except:
+            app.logger.exception(f'Could not generate server banner for {self.ip}:{self.port}')
+
+            if not app.config['DEBUG'] and app.config['SENTRY_DSN']:
+                import sentry_sdk
+
+                sentry_sdk.capture_exception()
+
             self.status = 500
             self.do_create_error('Internal server error: please try again later.')
 
@@ -184,6 +192,14 @@ class DynamicPlayerImage(DynamicImage):
                 self._do_create_header()
                 self._do_create_body()
         except:
+            app.logger.exception(f'Could not generate {self.database} player banner for {self.username}')
+
+            if not app.config['DEBUG'] and app.config['SENTRY_DSN']:
+                import sentry_sdk
+
+                sentry_sdk.capture_exception()
+
+
             self.status = 500
             self.do_create_error('Internal server error: please try again later.')
 
