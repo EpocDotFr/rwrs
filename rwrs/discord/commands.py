@@ -451,7 +451,7 @@ def now(
     total_players = steam_helpers.get_current_players_count_for_app(app.config['RWR_STEAM_APP_ID'])
     online_players, active_servers, total_servers = rwr.scraper.get_counters()
 
-    peaks = Variable.get_peaks_for_display()
+    peaks = helpers.get_peaks_for_display()
 
     return '\n'.join(answer).format(
         total_players=total_players,
