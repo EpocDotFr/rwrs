@@ -1,9 +1,9 @@
 from rwrs.discord import constants, utils, embeds, charts, components
-from rwrs.models import Variable, User, RwrAccount, RwrAccountStat
 from flask_discord_interactions.models.embed import Field
+from rwrs.models import User, RwrAccount, RwrAccountStat
 from app import app, cache, db, discord_interactions
+from rwrs import helpers, steam_helpers, motd, event
 from flask_discord_interactions import Message
-from rwrs import helpers, steam_helpers, motd
 from tabulate import tabulate
 from rwr.player import Player
 from flask import g
@@ -99,7 +99,6 @@ def motd_remove(
             return Message('MOTD removed.', ephemeral=True)
         else:
             return Message('MOTD already removed.', ephemeral=True)
-
     except Exception as e:
         return Message('Error removing MOTD: {}'.format(e), ephemeral=True)
 
@@ -180,7 +179,7 @@ def event_set(
     server_ip_and_port: str = None
 ):
     try:
-        Variable.set_event(name, datetime, server_ip_and_port)
+        event.set(name, datetime, server_ip_and_port)
 
         db.session.commit()
 
@@ -201,19 +200,17 @@ def event_set(
 def event_remove(
     ctx
 ):
-    if not Variable.get_value('event'):
-        return Message('Event already removed.', ephemeral=True)
-    else:
-        try:
-            Variable.set_value('event', None)
-
+    try:
+        if event.remove():
             db.session.commit()
 
             cache.delete_memoized(rwr.scraper.get_servers)
 
             return Message('Event removed.', ephemeral=True)
-        except Exception as e:
-            return Message('Error removing event: {}'.format(e), ephemeral=True)
+        else:
+            return Message('Event already removed.', ephemeral=True)
+    except Exception as e:
+        return Message('Error removing event: {}'.format(e), ephemeral=True)
 
 
 @discord_interactions.command(

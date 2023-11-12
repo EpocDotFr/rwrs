@@ -277,7 +277,7 @@ admin = Admin(app, name='RWRS Admin', template_mode='bootstrap4', url='/manage',
 @app.before_request
 def before_request():
     from rwrs.steam_helpers import get_current_players_count_for_app
-    from rwrs.models import Variable
+    from rwrs import event
     import rwr.scraper
 
     if request.endpoint and request.endpoint.startswith(('static', 'debugtoolbar', '_debug_toolbar')):
@@ -289,7 +289,7 @@ def before_request():
         return
 
     g.MOTD = motd.get()
-    g.EVENT = Variable.get_event()
+    g.EVENT = event.get()
 
     if request.path == app.config['DISCORD_INTERACTIONS_PATH']:
         return
