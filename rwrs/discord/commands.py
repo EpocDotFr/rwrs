@@ -496,15 +496,15 @@ def agenda(
         ))
 
         if len(servers) == 1:
-            answer.append('this server:')
+            answer.append(f'**{servers[0].name}**:')
 
             embed = embeds.create_server_message_embed(servers[0], advertise_event=False)
             cpnts = components.create_server_components(servers[0])
         else:
-            answer.append('these servers:\n')
+            answer.append('these servers:\n\n')
 
             for server in servers:
-                answer.append(utils.server_description(server))
+                answer.append(utils.server_description(server) + '\n')
 
             cpnts = components.create_servers_components(not_empty=False, not_full=False, with_event=True, label='Show on rwrstats.com')
     else:
@@ -521,20 +521,23 @@ def agenda(
     'servers',
     'Displays first {} currently active servers with room'.format(constants.SERVERS_LIMIT),
     annotations={
-        'official_only': 'Only return official servers'
+        'official_only': 'Only return official servers',
+        'with_event': 'Only return servers on which an event will or is happening'
     }
 )
 @utils.check_maintenance
 def servers(
     ctx,
     type: constants.SERVER_TYPE_CHOICES = None,
-    official_only: bool = False
+    official_only: bool = False,
+    with_event: bool = False
 ):
     servers = rwr.scraper.filter_servers(
         limit=constants.SERVERS_LIMIT,
         not_empty='yes',
         not_full='yes',
         official='yes' if official_only else None,
+        with_event='yes' if with_event else None,
         type=type if type else 'any'
     )
 
@@ -552,7 +555,11 @@ def servers(
     filters_string = ', ' + ', '.join(filters) if filters else ''
 
     response = [
-        'Here, the first {} currently active{} servers with room:\n'.format(constants.SERVERS_LIMIT, filters_string)
+        'Here, the first {} currently active{} servers with{} room:\n'.format(
+            constants.SERVERS_LIMIT,
+            filters_string,
+            ' event and' if with_event else ''
+        )
     ]
 
     for server in servers:
@@ -560,7 +567,7 @@ def servers(
 
     return Message(
         '\n'.join(response),
-        components=components.create_servers_components(type, official_only)
+        components=components.create_servers_components(type=type, official_only=official_only, with_event=with_event)
     )
 
 
