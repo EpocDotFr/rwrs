@@ -104,10 +104,10 @@ def _set_server_event(servers):
     if not servers:
         return
 
-    e = event.get(with_server=False)
+    e = event.get(with_servers=False)
 
     for server in servers:
-        server.event = e if e and e['server_ip_and_port'] and e['server_ip_and_port'] == server.ip_and_port else None
+        server.event = e if e and e['servers_address'] and server.ip_and_port in e['servers_address'] else None
 
 
 @cache.memoize(timeout=app.config['SERVERS_CACHE_TIMEOUT'])
