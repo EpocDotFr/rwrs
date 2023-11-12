@@ -8,7 +8,6 @@ from sqlalchemy import func
 from slugify import slugify
 from rwrs import helpers
 from enum import Enum
-import rwr.scraper
 import rwr.utils
 import hashlib
 import iso3166
@@ -257,6 +256,8 @@ class UserFriend(db.Model):
     @memoized_property
     def playing_on_server(self):
         """Return the server this friend is currently playing on."""
+        import rwr.scraper
+
         servers = rwr.scraper.get_servers()
 
         for server in servers:
