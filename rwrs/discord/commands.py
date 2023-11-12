@@ -168,7 +168,7 @@ def user_api_unban(
     'Sets next RWR event',
     annotations={
         'datetime': 'Format: {}'.format(app.config['EVENT_DATETIME_STORAGE_FORMAT']),
-        'server_ip_and_port': 'Format: {ip}:{port}'
+        'servers_address': 'Format: {ip}:{port},{ip}:{port},...'
     }
 )
 @utils.check_maintenance
@@ -176,10 +176,10 @@ def event_set(
     ctx,
     name: str,
     datetime: str,
-    server_ip_and_port: str = None
+    servers_address: str = None
 ):
     try:
-        event.set(name, datetime, server_ip_and_port)
+        event.set(name, datetime, servers_address)
 
         db.session.commit()
 
