@@ -51,21 +51,27 @@ def create_server_components(server):
     )
 
 
-def create_servers_components(type, official_only):
-    params = {
-        'not_empty': 'yes',
-        'not_full': 'yes',
-    }
+def create_servers_components(type=None, not_empty=True, not_full=True, with_event=False, official_only=False, label='Full list on rwrstats.com'):
+    params = {}
 
     if type:
         params['type'] = type
 
+    if not_empty:
+        params['not_empty'] = 'yes'
+
+    if not_full:
+        params['not_full'] = 'yes'
+
     if official_only:
         params['official'] = 'yes'
 
+    if with_event:
+        params['with_event'] = 'yes'
+
     return create_single_button_with_link_component(
         url_for('servers_list', **params, _external=True),
-        label='Full list on rwrstats.com'
+        label=label
     )
 
 

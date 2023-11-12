@@ -7,6 +7,7 @@ from flask_discord_interactions import Message
 from tabulate import tabulate
 from rwr.player import Player
 from flask import g
+import rwr.constants
 import rwr.scraper
 import rwr.utils
 import threading
@@ -487,13 +488,25 @@ def agenda(
             g.EVENT['datetime'].format(app.config['EVENT_DATETIME_DISPLAY_FORMAT'])
         ))
 
-    if g.EVENT['server']:
-        answer.append(' {} on this server:'.format(
+    servers = g.EVENT['servers']
+
+    if servers:
+        answer.append(' {} on '.format(
             'happening' if g.EVENT['is_ongoing'] else 'that will happen'
         ))
 
-        embed = embeds.create_server_message_embed(g.EVENT['server'], advertise_event=False)
-        cpnts = components.create_server_components(g.EVENT['server'])
+        if len(servers) == 1:
+            answer.append('this server:')
+
+            embed = embeds.create_server_message_embed(servers[0], advertise_event=False)
+            cpnts = components.create_server_components(servers[0])
+        else:
+            answer.append('these servers:\n')
+
+            for server in servers:
+                answer.append(utils.server_description(server))
+
+            cpnts = components.create_servers_components(not_empty=False, not_full=False, with_event=True, label='Show on rwrstats.com')
     else:
         answer.append('.')
 
@@ -543,15 +556,7 @@ def servers(
     ]
 
     for server in servers:
-        response.append('{flag}`{current_players}/{max_players}` **{name}** ({type} • {map})\n{url}\n'.format(
-            flag=':flag_' + server.location.country_code + ': ' if server.location.country_code else '',
-            current_players=server.players.current,
-            max_players=server.players.max,
-            name=server.name_display,
-            type=server.type_name,
-            map=server.map.name_display,
-            url=server.steam_join_link.replace(' ', '%20')
-        ))
+        response.append(utils.server_description(server))
 
     return Message(
         '\n'.join(response),
