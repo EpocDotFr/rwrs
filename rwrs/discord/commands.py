@@ -558,7 +558,7 @@ def servers(
         'Here, the first {} currently active{} servers with room{}:\n'.format(
             constants.SERVERS_LIMIT,
             filters_string,
-            'on which an event will or is happening' if with_event else ''
+            ' on which an event will or is happening' if with_event else ''
         )
     ]
 
