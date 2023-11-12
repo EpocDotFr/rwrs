@@ -555,10 +555,10 @@ def servers(
     filters_string = ', ' + ', '.join(filters) if filters else ''
 
     response = [
-        'Here, the first {} currently active{} servers with{} room:\n'.format(
+        'Here, the first {} currently active{} servers with room{}:\n'.format(
             constants.SERVERS_LIMIT,
             filters_string,
-            ' event and' if with_event else ''
+            'on which an event will or is happening' if with_event else ''
         )
     ]
 
