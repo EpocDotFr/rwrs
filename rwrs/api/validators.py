@@ -63,6 +63,7 @@ get_servers_list.add_argument('dedicated', location='args', type=inputs.boolean)
 get_servers_list.add_argument('official', location='args', type=inputs.boolean)
 get_servers_list.add_argument('not_empty', location='args', type=inputs.boolean)
 get_servers_list.add_argument('not_full', location='args', type=inputs.boolean)
+get_servers_list.add_argument('with_event', location='args', type=inputs.boolean)
 get_servers_list.add_argument('limit', location='args', type=inputs.positive)
 
 get_players_list = limit_parser.copy()

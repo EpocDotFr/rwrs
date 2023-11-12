@@ -41,6 +41,7 @@ class ServersResource(BaseResource):
             ServersResource.replace_true_by_yes(args, 'official')
             ServersResource.replace_true_by_yes(args, 'not_empty')
             ServersResource.replace_true_by_yes(args, 'not_full')
+            ServersResource.replace_true_by_yes(args, 'with_event')
 
             servers = rwr.scraper.filter_servers(**args)
         else:

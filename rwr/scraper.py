@@ -321,6 +321,7 @@ def filter_servers(**filters):
         ranked = filters.get('ranked')
         not_empty = filters.get('not_empty')
         not_full = filters.get('not_full')
+        with_event = filters.get('with_event')
         database = filters.get('database')
         username = filters.get('username')
 
@@ -381,6 +382,9 @@ def filter_servers(**filters):
             return False
 
         if not_full == 'yes' and server.players.free == 0:
+            return False
+
+        if with_event == 'yes' and not server.event:
             return False
 
         return True
