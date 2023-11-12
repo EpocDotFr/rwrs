@@ -1,7 +1,6 @@
 from flask import request, Markup, url_for
 from itertools import tee, islice, chain
 from collections import OrderedDict
-from rwrs.models import Variable
 import misaka
 import json
 
@@ -164,6 +163,8 @@ def generate_next_url():
 
 def get_peaks_for_display():
     """Return the list of peak players and servers counts for display."""
+    from rwrs.models import Variable
+
     var_names = [
         'total_players_peak_count', 'total_players_peak_date',
         'online_players_peak_count', 'online_players_peak_date',
