@@ -177,7 +177,7 @@ def event_set_from_discord(
 
         return Message('Event updated.', ephemeral=True)
     except (arrow.parser.ParserError, ValueError):
-        return Message('Invalid datetime provided (should be `{}`)'.format(app.config['EVENT_DATETIME_STORAGE_FORMAT']), ephemeral=True)
+        return Message('Invalid start time  provided (should be `{}`)'.format(app.config['EVENT_DATETIME_STORAGE_FORMAT']), ephemeral=True)
     except Exception as e:
         return Message('Error saving event: {}'.format(e), ephemeral=True)
 
@@ -186,7 +186,7 @@ def event_set_from_discord(
     'set',
     'Sets next RWR event',
     annotations={
-        'datetime': 'Format: {}'.format(app.config['EVENT_DATETIME_STORAGE_FORMAT']),
+        'start_time': 'Format: {}'.format(app.config['EVENT_DATETIME_STORAGE_FORMAT']),
         'servers_address': 'Format: {ip}:{port},{ip}:{port},...'
     }
 )
@@ -194,15 +194,15 @@ def event_set_from_discord(
 def event_set(
     ctx,
     name: str,
-    datetime: str,
+    start_time: str,
     servers_address: str = None
 ):
     try:
-        event.set(name, datetime, servers_address)
+        event.set(name, start_time, servers_address)
 
         return Message('Event updated.', ephemeral=True)
     except (arrow.parser.ParserError, ValueError):
-        return Message('Invalid datetime provided (should be `{}`)'.format(app.config['EVENT_DATETIME_STORAGE_FORMAT']), ephemeral=True)
+        return Message('Invalid start time provided (should be `{}`)'.format(app.config['EVENT_DATETIME_STORAGE_FORMAT']), ephemeral=True)
     except Exception as e:
         return Message('Error saving event: {}'.format(e), ephemeral=True)
 
@@ -495,7 +495,7 @@ def agenda(
 
     if not g.EVENT['is_ongoing']:
         answer.append(' scheduled for **{}**'.format(
-            g.EVENT['datetime'].format(app.config['EVENT_DATETIME_DISPLAY_FORMAT'])
+            g.EVENT['start_time'].format(app.config['EVENT_DATETIME_DISPLAY_FORMAT'])
         ))
 
     servers = g.EVENT['servers']
