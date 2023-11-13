@@ -165,6 +165,24 @@ def user_api_unban(
 
 
 @event_command_group.command(
+    'pull',
+    'Pull RWR event from Discord'
+)
+@utils.check_maintenance
+def event_set_from_discord(
+    ctx
+):
+    try:
+        event.set_from_discord()
+
+        return Message('Event updated.', ephemeral=True)
+    except (arrow.parser.ParserError, ValueError):
+        return Message('Invalid datetime provided (should be `{}`)'.format(app.config['EVENT_DATETIME_STORAGE_FORMAT']), ephemeral=True)
+    except Exception as e:
+        return Message('Error saving event: {}'.format(e), ephemeral=True)
+
+
+@event_command_group.command(
     'set',
     'Sets next RWR event',
     annotations={
@@ -182,15 +200,11 @@ def event_set(
     try:
         event.set(name, datetime, servers_address)
 
-        db.session.commit()
-
-        cache.delete_memoized(rwr.scraper.get_servers)
-
         return Message('Event updated.', ephemeral=True)
     except (arrow.parser.ParserError, ValueError):
         return Message('Invalid datetime provided (should be `{}`)'.format(app.config['EVENT_DATETIME_STORAGE_FORMAT']), ephemeral=True)
     except Exception as e:
-        return Message('Error setting event: {}'.format(e), ephemeral=True)
+        return Message('Error saving event: {}'.format(e), ephemeral=True)
 
 
 @event_command_group.command(
@@ -203,10 +217,6 @@ def event_remove(
 ):
     try:
         if event.remove():
-            db.session.commit()
-
-            cache.delete_memoized(rwr.scraper.get_servers)
-
             return Message('Event removed.', ephemeral=True)
         else:
             return Message('Event already removed.', ephemeral=True)
