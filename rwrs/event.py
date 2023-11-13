@@ -20,12 +20,16 @@ def remove():
     return False
 
 
-def set(name, start_time, servers_address, manual=True):
+def set(name, start_time, end_time=None, servers_address=None, manual=True):
     arrow.get(start_time, app.config['EVENT_DATETIME_STORAGE_FORMAT'])  # Just to validate
+
+    if end_time:
+        arrow.get(end_time, app.config['EVENT_DATETIME_STORAGE_FORMAT'])  # Just to validate
 
     Variable.set_value(VARIABLE_NAME, {
         'name': name,
         'start_time': start_time,
+        'end_time': end_time,
         'servers_address': servers_address.split(',') if servers_address else [],
         'manual': manual
     })
@@ -56,8 +60,8 @@ def set_from_discord():
     # TODO Parse all IPs from event's location and description fields
 
     # TODO Save event
-    # start_time=YYYY-MM-DD HH:mm ZZZ
-    # set(name, start_time, servers_address, manual=False)
+    # YYYY-MM-DD HH:mm ZZZ
+    # set(name, start_time, end_time=None, servers_address=None, manual=False)
 
 
 def get(with_servers=True):
@@ -67,9 +71,10 @@ def get(with_servers=True):
         return None
 
     event_start_time = arrow.get(event['start_time'], app.config['EVENT_DATETIME_STORAGE_FORMAT']).floor('minute')
+    event_end_time = arrow.get(event['end_time'], app.config['EVENT_DATETIME_STORAGE_FORMAT']).floor('minute') if event['end_time'] else None
     now_in_event_timezone = arrow.now(event_start_time.tzinfo).floor('minute')
 
-    if now_in_event_timezone >= event_start_time.shift(hours=+5):
+    if event_end_time and now_in_event_timezone >= event_end_time:
         return None
 
     event['start_time'] = event_start_time
