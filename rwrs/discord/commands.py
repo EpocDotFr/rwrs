@@ -522,7 +522,7 @@ def agenda(
     'Displays first {} currently active servers with room'.format(constants.SERVERS_LIMIT),
     annotations={
         'official_only': 'Only return official servers',
-        'with_event': 'Only return servers on which an event will or is happening'
+        'with_event': 'Only return servers on which an event will happen or is happening'
     }
 )
 @utils.check_maintenance
@@ -558,7 +558,7 @@ def servers(
         'Here, the first {} currently active{} servers with room{}:\n'.format(
             constants.SERVERS_LIMIT,
             filters_string,
-            ' on which an event will or is happening' if with_event else ''
+            ' on which an event will happen or is happening' if with_event else ''
         )
     ]
 
