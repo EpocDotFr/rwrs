@@ -42,6 +42,41 @@ def update_discord_commands():
 
 
 @app.cli.command()
+@check_maintenance
+def pull_discord_event():
+    """Pull event from Discord."""
+    from app import db, cache, discord_interactions
+    from rwrs import event
+    import rwr.scraper
+    import arrow
+
+    click.echo('Pulling event from Discord...')
+
+    event = event.get(with_servers=False)
+
+    if event and event['manual']:
+        click.secho('An event has already been manually set, aborting', fg='red')
+
+        return
+
+    # TODO Pull from Discord and get most significant event from list
+    # TODO Parse all IPs from event's location and description fields
+
+    try:
+        # TODO Save event
+        # datetime=YYYY-MM-DD HH:mm ZZZ
+        # event.set(name, datetime, servers_address, manual=False)
+
+        db.session.commit()
+
+        cache.delete_memoized(rwr.scraper.get_servers)
+
+        click.secho('Done', fg='green')
+    except (arrow.parser.ParserError, ValueError):
+        click.secho('Invalid datetime provided (should be `{}`)'.format(app.config['EVENT_DATETIME_STORAGE_FORMAT']), fg='red')
+
+
+@app.cli.command()
 @click.option('--starting-id', type=int, default=0)
 @click.option('--limit', type=int, default=200)
 def recompute_hashes(starting_id, limit):
