@@ -52,14 +52,9 @@ def set_event_from_discord():
 
     click.echo('Pulling event from Discord...')
 
-    try:
-        event.set_from_discord()
+    event.set_from_discord()
 
-        click.secho('Done', fg='green')
-    except (arrow.parser.ParserError, ValueError):
-        click.secho('Invalid start/end time provided (should be `{}`)'.format(app.config['EVENT_DATETIME_STORAGE_FORMAT']), fg='red')
-    except Exception as e:
-        click.secho('Error saving event: {}'.format(e), fg='red')
+    click.secho('Done', fg='green')
 
 
 @app.cli.command()

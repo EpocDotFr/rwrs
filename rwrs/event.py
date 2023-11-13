@@ -76,6 +76,7 @@ def get(with_servers=True):
         return None
 
     event['start_time'] = event_start_time
+    event['end_time'] = event_end_time
     event['is_ongoing'] = now_in_event_timezone >= event_start_time
     event['display_server_players_count'] = now_in_event_timezone >= event_start_time.shift(minutes=-15)
     event['servers'] = [
