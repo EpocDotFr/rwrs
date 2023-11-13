@@ -15,13 +15,14 @@ def remove():
     return False
 
 
-def set(name, datetime, servers_address):
+def set(name, datetime, servers_address, manual=True):
     arrow.get(datetime, app.config['EVENT_DATETIME_STORAGE_FORMAT'])  # Just to validate
 
     Variable.set_value(VARIABLE_NAME, {
         'name': name,
         'datetime': datetime,
-        'servers_address': servers_address.split(',') if servers_address else []
+        'servers_address': servers_address.split(',') if servers_address else [],
+        'manual': manual
     })
 
 
