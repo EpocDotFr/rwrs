@@ -177,7 +177,7 @@ def event_set_from_discord(
 
         return Message('Event updated.', ephemeral=True)
     except (arrow.parser.ParserError, ValueError):
-        return Message('Invalid start time  provided (should be `{}`)'.format(app.config['EVENT_DATETIME_STORAGE_FORMAT']), ephemeral=True)
+        return Message('Invalid start/end time  provided (should be `{}`)'.format(app.config['EVENT_DATETIME_STORAGE_FORMAT']), ephemeral=True)
     except Exception as e:
         return Message('Error saving event: {}'.format(e), ephemeral=True)
 
@@ -187,6 +187,7 @@ def event_set_from_discord(
     'Sets next RWR event',
     annotations={
         'start_time': 'Format: {}'.format(app.config['EVENT_DATETIME_STORAGE_FORMAT']),
+        'end_time': 'Format: {}'.format(app.config['EVENT_DATETIME_STORAGE_FORMAT']),
         'servers_address': 'Format: {ip}:{port},{ip}:{port},...'
     }
 )
@@ -195,14 +196,15 @@ def event_set(
     ctx,
     name: str,
     start_time: str,
+    end_time: str = None,
     servers_address: str = None
 ):
     try:
-        event.set(name, start_time, servers_address)
+        event.set(name, start_time, end_time=end_time, servers_address=servers_address)
 
         return Message('Event updated.', ephemeral=True)
     except (arrow.parser.ParserError, ValueError):
-        return Message('Invalid start time provided (should be `{}`)'.format(app.config['EVENT_DATETIME_STORAGE_FORMAT']), ephemeral=True)
+        return Message('Invalid start/end time provided (should be `{}`)'.format(app.config['EVENT_DATETIME_STORAGE_FORMAT']), ephemeral=True)
     except Exception as e:
         return Message('Error saving event: {}'.format(e), ephemeral=True)
 
