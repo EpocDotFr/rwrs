@@ -91,6 +91,7 @@ event = OrderedDict([
     ('name', fields.String),
     ('is_ongoing', fields.Boolean),
     ('starts_at', ArrowIsoDateTimeField(attribute='start_time')),
+    ('ends_at', ArrowIsoDateTimeField(attribute='end_time')),
 ])
 
 server_base = OrderedDict([
