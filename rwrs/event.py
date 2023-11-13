@@ -7,8 +7,8 @@ import arrow
 VARIABLE_NAME = 'event'
 
 
-def remove():
-    if Variable.get_value(VARIABLE_NAME):
+def remove(force=False):
+    if force or Variable.get_value(VARIABLE_NAME):
         Variable.set_value(VARIABLE_NAME, None)
 
         db.session.commit()
@@ -40,9 +40,9 @@ def set(name, start_time, end_time=None, servers_address=None, manual=True):
 
 
 def set_from_discord():
-    event = Variable.get_value(VARIABLE_NAME)
+    local_event = Variable.get_value(VARIABLE_NAME)
 
-    if event and event['manual']:
+    if local_event and local_event['manual']:
         raise Exception('Aborting: an event has already been manually set')
 
     url = '{}/guilds/{}/scheduled-events'.format(
@@ -56,10 +56,8 @@ def set_from_discord():
 
     print(response.json())
 
-    # TODO Pull from Discord and get most significant event from list
-    # TODO Parse all IPs from event's location and description fields
+    # remove(force=True)
 
-    # TODO Save event
     # YYYY-MM-DD HH:mm ZZZ
     # set(name, start_time, end_time=None, servers_address=None, manual=False)
 
