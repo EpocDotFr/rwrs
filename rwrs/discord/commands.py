@@ -166,7 +166,7 @@ def user_api_unban(
 
 @event_command_group.command(
     'pull',
-    'Pull RWR event from Discord'
+    'Set RWR event from Discord'
 )
 @utils.check_maintenance
 def event_set_from_discord(
