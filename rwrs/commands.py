@@ -50,7 +50,7 @@ def set_event_from_discord():
     click.echo('Pulling event from Discord...')
 
     try:
-        event.set_from_discord()
+        event.save_from_discord()
 
         click.secho('Done', fg='green')
     except event.ManualEventAlreadySetError:
