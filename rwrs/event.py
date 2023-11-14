@@ -50,7 +50,7 @@ def save(name, start_time, end_time=None, servers_address=None, manual=True):
     cache.delete_memoized(rwr.scraper.get_servers)
 
 
-def set_from_discord():
+def save_from_discord():
     local_event = Variable.get_value(VARIABLE_NAME)
 
     if local_event and local_event['manual']:

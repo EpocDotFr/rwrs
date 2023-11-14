@@ -173,7 +173,7 @@ def event_set_from_discord(
     ctx
 ):
     try:
-        event.set_from_discord()
+        event.save_from_discord()
 
         return Message('Event updated.', ephemeral=True)
     except (arrow.parser.ParserError, ValueError):
