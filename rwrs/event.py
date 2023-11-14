@@ -92,9 +92,9 @@ def save_from_discord():
             end_time = arrow.get(discord_event['scheduled_end_time']) if discord_event['scheduled_end_time'] else None
 
             servers_address = set()
-            servers_address.update(IP_PORT_REGEX.findall(name) or [])
-            servers_address.update(IP_PORT_REGEX.findall(description) or [])
-            servers_address.update(IP_PORT_REGEX.findall(location) or [])
+            servers_address.update(IP_PORT_REGEX.findall(name))
+            servers_address.update(IP_PORT_REGEX.findall(description))
+            servers_address.update(IP_PORT_REGEX.findall(location))
 
             save(
                 name,
