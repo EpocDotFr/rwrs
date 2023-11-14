@@ -100,7 +100,7 @@ def save_from_discord():
                 name,
                 start_time.format(app.config['EVENT_DATETIME_STORAGE_FORMAT']),
                 end_time=end_time.format(app.config['EVENT_DATETIME_STORAGE_FORMAT']) if end_time else None,
-                servers_address=list(servers_address),
+                servers_address=sorted(servers_address),
                 manual=False
             )
     elif local_event:
