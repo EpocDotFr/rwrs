@@ -45,10 +45,7 @@ def update_discord_commands():
 @check_maintenance
 def set_event_from_discord():
     """Pull RWR event from Discord."""
-    from app import db, cache
     from rwrs import event
-    import rwr.scraper
-    import arrow
 
     click.echo('Pulling event from Discord...')
 
