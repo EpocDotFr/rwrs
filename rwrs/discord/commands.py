@@ -80,7 +80,7 @@ def motd_set(
     message: str
 ):
     try:
-        motd.set(type, message)
+        motd.save(type, message)
 
         return Message('MOTD updated.', ephemeral=True)
     except Exception as e:
@@ -178,6 +178,8 @@ def event_set_from_discord(
         return Message('Event updated.', ephemeral=True)
     except (arrow.parser.ParserError, ValueError):
         return Message('Invalid start/end time  provided (should be `{}`)'.format(app.config['EVENT_DATETIME_STORAGE_FORMAT']), ephemeral=True)
+    except event.ManualEventAlreadySetError:
+        return Message('Aborting: an event has already been manually set', ephemeral=True)
     except Exception as e:
         return Message('Error saving event: {}'.format(e), ephemeral=True)
 
@@ -200,7 +202,7 @@ def event_set(
     servers_address: str = None
 ):
     try:
-        event.set(name, start_time, end_time=end_time, servers_address=servers_address)
+        event.save(name, start_time, end_time=end_time, servers_address=servers_address)
 
         return Message('Event updated.', ephemeral=True)
     except (arrow.parser.ParserError, ValueError):
