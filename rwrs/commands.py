@@ -49,9 +49,12 @@ def set_event_from_discord():
 
     click.echo('Pulling event from Discord...')
 
-    event.set_from_discord()
+    try:
+        event.set_from_discord()
 
-    click.secho('Done', fg='green')
+        click.secho('Done', fg='green')
+    except event.ManualEventAlreadySetError:
+        click.secho('Aborting: an event has already been manually set', fg='red')
 
 
 @app.cli.command()

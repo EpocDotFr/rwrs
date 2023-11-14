@@ -1,10 +1,16 @@
-from app import app, db, cache, discord_interactions
 from rwrs.models import Variable
+from app import app, db, cache
 import rwr.scraper
-import requests
 import arrow
+import re
 
 VARIABLE_NAME = 'event'
+
+IP_PORT_REGEX = re.compile(r'[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}:[0-9]{1,5}')
+
+
+class ManualEventAlreadySetError(Exception):
+    pass
 
 
 def remove(force=False):
@@ -20,17 +26,22 @@ def remove(force=False):
     return False
 
 
-def set(name, start_time, end_time=None, servers_address=None, manual=True):
+def save(name, start_time, end_time=None, servers_address=None, manual=True):
     arrow.get(start_time, app.config['EVENT_DATETIME_STORAGE_FORMAT'])  # Just to validate
 
     if end_time:
         arrow.get(end_time, app.config['EVENT_DATETIME_STORAGE_FORMAT'])  # Just to validate
 
+    if isinstance(servers_address, str):
+        servers_address = servers_address.split(',')
+    elif not servers_address:
+        servers_address = []
+
     Variable.set_value(VARIABLE_NAME, {
         'name': name,
         'start_time': start_time,
         'end_time': end_time,
-        'servers_address': servers_address.split(',') if servers_address else [],
+        'servers_address': servers_address,
         'manual': manual
     })
 
@@ -43,23 +54,57 @@ def set_from_discord():
     local_event = Variable.get_value(VARIABLE_NAME)
 
     if local_event and local_event['manual']:
-        raise Exception('Aborting: an event has already been manually set')
+        raise ManualEventAlreadySetError()
 
-    url = '{}/guilds/{}/scheduled-events'.format(
-        app.config['DISCORD_BASE_URL'],
-        app.config['DISCORD_GUILD'],
-    )
+    # TODO Fetch event from Discord
+    # TODO Sort events by starting date DESC
+    # TODO Take the first one
 
-    response = requests.get(url, headers=discord_interactions.auth_headers(app))
+    discord_event = {
+        'name': 'Caca',
+        'description': 'Will happen https://rwrstats.com/servers/162.248.88.126:1236/invasionus1 and 162.248.88.126:1236 [here](https://rwrstats.com/servers/47.107.163.15:1280/ww2invasioncn2) and 45.32.63.85:1280 mates',
+        'scheduled_start_time': '2023-11-14T14:00:00+02:00',
+        'scheduled_end_time': None,
+        'status': 'SCHEDULED',
+        'entity_metadata': {
+            'location': '31.186.250.67:1260 31.186.250.67:1260',
+        },
+    }
 
-    response.raise_for_status()
+    if discord_event:
+        if discord_event['status'] in ('COMPLETED', 'CANCELED'):
+            if local_event:
+                remove(force=True)
+        elif discord_event['status'] in ('SCHEDULED', 'ACTIVE'):
+            name = discord_event['name']
 
-    print(response.json())
+            try:
+                description = discord_event['description'] or ''
+            except KeyError:
+                description = ''
 
-    # remove(force=True)
+            try:
+                location = discord_event['entity_metadata']['location'] or ''
+            except KeyError:
+                location = ''
 
-    # YYYY-MM-DD HH:mm ZZZ
-    # set(name, start_time, end_time=None, servers_address=None, manual=False)
+            start_time = arrow.get(discord_event['scheduled_start_time'])
+            end_time = arrow.get(discord_event['scheduled_end_time']) if discord_event['scheduled_end_time'] else None
+
+            servers_address = set()
+            servers_address.update(IP_PORT_REGEX.findall(name) or [])
+            servers_address.update(IP_PORT_REGEX.findall(description) or [])
+            servers_address.update(IP_PORT_REGEX.findall(location) or [])
+
+            save(
+                name,
+                start_time.format(app.config['EVENT_DATETIME_STORAGE_FORMAT']),
+                end_time=end_time.format(app.config['EVENT_DATETIME_STORAGE_FORMAT']) if end_time else None,
+                servers_address=list(servers_address),
+                manual=False
+            )
+    elif local_event:
+        remove(force=True)
 
 
 def get(with_servers=True):
