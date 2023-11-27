@@ -143,6 +143,8 @@ def create_player_message_embed(player, description_addendum=None):
             player.playing_on_server.name_display,
             player.playing_on_server.summary
         ))
+    elif player.rwr_account and player.rwr_account.last_seen_at:
+        embed.footer = Footer(f'Last seen {player.rwr_account.last_seen_at.humanize(only_distance=True)}')
 
     return embed
 

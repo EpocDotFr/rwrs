@@ -521,7 +521,7 @@ def save_last_seen_players():
             else:
                 rwr_account = rwr_accounts_by_username[player_name]
 
-            rwr_account.last_seen_at = arrow.utcnow().floor('day')
+            rwr_account.last_seen_at = arrow.utcnow().floor('minute')
 
             db.session.add(rwr_account)
 

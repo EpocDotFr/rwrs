@@ -408,7 +408,7 @@ def whereis(
     'server',
     'Displays information about the given server',
     annotations={
-        'username': 'A server name (may be partial)'
+        'name': 'A server name (may be partial)'
     }
 )
 @utils.check_maintenance
