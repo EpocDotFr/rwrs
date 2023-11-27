@@ -41,6 +41,7 @@ player_base = OrderedDict([
 player_simple = player_base.copy()
 player_simple.update(OrderedDict([
     ('is_friend', fields.Boolean), # Added in the API controller
+    ('last_seen_at', ArrowIsoDateTimeField),
 ]))
 
 server_map_simple = OrderedDict([
