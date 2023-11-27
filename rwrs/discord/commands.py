@@ -177,7 +177,7 @@ def event_set_from_discord(
 
         return Message('Event updated.', ephemeral=True)
     except (arrow.parser.ParserError, ValueError):
-        return Message('Invalid start/end time  provided (should be `{}`)'.format(app.config['EVENT_DATETIME_INPUT_FORMAT']), ephemeral=True)
+        return Message('Invalid start/end time provided (should be any format supported by Arrow)', ephemeral=True)
     except event.ManualEventAlreadySetError:
         return Message('Aborting: an event has already been manually set', ephemeral=True)
     except Exception as e:
