@@ -177,7 +177,7 @@ def event_set_from_discord(
 
         return Message('Event updated.', ephemeral=True)
     except (arrow.parser.ParserError, ValueError):
-        return Message('Invalid start/end time  provided (should be `{}`)'.format(app.config['EVENT_DATETIME_STORAGE_FORMAT']), ephemeral=True)
+        return Message('Invalid start/end time  provided (should be `{}`)'.format(app.config['EVENT_DATETIME_INPUT_FORMAT']), ephemeral=True)
     except event.ManualEventAlreadySetError:
         return Message('Aborting: an event has already been manually set', ephemeral=True)
     except Exception as e:
@@ -188,8 +188,8 @@ def event_set_from_discord(
     'set',
     'Sets next RWR event',
     annotations={
-        'start_time': 'Format: {}'.format(app.config['EVENT_DATETIME_STORAGE_FORMAT']),
-        'end_time': 'Format: {}'.format(app.config['EVENT_DATETIME_STORAGE_FORMAT']),
+        'start_time': 'Format: {}'.format(app.config['EVENT_DATETIME_INPUT_FORMAT']),
+        'end_time': 'Format: {}'.format(app.config['EVENT_DATETIME_INPUT_FORMAT']),
         'servers_address': 'Format: {ip}:{port},{ip}:{port},...'
     }
 )
@@ -202,11 +202,16 @@ def event_set(
     servers_address: str = None
 ):
     try:
+        arrow.get(start_time, app.config['EVENT_DATETIME_INPUT_FORMAT']) # Just to validate
+
+        if end_time:
+            arrow.get(end_time, app.config['EVENT_DATETIME_INPUT_FORMAT']) # Just to validate
+
         event.save(name, start_time, end_time=end_time, servers_address=servers_address)
 
         return Message('Event updated.', ephemeral=True)
     except (arrow.parser.ParserError, ValueError):
-        return Message('Invalid start/end time provided (should be `{}`)'.format(app.config['EVENT_DATETIME_STORAGE_FORMAT']), ephemeral=True)
+        return Message('Invalid start/end time provided (should be `{}`)'.format(app.config['EVENT_DATETIME_INPUT_FORMAT']), ephemeral=True)
     except Exception as e:
         return Message('Error saving event: {}'.format(e), ephemeral=True)
 

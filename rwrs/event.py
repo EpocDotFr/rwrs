@@ -27,10 +27,10 @@ def remove(force=False):
 
 
 def save(name, start_time, end_time=None, servers_address=None, manual=True):
-    arrow.get(start_time, app.config['EVENT_DATETIME_STORAGE_FORMAT'])  # Just to validate
+    start_time = arrow.get(start_time).floor('minute')
 
     if end_time:
-        arrow.get(end_time, app.config['EVENT_DATETIME_STORAGE_FORMAT'])  # Just to validate
+        end_time = arrow.get(end_time).floor('minute')
 
     if isinstance(servers_address, str):
         servers_address = servers_address.split(',')
@@ -39,8 +39,8 @@ def save(name, start_time, end_time=None, servers_address=None, manual=True):
 
     Variable.set_value(VARIABLE_NAME, {
         'name': name,
-        'start_time': start_time,
-        'end_time': end_time,
+        'start_time': start_time.isoformat(),
+        'end_time': end_time.isoformat() if end_time else None,
         'servers_address': servers_address,
         'manual': manual
     })
@@ -63,7 +63,7 @@ def save_from_discord():
     discord_event = {
         'name': 'Caca',
         'description': 'Will happen https://rwrstats.com/servers/162.248.88.126:1236/invasionus1 and 162.248.88.126:1236 [here](https://rwrstats.com/servers/47.107.163.15:1280/ww2invasioncn2) and 45.32.63.85:1280 mates',
-        'scheduled_start_time': '2023-11-14T14:00:00+02:00',
+        'scheduled_start_time': '2023-11-27T14:00:00+01:00',
         'scheduled_end_time': None,
         'status': 'SCHEDULED',
         'entity_metadata': {
@@ -88,8 +88,8 @@ def save_from_discord():
             except KeyError:
                 location = ''
 
-            start_time = arrow.get(discord_event['scheduled_start_time'])
-            end_time = arrow.get(discord_event['scheduled_end_time']) if discord_event['scheduled_end_time'] else None
+            start_time = discord_event['scheduled_start_time']
+            end_time = discord_event['scheduled_end_time'] or None
 
             servers_address = set()
             servers_address.update(IP_PORT_REGEX.findall(name))
@@ -98,8 +98,8 @@ def save_from_discord():
 
             save(
                 name,
-                start_time.format(app.config['EVENT_DATETIME_STORAGE_FORMAT']),
-                end_time=end_time.format(app.config['EVENT_DATETIME_STORAGE_FORMAT']) if end_time else None,
+                start_time,
+                end_time=end_time,
                 servers_address=sorted(servers_address),
                 manual=False
             )
@@ -113,9 +113,9 @@ def get(with_servers=True):
     if not event:
         return None
 
-    event_start_time = arrow.get(event['start_time'], app.config['EVENT_DATETIME_STORAGE_FORMAT']).floor('minute')
-    event_end_time = arrow.get(event['end_time'], app.config['EVENT_DATETIME_STORAGE_FORMAT']).floor('minute') if event['end_time'] else None
-    now_in_event_timezone = arrow.now(event_start_time.tzinfo).floor('minute')
+    event_start_time = arrow.get(event['start_time'])
+    event_end_time = arrow.get(event['end_time']) if event['end_time'] else None
+    now_in_event_timezone = arrow.utcnow().to(event_start_time.tzinfo)
 
     if event_end_time and now_in_event_timezone >= event_end_time:
         return None
