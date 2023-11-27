@@ -629,6 +629,7 @@ class RwrAccount(db.Model):
     type = db.Column(db.Enum(RwrAccountType), nullable=False)
     username = db.Column(db.String(16), nullable=False)
     pending_delete = db.Column(db.Boolean, nullable=False, default=False)
+    last_seen_at = db.Column(ArrowType)
     created_at = db.Column(ArrowType, default=lambda: arrow.utcnow().floor('minute'), nullable=False)
     updated_at = db.Column(ArrowType, default=lambda: arrow.utcnow().floor('minute'), onupdate=lambda: arrow.utcnow().floor('minute'), nullable=False)
 
