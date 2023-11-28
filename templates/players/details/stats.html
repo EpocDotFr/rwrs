@@ -16,7 +16,7 @@
                     {{ macros.server_join_button(player.playing_on_server) }}
                 </div>
             {% else -%}
-                Nope{% if player.rwr_account and player.rwr_account.last_seen_at %}, was last seen {{ player.rwr_account.last_seen_at.humanize() }}{% endif %}.
+                Nope{% if player.rwr_account and player.rwr_account.last_seen_at %}, last seen {{ player.rwr_account.last_seen_at.humanize() }}{% endif %}.
             {%- endif %}
         </td>
         <td class="{{ 'big' if player.next_rank }} txtcenter">

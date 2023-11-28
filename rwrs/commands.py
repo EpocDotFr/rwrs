@@ -488,6 +488,7 @@ def save_last_seen_players():
     """Save "last seen" date of current players."""
     from rwrs.models import RwrAccount, RwrAccountType
     from app import db
+    import rwr.constants
     import rwr.scraper
     import arrow
 
