@@ -262,7 +262,7 @@ def extract_minimaps(steamdir):
 @click.option('--create-accounts-only', is_flag=True, help='Only create RWR accounts if they do not exist')
 @check_maintenance
 def save_players_stats(reset, create_accounts_only):
-    """Get and persist the players stats."""
+    """Retrieve and persist the players stats."""
     from rwrs.models import RwrAccount, RwrAccountType, RwrAccountStat
     from app import db, cache
     import rwr.constants
@@ -320,13 +320,12 @@ def save_players_stats(reset, create_accounts_only):
 
                     rwr_accounts_by_username[player.username] = rwr_account
 
-                    db.session.add(rwr_account)
                 elif not create_accounts_only:
                     rwr_account = rwr_accounts_by_username[player.username]
 
                     rwr_account.updated_at = arrow.utcnow().floor('minute')
 
-                    db.session.add(rwr_account)
+                db.session.add(rwr_account)
 
             db.session.flush()
 
@@ -480,5 +479,55 @@ def save_official_servers_mods():
     click.echo('Saving to {}'.format(app.config['OFFICIAL_SERVERS_MODS_FILE']))
 
     helpers.save_json(app.config['OFFICIAL_SERVERS_MODS_FILE'], mods)
+
+    click.secho('Done', fg='green')
+
+
+@app.cli.command()
+def save_last_seen_players():
+    """Save "last seen" date of current players."""
+    from rwrs.models import RwrAccount, RwrAccountType
+    from app import db
+    import rwr.constants
+    import rwr.scraper
+    import arrow
+
+    for database in rwr.constants.VALID_DATABASES:
+        click.echo(f'Getting players on {database} servers')
+
+        servers = rwr.scraper.filter_servers(database=database, not_empty='yes', official='yes', ranked='yes')
+
+        all_player_names = set()
+
+        for server in servers:
+            all_player_names.update(server.players.list)
+
+        click.echo(f'{len(all_player_names)} online players')
+
+        rwr_account_type = RwrAccountType(database.upper())
+
+        existing_rwr_accounts = RwrAccount.query.filter(
+            RwrAccount.type == rwr_account_type,
+            RwrAccount.username.in_(all_player_names)
+        ).all()
+
+        rwr_accounts_by_username = {rwr_account.username: rwr_account for rwr_account in existing_rwr_accounts}
+
+        for player_name in all_player_names:
+            if player_name not in rwr_accounts_by_username:
+                rwr_account = RwrAccount()
+
+                rwr_account.username = player_name
+                rwr_account.type = rwr_account_type
+            else:
+                rwr_account = rwr_accounts_by_username[player_name]
+
+            rwr_account.last_seen_at = arrow.utcnow().floor('minute')
+
+            db.session.add(rwr_account)
+
+        db.session.flush()
+
+    db.session.commit()
 
     click.secho('Done', fg='green')
