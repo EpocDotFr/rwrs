@@ -484,6 +484,7 @@ def save_official_servers_mods():
 
 
 @app.cli.command()
+@check_maintenance
 def save_last_seen_players():
     """Save "last seen" date of current players."""
     from rwrs.models import RwrAccount, RwrAccountType
