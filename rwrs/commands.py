@@ -77,15 +77,13 @@ def recompute_hashes(starting_id, limit):
             rwr_account_stat.compute_hash()
 
         db.session.bulk_save_objects(rwr_account_stats)
-        db.session.flush()
+        db.session.commit()
 
         current_id = rwr_account_stats[-1].id
 
         del rwr_account_stats
 
         processed += limit
-
-    db.session.commit()
 
     click.secho('Done', fg='green')
 
@@ -273,7 +271,7 @@ def save_players_stats(reset, create_accounts_only):
     if reset and click.confirm('Are you sure to reset all RWR accounts and stats?'):
         RwrAccountStat.query.delete()
         RwrAccount.query.delete()
-        db.session.flush()
+        db.session.commit()
 
     players_sort = rwr.constants.PlayersSort.XP.value
     players_count = app.config['MAX_NUM_OF_PLAYERS_TO_TRACK_STATS_FOR']
@@ -327,7 +325,7 @@ def save_players_stats(reset, create_accounts_only):
 
                 db.session.add(rwr_account)
 
-            db.session.flush()
+            db.session.commit()
 
             # Create all the RwrAccountStat objects for each players
             if not create_accounts_only:
@@ -370,9 +368,7 @@ def save_players_stats(reset, create_accounts_only):
 
                 # Finally save stats for all eligible players
                 db.session.bulk_save_objects(all_rwr_accounts_stat)
-                db.session.flush()
-
-    db.session.commit()
+                db.session.commit()
 
     click.secho('Done', fg='green')
 
@@ -413,7 +409,7 @@ def compute_promotions():
     click.echo('Resetting all already-computed promotions...')
 
     RwrAccountStat.query.update({RwrAccountStat.promoted_to_rank_id: None})
-    db.session.flush()
+    db.session.commit()
 
     for rwr_account in RwrAccount.query.yield_per(100):
         database = rwr_account.type.value.lower()
@@ -432,9 +428,7 @@ def compute_promotions():
             current_rwr_account_stat.promoted_to_rank_id = current_rank.id if current_rank.id != previous_rank.id else None
 
         db.session.bulk_save_objects(rwr_account_stats)
-        db.session.flush()
-
-    db.session.commit()
+        db.session.commit()
 
     click.secho('Done', fg='green')
 
@@ -527,8 +521,6 @@ def save_last_seen_players():
 
             db.session.add(rwr_account)
 
-        db.session.flush()
-
-    db.session.commit()
+        db.session.commit()
 
     click.secho('Done', fg='green')
