@@ -4,6 +4,18 @@ from flask import g
 import arrow
 
 
+def server_description(server):
+    return '{flag}`{current_players}/{max_players}` **{name}** ({type} • {map}) [Details]({url})\n'.format(
+        flag=':flag_' + server.location.country_code + ': ' if server.location.country_code else '',
+        current_players=server.players.current,
+        max_players=server.players.max,
+        name=server.name_display,
+        type=server.type_name,
+        map=server.map.name_display,
+        url=server.link_absolute
+    )
+
+
 def prepare_username(username):
     """Perform some action to a RWR username to be ready to be consumed by the bot."""
     username = username.upper()

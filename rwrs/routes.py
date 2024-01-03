@@ -1,4 +1,4 @@
-from rwrs.models import SteamPlayerCount, ServerPlayerCount, Variable, RwrAccountStat, RwrAccount
+from rwrs.models import SteamPlayerCount, ServerPlayerCount, RwrAccountStat, RwrAccount
 from flask import render_template, abort, request, redirect, url_for, flash, g, jsonify
 from rwrs.dynamic_image import DynamicServerImage, DynamicPlayerImage
 from flask_login import login_required, current_user, logout_user
@@ -35,7 +35,7 @@ def home():
         servers_active_data
     ]
 
-    peaks = Variable.get_peaks_for_display()
+    peaks = helpers.get_peaks_for_display()
 
     return render_template(
         'home.html',

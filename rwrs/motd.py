@@ -20,11 +20,11 @@ def remove():
         return False
 
 
-def set(type, message):
-    type = Types(type).value
+def save(type_, message):
+    type_ = Types(type_).value
 
     with open(FILENAME, 'w', encoding='utf-8') as f:
-        f.write('\n'.join((type, message)))
+        f.write('\n'.join((type_, message)))
 
 
 def get():
