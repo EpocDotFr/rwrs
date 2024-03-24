@@ -17,13 +17,13 @@
     <meta property="og:description" content="{{ self.meta_description() }}">
     <meta property="og:image" content="{{ meta_image if meta_image else url_for('static', filename='images/icon_round_dark_256.png', _external=True) }}">
 
-    <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png') }}" />
-    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" />
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
 
     <link rel="search" type="application/opensearchdescription+xml" href="{{ url_for('static', filename='opensearch_invasion.xml') }}" title="RWRS Invasion player search">
     <link rel="search" type="application/opensearchdescription+xml" href="{{ url_for('static', filename='opensearch_pacific.xml') }}" title="RWRS WW2 DLCs player search">
 
-    <link rel="author" href="{{ url_for('static', filename='humans.txt') }}" />
+    <link rel="author" href="{{ url_for('static', filename='humans.txt') }}">
 
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.0/css/solid.css" crossorigin="anonymous">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.0/css/brands.css" crossorigin="anonymous">
@@ -36,8 +36,6 @@
     {% block jsfiles %} {% endblock %}
 
     {% if canonical_url %}<link rel="canonical" href="{{ canonical_url }}">{% endif %}
-
-    <meta name="google-site-verification" content="58YRXAqZgsPP1fJar_ymC-4xSWtW3O2NmYwuRDzyRpg" />
 </head>
 <body itemscope itemtype="http://schema.org/WebSite">
     {%- if g.MOTD and not g.UNDER_MAINTENANCE -%}
