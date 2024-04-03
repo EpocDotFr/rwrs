@@ -19,7 +19,7 @@ python-slugify==8.0.1
 SQLAlchemy-Utils==0.41.1
 tabulate==0.9.0
 matplotlib==3.7.2
-Pillow==10.2.0
+Pillow==10.3.0
 Flask-RESTful==0.3.10
 Flask-HTTPAuth==4.8.0
 Flask-Limiter==3.4.0
