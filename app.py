@@ -108,11 +108,7 @@ app.config['OFFICIAL_SERVERS_MODS'] = helpers.load_json(app.config['OFFICIAL_SER
 # -----------------------------------------------------------
 # Debugging-related behaviours
 
-if app.config['DEBUG']:
-    import logging
-
-    logging.basicConfig(level=logging.DEBUG)
-elif app.config['SENTRY_DSN']:
+if app.config['SENTRY_DSN']:
     try:
         from sentry_sdk.integrations.flask import FlaskIntegration
         import sentry_sdk
