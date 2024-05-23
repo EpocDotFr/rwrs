@@ -20,18 +20,23 @@ if [ -f .flaskenv ]; then
     export $(cat .flaskenv | xargs)
 fi
 
+if [ "$GEOIP_ACCOUNT_ID" = "" ]; then
+    echo "Missing account ID"
+    exit
+fi
+
 if [ "$GEOIP_LICENSE_KEY" = "" ]; then
     echo "Missing license key"
     exit
 fi
 
 OUTPUT_DIR="instance"
-REMOTE_DB_FILE="https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-City&license_key=$GEOIP_LICENSE_KEY&suffix=tar.gz"
+REMOTE_DB_FILE="https://download.maxmind.com/geoip/databases/GeoLite2-City/download?suffix=tar.gz"
 OUTPUT_FILE="$OUTPUT_DIR/GeoLite2-City.tar.gz"
 
 echo "Downloading and decompressing archive"
 
-curl -o $OUTPUT_FILE -sS $REMOTE_DB_FILE
+curl -sSL -u "$GEOIP_ACCOUNT_ID:$GEOIP_LICENSE_KEY" -o "$OUTPUT_FILE" "$REMOTE_DB_FILE"
 tar -xzf $OUTPUT_FILE -C $OUTPUT_DIR
 rm $OUTPUT_FILE
 
