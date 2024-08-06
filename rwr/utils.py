@@ -59,7 +59,7 @@ def parse_map_path(map_path):
 
 
 def get_rank_from_xp(database, xp):
-    current_rank_id = None
+    current_rank_id = 0
 
     for rank_id, rank in constants.RANKS[database].items():
         if rank['xp'] > xp:
