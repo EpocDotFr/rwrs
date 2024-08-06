@@ -245,7 +245,7 @@ class Player:
             return 0
 
         if self.xp < 0:
-            return 0
+            return self.next_rank.xp
 
         return self.next_rank.xp - self.xp
 
