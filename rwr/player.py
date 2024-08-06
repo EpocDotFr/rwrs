@@ -252,6 +252,9 @@ class Player:
         if not self.next_rank:
             return 0.0
 
+        if self.xp < 0:
+            return 0.0
+
         return round((self.xp * 100) / self.next_rank.xp, 2)
 
     @property
