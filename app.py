@@ -155,13 +155,13 @@ except ImportError:
 assets = Environment(app)
 assets.append_path('assets')
 
-assets.register('js_popovers', Bundle('js/popovers.js', filters='jsmin', output='js/popovers.min.js'))
-assets.register('js_popovers_rwr_accounts_sync', Bundle('js/popovers.js', 'js/rwr_accounts_sync.js', filters='jsmin', output='js/popovers_rwr_accounts_sync.min.js'))
-assets.register('js_charts', Bundle('js/charts.js', filters='jsmin', output='js/charts.min.js'))
-assets.register('js_charts_popovers', Bundle('js/charts.js', 'js/popovers.js', filters='jsmin', output='js/charts_popovers.min.js'))
-assets.register('js_regenerate_pat', Bundle('js/regenerate_pat.js', filters='jsmin', output='js/regenerate_pat.min.js'))
-assets.register('js_rwr_account_deletion', Bundle('js/rwr_account_deletion.js', filters='jsmin', output='js/rwr_account_deletion.min.js'))
-assets.register('css_app', Bundle('css/flags.css', 'css/app.css', filters='cssutils', output='css/app.min.css'))
+assets.register('js_popovers', Bundle('js/popovers.js', filters='rjsmin', output='js/popovers.min.js'))
+assets.register('js_popovers_rwr_accounts_sync', Bundle('js/popovers.js', 'js/rwr_accounts_sync.js', filters='rjsmin', output='js/popovers_rwr_accounts_sync.min.js'))
+assets.register('js_charts', Bundle('js/charts.js', filters='rjsmin', output='js/charts.min.js'))
+assets.register('js_charts_popovers', Bundle('js/charts.js', 'js/popovers.js', filters='rjsmin', output='js/charts_popovers.min.js'))
+assets.register('js_regenerate_pat', Bundle('js/regenerate_pat.js', filters='rjsmin', output='js/regenerate_pat.min.js'))
+assets.register('js_rwr_account_deletion', Bundle('js/rwr_account_deletion.js', filters='rjsmin', output='js/rwr_account_deletion.min.js'))
+assets.register('css_app', Bundle('css/flags.css', 'css/app.css', filters='rcssmin', output='css/app.min.css'))
 
 # Flask-SQLAlchemy
 db = SQLAlchemy(app)
