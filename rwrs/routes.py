@@ -289,7 +289,7 @@ def online_multiplayer_status():
 
 @app.route('/api')
 def api_home():
-    return redirect(url_for('static', filename='/api_doc.html'), code=301)
+    return redirect(url_for('static', filename='api_doc.html'), code=301)
 
 
 @app.route('/players')
