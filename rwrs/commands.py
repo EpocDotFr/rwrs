@@ -42,6 +42,22 @@ def update_discord_commands():
 
 
 @app.cli.command()
+@check_maintenance
+def set_event_from_discord():
+    """Pull RWR event from Discord."""
+    from rwrs import event
+
+    click.echo('Pulling event from Discord...')
+
+    try:
+        event.save_from_discord()
+
+        click.secho('Done', fg='green')
+    except event.ManualEventAlreadySetError:
+        click.secho('Aborting: an event has already been manually set', fg='red')
+
+
+@app.cli.command()
 @click.option('--starting-id', type=int, default=0)
 @click.option('--limit', type=int, default=200)
 def recompute_hashes(starting_id, limit):

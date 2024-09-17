@@ -1,12 +1,13 @@
 from rwrs.discord import constants, utils, embeds, charts, components
-from rwrs.models import Variable, User, RwrAccount, RwrAccountStat
 from flask_discord_interactions.models.embed import Field
+from rwrs.models import User, RwrAccount, RwrAccountStat
 from app import app, cache, db, discord_interactions
+from rwrs import helpers, steam_helpers, motd, event
 from flask_discord_interactions import Message
-from rwrs import helpers, steam_helpers, motd
 from tabulate import tabulate
 from rwr.player import Player
 from flask import g
+import rwr.constants
 import rwr.scraper
 import rwr.utils
 import threading
@@ -79,7 +80,7 @@ def motd_set(
     message: str
 ):
     try:
-        motd.set(type, message)
+        motd.save(type, message)
 
         return Message('MOTD updated.', ephemeral=True)
     except Exception as e:
@@ -99,7 +100,6 @@ def motd_remove(
             return Message('MOTD removed.', ephemeral=True)
         else:
             return Message('MOTD already removed.', ephemeral=True)
-
     except Exception as e:
         return Message('Error removing MOTD: {}'.format(e), ephemeral=True)
 
@@ -165,32 +165,55 @@ def user_api_unban(
 
 
 @event_command_group.command(
+    'pull',
+    'Set RWR event from Discord'
+)
+@utils.check_maintenance
+def event_set_from_discord(
+    ctx
+):
+    try:
+        event.save_from_discord()
+
+        return Message('Event updated.', ephemeral=True)
+    except (arrow.parser.ParserError, ValueError):
+        return Message('Invalid start/end time provided (should be any format supported by Arrow)', ephemeral=True)
+    except event.ManualEventAlreadySetError:
+        return Message('Aborting: an event has already been manually set', ephemeral=True)
+    except Exception as e:
+        return Message('Error saving event: {}'.format(e), ephemeral=True)
+
+
+@event_command_group.command(
     'set',
     'Sets next RWR event',
     annotations={
-        'datetime': 'Format: {}'.format(app.config['EVENT_DATETIME_STORAGE_FORMAT']),
-        'server_ip_and_port': 'Format: {ip}:{port}'
+        'start_time': 'Format: {}'.format(app.config['EVENT_DATETIME_INPUT_FORMAT']),
+        'end_time': 'Format: {}'.format(app.config['EVENT_DATETIME_INPUT_FORMAT']),
+        'servers_address': 'Format: {ip}:{port},{ip}:{port},...'
     }
 )
 @utils.check_maintenance
 def event_set(
     ctx,
     name: str,
-    datetime: str,
-    server_ip_and_port: str = None
+    start_time: str,
+    end_time: str = None,
+    servers_address: str = None
 ):
     try:
-        Variable.set_event(name, datetime, server_ip_and_port)
+        arrow.get(start_time, app.config['EVENT_DATETIME_INPUT_FORMAT']) # Just to validate
 
-        db.session.commit()
+        if end_time:
+            arrow.get(end_time, app.config['EVENT_DATETIME_INPUT_FORMAT']) # Just to validate
 
-        cache.delete_memoized(rwr.scraper.get_servers)
+        event.save(name, start_time, end_time=end_time, servers_address=servers_address)
 
         return Message('Event updated.', ephemeral=True)
     except (arrow.parser.ParserError, ValueError):
-        return Message('Invalid datetime provided (should be `{}`)'.format(app.config['EVENT_DATETIME_STORAGE_FORMAT']), ephemeral=True)
+        return Message('Invalid start/end time provided (should be `{}`)'.format(app.config['EVENT_DATETIME_INPUT_FORMAT']), ephemeral=True)
     except Exception as e:
-        return Message('Error setting event: {}'.format(e), ephemeral=True)
+        return Message('Error saving event: {}'.format(e), ephemeral=True)
 
 
 @event_command_group.command(
@@ -201,19 +224,13 @@ def event_set(
 def event_remove(
     ctx
 ):
-    if not Variable.get_value('event'):
-        return Message('Event already removed.', ephemeral=True)
-    else:
-        try:
-            Variable.set_value('event', None)
-
-            db.session.commit()
-
-            cache.delete_memoized(rwr.scraper.get_servers)
-
+    try:
+        if event.remove():
             return Message('Event removed.', ephemeral=True)
-        except Exception as e:
-            return Message('Error removing event: {}'.format(e), ephemeral=True)
+        else:
+            return Message('Event already removed.', ephemeral=True)
+    except Exception as e:
+        return Message('Error removing event: {}'.format(e), ephemeral=True)
 
 
 @discord_interactions.command(
@@ -451,7 +468,7 @@ def now(
     total_players = steam_helpers.get_current_players_count_for_app(app.config['RWR_STEAM_APP_ID'])
     online_players, active_servers, total_servers = rwr.scraper.get_counters()
 
-    peaks = Variable.get_peaks_for_display()
+    peaks = helpers.get_peaks_for_display()
 
     return '\n'.join(answer).format(
         total_players=total_players,
@@ -487,16 +504,28 @@ def agenda(
 
     if not g.EVENT['is_ongoing']:
         answer.append(' scheduled for **{}**'.format(
-            g.EVENT['datetime'].format(app.config['EVENT_DATETIME_DISPLAY_FORMAT'])
+            g.EVENT['start_time'].format(app.config['EVENT_DATETIME_DISPLAY_FORMAT'])
         ))
 
-    if g.EVENT['server']:
-        answer.append(' {} on this server:'.format(
+    servers = g.EVENT['servers']
+
+    if servers:
+        answer.append(' {} on '.format(
             'happening' if g.EVENT['is_ongoing'] else 'that will happen'
         ))
 
-        embed = embeds.create_server_message_embed(g.EVENT['server'], advertise_event=False)
-        cpnts = components.create_server_components(g.EVENT['server'])
+        if len(servers) == 1:
+            answer.append(f'**{servers[0].name}**:')
+
+            embed = embeds.create_server_message_embed(servers[0], advertise_event=False)
+            cpnts = components.create_server_components(servers[0])
+        else:
+            answer.append('these servers:\n\n')
+
+            for server in servers:
+                answer.append(utils.server_description(server) + '\n')
+
+            cpnts = components.create_servers_components(not_empty=False, not_full=False, with_event=True, label='Show on rwrstats.com')
     else:
         answer.append('.')
 
@@ -511,20 +540,23 @@ def agenda(
     'servers',
     'Displays first {} currently active servers with room'.format(constants.SERVERS_LIMIT),
     annotations={
-        'official_only': 'Only return official servers'
+        'official_only': 'Only return official servers',
+        'with_event': 'Only return servers on which an event will happen or is happening'
     }
 )
 @utils.check_maintenance
 def servers(
     ctx,
     type: constants.SERVER_TYPE_CHOICES = None,
-    official_only: bool = False
+    official_only: bool = False,
+    with_event: bool = False
 ):
     servers = rwr.scraper.filter_servers(
         limit=constants.SERVERS_LIMIT,
         not_empty='yes',
         not_full='yes',
         official='yes' if official_only else None,
+        with_event='yes' if with_event else None,
         type=type if type else 'any'
     )
 
@@ -542,23 +574,19 @@ def servers(
     filters_string = ', ' + ', '.join(filters) if filters else ''
 
     response = [
-        'Here, the first {} currently active{} servers with room:\n'.format(constants.SERVERS_LIMIT, filters_string)
+        'Here, the first {} currently active{} servers with room{}:\n'.format(
+            constants.SERVERS_LIMIT,
+            filters_string,
+            ' on which an event will happen or is happening' if with_event else ''
+        )
     ]
 
     for server in servers:
-        response.append('{flag}`{current_players}/{max_players}` **{name}** ({type} • {map})\n{url}\n'.format(
-            flag=':flag_' + server.location.country_code + ': ' if server.location.country_code else '',
-            current_players=server.players.current,
-            max_players=server.players.max,
-            name=server.name_display,
-            type=server.type_name,
-            map=server.map.name_display,
-            url=server.steam_join_link.replace(' ', '%20')
-        ))
+        response.append(utils.server_description(server))
 
     return Message(
         '\n'.join(response),
-        components=components.create_servers_components(type, official_only)
+        components=components.create_servers_components(type=type, official_only=official_only, with_event=with_event)
     )
 
 
