@@ -239,58 +239,6 @@ class Variable(db.Model):
         if var:
             db.session.delete(var)
 
-    @staticmethod
-    def get_peaks_for_display():
-        """Return the list of peak players and servers counts for display."""
-        var_names = [
-            'total_players_peak_count', 'total_players_peak_date',
-            'online_players_peak_count', 'online_players_peak_date',
-            'online_servers_peak_count', 'online_servers_peak_date',
-            'active_servers_peak_count', 'active_servers_peak_date'
-        ]
-
-        peaks = Variable.get_many_values(var_names)
-
-        for name in var_names:
-            if name not in peaks:
-                peaks[name] = '?'
-            elif name.endswith('_date'):
-                    peaks[name] = peaks[name].format('MMMM D, YYYY')
-
-        return peaks
-
-    @staticmethod
-    def set_event(name, datetime, server_ip_and_port):
-        """Sets the next RWR event."""
-        arrow.get(datetime, app.config['EVENT_DATETIME_STORAGE_FORMAT']) # Just to validate
-
-        Variable.set_value('event', {
-            'name': name,
-            'datetime': datetime,
-            'server_ip_and_port': server_ip_and_port
-        })
-
-    @staticmethod
-    def get_event(with_server=True):
-        """Gets the next RWR event (if any)."""
-        event = Variable.get_value('event')
-
-        if not event:
-            return None
-
-        event_datetime = arrow.get(event['datetime'], app.config['EVENT_DATETIME_STORAGE_FORMAT']).floor('minute')
-        now_in_event_timezone = arrow.now(event_datetime.tzinfo).floor('minute')
-
-        if now_in_event_timezone >= event_datetime.shift(hours=+5):
-            return None
-
-        event['datetime'] = event_datetime
-        event['is_ongoing'] = now_in_event_timezone >= event_datetime
-        event['display_server_players_count'] = now_in_event_timezone >= event_datetime.shift(minutes=-15)
-        event['server'] = rwr.scraper.get_server_by_ip_and_port(event['server_ip_and_port']) if with_server and event['server_ip_and_port'] else None
-
-        return event
-
     def __repr__(self):
         return 'Variable:{}'.format(self.id)
 
@@ -308,6 +256,8 @@ class UserFriend(db.Model):
     @memoized_property
     def playing_on_server(self):
         """Return the server this friend is currently playing on."""
+        import rwr.scraper
+
         servers = rwr.scraper.get_servers()
 
         for server in servers:
