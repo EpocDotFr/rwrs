@@ -68,6 +68,8 @@ app.config.update(
 
     ADMINS=env.list('ADMINS', default=[]),
 
+    SCRAPER_PROXY=env.str('SCRAPER_PROXY', default=None),
+
     # Config values that cannot be overwritten
     CACHE_THRESHOLD=10000,
     SQLALCHEMY_TRACK_MODIFICATIONS=False,

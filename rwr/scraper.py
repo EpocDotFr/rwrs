@@ -12,6 +12,11 @@ import requests
 
 requests = requests.Session()
 
+if app.config['SCRAPER_PROXY']:
+    requests.proxies.update({
+        'http': app.config['SCRAPER_PROXY'],
+    })
+
 servers_base_url = 'http://rwr.runningwithrifles.com/rwr_server_list/'
 players_base_url = 'http://rwr.runningwithrifles.com/rwr_stats/'
 

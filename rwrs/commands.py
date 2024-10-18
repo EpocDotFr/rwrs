@@ -443,7 +443,7 @@ def save_official_servers_mods():
     click.echo('Retrieving admins list')
 
     try:
-        response = requests.get('http://rwr.runningwithrifles.com/shared/admins.xml')
+        response = requests.get('https://rwr.runningwithrifles.com/shared/admins.xml', verify=False)
 
         response.raise_for_status()
 
@@ -458,7 +458,7 @@ def save_official_servers_mods():
     click.echo('Retrieving moderators list')
 
     try:
-        response = requests.get('http://rwr.runningwithrifles.com/shared/moderators.xml')
+        response = requests.get('https://rwr.runningwithrifles.com/shared/moderators.xml', verify=False)
 
         response.raise_for_status()
 
