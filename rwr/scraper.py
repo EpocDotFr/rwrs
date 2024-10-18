@@ -16,7 +16,7 @@ servers_base_url = 'http://rwr.runningwithrifles.com/rwr_server_list/'
 players_base_url = 'http://rwr.runningwithrifles.com/rwr_stats/'
 
 
-def _call(url, parser=None, params=None, auth=None, verify=True):
+def _call(url, parser=None, params=None, auth=None):
     """Perform an HTTP GET request to the desired RWR list base_url."""
     headers = {
         'User-Agent': 'rwrstats.com'
@@ -27,7 +27,6 @@ def _call(url, parser=None, params=None, auth=None, verify=True):
         params=params,
         auth=auth,
         headers=headers,
-        verify=verify,
         timeout=5
     )
 
@@ -461,8 +460,7 @@ def get_players_by_steam_id(steam_id, only_this_database=None):
             app.config['RWR_ACCOUNTS_BY_STEAM_ID_ENDPOINT'],
             parser='html',
             params=params,
-            auth=app.config['RWR_ACCOUNTS_ENDPOINTS_CREDENTIALS'],
-            verify=False
+            auth=app.config['RWR_ACCOUNTS_ENDPOINTS_CREDENTIALS']
         )
 
         cells = html_content.xpath('//table/tr[position() > 1]/td[position() = 2]')
@@ -483,8 +481,7 @@ def delete_player(realm, hash):
         app.config['RWR_ACCOUNTS_DELETE_ENDPOINT'],
         parser='xml',
         params=params,
-        auth=app.config['RWR_ACCOUNTS_ENDPOINTS_CREDENTIALS'],
-        verify=False
+        auth=app.config['RWR_ACCOUNTS_ENDPOINTS_CREDENTIALS']
     )
 
     return dict(xml_content.attrib)
