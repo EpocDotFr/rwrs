@@ -1,11 +1,11 @@
 from steam.steamid import SteamID
-from rwrs.models import Variable
 from flask import current_app
 from rwr.server import Server
 from rwr.player import Player
 from lxml import html, etree
 from app import app, cache
 from rwr import constants
+from rwrs import event
 import geoip2.database
 import geoip2.errors
 import requests
@@ -110,10 +110,10 @@ def _set_server_event(servers):
     if not servers:
         return
 
-    event = Variable.get_event(with_server=False)
+    e = event.get(with_servers=False)
 
     for server in servers:
-        server.event = event if event and event['server_ip_and_port'] and event['server_ip_and_port'] == server.ip_and_port else None
+        server.event = e if e and e['servers_address'] and server.ip_and_port in e['servers_address'] else None
 
 
 @cache.memoize(timeout=app.config['SERVERS_CACHE_TIMEOUT'])
@@ -327,6 +327,7 @@ def filter_servers(**filters):
         ranked = filters.get('ranked')
         not_empty = filters.get('not_empty')
         not_full = filters.get('not_full')
+        with_event = filters.get('with_event')
         database = filters.get('database')
         username = filters.get('username')
 
@@ -387,6 +388,9 @@ def filter_servers(**filters):
             return False
 
         if not_full == 'yes' and server.players.free == 0:
+            return False
+
+        if with_event == 'yes' and not server.event:
             return False
 
         return True

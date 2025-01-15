@@ -16,7 +16,7 @@ class UserGeneralSettingsForm(FlaskForm):
 class UserFriendForm(FlaskForm):
     username = StringField('Player name', [validators.DataRequired(), validators.Length(max=16)])
 
-    def validate_username(form, field):
+    def validate_username(self, field):
         username = field.data.upper()
 
         if current_user.has_friend(username):
@@ -31,6 +31,6 @@ class RwrAccountDeleteForm(FlaskForm):
 
         self.target_username = target_username
 
-    def validate_username_confirmation(form, field):
-        if field.data != form.target_username:
+    def validate_username_confirmation(self, field):
+        if field.data != self.target_username:
             raise ValidationError('Username does not match')

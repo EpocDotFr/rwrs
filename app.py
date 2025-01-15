@@ -95,8 +95,8 @@ app.config.update(
     LIST_PAGE_SIZES=[15, 30, 50, 100],
     RWR_STEAM_APP_ID=270150,
 
-    EVENT_DATETIME_STORAGE_FORMAT='YYYY-MM-DD HH:mm ZZZ',
-    EVENT_DATETIME_DISPLAY_FORMAT='MMMM Do, YYYY @ h:mm A ZZZ',
+    EVENT_DATETIME_INPUT_FORMAT='YYYY-MM-DD HH:mm ZZ',
+    EVENT_DATETIME_DISPLAY_FORMAT='MMMM Do, YYYY @ h:mm A ZZ',
 
     STATUS_PAGE_URL='https://stats.uptimerobot.com/Z0PkQf9YY',
 
@@ -275,7 +275,7 @@ admin = Admin(app, name='RWRS Admin', template_mode='bootstrap4', url='/manage',
 @app.before_request
 def before_request():
     from rwrs.steam_helpers import get_current_players_count_for_app
-    from rwrs.models import Variable
+    from rwrs import event
     import rwr.scraper
 
     if request.endpoint and request.endpoint.startswith(('static', 'debugtoolbar', '_debug_toolbar')):
@@ -287,7 +287,7 @@ def before_request():
         return
 
     g.MOTD = motd.get()
-    g.EVENT = Variable.get_event()
+    g.EVENT = event.get()
 
     if request.path == app.config['DISCORD_INTERACTIONS_PATH']:
         return
