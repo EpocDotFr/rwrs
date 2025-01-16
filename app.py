@@ -70,6 +70,8 @@ app.config.update(
 
     SCRAPER_PROXY=env.str('SCRAPER_PROXY', default=None),
 
+    BANNED_IPS=env.list('BANNED_IPS', default=[]),
+
     # Config values that cannot be overwritten
     CACHE_THRESHOLD=10000,
     SQLALCHEMY_TRACK_MODIFICATIONS=False,
@@ -274,7 +276,9 @@ admin = Admin(app, name='RWRS Admin', template_mode='bootstrap4', url='/manage',
 
 @app.before_request
 def before_request():
-    from rwrs.steam_helpers import get_current_players_count_for_app
+    if request.headers.get('X-Real-IP') in app.config['BANNED_IPS']:
+        return 'gtfo', 403
+
     from rwrs.models import Variable
     import rwr.scraper
 
@@ -298,6 +302,8 @@ def before_request():
         abort(503)
 
     online_players, active_servers, total_servers = rwr.scraper.get_counters()
+
+    from rwrs.steam_helpers import get_current_players_count_for_app
 
     g.total_players = get_current_players_count_for_app(app.config['RWR_STEAM_APP_ID'])
     g.online_players = online_players
