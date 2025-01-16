@@ -45,4 +45,10 @@ Disallow: /
 User-agent: GPTBot
 Disallow: /
 
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
 Sitemap: https://rwrstats.com/sitemap.xml
