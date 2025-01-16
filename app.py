@@ -276,6 +276,7 @@ admin = Admin(app, name='RWRS Admin', template_mode='bootstrap4', url='/manage',
 
 @app.before_request
 def before_request():
+    print(request.headers)
     if request.headers.get('X-Real-IP') in app.config['BANNED_IPS']:
         return 'gtfo', 403
 
