@@ -1,18 +1,16 @@
 from werkzeug.exceptions import HTTPException, Unauthorized, Forbidden, NotFound, InternalServerError, ServiceUnavailable
-from flask import Flask, redirect, flash, url_for, request, g, abort, render_template, Markup
-from flask_login import LoginManager, current_user, login_user
+from flask import Flask, url_for, request, g, abort, render_template, Markup
 from flask_discord_interactions import DiscordInteractions
+from flask_login import LoginManager, current_user
 from flask_admin.contrib.sqla import ModelView
 from flask_admin import Admin, AdminIndexView
 from flask_assets import Environment, Bundle
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-from flask_openid import OpenID
 from flask_caching import Cache
 from rwrs import helpers, motd
 from datetime import datetime
 from environs import Env
-import arrow
 import math
 import os
 
@@ -187,68 +185,6 @@ def load_user(user_id):
 
     return User.query.get(user_id)
 
-# Flask-OpenID
-oid = OpenID(app)
-
-
-@oid.after_login
-def create_or_login(resp):
-    from rwrs.steam_helpers import parse_steam_id_from_identity_url, get_user_summaries
-    from rwrs.models import User
-
-    steam_id = parse_steam_id_from_identity_url(resp.identity_url)
-
-    try:
-        steam_user_info = get_user_summaries(steam_id)
-
-        if not steam_user_info:
-            raise Exception('Unable to get Steam user info for Steam ID {}'.format(steam_id))
-    except Exception:
-        app.logger.exception(f'Error fetching Steam account information #{steam_id}')
-
-        if not app.config['DEBUG'] and app.config['SENTRY_DSN']:
-            import sentry_sdk
-
-            sentry_sdk.capture_exception()
-
-        flash('An error occured while fetching your Steam account information. Please try again.', 'error')
-
-        return redirect(url_for('sign_in'))
-
-    user, user_was_created = User.get_by_steam_id(steam_id, create_if_unexisting=True)
-
-    user.username = steam_user_info['personaname']
-    user.small_avatar_url = steam_user_info['avatar']
-    user.large_avatar_url = steam_user_info['avatarfull']
-    user.country_code = steam_user_info['loccountrycode'].lower() if 'loccountrycode' in steam_user_info and steam_user_info['loccountrycode'] else None
-    user.last_login_at = arrow.utcnow().floor('minute')
-
-    if user_was_created:
-        user.is_profile_public = True if 'communityvisibilitystate' in steam_user_info and steam_user_info['communityvisibilitystate'] == 3 else False
-
-    db.session.add(user)
-
-    try:
-        user.sync_rwr_accounts()
-
-        db.session.commit()
-    except Exception:
-        app.logger.exception(f'Error syncing RWR accounts for user #{user.id} on login')
-
-        if not app.config['DEBUG'] and app.config['SENTRY_DSN']:
-            import sentry_sdk
-
-            sentry_sdk.capture_exception()
-
-        flash('An error occured while syncing your RWR accounts. Please try again.', 'error')
-
-        return redirect(url_for('sign_in'))
-
-    login_user(user, remember=True)
-
-    flash('Welcome, {}!'.format(user.username), 'success')
-
-    return redirect(url_for('home'))
 
 # Flask-Discord-Interactions
 discord_interactions = DiscordInteractions(app)

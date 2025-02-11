@@ -46,5 +46,5 @@ then
         rm maintenance
     fi
 else
-    echo "Error occured while restarting site"
+    echo "Error occurred while restarting site"
 fi

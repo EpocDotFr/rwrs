@@ -1,15 +1,16 @@
 from rwrs.models import SteamPlayerCount, ServerPlayerCount, Variable, RwrAccountStat, RwrAccount
 from flask import render_template, abort, request, redirect, url_for, flash, g, jsonify
 from rwrs.dynamic_image import DynamicServerImage, DynamicPlayerImage
-from flask_login import login_required, current_user, logout_user
+from flask_login import login_required, current_user, logout_user, login_user
+from urllib.parse import urlencode
 from rwrs import forms, helpers
 from rwr.player import Player
-from app import app, oid, db
 from rwrs.models import User
+from app import app, db
 import rwr.constants
-import flask_openid
 import rwr.scraper
 import rwr.utils
+import requests
 import arrow
 import uuid
 
@@ -46,18 +47,116 @@ def home():
 
 
 @app.route('/sign-in')
-@oid.loginhandler
 def sign_in():
     if current_user.is_authenticated:
         return redirect(url_for('home'))
 
-    if request.args.get('go_to_steam'):
-        return oid.try_login(flask_openid.COMMON_PROVIDERS['steam'])
+    steam_login_url = 'https://steamcommunity.com/openid/login?' + urlencode({
+        'openid.ns': "http://specs.openid.net/auth/2.0",
+        'openid.identity': "http://specs.openid.net/auth/2.0/identifier_select",
+        'openid.claimed_id': "http://specs.openid.net/auth/2.0/identifier_select",
+        'openid.mode': 'checkid_setup',
+        'openid.return_to': url_for('authorize', _external=True),
+        'openid.realm': url_for('home', _external=True),
+    })
 
     return render_template(
         'users/sign_in.html',
-        oid_error_message=oid.fetch_error()
+        steam_login_url=steam_login_url
     )
+
+
+@app.route('/sign-in/authorize')
+def authorize():
+    from rwrs.steam_helpers import parse_steam_id_from_identity_url, get_user_summaries
+    from rwrs.models import User
+
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
+
+    params = {
+        k: v for k, v in request.args.items() if k in ('openid.assoc_handle', 'openid.signed', 'openid.sig', 'openid.ns')
+    }
+
+    params['openid.mode'] = 'check_authentication'
+
+    for signed in params.get('openid.signed', '').split(','):
+        name = f'openid.{signed}'
+
+        params[name] = request.args.get(name, '')
+
+    try:
+        response = requests.get('https://steamcommunity.com/openid/login', params=params)
+
+        response.raise_for_status()
+
+        if not 'is_valid:true' in response.text:
+            raise Exception('OpenID validation failed')
+    except:
+        app.logger.exception(f'Error validating Steam account')
+
+        if not app.config['DEBUG'] and app.config['SENTRY_DSN']:
+            import sentry_sdk
+
+            sentry_sdk.capture_exception()
+
+        flash('An error occurred validating your identity with Steam. Please try again.', 'error')
+
+        return redirect(url_for('sign_in'))
+
+    steam_id = parse_steam_id_from_identity_url(request.args.get('openid.identity'))
+
+    try:
+        steam_user_info = get_user_summaries(steam_id)
+
+        if not steam_user_info:
+            raise Exception('Unable to get Steam user info for Steam ID {}'.format(steam_id))
+    except Exception:
+        app.logger.exception(f'Error fetching Steam account information #{steam_id}')
+
+        if not app.config['DEBUG'] and app.config['SENTRY_DSN']:
+            import sentry_sdk
+
+            sentry_sdk.capture_exception()
+
+        flash('An error occured while fetching your Steam account information. Please try again.', 'error')
+
+        return redirect(url_for('sign_in'))
+
+    user, user_was_created = User.get_by_steam_id(steam_id, create_if_unexisting=True)
+
+    user.username = steam_user_info['personaname']
+    user.small_avatar_url = steam_user_info['avatar']
+    user.large_avatar_url = steam_user_info['avatarfull']
+    user.country_code = steam_user_info['loccountrycode'].lower() if 'loccountrycode' in steam_user_info and steam_user_info['loccountrycode'] else None
+    user.last_login_at = arrow.utcnow().floor('minute')
+
+    if user_was_created:
+        user.is_profile_public = True if 'communityvisibilitystate' in steam_user_info and steam_user_info['communityvisibilitystate'] == 3 else False
+
+    db.session.add(user)
+
+    try:
+        user.sync_rwr_accounts()
+
+        db.session.commit()
+    except Exception:
+        app.logger.exception(f'Error syncing RWR accounts for user #{user.id} on login')
+
+        if not app.config['DEBUG'] and app.config['SENTRY_DSN']:
+            import sentry_sdk
+
+            sentry_sdk.capture_exception()
+
+        flash('An error occured while syncing your RWR accounts. Please try again.', 'error')
+
+        return redirect(url_for('sign_in'))
+
+    login_user(user, remember=True)
+
+    flash('Welcome, {}!'.format(user.username), 'success')
+
+    return redirect(url_for('home'))
 
 
 @app.route('/sign-out')
