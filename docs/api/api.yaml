@@ -1,0 +1,4790 @@
+swagger: '2.0'
+info:
+  title: Running With Rifles Stats REST API
+  version: ''
+  description: >-
+    Documentation about the [Running With Rifles Stats
+    (RWRS)](https://rwrstats.com/) REST API. [About
+    RWRS](https://rwrstats.com/about)
+
+
+    ::: note
+
+    The RWRS REST API is provided "as is", without warranty of any kind, express
+    or implied.
+
+    :::
+
+
+    ::: warning
+
+    You are **required** to mention somewhere in your project - in a visible
+    manner - that you're using the RWRS REST API.
+
+    Not doing so may lead to a ban from using the API.
+
+    :::
+
+
+    ## Getting a Personal Access Token
+
+
+    Although this API is public, a Personal Access Token is **required** to
+    prevent abuses. To obtain a Personal Access
+
+    Token:
+
+
+    1. Create an RWRS account by [signing in using your Steam
+    account](https://rwrstats.com/sign-in)
+
+
+    2. Get your Personal Access Token by heading to [your settings
+    page](https://rwrstats.com/settings#pat)
+
+
+    ## Sending the Personal Access Token
+
+
+    All endpoints needs a valid Personal Access Token, otherwise a
+    [403](https://httpstatuses.io/403) HTTP status code
+
+    will be returned. Send this HTTP header in all of your HTTP requests along
+    your Personal Access Token:
+
+
+    ```http
+
+    Authorization: Token {Your Personal Access Token}
+
+    ```
+
+
+    ## Base URL
+
+
+    The RWRS REST API base URL is `https://rwrstats.com/api`.
+
+
+    ::: note
+
+    Using HTTPS is mandatory or you'll encounter redirections (which may not be
+    appreciated by your HTTP client).
+
+    :::
+
+
+    ## Rate limiting
+
+
+    To prevent abuse, all resources are rate-limited. Each IP address + Personal
+    Access Token couple is limited to **1 request per
+
+    second**. Failing to respect this rate-limiting window will lead to a
+    [429](https://httpstatuses.io/429) HTTP status
+
+    code.
+
+
+    ## Ban
+
+
+    I reserve myself the right to ban from using the API anyone who might use it
+    in an abusive fashion. In such cases,
+
+    all requests will return a [423](https://httpstatuses.io/423) HTTP status
+    code.
+
+
+    ## Cache
+
+
+    Some resources are subject to server-side caching (i.e you'll not
+    necessarily get the most up-to-date data from the
+
+    server). Check their respective documentation for more information.
+
+
+    ## HTTP status codes
+
+
+    The HTTP response status code must be used to check if the sent request was
+    successfully handled or not:
+
+
+    - `2xx` Everything is OK. The response body will contain whatever the
+    resource provide (check its doc)
+
+
+    - `4xx` Something is wrong on the client side (e.g an input parameter
+    validation error)
+
+
+    - `5xx` There were a server error
+
+
+    ::: note
+
+    The RWRS REST API doesn't provide internal error codes, but tries to make a
+    meaningful use of HTTP status codes instead.
+
+    :::
+
+
+    ## Input & output data format
+
+
+    Everything is [JSON](https://en.wikipedia.org/wiki/JSON) along a
+    `Content-Type` HTTP header of `application/json`.
+
+
+    ### Success (2xx)
+
+
+    The output can be different regarding the resource. Check their respective
+    doc.
+
+
+    ### Client error (4xx)
+
+
+    Typically an input parameters validation error:
+
+
+    ```json
+
+    {
+        "message": {
+            "blow": "Missing required parameter in the JSON body",
+            "hey": "Missing required parameter in the JSON body"
+        }
+    }
+
+    ```
+
+
+    In this case the `hey` and `blow` input parameters are missing.
+
+
+    If a query string parameter is missing or invalid, it's the same output:
+
+
+    ```json
+
+    {
+        "message": {
+            "active": "Missing required parameter in the query string"
+        }
+    }
+
+    ```
+
+
+    May also happen in other cases, e.g when the requested resource wasn't
+    found:
+
+
+    ```json
+
+    {
+        "message": "This thing does not exists."
+    }
+
+    ```
+
+
+    ### Server error (5xx)
+
+
+    They should not happen (exception for [503](https://httpstatuses.io/503)).
+    If so, please [get in touch](https://rwrstats.com/feedback).
+
+
+    Example:
+
+
+    ```json
+
+    {
+        "message": "Error creating this thing: IndexError: out of bounds"
+    }
+
+    ```
+host: rwrstats.com
+basePath: /api
+schemes:
+  - https
+paths:
+  /servers:
+    get:
+      responses:
+        '200':
+          description: An empty list is returned if no Servers were found.
+          headers: {}
+          examples:
+            application/json:
+              - name: InvasionEU2
+                ip: 31.186.250.67
+                port: 1235
+                is_ranked: true
+                is_official: true
+                website_url: https://runningwithrifles.com/
+                url: https://rwrstats.com/servers/31.186.250.67:1235/invasioneu2
+                type:
+                  id: vanilla
+                  name: Vanilla
+                mode:
+                  id: COOP
+                  name: Coop.
+                database:
+                  id: invasion
+                  name: Invasion
+                map:
+                  id: map10
+                  name: Railroad Gap
+                players:
+                  current: 20
+                  max: 24
+                  free: 4
+                location:
+                  name: Frankfurt am Main, Germany
+                  country_code: de
+                  flag_image_url: https://rwrstats.com/static/images/flags/DE.png
+                steam_join_url: >-
+                  steam://rungameid/270150//server_address=178.32.58.160
+                  server_port=1240
+                event:
+                  name: PvP event!
+                  is_ongoing: true
+                  starts_at: '2019-04-16T16:00:00+02:00'
+                has_friends: true
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: Server name
+                ip:
+                  type: string
+                  description: Server IP address
+                port:
+                  type: number
+                  description: Server port
+                is_ranked:
+                  type: boolean
+                  description: >-
+                    Whether this server is a ranked one (official Invasion and
+                    WW2 DLCs servers only)
+                is_official:
+                  type: boolean
+                  description: >-
+                    Whether this server is an official one (official Invasion,
+                    WW2 DLCs or Dominance servers)
+                website_url:
+                  type:
+                    - string
+                    - 'null'
+                  description: Server website URL. `null` if none
+                  default: 'null'
+                url:
+                  type: string
+                  description: RWRS server page URL
+                type:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      description: Server type ID (used mod or DLC)
+                    name:
+                      type: string
+                      description: Server type name (used mod or DLC)
+                  required:
+                    - id
+                    - name
+                  description: Server type
+                mode:
+                  type:
+                    - object
+                    - 'null'
+                  properties:
+                    id:
+                      type: string
+                      description: Server mode ID (game mode)
+                    name:
+                      type: string
+                      description: Server mode name (game mode)
+                  required:
+                    - id
+                    - name
+                  description: Server mode. `null` if unknown
+                database:
+                  type:
+                    - object
+                    - 'null'
+                  properties:
+                    id:
+                      type: string
+                      description: The database ID
+                    name:
+                      type: string
+                      description: The database name
+                  required:
+                    - id
+                    - name
+                  description: >-
+                    Server used database. `null` if not an official Invasion or
+                    WW2 DLCs server
+                map:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      description: >-
+                        Map ID. **Not unique**: must be used in conjonction of
+                        the mode ID
+                    name:
+                      type: string
+                      description: Map name. If unknown, `id` will be used
+                  required:
+                    - id
+                    - name
+                  description: Server map
+                players:
+                  type: object
+                  properties:
+                    current:
+                      type: number
+                      description: Number of current players
+                    max:
+                      type: number
+                      description: Maximum allowed number of players
+                    free:
+                      type: number
+                      description: Number of free player slots
+                  required:
+                    - current
+                    - max
+                    - free
+                  description: Server players
+                location:
+                  type:
+                    - object
+                    - 'null'
+                  properties:
+                    name:
+                      type: string
+                      description: >-
+                        City name (if available) + country name of the server
+                        location
+                    country_code:
+                      type: string
+                      description: >-
+                        [ISO 3166-1
+                        alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)
+                        country code of the server location
+                    flag_image_url:
+                      type: string
+                      description: Image URL of the server country location. 24x24 pixels
+                  required:
+                    - name
+                    - country_code
+                    - flag_image_url
+                  description: Server location. `null` if unknown
+                steam_join_url:
+                  type: string
+                  description: >-
+                    [Steam browser
+                    protocol](https://developer.valvesoftware.com/wiki/Steam_browser_protocol)
+                    URL to be used to load Running With Rifles onto the given
+                    server lobby screen
+                event:
+                  type:
+                    - object
+                    - 'null'
+                  properties:
+                    name:
+                      type: string
+                      description: Event name
+                    is_ongoing:
+                      type: boolean
+                      description: Whether this event is ongoing or not
+                    starts_at:
+                      type: string
+                      description: >-
+                        [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) date
+                        when this event will start
+                  required:
+                    - name
+                    - is_ongoing
+                    - starts_at
+                  description: Event linked to this Server. `null` if none
+                has_friends:
+                  type: boolean
+                  description: >-
+                    Whether there's friends from the current user playing on
+                    this server
+              required:
+                - name
+                - ip
+                - port
+                - is_ranked
+                - is_official
+                - url
+                - type
+                - map
+                - players
+                - steam_join_url
+                - has_friends
+        '400':
+          description: >-
+            One or more arguments are (is) invalid. Check the error message(s)
+            for more information.
+          headers: {}
+          examples:
+            application/json:
+              message: Example error message
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: The error message explaining what happened
+            required:
+              - message
+            additionalProperties: false
+        '403':
+          description: Invalid Personal Access Token or Personal Access Token not provided.
+          headers: {}
+          examples:
+            application/json:
+              message: Example error message
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: The error message explaining what happened
+            required:
+              - message
+            additionalProperties: false
+        '503':
+          description: Maintenance in progress.
+          headers: {}
+          examples:
+            application/json:
+              message: Example error message
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: The error message explaining what happened
+            required:
+              - message
+            additionalProperties: false
+      summary: Get the list of Servers
+      operationId: Get the list of Servers
+      description: >-
+        Return the list of Servers. The list may be optionally filtered by
+        several criteria. These last are taken into account
+
+        **only** if it they are present in the query string.
+
+
+        ::: note
+
+
+        #### Server-side caching
+
+
+        This resource has a cache lifetime of **1 minute**.
+
+        :::
+      tags:
+        - Servers
+      parameters:
+        - name: location
+          in: query
+          description: >-
+
+            Servers country or continent of residence. This criterion format is
+            either:
+
+
+            - A concatenation of a **location type** and a **location code**,
+            separated by a colon, OR
+
+
+            - A single **country code**, OR
+
+
+            - A list of any of the two above, separated by a `+`, OR
+
+
+            - `any`
+
+
+            Available **location types** are:
+
+
+            - `continent`
+
+
+            - `country`
+
+
+            Available **continent codes**:
+
+
+            - `af` - Africa
+
+
+            - `na` - North America
+
+
+            - `oc` - Oceania
+
+
+            - `an` - Antarctica (_who knows!_)
+
+
+            - `as` - Asia
+
+
+            - `eu` - Europe
+
+
+            - `sa` - South America
+
+
+            **Country code** must conform to [ISO 3166-1
+            alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2).
+
+
+            Examples:
+
+
+            - A continent: `continent:eu`
+
+
+            - A country: `country:fr`
+
+
+            - A country: `de`
+
+
+            - Two continents: `continent:eu+continent:na`
+
+
+            - Two countries: `country:fr+country:de`
+
+
+            - Two countries: `jp+country:cn`
+
+
+            - A country and a continent: `fr+continent:na`
+
+
+            - A country and a continent: `country:fr+continent:na`
+
+
+            ::: note
+
+            **Don't forget to URL-encode values given to this criterion!**
+
+
+            Possible values and examples are shown unencoded for clarity
+            purpose, but you **must** URL-encode these so
+
+            it's properly parsed by the server, e.g the last example would be
+            `country%3Afr%2Bcountry%3Ade`.
+
+            :::
+          required: false
+          x-example: continent:eu
+          type: string
+          default: any
+        - name: map
+          in: query
+          description: >-
+
+            Servers map ID.
+
+
+            See [this
+            file](https://github.com/EpocDotFr/rwrs/blob/master/data/maps.json),
+            part of the RWRS source code,
+
+            for a complete list of allowed map IDs.
+          required: false
+          x-example: map10
+          type: string
+          default: any
+        - name: type
+          in: query
+          description: >-
+
+            Servers type (used mod or DLC). This criterion format is either:
+
+
+            - A single type, OR
+
+
+            - A list of types, separated by a `+`, OR
+
+
+            - `any`
+
+
+            Examples:
+
+
+            - Single type: `pacific`
+
+
+            - Two types: `pacific+edelweiss`
+
+
+            ::: note
+
+            **Don't forget to URL-encode values given to this criterion!**
+
+
+            Possible values and examples are shown unencoded for clarity
+            purpose, but you **must** URL-encode these so
+
+            it's properly parsed by the server, e.g the last example would be
+            `pacific%2Bedelweiss`.
+
+            :::
+          required: false
+          x-example: vanilla
+          type: string
+          default: any
+          enum:
+            - any
+            - vanilla
+            - vanilla.winter
+            - vanilla.desert
+            - pvp
+            - pacific
+            - edelweiss
+            - man_vs_world_mp
+            - man_vs_zombies_mp
+            - Running_with_the_Dead
+            - ww2_undead
+            - overlord_defense
+            - lab_defense
+            - lab_def_koth
+            - viper
+            - casus_belli_05
+            - Running_in_the_Bug_War
+            - soldiers_at_war_heavy
+            - SUPERHOT
+            - superhotrailroad
+            - snd
+            - running_from_exterminatus
+        - name: mode
+          in: query
+          description: Servers mode (game mode).
+          required: false
+          x-example: COOP
+          type: string
+          default: any
+          enum:
+            - any
+            - COOP
+            - DOM
+            - PvP
+            - PvE
+            - PvPvE
+        - name: dedicated
+          in: query
+          description: >-
+            Whether to filter dedicated servers only. `true` or `1` to enable
+            this filter. `false` or `0` will be ignored and thus disable this
+            filter.
+          required: false
+          x-example: 'true'
+          type: string
+          enum:
+            - 'true'
+            - '1'
+            - 'false'
+            - '0'
+        - name: official
+          in: query
+          description: >-
+            Whether to filter official servers only. `true` or `1` to enable
+            this filter. `false` or `0` will be ignored and thus disable this
+            filter.
+          required: false
+          x-example: 'true'
+          type: string
+          enum:
+            - 'true'
+            - '1'
+            - 'false'
+            - '0'
+        - name: not_empty
+          in: query
+          description: >-
+            Whether to filter non-empty servers only. `true` or `1` to enable
+            this filter. `false` or `0` will be ignored and thus disable this
+            filter.
+          required: false
+          x-example: 'true'
+          type: string
+          enum:
+            - 'true'
+            - '1'
+            - 'false'
+            - '0'
+        - name: not_full
+          in: query
+          description: >-
+            Whether to filter non-full servers only. `true` or `1` to enable
+            this filter. `false` or `0` will be ignored and thus disable this
+            filter.
+          required: false
+          x-example: 'true'
+          type: string
+          enum:
+            - 'true'
+            - '1'
+            - 'false'
+            - '0'
+        - name: limit
+          in: query
+          description: Return the _n_ first servers of the filtered list.
+          required: false
+          x-example: '10'
+          type: number
+      produces:
+        - application/json
+      consumes: []
+  /servers/{ip}:{port}:
+    get:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          examples:
+            application/json:
+              name: InvasionEU2
+              ip: 31.186.250.67
+              port: 1235
+              is_ranked: true
+              is_official: true
+              website_url: https://runningwithrifles.com/
+              url: https://rwrstats.com/servers/31.186.250.67:1235/invasioneu2
+              type:
+                id: vanilla
+                name: Vanilla
+              mode:
+                id: COOP
+                name: Coop.
+                name_long: Cooperation
+              database:
+                id: invasion
+                name: Invasion
+              map:
+                id: map10
+                name: Railroad Gap
+                preview_image_url: >-
+                  https://rwrstats.com/static/images/maps/preview/vanilla/map10.png
+                minimap_image_url: >-
+                  https://rwrstats.com/static/images/maps/minimap/vanilla/map10.png
+              players:
+                current: 20
+                max: 24
+                free: 4
+                list:
+                  - username: EPOCDOTFR
+                    url: https://rwrstats.com/players/invasion/EPOCDOTFR
+                    is_rwrs_creator: true
+                    is_contributor: false
+                    is_rwr_dev: false
+                    is_official_servers_mod: false
+                    database:
+                      id: invasion
+                      name: Invasion
+                    is_friend: true
+              location:
+                name: Frankfurt am Main, Germany
+                country_code: de
+                flag_image_url: https://rwrstats.com/static/images/flags/DE.png
+              steam_join_url: >-
+                steam://rungameid/270150//server_address=178.32.58.160
+                server_port=1240
+              event:
+                name: PvP event!
+                is_ongoing: true
+                starts_at: '2019-04-16T16:00:00+02:00'
+              version: 1.70.2
+              is_dedicated: true
+              comment: Coop campaign
+              bots: 104
+              banner_image_url: >-
+                https://rwrstats.com/static/images/servers/106.14.208.129-1234.png
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+                description: Server name
+              ip:
+                type: string
+                description: Server IP address
+              port:
+                type: number
+                description: Server port
+              is_ranked:
+                type: boolean
+                description: >-
+                  Whether this server is a ranked one (official Invasion and WW2
+                  DLCs servers only)
+              is_official:
+                type: boolean
+                description: >-
+                  Whether this server is an official one (official Invasion, WW2
+                  DLCs or Dominance servers)
+              website_url:
+                type:
+                  - string
+                  - 'null'
+                description: Server website URL. `null` if none
+                default: 'null'
+              url:
+                type: string
+                description: RWRS server page URL
+              type:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: Server type ID (used mod or DLC)
+                  name:
+                    type: string
+                    description: Server type name (used mod or DLC)
+                required:
+                  - id
+                  - name
+                description: Server type
+              mode:
+                type:
+                  - object
+                  - 'null'
+                properties:
+                  id:
+                    type: string
+                    description: Server mode ID (game mode)
+                  name:
+                    type: string
+                    description: Server mode name (game mode)
+                  name_long:
+                    type:
+                      - string
+                      - 'null'
+                    description: Long server mode name (game mode). `null` if unknown
+                    default: 'null'
+                required:
+                  - id
+                  - name
+                description: Server mode. `null` if unknown
+              database:
+                type:
+                  - object
+                  - 'null'
+                properties:
+                  id:
+                    type: string
+                    description: The database ID
+                  name:
+                    type: string
+                    description: The database name
+                required:
+                  - id
+                  - name
+                description: >-
+                  Server used database. `null` if not an official Invasion or
+                  WW2 DLCs server
+              map:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: >-
+                      Map ID. **Not unique**: must be used in conjonction of the
+                      mode ID
+                  name:
+                    type: string
+                    description: Map name. If unknown, `id` will be used
+                  preview_image_url:
+                    type:
+                      - string
+                      - 'null'
+                    description: >-
+                      Map preview image URL (ingame screenshot). `null` if none
+                      available. Size may vary
+                    default: 'null'
+                  minimap_image_url:
+                    type:
+                      - string
+                      - 'null'
+                    description: >-
+                      Mapview image URL. `null` if none available. 2048x2048
+                      pixels
+                    default: 'null'
+                required:
+                  - id
+                  - name
+                description: Server map
+              players:
+                type: object
+                properties:
+                  current:
+                    type: number
+                    description: Number of current players
+                  max:
+                    type: number
+                    description: Maximum allowed number of players
+                  free:
+                    type: number
+                    description: Number of free player slots
+                  list:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        username:
+                          type: string
+                          description: Player username
+                        url:
+                          type:
+                            - string
+                            - 'null'
+                          description: >-
+                            RWRS player profile page URL. `null` if the player
+                            isn't an official Invasion or WW2 DLCs profile
+                          default: 'null'
+                        is_rwrs_creator:
+                          type: boolean
+                          description: Whether this player is the creator of RWRS
+                        is_contributor:
+                          type: boolean
+                          description: >-
+                            Whether this player contributed in a way or another
+                            to RWRS
+                        is_rwr_dev:
+                          type: boolean
+                          description: Whether this player is one of the RWR developers
+                        is_official_servers_mod:
+                          type: boolean
+                          description: Whether this player is moderator on official servers
+                        database:
+                          type:
+                            - object
+                            - 'null'
+                          properties:
+                            id:
+                              type: string
+                              description: The database ID
+                            name:
+                              type: string
+                              description: The database name
+                          required:
+                            - id
+                            - name
+                          description: >-
+                            Player database. `null` if not an official Invasion
+                            or WW2 DLCs player profile
+                        is_friend:
+                          type: boolean
+                          description: Whether this player is friend with the current user
+                      required:
+                        - username
+                        - is_rwrs_creator
+                        - is_contributor
+                        - is_rwr_dev
+                        - is_official_servers_mod
+                        - is_friend
+                    description: List of current players
+                required:
+                  - current
+                  - max
+                  - free
+                  - list
+                description: Server players
+              location:
+                type:
+                  - object
+                  - 'null'
+                properties:
+                  name:
+                    type: string
+                    description: >-
+                      City name (if available) + country name of the server
+                      location
+                  country_code:
+                    type: string
+                    description: >-
+                      [ISO 3166-1
+                      alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)
+                      country code of the server location
+                  flag_image_url:
+                    type: string
+                    description: Image URL of the server country location. 24x24 pixels
+                required:
+                  - name
+                  - country_code
+                  - flag_image_url
+                description: Server location. `null` if unknown
+              steam_join_url:
+                type: string
+                description: >-
+                  [Steam browser
+                  protocol](https://developer.valvesoftware.com/wiki/Steam_browser_protocol)
+                  URL to be used to load Running With Rifles onto the given
+                  server lobby screen
+              event:
+                type:
+                  - object
+                  - 'null'
+                properties:
+                  name:
+                    type: string
+                    description: Event name
+                  is_ongoing:
+                    type: boolean
+                    description: Whether this event is ongoing or not
+                  starts_at:
+                    type: string
+                    description: >-
+                      [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) date
+                      when this event will start
+                required:
+                  - name
+                  - is_ongoing
+                  - starts_at
+                description: Event linked to this Server. `null` if none
+              version:
+                type: string
+                description: Server game version
+              is_dedicated:
+                type: boolean
+                description: Whether this server is a dedicated one
+              comment:
+                type:
+                  - string
+                  - 'null'
+                description: Server comment. `null` if none
+                default: 'null'
+              bots:
+                type: number
+                description: Number of current bots
+              banner_image_url:
+                type:
+                  - string
+                  - 'null'
+                description: >-
+                  Server banner image URL. Only available for dedicated servers.
+                  485x95 pixels
+                default: 'null'
+            required:
+              - name
+              - ip
+              - port
+              - is_ranked
+              - is_official
+              - website_url
+              - url
+              - type
+              - mode
+              - database
+              - map
+              - players
+              - location
+              - steam_join_url
+              - event
+              - version
+              - is_dedicated
+              - comment
+              - bots
+              - banner_image_url
+            additionalProperties: false
+        '400':
+          description: >-
+            One or more arguments are (is) invalid. Check the error message(s)
+            for more information.
+          headers: {}
+          examples:
+            application/json:
+              message: Example error message
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: The error message explaining what happened
+            required:
+              - message
+            additionalProperties: false
+        '403':
+          description: Invalid Personal Access Token or Personal Access Token not provided.
+          headers: {}
+          examples:
+            application/json:
+              message: Example error message
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: The error message explaining what happened
+            required:
+              - message
+            additionalProperties: false
+        '404':
+          description: The Server wasn't found.
+          headers: {}
+          examples:
+            application/json:
+              message: Example error message
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: The error message explaining what happened
+            required:
+              - message
+            additionalProperties: false
+        '503':
+          description: Maintenance in progress.
+          headers: {}
+          examples:
+            application/json:
+              message: Example error message
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: The error message explaining what happened
+            required:
+              - message
+            additionalProperties: false
+      summary: Get a specific Server
+      operationId: Get a specific Server
+      description: >-
+        Return the Server corresponding to the given IP address / port couple.
+        This resource returns more information comparing
+
+        to the `GET /servers` resource (e.g the player list).
+
+
+        ::: note
+
+
+        #### Server-side caching
+
+
+        This resource has a cache lifetime of **1 minute**.
+
+        :::
+      tags:
+        - Servers
+      parameters:
+        - name: ip
+          in: path
+          description: The Server IP
+          required: true
+          x-example: 31.186.250.67
+          type: string
+        - name: port
+          in: path
+          description: The Server port
+          required: true
+          x-example: '1235'
+          type: integer
+      produces:
+        - application/json
+      consumes: []
+  /players/{database}:
+    get:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          examples:
+            application/json:
+              - username: EPOCDOTFR
+                url: https://rwrstats.com/players/invasion/EPOCDOTFR
+                is_rwrs_creator: true
+                is_contributor: false
+                is_rwr_dev: false
+                is_official_servers_mod: false
+                database:
+                  id: invasion
+                  name: Invasion
+                is_friend: true
+                current_server:
+                  name: InvasionEU2
+                  ip: 31.186.250.67
+                  port: 1235
+                  is_ranked: true
+                  is_official: true
+                  website_url: https://runningwithrifles.com/
+                  url: https://rwrstats.com/servers/31.186.250.67:1235/invasioneu2
+                  type:
+                    id: vanilla
+                    name: Vanilla
+                  mode:
+                    id: COOP
+                    name: Coop.
+                  database:
+                    id: invasion
+                    name: Invasion
+                  map:
+                    id: map10
+                    name: Railroad Gap
+                  players:
+                    current: 20
+                    max: 24
+                    free: 4
+                  location:
+                    name: Frankfurt am Main, Germany
+                    country_code: de
+                    flag_image_url: https://rwrstats.com/static/images/flags/DE.png
+                  steam_join_url: >-
+                    steam://rungameid/270150//server_address=178.32.58.160
+                    server_port=1240
+                  event:
+                    name: PvP event!
+                    is_ongoing: true
+                    starts_at: '2019-04-16T16:00:00+02:00'
+                stats:
+                  kills: 38689
+                  deaths: 3695
+                  score: 34994
+                  kd_ratio: 10.47
+                  time_played: 640200
+                  longest_kill_streak: 301
+                  targets_destroyed: 633
+                  vehicles_destroyed: 638
+                  soldiers_healed: 31
+                  teamkills: 785
+                  distance_moved: 790.4
+                  shots_fired: 417868
+                  throwables_thrown: 3057
+                  xp: 219921
+                current_rank:
+                  id: 14
+                  name: Lieutenant General
+                  required_xp: 200000
+                  image_url: https://rwrstats.com/static/images/ranks/us/14.png
+                  icon_url: https://rwrstats.com/static/images/ranks/us/14_icon.png
+                position: 42
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                username:
+                  type: string
+                  description: Player username
+                url:
+                  type:
+                    - string
+                    - 'null'
+                  description: >-
+                    RWRS player profile page URL. `null` if the player isn't an
+                    official Invasion or WW2 DLCs profile
+                  default: 'null'
+                is_rwrs_creator:
+                  type: boolean
+                  description: Whether this player is the creator of RWRS
+                is_contributor:
+                  type: boolean
+                  description: Whether this player contributed in a way or another to RWRS
+                is_rwr_dev:
+                  type: boolean
+                  description: Whether this player is one of the RWR developers
+                is_official_servers_mod:
+                  type: boolean
+                  description: Whether this player is moderator on official servers
+                database:
+                  type:
+                    - object
+                    - 'null'
+                  properties:
+                    id:
+                      type: string
+                      description: The database ID
+                    name:
+                      type: string
+                      description: The database name
+                  required:
+                    - id
+                    - name
+                  description: >-
+                    Player database. `null` if not an official Invasion or WW2
+                    DLCs player profile
+                is_friend:
+                  type: boolean
+                  description: Whether this player is friend with the current user
+                current_server:
+                  type:
+                    - object
+                    - 'null'
+                  properties:
+                    name:
+                      type: string
+                      description: Server name
+                    ip:
+                      type: string
+                      description: Server IP address
+                    port:
+                      type: number
+                      description: Server port
+                    is_ranked:
+                      type: boolean
+                      description: >-
+                        Whether this server is a ranked one (official Invasion
+                        and WW2 DLCs servers only)
+                    is_official:
+                      type: boolean
+                      description: >-
+                        Whether this server is an official one (official
+                        Invasion, WW2 DLCs or Dominance servers)
+                    website_url:
+                      type:
+                        - string
+                        - 'null'
+                      description: Server website URL. `null` if none
+                      default: 'null'
+                    url:
+                      type: string
+                      description: RWRS server page URL
+                    type:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          description: Server type ID (used mod or DLC)
+                        name:
+                          type: string
+                          description: Server type name (used mod or DLC)
+                      required:
+                        - id
+                        - name
+                      description: Server type
+                    mode:
+                      type:
+                        - object
+                        - 'null'
+                      properties:
+                        id:
+                          type: string
+                          description: Server mode ID (game mode)
+                        name:
+                          type: string
+                          description: Server mode name (game mode)
+                      required:
+                        - id
+                        - name
+                      description: Server mode. `null` if unknown
+                    database:
+                      type:
+                        - object
+                        - 'null'
+                      properties:
+                        id:
+                          type: string
+                          description: The database ID
+                        name:
+                          type: string
+                          description: The database name
+                      required:
+                        - id
+                        - name
+                      description: >-
+                        Server used database. `null` if not an official Invasion
+                        or WW2 DLCs server
+                    map:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          description: >-
+                            Map ID. **Not unique**: must be used in conjonction
+                            of the mode ID
+                        name:
+                          type: string
+                          description: Map name. If unknown, `id` will be used
+                      required:
+                        - id
+                        - name
+                      description: Server map
+                    players:
+                      type: object
+                      properties:
+                        current:
+                          type: number
+                          description: Number of current players
+                        max:
+                          type: number
+                          description: Maximum allowed number of players
+                        free:
+                          type: number
+                          description: Number of free player slots
+                      required:
+                        - current
+                        - max
+                        - free
+                      description: Server players
+                    location:
+                      type:
+                        - object
+                        - 'null'
+                      properties:
+                        name:
+                          type: string
+                          description: >-
+                            City name (if available) + country name of the
+                            server location
+                        country_code:
+                          type: string
+                          description: >-
+                            [ISO 3166-1
+                            alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)
+                            country code of the server location
+                        flag_image_url:
+                          type: string
+                          description: >-
+                            Image URL of the server country location. 24x24
+                            pixels
+                      required:
+                        - name
+                        - country_code
+                        - flag_image_url
+                      description: Server location. `null` if unknown
+                    steam_join_url:
+                      type: string
+                      description: >-
+                        [Steam browser
+                        protocol](https://developer.valvesoftware.com/wiki/Steam_browser_protocol)
+                        URL to be used to load Running With Rifles onto the
+                        given server lobby screen
+                    event:
+                      type:
+                        - object
+                        - 'null'
+                      properties:
+                        name:
+                          type: string
+                          description: Event name
+                        is_ongoing:
+                          type: boolean
+                          description: Whether this event is ongoing or not
+                        starts_at:
+                          type: string
+                          description: >-
+                            [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601)
+                            date when this event will start
+                      required:
+                        - name
+                        - is_ongoing
+                        - starts_at
+                      description: Event linked to this Server. `null` if none
+                  required:
+                    - name
+                    - ip
+                    - port
+                    - is_ranked
+                    - is_official
+                    - url
+                    - type
+                    - map
+                    - players
+                    - steam_join_url
+                  description: Server on which the player is currently playing
+                stats:
+                  type: object
+                  properties:
+                    kills:
+                      type: number
+                      description: Number of soldiers killed
+                    deaths:
+                      type: number
+                      description: Number of times being killed
+                    score:
+                      type: number
+                      description: Score as shown in-game (kills minus deaths)
+                    kd_ratio:
+                      type: number
+                      description: Kills / deaths ratio. The higher above 1.0, the better
+                    time_played:
+                      type: number
+                      description: Number of seconds played online
+                    longest_kill_streak:
+                      type: number
+                      description: >-
+                        Maximum number of consecutive kills without a single
+                        death
+                    targets_destroyed:
+                      type: number
+                      description: Number of structures destroyed (radars, prisons, etc)
+                    vehicles_destroyed:
+                      type: number
+                      description: Number of vehicles destroyed
+                    soldiers_healed:
+                      type: number
+                      description: Number of soldiers healed
+                    teamkills:
+                      type: number
+                      description: Number of friendly soldiers killed
+                    distance_moved:
+                      type: number
+                      description: Number of kilometers traveled (includes vehicles use)
+                    shots_fired:
+                      type: number
+                      description: >-
+                        Number of bullets fired (includes static weapons, tank
+                        turrets, etc)
+                    throwables_thrown:
+                      type: number
+                      description: Number of grenades, C4s, etc thrown
+                    xp:
+                      type: number
+                      description: Current number of experience points
+                  required:
+                    - kills
+                    - deaths
+                    - score
+                    - kd_ratio
+                    - time_played
+                    - longest_kill_streak
+                    - targets_destroyed
+                    - vehicles_destroyed
+                    - soldiers_healed
+                    - teamkills
+                    - distance_moved
+                    - shots_fired
+                    - throwables_thrown
+                    - xp
+                  description: Player statistics
+                current_rank:
+                  type: object
+                  properties:
+                    id:
+                      type: number
+                      description: Rank ID
+                    name:
+                      type: string
+                      description: Rank name
+                      default: 'null'
+                    required_xp:
+                      type: number
+                      description: >-
+                        Number of experience points this rank requires to be
+                        promoted to
+                    image_url:
+                      type: string
+                      description: Rank image URL. 64x64 pixels
+                    icon_url:
+                      type: string
+                      description: Small rank image URL. 20x20 pixels
+                  required:
+                    - id
+                    - name
+                    - required_xp
+                    - image_url
+                    - icon_url
+                  description: Player current rank
+                position:
+                  type: number
+                  description: Position on the leaderboard
+              required:
+                - username
+                - is_rwrs_creator
+                - is_contributor
+                - is_rwr_dev
+                - is_official_servers_mod
+                - is_friend
+                - stats
+                - current_rank
+                - position
+        '400':
+          description: >-
+            One or more arguments are (is) invalid. Check the error message(s)
+            for more information.
+          headers: {}
+          examples:
+            application/json:
+              message: Example error message
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: The error message explaining what happened
+            required:
+              - message
+            additionalProperties: false
+        '403':
+          description: Invalid Personal Access Token or Personal Access Token not provided.
+          headers: {}
+          examples:
+            application/json:
+              message: Example error message
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: The error message explaining what happened
+            required:
+              - message
+            additionalProperties: false
+        '404':
+          description: >-
+            Only if the `target` parameter was provided: the given player
+            username doesn't exist.
+          headers: {}
+          examples:
+            application/json:
+              message: Example error message
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: The error message explaining what happened
+            required:
+              - message
+            additionalProperties: false
+        '503':
+          description: Maintenance in progress.
+          headers: {}
+          examples:
+            application/json:
+              message: Example error message
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: The error message explaining what happened
+            required:
+              - message
+            additionalProperties: false
+      summary: Get a list of Players
+      operationId: Get a list of Players
+      description: >-
+        Return a list of Players (leaderboard). The list may be optionally
+        filtered or sorted.
+
+
+        ::: note
+
+
+        #### Server-side caching
+
+
+        This resource has a cache lifetime of **1 hour**.
+
+        :::
+      tags:
+        - Players
+      parameters:
+        - name: database
+          in: path
+          description: The players database.
+          required: true
+          x-example: invasion
+          type: string
+          enum:
+            - invasion
+            - pacific
+        - name: start
+          in: query
+          description: |-
+
+            Pagination start offset.
+
+            Minimum value: `0`
+          required: false
+          x-example: '15'
+          type: integer
+        - name: sort
+          in: query
+          description: >-
+            The stat value (or column) on which the player list should be
+            sorted.
+          required: false
+          x-example: rank_progression
+          type: string
+          default: score
+          enum:
+            - username
+            - kills
+            - deaths
+            - score
+            - kd
+            - time_played
+            - longest_kill_streak
+            - targets_destroyed
+            - vehicles_destroyed
+            - soldiers_healed
+            - teamkills
+            - distance_moved
+            - shots_fired
+            - throwables_thrown
+            - rank_progression
+        - name: target
+          in: query
+          description: A player username that should be highlighted.
+          required: false
+          x-example: EPOCDOTFR
+          type: string
+        - name: limit
+          in: query
+          description: |-
+
+            Number of players to return.
+
+            Minimum value: `1`
+
+            Maximum value: `100`
+          required: false
+          x-example: '25'
+          type: integer
+          default: 15
+      produces:
+        - application/json
+      consumes: []
+  /players/{database}/{username}:
+    get:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          examples:
+            application/json:
+              username: EPOCDOTFR
+              url: https://rwrstats.com/players/invasion/EPOCDOTFR
+              is_rwrs_creator: true
+              is_contributor: false
+              is_rwr_dev: false
+              is_official_servers_mod: false
+              database:
+                id: invasion
+                name: Invasion
+              is_friend: true
+              current_server:
+                name: InvasionEU2
+                ip: 31.186.250.67
+                port: 1235
+                is_ranked: true
+                is_official: true
+                website_url: https://runningwithrifles.com/
+                url: https://rwrstats.com/servers/31.186.250.67:1235/invasioneu2
+                type:
+                  id: vanilla
+                  name: Vanilla
+                mode:
+                  id: COOP
+                  name: Coop.
+                database:
+                  id: invasion
+                  name: Invasion
+                map:
+                  id: map10
+                  name: Railroad Gap
+                players:
+                  current: 20
+                  max: 24
+                  free: 4
+                location:
+                  name: Frankfurt am Main, Germany
+                  country_code: de
+                  flag_image_url: https://rwrstats.com/static/images/flags/DE.png
+                steam_join_url: >-
+                  steam://rungameid/270150//server_address=178.32.58.160
+                  server_port=1240
+                event:
+                  name: PvP event!
+                  is_ongoing: true
+                  starts_at: '2019-04-16T16:00:00+02:00'
+              stats:
+                kills: 38689
+                deaths: 3695
+                score: 34994
+                kd_ratio: 10.47
+                time_played: 640200
+                longest_kill_streak: 301
+                targets_destroyed: 633
+                vehicles_destroyed: 638
+                soldiers_healed: 31
+                teamkills: 785
+                distance_moved: 790.4
+                shots_fired: 417868
+                throwables_thrown: 3057
+                xp: 219921
+              current_rank:
+                id: 14
+                name: Lieutenant General
+                required_xp: 200000
+                image_url: https://rwrstats.com/static/images/ranks/us/14.png
+                icon_url: https://rwrstats.com/static/images/ranks/us/14_icon.png
+              next_rank:
+                id: 14
+                name: Lieutenant General
+                required_xp: 200000
+                image_url: https://rwrstats.com/static/images/ranks/us/14.png
+                icon_url: https://rwrstats.com/static/images/ranks/us/14_icon.png
+              xp_to_next_rank: 280079
+              xp_percent_completion_to_next_rank: 43.98
+              date: '2018-11-30'
+              signature_image_url: >-
+                https://rwrstats.com/static/images/players/EPOCDOTFR-invasion.png
+              promoted_to_rank:
+                id: 14
+                name: Lieutenant General
+                required_xp: 200000
+                image_url: https://rwrstats.com/static/images/ranks/us/14.png
+                icon_url: https://rwrstats.com/static/images/ranks/us/14_icon.png
+              owner:
+                id: 56
+                username: Epoc
+                url: https://rwrstats.com/users/56/epoc
+                steam_id: 76561198051750940
+                steam_profile_url: https://steamcommunity.com/profiles/76561198051750940
+                small_avatar_url: >-
+                  https://steamcdn-a.akamaihd.net/steamcommunity/public/images/avatars/18/18a19ee73965fb3b92f39db8a307df80f5624122.jpg
+                large_avatar_url: >-
+                  https://steamcdn-a.akamaihd.net/steamcommunity/public/images/avatars/18/18a19ee73965fb3b92f39db8a307df80f5624122_full.jpg
+          schema:
+            type: object
+            properties:
+              username:
+                type: string
+                description: Player username
+              url:
+                type:
+                  - string
+                  - 'null'
+                description: >-
+                  RWRS player profile page URL. `null` if the player isn't an
+                  official Invasion or WW2 DLCs profile
+                default: 'null'
+              is_rwrs_creator:
+                type: boolean
+                description: Whether this player is the creator of RWRS
+              is_contributor:
+                type: boolean
+                description: Whether this player contributed in a way or another to RWRS
+              is_rwr_dev:
+                type: boolean
+                description: Whether this player is one of the RWR developers
+              is_official_servers_mod:
+                type: boolean
+                description: Whether this player is moderator on official servers
+              database:
+                type:
+                  - object
+                  - 'null'
+                properties:
+                  id:
+                    type: string
+                    description: The database ID
+                  name:
+                    type: string
+                    description: The database name
+                required:
+                  - id
+                  - name
+                description: >-
+                  Player database. `null` if not an official Invasion or WW2
+                  DLCs player profile
+              is_friend:
+                type: boolean
+                description: Whether this player is friend with the current user
+              current_server:
+                type:
+                  - object
+                  - 'null'
+                properties:
+                  name:
+                    type: string
+                    description: Server name
+                  ip:
+                    type: string
+                    description: Server IP address
+                  port:
+                    type: number
+                    description: Server port
+                  is_ranked:
+                    type: boolean
+                    description: >-
+                      Whether this server is a ranked one (official Invasion and
+                      WW2 DLCs servers only)
+                  is_official:
+                    type: boolean
+                    description: >-
+                      Whether this server is an official one (official Invasion,
+                      WW2 DLCs or Dominance servers)
+                  website_url:
+                    type:
+                      - string
+                      - 'null'
+                    description: Server website URL. `null` if none
+                    default: 'null'
+                  url:
+                    type: string
+                    description: RWRS server page URL
+                  type:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        description: Server type ID (used mod or DLC)
+                      name:
+                        type: string
+                        description: Server type name (used mod or DLC)
+                    required:
+                      - id
+                      - name
+                    description: Server type
+                  mode:
+                    type:
+                      - object
+                      - 'null'
+                    properties:
+                      id:
+                        type: string
+                        description: Server mode ID (game mode)
+                      name:
+                        type: string
+                        description: Server mode name (game mode)
+                    required:
+                      - id
+                      - name
+                    description: Server mode. `null` if unknown
+                  database:
+                    type:
+                      - object
+                      - 'null'
+                    properties:
+                      id:
+                        type: string
+                        description: The database ID
+                      name:
+                        type: string
+                        description: The database name
+                    required:
+                      - id
+                      - name
+                    description: >-
+                      Server used database. `null` if not an official Invasion
+                      or WW2 DLCs server
+                  map:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        description: >-
+                          Map ID. **Not unique**: must be used in conjonction of
+                          the mode ID
+                      name:
+                        type: string
+                        description: Map name. If unknown, `id` will be used
+                    required:
+                      - id
+                      - name
+                    description: Server map
+                  players:
+                    type: object
+                    properties:
+                      current:
+                        type: number
+                        description: Number of current players
+                      max:
+                        type: number
+                        description: Maximum allowed number of players
+                      free:
+                        type: number
+                        description: Number of free player slots
+                    required:
+                      - current
+                      - max
+                      - free
+                    description: Server players
+                  location:
+                    type:
+                      - object
+                      - 'null'
+                    properties:
+                      name:
+                        type: string
+                        description: >-
+                          City name (if available) + country name of the server
+                          location
+                      country_code:
+                        type: string
+                        description: >-
+                          [ISO 3166-1
+                          alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)
+                          country code of the server location
+                      flag_image_url:
+                        type: string
+                        description: Image URL of the server country location. 24x24 pixels
+                    required:
+                      - name
+                      - country_code
+                      - flag_image_url
+                    description: Server location. `null` if unknown
+                  steam_join_url:
+                    type: string
+                    description: >-
+                      [Steam browser
+                      protocol](https://developer.valvesoftware.com/wiki/Steam_browser_protocol)
+                      URL to be used to load Running With Rifles onto the given
+                      server lobby screen
+                  event:
+                    type:
+                      - object
+                      - 'null'
+                    properties:
+                      name:
+                        type: string
+                        description: Event name
+                      is_ongoing:
+                        type: boolean
+                        description: Whether this event is ongoing or not
+                      starts_at:
+                        type: string
+                        description: >-
+                          [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601)
+                          date when this event will start
+                    required:
+                      - name
+                      - is_ongoing
+                      - starts_at
+                    description: Event linked to this Server. `null` if none
+                required:
+                  - name
+                  - ip
+                  - port
+                  - is_ranked
+                  - is_official
+                  - url
+                  - type
+                  - map
+                  - players
+                  - steam_join_url
+                description: Server on which the player is currently playing
+              stats:
+                type: object
+                properties:
+                  kills:
+                    type: number
+                    description: Number of soldiers killed
+                  deaths:
+                    type: number
+                    description: Number of times being killed
+                  score:
+                    type: number
+                    description: Score as shown in-game (kills minus deaths)
+                  kd_ratio:
+                    type: number
+                    description: Kills / deaths ratio. The higher above 1.0, the better
+                  time_played:
+                    type: number
+                    description: Number of seconds played online
+                  longest_kill_streak:
+                    type: number
+                    description: Maximum number of consecutive kills without a single death
+                  targets_destroyed:
+                    type: number
+                    description: Number of structures destroyed (radars, prisons, etc)
+                  vehicles_destroyed:
+                    type: number
+                    description: Number of vehicles destroyed
+                  soldiers_healed:
+                    type: number
+                    description: Number of soldiers healed
+                  teamkills:
+                    type: number
+                    description: Number of friendly soldiers killed
+                  distance_moved:
+                    type: number
+                    description: Number of kilometers traveled (includes vehicles use)
+                  shots_fired:
+                    type: number
+                    description: >-
+                      Number of bullets fired (includes static weapons, tank
+                      turrets, etc)
+                  throwables_thrown:
+                    type: number
+                    description: Number of grenades, C4s, etc thrown
+                  xp:
+                    type: number
+                    description: Current number of experience points
+                required:
+                  - kills
+                  - deaths
+                  - score
+                  - kd_ratio
+                  - time_played
+                  - longest_kill_streak
+                  - targets_destroyed
+                  - vehicles_destroyed
+                  - soldiers_healed
+                  - teamkills
+                  - distance_moved
+                  - shots_fired
+                  - throwables_thrown
+                  - xp
+                description: Player statistics
+              current_rank:
+                type: object
+                properties:
+                  id:
+                    type: number
+                    description: Rank ID
+                  name:
+                    type: string
+                    description: Rank name
+                    default: 'null'
+                  required_xp:
+                    type: number
+                    description: >-
+                      Number of experience points this rank requires to be
+                      promoted to
+                  image_url:
+                    type: string
+                    description: Rank image URL. 64x64 pixels
+                  icon_url:
+                    type: string
+                    description: Small rank image URL. 20x20 pixels
+                required:
+                  - id
+                  - name
+                  - required_xp
+                  - image_url
+                  - icon_url
+                description: Player current rank
+              next_rank:
+                type:
+                  - object
+                  - 'null'
+                properties:
+                  id:
+                    type: number
+                    description: Rank ID
+                  name:
+                    type: string
+                    description: Rank name
+                    default: 'null'
+                  required_xp:
+                    type: number
+                    description: >-
+                      Number of experience points this rank requires to be
+                      promoted to
+                  image_url:
+                    type: string
+                    description: Rank image URL. 64x64 pixels
+                  icon_url:
+                    type: string
+                    description: Small rank image URL. 20x20 pixels
+                required:
+                  - id
+                  - name
+                  - required_xp
+                  - image_url
+                  - icon_url
+                description: Player next rank (if applicable)
+              xp_to_next_rank:
+                type: number
+                description: Number of experience points to gain until the next promotion
+                default: 0
+              xp_percent_completion_to_next_rank:
+                type: number
+                description: >-
+                  Percentage of experience points to gain until the next
+                  promotion
+                default: 0
+              date:
+                type:
+                  - string
+                  - 'null'
+                description: >-
+                  If not `null`: [ISO
+                  8601](https://en.wikipedia.org/wiki/ISO_8601) date for which
+                  this player date are available for (stats history mode only)
+                default: 'null'
+              signature_image_url:
+                type:
+                  - string
+                  - 'null'
+                description: Player signature image URL. 387x108 pixels
+              promoted_to_rank:
+                type:
+                  - object
+                  - 'null'
+                properties:
+                  id:
+                    type: number
+                    description: Rank ID
+                  name:
+                    type: string
+                    description: Rank name
+                    default: 'null'
+                  required_xp:
+                    type: number
+                    description: >-
+                      Number of experience points this rank requires to be
+                      promoted to
+                  image_url:
+                    type: string
+                    description: Rank image URL. 64x64 pixels
+                  icon_url:
+                    type: string
+                    description: Small rank image URL. 20x20 pixels
+                required:
+                  - id
+                  - name
+                  - required_xp
+                  - image_url
+                  - icon_url
+                description: >-
+                  If not `null`: rank this player has been promoted to (stats
+                  history mode only)
+              owner:
+                type:
+                  - object
+                  - 'null'
+                properties:
+                  id:
+                    type: number
+                    description: RWRS user ID
+                  username:
+                    type: string
+                    description: The user nickname (as provided by Steam)
+                  url:
+                    type: string
+                    description: RWRS user profile page URL
+                  steam_id:
+                    type: number
+                    description: SteamID64 of this user
+                  steam_profile_url:
+                    type: string
+                    description: URL to this Steam user profile page
+                  small_avatar_url:
+                    type:
+                      - string
+                      - 'null'
+                    description: User small avatar (as provided by Steam). 32x32 pixels
+                    default: 'null'
+                  large_avatar_url:
+                    type:
+                      - string
+                      - 'null'
+                    description: User large avatar (as provided by Steam). 184x184 pixels
+                    default: 'null'
+                required:
+                  - id
+                  - username
+                  - url
+                  - steam_id
+                  - steam_profile_url
+                description: >-
+                  The RWRS user that owns this RWR account or `null` if he's
+                  unknown or if the RWRS user has defined its profile as private
+            required:
+              - username
+              - url
+              - is_rwrs_creator
+              - is_contributor
+              - is_rwr_dev
+              - is_official_servers_mod
+              - database
+              - is_friend
+              - current_server
+              - stats
+              - current_rank
+              - next_rank
+              - xp_to_next_rank
+              - xp_percent_completion_to_next_rank
+              - date
+              - signature_image_url
+              - promoted_to_rank
+              - owner
+            additionalProperties: false
+        '400':
+          description: >-
+            One or more arguments are (is) invalid. Check the error message(s)
+            for more information.
+          headers: {}
+          examples:
+            application/json:
+              message: Example error message
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: The error message explaining what happened
+            required:
+              - message
+            additionalProperties: false
+        '403':
+          description: Invalid Personal Access Token or Personal Access Token not provided.
+          headers: {}
+          examples:
+            application/json:
+              message: Example error message
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: The error message explaining what happened
+            required:
+              - message
+            additionalProperties: false
+        '404':
+          description: >-
+            The Player wasn't found or, only when the `date` parameter is
+            provided: no stats found for this player (although he's eligible for
+            stats history).
+          headers: {}
+          examples:
+            application/json:
+              message: Example error message
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: The error message explaining what happened
+            required:
+              - message
+            additionalProperties: false
+        '412':
+          description: >-
+            If the `date` parameter is provided: the Player isn't eligible for
+            stats history (5000 most experienced players only).
+          headers: {}
+          examples:
+            application/json:
+              message: Example error message
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: The error message explaining what happened
+            required:
+              - message
+            additionalProperties: false
+        '503':
+          description: Maintenance in progress.
+          headers: {}
+          examples:
+            application/json:
+              message: Example error message
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: The error message explaining what happened
+            required:
+              - message
+            additionalProperties: false
+      summary: Get a specific Player
+      operationId: Get a specific Player
+      description: >-
+        Return the Player corresponding to the given database / player username
+        couple.
+
+
+        ::: note
+
+
+        #### Server-side caching
+
+
+        This resource has a cache lifetime of **1 hour**.
+
+        :::
+      tags:
+        - Players
+      parameters:
+        - name: database
+          in: path
+          description: The player database.
+          required: true
+          x-example: invasion
+          type: string
+          enum:
+            - invasion
+            - pacific
+        - name: username
+          in: path
+          description: The player username.
+          required: true
+          x-example: EPOCDOTFR
+          type: string
+        - name: date
+          in: query
+          description: >-
+            [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) date for which to
+            retrieve the stats for.
+
+
+            Note the player must be part of the 5000 most experienced players
+            for its stats history to be recorded.
+          required: false
+          x-example: '2018-11-30'
+          type: string
+      produces:
+        - application/json
+      consumes: []
+  /players/{database}/{username}/stats-history:
+    get:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          examples:
+            application/json:
+              - kills: 38689
+                deaths: 3695
+                score: 34994
+                kd_ratio: 10.47
+                time_played: 640200
+                longest_kill_streak: 301
+                targets_destroyed: 633
+                vehicles_destroyed: 638
+                soldiers_healed: 31
+                teamkills: 785
+                distance_moved: 790.4
+                shots_fired: 417868
+                throwables_thrown: 3057
+                xp: 219921
+                date: '2018-11-30'
+                promoted_to_rank:
+                  id: 14
+                  name: Lieutenant General
+                  required_xp: 200000
+                  image_url: https://rwrstats.com/static/images/ranks/us/14.png
+                  icon_url: https://rwrstats.com/static/images/ranks/us/14_icon.png
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                kills:
+                  type: number
+                  description: Number of soldiers killed
+                deaths:
+                  type: number
+                  description: Number of times being killed
+                score:
+                  type: number
+                  description: Score as shown in-game (kills minus deaths)
+                kd_ratio:
+                  type: number
+                  description: Kills / deaths ratio. The higher above 1.0, the better
+                time_played:
+                  type: number
+                  description: Number of seconds played online
+                longest_kill_streak:
+                  type: number
+                  description: Maximum number of consecutive kills without a single death
+                targets_destroyed:
+                  type: number
+                  description: Number of structures destroyed (radars, prisons, etc)
+                vehicles_destroyed:
+                  type: number
+                  description: Number of vehicles destroyed
+                soldiers_healed:
+                  type: number
+                  description: Number of soldiers healed
+                teamkills:
+                  type: number
+                  description: Number of friendly soldiers killed
+                distance_moved:
+                  type: number
+                  description: Number of kilometers traveled (includes vehicles use)
+                shots_fired:
+                  type: number
+                  description: >-
+                    Number of bullets fired (includes static weapons, tank
+                    turrets, etc)
+                throwables_thrown:
+                  type: number
+                  description: Number of grenades, C4s, etc thrown
+                xp:
+                  type: number
+                  description: Current number of experience points
+                date:
+                  type: string
+                  description: >-
+                    [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) date when
+                    stats have been recorded
+                promoted_to_rank:
+                  type:
+                    - object
+                    - 'null'
+                  properties:
+                    id:
+                      type: number
+                      description: Rank ID
+                    name:
+                      type: string
+                      description: Rank name
+                      default: 'null'
+                    required_xp:
+                      type: number
+                      description: >-
+                        Number of experience points this rank requires to be
+                        promoted to
+                    image_url:
+                      type: string
+                      description: Rank image URL. 64x64 pixels
+                    icon_url:
+                      type: string
+                      description: Small rank image URL. 20x20 pixels
+                  required:
+                    - id
+                    - name
+                    - required_xp
+                    - image_url
+                    - icon_url
+                  description: 'If not `null`: rank this player has been promoted to'
+              required:
+                - kills
+                - deaths
+                - score
+                - kd_ratio
+                - time_played
+                - longest_kill_streak
+                - targets_destroyed
+                - vehicles_destroyed
+                - soldiers_healed
+                - teamkills
+                - distance_moved
+                - shots_fired
+                - throwables_thrown
+                - xp
+        '400':
+          description: >-
+            One or more arguments are (is) invalid. Check the error message(s)
+            for more information.
+          headers: {}
+          examples:
+            application/json:
+              message: Example error message
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: The error message explaining what happened
+            required:
+              - message
+            additionalProperties: false
+        '403':
+          description: Invalid Personal Access Token or Personal Access Token not provided.
+          headers: {}
+          examples:
+            application/json:
+              message: Example error message
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: The error message explaining what happened
+            required:
+              - message
+            additionalProperties: false
+        '404':
+          description: The Player wasn't found.
+          headers: {}
+          examples:
+            application/json:
+              message: Example error message
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: The error message explaining what happened
+            required:
+              - message
+            additionalProperties: false
+        '412':
+          description: >-
+            The Player isn't eligible for stats history (5000 most experienced
+            players only).
+          headers: {}
+          examples:
+            application/json:
+              message: Example error message
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: The error message explaining what happened
+            required:
+              - message
+            additionalProperties: false
+        '503':
+          description: Maintenance in progress.
+          headers: {}
+          examples:
+            application/json:
+              message: Example error message
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: The error message explaining what happened
+            required:
+              - message
+            additionalProperties: false
+      summary: Get stats history
+      operationId: Get stats history
+      description: >-
+        Return stats history corresponding to the given database / player
+        username couple.
+
+
+        Available only for the 5000 most experienced players.
+      tags:
+        - Players
+      parameters:
+        - name: database
+          in: path
+          description: The player database.
+          required: true
+          x-example: invasion
+          type: string
+          enum:
+            - invasion
+            - pacific
+        - name: username
+          in: path
+          description: The player username.
+          required: true
+          x-example: EPOCDOTFR
+          type: string
+        - name: page
+          in: query
+          description: |
+
+            Minimum value: `1`
+          required: false
+          x-example: '1'
+          type: integer
+          default: 1
+        - name: limit
+          in: query
+          description: |-
+
+            Number of stats row to return.
+
+            Minimum value: `1`
+
+            Maximum value: `100`
+          required: false
+          x-example: '25'
+          type: integer
+          default: 15
+      produces:
+        - application/json
+      consumes: []
+  /friends:
+    get:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          examples:
+            application/json:
+              - username: EPOCDOTFR
+                url: https://rwrstats.com/players/invasion/EPOCDOTFR
+                is_rwrs_creator: true
+                is_contributor: false
+                is_rwr_dev: false
+                is_official_servers_mod: false
+                database:
+                  id: invasion
+                  name: Invasion
+                current_server:
+                  name: InvasionEU2
+                  ip: 31.186.250.67
+                  port: 1235
+                  is_ranked: true
+                  is_official: true
+                  website_url: https://runningwithrifles.com/
+                  url: https://rwrstats.com/servers/31.186.250.67:1235/invasioneu2
+                  type:
+                    id: vanilla
+                    name: Vanilla
+                  mode:
+                    id: COOP
+                    name: Coop.
+                  database:
+                    id: invasion
+                    name: Invasion
+                  map:
+                    id: map10
+                    name: Railroad Gap
+                  players:
+                    current: 20
+                    max: 24
+                    free: 4
+                  location:
+                    name: Frankfurt am Main, Germany
+                    country_code: de
+                    flag_image_url: https://rwrstats.com/static/images/flags/DE.png
+                  steam_join_url: >-
+                    steam://rungameid/270150//server_address=178.32.58.160
+                    server_port=1240
+                  event:
+                    name: PvP event!
+                    is_ongoing: true
+                    starts_at: '2019-04-16T16:00:00+02:00'
+                friend_since: '2019-02-22T10:46:00+00:00'
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                username:
+                  type: string
+                  description: Player username
+                url:
+                  type:
+                    - string
+                    - 'null'
+                  description: >-
+                    RWRS player profile page URL. `null` if the player isn't an
+                    official Invasion or WW2 DLCs profile
+                  default: 'null'
+                is_rwrs_creator:
+                  type: boolean
+                  description: Whether this player is the creator of RWRS
+                is_contributor:
+                  type: boolean
+                  description: Whether this player contributed in a way or another to RWRS
+                is_rwr_dev:
+                  type: boolean
+                  description: Whether this player is one of the RWR developers
+                is_official_servers_mod:
+                  type: boolean
+                  description: Whether this player is moderator on official servers
+                database:
+                  type:
+                    - object
+                    - 'null'
+                  properties:
+                    id:
+                      type: string
+                      description: The database ID
+                    name:
+                      type: string
+                      description: The database name
+                  required:
+                    - id
+                    - name
+                  description: >-
+                    Player database. `null` if not an official Invasion or WW2
+                    DLCs player profile
+                current_server:
+                  type:
+                    - object
+                    - 'null'
+                  properties:
+                    name:
+                      type: string
+                      description: Server name
+                    ip:
+                      type: string
+                      description: Server IP address
+                    port:
+                      type: number
+                      description: Server port
+                    is_ranked:
+                      type: boolean
+                      description: >-
+                        Whether this server is a ranked one (official Invasion
+                        and WW2 DLCs servers only)
+                    is_official:
+                      type: boolean
+                      description: >-
+                        Whether this server is an official one (official
+                        Invasion, WW2 DLCs or Dominance servers)
+                    website_url:
+                      type:
+                        - string
+                        - 'null'
+                      description: Server website URL. `null` if none
+                      default: 'null'
+                    url:
+                      type: string
+                      description: RWRS server page URL
+                    type:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          description: Server type ID (used mod or DLC)
+                        name:
+                          type: string
+                          description: Server type name (used mod or DLC)
+                      required:
+                        - id
+                        - name
+                      description: Server type
+                    mode:
+                      type:
+                        - object
+                        - 'null'
+                      properties:
+                        id:
+                          type: string
+                          description: Server mode ID (game mode)
+                        name:
+                          type: string
+                          description: Server mode name (game mode)
+                      required:
+                        - id
+                        - name
+                      description: Server mode. `null` if unknown
+                    database:
+                      type:
+                        - object
+                        - 'null'
+                      properties:
+                        id:
+                          type: string
+                          description: The database ID
+                        name:
+                          type: string
+                          description: The database name
+                      required:
+                        - id
+                        - name
+                      description: >-
+                        Server used database. `null` if not an official Invasion
+                        or WW2 DLCs server
+                    map:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          description: >-
+                            Map ID. **Not unique**: must be used in conjonction
+                            of the mode ID
+                        name:
+                          type: string
+                          description: Map name. If unknown, `id` will be used
+                      required:
+                        - id
+                        - name
+                      description: Server map
+                    players:
+                      type: object
+                      properties:
+                        current:
+                          type: number
+                          description: Number of current players
+                        max:
+                          type: number
+                          description: Maximum allowed number of players
+                        free:
+                          type: number
+                          description: Number of free player slots
+                      required:
+                        - current
+                        - max
+                        - free
+                      description: Server players
+                    location:
+                      type:
+                        - object
+                        - 'null'
+                      properties:
+                        name:
+                          type: string
+                          description: >-
+                            City name (if available) + country name of the
+                            server location
+                        country_code:
+                          type: string
+                          description: >-
+                            [ISO 3166-1
+                            alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)
+                            country code of the server location
+                        flag_image_url:
+                          type: string
+                          description: >-
+                            Image URL of the server country location. 24x24
+                            pixels
+                      required:
+                        - name
+                        - country_code
+                        - flag_image_url
+                      description: Server location. `null` if unknown
+                    steam_join_url:
+                      type: string
+                      description: >-
+                        [Steam browser
+                        protocol](https://developer.valvesoftware.com/wiki/Steam_browser_protocol)
+                        URL to be used to load Running With Rifles onto the
+                        given server lobby screen
+                    event:
+                      type:
+                        - object
+                        - 'null'
+                      properties:
+                        name:
+                          type: string
+                          description: Event name
+                        is_ongoing:
+                          type: boolean
+                          description: Whether this event is ongoing or not
+                        starts_at:
+                          type: string
+                          description: >-
+                            [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601)
+                            date when this event will start
+                      required:
+                        - name
+                        - is_ongoing
+                        - starts_at
+                      description: Event linked to this Server. `null` if none
+                  required:
+                    - name
+                    - ip
+                    - port
+                    - is_ranked
+                    - is_official
+                    - url
+                    - type
+                    - map
+                    - players
+                    - steam_join_url
+                  description: Server on which the player is currently playing
+                friend_since:
+                  type: string
+                  description: >-
+                    [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) date /
+                    time since the current user is friend with this player
+              required:
+                - username
+                - is_rwrs_creator
+                - is_contributor
+                - is_rwr_dev
+                - is_official_servers_mod
+                - friend_since
+        '403':
+          description: Invalid Personal Access Token or Personal Access Token not provided.
+          headers: {}
+          examples:
+            application/json:
+              message: Example error message
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: The error message explaining what happened
+            required:
+              - message
+            additionalProperties: false
+        '503':
+          description: Maintenance in progress.
+          headers: {}
+          examples:
+            application/json:
+              message: Example error message
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: The error message explaining what happened
+            required:
+              - message
+            additionalProperties: false
+      summary: Get the Friends list
+      operationId: Get the Friends list
+      description: Return the list of Friends for the current user, ordered by username.
+      tags:
+        - Friends
+      parameters: []
+      produces:
+        - application/json
+      consumes: []
+    post:
+      responses:
+        '201':
+          description: Created
+          headers: {}
+          examples:
+            application/json:
+              username: EPOCDOTFR
+              url: https://rwrstats.com/players/invasion/EPOCDOTFR
+              is_rwrs_creator: true
+              is_contributor: false
+              is_rwr_dev: false
+              is_official_servers_mod: false
+              database:
+                id: invasion
+                name: Invasion
+              current_server:
+                name: InvasionEU2
+                ip: 31.186.250.67
+                port: 1235
+                is_ranked: true
+                is_official: true
+                website_url: https://runningwithrifles.com/
+                url: https://rwrstats.com/servers/31.186.250.67:1235/invasioneu2
+                type:
+                  id: vanilla
+                  name: Vanilla
+                mode:
+                  id: COOP
+                  name: Coop.
+                database:
+                  id: invasion
+                  name: Invasion
+                map:
+                  id: map10
+                  name: Railroad Gap
+                players:
+                  current: 20
+                  max: 24
+                  free: 4
+                location:
+                  name: Frankfurt am Main, Germany
+                  country_code: de
+                  flag_image_url: https://rwrstats.com/static/images/flags/DE.png
+                steam_join_url: >-
+                  steam://rungameid/270150//server_address=178.32.58.160
+                  server_port=1240
+                event:
+                  name: PvP event!
+                  is_ongoing: true
+                  starts_at: '2019-04-16T16:00:00+02:00'
+              friend_since: '2019-02-22T10:46:00+00:00'
+          schema:
+            type: object
+            properties:
+              username:
+                type: string
+                description: Player username
+              url:
+                type:
+                  - string
+                  - 'null'
+                description: >-
+                  RWRS player profile page URL. `null` if the player isn't an
+                  official Invasion or WW2 DLCs profile
+                default: 'null'
+              is_rwrs_creator:
+                type: boolean
+                description: Whether this player is the creator of RWRS
+              is_contributor:
+                type: boolean
+                description: Whether this player contributed in a way or another to RWRS
+              is_rwr_dev:
+                type: boolean
+                description: Whether this player is one of the RWR developers
+              is_official_servers_mod:
+                type: boolean
+                description: Whether this player is moderator on official servers
+              database:
+                type:
+                  - object
+                  - 'null'
+                properties:
+                  id:
+                    type: string
+                    description: The database ID
+                  name:
+                    type: string
+                    description: The database name
+                required:
+                  - id
+                  - name
+                description: >-
+                  Player database. `null` if not an official Invasion or WW2
+                  DLCs player profile
+              current_server:
+                type:
+                  - object
+                  - 'null'
+                properties:
+                  name:
+                    type: string
+                    description: Server name
+                  ip:
+                    type: string
+                    description: Server IP address
+                  port:
+                    type: number
+                    description: Server port
+                  is_ranked:
+                    type: boolean
+                    description: >-
+                      Whether this server is a ranked one (official Invasion and
+                      WW2 DLCs servers only)
+                  is_official:
+                    type: boolean
+                    description: >-
+                      Whether this server is an official one (official Invasion,
+                      WW2 DLCs or Dominance servers)
+                  website_url:
+                    type:
+                      - string
+                      - 'null'
+                    description: Server website URL. `null` if none
+                    default: 'null'
+                  url:
+                    type: string
+                    description: RWRS server page URL
+                  type:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        description: Server type ID (used mod or DLC)
+                      name:
+                        type: string
+                        description: Server type name (used mod or DLC)
+                    required:
+                      - id
+                      - name
+                    description: Server type
+                  mode:
+                    type:
+                      - object
+                      - 'null'
+                    properties:
+                      id:
+                        type: string
+                        description: Server mode ID (game mode)
+                      name:
+                        type: string
+                        description: Server mode name (game mode)
+                    required:
+                      - id
+                      - name
+                    description: Server mode. `null` if unknown
+                  database:
+                    type:
+                      - object
+                      - 'null'
+                    properties:
+                      id:
+                        type: string
+                        description: The database ID
+                      name:
+                        type: string
+                        description: The database name
+                    required:
+                      - id
+                      - name
+                    description: >-
+                      Server used database. `null` if not an official Invasion
+                      or WW2 DLCs server
+                  map:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        description: >-
+                          Map ID. **Not unique**: must be used in conjonction of
+                          the mode ID
+                      name:
+                        type: string
+                        description: Map name. If unknown, `id` will be used
+                    required:
+                      - id
+                      - name
+                    description: Server map
+                  players:
+                    type: object
+                    properties:
+                      current:
+                        type: number
+                        description: Number of current players
+                      max:
+                        type: number
+                        description: Maximum allowed number of players
+                      free:
+                        type: number
+                        description: Number of free player slots
+                    required:
+                      - current
+                      - max
+                      - free
+                    description: Server players
+                  location:
+                    type:
+                      - object
+                      - 'null'
+                    properties:
+                      name:
+                        type: string
+                        description: >-
+                          City name (if available) + country name of the server
+                          location
+                      country_code:
+                        type: string
+                        description: >-
+                          [ISO 3166-1
+                          alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)
+                          country code of the server location
+                      flag_image_url:
+                        type: string
+                        description: Image URL of the server country location. 24x24 pixels
+                    required:
+                      - name
+                      - country_code
+                      - flag_image_url
+                    description: Server location. `null` if unknown
+                  steam_join_url:
+                    type: string
+                    description: >-
+                      [Steam browser
+                      protocol](https://developer.valvesoftware.com/wiki/Steam_browser_protocol)
+                      URL to be used to load Running With Rifles onto the given
+                      server lobby screen
+                  event:
+                    type:
+                      - object
+                      - 'null'
+                    properties:
+                      name:
+                        type: string
+                        description: Event name
+                      is_ongoing:
+                        type: boolean
+                        description: Whether this event is ongoing or not
+                      starts_at:
+                        type: string
+                        description: >-
+                          [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601)
+                          date when this event will start
+                    required:
+                      - name
+                      - is_ongoing
+                      - starts_at
+                    description: Event linked to this Server. `null` if none
+                required:
+                  - name
+                  - ip
+                  - port
+                  - is_ranked
+                  - is_official
+                  - url
+                  - type
+                  - map
+                  - players
+                  - steam_join_url
+                description: Server on which the player is currently playing
+              friend_since:
+                type: string
+                description: >-
+                  [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) date / time
+                  since the current user is friend with this player
+            required:
+              - username
+              - url
+              - is_rwrs_creator
+              - is_contributor
+              - is_rwr_dev
+              - is_official_servers_mod
+              - database
+              - current_server
+              - friend_since
+            additionalProperties: false
+        '400':
+          description: >-
+            One or more arguments are (is) invalid. Check the error message(s)
+            for more information.
+          headers: {}
+          examples:
+            application/json:
+              message: Example error message
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: The error message explaining what happened
+            required:
+              - message
+            additionalProperties: false
+        '403':
+          description: Invalid Personal Access Token or Personal Access Token not provided.
+          headers: {}
+          examples:
+            application/json:
+              message: Example error message
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: The error message explaining what happened
+            required:
+              - message
+            additionalProperties: false
+        '412':
+          description: The given player is already friend with the current user.
+          headers: {}
+          examples:
+            application/json:
+              message: Example error message
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: The error message explaining what happened
+            required:
+              - message
+            additionalProperties: false
+        '503':
+          description: Maintenance in progress.
+          headers: {}
+          examples:
+            application/json:
+              message: Example error message
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: The error message explaining what happened
+            required:
+              - message
+            additionalProperties: false
+      summary: Add a new Friend
+      operationId: Add a new Friend
+      description: Add the given player to the current user's friends list.
+      tags:
+        - Friends
+      parameters:
+        - name: body
+          in: body
+          schema:
+            type: object
+            properties:
+              username:
+                type: string
+            example:
+              username: EPOCDOTFR
+      produces:
+        - application/json
+      consumes:
+        - application/json
+  /friends/{username}:
+    delete:
+      responses:
+        '204':
+          description: No Content
+          headers: {}
+          examples: {}
+        '403':
+          description: Invalid Personal Access Token or Personal Access Token not provided.
+          headers: {}
+          examples:
+            application/json:
+              message: Example error message
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: The error message explaining what happened
+            required:
+              - message
+            additionalProperties: false
+        '404':
+          description: The given player isn't friend with the current user.
+          headers: {}
+          examples:
+            application/json:
+              message: Example error message
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: The error message explaining what happened
+            required:
+              - message
+            additionalProperties: false
+        '503':
+          description: Maintenance in progress.
+          headers: {}
+          examples:
+            application/json:
+              message: Example error message
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: The error message explaining what happened
+            required:
+              - message
+            additionalProperties: false
+      summary: Remove a Friend
+      operationId: Remove a Friend
+      description: Remove the given player from the current user's friends list.
+      tags:
+        - Friends
+      parameters:
+        - name: username
+          in: path
+          description: The player username.
+          required: true
+          x-example: EPOCDOTFR
+          type: string
+      produces:
+        - application/json
+      consumes: []
+  /users/{user_id}:
+    get:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          examples:
+            application/json:
+              id: 56
+              username: Epoc
+              url: https://rwrstats.com/users/56/epoc
+              steam_id: 76561198051750940
+              steam_profile_url: https://steamcommunity.com/profiles/76561198051750940
+              small_avatar_url: >-
+                https://steamcdn-a.akamaihd.net/steamcommunity/public/images/avatars/18/18a19ee73965fb3b92f39db8a307df80f5624122.jpg
+              large_avatar_url: >-
+                https://steamcdn-a.akamaihd.net/steamcommunity/public/images/avatars/18/18a19ee73965fb3b92f39db8a307df80f5624122_full.jpg
+              registered_at: '2019-02-22T10:46:00+00:00'
+              country:
+                name: France
+                code: fr
+                flag_image_url: https://rwrstats.com/static/images/flags/FR.png
+              accounts:
+                - username: EPOCDOTFR
+                  url: https://rwrstats.com/players/invasion/EPOCDOTFR
+                  is_rwrs_creator: true
+                  is_contributor: false
+                  is_rwr_dev: false
+                  is_official_servers_mod: false
+                  database:
+                    id: invasion
+                    name: Invasion
+                  is_friend: true
+                  current_server:
+                    name: InvasionEU2
+                    ip: 31.186.250.67
+                    port: 1235
+                    is_ranked: true
+                    is_official: true
+                    website_url: https://runningwithrifles.com/
+                    url: >-
+                      https://rwrstats.com/servers/31.186.250.67:1235/invasioneu2
+                    type:
+                      id: vanilla
+                      name: Vanilla
+                    mode:
+                      id: COOP
+                      name: Coop.
+                    database:
+                      id: invasion
+                      name: Invasion
+                    map:
+                      id: map10
+                      name: Railroad Gap
+                    players:
+                      current: 20
+                      max: 24
+                      free: 4
+                    location:
+                      name: Frankfurt am Main, Germany
+                      country_code: de
+                      flag_image_url: https://rwrstats.com/static/images/flags/DE.png
+                    steam_join_url: >-
+                      steam://rungameid/270150//server_address=178.32.58.160
+                      server_port=1240
+                    event:
+                      name: PvP event!
+                      is_ongoing: true
+                      starts_at: '2019-04-16T16:00:00+02:00'
+          schema:
+            type: object
+            properties:
+              id:
+                type: number
+                description: RWRS user ID
+              username:
+                type: string
+                description: The user nickname (as provided by Steam)
+              url:
+                type: string
+                description: RWRS user profile page URL
+              steam_id:
+                type: number
+                description: SteamID64 of this user
+              steam_profile_url:
+                type: string
+                description: URL to this Steam user profile page
+              small_avatar_url:
+                type:
+                  - string
+                  - 'null'
+                description: User small avatar (as provided by Steam). 32x32 pixels
+                default: 'null'
+              large_avatar_url:
+                type:
+                  - string
+                  - 'null'
+                description: User large avatar (as provided by Steam). 184x184 pixels
+                default: 'null'
+              registered_at:
+                type: string
+                description: >-
+                  [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) date / time
+                  when user registered on RWRS
+              country:
+                type:
+                  - object
+                  - 'null'
+                properties:
+                  name:
+                    type: string
+                    description: User country name
+                  code:
+                    type: string
+                    description: >-
+                      [ISO 3166-1
+                      alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)
+                      user country code
+                  flag_image_url:
+                    type: string
+                    description: Image URL of the user country. 24x24 pixels
+                required:
+                  - name
+                  - code
+                  - flag_image_url
+                description: 'If not `null`: user country (as provided by Steam)'
+              accounts:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    username:
+                      type: string
+                      description: Player username
+                    url:
+                      type:
+                        - string
+                        - 'null'
+                      description: >-
+                        RWRS player profile page URL. `null` if the player isn't
+                        an official Invasion or WW2 DLCs profile
+                      default: 'null'
+                    is_rwrs_creator:
+                      type: boolean
+                      description: Whether this player is the creator of RWRS
+                    is_contributor:
+                      type: boolean
+                      description: >-
+                        Whether this player contributed in a way or another to
+                        RWRS
+                    is_rwr_dev:
+                      type: boolean
+                      description: Whether this player is one of the RWR developers
+                    is_official_servers_mod:
+                      type: boolean
+                      description: Whether this player is moderator on official servers
+                    database:
+                      type:
+                        - object
+                        - 'null'
+                      properties:
+                        id:
+                          type: string
+                          description: The database ID
+                        name:
+                          type: string
+                          description: The database name
+                      required:
+                        - id
+                        - name
+                      description: >-
+                        Player database. `null` if not an official Invasion or
+                        WW2 DLCs player profile
+                    is_friend:
+                      type: boolean
+                      description: Whether this player is friend with the current user
+                    current_server:
+                      type:
+                        - object
+                        - 'null'
+                      properties:
+                        name:
+                          type: string
+                          description: Server name
+                        ip:
+                          type: string
+                          description: Server IP address
+                        port:
+                          type: number
+                          description: Server port
+                        is_ranked:
+                          type: boolean
+                          description: >-
+                            Whether this server is a ranked one (official
+                            Invasion and WW2 DLCs servers only)
+                        is_official:
+                          type: boolean
+                          description: >-
+                            Whether this server is an official one (official
+                            Invasion, WW2 DLCs or Dominance servers)
+                        website_url:
+                          type:
+                            - string
+                            - 'null'
+                          description: Server website URL. `null` if none
+                          default: 'null'
+                        url:
+                          type: string
+                          description: RWRS server page URL
+                        type:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                              description: Server type ID (used mod or DLC)
+                            name:
+                              type: string
+                              description: Server type name (used mod or DLC)
+                          required:
+                            - id
+                            - name
+                          description: Server type
+                        mode:
+                          type:
+                            - object
+                            - 'null'
+                          properties:
+                            id:
+                              type: string
+                              description: Server mode ID (game mode)
+                            name:
+                              type: string
+                              description: Server mode name (game mode)
+                          required:
+                            - id
+                            - name
+                          description: Server mode. `null` if unknown
+                        database:
+                          type:
+                            - object
+                            - 'null'
+                          properties:
+                            id:
+                              type: string
+                              description: The database ID
+                            name:
+                              type: string
+                              description: The database name
+                          required:
+                            - id
+                            - name
+                          description: >-
+                            Server used database. `null` if not an official
+                            Invasion or WW2 DLCs server
+                        map:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                              description: >-
+                                Map ID. **Not unique**: must be used in
+                                conjonction of the mode ID
+                            name:
+                              type: string
+                              description: Map name. If unknown, `id` will be used
+                          required:
+                            - id
+                            - name
+                          description: Server map
+                        players:
+                          type: object
+                          properties:
+                            current:
+                              type: number
+                              description: Number of current players
+                            max:
+                              type: number
+                              description: Maximum allowed number of players
+                            free:
+                              type: number
+                              description: Number of free player slots
+                          required:
+                            - current
+                            - max
+                            - free
+                          description: Server players
+                        location:
+                          type:
+                            - object
+                            - 'null'
+                          properties:
+                            name:
+                              type: string
+                              description: >-
+                                City name (if available) + country name of the
+                                server location
+                            country_code:
+                              type: string
+                              description: >-
+                                [ISO 3166-1
+                                alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)
+                                country code of the server location
+                            flag_image_url:
+                              type: string
+                              description: >-
+                                Image URL of the server country location. 24x24
+                                pixels
+                          required:
+                            - name
+                            - country_code
+                            - flag_image_url
+                          description: Server location. `null` if unknown
+                        steam_join_url:
+                          type: string
+                          description: >-
+                            [Steam browser
+                            protocol](https://developer.valvesoftware.com/wiki/Steam_browser_protocol)
+                            URL to be used to load Running With Rifles onto the
+                            given server lobby screen
+                        event:
+                          type:
+                            - object
+                            - 'null'
+                          properties:
+                            name:
+                              type: string
+                              description: Event name
+                            is_ongoing:
+                              type: boolean
+                              description: Whether this event is ongoing or not
+                            starts_at:
+                              type: string
+                              description: >-
+                                [ISO
+                                8601](https://en.wikipedia.org/wiki/ISO_8601)
+                                date when this event will start
+                          required:
+                            - name
+                            - is_ongoing
+                            - starts_at
+                          description: Event linked to this Server. `null` if none
+                      required:
+                        - name
+                        - ip
+                        - port
+                        - is_ranked
+                        - is_official
+                        - url
+                        - type
+                        - map
+                        - players
+                        - steam_join_url
+                      description: Server on which the player is currently playing
+                  required:
+                    - username
+                    - is_rwrs_creator
+                    - is_contributor
+                    - is_rwr_dev
+                    - is_official_servers_mod
+                    - is_friend
+                description: List of linked RWR accounts
+            required:
+              - id
+              - username
+              - url
+              - steam_id
+              - steam_profile_url
+              - small_avatar_url
+              - large_avatar_url
+              - registered_at
+              - country
+              - accounts
+            additionalProperties: false
+        '400':
+          description: >-
+            One or more arguments are (is) invalid. Check the error message(s)
+            for more information.
+          headers: {}
+          examples:
+            application/json:
+              message: Example error message
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: The error message explaining what happened
+            required:
+              - message
+            additionalProperties: false
+        '403':
+          description: Invalid Personal Access Token or Personal Access Token not provided.
+          headers: {}
+          examples:
+            application/json:
+              message: Example error message
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: The error message explaining what happened
+            required:
+              - message
+            additionalProperties: false
+        '404':
+          description: >-
+            The User wasn't found, or its profile is set as private and is not
+            requested by the same user the Personal Access Token is linked to.
+          headers: {}
+          examples:
+            application/json:
+              message: Example error message
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: The error message explaining what happened
+            required:
+              - message
+            additionalProperties: false
+        '503':
+          description: Maintenance in progress.
+          headers: {}
+          examples:
+            application/json:
+              message: Example error message
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: The error message explaining what happened
+            required:
+              - message
+            additionalProperties: false
+      summary: Get a specific User
+      operationId: Get a specific User
+      description: Return the User corresponding to the given RWRS user ID.
+      tags:
+        - Users
+      parameters:
+        - name: user_id
+          in: path
+          description: The RWRS user ID.
+          required: true
+          x-example: '56'
+          type: number
+      produces:
+        - application/json
+      consumes: []
+  /live-counters:
+    get:
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          examples:
+            application/json:
+              players:
+                total: 85
+                online: 32
+                friends_online: 12
+              servers:
+                total: 22
+                active: 7
+          schema:
+            type: object
+            properties:
+              players:
+                type: object
+                properties:
+                  total:
+                    type: number
+                    description: Total number of people playing RWR
+                  online:
+                    type: number
+                    description: Number of people playing RWR multiplayer online
+                  friends_online:
+                    type: number
+                    description: >-
+                      Number of current user's friends playing RWR multiplayer
+                      online
+                required:
+                  - total
+                  - online
+                  - friends_online
+                description: Player counts
+              servers:
+                type: object
+                properties:
+                  total:
+                    type: number
+                    description: Total number of public RWR servers
+                  active:
+                    type: number
+                    description: Number of active (non-empty) public RWR servers
+                required:
+                  - total
+                  - active
+                description: Player counts
+            required:
+              - players
+              - servers
+            additionalProperties: false
+        '403':
+          description: Invalid Personal Access Token or Personal Access Token not provided.
+          headers: {}
+          examples:
+            application/json:
+              message: Example error message
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: The error message explaining what happened
+            required:
+              - message
+            additionalProperties: false
+        '503':
+          description: Maintenance in progress.
+          headers: {}
+          examples:
+            application/json:
+              message: Example error message
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: The error message explaining what happened
+            required:
+              - message
+            additionalProperties: false
+      summary: Get live counters
+      operationId: Get live counters
+      description: >-
+        Return the current number of players (total / online) and servers (total
+        / active).
+
+
+        ::: note
+
+
+        #### Server-side caching
+
+
+        This resource has a cache lifetime of **1 minute**.
+
+        :::
+      tags:
+        - Misc
+      parameters: []
+      produces:
+        - application/json
+      consumes: []
+definitions:
+  Database Object:
+    type: object
+    required:
+      - id
+      - name
+    properties:
+      id:
+        type: string
+        example: invasion
+        description: The database ID
+      name:
+        type: string
+        example: Invasion
+        description: The database name
+  Event Object:
+    type: object
+    required:
+      - name
+      - is_ongoing
+      - starts_at
+    properties:
+      name:
+        type: string
+        example: PvP event!
+        description: Event name
+      is_ongoing:
+        type: boolean
+        example: true
+        description: Whether this event is ongoing or not
+      starts_at:
+        type: string
+        example: '2019-04-16T16:00:00+02:00'
+        description: >-
+          [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) date when this
+          event will start
+  Error Response:
+    type: object
+    required:
+      - message
+    properties:
+      message:
+        type: string
+        example: Example error message
+        description: The error message explaining what happened
+  User Country Object:
+    type: object
+    required:
+      - name
+      - code
+      - flag_image_url
+    properties:
+      name:
+        type: string
+        example: France
+        description: User country name
+      code:
+        type: string
+        example: fr
+        description: >-
+          [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)
+          user country code
+      flag_image_url:
+        type: string
+        example: https://rwrstats.com/static/images/flags/FR.png
+        description: Image URL of the user country. 24x24 pixels
+  User Simple Object:
+    type: object
+    required:
+      - id
+      - username
+      - url
+      - steam_id
+      - steam_profile_url
+    properties:
+      id:
+        type: number
+        example: 56
+        description: RWRS user ID
+      username:
+        type: string
+        example: Epoc
+        description: The user nickname (as provided by Steam)
+      url:
+        type: string
+        example: https://rwrstats.com/users/56/epoc
+        description: RWRS user profile page URL
+      steam_id:
+        type: number
+        example: 76561198051750940
+        description: SteamID64 of this user
+      steam_profile_url:
+        type: string
+        example: https://steamcommunity.com/profiles/76561198051750940
+        description: URL to this Steam user profile page
+      small_avatar_url:
+        type:
+          - string
+          - 'null'
+        example: >-
+          https://steamcdn-a.akamaihd.net/steamcommunity/public/images/avatars/18/18a19ee73965fb3b92f39db8a307df80f5624122.jpg
+        description: User small avatar (as provided by Steam). 32x32 pixels
+      large_avatar_url:
+        type:
+          - string
+          - 'null'
+        example: >-
+          https://steamcdn-a.akamaihd.net/steamcommunity/public/images/avatars/18/18a19ee73965fb3b92f39db8a307df80f5624122_full.jpg
+        description: User large avatar (as provided by Steam). 184x184 pixels
+  User Full Object:
+    allOf:
+      - $ref: '#/definitions/User Simple Object'
+      - type: object
+        required:
+          - registered_at
+        properties:
+          registered_at:
+            type: string
+            example: '2019-02-22T10:46:00+00:00'
+            description: >-
+              [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) date / time
+              when user registered on RWRS
+          country:
+            oneOf:
+              - $ref: '#/definitions/User Country Object'
+                description: 'If not `null`: user country (as provided by Steam)'
+              - type: 'null'
+          accounts:
+            type: array
+            items:
+              $ref: '#/definitions/Player Intermediate Object'
+            description: List of linked RWR accounts
+  Player Stats Object:
+    type: object
+    required:
+      - kills
+      - deaths
+      - score
+      - kd_ratio
+      - time_played
+      - longest_kill_streak
+      - targets_destroyed
+      - vehicles_destroyed
+      - soldiers_healed
+      - teamkills
+      - distance_moved
+      - shots_fired
+      - throwables_thrown
+      - xp
+    properties:
+      kills:
+        type: number
+        example: 38689
+        description: Number of soldiers killed
+      deaths:
+        type: number
+        example: 3695
+        description: Number of times being killed
+      score:
+        type: number
+        example: 34994
+        description: Score as shown in-game (kills minus deaths)
+      kd_ratio:
+        type: number
+        example: 10.47
+        description: Kills / deaths ratio. The higher above 1.0, the better
+      time_played:
+        type: number
+        example: 640200
+        description: Number of seconds played online
+      longest_kill_streak:
+        type: number
+        example: 301
+        description: Maximum number of consecutive kills without a single death
+      targets_destroyed:
+        type: number
+        example: 633
+        description: Number of structures destroyed (radars, prisons, etc)
+      vehicles_destroyed:
+        type: number
+        example: 638
+        description: Number of vehicles destroyed
+      soldiers_healed:
+        type: number
+        example: 31
+        description: Number of soldiers healed
+      teamkills:
+        type: number
+        example: 785
+        description: Number of friendly soldiers killed
+      distance_moved:
+        type: number
+        example: 790.4
+        description: Number of kilometers traveled (includes vehicles use)
+      shots_fired:
+        type: number
+        example: 417868
+        description: Number of bullets fired (includes static weapons, tank turrets, etc)
+      throwables_thrown:
+        type: number
+        example: 3057
+        description: Number of grenades, C4s, etc thrown
+      xp:
+        type: number
+        example: 219921
+        description: Current number of experience points
+  Player Rank Object:
+    type: object
+    required:
+      - id
+      - name
+      - required_xp
+      - image_url
+      - icon_url
+    properties:
+      id:
+        type: number
+        example: 14
+        description: Rank ID
+      name:
+        type: string
+        example: Lieutenant General
+        description: Rank name
+      required_xp:
+        type: number
+        example: 200000
+        description: Number of experience points this rank requires to be promoted to
+      image_url:
+        type: string
+        example: https://rwrstats.com/static/images/ranks/us/14.png
+        description: Rank image URL. 64x64 pixels
+      icon_url:
+        type: string
+        example: https://rwrstats.com/static/images/ranks/us/14_icon.png
+        description: Small rank image URL. 20x20 pixels
+  Player Base Object:
+    type: object
+    required:
+      - username
+      - is_rwrs_creator
+      - is_contributor
+      - is_rwr_dev
+      - is_official_servers_mod
+    properties:
+      username:
+        type: string
+        example: EPOCDOTFR
+        description: Player username
+      url:
+        type:
+          - string
+          - 'null'
+        example: https://rwrstats.com/players/invasion/EPOCDOTFR
+        description: >-
+          RWRS player profile page URL. `null` if the player isn't an official
+          Invasion or WW2 DLCs profile
+      is_rwrs_creator:
+        type: boolean
+        example: true
+        description: Whether this player is the creator of RWRS
+      is_contributor:
+        type: boolean
+        description: Whether this player contributed in a way or another to RWRS
+      is_rwr_dev:
+        type: boolean
+        description: Whether this player is one of the RWR developers
+      is_official_servers_mod:
+        type: boolean
+        description: Whether this player is moderator on official servers
+      database:
+        oneOf:
+          - $ref: '#/definitions/Database Object'
+            description: >-
+              Player database. `null` if not an official Invasion or WW2 DLCs
+              player profile
+          - type: 'null'
+  Player Simple Object:
+    allOf:
+      - $ref: '#/definitions/Player Base Object'
+      - type: object
+        required:
+          - is_friend
+        properties:
+          is_friend:
+            type: boolean
+            example: true
+            description: Whether this player is friend with the current user
+  Player Intermediate Object:
+    allOf:
+      - $ref: '#/definitions/Player Simple Object'
+      - type: object
+        properties:
+          current_server:
+            oneOf:
+              - $ref: '#/definitions/Server Base Object'
+                description: Server on which the player is currently playing
+              - type: 'null'
+  Player Advanced Object:
+    allOf:
+      - $ref: '#/definitions/Player Intermediate Object'
+      - type: object
+        required:
+          - stats
+          - current_rank
+        properties:
+          stats:
+            $ref: '#/definitions/Player Stats Object'
+            description: Player statistics
+          current_rank:
+            $ref: '#/definitions/Player Rank Object'
+            description: Player current rank
+  Player List Object:
+    allOf:
+      - $ref: '#/definitions/Player Advanced Object'
+      - type: object
+        required:
+          - position
+        properties:
+          position:
+            type: number
+            example: 42
+            description: Position on the leaderboard
+  Player Stats History Object:
+    allOf:
+      - $ref: '#/definitions/Player Stats Object'
+      - type: object
+        properties:
+          date:
+            type: string
+            example: '2018-11-30'
+            description: >-
+              [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) date when stats
+              have been recorded
+          promoted_to_rank:
+            oneOf:
+              - $ref: '#/definitions/Player Rank Object'
+                description: 'If not `null`: rank this player has been promoted to'
+              - type: 'null'
+  Player Full Object:
+    allOf:
+      - $ref: '#/definitions/Player Advanced Object'
+      - type: object
+        properties:
+          next_rank:
+            oneOf:
+              - $ref: '#/definitions/Player Rank Object'
+                description: Player next rank (if applicable)
+              - type: 'null'
+          xp_to_next_rank:
+            type: number
+            example: 280079
+            description: Number of experience points to gain until the next promotion
+          xp_percent_completion_to_next_rank:
+            type: number
+            example: 43.98
+            description: Percentage of experience points to gain until the next promotion
+          date:
+            type:
+              - string
+              - 'null'
+            example: '2018-11-30'
+            description: >-
+              If not `null`: [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601)
+              date for which this player date are available for (stats history
+              mode only)
+          signature_image_url:
+            type:
+              - string
+              - 'null'
+            example: https://rwrstats.com/static/images/players/EPOCDOTFR-invasion.png
+            description: Player signature image URL. 387x108 pixels
+          promoted_to_rank:
+            oneOf:
+              - $ref: '#/definitions/Player Rank Object'
+                description: >-
+                  If not `null`: rank this player has been promoted to (stats
+                  history mode only)
+              - type: 'null'
+          owner:
+            oneOf:
+              - $ref: '#/definitions/User Simple Object'
+                description: >-
+                  The RWRS user that owns this RWR account or `null` if he's
+                  unknown or if the RWRS user has defined its profile as private
+              - type: 'null'
+  Friend Object:
+    allOf:
+      - $ref: '#/definitions/Player Base Object'
+      - type: object
+        required:
+          - friend_since
+        properties:
+          current_server:
+            oneOf:
+              - $ref: '#/definitions/Server Base Object'
+                description: Server on which the player is currently playing
+              - type: 'null'
+          friend_since:
+            type: string
+            example: '2019-02-22T10:46:00+00:00'
+            description: >-
+              [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) date / time
+              since the current user is friend with this player
+  Server Map Simple Object:
+    type: object
+    required:
+      - id
+      - name
+    properties:
+      id:
+        type: string
+        example: map10
+        description: 'Map ID. **Not unique**: must be used in conjonction of the mode ID'
+      name:
+        type: string
+        example: Railroad Gap
+        description: Map name. If unknown, `id` will be used
+  Server Map Full Object:
+    allOf:
+      - $ref: '#/definitions/Server Map Simple Object'
+      - type: object
+        properties:
+          preview_image_url:
+            type:
+              - string
+              - 'null'
+            example: https://rwrstats.com/static/images/maps/preview/vanilla/map10.png
+            description: >-
+              Map preview image URL (ingame screenshot). `null` if none
+              available. Size may vary
+          minimap_image_url:
+            type:
+              - string
+              - 'null'
+            example: https://rwrstats.com/static/images/maps/minimap/vanilla/map10.png
+            description: Mapview image URL. `null` if none available. 2048x2048 pixels
+  Server Location Object:
+    type: object
+    required:
+      - name
+      - country_code
+      - flag_image_url
+    properties:
+      name:
+        type: string
+        example: Frankfurt am Main, Germany
+        description: City name (if available) + country name of the server location
+      country_code:
+        type: string
+        example: de
+        description: >-
+          [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)
+          country code of the server location
+      flag_image_url:
+        type: string
+        example: https://rwrstats.com/static/images/flags/DE.png
+        description: Image URL of the server country location. 24x24 pixels
+  Server Type Object:
+    type: object
+    required:
+      - id
+      - name
+    properties:
+      id:
+        type: string
+        example: vanilla
+        description: Server type ID (used mod or DLC)
+      name:
+        type: string
+        example: Vanilla
+        description: Server type name (used mod or DLC)
+  Server Mode Simple Object:
+    type: object
+    required:
+      - id
+      - name
+    properties:
+      id:
+        type: string
+        example: COOP
+        description: Server mode ID (game mode)
+      name:
+        type: string
+        example: Coop.
+        description: Server mode name (game mode)
+  Server Mode Full Object:
+    allOf:
+      - $ref: '#/definitions/Server Mode Simple Object'
+      - type: object
+        properties:
+          name_long:
+            type:
+              - string
+              - 'null'
+            example: Cooperation
+            description: Long server mode name (game mode). `null` if unknown
+  Server Players Simple Object:
+    type: object
+    required:
+      - current
+      - max
+      - free
+    properties:
+      current:
+        type: number
+        example: 20
+        description: Number of current players
+      max:
+        type: number
+        example: 24
+        description: Maximum allowed number of players
+      free:
+        type: number
+        example: 4
+        description: Number of free player slots
+  Server Players Full Object:
+    allOf:
+      - $ref: '#/definitions/Server Players Simple Object'
+      - type: object
+        required:
+          - list
+        properties:
+          list:
+            type: array
+            items:
+              $ref: '#/definitions/Player Simple Object'
+            description: List of current players
+  Server Base Object:
+    type: object
+    required:
+      - name
+      - ip
+      - port
+      - is_ranked
+      - is_official
+      - url
+      - type
+      - map
+      - players
+      - steam_join_url
+    properties:
+      name:
+        type: string
+        example: InvasionEU2
+        description: Server name
+      ip:
+        type: string
+        example: 31.186.250.67
+        description: Server IP address
+      port:
+        type: number
+        example: 1235
+        description: Server port
+      is_ranked:
+        type: boolean
+        example: true
+        description: >-
+          Whether this server is a ranked one (official Invasion and WW2 DLCs
+          servers only)
+      is_official:
+        type: boolean
+        example: true
+        description: >-
+          Whether this server is an official one (official Invasion, WW2 DLCs or
+          Dominance servers)
+      website_url:
+        type:
+          - string
+          - 'null'
+        example: https://runningwithrifles.com/
+        description: Server website URL. `null` if none
+      url:
+        type: string
+        example: https://rwrstats.com/servers/31.186.250.67:1235/invasioneu2
+        description: RWRS server page URL
+      type:
+        $ref: '#/definitions/Server Type Object'
+        description: Server type
+      mode:
+        oneOf:
+          - $ref: '#/definitions/Server Mode Simple Object'
+            description: Server mode. `null` if unknown
+          - type: 'null'
+      database:
+        oneOf:
+          - $ref: '#/definitions/Database Object'
+            description: >-
+              Server used database. `null` if not an official Invasion or WW2
+              DLCs server
+          - type: 'null'
+      map:
+        $ref: '#/definitions/Server Map Simple Object'
+        description: Server map
+      players:
+        $ref: '#/definitions/Server Players Simple Object'
+        description: Server players
+      location:
+        oneOf:
+          - $ref: '#/definitions/Server Location Object'
+            description: Server location. `null` if unknown
+          - type: 'null'
+      steam_join_url:
+        type: string
+        example: >-
+          steam://rungameid/270150//server_address=178.32.58.160
+          server_port=1240
+        description: >-
+          [Steam browser
+          protocol](https://developer.valvesoftware.com/wiki/Steam_browser_protocol)
+          URL to be used to load Running With Rifles onto the given server lobby
+          screen
+      event:
+        oneOf:
+          - $ref: '#/definitions/Event Object'
+            description: Event linked to this Server. `null` if none
+          - type: 'null'
+  Server Simple Object:
+    allOf:
+      - $ref: '#/definitions/Server Base Object'
+      - type: object
+        required:
+          - has_friends
+        properties:
+          has_friends:
+            type: boolean
+            example: true
+            description: >-
+              Whether there's friends from the current user playing on this
+              server
+  Server Full Object:
+    allOf:
+      - $ref: '#/definitions/Server Base Object'
+      - type: object
+        required:
+          - map
+          - version
+          - is_dedicated
+          - bots
+          - players
+        properties:
+          map:
+            $ref: '#/definitions/Server Map Full Object'
+            description: Server map
+          version:
+            type: string
+            example: 1.70.2
+            description: Server game version
+          is_dedicated:
+            type: boolean
+            example: true
+            description: Whether this server is a dedicated one
+          comment:
+            type:
+              - string
+              - 'null'
+            example: Coop campaign
+            description: Server comment. `null` if none
+          bots:
+            type: number
+            example: 104
+            description: Number of current bots
+          mode:
+            oneOf:
+              - $ref: '#/definitions/Server Mode Full Object'
+                description: Server mode. `null` if unknown
+              - type: 'null'
+          players:
+            $ref: '#/definitions/Server Players Full Object'
+            description: Server players
+          banner_image_url:
+            type:
+              - string
+              - 'null'
+            example: https://rwrstats.com/static/images/servers/106.14.208.129-1234.png
+            description: >-
+              Server banner image URL. Only available for dedicated servers.
+              485x95 pixels
+  Map Counters Object:
+    type: object
+    required:
+      - players
+      - servers
+    properties:
+      players:
+        type: object
+        required:
+          - total
+          - online
+          - friends_online
+        properties:
+          total:
+            type: number
+            example: 85
+            description: Total number of people playing RWR
+          online:
+            type: number
+            example: 32
+            description: Number of people playing RWR multiplayer online
+          friends_online:
+            type: number
+            example: 12
+            description: Number of current user's friends playing RWR multiplayer online
+        description: Player counts
+      servers:
+        type: object
+        required:
+          - total
+          - active
+        properties:
+          total:
+            type: number
+            example: 22
+            description: Total number of public RWR servers
+          active:
+            type: number
+            example: 7
+            description: Number of active (non-empty) public RWR servers
+        description: Player counts
+  Servers: {}
+  Server: {}
+  Players: {}
+  Player: {}
+  Friends: {}
+  Friend: {}
+  User: {}
+  Live counters: {}
+securityDefinitions: {}
+tags:
+  - name: Servers
+    description: A Server represent a public multiplayer Running With Rifles game.
+  - name: Players
+    description: >-
+      A Player represent an online multiplayer Running With Rifles account on
+      official Invasion or WW2 DLCs servers.
+
+
+      ::: note
+
+      **Important note**
+
+
+      Players stats are updated daily and **only** concerns official Invasion
+      and WW2 DLCs servers.
+
+
+      Also, stats history is only recorded for the 5000 most experienced
+      players.
+
+      :::
+  - name: Friends
+    description: >-
+      A Friend is an online multiplayer Running With Rifles account which is
+      existing in the current user's friends list.
+  - name: Users
+    description: A User represent a RWRS user, created after the User signed-in via Steam.
+  - name: Misc
+    description: Miscellanous resources.
