@@ -3,11 +3,11 @@
 A Player represent an online multiplayer Running With Rifles account on official Invasion or WW2 DLCs servers.
 
 ::: note
-**Important note**
+**Important notes**
 
-Players stats are updated daily and **only** concerns official Invasion and WW2 DLCs servers.
-
-Also, stats history is only recorded for the 5000 most experienced players.
+- Players stats are updated daily and **only** concerns official Invasion and WW2 DLCs servers.
+- Stats history is only recorded for the 5000 most experienced players.
+- The data retention policy is **one year per RWR account**.
 :::
 
 ## Players [/players/{database}{?start,sort,target,limit}]
@@ -107,6 +107,8 @@ This resource has a cache lifetime of **1 hour**.
 
         Note the player must be part of the 5000 most experienced players for its stats history to be recorded.
 
+        Also note the data retention policy is **one year per RWR account**.
+
 ### Get a specific Player [GET]
 
 Return the Player corresponding to the given database / player username couple.
@@ -181,6 +183,8 @@ This resource has a cache lifetime of **1 hour**.
 Return stats history corresponding to the given database / player username couple.
 
 Available only for the 5000 most experienced players.
+
+Also note the data retention policy is **one year per RWR account**.
 
 + Request
 
