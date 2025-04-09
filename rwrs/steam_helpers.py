@@ -7,6 +7,7 @@ import re
 def _get_steam_api_interfaces(client):
     return client.fetch_interfaces()
 
+
 steam_api_client = SteamAPIClient(app.config['STEAM_API_KEY'], auto_load_interfaces=False)
 steam_api_client.load_interfaces(
     _get_steam_api_interfaces(steam_api_client)
