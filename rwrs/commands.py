@@ -370,11 +370,10 @@ def save_players_stats(reset, create_accounts_only):
                 db.session.bulk_save_objects(all_rwr_accounts_stat)
                 db.session.commit()
 
-    if arrow.utcnow().floor('minute').to('Europe/Paris') >= arrow.get(2025, 4, 16, 21, tzinfo='Europe/Paris'):
-        click.echo('Pruning old stats...')
+    click.echo('Pruning old stats...')
 
-        RwrAccountStat.query.filter(RwrAccountStat.created_at < one_year_ago()).delete()
-        db.session.commit()
+    RwrAccountStat.query.filter(RwrAccountStat.created_at < one_year_ago()).delete()
+    db.session.commit()
 
     click.secho('Done', fg='green')
 
