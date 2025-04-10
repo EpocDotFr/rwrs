@@ -358,7 +358,7 @@ def evolution(
             evolution_chart = charts.create_evolution_chart(
                 player.rwr_account,
                 constants.EVOLUTION_TYPES[type]['column'],
-                'Past year {} evolution for {}\n({} official servers, {} is better)'.format(
+                '{} evolution for {}\n({} official servers, {} is better)'.format(
                     constants.EVOLUTION_TYPES[type]['name'],
                     player.username,
                     player.database_name,
