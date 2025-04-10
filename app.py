@@ -158,7 +158,7 @@ assets = Environment(app)
 assets.append_path('assets')
 
 assets.register('js_popovers', Bundle('js/popovers.js', filters='rjsmin', output='js/popovers.min.js'))
-assets.register('js_popovers_rwr_accounts_sync', Bundle('js/popovers.js', 'js/rwr_accounts_sync.js', filters='rjsmin', output='js/popovers_rwr_accounts_sync.min.js'))
+assets.register('js_popovers_rwr_accounts_sync_clear', Bundle('js/popovers.js', 'js/rwr_accounts_sync.js', 'js/rwr_accounts_clear.js', filters='rjsmin', output='js/popovers_rwr_accounts_sync_clear.min.js'))
 assets.register('js_charts', Bundle('js/charts.js', filters='rjsmin', output='js/charts.min.js'))
 assets.register('js_charts_popovers', Bundle('js/charts.js', 'js/popovers.js', filters='rjsmin', output='js/charts_popovers.min.js'))
 assets.register('js_regenerate_pat', Bundle('js/regenerate_pat.js', filters='rjsmin', output='js/regenerate_pat.min.js'))
