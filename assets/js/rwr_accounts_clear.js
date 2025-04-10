@@ -8,7 +8,7 @@ rwrAccountsClear = {
     init: function() {
         var self = this;
 
-        this.$clear_rwr_account_credentials_buttons = document.querySelectorAll('button.clear-rwr-account-credentials');
+        this.$clear_rwr_account_credentials_buttons = document.querySelectorAll('a.clear-rwr-account-credentials');
 
         this.$clear_rwr_account_credentials_buttons.forEach(function(el) {
             el.addEventListener('click', function(e) {
@@ -28,7 +28,7 @@ rwrAccountsClear = {
    clear: function(button) {
         button.disabled = true;
 
-        fetch('', { // TODO
+        fetch(this.endpoint, { // TODO
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

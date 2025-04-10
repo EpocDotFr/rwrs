@@ -68,13 +68,16 @@
                                 {%- for rwr_account in rwr_accounts_by_type -%}
                                     <tr>
                                         <td>
-                                            {%- if current_user.is_authenticated and user.id == current_user.id and not rwr_account.pending_delete -%}
-                                                <div class="actions fr">
-                                                    <span class="txtred"><a href="{{ url_for('delete_rwr_account', rwr_account_id=rwr_account.id) }}" title="Delete this RWR account"><i class="fas fa-trash"></i></a></span>
-                                                </div>
-                                            {%- endif -%}
+                                            <div class="flex-container">
+                                                <span class="flex-item-center flex-item-fluid">
+                                                    {{ macros.player_name(rwr_account.username, raw=True, link=True, database=database, popover_url=True) }}{% if user.id == current_user.id and rwr_account.pending_delete %} <i class="fas fa-times help" title="This account is pending deletion"></i>{% endif -%}
+                                                </span>
 
-                                            {{ macros.player_name(rwr_account.username, raw=True, link=True, database=database, popover_url=True) }}{% if user.id == current_user.id and rwr_account.pending_delete %} <i class="fas fa-times help" title="This account is pending deletion"></i>{% endif -%}
+                                                {%- if current_user.is_authenticated and user.id == current_user.id and not rwr_account.pending_delete -%}
+                                                    <span class="flex-item-center actions mrs"><a href="#" title="Clear credentials for this RWR account" class="txtorange clear-rwr-account-credentials"><i class="fas fa-unlock"></i></a></span>
+                                                    <span class="flex-item-center actions"><a href="{{ url_for('delete_rwr_account', rwr_account_id=rwr_account.id) }}" title="Delete this RWR account" class="txtred"><i class="fas fa-trash"></i></a></span>
+                                                {%- endif -%}
+                                            </div>
                                         </td>
                                     </tr>
                                 {%- else -%}
@@ -104,6 +107,7 @@
                 rwrAccountsSync.endpoints = {{ sync_rwr_accounts_endpoints|tojson }};
                 rwrAccountsSync.init();
 
+                rwrAccountsClear.endpoint = '{{ clear_rwr_account_credentials_endpoint }}';
                 rwrAccountsClear.init();
             {%- endif -%}
         });

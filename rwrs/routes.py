@@ -187,7 +187,8 @@ def user_profile(user_id, slug):
     return render_template(
         'users/profile.html',
         user=user,
-        sync_rwr_accounts_endpoints=sync_rwr_accounts_endpoints
+        sync_rwr_accounts_endpoints=sync_rwr_accounts_endpoints,
+        clear_rwr_account_credentials_endpoint=url_for('clear_rwr_account_credentials')
     )
 
 
@@ -310,6 +311,11 @@ def sync_rwr_accounts(database):
         result = {'status': 'failure', 'data': {'message': str(e)}}
 
     return jsonify(result), status
+
+@app.route('/my-rwr-accounts/clear-credentials', methods=['POST'])
+@login_required
+def clear_rwr_account_credentials():
+    pass
 
 
 @app.route('/my-rwr-accounts/delete/<int:rwr_account_id>', methods=['GET', 'POST'])
