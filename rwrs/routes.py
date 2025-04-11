@@ -187,7 +187,8 @@ def user_profile(user_id, slug):
     return render_template(
         'users/profile.html',
         user=user,
-        sync_rwr_accounts_endpoints=sync_rwr_accounts_endpoints
+        sync_rwr_accounts_endpoints=sync_rwr_accounts_endpoints,
+        clear_rwr_account_credentials_endpoint='/my-rwr-accounts/clear-credentials/'
     )
 
 
@@ -300,6 +301,42 @@ def sync_rwr_accounts(database):
         flash('{} RWR accounts successfully sync\'ed.'.format(rwr.utils.get_database_name(database)), 'success')
     except Exception as e:
         app.logger.exception(f'Error syncing RWR accounts for user #{current_user.id} on demand')
+
+        if not app.config['DEBUG'] and app.config['SENTRY_DSN']:
+            import sentry_sdk
+
+            sentry_sdk.capture_exception()
+
+        status = 500
+        result = {'status': 'failure', 'data': {'message': str(e)}}
+
+    return jsonify(result), status
+
+
+@app.route('/my-rwr-accounts/clear-credentials/<int:rwr_account_id>', methods=['POST'])
+@login_required
+def clear_rwr_account_credentials(rwr_account_id):
+    status = 200
+
+    try:
+        rwr_account = RwrAccount.query.get(rwr_account_id)
+
+        if not rwr_account or not current_user.owns_rwr_account(rwr_account) or rwr_account.pending_delete:
+            raise Exception('Invalid account.')
+
+        player = rwr.scraper.search_player_by_username(rwr_account.database, rwr_account.username)
+
+        if not player:
+            raise Exception('Player "{username}" wasn\'t found in the {database} players list.'.format(username=rwr_account.username, database=rwr_account.database_name))
+
+        result = rwr.scraper.clear_credentials(rwr_account.realm, rwr_account.hash)
+
+        if 'ok' not in result or result['ok'] != '1':
+            raise Exception('Failed clear credentials response for {}@{}: {}'.format(rwr_account.hash, rwr_account.realm, result))
+
+        result = {'status': 'success', 'data': {}}
+    except Exception as e:
+        app.logger.exception(f'Error clearing credentials for RWR account #{rwr_account_id}')
 
         if not app.config['DEBUG'] and app.config['SENTRY_DSN']:
             import sentry_sdk

@@ -1,3 +1,4 @@
 -r requirements.txt
-Flask-DebugToolbar==0.13.1
-python-dotenv==1.0.1
+Flask-DebugToolbar~=0.16
+python-dotenv~=1.0
+watchdog~=4.0

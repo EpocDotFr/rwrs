@@ -9,7 +9,7 @@
 {% block jsfiles %}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tippy.js/3.1.3/tippy.min.js"></script>
     {%- if current_user.is_authenticated and user.id == current_user.id -%}
-        {% assets 'js_popovers_rwr_accounts_sync' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
+        {% assets 'js_popovers_rwr_accounts_sync_clear' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
     {%- else -%}
         {% assets 'js_popovers' %}<script src="{{ ASSET_URL }}"></script>{% endassets %}
     {%- endif -%}
@@ -55,8 +55,8 @@
         </div>
         <div class="four-fifth">
             <div class="grid has-gutter">
-    	        {%- for database, database_info in PLAYERS_LIST_DATABASES.items() -%}
-    	            {%- set rwr_accounts_by_type = user.get_rwr_accounts_by_type(database) -%}
+                {%- for database, database_info in PLAYERS_LIST_DATABASES.items() -%}
+                    {%- set rwr_accounts_by_type = user.get_rwr_accounts_by_type(database) -%}
                     <div>
                         <table class="mbs {{ 'striped' if rwr_accounts_by_type }} rwr-accounts-list">
                             <thead>
@@ -68,13 +68,16 @@
                                 {%- for rwr_account in rwr_accounts_by_type -%}
                                     <tr>
                                         <td>
-                                            {%- if current_user.is_authenticated and user.id == current_user.id and not rwr_account.pending_delete -%}
-                                                <div class="actions fr">
-                                                    <span class="txtred"><a href="{{ url_for('delete_rwr_account', rwr_account_id=rwr_account.id) }}" title="Delete this RWR account"><i class="fas fa-trash"></i></a></span>
-                                                </div>
-                                            {%- endif -%}
+                                            <div class="flex-container">
+                                                <span class="flex-item-center flex-item-fluid">
+                                                    {{ macros.player_name(rwr_account.username, raw=True, link=True, database=database, popover_url=True) }}{% if user.id == current_user.id and rwr_account.pending_delete %} <i class="fas fa-times help" title="This account is pending deletion"></i>{% endif -%}
+                                                </span>
 
-                                            {{ macros.player_name(rwr_account.username, raw=True, link=True, database=database, popover_url=True) }}{% if user.id == current_user.id and rwr_account.pending_delete %} <i class="fas fa-times help" title="This account is pending deletion"></i>{% endif -%}
+                                                {%- if current_user.is_authenticated and user.id == current_user.id and not rwr_account.pending_delete -%}
+                                                    <span class="flex-item-center actions mrs"><a href="#" title="Clear credentials for this RWR account" class="txtorange clear-rwr-account-credentials" data-account-id="{{ rwr_account.id }}"><i class="fas fa-unlock"></i></a></span>
+                                                    <span class="flex-item-center actions"><a href="{{ url_for('delete_rwr_account', rwr_account_id=rwr_account.id) }}" title="Delete this RWR account" class="txtred"><i class="fas fa-trash"></i></a></span>
+                                                {%- endif -%}
+                                            </div>
                                         </td>
                                     </tr>
                                 {%- else -%}
@@ -85,8 +88,8 @@
                             </tbody>
                         </table>
                     </div>
-    	        {%- endfor -%}
-           </div>
+                {%- endfor -%}
+            </div>
 
             {%- if current_user.is_authenticated and user.id == current_user.id -%}
                 <div class="small txtcenter txtgrey">
@@ -103,6 +106,9 @@
             {%- if current_user.is_authenticated and user.id == current_user.id -%}
                 rwrAccountsSync.endpoints = {{ sync_rwr_accounts_endpoints|tojson }};
                 rwrAccountsSync.init();
+
+                rwrAccountsClear.endpoint = '{{ clear_rwr_account_credentials_endpoint }}';
+                rwrAccountsClear.init();
             {%- endif -%}
         });
     </script>

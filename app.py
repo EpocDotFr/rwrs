@@ -1,11 +1,9 @@
 from werkzeug.exceptions import HTTPException, Unauthorized, Forbidden, NotFound, InternalServerError, ServiceUnavailable
 from flask import Flask, url_for, request, g, abort, render_template, Markup
 from flask_discord_interactions import DiscordInteractions
-from flask_login import LoginManager, current_user
-from flask_admin.contrib.sqla import ModelView
-from flask_admin import Admin, AdminIndexView
 from flask_assets import Environment, Bundle
 from flask_sqlalchemy import SQLAlchemy
+from flask_login import LoginManager
 from flask_migrate import Migrate
 from flask_caching import Cache
 from rwrs import helpers, motd
@@ -63,6 +61,7 @@ app.config.update(
 
     RWR_ACCOUNTS_BY_STEAM_ID_ENDPOINT=env.str('RWR_ACCOUNTS_BY_STEAM_ID_ENDPOINT', default=None),
     RWR_ACCOUNTS_DELETE_ENDPOINT=env.str('RWR_ACCOUNTS_DELETE_ENDPOINT', default=None),
+    RWR_ACCOUNTS_CLEAR_CREDENTIALS_ENDPOINT=env.str('RWR_ACCOUNTS_CLEAR_CREDENTIALS_ENDPOINT', default=None),
 
     ADMINS=env.list('ADMINS', default=[]),
 
@@ -158,7 +157,7 @@ assets = Environment(app)
 assets.append_path('assets')
 
 assets.register('js_popovers', Bundle('js/popovers.js', filters='rjsmin', output='js/popovers.min.js'))
-assets.register('js_popovers_rwr_accounts_sync', Bundle('js/popovers.js', 'js/rwr_accounts_sync.js', filters='rjsmin', output='js/popovers_rwr_accounts_sync.min.js'))
+assets.register('js_popovers_rwr_accounts_sync_clear', Bundle('js/popovers.js', 'js/rwr_accounts_sync.js', 'js/rwr_accounts_clear.js', filters='rjsmin', output='js/popovers_rwr_accounts_sync_clear.min.js'))
 assets.register('js_charts', Bundle('js/charts.js', filters='rjsmin', output='js/charts.min.js'))
 assets.register('js_charts_popovers', Bundle('js/charts.js', 'js/popovers.js', filters='rjsmin', output='js/charts_popovers.min.js'))
 assets.register('js_regenerate_pat', Bundle('js/regenerate_pat.js', filters='rjsmin', output='js/regenerate_pat.min.js'))
@@ -189,23 +188,6 @@ def load_user(user_id):
 # Flask-Discord-Interactions
 discord_interactions = DiscordInteractions(app)
 discord_interactions.set_route(app.config['DISCORD_INTERACTIONS_PATH'])
-
-# Flask-Admin
-class RestrictedView:
-    def is_accessible(self):
-        return current_user.is_authenticated and current_user.is_rwrs_admin
-
-    def inaccessible_callback(self, name, **kwargs):
-        abort(404)
-
-
-class RestrictedAdminIndexView(RestrictedView, AdminIndexView):
-    pass
-
-class RestrictedModelView(RestrictedView, ModelView):
-    pass
-
-admin = Admin(app, name='RWRS Admin', template_mode='bootstrap4', url='/manage', index_view=RestrictedAdminIndexView(url='/manage'))
 
 # -----------------------------------------------------------
 # Pre-request hooks
@@ -342,9 +324,3 @@ import rwrs.routes
 import rwrs.commands
 import rwrs.discord.commands
 import rwrs.api
-
-admin.add_view(RestrictedModelView(rwrs.models.RwrAccount, db.session, name='RWR Accounts', url='rwr-accounts'))
-admin.add_view(RestrictedModelView(rwrs.models.RwrAccountStat, db.session, name='RWR Accounts Stats', url='rwr-accounts-stats'))
-admin.add_view(RestrictedModelView(rwrs.models.User, db.session, name='Users', url='users'))
-admin.add_view(RestrictedModelView(rwrs.models.UserFriend, db.session, name='Users Friends', url='users-friends'))
-admin.add_view(RestrictedModelView(rwrs.models.Variable, db.session, name='Variables', url='variables'))
