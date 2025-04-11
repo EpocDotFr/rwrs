@@ -329,10 +329,10 @@ def clear_rwr_account_credentials(rwr_account_id):
         if not player:
             raise Exception('Player "{username}" wasn\'t found in the {database} players list.'.format(username=rwr_account.username, database=rwr_account.database_name))
 
-        # result = rwr.scraper.clear_credentials(rwr_account.realm, rwr_account.hash)
-        #
-        # if 'ok' not in result or result['ok'] != '1':
-        #     raise Exception('Failed clear credentials response for {}@{}: {}'.format(rwr_account.hash, rwr_account.realm, result))
+        result = rwr.scraper.clear_credentials(rwr_account.realm, rwr_account.hash)
+
+        if 'ok' not in result or result['ok'] != '1':
+            raise Exception('Failed clear credentials response for {}@{}: {}'.format(rwr_account.hash, rwr_account.realm, result))
 
         result = {'status': 'success', 'data': {}}
     except Exception as e:

@@ -33,11 +33,7 @@ regeneratePat = {
                 'Content-Type': 'application/json',
             }
         }).then(function(response) {
-            if (response.ok) {
-                return response.json();
-            } else {
-                return Promise.reject(response);
-            }
+            return response.json();
         }).then(function(response) {
             if (response.status != 'success') {
                 alert(response.data.message);
