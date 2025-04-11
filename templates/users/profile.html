@@ -55,8 +55,8 @@
         </div>
         <div class="four-fifth">
             <div class="grid has-gutter">
-    	        {%- for database, database_info in PLAYERS_LIST_DATABASES.items() -%}
-    	            {%- set rwr_accounts_by_type = user.get_rwr_accounts_by_type(database) -%}
+                {%- for database, database_info in PLAYERS_LIST_DATABASES.items() -%}
+                    {%- set rwr_accounts_by_type = user.get_rwr_accounts_by_type(database) -%}
                     <div>
                         <table class="mbs {{ 'striped' if rwr_accounts_by_type }} rwr-accounts-list">
                             <thead>
@@ -74,7 +74,7 @@
                                                 </span>
 
                                                 {%- if current_user.is_authenticated and user.id == current_user.id and not rwr_account.pending_delete -%}
-                                                    <span class="flex-item-center actions mrs"><a href="#" title="Clear credentials for this RWR account" class="txtorange clear-rwr-account-credentials"><i class="fas fa-unlock"></i></a></span>
+                                                    <span class="flex-item-center actions mrs"><a href="#" title="Clear credentials for this RWR account" class="txtorange clear-rwr-account-credentials" data-account-id="{{ rwr_account.id }}"><i class="fas fa-unlock"></i></a></span>
                                                     <span class="flex-item-center actions"><a href="{{ url_for('delete_rwr_account', rwr_account_id=rwr_account.id) }}" title="Delete this RWR account" class="txtred"><i class="fas fa-trash"></i></a></span>
                                                 {%- endif -%}
                                             </div>
@@ -88,8 +88,8 @@
                             </tbody>
                         </table>
                     </div>
-    	        {%- endfor -%}
-           </div>
+                {%- endfor -%}
+            </div>
 
             {%- if current_user.is_authenticated and user.id == current_user.id -%}
                 <div class="small txtcenter txtgrey">

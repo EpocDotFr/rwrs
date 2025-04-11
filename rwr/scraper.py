@@ -496,6 +496,24 @@ def delete_player(realm, hash):
     return dict(xml_content.attrib)
 
 
+def clear_credentials(realm, hash):
+    """Clear credentials for a given RWR player."""
+    params = {
+        'realm': realm,
+        'hash': hash
+    }
+
+    xml_content = _call(
+        app.config['RWR_ACCOUNTS_CLEAR_CREDENTIALS_ENDPOINT'],
+        parser='xml',
+        params=params,
+        auth=app.config['RWR_ACCOUNTS_ENDPOINTS_CREDENTIALS'],
+        verify=False
+    )
+
+    return dict(xml_content.attrib)
+
+
 @cache.memoize(timeout=app.config['PLAYERS_CACHE_TIMEOUT'])
 def search_player_by_username(database, username, check_exist_only=False):
     """Search for a RWR player (exact match)."""

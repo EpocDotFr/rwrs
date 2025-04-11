@@ -12,6 +12,8 @@ rwrAccountsClear = {
 
         this.$clear_rwr_account_credentials_buttons.forEach(function(el) {
             el.addEventListener('click', function(e) {
+                e.preventDefault();
+
                 if (!confirm('Confirm clearing this account\'s credentials?\n\nIf you do not understand what you are doing, or if someone did not asked you to click on that button, do not proceed.')) {
                     e.preventDefault();
 
@@ -28,7 +30,7 @@ rwrAccountsClear = {
    clear: function(button) {
         button.disabled = true;
 
-        fetch(this.endpoint, { // TODO
+        fetch(`${this.endpoint}${button.dataset.accountId}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
