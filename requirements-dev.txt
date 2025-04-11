@@ -1,4 +1,4 @@
 -r requirements.txt
 Flask-DebugToolbar~=0.16
 python-dotenv~=1.0
-watchdog~=6.0
+watchdog~=4.0
