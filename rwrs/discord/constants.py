@@ -7,7 +7,7 @@ import re
 
 EVOLUTION_TYPES = {
     'ratio': {'name': 'K/D ratio', 'column': 'kd_ratio'},
-    'score': {'name': 'score', 'column': 'score'},
+    'score': {'name': 'Score', 'column': 'score'},
 }
 
 PLAYER_SORTS = {
