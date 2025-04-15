@@ -16,7 +16,7 @@ import uuid
 
 ERROR_PLAYER_NOT_FOUND = 'Sorry, the player "{username}" wasn\'t found in the {database} players list. Maybe this player hasn\'t already played on an official Invasion or WW2 DLCs server yet. If this player started to play today on an official Invasion or WW2 DLCs server, please wait until tomorrow as stats are refreshed daily.'
 ERROR_NO_RWR_ACCOUNT = 'Sorry, stats history isn\'t recorded for {username}. He/she must be part of the {database} {max_players} most experienced players.'
-ERROR_NO_RWR_ACCOUNT_STATS = 'No stats were found for the given date for {username}. Are you sure he/she is/was part of the {database} {max_players} most experienced players?'
+ERROR_NO_RWR_ACCOUNT_STATS = 'No stats were found for the given date for {username}. Are you sure he/she is/was part of the {database} {max_players} most experienced players? Also note the data retention policy is one year per RWR account.'
 
 
 @app.route('/')

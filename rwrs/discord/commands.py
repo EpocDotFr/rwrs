@@ -286,7 +286,7 @@ def stats(
         rwr_account_stat = RwrAccountStat.get_stats_for_date(rwr_account.id, date)
 
         if not rwr_account_stat:
-            return 'No stats were found for the given date :confused: Are you sure he/she is part of the {} {} most experienced players?'.format(
+            return 'No stats were found for the given date :confused: Are you sure he/she is part of the {} {} most experienced players? Also note the data retention policy is one year per RWR account.'.format(
                 rwr.utils.get_database_name(database),
                 app.config['MAX_NUM_OF_PLAYERS_TO_TRACK_STATS_FOR']
             )
@@ -358,7 +358,7 @@ def evolution(
             evolution_chart = charts.create_evolution_chart(
                 player.rwr_account,
                 constants.EVOLUTION_TYPES[type]['column'],
-                'Past year {} evolution for {}\n({} official servers, {} is better)'.format(
+                '{} evolution for {}\n({} official servers, {} is better)'.format(
                     constants.EVOLUTION_TYPES[type]['name'],
                     player.username,
                     player.database_name,
@@ -724,7 +724,7 @@ def compare(
         source_rwr_account_stat = RwrAccountStat.get_stats_for_date(source_rwr_account.id, date)
 
         if not source_rwr_account_stat:
-            return 'No stats were found for the given date for {} :confused: Are you sure he/she is/was part of the {} {} most experienced players?'.format(
+            return 'No stats were found for the given date for {} :confused: Are you sure he/she is/was part of the {} {} most experienced players? Also note the data retention policy is one year per RWR account.'.format(
                 source_username,
                 rwr.utils.get_database_name(database),
                 app.config['MAX_NUM_OF_PLAYERS_TO_TRACK_STATS_FOR']
@@ -749,7 +749,7 @@ def compare(
         target_rwr_account_stat = RwrAccountStat.get_stats_for_date(target_rwr_account.id, date)
 
         if not target_rwr_account_stat:
-            return 'No stats were found for the given date for {} :confused: Are you sure he/she is/was part of the {} {} most experienced players?'.format(
+            return 'No stats were found for the given date for {} :confused: Are you sure he/she is/was part of the {} {} most experienced players? Also note the data retention policy is one year per RWR account.'.format(
                 target_username,
                 rwr.utils.get_database_name(database),
                 app.config['MAX_NUM_OF_PLAYERS_TO_TRACK_STATS_FOR']

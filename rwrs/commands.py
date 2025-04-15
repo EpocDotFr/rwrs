@@ -261,7 +261,7 @@ def extract_minimaps(steamdir):
 @check_maintenance
 def save_players_stats(reset, create_accounts_only):
     """Retrieve and persist the players stats."""
-    from rwrs.models import RwrAccount, RwrAccountType, RwrAccountStat
+    from rwrs.models import RwrAccount, RwrAccountType, RwrAccountStat, one_year_ago
     from app import db, cache
     import rwr.constants
     import rwr.scraper
@@ -369,6 +369,11 @@ def save_players_stats(reset, create_accounts_only):
                 # Finally save stats for all eligible players
                 db.session.bulk_save_objects(all_rwr_accounts_stat)
                 db.session.commit()
+
+    click.echo('Pruning old stats...')
+
+    RwrAccountStat.query.filter(RwrAccountStat.created_at < one_year_ago()).delete()
+    db.session.commit()
 
     click.secho('Done', fg='green')
 
