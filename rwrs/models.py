@@ -836,7 +836,8 @@ class RwrAccountStat(db.Model):
     def get_stats_for_column(rwr_account, column=None):
         """Return the player's score or K/D ratio evolution data."""
         rwr_account_stats = RwrAccountStat.query.filter(
-            RwrAccountStat.rwr_account_id == rwr_account.id
+            RwrAccountStat.rwr_account_id == rwr_account.id,
+            RwrAccountStat.created_at >= one_year_ago()
         ).order_by(RwrAccountStat.created_at.desc()).all()
 
         # Set RwrAccount relations now to prevent lazy loading issue (and to prevent extra DB query)
