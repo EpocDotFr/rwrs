@@ -548,7 +548,7 @@ def servers(
     ]
 
     for server in servers:
-        response.append('{flag}`{current_players}/{max_players}` **{name}** ({type} • {map}) [Details]({url})\n'.format(
+        response.append('{flag}`{current_players}/{max_players}` **{name}** ({type} • {map}) [Details](<{url}>)\n'.format(
             flag=':flag_' + server.location.country_code + ': ' if server.location.country_code else '',
             current_players=server.players.current,
             max_players=server.players.max,
