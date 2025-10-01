@@ -21,27 +21,50 @@ env.read_env()
 app = Flask(__name__)
 
 app.config.update(
-    # Default config values that may be overwritten by environment values
+    # -----------------------------------------------------------
+    # Flask config
+
     SECRET_KEY=env.str('SECRET_KEY'),
     SERVER_NAME=env.str('SERVER_NAME', default='localhost:8080'),
     PREFERRED_URL_SCHEME=env.str('PREFERRED_URL_SCHEME', default='http'),
 
+    # -----------------------------------------------------------
+    # Extensions config
+
+    # sentry-sdk[flask]
     SENTRY_DSN=env.str('SENTRY_DSN', default=None),
     SENTRY_TRACES_SAMPLE_RATE=env.float('SENTRY_TRACES_SAMPLE_RATE', default=None),
 
-    CACHE_TYPE=env.str('CACHE_TYPE', default='FileSystemCache'),
-    CACHE_DIR=env.str('CACHE_DIR', default='instance/cache'),
-
-    ASSETS_CACHE=env.str('ASSETS_CACHE', default='instance/webassets-cache'),
-
+    # Flask-DebugToolbar
     DEBUG_TB_INTERCEPT_REDIRECTS=env.bool('DEBUG_TB_INTERCEPT_REDIRECTS', False),
 
-    MINIFY_HTML=env.bool('MINIFY_HTML', default=False),
-
+    # Flask-Compress
     COMPRESS_REGISTER=env.bool('COMPRESS_REGISTER', default=False),
     COMPRESS_MIN_SIZE=env.int('COMPRESS_MIN_SIZE', 512),
 
+    # Flask-HTMLmin
+    MINIFY_HTML=env.bool('MINIFY_HTML', default=False),
+
+    # Flask-Caching
+    CACHE_TYPE=env.str('CACHE_TYPE', default='FileSystemCache'),
+    CACHE_DIR=env.str('CACHE_DIR', default='instance/cache'),
+    CACHE_THRESHOLD=10000,
+
+    # Flask-Assets
+    ASSETS_CACHE=env.str('ASSETS_CACHE', default='instance/webassets-cache'),
+
+    # Flask-SQLAlchemy
     SQLALCHEMY_DATABASE_URI=env.str('SQLALCHEMY_DATABASE_URI', default='sqlite:///instance/db.sqlite'),
+    SQLALCHEMY_TRACK_MODIFICATIONS=False,
+
+    # Flask-RESTful
+    BUNDLE_ERRORS=True,
+
+    # Flask-Login
+    SESSION_PROTECTION='basic',
+
+    # -----------------------------------------------------------
+    # App config
 
     SERVERS_CACHE_TIMEOUT=env.int('SERVERS_CACHE_TIMEOUT', default=60),
     PLAYERS_CACHE_TIMEOUT=env.int('PLAYERS_CACHE_TIMEOUT', default=60),
@@ -68,12 +91,6 @@ app.config.update(
     SCRAPER_PROXY=env.str('SCRAPER_PROXY', default=None),
 
     BANNED_IPS=env.list('BANNED_IPS', default=[]),
-
-    # Config values that cannot be overwritten
-    CACHE_THRESHOLD=10000,
-    SQLALCHEMY_TRACK_MODIFICATIONS=False,
-    BUNDLE_ERRORS=True,
-    SESSION_PROTECTION='basic',
 
     RANKS_IMAGES_DIR='static/images/ranks',
     RANKS_DATA_FILE='data/ranks.json',
@@ -119,7 +136,8 @@ if app.config['SENTRY_DSN']:
             integrations=[
                 FlaskIntegration(),
             ],
-            traces_sample_rate=app.config['SENTRY_TRACES_SAMPLE_RATE']
+            traces_sample_rate=app.config['SENTRY_TRACES_SAMPLE_RATE'],
+            send_default_pii=True
         )
     except ImportError:
         pass
@@ -267,7 +285,7 @@ app.jinja_env.globals.update(
 )
 
 # -----------------------------------------------------------
-# Error pages
+# Custom error page handler
 
 @app.errorhandler(HTTPException)
 def http_error_handler(e):
