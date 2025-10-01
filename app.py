@@ -1,6 +1,7 @@
 from werkzeug.exceptions import HTTPException, Unauthorized, Forbidden, NotFound, InternalServerError, ServiceUnavailable
 from flask import Flask, url_for, request, g, abort, render_template, Markup
 from flask_discord_interactions import DiscordInteractions
+from requests import Timeout, ConnectionError
 from flask_assets import Environment, Bundle
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
@@ -137,7 +138,10 @@ if app.config['SENTRY_DSN']:
                 FlaskIntegration(),
             ],
             traces_sample_rate=app.config['SENTRY_TRACES_SAMPLE_RATE'],
-            send_default_pii=True
+            send_default_pii=True,
+            ignore_errors=[
+                Timeout, ConnectionError
+            ]
         )
     except ImportError:
         pass
