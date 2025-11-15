@@ -1,6 +1,7 @@
 from rwrs.discord import constants
 from functools import wraps
 from flask import g
+from app import app
 import arrow
 
 
@@ -86,8 +87,11 @@ def check_maintenance(func):
         if args:
             ctx = args[0]
 
-            if g.UNDER_MAINTENANCE and not has_permissions(ctx.author, admin_permissions()):
-                return ':wrench: RWRS is under ongoing maintenance! Please try again later.'
+            if g.UNDER_MAINTENANCE and not app.config['DISCORD_BOT_BYPASS_MAINTENANCE'] and not has_permissions(ctx.author, admin_permissions()):
+                if g.MOTD:
+                    return g.MOTD.message
+                else:
+                    return ':wrench: RWRS is under ongoing maintenance! Please try again later.'
 
         return func(*args, **kwargs)
 

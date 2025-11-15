@@ -64,6 +64,9 @@ app.config.update(
     # Flask-Login
     SESSION_PROTECTION='basic',
 
+    # Flask-Discord-Interactions
+    DISCORD_INTERACTIONS_PATH=env.str('DISCORD_INTERACTIONS_PATH'),
+
     # -----------------------------------------------------------
     # App config
 
@@ -80,6 +83,7 @@ app.config.update(
     DISCORD_PUBLIC_KEY=env.str('DISCORD_PUBLIC_KEY'),
     DISCORD_CLIENT_SECRET=env.str('DISCORD_CLIENT_SECRET'),
     DISCORD_GUILD=env.str('DISCORD_GUILD'),
+    DISCORD_BOT_BYPASS_MAINTENANCE=env.bool('DISCORD_BOT_BYPASS_MAINTENANCE', default=False),
 
     RWR_ACCOUNTS_ENDPOINTS_CREDENTIALS=tuple(env.list('RWR_ACCOUNTS_ENDPOINTS_CREDENTIALS', ['username', 'password'])),
 
@@ -118,7 +122,6 @@ app.config.update(
     STATUS_PAGE_URL='https://stats.uptimerobot.com/Z0PkQf9YY',
 
     DISCORD_SERVER_URL='https://discord.gg/runningwithrifles',
-    DISCORD_INTERACTIONS_PATH='/discord-interactions',
     MY_DISCORD_ID='66543750725246976',
 )
 
@@ -316,7 +319,7 @@ def http_error_handler(e):
     elif isinstance(e, ServiceUnavailable):
         page_icon = 'fas fa-wrench'
         title = 'Unavailable'
-        text = Markup('Sorry, RWRS is temporarily unavailable <i class="fa fa-frown"></i><br><br>{}')
+        text = Markup('{}')
 
         if g.MOTD:
             text = text.format(helpers.markdown_to_html_inline(g.MOTD.message))
