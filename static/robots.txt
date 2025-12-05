@@ -4,6 +4,7 @@ Disallow: /popover
 Disallow: /api
 Disallow: /players/invasion
 Disallow: /players/pacific
+Disallow: /servers/*/banner
 Allow: /players/invasion$
 Allow: /players/pacific$
 
