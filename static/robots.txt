@@ -2,6 +2,10 @@ User-agent: *
 Allow: /
 Disallow: /popover
 Disallow: /api
+Disallow: /players/invasion
+Disallow: /players/pacific
+Allow: /players/invasion$
+Allow: /players/pacific$
 
 User-agent: AI2Bot
 User-agent: Ai2Bot-Dolma
