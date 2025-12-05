@@ -5,6 +5,7 @@ Disallow: /api
 Disallow: /players/invasion
 Disallow: /players/pacific
 Disallow: /servers/*/banner
+Disallow: /users
 Allow: /players/invasion$
 Allow: /players/pacific$
 
