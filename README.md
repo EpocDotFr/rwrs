@@ -30,4 +30,4 @@ You'll find credits and legal mentions [here](https://rwrstats.com/about#credits
 ## Feedback
 
 If you have suggestions or problems, you can submit an issue [here on GitHub](https://github.com/EpocDotFr/rwrs/issues) or
-head over [hhere](https://rwrstats.com/feedback).
+head over [here](https://rwrstats.com/feedback).
