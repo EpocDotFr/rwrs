@@ -5,7 +5,6 @@ Disallow: /api
 Disallow: /players/invasion
 Disallow: /players/pacific
 Disallow: /servers/*/banner
-Disallow: /users
 Allow: /players/invasion$
 Allow: /players/pacific$
 
@@ -13,7 +12,6 @@ User-agent: AI2Bot
 User-agent: AhrefsBot
 User-agent: MJ12bot
 User-agent: DataForSeoBot
-User-agent: Rogerbot
 User-agent: Rogerbot
 User-agent: Dotbot
 User-agent: ia_archiver
