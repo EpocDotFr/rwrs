@@ -95,8 +95,6 @@ app.config.update(
 
     SCRAPER_PROXY=env.str('SCRAPER_PROXY', default=None),
 
-    BANNED_IPS=env.list('BANNED_IPS', default=[]),
-
     RANKS_IMAGES_DIR='static/images/ranks',
     RANKS_DATA_FILE='data/ranks.json',
 
@@ -219,9 +217,6 @@ discord_interactions.set_route(app.config['DISCORD_INTERACTIONS_PATH'])
 
 @app.before_request
 def before_request():
-    if request.headers.get('X-Real-IP') in app.config['BANNED_IPS']:
-        return 'gtfo', 403
-
     from rwrs.models import Variable
     import rwr.scraper
 
