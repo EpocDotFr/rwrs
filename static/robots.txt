@@ -15,6 +15,7 @@ User-agent: Rogerbot
 User-agent: Dotbot
 User-agent: ia_archiver
 User-agent: AddSearchBot
+User-agent: SemrushBot
 
 User-agent: AI2Bot
 User-agent: AI2Bot-DeepResearchEval
