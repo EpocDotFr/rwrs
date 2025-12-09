@@ -10,6 +10,7 @@ from flask_caching import Cache
 from rwrs import helpers, motd
 from datetime import datetime
 from environs import Env
+import ipaddress
 import math
 import os
 
@@ -70,6 +71,8 @@ app.config.update(
     # -----------------------------------------------------------
     # App config
 
+    BANNED_IPS_FILE = env.str('BANNED_IPS_FILE', default=None),
+
     SERVERS_CACHE_TIMEOUT=env.int('SERVERS_CACHE_TIMEOUT', default=60),
     PLAYERS_CACHE_TIMEOUT=env.int('PLAYERS_CACHE_TIMEOUT', default=60),
     GRAPHS_DATA_CACHE_TIMEOUT=env.int('GRAPHS_DATA_CACHE_TIMEOUT', default=60),
@@ -124,6 +127,7 @@ app.config.update(
 )
 
 app.config['OFFICIAL_SERVERS_MODS'] = helpers.load_json(app.config['OFFICIAL_SERVERS_MODS_FILE'])
+app.config['BANNED_IPS'] = helpers.load_banned_ips(app.config['BANNED_IPS_FILE'])
 
 # -----------------------------------------------------------
 # Debugging-related behaviours
@@ -217,6 +221,28 @@ discord_interactions.set_route(app.config['DISCORD_INTERACTIONS_PATH'])
 
 @app.before_request
 def before_request():
+    banned_ips = app.config['BANNED_IPS']
+
+    if banned_ips:
+        ip = request.headers.get('X-Real-IP') or request.remote_addr
+
+        if ip:
+            ban = False
+
+            if ip in banned_ips['addresses']:
+                ban = True
+            else:
+                ip_address = ipaddress.ip_address(ip)
+
+                for ip_network in banned_ips['networks']:
+                    if ip_address in ip_network:
+                        ban = True
+
+                        break
+
+            if ban:
+                return 'gtfo', 403, {'Content-Type': 'text/plain'}
+
     from rwrs.models import Variable
     import rwr.scraper
 

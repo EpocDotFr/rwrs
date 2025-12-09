@@ -3,6 +3,7 @@ instance/*.sqlite
 instance/cache/*
 instance/webassets-cache/*
 !instance/webassets-cache/.gitkeep
+data/banned_ips.txt
 maintenance
 motd
 static/css/*.min.css

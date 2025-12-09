@@ -1,6 +1,8 @@
 from flask import request, Markup, url_for
 from itertools import tee, islice, chain
 from collections import OrderedDict
+from typing import Optional, Dict
+import ipaddress
 import misaka
 import json
 
@@ -159,3 +161,29 @@ def get_next_url():
 def generate_next_url():
     """Return the full path of the current URL, minus the ending question mark."""
     return request.full_path.rstrip('?')
+
+
+def load_banned_ips(filename: Optional[str] = None) -> Optional[Dict]:
+    if not filename:
+        return None
+
+    ret = {
+        'addresses': [],
+        'networks': []
+    }
+
+    with open(filename, 'r') as f:
+        for line in f:
+            line = line.strip()
+
+            if not line or line.startswith('#'):
+                continue
+
+            try:
+                ret['networks'].append(
+                    ipaddress.ip_network(line)
+                )
+            except:
+                ret['addresses'].append(line)
+
+    return ret
