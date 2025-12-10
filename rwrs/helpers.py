@@ -179,11 +179,11 @@ def load_banned_ips(filename: Optional[str] = None) -> Optional[Dict]:
             if not line or line.startswith('#'):
                 continue
 
-            try:
+            if '/' in line:
                 ret['networks'].append(
                     ipaddress.ip_network(line)
                 )
-            except:
+            else:
                 ret['addresses'].append(line)
 
     return ret
