@@ -1,11 +1,15 @@
 # Running With Rifles Stats (RWRS)
 
+> [!IMPORTANT]
+> This project was hosted at https://rwrstats.com, but no longer has anything to do with the current site and owner since it
+> has shutdown. If the current site and/or its owner claim otherwise, do NOT trust them.
+
 <img src="static/images/icon_round_dark_256.png" align="right">
 
 Players statistics, servers list and more for the [Running With Rifles](http://www.runningwithrifles.com/wp/) (RWR) game
 as well as its Pacific and Edelweiss DLCs.
 
-[Website](https://rwrstats.com/) • [Discord](https://discord.gg/runningwithrifles) • [Steam Discussions](https://steamcommunity.com/app/270150/discussions/0/1520386297704428050/)
+[Discord](https://discord.gg/runningwithrifles) • [Steam Discussions](https://steamcommunity.com/app/270150/discussions/0/1520386297704428050/)
 
 ## Prerequisites
 
@@ -22,12 +26,3 @@ as well as its Pacific and Edelweiss DLCs.
   3. `pip install -r requirements-dev.txt`
   4. `flask db upgrade`
   5. `bash scripts/geolite2_city_updater.sh`
-
-## Credits
-
-You'll find credits and legal mentions [here](https://rwrstats.com/about#credits).
-
-## Feedback
-
-If you have suggestions or problems, you can submit an issue [here on GitHub](https://github.com/EpocDotFr/rwrs/issues) or
-head over [here](https://rwrstats.com/feedback).
